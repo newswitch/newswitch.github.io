@@ -71,137 +71,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-游戏文章示例" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+    <article id="post-RDMA详解" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2025/10/21/%E6%B8%B8%E6%88%8F%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/" class="article-date">
-  <time class="dt-published" datetime="2025-10-21T09:35:00.000Z" itemprop="datePublished">2025-10-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%B8%B8%E6%88%8F/">游戏</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/10/21/%E6%B8%B8%E6%88%8F%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/">游戏开发入门 - Unity 基础</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="游戏开发入门-Unity-基础"><a href="#游戏开发入门-Unity-基础" class="headerlink" title="游戏开发入门 - Unity 基础"></a>游戏开发入门 - Unity 基础</h1><p>Unity 是世界上最流行的游戏开发引擎之一，本文将介绍 Unity 的基础知识。</p>
-<h2 id="Unity-界面介绍"><a href="#Unity-界面介绍" class="headerlink" title="Unity 界面介绍"></a>Unity 界面介绍</h2><h3 id="主要窗口"><a href="#主要窗口" class="headerlink" title="主要窗口"></a>主要窗口</h3><ul>
-<li><strong>Scene 视图</strong>: 3D 场景编辑</li>
-<li><strong>Game 视图</strong>: 游戏运行预览</li>
-<li><strong>Hierarchy 窗口</strong>: 场景对象层级</li>
-<li><strong>Inspector 窗口</strong>: 对象属性编辑</li>
-<li><strong>Project 窗口</strong>: 项目资源管理</li>
-</ul>
-<h2 id="创建第一个游戏对象"><a href="#创建第一个游戏对象" class="headerlink" title="创建第一个游戏对象"></a>创建第一个游戏对象</h2><ol>
-<li>在 Hierarchy 中右键</li>
-<li>选择 3D Object → Cube</li>
-<li>在 Inspector 中调整 Transform 属性</li>
-</ol>
-<h2 id="C-脚本基础"><a href="#C-脚本基础" class="headerlink" title="C# 脚本基础"></a>C# 脚本基础</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">PlayerController</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">float</span> speed = <span class="number">5.0f</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">float</span> horizontal = Input.GetAxis(<span class="string">&quot;Horizontal&quot;</span>);</span><br><span class="line">        <span class="built_in">float</span> vertical = Input.GetAxis(<span class="string">&quot;Vertical&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        Vector3 movement = <span class="keyword">new</span> Vector3(horizontal, <span class="number">0</span>, vertical);</span><br><span class="line">        transform.Translate(movement * speed * Time.deltaTime);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="物理系统"><a href="#物理系统" class="headerlink" title="物理系统"></a>物理系统</h2><p>Unity 内置了强大的物理引擎：</p>
-<ul>
-<li><strong>Rigidbody</strong>: 刚体组件</li>
-<li><strong>Collider</strong>: 碰撞器组件</li>
-<li><strong>Physics Material</strong>: 物理材质</li>
-</ul>
-<h2 id="动画系统"><a href="#动画系统" class="headerlink" title="动画系统"></a>动画系统</h2><p>使用 Animator 组件可以创建复杂的角色动画：</p>
-<ul>
-<li>状态机</li>
-<li>动画过渡</li>
-<li>参数控制</li>
-</ul>
-<p>开始您的游戏开发之旅吧！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://newswitch.github.io/2025/10/21/%E6%B8%B8%E6%88%8F%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/" data-id="cuidZ96x_p3cAu9sMuxN7OrwD" data-title="游戏开发入门 - Unity 基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity/" rel="tag">Unity</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" rel="tag">游戏开发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-运维文章示例" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/10/21/%E8%BF%90%E7%BB%B4%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/" class="article-date">
-  <time class="dt-published" datetime="2025-10-21T09:30:00.000Z" itemprop="datePublished">2025-10-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/10/21/%E8%BF%90%E7%BB%B4%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/">Docker 容器化部署指南</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="Docker-容器化部署指南"><a href="#Docker-容器化部署指南" class="headerlink" title="Docker 容器化部署指南"></a>Docker 容器化部署指南</h1><p>Docker 是现代应用部署的重要工具，本文将介绍如何使用 Docker 进行应用容器化。</p>
-<h2 id="Docker-基础概念"><a href="#Docker-基础概念" class="headerlink" title="Docker 基础概念"></a>Docker 基础概念</h2><h3 id="镜像-Image"><a href="#镜像-Image" class="headerlink" title="镜像 (Image)"></a>镜像 (Image)</h3><p>镜像是只读的模板，用于创建容器。</p>
-<h3 id="容器-Container"><a href="#容器-Container" class="headerlink" title="容器 (Container)"></a>容器 (Container)</h3><p>容器是镜像的运行实例。</p>
-<h3 id="仓库-Repository"><a href="#仓库-Repository" class="headerlink" title="仓库 (Repository)"></a>仓库 (Repository)</h3><p>仓库是存储镜像的地方。</p>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉取镜像</span></span><br><span class="line">docker pull nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行容器</span></span><br><span class="line">docker run -d -p 80:80 nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看运行中的容器</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止容器</span></span><br><span class="line">docker stop &lt;container_id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除容器</span></span><br><span class="line">docker <span class="built_in">rm</span> &lt;container_id&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Dockerfile-示例"><a href="#Dockerfile-示例" class="headerlink" title="Dockerfile 示例"></a>Dockerfile 示例</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:<span class="number">16</span>-alpine</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> package*.json ./</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> npm install</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">3000</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;npm&quot;</span>, <span class="string">&quot;start&quot;</span>]</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="构建和运行"><a href="#构建和运行" class="headerlink" title="构建和运行"></a>构建和运行</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建镜像</span></span><br><span class="line">docker build -t my-app .</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行容器</span></span><br><span class="line">docker run -p 3000:3000 my-app</span><br></pre></td></tr></table></figure>
-
-<p>通过 Docker，我们可以轻松地实现应用的容器化部署！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://newswitch.github.io/2025/10/21/%E8%BF%90%E7%BB%B4%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/" data-id="cuidPCm9TkHtUSkxbBY0becZ6" data-title="Docker 容器化部署指南" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/" rel="tag">容器化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%83%A8%E7%BD%B2/" rel="tag">部署</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-开发文章示例" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/10/21/%E5%BC%80%E5%8F%91%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/" class="article-date">
-  <time class="dt-published" datetime="2025-10-21T09:25:00.000Z" itemprop="datePublished">2025-10-21</time>
+    <a href="/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/" class="article-date">
+  <time class="dt-published" datetime="2025-10-22T10:13:48.000Z" itemprop="datePublished">2025-10-22</time>
 </a>
     
   <div class="article-category">
@@ -216,7 +89,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/10/21/%E5%BC%80%E5%8F%91%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/">JavaScript 基础教程</a>
+      <a class="p-name article-title" href="/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/">RDMA详解</a>
     </h1>
   
 
@@ -224,80 +97,29 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="JavaScript-基础教程"><a href="#JavaScript-基础教程" class="headerlink" title="JavaScript 基础教程"></a>JavaScript 基础教程</h1><p>这是一篇关于 JavaScript 基础知识的文章。</p>
-<h2 id="变量声明"><a href="#变量声明" class="headerlink" title="变量声明"></a>变量声明</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 let 声明变量</span></span><br><span class="line"><span class="keyword">let</span> name = <span class="string">&quot;张三&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 const 声明常量</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">PI</span> = <span class="number">3.14159</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 var 声明变量（不推荐）</span></span><br><span class="line"><span class="keyword">var</span> age = <span class="number">25</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数声明</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">greet</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`Hello, <span class="subst">$&#123;name&#125;</span>!`</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 箭头函数</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params">a, b</span>) =&gt; a + b;</span><br></pre></td></tr></table></figure>
-
-<h2 id="对象和数组"><a href="#对象和数组" class="headerlink" title="对象和数组"></a>对象和数组</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对象</span></span><br><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;李四&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">30</span>,</span><br><span class="line">    <span class="attr">city</span>: <span class="string">&quot;北京&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数组</span></span><br><span class="line"><span class="keyword">const</span> fruits = [<span class="string">&quot;苹果&quot;</span>, <span class="string">&quot;香蕉&quot;</span>, <span class="string">&quot;橙子&quot;</span>];</span><br></pre></td></tr></table></figure>
-
-<p>这就是 JavaScript 的基础知识，希望对您有帮助！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://newswitch.github.io/2025/10/21/%E5%BC%80%E5%8F%91%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/" data-id="cuida_10gjnUyhl59EhJdHaSB" data-title="JavaScript 基础教程" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%99%E7%A8%8B/" rel="tag">教程</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/10/21/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2025-10-21T09:20:00.000Z" itemprop="datePublished">2025-10-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/10/21/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h1 id="RDMA详解"><a href="#RDMA详解" class="headerlink" title="RDMA详解"></a>RDMA详解</h1><p>这是一篇关于 RDMA（Remote Direct Memory Access）技术的详细解析文章。</p>
+<h2 id="什么是-RDMA"><a href="#什么是-RDMA" class="headerlink" title="什么是 RDMA"></a>什么是 RDMA</h2><p>RDMA 是一种网络技术，允许计算机直接访问远程计算机的内存，而无需操作系统内核的参与。</p>
+<h2 id="RDMA-的优势"><a href="#RDMA-的优势" class="headerlink" title="RDMA 的优势"></a>RDMA 的优势</h2><ul>
+<li><strong>低延迟</strong>：绕过内核，减少数据拷贝</li>
+<li><strong>高带宽</strong>：充分利用网络带宽</li>
+<li><strong>低 CPU 占用</strong>：减少 CPU 开销</li>
+</ul>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
+<li>高性能计算（HPC）</li>
+<li>数据中心网络</li>
+<li>存储系统</li>
+<li>机器学习训练</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RDMA 是现代高性能网络的重要技术，在数据中心和科学计算领域有广泛应用。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://newswitch.github.io/2025/10/21/hello-world/" data-id="cuidfXR76dQfuPMFPxO_r7WIB" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://newswitch.github.io/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/" data-id="cuidkxMhLztMtDh9nfsqP4t1p" data-title="RDMA详解" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag">博客</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%99%E7%A8%8B/" rel="tag">教程</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RDMA/" rel="tag">RDMA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/" rel="tag">高性能计算</a></li></ul>
 
     </footer>
   </div>
@@ -317,7 +139,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%B8%E6%88%8F/">游戏</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a></li></ul>
     </div>
   </div>
 
@@ -327,7 +149,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag">博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/" rel="tag">容器化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%99%E7%A8%8B/" rel="tag">教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" rel="tag">游戏开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%83%A8%E7%BD%B2/" rel="tag">部署</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/RDMA/" rel="tag">RDMA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/" rel="tag">高性能计算</a></li></ul>
     </div>
   </div>
 
@@ -337,7 +159,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C/" style="font-size: 10px;">C#</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Unity/" style="font-size: 10px;">Unity</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 10px;">前端</a> <a href="/tags/%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">博客</a> <a href="/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/" style="font-size: 10px;">容器化</a> <a href="/tags/%E6%95%99%E7%A8%8B/" style="font-size: 20px;">教程</a> <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" style="font-size: 10px;">游戏开发</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 10px;">部署</a>
+      <a href="/tags/RDMA/" style="font-size: 10px;">RDMA</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/" style="font-size: 10px;">高性能计算</a>
     </div>
   </div>
 
@@ -359,19 +181,7 @@
       <ul>
         
           <li>
-            <a href="/2025/10/21/%E6%B8%B8%E6%88%8F%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/">游戏开发入门 - Unity 基础</a>
-          </li>
-        
-          <li>
-            <a href="/2025/10/21/%E8%BF%90%E7%BB%B4%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/">Docker 容器化部署指南</a>
-          </li>
-        
-          <li>
-            <a href="/2025/10/21/%E5%BC%80%E5%8F%91%E6%96%87%E7%AB%A0%E7%A4%BA%E4%BE%8B/">JavaScript 基础教程</a>
-          </li>
-        
-          <li>
-            <a href="/2025/10/21/hello-world/">Hello World</a>
+            <a href="/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/">RDMA详解</a>
           </li>
         
       </ul>
