@@ -19,22 +19,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://newswitch.github.io/index.html">
+    <meta name="description" content="RDMA详解本文详细介绍 RDMA（Remote Direct Memory Access，远程直接内存访问）技术的原理、实现方式及应用场景。 什么是 RDMARDMA 是一种网络技术，允许计算机通过网络直接访问远程计算机的内存，而无需操作系统内核的参与。这种技术实现了零拷贝（Zero-copy）和内核旁路（Kernel bypass），即数据可以直接在应用程序的内存缓冲区之间传输，无需经过操作系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RDMA详解">
+<meta property="og:url" content="https://newswitch.github.io/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="RDMA详解本文详细介绍 RDMA（Remote Direct Memory Access，远程直接内存访问）技术的原理、实现方式及应用场景。 什么是 RDMARDMA 是一种网络技术，允许计算机通过网络直接访问远程计算机的内存，而无需操作系统内核的参与。这种技术实现了零拷贝（Zero-copy）和内核旁路（Kernel bypass），即数据可以直接在应用程序的内存缓冲区之间传输，无需经过操作系">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-10-22T10:13:48.000Z">
+<meta property="article:modified_time" content="2025-11-01T02:33:16.497Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="高性能计算">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://newswitch.github.io/">
+<link rel="canonical" href="https://newswitch.github.io/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/","path":"2025/10/22/RDMA详解/","title":"RDMA详解"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hexo</title>
+<title>RDMA详解 | Hexo</title>
   
 
 
@@ -81,7 +88,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Hexo</h1>
+      <p class="site-title">Hexo</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -103,7 +110,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -116,6 +123,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RDMA%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">RDMA详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-RDMA"><span class="nav-number">1.1.</span> <span class="nav-text">什么是 RDMA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.1.</span> <span class="nav-text">核心原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">RDMA 的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-InfiniBand"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. InfiniBand</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-RoCE%EF%BC%88RDMA-over-Converged-Ethernet%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. RoCE（RDMA over Converged Ethernet）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-iWARP%EF%BC%88Internet-Wide-Area-RDMA-Protocol%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. iWARP（Internet Wide Area RDMA Protocol）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">1.3.</span> <span class="nav-text">RDMA 的优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.4.</span> <span class="nav-text">RDMA 的应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97%EF%BC%88HPC%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">高性能计算（HPC）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C"><span class="nav-number">1.4.2.</span> <span class="nav-text">数据中心网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%AE%AD%E7%BB%83"><span class="nav-number">1.4.3.</span> <span class="nav-text">机器学习训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%9A%E4%B9%89%E5%AD%98%E5%82%A8%EF%BC%88SDS%EF%BC%89"><span class="nav-number">1.4.4.</span> <span class="nav-text">软件定义存储（SDS）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E9%9D%A2%E4%B8%B4%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">1.5.</span> <span class="nav-text">RDMA 面临的挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E7%9A%84%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF"><span class="nav-number">1.6.</span> <span class="nav-text">RDMA 的技术发展趋势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -153,120 +161,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/11/01/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">PCIE总线学习</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2025-11-01 10:30:56 / Modified: 14:37:50" itemprop="dateCreated datePublished" datetime="2025-11-01T10:30:56+08:00">2025-11-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">技术学习</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="PCIE总线学习"><a href="#PCIE总线学习" class="headerlink" title="PCIE总线学习"></a>PCIE总线学习</h1><h2 id="PCIE拓扑图"><a href="#PCIE拓扑图" class="headerlink" title="PCIE拓扑图"></a>PCIE拓扑图</h2><p>下面是 PCIE 总线拓扑图实例：</p>
-<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIE%E6%8B%93%E6%89%91%E5%9B%BE%E5%AE%9E%E4%BE%8B.png" alt="PCIE拓扑图实例"></p>
-<p>该图中RC为PCIE的根节点，在它上面连接了一个EP，一个PCIE-PCI桥，以及一个PCIE switch，switch作为中间节点，又在其上连接了四个EP，这些节点构成了一个简单的PCIE树，而实际的PCIE树可能比该结构更加复杂，如switch上可以连接更多的switch，这些switch还可以进一步连接新的switch以及EP端点。</p>
-<p>其中RC是PCIE的核心组件，它是CPU以及系统内存与PCIE总线的核心桥梁，可实现系统存储域地址空间和PCIE总线域地址空间之间的转换。即CPU对PCIE的访问事务，都需要通过RC转化为总线上的事务，而连接到EP端点上的PCIE设备对系统内存的访问，也需要通过RC转发实现。</p>
-<h2 id="PCIE-Switch结构图"><a href="#PCIE-Switch结构图" class="headerlink" title="PCIE-Switch结构图"></a>PCIE-Switch结构图</h2><p>Switch与网络中的交换机类似，用于转发连接到它上面各节点之间的数据。其结构如下所示</p>
-<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIE-switch%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>即一个switch可以包含一个upstream端口和多个downstream端口，这些端口通过其内部的多个PCI-PCI桥连接。其中upstream端口被用于连接其上游节点，这些上游节点可以是RC端口，或者其他switch的下游节点，而downstream用于连接其下游节点，这些下游节点可以是EP节点，或者其他switch的上游端口。最后，switch中各端口之间的transaction可以通过内部的虚拟PCI-PCI网桥转发。</p>
-<p>EP作为PCIE的叶节点，主要用于连接终端PEIC设备，如PCIE网卡，PCIE显卡等，当然一个具体的设备可能需要由多种不同的功能组合而成，而这些功能可以被实现为不同的EP，如PCIE显卡除了包含一个显卡本身的EP之外，还可以包含一个USB的EP。</p>
-<h2 id="PCIE链路"><a href="#PCIE链路" class="headerlink" title="PCIE链路"></a>PCIE链路</h2><p>上一部分的PCIE拓扑结构中，各组件之间都是通过链路连接起来的，在PCIE中这些链路被称为Link，而其中每条Link可以包含多条Lane。</p>
-<p>一条PCIE Link支持多少条lane是可配置的，在相同协议版本下，lane的数量越多，其通信速率也越高。比如 PCIe Gen4 X2，表示支持2条lane的PCIE 4.0协议，而PCIe Gen4 X4则支持4条lane的PCIe 4.0协议，因此其速率也是PCIe Gen4 X2的两倍。</p>
-<p>PCIE还支持插槽与设备工作在不同的协议版本下，例如一个PCIe3.0的设备连接到PCIe4.0的插槽上，或一个PCIe4.0的设备连接到PCI3.0的插槽上，设备都是能正常工作的。其限制就是工作速率会向下兼容。</p>
-<p>当Link支持多条lane时，PCIE还支持lane的逆序连接。如下图<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/Line%E4%B8%ADLane%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>我们知道传统PCI是采用并行通信方式（数据的多个比特位通过多条独立通道传输）连接的，他的优点是接口包含一条时钟线与多条数据线，从而支持在一个时钟周期内传多个bit的数据，即在一定的条件下，数据线的数量越多，总线传输的速率越快。以下为其中一个实例（PCI总线插槽与PCI9052芯片）<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCI%E6%80%BB%E7%BA%BF%E6%8F%92%E6%A7%BD%E4%B8%8EPCI9052%E8%8A%AF%E7%89%87%E7%9A%84%E8%BF%9E%E6%8E%A5%E5%85%B3%E7%B3%BB%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>| 信号名	  |   方向   |                功能说明               |<br>| CLK		   |   输入   | 时钟信号，同步整个 PCI 总线的操作，决定数据传输的节奏|<br>| RST	     |   输入   |复位信号，用于初始化 PCI9052 芯片，使其回到初始状态|<br>| AD[0:31] |   双向   |32 位地址 &#x2F; 数据复用线，既传输内存 &#x2F; 设备的地址信息，也传输数据，是并行通信的核心线路|<br>| PAR	     |   输出   |奇偶校验信号，用于检测AD[0:31]传输过程中的数据错误|<br>| C&#x2F;BE[3:0]|   输出   |命令 &#x2F; 字节使能信号，用于标识当前AD线上传输的是 “命令” 还是 “数据”，以及哪些字节有效|<br>| FRAME		 |   输出   |帧周期信号，标识一次 PCI 总线传输的开始和持续|<br>| DEVSEL	 |   输入   |设备选择信号，由被选中的 PCI 设备（如 PCI9052）发出，表明设备已识别到总线请求|<br>| IRDY&#x2F;TRDY|   双向   |主设备就绪 &#x2F; 从设备就绪信号，用于握手同步，确保主从设备数据传输的时序匹配。|<br>| LOCK		 |   输出   |锁定信号，用于实现总线的独占访问（如原子操作）|<br>| PERR&#x2F;SERR|   输入   |奇偶错误 &#x2F; 系统错误信号，用于上报数据传输中的错误|<br>| STOP		 |   输入   |停止信号，由设备发出，表明当前传输需中断 |<br>| INTA	   |   输出   |停止信号，由设备发出，表明当前传输需中断|<br>| IDSEL 	 |   输入   |初始化设备选择信号，用于 PCI 设备的枚举和配置|</p>
-<p>在该例子中包含一条时钟线CLK与32条数据线AD[0:31],因此每个时钟周期可以传输32bit的数据。在时钟频率不太高的时候，这种方法确实可以提高数据传输的速率，但通信频率进一步提高的时候，这些信号之间的干扰会非常严重。</p>
-<p>而串行通信则不存在该问题，因此工作频率可以达到很高，所以当前包括PCIE在内的高速通信链路普遍采用的都是串行通信的方式。另外除了数据线之外，随着频率的提升，时钟信号在传输链路上也会发生飘移，为了消除该问题，在高速串行链路中除了数据线之外把时钟线也给去掉了，时钟信息则在发送端通过编码后随数据一起从串行链路上发送出去。接收端在收到数据后，通过时钟恢复技术来获取时钟信息。</p>
-<p>由于不包含时钟信号线，因此信号线上的数据变化频率太慢的话，就容器产生误码，例如连续5个甚至连续10个周期的低电平。薇欧蕾解决该问题，PCIE的数据在传输时会在原始数据中插入一些额外的数据，以平衡其中连续的0或者连续的1。以最常见的8b&#x2F;10b编码为例，它会将原始数据分成8bit一组，并通过8b&#x2F;10b编码规则，将其编码为10bit再在通信链路上传输。当传输到对端后，接收端则通过10b&#x2F;8b解码器将10bit的数据解码为8bit，其中以下为PCIe中的8b&#x2F;10b编码流程示意图：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/8b-10b%E7%BC%96%E7%A0%81%E6%B5%81%E7%A8%8B%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>从上面流程可知，若信道采用8b&#x2F;10b编码，则信道的利用率会下降为80%。冗余码的比例越低，其信道利用率越高。综上所述，PCIe链路可以兼容不同的lane数量、不同协议版本以及lane之间不同的连接顺序等，而这些都要依赖于链路训练来实现。在PCIe中链路训练是由完全由硬件实现的。</p>
-<h2 id="PCIE总线的分层"><a href="#PCIE总线的分层" class="headerlink" title="PCIE总线的分层"></a>PCIE总线的分层</h2><p>与网络协议类似，PCIe也是一个分层协议，它从上到下可被分为事务层（transaction layer）、数据链路层（data link layer）和物理层（Physical layer），且这些层之间是通过数据包（packet）进行通信的。其中下图为其各层的示意图：</p>
-<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIE%E5%90%84%E5%B1%82%E7%9A%84%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E6%A0%BC%E5%BC%8F%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>从该图可看到，普通数据包是从事务层开始，依次经过数据链路层和物理层，并最终通过节点之间的硬件链路发送给对端。其中在该流程中，各层会加入自身的包头和CRC信息。当数据包达到对端后，则依次经过物理层、数据链路层、并传送到事务层。与之相反，在该流程中，各层会移除并解析该层对应的包头和CRC信息。其中下图为各层的数据包的格式：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIe%E6%80%BB%E7%BA%BF%E5%88%86%E5%B1%82%E7%A4%BA%E4%BE%8B%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>以数据发送为例，则其包括以下部分：</p>
-<p>（1）事务层：事务层数据包被称为TLP包，它包括原始数据（data）、TLP数据包头（header）以及CRC校验值（ECRC）</p>
-<p>（2）数据链路层：数据链路层数据包被称为DLLP包，它是在TLP包的基础上添加了一个序列号（sequence number）和一个CRC校验值（LCRC）</p>
-<p>（3）物理层：物理层则会先在DLLP包的基础上添加起始符号（framing）和结束符号（framing），然后对其执行8b&#x2F;10b、128b&#x2F;130b或242b&#x2F;256b编码，并最终通过物理链路发送给对端设备</p>
-<p>由于这些层次中数据包的定义和发送流程是PCIe的核心部分，且会涉及到地址空间定义，不同包类型的处理方式等，因而篇幅会较长，故这些部分将在后续系列中再逐步介绍</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -280,13 +185,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="name" content="RDMA详解 | Hexo">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/10/22/RDMA%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">RDMA详解</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          RDMA详解
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -324,8 +229,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="RDMA详解"><a href="#RDMA详解" class="headerlink" title="RDMA详解"></a>RDMA详解</h1><p>本文详细介绍 RDMA（Remote Direct Memory Access，远程直接内存访问）技术的原理、实现方式及应用场景。</p>
+    <div class="post-body" itemprop="articleBody"><h1 id="RDMA详解"><a href="#RDMA详解" class="headerlink" title="RDMA详解"></a>RDMA详解</h1><p>本文详细介绍 RDMA（Remote Direct Memory Access，远程直接内存访问）技术的原理、实现方式及应用场景。</p>
 <h2 id="什么是-RDMA"><a href="#什么是-RDMA" class="headerlink" title="什么是 RDMA"></a>什么是 RDMA</h2><p>RDMA 是一种网络技术，允许计算机通过网络直接访问远程计算机的内存，而无需操作系统内核的参与。这种技术实现了<strong>零拷贝（Zero-copy）<strong>和</strong>内核旁路（Kernel bypass）</strong>，即数据可以直接在应用程序的内存缓冲区之间传输，无需经过操作系统的网络协议栈处理。</p>
 <h3 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h3><p>RDMA 的核心优势在于：</p>
 <ol>
@@ -398,7 +302,6 @@
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RDMA 作为现代高性能网络通信的重要技术，通过零拷贝和内核旁路机制，实现了极低的延迟和极高的带宽。随着 InfiniBand、RoCE 和 iWARP 等不同实现方式的发展，RDMA 正在数据中心和高性能计算领域发挥越来越重要的作用。虽然部署有一定复杂性，但其带来的性能提升使得 RDMA 成为追求极致性能的应用场景的首选方案。</p>
 
-      
     </div>
 
     
@@ -406,11 +309,27 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+              <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/" rel="tag"># 高性能计算</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/01/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/" rel="next" title="PCIE总线学习">
+                  PCIE总线学习 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
   </article>
 </div>
+
 
 
 
