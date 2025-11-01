@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="PCIe总线学习（三）中断机制PCIe中断类型在芯片中，外设通常都会含有一个或几个中断，以用于向CPU通知设备相关的事件。这些中断信号一般是在SOC设计时，通过硬连线连接到中断控制器，并由中断控制器发送给CPU的 与普通外设相同，PCIe设备也需要通过中断与CPU交互。但由于PCIe设备可以通过switch扩展，在SOC设计阶段并不能知道会有多少PCIe设备会被连接到总线上，也无法知道各个设备需要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCIe总线学习（三）中断机制">
+<meta property="og:url" content="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="PCIe总线学习（三）中断机制PCIe中断类型在芯片中，外设通常都会含有一个或几个中断，以用于向CPU通知设备相关的事件。这些中断信号一般是在SOC设计时，通过硬连线连接到中断控制器，并由中断控制器发送给CPU的 与普通外设相同，PCIe设备也需要通过中断与CPU交互。但由于PCIe设备可以通过switch扩展，在SOC设计阶段并不能知道会有多少PCIe设备会被连接到总线上，也无法知道各个设备需要">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/INTX%E4%B8%AD%E6%96%AD.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/INTX%E4%B8%AD%E6%96%AD-2.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/MSI%E4%B8%AD%E6%96%AD-1.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/MSI%E4%B8%AD%E6%96%AD-2.png">
+<meta property="article:published_time" content="2025-11-01T08:00:00.000Z">
+<meta property="article:modified_time" content="2025-11-01T09:49:01.388Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="PCIe">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="总线">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/INTX%E4%B8%AD%E6%96%AD.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/","path":"2025/11/01/PCIe总线学习（三）中断机制/","title":"PCIe总线学习（三）中断机制"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PCIe总线学习（三）中断机制 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">PCIe总线学习（三）中断机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PCIe%E4%B8%AD%E6%96%AD%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">PCIe中断类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#INTX%E7%B1%BB%E5%9E%8B%E4%B8%AD%E6%96%AD"><span class="nav-number">1.2.</span> <span class="nav-text">INTX类型中断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MSI%E4%B8%AD%E6%96%AD"><span class="nav-number">1.3.</span> <span class="nav-text">MSI中断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PCIe%E5%8D%8F%E8%AE%AE%E5%AF%B9MSI%E7%9A%84%E6%94%AF%E6%8C%81"><span class="nav-number">1.3.1.</span> <span class="nav-text">PCIe协议对MSI的支持</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PCIe总线学习（三）中断机制 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PCIe总线学习（三）中断机制
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-11-01 16:00:00 / Modified: 17:49:01" itemprop="dateCreated datePublished" datetime="2025-11-01T16:00:00+08:00">2025-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">技术学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="PCIe总线学习（三）中断机制"><a href="#PCIe总线学习（三）中断机制" class="headerlink" title="PCIe总线学习（三）中断机制"></a>PCIe总线学习（三）中断机制</h1><h2 id="PCIe中断类型"><a href="#PCIe中断类型" class="headerlink" title="PCIe中断类型"></a>PCIe中断类型</h2><p>在芯片中，外设通常都会含有一个或几个中断，以用于向CPU通知设备相关的事件。这些中断信号一般是在SOC设计时，通过硬连线连接到中断控制器，并由中断控制器发送给CPU的</p>
+<p>与普通外设相同，PCIe设备也需要通过中断与CPU交互。但由于PCIe设备可以通过switch扩展，在SOC设计阶段并不能知道会有多少PCIe设备会被连接到总线上，也无法知道各个设备需要多少根中断信号线。因此它们不能像其它外设一样，在设计阶段就为每个中断分配独立的硬件中断线。为此需要采取一定的机制来支持它们，当前PCIe一共提供了以下三种方式：</p>
+<p>（1）INTX类型</p>
+<p>（2）MSI类型</p>
+<p>（3）MSI-X类型</p>
+<p>其中INTX也是采用硬件中断线的方式，但需要PCIe设备共享中断，它也是PCI&#x2F;PCIe传统的中断处理模式。而MSI和MSI-X则不需要硬件连线，PCIe设备只需向特定内存地址写入相应的数据，就可以在中断控制器上触发一个中断，因此其能支持的中断数量可以更多，这也是当前推荐使用的方式</p>
+<h2 id="INTX类型中断"><a href="#INTX类型中断" class="headerlink" title="INTX类型中断"></a>INTX类型中断</h2><p>这种方式的思路非常简单，既然PCIe设备的中断数量不能确定，那就为所有PCIe设备分配固定数量的中断，并让它们共享这些中断线即可。为此，PCIe一共为其分配了四根中断线，其名称分别为INTA、INTB、INTC和INTD，连接到总线上的所有设备都可以共享使用这四个中断</p>
+<p>最简单的方式就是所有设备的INTA-INTD分别连接在一起，当其中某条中断线被触发后，中断处理函数通过查找设备的中断状态位来确定产生中断的设备，并执行相应的处理。但由于PCIe设备数量可能会比较多，且其中断触发也比较频繁，若不对这些中断线的分配进行管理，就可能导致其中某些中断线的负载很重，而另外的中断线又比较空闲，从而影响中断的处理效率。因此，PCIe需要实现一定的机制，使这些中断线尽量均衡地分配给每个设备</p>
+<p>由于大部分PCIe设备都只有一个中断，因此PCIe协议可通过中断重映射的方式来缓解该问题。其基本原理是，由于PCIe拓扑由总线和设备组成，其中总线是由PCIe桥设备派生的，而设备会被连接到对应的总线上。因此协议规定所有设备若只支持一个中断，则都以INTA来发送中断，这些中断会被路由到其upstream端口对应的桥设备上。这些桥设备则需要根据设备编号，对连接在它上面的中断进行重映射，例如dev 0的INTA依然被映射为INTA，dev 1的INTA被映射为INTB，dev 2的INTA被映射为INTC，dev 3的INTA被映射为INTD</p>
+<p>通过以上流程，若上述一条总线上只连接了上述四个设备，且它们都只含有一个中断，则这些中断就会被分别重映射到四条中断线上，从而达到了平衡中断的目的。若每个设备都包含四个中断，则其映射关系可以依次递推，其中以下为其逻辑示意图：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/INTX%E4%B8%AD%E6%96%AD.png" alt="INTX中断"></p>
+<p>由于PCIe桥又是其上一级总线的一个设备，因此它的中断信号还可以与挂在该总线上的其它设备一起，在上一级PCIe桥上进一步重映射。根据这种方式，所有PCIe设备的中断都会被汇聚到RC的root bridge上，并最终被连接到中断控制器上。由于PCIe每条总线最多可以包含32个设备，因此这些设备中断的映射关系如下表：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/INTX%E4%B8%AD%E6%96%AD-2.png" alt="INTX中断-2"><br>当然在PCIe内部，设备与总线之间并没有这些硬件中断线，那么设备是如何发出中断的呢？我们知道中断线的实际作用就是传送一个电平或边沿信号，来表示硬件触发了一个中断，因此完全可以将这个信号封装成消息来传递。PCIe就是采用这种方式的，它会将设备中断封装成TLP消息，并通过switch传递给RC，最后由RC触发中断控制器上的中断线</p>
+<p>这种方式虽然对中断进行了均衡，但由于最多只能支持四条中断线，因此当PCIe设备较多，且中断触发频繁时，中断冲突还是会比较严重，因而会影响中断处理效率，及增加中断延迟。因此，这种中断方式当前已经不再推荐使用，在硬件支持的情况下，系统应该尽量选择使用后面介绍的MSI和MSI-X中断</p>
+<h2 id="MSI中断"><a href="#MSI中断" class="headerlink" title="MSI中断"></a>MSI中断</h2><p>INTx中断虽然在PCIe总线内部是基于消息传递的，但最终还是需要通过中断线连接到中断控制器的，这也限制了其中断数量的扩展。MSI中断则与此不同，此时PCIe与中断控制器之间不再需要硬件中断线，而是当中断发生时，PCIe设备只需要向特定地址写入指定的值后，中断控制器就能自动产生一个中断，即它是完全基于消息形式的。显然，若要支持这种类型的中断，在硬件层面至少需要以下两方面的支持：</p>
+<p>（1）对于PCIe设备，需要知道向哪个地址写数据，以及写什么数据来触发中断。同时还要能提供中断属性的配置能力，如对应中断是否使能，是否被mask等</p>
+<p>（2）对于中断控制器，需要能支持其它外设通过消息的方式向其发送中断</p>
+<h3 id="PCIe协议对MSI的支持"><a href="#PCIe协议对MSI的支持" class="headerlink" title="PCIe协议对MSI的支持"></a>PCIe协议对MSI的支持</h3><p>在介绍PCIe配置空间时，我们知道它是由64字节的header和192字节的capability组成，其中以下为其layout<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/MSI%E4%B8%AD%E6%96%AD-1.png" alt="MSI中断-1"><br>在上图header中有一个capability pointer指针，它被用于指定该设备capability属性在配置空间中的起始位置，通过它指定的偏移，可以获取到第一个capability属性。在PCIe的capability属性中，其第一个字节表示该capability的ID值，而第二个字节表示下一个capability的偏移，其它空间则用于保存它的实际能力信息。通过这种链式连接的方式，软件可以查询设备的所有能力，其中以下为其中的一个简单示例：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/MSI%E4%B8%AD%E6%96%AD-2.png" alt="MSI中断-2"></p>
+<p>MSI就是通过设备的capability来实现的，根据其中断消息对应的地址是32位还是64位，以及是否支持中断mask等。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PCIe/" rel="tag"># PCIe</a>
+              <a href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag"># 总线</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/" rel="prev" title="PCIe总线学习（二）地址空间">
+                  <i class="fa fa-angle-left"></i> PCIe总线学习（二）地址空间
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -128,7 +128,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -163,7 +163,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -181,7 +181,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/11/01/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">PCIE总线学习</a>
+          <a href="/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">PCIe总线学习（三）中断机制</a>
         </h2>
 
         <div class="post-meta-container">
@@ -193,7 +193,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2025-11-01 10:30:56 / Modified: 14:49:07" itemprop="dateCreated datePublished" datetime="2025-11-01T10:30:56+08:00">2025-11-01</time>
+      <time title="Created: 2025-11-01 16:00:00 / Modified: 17:49:01" itemprop="dateCreated datePublished" datetime="2025-11-01T16:00:00+08:00">2025-11-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -215,27 +215,303 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="PCIE总线学习"><a href="#PCIE总线学习" class="headerlink" title="PCIE总线学习"></a>PCIE总线学习</h1><h2 id="PCIE拓扑图"><a href="#PCIE拓扑图" class="headerlink" title="PCIE拓扑图"></a>PCIE拓扑图</h2><p>下面是 PCIE 总线拓扑图实例：</p>
-<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIE%E6%8B%93%E6%89%91%E5%9B%BE%E5%AE%9E%E4%BE%8B.png" alt="PCIE拓扑图实例"></p>
+          <h1 id="PCIe总线学习（三）中断机制"><a href="#PCIe总线学习（三）中断机制" class="headerlink" title="PCIe总线学习（三）中断机制"></a>PCIe总线学习（三）中断机制</h1><h2 id="PCIe中断类型"><a href="#PCIe中断类型" class="headerlink" title="PCIe中断类型"></a>PCIe中断类型</h2><p>在芯片中，外设通常都会含有一个或几个中断，以用于向CPU通知设备相关的事件。这些中断信号一般是在SOC设计时，通过硬连线连接到中断控制器，并由中断控制器发送给CPU的</p>
+<p>与普通外设相同，PCIe设备也需要通过中断与CPU交互。但由于PCIe设备可以通过switch扩展，在SOC设计阶段并不能知道会有多少PCIe设备会被连接到总线上，也无法知道各个设备需要多少根中断信号线。因此它们不能像其它外设一样，在设计阶段就为每个中断分配独立的硬件中断线。为此需要采取一定的机制来支持它们，当前PCIe一共提供了以下三种方式：</p>
+<p>（1）INTX类型</p>
+<p>（2）MSI类型</p>
+<p>（3）MSI-X类型</p>
+<p>其中INTX也是采用硬件中断线的方式，但需要PCIe设备共享中断，它也是PCI&#x2F;PCIe传统的中断处理模式。而MSI和MSI-X则不需要硬件连线，PCIe设备只需向特定内存地址写入相应的数据，就可以在中断控制器上触发一个中断，因此其能支持的中断数量可以更多，这也是当前推荐使用的方式</p>
+<h2 id="INTX类型中断"><a href="#INTX类型中断" class="headerlink" title="INTX类型中断"></a>INTX类型中断</h2><p>这种方式的思路非常简单，既然PCIe设备的中断数量不能确定，那就为所有PCIe设备分配固定数量的中断，并让它们共享这些中断线即可。为此，PCIe一共为其分配了四根中断线，其名称分别为INTA、INTB、INTC和INTD，连接到总线上的所有设备都可以共享使用这四个中断</p>
+<p>最简单的方式就是所有设备的INTA-INTD分别连接在一起，当其中某条中断线被触发后，中断处理函数通过查找设备的中断状态位来确定产生中断的设备，并执行相应的处理。但由于PCIe设备数量可能会比较多，且其中断触发也比较频繁，若不对这些中断线的分配进行管理，就可能导致其中某些中断线的负载很重，而另外的中断线又比较空闲，从而影响中断的处理效率。因此，PCIe需要实现一定的机制，使这些中断线尽量均衡地分配给每个设备</p>
+<p>由于大部分PCIe设备都只有一个中断，因此PCIe协议可通过中断重映射的方式来缓解该问题。其基本原理是，由于PCIe拓扑由总线和设备组成，其中总线是由PCIe桥设备派生的，而设备会被连接到对应的总线上。因此协议规定所有设备若只支持一个中断，则都以INTA来发送中断，这些中断会被路由到其upstream端口对应的桥设备上。这些桥设备则需要根据设备编号，对连接在它上面的中断进行重映射，例如dev 0的INTA依然被映射为INTA，dev 1的INTA被映射为INTB，dev 2的INTA被映射为INTC，dev 3的INTA被映射为INTD</p>
+<p>通过以上流程，若上述一条总线上只连接了上述四个设备，且它们都只含有一个中断，则这些中断就会被分别重映射到四条中断线上，从而达到了平衡中断的目的。若每个设备都包含四个中断，则其映射关系可以依次递推，其中以下为其逻辑示意图：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/INTX%E4%B8%AD%E6%96%AD.png" alt="INTX中断"></p>
+<p>由于PCIe桥又是其上一级总线的一个设备，因此它的中断信号还可以与挂在该总线上的其它设备一起，在上一级PCIe桥上进一步重映射。根据这种方式，所有PCIe设备的中断都会被汇聚到RC的root bridge上，并最终被连接到中断控制器上。由于PCIe每条总线最多可以包含32个设备，因此这些设备中断的映射关系如下表：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/INTX%E4%B8%AD%E6%96%AD-2.png" alt="INTX中断-2"><br>当然在PCIe内部，设备与总线之间并没有这些硬件中断线，那么设备是如何发出中断的呢？我们知道中断线的实际作用就是传送一个电平或边沿信号，来表示硬件触发了一个中断，因此完全可以将这个信号封装成消息来传递。PCIe就是采用这种方式的，它会将设备中断封装成TLP消息，并通过switch传递给RC，最后由RC触发中断控制器上的中断线</p>
+<p>这种方式虽然对中断进行了均衡，但由于最多只能支持四条中断线，因此当PCIe设备较多，且中断触发频繁时，中断冲突还是会比较严重，因而会影响中断处理效率，及增加中断延迟。因此，这种中断方式当前已经不再推荐使用，在硬件支持的情况下，系统应该尽量选择使用后面介绍的MSI和MSI-X中断</p>
+<h2 id="MSI中断"><a href="#MSI中断" class="headerlink" title="MSI中断"></a>MSI中断</h2><p>INTx中断虽然在PCIe总线内部是基于消息传递的，但最终还是需要通过中断线连接到中断控制器的，这也限制了其中断数量的扩展。MSI中断则与此不同，此时PCIe与中断控制器之间不再需要硬件中断线，而是当中断发生时，PCIe设备只需要向特定地址写入指定的值后，中断控制器就能自动产生一个中断，即它是完全基于消息形式的。显然，若要支持这种类型的中断，在硬件层面至少需要以下两方面的支持：</p>
+<p>（1）对于PCIe设备，需要知道向哪个地址写数据，以及写什么数据来触发中断。同时还要能提供中断属性的配置能力，如对应中断是否使能，是否被mask等</p>
+<p>（2）对于中断控制器，需要能支持其它外设通过消息的方式向其发送中断</p>
+<h3 id="PCIe协议对MSI的支持"><a href="#PCIe协议对MSI的支持" class="headerlink" title="PCIe协议对MSI的支持"></a>PCIe协议对MSI的支持</h3><p>在介绍PCIe配置空间时，我们知道它是由64字节的header和192字节的capability组成，其中以下为其layout<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/MSI%E4%B8%AD%E6%96%AD-1.png" alt="MSI中断-1"><br>在上图header中有一个capability pointer指针，它被用于指定该设备capability属性在配置空间中的起始位置，通过它指定的偏移，可以获取到第一个capability属性。在PCIe的capability属性中，其第一个字节表示该capability的ID值，而第二个字节表示下一个capability的偏移，其它空间则用于保存它的实际能力信息。通过这种链式连接的方式，软件可以查询设备的所有能力，其中以下为其中的一个简单示例：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/MSI%E4%B8%AD%E6%96%AD-2.png" alt="MSI中断-2"></p>
+<p>MSI就是通过设备的capability来实现的，根据其中断消息对应的地址是32位还是64位，以及是否支持中断mask等。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/" class="post-title-link" itemprop="url">PCIe总线学习（二）地址空间</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-11-01 15:43:28 / Modified: 17:34:56" itemprop="dateCreated datePublished" datetime="2025-11-01T15:43:28+08:00">2025-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">技术学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="PCIe总线学习（二）地址空间"><a href="#PCIe总线学习（二）地址空间" class="headerlink" title="PCIe总线学习（二）地址空间"></a>PCIe总线学习（二）地址空间</h1><h2 id="PCIe的总线、设备和功能"><a href="#PCIe的总线、设备和功能" class="headerlink" title="PCIe的总线、设备和功能"></a>PCIe的总线、设备和功能</h2><p>前面已经说过，PCIe总线上的各组件以树形结构连接，其中树根是RC，树叶是EP，在RC和EP之间可以连接多级switch。由于PCIe可以通过switch来扩展这颗树，因而不同实例中，树的具体形状也会不同。</p>
+<p>PCIe通过对其各分支及节点编号来管理这棵树，它们分别被称为Bus、Device和Function（通常被合成为BDF），因此，只要知道了一个节点对应的BDF，就能唯一地确定其在PCIe拓扑结构中的位置。</p>
+<p>PCIe协议中，是通过一个16 位整数来表示一个节点BDF的，该整数又会被进一步划分为8位的bus号，5位的device号以及3位的function号，因此，一颗PCIe树最多可以支持256条总线，每条总线可支持32个设备，而每个设备又可支持8个功能。在PCIe驱动初始化时，会通过深度优先算法扫描PCIe树，并依次对它们进行编号</p>
+<h3 id="PCIe-bus"><a href="#PCIe-bus" class="headerlink" title="PCIe bus"></a>PCIe bus</h3><p>PCIe总线可以由PCIe桥设备派生，这些桥设备会被包含在RC及switch中，如在RC中就包含一个host桥以及多个虚拟P2P桥，其连接方式如下图所示：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-Bus-RC%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png" alt="PCIE-Bus-RC连接方式"></p>
+<p>Host桥是整个PCIe的根，它会派生编号为0的总线，并可在该总线上连接多个虚拟P2P桥，这些桥首先作为Bus 0上的设备，同时又能派生出新的总线，如上图中的Bus 1。Switch的结构与RC类似，它会包含一个连接upstream的虚拟P2P桥，以及多个连接downstream的虚拟P2P桥，其中下图为其相应的连接方式：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-bus-switch%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png" alt="PCIE-bus-switch连接方式"><br>在该图中，upstream端口的桥设备派生了一条总线Bus X，并在该总线上连接了4个虚拟P2P桥作为downstream的端口，它们又会分别派生出一条新的总线，如第一个桥会派生出Bus X+1总线等</p>
+<h3 id="PCIe-device"><a href="#PCIe-device" class="headerlink" title="PCIe device"></a>PCIe device</h3><p>上一节中的P2P虚拟桥就是一种连接在总线上的设备，此外switch的downstream端口还可以直接连接EP设备，其中每条总线最多可以连接32个设备。以下为其示例连接方式：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png" alt="PCIE连接方式"><br>该图中一共包括9条总线，其中bus 0、2、6上都连接了两个设备，bus 1、3、4、5、7和8上各连接了一个设备。并且每条总线上的第一个设备编号为0，其余设备编号依次增加</p>
+<h3 id="PCIe-funtction"><a href="#PCIe-funtction" class="headerlink" title="PCIe funtction"></a>PCIe funtction</h3><p>有些PCIe设备可能会包含多个不同的逻辑功能，如某个设备可能会同时支持视频和音频功能，为此PCIe支持一个设备包含多个function。其中每个设备都必须包含function 0，而其它function不是必须的，且它们的编号也不要求连续。由以上分析可知，PCIe拓扑结构中的每个总线号、设备号和功能号都是唯一的，故可通过BDF来唯一地确定一个设备的function。其中以下为其中的一个示例连接</p>
+<h2 id="PCIe配置空间"><a href="#PCIe配置空间" class="headerlink" title="PCIe配置空间"></a>PCIe配置空间</h2><p>PCIe事务层支持一种通过BDF号访问设备function的事务，它主要被用于获取设备信息、配置设备参数等，因此被称为配置事务。这些配置信息就是被保存在配置空间中的，在传统PCI设备中每个function会包含一个256字节的配置空间，而PCIe将其扩展到了4K字节。为了保持与传统PCI设备的兼容，PCIe配置空间的前256字节定义与PCI设备相同，而在其之后的定义则是PCIe设备所特有的。其中以下为PCI配置空间的定义：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4.png" alt="PCIE配置空间"></p>
+<p>它包括64字节的配置头空间和192字节的设备能力空间，而设备头又被分为Type0和Type1两种类型。其中Type 0头被用于普通的EP设备，而Type 1头则被用于桥设备。PCIe在兼容以上结构的基础上，对配置空间进行了进一步的扩展，以下为其相应的结构：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-2.png" alt="PCIE配置空间-2"></p>
+<p>从上面配置空间的定义可知，设备头包括该设备对应的device id、vendor id、class code及revision id等属性信息，以用于识别该设备的厂商及设备类型。command寄存器用于配置该设备的一些功能，以下为其相关定义：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-3.png" alt="PCIE配置空间-3"></p>
+<p>其中bit 0和bit 1用于配置其是否IO及MMIO访问，bit 2用于配置其是否能发起或转发master请求等。status寄存器则用于表示该设备的一些状态信息，以下为其相关定义</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-4.png" alt="PCIE配置空间-4"></p>
+<p>它主要用于指示设备当前INTx类型的中断状态信息，以及一些错误状态，如数据parity错误，data abort错误等</p>
+<p>除此之外，它含包含一些BASE ADDRESS字段，们在PCIe中被称为BAR（base address register），其中每个type 0类型配置空间最多可包含6个BAR，而type 1类型配置空间最多包含2个BAR</p>
+<p>那么为什么要支持BAR呢？我们知道在PCIe标准中，每个PCIe function会包含4K字节的配置空间，以被用于保存该设备的配置信息。而对于实际的PCIe设备，除了这些配置信息之外，一般来说还会包含其自身的寄存器空间以及设备内存。CPU要访问这些设备自身的空间时，就需要通过内存访问事务来实现，因此BAR寄存器就是用于保存这些空间基地址的</p>
+<h2 id="PCIe-BAR空间"><a href="#PCIe-BAR空间" class="headerlink" title="PCIe BAR空间"></a>PCIe BAR空间</h2><p>对于普通外设，其寄存器会通过APB总线映射到系统内存空间中，CPU只需要使用该寄存器的MMIO地址来访问它们。而PCIe设备是可以通过switch动态扩展的，因此无法将其通过静态的方式映射到系统空间</p>
+<p>为此，PCIe采用了动态地址分配的方式来支持CPU访问PCIe的设备地址空间。即在SOC地址空间分配时，为PCIe保留一段系统地址空间，这段地址空间将在系统初始化时，由驱动程序根据需要分配给各个PCIe设备，并记录到对应设备的BAR寄存器中</p>
+<p>所有BAR寄存器的bit 0都是只读的，且被用于确定该BAR是属于IO空间还是内存空间，其中该值为0表示其为内存空间，为1则表示其为IO空间。对于内存空间，寄存器的bit 1和bit 2表示其地址长度是32位还是64位，若其为64位，则需要使用两个相邻的32位BAR寄存器来表示一个64位地址。最后，bit 3用于表示这段地址是否是可预取的。以下为其定义：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-bar%E7%A9%BA%E9%97%B4.png" alt="PCIE-bar空间"></p>
+<p>当确定了BAR空间的类型和地址长度后，就可以为其分配地址了。在PCIe中，是通过将某些BAR寄存器的bit设为只读来确定其所占空间长度的。因此BAR空间长度可通过以下流程获取：</p>
+<p>（1）在PCIe驱动初始化时，通过配置事务扫描所有的设备</p>
+<p>（2）对每个设备的BAR，都通过配置事务读取该寄存器的值</p>
+<p>（3）对该寄存器的所有bit写入1</p>
+<p>（4）回读该BAR寄存器的值，根据哪些位没有改变来确定BAR空间的长度。例如若其低16位未改变，则该空间长度为64K</p>
+<p>在确定了BAR空间的长度后，驱动程序就可以为其分配一段与该长度对齐的地址空间，并将其写入BAR寄存器中。当设备的BAR寄存器中设置好了地址，CPU就可以像访问其它内存空间一样，通过其对应的存储域地址访问这段空间了。当CPU使用BAR空间地址访问PCIe设备时，该操作首先会被PCIe的RC捕捉到，然后RC会将该操作转换为PCIe的内存访问事务，并通过PCIe链路路由到对应设备中，最后由该设备对其响应从而完成对应的事务</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">PCIe总线学习（一）基本架构</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-11-01 10:30:56 / Modified: 16:11:09" itemprop="dateCreated datePublished" datetime="2025-11-01T10:30:56+08:00">2025-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">技术学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="PCIe总线学习（一）基本架构"><a href="#PCIe总线学习（一）基本架构" class="headerlink" title="PCIe总线学习（一）基本架构"></a>PCIe总线学习（一）基本架构</h1><h2 id="PCIE拓扑图"><a href="#PCIE拓扑图" class="headerlink" title="PCIE拓扑图"></a>PCIE拓扑图</h2><p>下面是 PCIE 总线拓扑图实例：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/PCIE%E6%8B%93%E6%89%91%E5%9B%BE%E5%AE%9E%E4%BE%8B.png" alt="PCIE拓扑图实例"></p>
 <p>该图中RC为PCIE的根节点，在它上面连接了一个EP，一个PCIE-PCI桥，以及一个PCIE switch，switch作为中间节点，又在其上连接了四个EP，这些节点构成了一个简单的PCIE树，而实际的PCIE树可能比该结构更加复杂，如switch上可以连接更多的switch，这些switch还可以进一步连接新的switch以及EP端点。</p>
 <p>其中RC是PCIE的核心组件，它是CPU以及系统内存与PCIE总线的核心桥梁，可实现系统存储域地址空间和PCIE总线域地址空间之间的转换。即CPU对PCIE的访问事务，都需要通过RC转化为总线上的事务，而连接到EP端点上的PCIE设备对系统内存的访问，也需要通过RC转发实现。</p>
 <h2 id="PCIE-Switch结构图"><a href="#PCIE-Switch结构图" class="headerlink" title="PCIE-Switch结构图"></a>PCIE-Switch结构图</h2><p>Switch与网络中的交换机类似，用于转发连接到它上面各节点之间的数据。其结构如下所示</p>
-<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIE-switch%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/PCIE-switch%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="PCIE-switch结构图"></p>
 <p>即一个switch可以包含一个upstream端口和多个downstream端口，这些端口通过其内部的多个PCI-PCI桥连接。其中upstream端口被用于连接其上游节点，这些上游节点可以是RC端口，或者其他switch的下游节点，而downstream用于连接其下游节点，这些下游节点可以是EP节点，或者其他switch的上游端口。最后，switch中各端口之间的transaction可以通过内部的虚拟PCI-PCI网桥转发。</p>
 <p>EP作为PCIE的叶节点，主要用于连接终端PEIC设备，如PCIE网卡，PCIE显卡等，当然一个具体的设备可能需要由多种不同的功能组合而成，而这些功能可以被实现为不同的EP，如PCIE显卡除了包含一个显卡本身的EP之外，还可以包含一个USB的EP。</p>
 <h2 id="PCIE链路"><a href="#PCIE链路" class="headerlink" title="PCIE链路"></a>PCIE链路</h2><p>上一部分的PCIE拓扑结构中，各组件之间都是通过链路连接起来的，在PCIE中这些链路被称为Link，而其中每条Link可以包含多条Lane。</p>
 <p>一条PCIE Link支持多少条lane是可配置的，在相同协议版本下，lane的数量越多，其通信速率也越高。比如 PCIe Gen4 X2，表示支持2条lane的PCIE 4.0协议，而PCIe Gen4 X4则支持4条lane的PCIe 4.0协议，因此其速率也是PCIe Gen4 X2的两倍。</p>
 <p>PCIE还支持插槽与设备工作在不同的协议版本下，例如一个PCIe3.0的设备连接到PCIe4.0的插槽上，或一个PCIe4.0的设备连接到PCI3.0的插槽上，设备都是能正常工作的。其限制就是工作速率会向下兼容。</p>
-<p>当Link支持多条lane时，PCIE还支持lane的逆序连接。如下图<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/Line%E4%B8%ADLane%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>我们知道传统PCI是采用并行通信方式（数据的多个比特位通过多条独立通道传输）连接的，他的优点是接口包含一条时钟线与多条数据线，从而支持在一个时钟周期内传多个bit的数据，即在一定的条件下，数据线的数量越多，总线传输的速率越快。以下为其中一个实例（PCI总线插槽与PCI9052芯片）<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCI%E6%80%BB%E7%BA%BF%E6%8F%92%E6%A7%BD%E4%B8%8EPCI9052%E8%8A%AF%E7%89%87%E7%9A%84%E8%BF%9E%E6%8E%A5%E5%85%B3%E7%B3%BB%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>| 信号名	  |   方向   |                功能说明               |<br>| CLK		   |   输入   | 时钟信号，同步整个 PCI 总线的操作，决定数据传输的节奏|<br>| RST	     |   输入   |复位信号，用于初始化 PCI9052 芯片，使其回到初始状态|<br>| AD[0:31] |   双向   |32 位地址 &#x2F; 数据复用线，既传输内存 &#x2F; 设备的地址信息，也传输数据，是并行通信的核心线路|<br>| PAR	     |   输出   |奇偶校验信号，用于检测AD[0:31]传输过程中的数据错误|<br>| C&#x2F;BE[3:0]|   输出   |命令 &#x2F; 字节使能信号，用于标识当前AD线上传输的是 “命令” 还是 “数据”，以及哪些字节有效|<br>| FRAME		 |   输出   |帧周期信号，标识一次 PCI 总线传输的开始和持续|<br>| DEVSEL	 |   输入   |设备选择信号，由被选中的 PCI 设备（如 PCI9052）发出，表明设备已识别到总线请求|<br>| IRDY&#x2F;TRDY|   双向   |主设备就绪 &#x2F; 从设备就绪信号，用于握手同步，确保主从设备数据传输的时序匹配。|<br>| LOCK		 |   输出   |锁定信号，用于实现总线的独占访问（如原子操作）|<br>| PERR&#x2F;SERR|   输入   |奇偶错误 &#x2F; 系统错误信号，用于上报数据传输中的错误|<br>| STOP		 |   输入   |停止信号，由设备发出，表明当前传输需中断 |<br>| INTA	   |   输出   |停止信号，由设备发出，表明当前传输需中断|<br>| IDSEL 	 |   输入   |初始化设备选择信号，用于 PCI 设备的枚举和配置|</p>
+<p>当Link支持多条lane时，PCIE还支持lane的逆序连接。如下图<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/Line%E4%B8%ADLane%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Line中Lane连接方式示意图"></p>
+<p>我们知道传统PCI是采用并行通信方式（数据的多个比特位通过多条独立通道传输）连接的，他的优点是接口包含一条时钟线与多条数据线，从而支持在一个时钟周期内传多个bit的数据，即在一定的条件下，数据线的数量越多，总线传输的速率越快。以下为其中一个实例（PCI总线插槽与PCI9052芯片）<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/PCI%E6%80%BB%E7%BA%BF%E6%8F%92%E6%A7%BD%E4%B8%8EPCI9052%E8%8A%AF%E7%89%87%E7%9A%84%E8%BF%9E%E6%8E%A5%E5%85%B3%E7%B3%BB%E5%9B%BE.png" alt="PCI总线插槽与PCI9052芯片的连接关系图"></p>
+<table>
+<thead>
+<tr>
+<th>信号名</th>
+<th>方向</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CLK</td>
+<td>输入</td>
+<td>时钟信号，同步整个 PCI 总线的操作，决定数据传输的节奏</td>
+</tr>
+<tr>
+<td>RST</td>
+<td>输入</td>
+<td>复位信号，用于初始化 PCI9052 芯片，使其回到初始状态</td>
+</tr>
+<tr>
+<td>AD[0:31]</td>
+<td>双向</td>
+<td>32 位地址 &#x2F; 数据复用线，既传输内存 &#x2F; 设备的地址信息，也传输数据，是并行通信的核心线路</td>
+</tr>
+<tr>
+<td>PAR</td>
+<td>输出</td>
+<td>奇偶校验信号，用于检测AD[0:31]传输过程中的数据错误</td>
+</tr>
+<tr>
+<td>C&#x2F;BE[3:0]</td>
+<td>输出</td>
+<td>命令 &#x2F; 字节使能信号，用于标识当前AD线上传输的是 “命令” 还是 “数据”，以及哪些字节有效</td>
+</tr>
+<tr>
+<td>FRAME</td>
+<td>输出</td>
+<td>帧周期信号，标识一次 PCI 总线传输的开始和持续</td>
+</tr>
+<tr>
+<td>DEVSEL</td>
+<td>输入</td>
+<td>设备选择信号，由被选中的 PCI 设备（如 PCI9052）发出，表明设备已识别到总线请求</td>
+</tr>
+<tr>
+<td>IRDY&#x2F;TRDY</td>
+<td>双向</td>
+<td>主设备就绪 &#x2F; 从设备就绪信号，用于握手同步，确保主从设备数据传输的时序匹配。</td>
+</tr>
+<tr>
+<td>LOCK</td>
+<td>输出</td>
+<td>锁定信号，用于实现总线的独占访问（如原子操作）</td>
+</tr>
+<tr>
+<td>PERR&#x2F;SERR</td>
+<td>输入</td>
+<td>奇偶错误 &#x2F; 系统错误信号，用于上报数据传输中的错误</td>
+</tr>
+<tr>
+<td>STOP</td>
+<td>输入</td>
+<td>停止信号，由设备发出，表明当前传输需中断</td>
+</tr>
+<tr>
+<td>INTA</td>
+<td>输出</td>
+<td>停止信号，由设备发出，表明当前传输需中断</td>
+</tr>
+<tr>
+<td>IDSEL</td>
+<td>输入</td>
+<td>初始化设备选择信号，用于 PCI 设备的枚举和配置</td>
+</tr>
+</tbody></table>
 <p>在该例子中包含一条时钟线CLK与32条数据线AD[0:31],因此每个时钟周期可以传输32bit的数据。在时钟频率不太高的时候，这种方法确实可以提高数据传输的速率，但通信频率进一步提高的时候，这些信号之间的干扰会非常严重。</p>
 <p>而串行通信则不存在该问题，因此工作频率可以达到很高，所以当前包括PCIE在内的高速通信链路普遍采用的都是串行通信的方式。另外除了数据线之外，随着频率的提升，时钟信号在传输链路上也会发生飘移，为了消除该问题，在高速串行链路中除了数据线之外把时钟线也给去掉了，时钟信息则在发送端通过编码后随数据一起从串行链路上发送出去。接收端在收到数据后，通过时钟恢复技术来获取时钟信息。</p>
-<p>由于不包含时钟信号线，因此信号线上的数据变化频率太慢的话，就容器产生误码，例如连续5个甚至连续10个周期的低电平。薇欧蕾解决该问题，PCIE的数据在传输时会在原始数据中插入一些额外的数据，以平衡其中连续的0或者连续的1。以最常见的8b&#x2F;10b编码为例，它会将原始数据分成8bit一组，并通过8b&#x2F;10b编码规则，将其编码为10bit再在通信链路上传输。当传输到对端后，接收端则通过10b&#x2F;8b解码器将10bit的数据解码为8bit，其中以下为PCIe中的8b&#x2F;10b编码流程示意图：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/8b-10b%E7%BC%96%E7%A0%81%E6%B5%81%E7%A8%8B%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
+<p>由于不包含时钟信号线，因此信号线上的数据变化频率太慢的话，就容器产生误码，例如连续5个甚至连续10个周期的低电平。薇欧蕾解决该问题，PCIE的数据在传输时会在原始数据中插入一些额外的数据，以平衡其中连续的0或者连续的1。以最常见的8b&#x2F;10b编码为例，它会将原始数据分成8bit一组，并通过8b&#x2F;10b编码规则，将其编码为10bit再在通信链路上传输。当传输到对端后，接收端则通过10b&#x2F;8b解码器将10bit的数据解码为8bit，其中以下为PCIe中的8b&#x2F;10b编码流程示意图：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/8b-10b%E7%BC%96%E7%A0%81%E6%B5%81%E7%A8%8B%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="8b-10b编码流程示意图"></p>
 <p>从上面流程可知，若信道采用8b&#x2F;10b编码，则信道的利用率会下降为80%。冗余码的比例越低，其信道利用率越高。综上所述，PCIe链路可以兼容不同的lane数量、不同协议版本以及lane之间不同的连接顺序等，而这些都要依赖于链路训练来实现。在PCIe中链路训练是由完全由硬件实现的。</p>
 <h2 id="PCIE总线的分层"><a href="#PCIE总线的分层" class="headerlink" title="PCIE总线的分层"></a>PCIE总线的分层</h2><p>与网络协议类似，PCIe也是一个分层协议，它从上到下可被分为事务层（transaction layer）、数据链路层（data link layer）和物理层（Physical layer），且这些层之间是通过数据包（packet）进行通信的。其中下图为其各层的示意图：</p>
-<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIE%E5%90%84%E5%B1%82%E7%9A%84%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E6%A0%BC%E5%BC%8F%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
-<p>从该图可看到，普通数据包是从事务层开始，依次经过数据链路层和物理层，并最终通过节点之间的硬件链路发送给对端。其中在该流程中，各层会加入自身的包头和CRC信息。当数据包达到对端后，则依次经过物理层、数据链路层、并传送到事务层。与之相反，在该流程中，各层会移除并解析该层对应的包头和CRC信息。其中下图为各层的数据包的格式：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0/PCIe%E6%80%BB%E7%BA%BF%E5%88%86%E5%B1%82%E7%A4%BA%E4%BE%8B%E5%9B%BE.png" alt="PCIE拓扑图实例"></p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/PCIE%E5%90%84%E5%B1%82%E7%9A%84%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E6%A0%BC%E5%BC%8F%E5%9B%BE.png" alt="PCIE各层的数据包的格式图"></p>
+<p>从该图可看到，普通数据包是从事务层开始，依次经过数据链路层和物理层，并最终通过节点之间的硬件链路发送给对端。其中在该流程中，各层会加入自身的包头和CRC信息。当数据包达到对端后，则依次经过物理层、数据链路层、并传送到事务层。与之相反，在该流程中，各层会移除并解析该层对应的包头和CRC信息。其中下图为各层的数据包的格式：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/PCIe%E6%80%BB%E7%BA%BF%E5%88%86%E5%B1%82%E7%A4%BA%E4%BE%8B%E5%9B%BE.png" alt="PCIe总线分层示例图"></p>
 <p>以数据发送为例，则其包括以下部分：</p>
 <p>（1）事务层：事务层数据包被称为TLP包，它包括原始数据（data）、TLP数据包头（header）以及CRC校验值（ECRC）</p>
 <p>（2）数据链路层：数据链路层数据包被称为DLLP包，它是在TLP包的基础上添加了一个序列号（sequence number）和一个CRC校验值（LCRC）</p>

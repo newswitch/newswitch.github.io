@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="PCIe总线学习（二）地址空间PCIe的总线、设备和功能前面已经说过，PCIe总线上的各组件以树形结构连接，其中树根是RC，树叶是EP，在RC和EP之间可以连接多级switch。由于PCIe可以通过switch来扩展这颗树，因而不同实例中，树的具体形状也会不同。 PCIe通过对其各分支及节点编号来管理这棵树，它们分别被称为Bus、Device和Function（通常被合成为BDF），因此，只要知道">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCIe总线学习（二）地址空间">
+<meta property="og:url" content="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="PCIe总线学习（二）地址空间PCIe的总线、设备和功能前面已经说过，PCIe总线上的各组件以树形结构连接，其中树根是RC，树叶是EP，在RC和EP之间可以连接多级switch。由于PCIe可以通过switch来扩展这颗树，因而不同实例中，树的具体形状也会不同。 PCIe通过对其各分支及节点编号来管理这棵树，它们分别被称为Bus、Device和Function（通常被合成为BDF），因此，只要知道">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-Bus-RC%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-bus-switch%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-2.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-3.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-4.png">
+<meta property="og:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-bar%E7%A9%BA%E9%97%B4.png">
+<meta property="article:published_time" content="2025-11-01T07:43:28.000Z">
+<meta property="article:modified_time" content="2025-11-01T09:34:56.294Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="PCIe">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="总线">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-Bus-RC%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/","path":"2025/11/01/PCIe总线学习（二）地址空间/","title":"PCIe总线学习（二）地址空间"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PCIe总线学习（二）地址空间 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="nav-number">1.</span> <span class="nav-text">PCIe总线学习（二）地址空间</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PCIe%E7%9A%84%E6%80%BB%E7%BA%BF%E3%80%81%E8%AE%BE%E5%A4%87%E5%92%8C%E5%8A%9F%E8%83%BD"><span class="nav-number">1.1.</span> <span class="nav-text">PCIe的总线、设备和功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PCIe-bus"><span class="nav-number">1.1.1.</span> <span class="nav-text">PCIe bus</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCIe-device"><span class="nav-number">1.1.2.</span> <span class="nav-text">PCIe device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCIe-funtction"><span class="nav-number">1.1.3.</span> <span class="nav-text">PCIe funtction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCIe%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4"><span class="nav-number">1.2.</span> <span class="nav-text">PCIe配置空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCIe-BAR%E7%A9%BA%E9%97%B4"><span class="nav-number">1.3.</span> <span class="nav-text">PCIe BAR空间</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PCIe总线学习（二）地址空间 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PCIe总线学习（二）地址空间
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-11-01 15:43:28 / Modified: 17:34:56" itemprop="dateCreated datePublished" datetime="2025-11-01T15:43:28+08:00">2025-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">技术学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="PCIe总线学习（二）地址空间"><a href="#PCIe总线学习（二）地址空间" class="headerlink" title="PCIe总线学习（二）地址空间"></a>PCIe总线学习（二）地址空间</h1><h2 id="PCIe的总线、设备和功能"><a href="#PCIe的总线、设备和功能" class="headerlink" title="PCIe的总线、设备和功能"></a>PCIe的总线、设备和功能</h2><p>前面已经说过，PCIe总线上的各组件以树形结构连接，其中树根是RC，树叶是EP，在RC和EP之间可以连接多级switch。由于PCIe可以通过switch来扩展这颗树，因而不同实例中，树的具体形状也会不同。</p>
+<p>PCIe通过对其各分支及节点编号来管理这棵树，它们分别被称为Bus、Device和Function（通常被合成为BDF），因此，只要知道了一个节点对应的BDF，就能唯一地确定其在PCIe拓扑结构中的位置。</p>
+<p>PCIe协议中，是通过一个16 位整数来表示一个节点BDF的，该整数又会被进一步划分为8位的bus号，5位的device号以及3位的function号，因此，一颗PCIe树最多可以支持256条总线，每条总线可支持32个设备，而每个设备又可支持8个功能。在PCIe驱动初始化时，会通过深度优先算法扫描PCIe树，并依次对它们进行编号</p>
+<h3 id="PCIe-bus"><a href="#PCIe-bus" class="headerlink" title="PCIe bus"></a>PCIe bus</h3><p>PCIe总线可以由PCIe桥设备派生，这些桥设备会被包含在RC及switch中，如在RC中就包含一个host桥以及多个虚拟P2P桥，其连接方式如下图所示：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-Bus-RC%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png" alt="PCIE-Bus-RC连接方式"></p>
+<p>Host桥是整个PCIe的根，它会派生编号为0的总线，并可在该总线上连接多个虚拟P2P桥，这些桥首先作为Bus 0上的设备，同时又能派生出新的总线，如上图中的Bus 1。Switch的结构与RC类似，它会包含一个连接upstream的虚拟P2P桥，以及多个连接downstream的虚拟P2P桥，其中下图为其相应的连接方式：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-bus-switch%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png" alt="PCIE-bus-switch连接方式"><br>在该图中，upstream端口的桥设备派生了一条总线Bus X，并在该总线上连接了4个虚拟P2P桥作为downstream的端口，它们又会分别派生出一条新的总线，如第一个桥会派生出Bus X+1总线等</p>
+<h3 id="PCIe-device"><a href="#PCIe-device" class="headerlink" title="PCIe device"></a>PCIe device</h3><p>上一节中的P2P虚拟桥就是一种连接在总线上的设备，此外switch的downstream端口还可以直接连接EP设备，其中每条总线最多可以连接32个设备。以下为其示例连接方式：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F.png" alt="PCIE连接方式"><br>该图中一共包括9条总线，其中bus 0、2、6上都连接了两个设备，bus 1、3、4、5、7和8上各连接了一个设备。并且每条总线上的第一个设备编号为0，其余设备编号依次增加</p>
+<h3 id="PCIe-funtction"><a href="#PCIe-funtction" class="headerlink" title="PCIe funtction"></a>PCIe funtction</h3><p>有些PCIe设备可能会包含多个不同的逻辑功能，如某个设备可能会同时支持视频和音频功能，为此PCIe支持一个设备包含多个function。其中每个设备都必须包含function 0，而其它function不是必须的，且它们的编号也不要求连续。由以上分析可知，PCIe拓扑结构中的每个总线号、设备号和功能号都是唯一的，故可通过BDF来唯一地确定一个设备的function。其中以下为其中的一个示例连接</p>
+<h2 id="PCIe配置空间"><a href="#PCIe配置空间" class="headerlink" title="PCIe配置空间"></a>PCIe配置空间</h2><p>PCIe事务层支持一种通过BDF号访问设备function的事务，它主要被用于获取设备信息、配置设备参数等，因此被称为配置事务。这些配置信息就是被保存在配置空间中的，在传统PCI设备中每个function会包含一个256字节的配置空间，而PCIe将其扩展到了4K字节。为了保持与传统PCI设备的兼容，PCIe配置空间的前256字节定义与PCI设备相同，而在其之后的定义则是PCIe设备所特有的。其中以下为PCI配置空间的定义：<br><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4.png" alt="PCIE配置空间"></p>
+<p>它包括64字节的配置头空间和192字节的设备能力空间，而设备头又被分为Type0和Type1两种类型。其中Type 0头被用于普通的EP设备，而Type 1头则被用于桥设备。PCIe在兼容以上结构的基础上，对配置空间进行了进一步的扩展，以下为其相应的结构：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-2.png" alt="PCIE配置空间-2"></p>
+<p>从上面配置空间的定义可知，设备头包括该设备对应的device id、vendor id、class code及revision id等属性信息，以用于识别该设备的厂商及设备类型。command寄存器用于配置该设备的一些功能，以下为其相关定义：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-3.png" alt="PCIE配置空间-3"></p>
+<p>其中bit 0和bit 1用于配置其是否IO及MMIO访问，bit 2用于配置其是否能发起或转发master请求等。status寄存器则用于表示该设备的一些状态信息，以下为其相关定义</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE%E9%85%8D%E7%BD%AE%E7%A9%BA%E9%97%B4-4.png" alt="PCIE配置空间-4"></p>
+<p>它主要用于指示设备当前INTx类型的中断状态信息，以及一些错误状态，如数据parity错误，data abort错误等</p>
+<p>除此之外，它含包含一些BASE ADDRESS字段，们在PCIe中被称为BAR（base address register），其中每个type 0类型配置空间最多可包含6个BAR，而type 1类型配置空间最多包含2个BAR</p>
+<p>那么为什么要支持BAR呢？我们知道在PCIe标准中，每个PCIe function会包含4K字节的配置空间，以被用于保存该设备的配置信息。而对于实际的PCIe设备，除了这些配置信息之外，一般来说还会包含其自身的寄存器空间以及设备内存。CPU要访问这些设备自身的空间时，就需要通过内存访问事务来实现，因此BAR寄存器就是用于保存这些空间基地址的</p>
+<h2 id="PCIe-BAR空间"><a href="#PCIe-BAR空间" class="headerlink" title="PCIe BAR空间"></a>PCIe BAR空间</h2><p>对于普通外设，其寄存器会通过APB总线映射到系统内存空间中，CPU只需要使用该寄存器的MMIO地址来访问它们。而PCIe设备是可以通过switch动态扩展的，因此无法将其通过静态的方式映射到系统空间</p>
+<p>为此，PCIe采用了动态地址分配的方式来支持CPU访问PCIe的设备地址空间。即在SOC地址空间分配时，为PCIe保留一段系统地址空间，这段地址空间将在系统初始化时，由驱动程序根据需要分配给各个PCIe设备，并记录到对应设备的BAR寄存器中</p>
+<p>所有BAR寄存器的bit 0都是只读的，且被用于确定该BAR是属于IO空间还是内存空间，其中该值为0表示其为内存空间，为1则表示其为IO空间。对于内存空间，寄存器的bit 1和bit 2表示其地址长度是32位还是64位，若其为64位，则需要使用两个相邻的32位BAR寄存器来表示一个64位地址。最后，bit 3用于表示这段地址是否是可预取的。以下为其定义：</p>
+<p><img src="/images/PCIE%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89/PCIE-bar%E7%A9%BA%E9%97%B4.png" alt="PCIE-bar空间"></p>
+<p>当确定了BAR空间的类型和地址长度后，就可以为其分配地址了。在PCIe中，是通过将某些BAR寄存器的bit设为只读来确定其所占空间长度的。因此BAR空间长度可通过以下流程获取：</p>
+<p>（1）在PCIe驱动初始化时，通过配置事务扫描所有的设备</p>
+<p>（2）对每个设备的BAR，都通过配置事务读取该寄存器的值</p>
+<p>（3）对该寄存器的所有bit写入1</p>
+<p>（4）回读该BAR寄存器的值，根据哪些位没有改变来确定BAR空间的长度。例如若其低16位未改变，则该空间长度为64K</p>
+<p>在确定了BAR空间的长度后，驱动程序就可以为其分配一段与该长度对齐的地址空间，并将其写入BAR寄存器中。当设备的BAR寄存器中设置好了地址，CPU就可以像访问其它内存空间一样，通过其对应的存储域地址访问这段空间了。当CPU使用BAR空间地址访问PCIe设备时，该操作首先会被PCIe的RC捕捉到，然后RC会将该操作转换为PCIe的内存访问事务，并通过PCIe链路路由到对应设备中，最后由该设备对其响应从而完成对应的事务</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PCIe/" rel="tag"># PCIe</a>
+              <a href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag"># 总线</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84/" rel="prev" title="PCIe总线学习（一）基本架构">
+                  <i class="fa fa-angle-left"></i> PCIe总线学习（一）基本架构
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/" rel="next" title="PCIe总线学习（三）中断机制">
+                  PCIe总线学习（三）中断机制 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
