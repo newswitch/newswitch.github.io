@@ -24,5 +24,8 @@
     "hexo-server": "^3.0.0",
     "hexo-theme-landscape": "^1.0.0",
     "hexo-theme-next": "^8.25.0"
+  },
+  "devDependencies": {
+    "hexo-cli": "^4.3.2"
   }
 }
