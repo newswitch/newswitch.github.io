@@ -1,7 +1,7 @@
 ---
 title: RDMA技术详解（二）：RDMA Send Receive操作
 date: 2025-11-04 10:10:13
-categories: 技术学习
+categories: 高性能网络
 tags: [RDMA, 网络, 高性能计算]
 ---
 

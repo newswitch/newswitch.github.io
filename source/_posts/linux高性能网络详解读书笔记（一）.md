@@ -1,7 +1,7 @@
 ---
 title: linux高性能网络详解读书笔记（一）
 date: 2025-11-05 10:30:00
-categories: 技术学习
+categories: 高性能网络
 tags: [Linux, 网络, 高性能, 读书笔记]
 ---
 

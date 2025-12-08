@@ -1,7 +1,7 @@
 ---
 title: RDMA技术详解（一）：RDMA概述
 date: 2025-11-01 17:00:00
-categories: 技术学习
+categories: 高性能网络
 tags: [RDMA, 网络, 高性能计算]
 ---
 

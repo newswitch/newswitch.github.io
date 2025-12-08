@@ -1,7 +1,7 @@
 ---
 title: linux高性能网络详解读书笔记（三）RDMA
 date: 2025-11-10 10:00:00
-categories: 技术学习
+categories: 高性能网络
 tags: [Linux, 网络, 高性能, 读书笔记, RDMA]
 ---
 

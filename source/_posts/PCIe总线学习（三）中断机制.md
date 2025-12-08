@@ -1,7 +1,7 @@
 ---
 title: PCIe总线学习（三）中断机制
 date: 2025-11-01 16:00:00
-categories: 技术学习
+categories: 高性能网络
 tags: [PCIe, 总线, RDMA]
 ---
 

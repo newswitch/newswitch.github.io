@@ -1,7 +1,7 @@
 ---
 title: RDMA技术详解（三）：理解RDMA SGL
 date: 2025-11-04 10:15:00
-categories: 技术学习
+categories: 高性能网络
 tags: [RDMA, 网络, 高性能计算]
 ---
 
