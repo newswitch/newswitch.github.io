@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="linux高性能网络详解读书笔记（三）RDMARDMA协议RDMA 指的是一种远程直接存储器访问技术。具体到协议层面，它主要包含 InfiniBand、RoCE 和 iWARP 三种协议。三种协议都符合 RDMA 标准，共享相同的上层用户接口（Verbs），只是在不同层次上有一些差别。图 13-6 对比了这几个协议在不同层次上的差异。 InfiniBandInfiniBand（直译为“无限带宽”，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux高性能网络详解读书笔记（三）RDMA">
+<meta property="og:url" content="https://newswitch.github.io/2025/11/10/linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89RDMA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="linux高性能网络详解读书笔记（三）RDMARDMA协议RDMA 指的是一种远程直接存储器访问技术。具体到协议层面，它主要包含 InfiniBand、RoCE 和 iWARP 三种协议。三种协议都符合 RDMA 标准，共享相同的上层用户接口（Verbs），只是在不同层次上有一些差别。图 13-6 对比了这几个协议在不同层次上的差异。 InfiniBandInfiniBand（直译为“无限带宽”，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/1.png">
+<meta property="og:image" content="https://newswitch.github.io/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/2.png">
+<meta property="og:image" content="https://newswitch.github.io/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/3.png">
+<meta property="og:image" content="https://newswitch.github.io/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/4.png">
+<meta property="og:image" content="https://newswitch.github.io/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/5.png">
+<meta property="article:published_time" content="2025-11-10T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-13T02:43:05.260Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="高性能">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/1.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2025/11/10/linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89RDMA/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2025/11/10/linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89RDMA/","path":"2025/11/10/linux高性能网络详解读书笔记（三）RDMA/","title":"linux高性能网络详解读书笔记（三）RDMA"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>linux高性能网络详解读书笔记（三）RDMA | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89RDMA"><span class="nav-number">1.</span> <span class="nav-text">linux高性能网络详解读书笔记（三）RDMA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.1.</span> <span class="nav-text">RDMA协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InfiniBand"><span class="nav-number">1.1.1.</span> <span class="nav-text">InfiniBand</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROCE"><span class="nav-number">1.1.2.</span> <span class="nav-text">ROCE</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E7%BD%91%E7%BB%9C%E6%9E%84%E6%88%90"><span class="nav-number">1.2.</span> <span class="nav-text">RDMA 网络构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LID-%E5%92%8C-GID"><span class="nav-number">1.3.</span> <span class="nav-text">LID 和 GID</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LID"><span class="nav-number">1.3.1.</span> <span class="nav-text">LID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GID"><span class="nav-number">1.3.2.</span> <span class="nav-text">GID</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA%E5%9F%BA%E6%9C%AC%E5%85%83%E7%B4%A0"><span class="nav-number">1.4.</span> <span class="nav-text">RDMA基本元素</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/10/linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89RDMA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="linux高性能网络详解读书笔记（三）RDMA | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          linux高性能网络详解读书笔记（三）RDMA
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-11-10 10:00:00" itemprop="dateCreated datePublished" datetime="2025-11-10T10:00:00+08:00">2025-11-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-13 10:43:05" itemprop="dateModified" datetime="2026-02-13T10:43:05+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">高性能网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="linux高性能网络详解读书笔记（三）RDMA"><a href="#linux高性能网络详解读书笔记（三）RDMA" class="headerlink" title="linux高性能网络详解读书笔记（三）RDMA"></a>linux高性能网络详解读书笔记（三）RDMA</h1><h2 id="RDMA协议"><a href="#RDMA协议" class="headerlink" title="RDMA协议"></a>RDMA协议</h2><p>RDMA 指的是一种远程直接存储器访问技术。具体到协议层面，它主要包含 InfiniBand、RoCE 和 iWARP 三种协议。三种协议都符合 RDMA 标准，共享相同的上层用户接口（Verbs），只是在不同层次上有一些差别。图 13-6 对比了这几个协议在不同层次上的差异。<br><img src="/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/1.png" alt="1"></p>
+<h3 id="InfiniBand"><a href="#InfiniBand" class="headerlink" title="InfiniBand"></a>InfiniBand</h3><p>InfiniBand（直译为“无限带宽”，缩写为 IB）是一个用于高性能计算的计算机网络通信标准，它具有极高的吞吐量和极低的时延，在 2000 年由 IBTA（InfiniBand Trade Association）提出。IBTA 是 RDMA 技术最主要的倡导者和先行者，其规定了一整套完整的链路层到传输层（和传统 OSI 七层模型的传输层不同）规范，如图 13-7 所示。但是 InfiniBand无法兼容现有以太网，如果企业想部署的话，除了需要专用网卡之外，还要重新购买配套的网络交换设备。<br><img src="/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/2.png" alt="2"></p>
+<h3 id="ROCE"><a href="#ROCE" class="headerlink" title="ROCE"></a>ROCE</h3><p>RoCE有RoCEv1和RoCEv2两个版本。如图13-6所示，RoCEv1的网络层使用了InfiniBand规范，链路层使用以太网协议，因此允许同一个以太网广播域中的两台主机进行通信。RoCEv2使用了“UDP+IP”作为网络层，是一个“网络层+链路层”协议，因此 RoCEv2 网络中的数据包可以被路由。RoCE 被认为是 InfiniBand 的“低成本解决方案”，将 InfiniBand 传输层的报文封装成以太网数据包进行收发（也就是说 RoCE 仍然使用 InfiniBand 传输层，见图 13-6）。<br>由于 RoCE 可以使用以太网交换设备，因此在企业中的应用比较多，但是其在相同场景下相比 InfiniBand 会有一些性能方面的损失</p>
+<h2 id="RDMA-网络构成"><a href="#RDMA-网络构成" class="headerlink" title="RDMA 网络构成"></a>RDMA 网络构成</h2><p>InfiniBand 体系结构定义了组网通信所需的多种设备：通道适配器（channel adapter）、交换机（switch）、路由器（router）和子网管理器（subnet manager）。其中子网管理器属于虚拟设备，它可以在其他任何一台设备上实现。图 13-8 展示了一个包含所有这些实体设备的网络。每个终端（endnode）设备必须至少有一个通道适配器（HCA 或 TCA）。一个子网中至少有一个子网管理器用于配置和维护链路。所有的通道适配器和交换机必须包含子网管理代理（subnet management agent，SMA），用于处理与子网管理器的通信。除了子网管理器，RoCE 类型的网络中也需要上述这些组件。<br><img src="/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/3.png" alt="3"><br><strong>主机通道适配器（host channel adapter，HCA）</strong><br>HCA 即本书中经常提及的安装在主机上的 RDMA 网卡，用于将一个主机设备连接到一个 RDMA 网络上。<br>一个 HCA 可以有多个物理端口（port），每个端口有自己的本地标识符（local identifier，LID）或 LID 范围。另外，每个端口还有自己的发送和接收缓存（buffer），因此所有端口可以并行发送和接收。<br>子网管理器为 HCA 的每一个物理端口配置子网内的本地地址，即 LID。HCA 中的子网管理代理和子网管理器通信，共同实现子网管理功能。<br>厂商会给每一个 HCA 分配独一无二的标识符，称为 GUID（globally unique identifier）。子网管理器分配给 HCA 的 LID 并不是永久的（断电重启后可能会变），所以 GUID 就成了永久识别某一个 HCA 的主要标识符。另外，厂商还给每一个端口分配了一个端口 GUID。<br><strong>目标通道适配器（target channel adapter，TCA）</strong><br>TCA 为 I&#x2F;O 设备（比如硬盘控制器）提供其到 RDMA 网络的连接，支持每个设备的特定操作所需的 HCA 功能子集。<br><strong>子网管理器（subnet manager）</strong><br>InfiniBand 子网管理器为连接到 InfiniBand 网络的每个端口分配 LID，并基于分配的 LID建立路由表。<br><strong>交换机（switch）</strong><br>InfiniBand 交换机在概念上类似于标准以太网交换机，但其设计旨在满足 InfiniBand 的性能要求。它们实现 InfiniBand 链路层的流量控制以防止丢包，有避免阻塞和自适应路由的功能，并支持高级服务质量（QoS）。<br><strong>路由器（router）</strong><br>InfiniBand 路由器将数据包从一个子网转发到另一个子网，路由器根据全局路由报头（global route header，GRH）中包含的 IPv6 网络层地址来转发数据包。在将数据包发送到下一个子网中时，路由器会按照目标子网中合适的 LID 来修改数据包中的本地路由报头（local route header，LRH），重新组装每个数据包。<br>路由对终端来说并不是透明的，因为终端发包时必须指定路由器的 LID 和最终目标的GID。<br>每一个子网都有独一无二的子网 ID，称为子网前缀。子网管理员会把这个子网前缀赋值给这个子网中所有的端口（包含在端口的 PortInfo 属性中）。这个子网前缀和端口的 GUID结合，就成了端口的 GID。端口也可以有其他的 GID。<br>从路由器的角度看，GID 中的子网前缀部分就代表了穿过路由器的路径。路由器依据数据包的目的 GID 和转发表来决定把数据包转发到哪个或哪些端口。</p>
+<h2 id="LID-和-GID"><a href="#LID-和-GID" class="headerlink" title="LID 和 GID"></a>LID 和 GID</h2><p>从功能上看，LID（local identifier）和 GID（globally identifier）的概念类似于“以太网和IP 网”中的 MAC 和 IP，分别用于子网内的目标寻址和子网间的目标寻址。<br>根据 InfiniBand 协议，两台设备间建立连接时，需要知道对方的 QP 号和端口，其中对端口的识别根据 LID 和 GID（后者可选）进行。</p>
+<h3 id="LID"><a href="#LID" class="headerlink" title="LID"></a>LID</h3><p>InfiniBand 定义的 LID 是一个 16 位的标识符。LID 有以下特征。<br>• 由子网管理员分配，子网内唯一，不可用于子网间路由。<br>• LID 作为一种网络地址，分为预留、单播和多播地址段。<br>• 数据包中的本地路由报头（local route header，LRH）中包含了 LID。<br>• 源 LID 指的是第一个将数据包插入子网的终端端口的 LID。<br>• 一个单播型的目的 LID 适用于某一个目的终端端口。一个多播型的目的 LID 适用于一个子网中某个多播组里的一系列目的终端端口。<br>• 如果最终的目的端口不在这个子网内，数据包中的目的 LID 指向的是，负责转发这个数据包到下一跳的路由器的某个端口。<br>• 一个终端端口在连接到子网后，收到的数据包可能经过了子网内的多条物理路径。例如，图 13-9 中交换机之间相同类型的连线表示一条可能的路径，这样的路径共有 4条。每条路径可以被一个或多个物理 LID 标识。为了降低 HCA 的多路径操作的复杂度，每个物理端口应分配一个基本 LID 和一个 LMC。LMC 是一个 3 位的域，代表2LMC条路径。图 13-9 中，HCA A 和 HCA C 之间存在多条路径。如果 HCA A 被分配了基本 LID 4，LMC &#x3D;2，则其 LID 的范围是 4、5、6、7。如果 HCA C 被分配了基本LID 8，LMC&#x3D;2，则其 LID 的范围就是 8、9、10、11。<br>• LID 的分配规则：LID 0x0000 无效；LID 0xFFFF 分配给接收数据包的终端端口的 QP0；0x0001 和 0xBFFF 之间为单播 LID；0xC000 和 0xFFFE 之间为多播 LID。<br>对于 RoCE 类型的网络，LID 无效，所有端口的 LID 都为 0x0000。<br><img src="/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/4.png" alt="4"></p>
+<h3 id="GID"><a href="#GID" class="headerlink" title="GID"></a>GID</h3><p>GID 是一种 128 位的单播或多播标识符，用于标识端口或多播组。<br>GUID（globally unique identifier）是全局唯一的 EUI-64 标识符，共 64 位。其中的 24 位表示厂商 ID，另外 40 位是扩展标识符，由生产设备的厂商来分配。<br>GID 有以下特征。</p>
+<h2 id="RDMA基本元素"><a href="#RDMA基本元素" class="headerlink" title="RDMA基本元素"></a>RDMA基本元素</h2><p><img src="/images/Linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/5.png" alt="5"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD/" rel="tag"># 高性能</a>
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/08/linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89DPDK/" rel="prev" title="linux高性能网络详解读书笔记（二）DPDK">
+                  <i class="fa fa-angle-left"></i> linux高性能网络详解读书笔记（二）DPDK
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/10/nginx%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="nginx源码分析-基础数据结构">
+                  nginx源码分析-基础数据结构 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

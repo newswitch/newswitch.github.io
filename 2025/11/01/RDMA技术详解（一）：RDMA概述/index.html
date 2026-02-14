@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="RDMA技术详解（一）：RDMA概述DMADMA(直接内存访问)是一种能力，允许在计算机主板上的设备直接把数据发送到内存中去，数据搬运不需要CPU的参与。 传统内存访问需要通过CPU进行数据copy来移动数据，通过CPU将内存中的Buffer1移动到Buffer2中。DMA模式：可以同DMA Engine之间通过硬件将数据从Buffer1移动到Buffer2,而不需要操作系统CPU的参与，大大降低">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RDMA技术详解（一）：RDMA概述">
+<meta property="og:url" content="https://newswitch.github.io/2025/11/01/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9ARDMA%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="RDMA技术详解（一）：RDMA概述DMADMA(直接内存访问)是一种能力，允许在计算机主板上的设备直接把数据发送到内存中去，数据搬运不需要CPU的参与。 传统内存访问需要通过CPU进行数据copy来移动数据，通过CPU将内存中的Buffer1移动到Buffer2中。DMA模式：可以同DMA Engine之间通过硬件将数据从Buffer1移动到Buffer2,而不需要操作系统CPU的参与，大大降低">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/DMA%E5%AE%9E%E4%BE%8B%E5%9B%BE.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA%E7%A4%BA%E4%BE%8B%E5%9B%BE.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA-2.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA-3.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA-4.png">
+<meta property="article:published_time" content="2025-11-01T09:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-13T02:43:05.468Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="高性能计算">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/DMA%E5%AE%9E%E4%BE%8B%E5%9B%BE.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2025/11/01/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9ARDMA%E6%A6%82%E8%BF%B0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2025/11/01/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9ARDMA%E6%A6%82%E8%BF%B0/","path":"2025/11/01/RDMA技术详解（一）：RDMA概述/","title":"RDMA技术详解（一）：RDMA概述"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RDMA技术详解（一）：RDMA概述 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9ARDMA%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">RDMA技术详解（一）：RDMA概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DMA"><span class="nav-number">1.1.</span> <span class="nav-text">DMA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA"><span class="nav-number">1.2.</span> <span class="nav-text">RDMA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">1.3.</span> <span class="nav-text">RDMA的优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E4%B8%89%E7%A7%8D%E4%B8%8D%E5%90%8C%E7%9A%84%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.</span> <span class="nav-text">RDMA 三种不同的硬件实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA%E5%9F%BA%E6%9C%AC%E6%9C%AF%E8%AF%AD"><span class="nav-number">1.5.</span> <span class="nav-text">RDMA基本术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.6.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-Registration-MR-%E5%86%85%E5%AD%98%E6%B3%A8%E5%86%8C"><span class="nav-number">1.6.1.</span> <span class="nav-text">Memory Registration(MR) | 内存注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Queues-%E9%98%9F%E5%88%97"><span class="nav-number">1.6.2.</span> <span class="nav-text">Queues | 队列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA%E6%98%AF%E5%9F%BA%E4%BA%8E%E6%B6%88%E6%81%AF%E7%9A%84%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%EF%BC%8C%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E9%83%BD%E6%98%AF%E5%BC%82%E6%AD%A5%E6%93%8D%E4%BD%9C%E3%80%82-RDMA%E6%93%8D%E4%BD%9C%E5%85%B6%E5%AE%9E%E5%BE%88%E7%AE%80%E5%8D%95%EF%BC%8C%E5%8F%AF%E4%BB%A5%E7%90%86%E8%A7%A3%E4%B8%BA%EF%BC%9A1-Host%E6%8F%90%E4%BA%A4%E5%B7%A5%E4%BD%9C%E8%AF%B7%E6%B1%82-WR-%E5%88%B0%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97-WQ-%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97%E5%8C%85%E6%8B%AC%E5%8F%91%E9%80%81%E9%98%9F%E5%88%97-SQ-%E5%92%8C%E6%8E%A5%E6%94%B6%E9%98%9F%E5%88%97-RQ-%E3%80%82%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97%E7%9A%84%E6%AF%8F%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E5%8F%AB%E5%81%9AWQE-%E4%B9%9F%E5%B0%B1%E6%98%AFWR%E3%80%822-Host%E4%BB%8E%E5%AE%8C%E6%88%90%E9%98%9F%E5%88%97%EF%BC%88CQ%EF%BC%89%E4%B8%AD%E8%8E%B7%E5%8F%96%E5%B7%A5%E4%BD%9C%E5%AE%8C%E6%88%90-WC-%E5%AE%8C%E6%88%90%E9%98%9F%E5%88%97%E9%87%8C%E7%9A%84%E6%AF%8F%E4%B8%80%E4%B8%AA%E5%8F%AB%E5%81%9ACQE-%E4%B9%9F%E5%B0%B1%E6%98%AFWC%E3%80%823-%E5%85%B7%E6%9C%89RDMA%E5%BC%95%E6%93%8E%E7%9A%84%E7%A1%AC%E4%BB%B6-hardware-%E5%B0%B1%E6%98%AF%E4%B8%80%E4%B8%AA%E9%98%9F%E5%88%97%E5%85%83%E7%B4%A0%E5%A4%84%E7%90%86%E5%99%A8%E3%80%82-RDMA%E7%A1%AC%E4%BB%B6%E4%B8%8D%E6%96%AD%E5%9C%B0%E4%BB%8E%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97-WQ-%E4%B8%AD%E5%8E%BB%E5%8F%96%E5%B7%A5%E4%BD%9C%E8%AF%B7%E6%B1%82-WR-%E6%9D%A5%E6%89%A7%E8%A1%8C%EF%BC%8C%E6%89%A7%E8%A1%8C%E5%AE%8C%E4%BA%86%E5%B0%B1%E7%BB%99%E5%AE%8C%E6%88%90%E9%98%9F%E5%88%97-CQ-%E4%B8%AD%E6%94%BE%E7%BD%AE%E5%B7%A5%E4%BD%9C%E5%AE%8C%E6%88%90-WC-%E3%80%82%E4%BB%8E%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E7%9A%84%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3%E5%B0%B1%E6%98%AF%EF%BC%9A4-Host%E7%94%9F%E4%BA%A7WR-%E6%8A%8AWR%E6%94%BE%E5%88%B0WQ%E4%B8%AD%E5%8E%BB5-RDMA%E7%A1%AC%E4%BB%B6%E6%B6%88%E8%B4%B9WR6-RDMA%E7%A1%AC%E4%BB%B6%E7%94%9F%E4%BA%A7WC-%E6%8A%8AWC%E6%94%BE%E5%88%B0CQ%E4%B8%AD%E5%8E%BB7-Host%E6%B6%88%E8%B4%B9WC"><span class="nav-number">1.7.</span> <span class="nav-text">RDMA是基于消息的传输协议，数据传输都是异步操作。 RDMA操作其实很简单，可以理解为：1.Host提交工作请求(WR)到工作队列(WQ): 工作队列包括发送队列(SQ)和接收队列(RQ)。工作队列的每一个元素叫做WQE, 也就是WR。2.Host从完成队列（CQ）中获取工作完成(WC): 完成队列里的每一个叫做CQE, 也就是WC。3.具有RDMA引擎的硬件(hardware)就是一个队列元素处理器。 RDMA硬件不断地从工作队列(WQ)中去取工作请求(WR)来执行，执行完了就给完成队列(CQ)中放置工作完成(WC)。从生产者-消费者的角度理解就是：4.Host生产WR, 把WR放到WQ中去5.RDMA硬件消费WR6.RDMA硬件生产WC, 把WC放到CQ中去7.Host消费WC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="nav-number">1.8.</span> <span class="nav-text">RDMA数据传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDMA-Send-RDMA%E5%8F%91%E9%80%81-%E6%8E%A5%E6%94%B6-%E6%93%8D%E4%BD%9C-%EF%BC%88Send-Recv%EF%BC%89"><span class="nav-number">1.8.1.</span> <span class="nav-text">RDMA Send | RDMA发送(&#x2F;接收)操作 （Send&#x2F;Recv）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDMA-Read-RDMA%E8%AF%BB%E6%93%8D%E4%BD%9C-Pull"><span class="nav-number">1.8.2.</span> <span class="nav-text">RDMA Read | RDMA读操作 (Pull)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDMA-Write-RDMA%E5%86%99%E6%93%8D%E4%BD%9C-Push"><span class="nav-number">1.8.3.</span> <span class="nav-text">RDMA Write | RDMA写操作 (Push)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDMA-Write-with-Immediate-Data-%E6%94%AF%E6%8C%81%E7%AB%8B%E5%8D%B3%E6%95%B0%E7%9A%84RDMA%E5%86%99%E6%93%8D%E4%BD%9C"><span class="nav-number">1.8.4.</span> <span class="nav-text">RDMA Write with Immediate Data | 支持立即数的RDMA写操作</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/01/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9ARDMA%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RDMA技术详解（一）：RDMA概述 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RDMA技术详解（一）：RDMA概述
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-11-01 17:00:00" itemprop="dateCreated datePublished" datetime="2025-11-01T17:00:00+08:00">2025-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-13 10:43:05" itemprop="dateModified" datetime="2026-02-13T10:43:05+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">高性能网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="RDMA技术详解（一）：RDMA概述"><a href="#RDMA技术详解（一）：RDMA概述" class="headerlink" title="RDMA技术详解（一）：RDMA概述"></a>RDMA技术详解（一）：RDMA概述</h1><h2 id="DMA"><a href="#DMA" class="headerlink" title="DMA"></a>DMA</h2><p>DMA(直接内存访问)是一种能力，允许在计算机主板上的设备直接把数据发送到内存中去，数据搬运不需要CPU的参与。</p>
+<p>传统内存访问需要通过CPU进行数据copy来移动数据，通过CPU将内存中的Buffer1移动到Buffer2中。DMA模式：可以同DMA Engine之间通过硬件将数据从Buffer1移动到Buffer2,而不需要操作系统CPU的参与，大大降低了CPU Copy的开销。</p>
+<p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/DMA%E5%AE%9E%E4%BE%8B%E5%9B%BE.png" alt="DMA实例图"></p>
+<h2 id="RDMA"><a href="#RDMA" class="headerlink" title="RDMA"></a>RDMA</h2><p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA%E7%A4%BA%E4%BE%8B%E5%9B%BE.png" alt="RDMA示例图"></p>
+<p>RDMA是一种概念，在两个或者多个计算机进行通讯的时候使用DMA， 从一个主机的内存直接访问另一个主机的内存。</p>
+<p>RDMA是一种host-offload, host-bypass技术，允许应用程序(包括存储)在它们的内存空间之间直接做数据传输。具有RDMA引擎的以太网卡(RNIC)–而不是host–负责管理源和目标之间的可靠连接。使用RNIC的应用程序之间使用专注的QP和CQ进行通讯：</p>
+<p>每一个应用程序可以有很多QP和CQ<br>每一个QP包括一个SQ和RQ<br>每一个CQ可以跟多个SQ或者RQ相关联</p>
+<ol>
+<li>QP（Queue Pair，队列对）</li>
+<li>CQ（Completion Queue，完成队列）</li>
+<li>SQ（Send Queue，发送队列）</li>
+<li>RQ（Receive Queue，接收队列）</li>
+</ol>
+<p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA-2.png" alt="RDMA-2"></p>
+<h2 id="RDMA的优势"><a href="#RDMA的优势" class="headerlink" title="RDMA的优势"></a>RDMA的优势</h2><p>传统的TCP&#x2F;IP技术在数据包处理过程中，要经过操作系统及其他软件层，需要占用大量的服务器资源和内存总线带宽，数据在系统内存、处理器缓存和网络控制器缓存之间来回进行复制移动，给服务器的CPU和内存造成了沉重负担。尤其是网络带宽、处理器速度与内存带宽三者的严重”不匹配性”，更加剧了网络延迟效应。</p>
+<p>RDMA是一种新的直接内存访问技术，RDMA让计算机可以直接存取其他计算机的内存，而不需要经过处理器的处理。RDMA将数据从一个系统快速移动到远程系统的内存中，而不对操作系统造成任何影响。</p>
+<p>在实现上，RDMA实际上是一种智能网卡与软件架构充分优化的远端内存直接高速访问技术，通过将RDMA协议固化于硬件(即网卡)上，以及支持Zero-copy和Kernel bypass这两种途径来达到其高性能的远程直接数据存取的目标。 使用RDMA的优势如下：</p>
+<p>1.零拷贝(Zero-copy) - 应用程序能够直接执行数据传输，在不涉及到网络软件栈的情况下。数据能够被直接发送到缓冲区或者能够直接从缓冲区里接收，而不需要被复制到网络层。<br>2.内核旁路(Kernel bypass) - 应用程序可以直接在用户态执行数据传输，不需要在内核态与用户态之间做上下文切换。<br>3.不需要CPU干预(No CPU involvement) - 应用程序可以访问远程主机内存而不消耗远程主机中的任何CPU。远程主机内存能够被读取而不需要远程主机上的进程（或CPU）参与。远程主机的CPU的缓存(cache)不会被访问的内存内容所填充。<br>4.消息基于事务(Message based transactions) - 数据被处理为离散消息而不是流，消除了应用程序将流切割为不同消息&#x2F;事务的需求。<br>5.支持分散&#x2F;聚合条目(Scatter&#x2F;gather entries support) - RDMA原生态支持分散&#x2F;聚合。也就是说，读取多个内存缓冲区然后作为一个流发出去或者接收一个流然后写入到多个内存缓冲区里去。</p>
+<p>在具体的远程内存读写中，RDMA操作用于读写操作的远程虚拟内存地址包含在RDMA消息中传送，远程应用程序要做的只是在其本地网卡中注册相应的内存缓冲区。远程节点的CPU除在连接建立、注册调用等之外，在整个RDMA数据传输过程中并不提供服务，因此没有带来任何负载。</p>
+<h2 id="RDMA-三种不同的硬件实现"><a href="#RDMA-三种不同的硬件实现" class="headerlink" title="RDMA 三种不同的硬件实现"></a>RDMA 三种不同的硬件实现</h2><p>RDMA作为一种host-offload, host-bypass技术，使低延迟、高带宽的直接的内存到内存的数据通信成为了可能。目前支持RDMA的网络协议有：</p>
+<p>1.InfiniBand(IB): 从一开始就支持RDMA的新一代网络协议。由于这是一种新的网络技术，因此需要支持该技术的网卡和交换机。<br>2.RDMA过融合以太网(RoCE): 即RDMA over Ethernet, 允许通过以太网执行RDMA的网络协议。这允许在标准以太网基础架构(交换机)上使用RDMA，只不过网卡必须是支持RoCE的特殊的NIC。<br>3.互联网广域RDMA协议(iWARP): 即RDMA over TCP, 允许通过TCP执行RDMA的网络协议。这允许在标准以太网基础架构(交换机)上使用RDMA，只不过网卡要求是支持iWARP(如果使用CPU offload的话)的NIC。否则，所有iWARP栈都可以在软件中实现，但是失去了大部分的RDMA性能优势。<br><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA-3.png" alt="RDMA-3"><br>在三种主流的RDMA技术中，可以划分为两大阵营。一个是IB技术, 另一个是支持RDMA的以太网技术(RoCE和iWARP)。其中, IBTA力挺的技术自然是IB和RoCE, Mellanox公司（一个以色列人搞的小公司）是这方面的急先锋。而iWARP则是IEEE&#x2F;IETF力挺的技术，主要是Chelsio公司在推进。RoCE和iWARP的争论，请参考Mellanox和Chelsio这两家公司发布的白皮书。</p>
+<p>在存储领域，支持RDMA的技术早就存在，比如SRP(SCSI RDMA Protocol)和iSER(iSCSI Extensions for RDMA)。 如今兴起的NVMe over Fabrics如果使用的不是FC网络的话，本质上就是NVMe over RDMA。 换句话说，NVMe over InfiniBand, NVMe over RoCE和NVMe over iWARP都是NVMe over RDMA。</p>
+<h2 id="RDMA基本术语"><a href="#RDMA基本术语" class="headerlink" title="RDMA基本术语"></a>RDMA基本术语</h2><p>1.Fabric<br>所谓Fabric，就是支持RDMA的局域网(LAN)。</p>
+<p>2.CA(Channel Adapter)<br>CA是Channel Adapter(通道适配器)的缩写。那么，CA就是将系统连接到Fabric的硬件组件。 在IBTA中，一个CA就是IB子网中的一个终端结点(End Node)。分为两种类型，一种是HCA, 另一种叫做TCA, 它们合称为xCA。其中， HCA(Host Channel Adapter)是支持”verbs”接口的CA, TCA(Target Channel Adapter)可以理解为”weak CA”, 不需要像HCA一样支持很多功能。 而在IEEE&#x2F;IETF中，CA的概念被实体化为RNIC（RDMA Network Interface Card）, iWARP就把一个CA称之为一个RNIC。<br>简言之，在IBTA阵营中，CA即HCA或TCA； 而在iWARP阵营中，CA就是RNIC。 总之，无论是HCA、 TCA还是RNIC，它们都是CA, 它们的基本功能本质上都是生产或消费数据包(packet)</p>
+<p>3.Verbs<br>在RDMA的持续演进中，有一个组织叫做OpenFabric Alliance所做的贡献可谓功不可没。 Verbs这个词不好翻译，大致可以理解为访问RDMA硬件的“一组标准动作”。 每一个Verb可以理解为一个Function</p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="Memory-Registration-MR-内存注册"><a href="#Memory-Registration-MR-内存注册" class="headerlink" title="Memory Registration(MR) | 内存注册"></a>Memory Registration(MR) | 内存注册</h3><p>RDMA 就是用来对内存进行数据传输。那么怎样才能对内存进行传输，很简单，注册。 因为RDMA硬件对用来做数据传输的内存是有特殊要求的。<br>1.在数据传输过程中，应用程序不能修改数据所在的内存。<br>2.操作系统不能对数据所在的内存进行page out操作 – 物理地址和虚拟地址的映射必须是固定不变的。</p>
+<p>注意无论是DMA或者RDMA都要求物理地址连续，这是由DMA引擎所决定的。 那么怎么进行内存注册呢？<br>1.创建两个key (local和remote)指向需要操作的内存区域<br>2.注册的keys是数据传输请求的一部分</p>
+<p>注册一个Memory Region之后，这个时候这个Memory Region也就有了它自己的属性：<br>context : RDMA操作上下文<br>addr : MR被注册的Buffer地址<br>length : MR被注册的Buffer长度<br>lkey：MR被注册的本地key<br>rkey：MR被注册的远程key</p>
+<p>对Memrory Registration：Memory Registration只是RDMA中对内存保护的一种措施，只有将要操作的内存注册到RDMA Memory Region中，这快操作的内存就交给RDMA 保护域来操作了。这个时候我们就可以对这快内存进行操作，至于操作的起始地址、操作Buffer的长度，可以根据程序的具体需求进行操作。我们只要保证接受方的Buffer 接受的长度大于等于发送的Buffer长度</p>
+<h3 id="Queues-队列"><a href="#Queues-队列" class="headerlink" title="Queues | 队列"></a>Queues | 队列</h3><p>RDMA一共支持三种队列，发送队列(SQ)和接收队列(RQ)，完成队列(CQ)。其中，SQ和RQ通常成对创建，被称为Queue Pairs(QP)。</p>
+<h2 id="RDMA是基于消息的传输协议，数据传输都是异步操作。-RDMA操作其实很简单，可以理解为：1-Host提交工作请求-WR-到工作队列-WQ-工作队列包括发送队列-SQ-和接收队列-RQ-。工作队列的每一个元素叫做WQE-也就是WR。2-Host从完成队列（CQ）中获取工作完成-WC-完成队列里的每一个叫做CQE-也就是WC。3-具有RDMA引擎的硬件-hardware-就是一个队列元素处理器。-RDMA硬件不断地从工作队列-WQ-中去取工作请求-WR-来执行，执行完了就给完成队列-CQ-中放置工作完成-WC-。从生产者-消费者的角度理解就是：4-Host生产WR-把WR放到WQ中去5-RDMA硬件消费WR6-RDMA硬件生产WC-把WC放到CQ中去7-Host消费WC"><a href="#RDMA是基于消息的传输协议，数据传输都是异步操作。-RDMA操作其实很简单，可以理解为：1-Host提交工作请求-WR-到工作队列-WQ-工作队列包括发送队列-SQ-和接收队列-RQ-。工作队列的每一个元素叫做WQE-也就是WR。2-Host从完成队列（CQ）中获取工作完成-WC-完成队列里的每一个叫做CQE-也就是WC。3-具有RDMA引擎的硬件-hardware-就是一个队列元素处理器。-RDMA硬件不断地从工作队列-WQ-中去取工作请求-WR-来执行，执行完了就给完成队列-CQ-中放置工作完成-WC-。从生产者-消费者的角度理解就是：4-Host生产WR-把WR放到WQ中去5-RDMA硬件消费WR6-RDMA硬件生产WC-把WC放到CQ中去7-Host消费WC" class="headerlink" title="RDMA是基于消息的传输协议，数据传输都是异步操作。 RDMA操作其实很简单，可以理解为：1.Host提交工作请求(WR)到工作队列(WQ): 工作队列包括发送队列(SQ)和接收队列(RQ)。工作队列的每一个元素叫做WQE, 也就是WR。2.Host从完成队列（CQ）中获取工作完成(WC): 完成队列里的每一个叫做CQE, 也就是WC。3.具有RDMA引擎的硬件(hardware)就是一个队列元素处理器。 RDMA硬件不断地从工作队列(WQ)中去取工作请求(WR)来执行，执行完了就给完成队列(CQ)中放置工作完成(WC)。从生产者-消费者的角度理解就是：4.Host生产WR, 把WR放到WQ中去5.RDMA硬件消费WR6.RDMA硬件生产WC, 把WC放到CQ中去7.Host消费WC"></a>RDMA是基于消息的传输协议，数据传输都是异步操作。 RDMA操作其实很简单，可以理解为：<br>1.Host提交工作请求(WR)到工作队列(WQ): 工作队列包括发送队列(SQ)和接收队列(RQ)。工作队列的每一个元素叫做WQE, 也就是WR。<br>2.Host从完成队列（CQ）中获取工作完成(WC): 完成队列里的每一个叫做CQE, 也就是WC。<br>3.具有RDMA引擎的硬件(hardware)就是一个队列元素处理器。 RDMA硬件不断地从工作队列(WQ)中去取工作请求(WR)来执行，执行完了就给完成队列(CQ)中放置工作完成(WC)。从生产者-消费者的角度理解就是：<br>4.Host生产WR, 把WR放到WQ中去<br>5.RDMA硬件消费WR<br>6.RDMA硬件生产WC, 把WC放到CQ中去<br>7.Host消费WC</h2><p>一、核心组件与角色明确<br>工作队列（WQ）：分为两类独立队列，分别对应 “发送” 和 “接收” 两种操作，是 Host 与 RDMA 硬件交互的核心接口：<br>发送队列（SQ，Send Queue）：仅存储 “发送类工作请求”（如主动发起数据发送、远程写、远程读等操作的请求），由 Host 向其中提交发送相关的工作元素（WQE）。<br>接收队列（RQ，Receive Queue）：仅存储 “接收类工作请求”（如准备接收远程发送的数据、响应远程读请求等操作的请求），由 Host 提前向其中提交接收相关的工作元素（WQE）。<br>注：SQ 和 RQ 是成对存在的（即一个队列对 QP 包含一个 SQ 和一个 RQ），共同构成一个双向通信的逻辑通道。<br>工作请求（WR，Work Request）：Host 发起的具体操作指令，分为两类：<br>发送 WR：放入 SQ 中，包含发送数据的地址、长度、目标节点信息、操作类型（如RDMA_SEND、RDMA_WRITE）等，用于主动发起数据传输。<br>接收 WR：放入 RQ 中，包含接收缓冲的地址、长度等信息（即 “提前预留内存空间”），用于告知硬件 “如何接收外来数据”。<br>每个 WR 在队列中以 “工作队列元素（WQE，Work Queue Element）” 的形式存在，是硬件可直接解析的结构化数据。<br>完成队列（CQ，Completion Queue）：独立于 WQ 的通知队列，用于记录操作执行结果，可关联多个 SQ 或 RQ（即多个 QP 的发送 &#x2F; 接收操作可共用一个 CQ）。其中的元素称为 “完成队列元素（CQE，Completion Queue Element）”，对应 “工作完成（WC，Work Completion）” 信息，包含操作是否成功、字节数、错误码等细节。<br>RDMA 硬件（含 RDMA 引擎）：专门处理队列操作的硬件单元，核心功能是 “消费 WQE 并生成 CQE”。<br>二、细化后的操作流程（结合 SQ 和 RQ）<br>从 “生产者 - 消费者” 模型拆解，整个过程分为四个交互环节，明确区分 SQ 和 RQ 的角色：</p>
+<ol>
+<li>Host 向 SQ&#x2F;RQ 生产 WQE（提交 WR）<br>针对发送操作：Host 需要主动发送数据时，会构造 “发送 WR”（如 “将内存中 A 区域的数据发送到目标节点 X 的 B 区域”），并将其封装为 WQE 放入当前 QP 的 SQ 中。此时 Host 是 SQ 的 “生产者”。<br>针对接收操作：Host 需要接收外来数据时，必须提前构造 “接收 WR”（如 “用内存中 C 区域接收来自任意节点的数据，最大长度为 1024 字节”），并将其封装为 WQE 放入当前 QP 的 RQ 中。此时 Host 是 RQ 的 “生产者”。<br>关键：接收操作必须 “提前准备”—— 若 RQ 中没有可用的接收 WQE，硬件收到外来数据时会因无缓冲而丢弃或报错（类似 “快递柜没空格子，无法接收快递”）。</li>
+<li>RDMA 硬件消费 SQ&#x2F;RQ 中的 WQE（执行 WR）<br>RDMA 引擎会持续轮询所有关联的 SQ 和 RQ，按顺序取出 WQE 并执行：<br>处理 SQ 中的发送 WQE：硬件根据 WQE 中的指令，直接通过 RDMA 链路将本地内存数据传输到目标节点（无需 CPU 干预），完成后生成 “发送完成 WC”。<br>处理 RQ 中的接收 WQE：当硬件检测到外来数据时，会查找对应的 RQ（通过 QP 编号匹配），取出其中的接收 WQE，将数据写入指定的本地内存缓冲，完成后生成 “接收完成 WC”。<br>此时 RDMA 硬件是 SQ 和 RQ 的 “消费者”，整个过程由硬件独立完成，Host 的 CPU 可处理其他任务（体现异步特性）。</li>
+<li>RDMA 硬件向 CQ 生产 CQE（记录 WC）<br>无论 SQ 的发送操作还是 RQ 的接收操作执行完毕，RDMA 硬件都会将结果（成功 &#x2F; 失败、细节信息）封装为 CQE，并放入与该 SQ&#x2F;RQ 关联的 CQ 中。此时 RDMA 硬件是 CQ 的 “生产者”。</li>
+<li>Host 消费 CQ 中的 CQE（获取 WC）<br>Host 通过轮询 CQ（或注册中断回调）发现新的 CQE 后，会读取其中的 WC 信息，确认操作结果：<br>若为发送完成：Host 可释放发送缓冲（如确认数据已发出，可回收内存）。<br>若为接收完成：Host 可处理接收缓冲中的数据（如解析刚收到的消息）。<br>此时 Host 是 CQ 的 “消费者”，根据 WC 结果决定下一步操作（如提交新的 WR 继续通信）。<br>三、总结：SQ、RQ 的分工与异步本质<br>SQ 的核心作用：承载主动发起的 “输出型” 操作，是 Host 向外部发送数据的 “指令队列”。<br>RQ 的核心作用：承载被动响应的 “输入型” 操作，是 Host 为接收外部数据预留的 “缓冲描述队列”。<br>异步性体现：Host 提交 WR 到 SQ&#x2F;RQ 后即可返回，无需等待操作完成；待硬件处理完毕，通过 CQE 异步通知 Host 结果，实现 CPU 与数据传输的 “并行工作”，这也是 RDMA 高性能的核心原因之一。<br>通过明确 SQ 和 RQ 的分工，能更清晰地理解 RDMA “硬件卸载” 和 “零拷贝” 的底层逻辑 —— 所有数据传输的细节（如地址解析、链路层交互）均由硬件基于 SQ&#x2F;RQ 中的 WQE 自动完成，Host 只需负责 “发指令” 和 “收结果”</li>
+</ol>
+<p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89/RDMA-4.png" alt="RDMA-4"></p>
+<h2 id="RDMA数据传输"><a href="#RDMA数据传输" class="headerlink" title="RDMA数据传输"></a>RDMA数据传输</h2><h3 id="RDMA-Send-RDMA发送-接收-操作-（Send-Recv）"><a href="#RDMA-Send-RDMA发送-接收-操作-（Send-Recv）" class="headerlink" title="RDMA Send | RDMA发送(&#x2F;接收)操作 （Send&#x2F;Recv）"></a>RDMA Send | RDMA发送(&#x2F;接收)操作 （Send&#x2F;Recv）</h3><p>跟TCP&#x2F;IP的send&#x2F;recv是类似的，不同的是RDMA是基于消息的数据传输协议（而不是基于字节流的传输协议），所有数据包的组装都在RDMA硬件上完成的，也就是说OSI模型中的下面4层(传输层，网络层，数据链路层，物理层)都在RDMA硬件上完成。</p>
+<h3 id="RDMA-Read-RDMA读操作-Pull"><a href="#RDMA-Read-RDMA读操作-Pull" class="headerlink" title="RDMA Read | RDMA读操作 (Pull)"></a>RDMA Read | RDMA读操作 (Pull)</h3><p>RDMA读操作本质上就是Pull操作, 把远程系统内存里的数据拉回到本地系统的内存里。</p>
+<h3 id="RDMA-Write-RDMA写操作-Push"><a href="#RDMA-Write-RDMA写操作-Push" class="headerlink" title="RDMA Write | RDMA写操作 (Push)"></a>RDMA Write | RDMA写操作 (Push)</h3><p>RDMA写操作本质上就是Push操作，把本地系统内存里的数据推送到远程系统的内存里。</p>
+<h3 id="RDMA-Write-with-Immediate-Data-支持立即数的RDMA写操作"><a href="#RDMA-Write-with-Immediate-Data-支持立即数的RDMA写操作" class="headerlink" title="RDMA Write with Immediate Data | 支持立即数的RDMA写操作"></a>RDMA Write with Immediate Data | 支持立即数的RDMA写操作</h3><p>支持立即数的RDMA写操作本质上就是给远程系统Push(推送)带外(OOB)数据, 这跟TCP里的带外数据是类似的。</p>
+<p>可选地，immediate 4字节值可以与数据缓冲器一起发送。 该值作为接收通知的一部分呈现给接收者，并且不包含在数据缓冲器中。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+              <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/" rel="tag"># 高性能计算</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/01/PCIe%E6%80%BB%E7%BA%BF%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/" rel="prev" title="PCIe总线学习（三）中断机制">
+                  <i class="fa fa-angle-left"></i> PCIe总线学习（三）中断机制
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9ARDMA-Send-Receive%E6%93%8D%E4%BD%9C/" rel="next" title="RDMA技术详解（二）：RDMA Send Receive操作">
+                  RDMA技术详解（二）：RDMA Send Receive操作 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

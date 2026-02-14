@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="RDMA技术详解（二）：RDMA Send Receive操作概述RDMA指的是远程直接内存访问，这是一种通过网络在两个应用程序之间搬运缓冲区里的数据的方法。RDMA与传统的网络接口不同，因为它绕过了操作系统。这允许实现了RDMA的程序具有如下特点： 绝对的最低时延最高的吞吐量最小的CPU足迹 （也就是说，需要CPU参与的地方被最小化） RDMA Verbs操作使用RDMA, 我们需要有一张实现了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RDMA技术详解（二）：RDMA Send Receive操作">
+<meta property="og:url" content="https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9ARDMA-Send-Receive%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="RDMA技术详解（二）：RDMA Send Receive操作概述RDMA指的是远程直接内存访问，这是一种通过网络在两个应用程序之间搬运缓冲区里的数据的方法。RDMA与传统的网络接口不同，因为它绕过了操作系统。这允许实现了RDMA的程序具有如下特点： 绝对的最低时延最高的吞吐量最小的CPU足迹 （也就是说，需要CPU参与的地方被最小化） RDMA Verbs操作使用RDMA, 我们需要有一张实现了">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-1.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-2.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-3.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-4.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-5.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-6.png">
+<meta property="article:published_time" content="2025-11-04T02:10:13.000Z">
+<meta property="article:modified_time" content="2026-02-13T02:43:05.532Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="高性能计算">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-1.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9ARDMA-Send-Receive%E6%93%8D%E4%BD%9C/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9ARDMA-Send-Receive%E6%93%8D%E4%BD%9C/","path":"2025/11/04/RDMA技术详解（二）：RDMA-Send-Receive操作/","title":"RDMA技术详解（二）：RDMA Send Receive操作"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RDMA技术详解（二）：RDMA Send Receive操作 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9ARDMA-Send-Receive%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">RDMA技术详解（二）：RDMA Send Receive操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-Verbs%E6%93%8D%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">RDMA Verbs操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Queue-Pairs"><span class="nav-number">1.3.</span> <span class="nav-text">Queue Pairs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-Send-Receive"><span class="nav-number">1.4.</span> <span class="nav-text">RDMA Send&#x2F;Receive</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5"><span class="nav-number">1.4.1.</span> <span class="nav-text">第一步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5"><span class="nav-number">1.4.2.</span> <span class="nav-text">第二步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5"><span class="nav-number">1.4.3.</span> <span class="nav-text">第三步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5"><span class="nav-number">1.4.4.</span> <span class="nav-text">第四步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9ARDMA-Send-Receive%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RDMA技术详解（二）：RDMA Send Receive操作 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RDMA技术详解（二）：RDMA Send Receive操作
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-11-04 10:10:13" itemprop="dateCreated datePublished" datetime="2025-11-04T10:10:13+08:00">2025-11-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-13 10:43:05" itemprop="dateModified" datetime="2026-02-13T10:43:05+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">高性能网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="RDMA技术详解（二）：RDMA-Send-Receive操作"><a href="#RDMA技术详解（二）：RDMA-Send-Receive操作" class="headerlink" title="RDMA技术详解（二）：RDMA Send Receive操作"></a>RDMA技术详解（二）：RDMA Send Receive操作</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>RDMA指的是远程直接内存访问，这是一种通过网络在两个应用程序之间搬运缓冲区里的数据的方法。RDMA与传统的网络接口不同，因为它绕过了操作系统。这允许实现了RDMA的程序具有如下特点：</p>
+<p>绝对的最低时延<br>最高的吞吐量<br>最小的CPU足迹 （也就是说，需要CPU参与的地方被最小化）</p>
+<h2 id="RDMA-Verbs操作"><a href="#RDMA-Verbs操作" class="headerlink" title="RDMA Verbs操作"></a>RDMA Verbs操作</h2><p>使用RDMA, 我们需要有一张实现了RDMA引擎的网卡。我们把这种卡称之为HCA(主机通道适配器)。 适配器创建一个贯穿PCIe总线的从RDMA引擎到应用程序内存的通道。一个好的HCA将在导线上执行的RDMA协议所需要的全部逻辑都在硬件上予以实现。这包括分组，重组以及流量控制和可靠性保证。因此，从应用程序的角度看，只负责处理所有缓冲区即可。<br><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-1.png" alt="RDMA-1.png"></p>
+<p>在RDMA中我们使用内核态驱动建立一个数据通道。我们称之为命令通道（Command Channel）。使用命令通道，我们能够建立一个数据通道（Data Channel），该通道允许我们在搬运数据的时候完全绕过内核。一旦建立了这种数据通道，我们就能直接读写数据缓冲区。</p>
+<p>建立数据通道的API是一种称之为”verbs”的API。”verbs” API是由一个叫做OFED的Linux开源项目维护的。在站点<a target="_blank" rel="noopener" href="http://www.openfabrics.org上./">http://www.openfabrics.org上。</a></p>
+<h2 id="Queue-Pairs"><a href="#Queue-Pairs" class="headerlink" title="Queue Pairs"></a>Queue Pairs</h2><p>RDMA操作开始于“搞”内存。当你在对内存进行操作的时候，就是告诉内核这段内存名花有主了，主人就是你的应用程序。于是，你告诉HCA，就在这段内存上寻址，赶紧准备开辟一条从HCA卡到这段内存的通道。我们将这一动作称之为注册一个内存区域(MR)。一旦MR注册完毕，我们就可以使用这段内存来做任何RDMA操作。在下面的图中，我们可以看到注册的内存区域(MR)和被通信队列所使用的位于内存区域之内的缓冲区(buffer)。</p>
+<p>RDMA Memory Registration（RDMA内存注册）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_mr</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_context</span>     *<span class="title">context</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_pd</span>          *<span class="title">pd</span>;</span></span><br><span class="line">    <span class="type">void</span>                   *addr;</span><br><span class="line">    <span class="type">size_t</span>                  length;</span><br><span class="line">    <span class="type">uint32_t</span>                handle;</span><br><span class="line">    <span class="type">uint32_t</span>                lkey;</span><br><span class="line">    <span class="type">uint32_t</span>                rkey;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-2.png" alt="RDMA-2.png"></p>
+<p>RDMA硬件不断地从工作队列(WQ)中去取工作请求(WR)来执行，执行完了就给完成队列(CQ)中放置工作完成通知(WC)。这个WC意思就是Work Completion。表示这个WR RDMA请求已经被处理完成，可以从这个Completion Queue从取出来，表示这个RDMA请求已经被处理完毕。</p>
+<p>RDMA通信基于三条队列(SQ, RQ和CQ)组成的集合。 其中， 发送队列(SQ)和接收队列(RQ)负责调度工作，他们总是成对被创建，称之为队列对(QP)。当放置在工作队列上的指令被完成的时候，完成队列(CQ)用来发送通知。</p>
+<p>当用户把指令放置到工作队列的时候，就意味着告诉HCA那些缓冲区需要被发送或者用来接受数据。这些指令是一些小的结构体，称之为工作请求(WR)或者工作队列元素(WQE)。 WQE的发音为”WOOKIE”，就像星球大战里的猛兽。一个WQE主要包含一个指向某个缓冲区的指针。一个放置在发送队列（SQ）里的WQE中包含一个指向待发送的消息的指针。一个放置在接受队列里的WQE里的指针指向一段缓冲区，该缓冲区用来存放待接受的消息。</p>
+<p>下面我们来看一下RDMA中的Work Request（SendWR和ReceWR）<br>RDMA Send Work Request请求</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> &#123;</span></span><br><span class="line">    <span class="type">uint64_t</span>                wr_id;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span>     *<span class="title">next</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span>         *<span class="title">sg_list</span>;</span></span><br><span class="line">    <span class="type">int</span>                     num_sge;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">ibv_wr_opcode</span>      <span class="title">opcode</span>;</span></span><br><span class="line">    <span class="type">int</span>                     send_flags;</span><br><span class="line">    <span class="type">uint32_t</span>                imm_data;       <span class="comment">/* in network byte order */</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">            <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">                    <span class="type">uint64_t</span>        remote_addr;</span><br><span class="line">                    <span class="type">uint32_t</span>        rkey;</span><br><span class="line">            &#125; rdma;</span><br><span class="line">            <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">                    <span class="type">uint64_t</span>        remote_addr;</span><br><span class="line">                    <span class="type">uint64_t</span>        compare_add;</span><br><span class="line">                    <span class="type">uint64_t</span>        swap;</span><br><span class="line">                    <span class="type">uint32_t</span>        rkey;</span><br><span class="line">            &#125; atomic;</span><br><span class="line">            <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">                    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_ah</span>  *<span class="title">ah</span>;</span></span><br><span class="line">                    <span class="type">uint32_t</span>        remote_qpn;</span><br><span class="line">                    <span class="type">uint32_t</span>        remote_qkey;</span><br><span class="line">            &#125; ud;</span><br><span class="line">    &#125; wr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>RDMA Receive Work Request请求</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_recv_wr</span> &#123;</span></span><br><span class="line">    <span class="type">uint64_t</span>                wr_id;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_recv_wr</span>     *<span class="title">next</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span>         *<span class="title">sg_list</span>;</span></span><br><span class="line">    <span class="type">int</span>                     num_sge;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>RDMA是一种异步传输机制。因此我们可以一次性在工作队列里放置好多个发送或接收WQE。HCA将尽可能快地按顺序处理这些WQE。当一个WQE被处理了，那么数据就被搬运了。 一旦传输完成，HCA就创建一个完成队列元素(CQE)并放置到完成队列(CQ)中去。 相应地，CQE的发音为”COOKIE”。</p>
+<h2 id="RDMA-Send-Receive"><a href="#RDMA-Send-Receive" class="headerlink" title="RDMA Send&#x2F;Receive"></a>RDMA Send&#x2F;Receive</h2><p>让我们看个简单的例子。在这个例子中，我们将把一个缓冲区里的数据从系统A的内存中搬到系统B的内存中去。这就是我们所说的消息传递语义学。接下来我们要讲的一种操作为SEND，是RDMA中最基础的操作类型。</p>
+<h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>第1步：系统A和B都创建了他们各自的QP的完成队列(CQ), 并为即将进行的RDMA传输注册了相应的内存区域(MR)。 系统A识别了一段缓冲区，该缓冲区的数据将被搬运到系统B上。系统B分配了一段空的缓冲区，用来存放来自系统A发送的数据。<br><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-3.png" alt="RDMA-3.png"></p>
+<h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>第二步：系统B创建一个WQE并放置到它的接收队列(RQ)中。这个WQE包含了一个指针，该指针指向的内存缓冲区用来存放接收到的数据。系统A也创建一个WQE并放置到它的发送队列(SQ)中去，该WQE中的指针执行一段内存缓冲区，该缓冲区的数据将要被传送。<br><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-4.png" alt="RDMA-4.png"></p>
+<h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>第三步：系统A上的HCA总是在硬件上干活，看看发送队列里有没有WQE。HCA将消费掉来自系统A的WQE, 然后将内存区域里的数据变成数据流发送给系统B。当数据流开始到达系统B的时候，系统B上的HCA就消费来自系统B的WQE，然后将数据放到该放的缓冲区上去。在高速通道上传输的数据流完全绕过了操作系统内核。<br><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-5.png" alt="RDMA-5.png"></p>
+<h3 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h3><p>第四步：当数据搬运完成的时候，HCA会创建一个CQE。 这个CQE被放置到完成队列(CQ)中，表明数据传输已经完成。HCA每消费掉一个WQE, 都会生成一个CQE。因此，在系统A的完成队列中放置一个CQE,意味着对应的WQE的发送操作已经完成。同理，在系统B的完成队列中也会放置一个CQE，表明对应的WQE的接收操作已经完成。如果发生错误，HCA依然会创建一个CQE。在CQE中，包含了一个用来记录传输状态的字段。<br><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-6.png" alt="RDMA-6.png"></p>
+<p>我们刚刚举例说明的是一个RDMA Send操作。在IB或RoCE中，传送一个小缓冲区里的数据耗费的总时间大约在1.3µs。通过同时创建很多WQE, 就能在1秒内传输存放在数百万个缓冲区里的数据。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在这博客中，我们学习了如何使用RDMA verbs API。同时也介绍了队列的概念，而队列概念是RDMA编程的基础。最后，我们演示了RDMA send操作，展现了缓冲区的数据是如何在从一个系统搬运到另一个系统上去的</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+              <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/" rel="tag"># 高性能计算</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/01/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9ARDMA%E6%A6%82%E8%BF%B0/" rel="prev" title="RDMA技术详解（一）：RDMA概述">
+                  <i class="fa fa-angle-left"></i> RDMA技术详解（一）：RDMA概述
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E7%90%86%E8%A7%A3RDMA-SGL/" rel="next" title="RDMA技术详解（三）：理解RDMA SGL">
+                  RDMA技术详解（三）：理解RDMA SGL <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

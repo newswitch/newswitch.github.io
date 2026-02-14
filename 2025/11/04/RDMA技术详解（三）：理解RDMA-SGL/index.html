@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="RDMA技术详解（三）：理解RDMA SGL概述在前面的文章中，我们介绍了RDMA的基本概念和Send&#x2F;Receive操作。本文将继续深入探讨RDMA中的一个重要概念：SGL（Scatter&#x2F;Gather List，分散&#x2F;聚合列表）。 SGL是RDMA中用于描述分散&#x2F;聚合内存操作的数据结构，它允许在一次RDMA操作中处理多个不连续的内存缓冲区，这对于高性能数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RDMA技术详解（三）：理解RDMA SGL">
+<meta property="og:url" content="https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E7%90%86%E8%A7%A3RDMA-SGL/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="RDMA技术详解（三）：理解RDMA SGL概述在前面的文章中，我们介绍了RDMA的基本概念和Send&#x2F;Receive操作。本文将继续深入探讨RDMA中的一个重要概念：SGL（Scatter&#x2F;Gather List，分散&#x2F;聚合列表）。 SGL是RDMA中用于描述分散&#x2F;聚合内存操作的数据结构，它允许在一次RDMA操作中处理多个不连续的内存缓冲区，这对于高性能数">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-1.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-2.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-3.png">
+<meta property="og:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-4.png">
+<meta property="article:published_time" content="2025-11-04T02:15:00.000Z">
+<meta property="article:modified_time" content="2026-02-13T02:43:05.560Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="高性能计算">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-1.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E7%90%86%E8%A7%A3RDMA-SGL/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E7%90%86%E8%A7%A3RDMA-SGL/","path":"2025/11/04/RDMA技术详解（三）：理解RDMA-SGL/","title":"RDMA技术详解（三）：理解RDMA SGL"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RDMA技术详解（三）：理解RDMA SGL | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E7%90%86%E8%A7%A3RDMA-SGL"><span class="nav-number">1.</span> <span class="nav-text">RDMA技术详解（三）：理解RDMA SGL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSGL"><span class="nav-number">1.2.</span> <span class="nav-text">什么是SGL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SGL%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">SGL的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ivc-post-send%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.4.</span> <span class="nav-text">ivc_post_send接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ibv-send-wr%E7%BB%93%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text">ibv_send_wr结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDMA-%E6%8F%90%E4%BA%A4WR%E6%B5%81%E7%A8%8B"><span class="nav-number">1.6.</span> <span class="nav-text">RDMA 提交WR流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%88%9B%E5%BB%BASGL"><span class="nav-number">1.6.1.</span> <span class="nav-text">第一步：创建SGL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E4%BD%BF%E7%94%A8PD%E8%BF%9B%E8%A1%8C%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4"><span class="nav-number">1.6.2.</span> <span class="nav-text">第二步：使用PD进行内存保护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E8%B0%83%E7%94%A8ibv-post-send-%E5%B0%86SGL%E5%8F%91%E9%80%81%E5%88%B0wire%E4%B8%8A%E5%8E%BB"><span class="nav-number">1.6.3.</span> <span class="nav-text">第三步：调用ibv_post_send()将SGL发送到wire上去</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.7.</span> <span class="nav-text">代码示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84Send%E6%93%8D%E4%BD%9C%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.7.1.</span> <span class="nav-text">完整的Send操作示例</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E7%90%86%E8%A7%A3RDMA-SGL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RDMA技术详解（三）：理解RDMA SGL | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RDMA技术详解（三）：理解RDMA SGL
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-11-04 10:15:00" itemprop="dateCreated datePublished" datetime="2025-11-04T10:15:00+08:00">2025-11-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-13 10:43:05" itemprop="dateModified" datetime="2026-02-13T10:43:05+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">高性能网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="RDMA技术详解（三）：理解RDMA-SGL"><a href="#RDMA技术详解（三）：理解RDMA-SGL" class="headerlink" title="RDMA技术详解（三）：理解RDMA SGL"></a>RDMA技术详解（三）：理解RDMA SGL</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在前面的文章中，我们介绍了RDMA的基本概念和Send&#x2F;Receive操作。本文将继续深入探讨RDMA中的一个重要概念：<strong>SGL（Scatter&#x2F;Gather List，分散&#x2F;聚合列表）</strong>。</p>
+<p>SGL是RDMA中用于描述分散&#x2F;聚合内存操作的数据结构，它允许在一次RDMA操作中处理多个不连续的内存缓冲区，这对于高性能数据传输至关重要。</p>
+<h2 id="什么是SGL"><a href="#什么是SGL" class="headerlink" title="什么是SGL"></a>什么是SGL</h2><p><strong>SGL（Scatter&#x2F;Gather List）</strong>，中文译为”分散&#x2F;聚合列表”，是一个包含多个内存地址和长度的列表。它允许RDMA硬件在一次操作中：</p>
+<ul>
+<li><strong>Scatter（分散）</strong>：将一个连续的数据流分散写入多个不连续的内存缓冲区</li>
+<li><strong>Gather（聚合）</strong>：将多个不连续的内存缓冲区聚合成一个连续的数据流发送出去</li>
+</ul>
+<p>在NVMe over PCIe中，I&#x2F;O命令支持SGL(Scatter Gather List 分散聚合表)和PRP(Physical Region Page 物理(内存)区域页), 而管理命令只支持PRP;而在NVMe over Fabrics中，无论是管理命令还是I&#x2F;O命令都只支持SGL。</p>
+<p>RDMA编程中，SGL(Scatter&#x2F;Gather List)是最基本的数据组织形式。 SGL是一个数组，该数组中的元素被称之为SGE(Scatter&#x2F;Gather Element)，每一个SGE就是一个Data Segment(数据段)。RDMA支持Scatter&#x2F;Gather操作，具体来讲就是RDMA可以支持一个连续的Buffer空间，进行Scatter分散到多个目的主机的不连续的Buffer空间。Gather指的就是多个不连续的Buffer空间，可以Gather到目的主机的一段连续的Buffer空间。</p>
+<p>下面我们就来看一下ibv_sge的定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span> &#123;</span></span><br><span class="line">    <span class="type">uint64_t</span>    addr;      <span class="comment">// 内存地址</span></span><br><span class="line">    <span class="type">uint32_t</span>    length;    <span class="comment">// 数据长度</span></span><br><span class="line">    <span class="type">uint32_t</span>    lkey;      <span class="comment">// 本地内存键（Local Key）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="SGL的结构"><a href="#SGL的结构" class="headerlink" title="SGL的结构"></a>SGL的结构</h2><p>在RDMA中，SGL由多个**SGE（Scatter&#x2F;Gather Element）**组成。每个SGE描述一个内存段的信息：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span> &#123;</span></span><br><span class="line">    <span class="type">uint64_t</span>    addr;      <span class="comment">// 内存地址</span></span><br><span class="line">    <span class="type">uint32_t</span>    length;    <span class="comment">// 数据长度</span></span><br><span class="line">    <span class="type">uint32_t</span>    lkey;      <span class="comment">// 本地内存键（Local Key）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol>
+<li><strong>addr</strong>：内存缓冲区的起始地址（虚拟地址）</li>
+<li><strong>length</strong>：该内存段的长度（字节数）</li>
+<li><strong>lkey</strong>：本地内存键，用于验证和保护内存访问。这个键来自于内存注册（MR）时返回的lkey</li>
+</ol>
+<h2 id="ivc-post-send接口"><a href="#ivc-post-send接口" class="headerlink" title="ivc_post_send接口"></a>ivc_post_send接口</h2><p>而在数据传输中，发送&#x2F;接收使用的Verbs API为：<br>ibv_post_send() - post a list of work requests (WRs) to a send queue 将一个WR列表放置到发送队列中 ibv_post_recv() - post a list of work requests (WRs) to a receive queue 将一个WR列表放置到接收队列中</p>
+<p>下面以ibv_post_send()为例，说明SGL是如何被放置到RDMA硬件的线缆(Wire)上的。<br>ibv_post_send()的函数原型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;infiniband/verbs.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">ibv_post_send</span><span class="params">(<span class="keyword">struct</span> ibv_qp *qp, </span></span><br><span class="line"><span class="params">                  <span class="keyword">struct</span> ibv_send_wr *wr,</span></span><br><span class="line"><span class="params">                  <span class="keyword">struct</span> ibv_send_wr **bad_wr)</span>;</span><br></pre></td></tr></table></figure>
+<p>ibv_post_send（）将以send_wr开头的工作请求（WR）的列表发布到Queue Pair的Send Queue。 它会在第一次失败时停止处理此列表中的WR（可以在发布请求时立即检测到），并通过bad_wr返回此失败的WR。</p>
+<p>参数wr是一个ibv_send_wr结构，如中所定义</p>
+<h2 id="ibv-send-wr结构"><a href="#ibv-send-wr结构" class="headerlink" title="ibv_send_wr结构"></a>ibv_send_wr结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> &#123;</span></span><br><span class="line">        <span class="type">uint64_t</span>                wr_id;                  <span class="comment">/* User defined WR ID */</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span>     *<span class="title">next</span>;</span>                   <span class="comment">/* Pointer to next WR in list, NULL if last WR */</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span>         *<span class="title">sg_list</span>;</span>                <span class="comment">/* Pointer to the s/g array */</span></span><br><span class="line">        <span class="type">int</span>                     num_sge;                <span class="comment">/* Size of the s/g array */</span></span><br><span class="line">        <span class="class"><span class="keyword">enum</span> <span class="title">ibv_wr_opcode</span>      <span class="title">opcode</span>;</span>                 <span class="comment">/* Operation type */</span></span><br><span class="line">        <span class="type">int</span>                     send_flags;             <span class="comment">/* Flags of the WR properties */</span></span><br><span class="line">        <span class="type">uint32_t</span>                imm_data;               <span class="comment">/* Immediate data (in network byte order) */</span></span><br><span class="line">        <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">                <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">                        <span class="type">uint64_t</span>        remote_addr;    <span class="comment">/* Start address of remote memory buffer */</span></span><br><span class="line">                        <span class="type">uint32_t</span>        rkey;           <span class="comment">/* Key of the remote Memory Region */</span></span><br><span class="line">                &#125; rdma;</span><br><span class="line">                <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">                        <span class="type">uint64_t</span>        remote_addr;    <span class="comment">/* Start address of remote memory buffer */</span></span><br><span class="line">                        <span class="type">uint64_t</span>        compare_add;    <span class="comment">/* Compare operand */</span></span><br><span class="line">                        <span class="type">uint64_t</span>        swap;           <span class="comment">/* Swap operand */</span></span><br><span class="line">                        <span class="type">uint32_t</span>        rkey;           <span class="comment">/* Key of the remote Memory Region */</span></span><br><span class="line">                &#125; atomic;</span><br><span class="line">                <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">                        <span class="class"><span class="keyword">struct</span> <span class="title">ibv_ah</span>  *<span class="title">ah</span>;</span>             <span class="comment">/* Address handle (AH) for the remote node address */</span></span><br><span class="line">                        <span class="type">uint32_t</span>        remote_qpn;     <span class="comment">/* QP number of the destination QP */</span></span><br><span class="line">                        <span class="type">uint32_t</span>        remote_qkey;    <span class="comment">/* Q_Key number of the destination QP */</span></span><br><span class="line">                &#125; ud;</span><br><span class="line">        &#125; wr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在调用ibv_post_send()之前，必须填充好数据结构wr。 wr是一个链表，每一个结点包含了一个sg_list(i.e. SGL: 由一个或多个SGE构成的数组), sg_list的长度为num_sge。</p>
+<h2 id="RDMA-提交WR流程"><a href="#RDMA-提交WR流程" class="headerlink" title="RDMA 提交WR流程"></a>RDMA 提交WR流程</h2><p>下面图解一下SGL和WR链表的对应关系，并说明一个SGL (struct ibv_sge *sg_list)里包含的多个数据段是如何被RDMA硬件聚合成一个连续的数据段的。</p>
+<h3 id="第一步：创建SGL"><a href="#第一步：创建SGL" class="headerlink" title="第一步：创建SGL"></a>第一步：创建SGL</h3><p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-1.png" alt="RDMA-1.png"></p>
+<p>从上图中，我们可以看到wr链表中的每一个结点都包含了一个SGL，SGL是一个数组，包含一个或多个SGE。通过ibv_post_send提交一个RDMA SEND 请求。这个WR请求中，包括一个sg_list的元素。它是一个SGE链表，SGE指向具体需要发送数据的Buffer</p>
+<h3 id="第二步：使用PD进行内存保护"><a href="#第二步：使用PD进行内存保护" class="headerlink" title="第二步：使用PD进行内存保护"></a>第二步：使用PD进行内存保护</h3><p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-2.png" alt="RDMA-2.png"><br>我们在发送一段内存地址的时候，我们需要将这段内存地址通过Memory Registration注册到RDMA中。也就是说注册到PD内存保护域当中。一个SGL至少被一个MR保护, 多个MR存在同一个PD中。如图所示一段内存MR可以保护多个SGE元素。</p>
+<h3 id="第三步：调用ibv-post-send-将SGL发送到wire上去"><a href="#第三步：调用ibv-post-send-将SGL发送到wire上去" class="headerlink" title="第三步：调用ibv_post_send()将SGL发送到wire上去"></a>第三步：调用ibv_post_send()将SGL发送到wire上去</h3><p><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-3.png" alt="RDMA-3.png"><br>在上图中，一个SGL数组包含了3个SGE, 长度分别为N1, N2, N3字节。我们可以看到，这3个buffer并不连续，它们Scatter(分散)在内存中的各个地方。RDMA硬件读取到SGL后，进行Gather(聚合)操作，于是在RDMA硬件的Wire上看到的就是N3+N2+N1个连续的字节。换句话说，通过使用SGL, 我们可以把分散(Scatter)在内存中的多个数据段(不连续)交给RDMA硬件去聚合(Gather)成连续的数据段。</p>
+<p>附录一： OFED Verbs<br><img src="/images/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89/RDMA-4.png" alt="RDMA-4.png"></p>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><h3 id="完整的Send操作示例"><a href="#完整的Send操作示例" class="headerlink" title="完整的Send操作示例"></a>完整的Send操作示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 准备三个分散的缓冲区</span></span><br><span class="line"><span class="type">char</span> *header = <span class="built_in">malloc</span>(<span class="number">100</span>);</span><br><span class="line"><span class="type">char</span> *payload = <span class="built_in">malloc</span>(<span class="number">2000</span>);</span><br><span class="line"><span class="type">char</span> *footer = <span class="built_in">malloc</span>(<span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 填充数据</span></span><br><span class="line"><span class="comment">// ... </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册内存</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_mr</span> *<span class="title">mr</span> =</span> ibv_reg_mr(pd, header, <span class="number">2150</span>, </span><br><span class="line">                                IBV_ACCESS_LOCAL_WRITE | </span><br><span class="line">                                IBV_ACCESS_REMOTE_WRITE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 构造SGL</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span> <span class="title">sge_list</span>[3];</span></span><br><span class="line">sge_list[<span class="number">0</span>].addr = (<span class="type">uint64_t</span>)header;</span><br><span class="line">sge_list[<span class="number">0</span>].length = <span class="number">100</span>;</span><br><span class="line">sge_list[<span class="number">0</span>].lkey = mr-&gt;lkey;</span><br><span class="line"></span><br><span class="line">sge_list[<span class="number">1</span>].addr = (<span class="type">uint64_t</span>)payload;</span><br><span class="line">sge_list[<span class="number">1</span>].length = <span class="number">2000</span>;</span><br><span class="line">sge_list[<span class="number">1</span>].lkey = mr-&gt;lkey;</span><br><span class="line"></span><br><span class="line">sge_list[<span class="number">2</span>].addr = (<span class="type">uint64_t</span>)footer;</span><br><span class="line">sge_list[<span class="number">2</span>].length = <span class="number">50</span>;</span><br><span class="line">sge_list[<span class="number">2</span>].lkey = mr-&gt;lkey;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 构造Send WR</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> <span class="title">send_wr</span>;</span></span><br><span class="line"><span class="built_in">memset</span>(&amp;send_wr, <span class="number">0</span>, <span class="keyword">sizeof</span>(send_wr));</span><br><span class="line">send_wr.wr_id = <span class="number">1</span>;</span><br><span class="line">send_wr.sg_list = sge_list;</span><br><span class="line">send_wr.num_sge = <span class="number">3</span>;</span><br><span class="line">send_wr.opcode = IBV_WR_SEND;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提交WR</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> *<span class="title">bad_wr</span>;</span></span><br><span class="line">ibv_post_send(qp, &amp;send_wr, &amp;bad_wr);</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+              <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/" rel="tag"># 高性能计算</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/04/RDMA%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9ARDMA-Send-Receive%E6%93%8D%E4%BD%9C/" rel="prev" title="RDMA技术详解（二）：RDMA Send Receive操作">
+                  <i class="fa fa-angle-left"></i> RDMA技术详解（二）：RDMA Send Receive操作
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/05/linux%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="linux高性能网络详解读书笔记（一）">
+                  linux高性能网络详解读书笔记（一） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
