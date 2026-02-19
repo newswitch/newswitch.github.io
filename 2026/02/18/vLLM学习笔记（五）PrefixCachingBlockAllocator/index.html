@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="vLLM 学习笔记（五）：PrefixCachingBlockAllocator本系列基于 vLLM 0.6.3 版本。 概述在上一篇博客中，我们详细探讨了 BlockSpaceManager 和 NaiveBlockAllocator 的设计与内存管理策略，了解了 vLLM 在生成任务中如何通过分配内存块来支持多任务并发、动态扩展及数据交换等需求。NaiveBlockAllocator 提供了基">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vLLM 学习笔记（五）：PrefixCachingBlockAllocator">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/18/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89PrefixCachingBlockAllocator/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="vLLM 学习笔记（五）：PrefixCachingBlockAllocator本系列基于 vLLM 0.6.3 版本。 概述在上一篇博客中，我们详细探讨了 BlockSpaceManager 和 NaiveBlockAllocator 的设计与内存管理策略，了解了 vLLM 在生成任务中如何通过分配内存块来支持多任务并发、动态扩展及数据交换等需求。NaiveBlockAllocator 提供了基">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89/vllm5-1.png">
+<meta property="article:published_time" content="2026-02-18T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-16T09:33:19.867Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="vLLM">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="推理">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89/vllm5-1.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/18/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89PrefixCachingBlockAllocator/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/18/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89PrefixCachingBlockAllocator/","path":"2026/02/18/vLLM学习笔记（五）PrefixCachingBlockAllocator/","title":"vLLM 学习笔记（五）：PrefixCachingBlockAllocator"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>vLLM 学习笔记（五）：PrefixCachingBlockAllocator | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vLLM-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9APrefixCachingBlockAllocator"><span class="nav-number">1.</span> <span class="nav-text">vLLM 学习笔记（五）：PrefixCachingBlockAllocator</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Prefix-Caching%EF%BC%9ARadixAttention-%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">1 Prefix Caching：RadixAttention 原理及应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-RadixAttention-%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1 RadixAttention 的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Radix-Tree-%E4%B8%8E-Prefix-Tree-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2 Radix Tree 与 Prefix Tree 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Prefix-Generated-KV-Caching"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.3 Prefix + Generated KV Caching</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-RadixAttention-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.4.</span> <span class="nav-text">1.4 RadixAttention 的工作流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-vLLM-Automatic-Prefix-Caching%EF%BC%9A%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">2 vLLM Automatic Prefix Caching：核心架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E4%B8%8E%E6%95%B4%E4%BD%93%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.1.</span> <span class="nav-text">2.1 核心组件与整体设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%93%88%E5%B8%8C%E6%9C%BA%E5%88%B6%EF%BC%9A%E5%86%85%E5%AE%B9%E5%93%88%E5%B8%8C%E5%9C%A8%E7%BC%93%E5%AD%98%E9%87%8D%E7%94%A8%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.2 哈希机制：内容哈希在缓存重用中的应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%86%85%E5%AD%98%E7%BC%93%E5%AD%98%E4%B8%8E%E5%A4%8D%E7%94%A8%E6%9C%BA%E5%88%B6"><span class="nav-number">1.4.</span> <span class="nav-text">3 内存缓存与复用机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%BC%93%E5%AD%98%E8%BF%87%E7%A8%8B%EF%BC%9Aallocate-immutable-block-%E6%96%B9%E6%B3%95%E8%A7%A3%E6%9E%90"><span class="nav-number">1.4.1.</span> <span class="nav-text">3.1 缓存过程：allocate_immutable_block 方法解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%9D%97%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%EF%BC%9ABlockTracker-%E4%B8%AD%E7%9A%84-enable-%E5%92%8C-disable"><span class="nav-number">1.4.2.</span> <span class="nav-text">3.2 块状态管理：BlockTracker 中的 enable 和 disable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%91%BD%E4%B8%AD%E7%8E%87%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%EF%BC%9A%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD%E7%8E%87%E7%BB%9F%E8%AE%A1%E4%B8%8E%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">1.4.3.</span> <span class="nav-text">3.3 命中率和性能优化：缓存命中率统计与优化策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%A4%9A%E8%BD%AE%E5%AF%B9%E8%AF%9D%E5%9C%BA%E6%99%AF%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.5.</span> <span class="nav-text">4 多轮对话场景中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%A4%9A%E8%BD%AE%E5%AF%B9%E8%AF%9D%E7%9A%84%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">1.5.1.</span> <span class="nav-text">4.1 多轮对话的缓存管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="nav-number">1.5.2.</span> <span class="nav-text">4.2 典型应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">5 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/18/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89PrefixCachingBlockAllocator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="vLLM 学习笔记（五）：PrefixCachingBlockAllocator | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vLLM 学习笔记（五）：PrefixCachingBlockAllocator
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-18 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-18T12:00:00+08:00">2026-02-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-16 17:33:19" itemprop="dateModified" datetime="2026-02-16T17:33:19+08:00">2026-02-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="vLLM-学习笔记（五）：PrefixCachingBlockAllocator"><a href="#vLLM-学习笔记（五）：PrefixCachingBlockAllocator" class="headerlink" title="vLLM 学习笔记（五）：PrefixCachingBlockAllocator"></a>vLLM 学习笔记（五）：PrefixCachingBlockAllocator</h1><p>本系列基于 vLLM 0.6.3 版本。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在上一篇博客中，我们详细探讨了 BlockSpaceManager 和 NaiveBlockAllocator 的设计与内存管理策略，了解了 vLLM 在生成任务中如何通过分配内存块来支持多任务并发、动态扩展及数据交换等需求。NaiveBlockAllocator 提供了基础的内存分配和回收机制，确保了序列在生成不同阶段（如 prefill 和 decode 阶段）所需的资源。然而，随着任务规模的增大，特别是对于频繁出现相同或相似前缀的请求，简单的内存管理策略在效率上面临瓶颈。</p>
+<p>在深度学习生成任务中，特别是长文本生成或多轮对话应用场景中，缓存机制显得尤为重要。每当需要重复生成某一段相同内容时，如果可以将已经生成的部分缓存下来以供复用，就能够显著降低系统的开销，提高任务效率。vLLM 的 PrefixCachingBlockAllocator 就是为了解决这一需求而设计的一种优化器，其通过前缀缓存实现了对已有内容生成结果的重用，避免了无效计算。</p>
+<p>在长 prompt 场景或多轮对话生成任务中，经常会遇到相似的请求。例如，对于同一系统 prompt 或在多轮对话场景中需要不断复用的历史上下文，重复计算会大幅增加系统的延迟，降低处理效率。如果能在生成过程中，将相同 prompt 的计算结果以 KV 缓存的形式保存下来，供后续请求复用，不仅可以节省内存和计算资源，还可以减少首 token 的生成时间。</p>
+<p>vLLM 中的 PrefixCachingBlockAllocator 主要基于 RadixAttention 算法实现，该算法通过基数树的结构来高效地复用相似前缀内容。在 vLLM 的缓存体系中，PrefixCaching 不仅缓存 prefix 阶段的 KV 数据，还包括生成阶段的 KV 缓存数据。RadixAttention 则通过标识内容的 hash 方式来唯一标识不同的缓存单元，并在必要时动态生成 KV 缓存块。这种设计方式，避免了多轮对话或长 prompt 生成中大量重复计算。</p>
+<p>本篇文章将深入分析 PrefixCachingBlockAllocator 的整体架构与内部机制，主要涵盖以下几点：</p>
+<ul>
+<li><strong>Prefix Caching 的核心原理</strong>：介绍 RadixAttention 算法的应用，及其在 PrefixCaching 中的作用。</li>
+<li><strong>缓存复用的具体实现</strong>：讲解 <strong>allocate_immutable_block</strong> 方法如何实现基于内容的缓存复用。</li>
+<li><strong>状态管理和块分配策略</strong>：分析 <strong>BlockTracker</strong>、<strong>Evictor</strong> 等核心组件如何协作管理缓存状态，保证高效利用内存。</li>
+<li><strong>多轮对话和生成优化</strong>：通过典型应用场景展示 PrefixCaching 的具体优化效果。</li>
+</ul>
+<p>通过本篇分析，希望能帮助大家更好地理解 vLLM 的缓存机制，挖掘 PrefixCaching 在生成任务中的优势，并在实践中灵活运用以提升生成效率。</p>
+<blockquote>
+<p>本系列代码基于 vLLM 0.6.3 版本。</p>
+</blockquote>
+<h2 id="1-Prefix-Caching：RadixAttention-原理及应用"><a href="#1-Prefix-Caching：RadixAttention-原理及应用" class="headerlink" title="1 Prefix Caching：RadixAttention 原理及应用"></a>1 Prefix Caching：RadixAttention 原理及应用</h2><h3 id="1-1-RadixAttention-的基本原理"><a href="#1-1-RadixAttention-的基本原理" class="headerlink" title="1.1 RadixAttention 的基本原理"></a>1.1 RadixAttention 的基本原理</h3><p><strong>RadixAttention</strong> 是一种创新的缓存机制，利用**基数树（Radix Tree）**的数据结构来管理和复用缓存。它的核心思想是通过共享公共前缀的内容，减少在生成任务中重复计算的成本，尤其是在对话生成和长 prompt 场景下尤为有效。</p>
+<p><strong>基数树如何用于缓存复用？</strong></p>
+<p>基数树是一种压缩的前缀树结构，常用于存储具有相同前缀的字符串。在 RadixAttention 中，基数树的每个节点代表一个内容块，节点之间的边代表着从父节点到子节点的前缀关系。通过这样的树结构，我们可以高效地存储和复用具有相同前缀的内容。例如：</p>
+<ul>
+<li>在长 prompt 生成任务中，如果两个不同的请求都包含相似的系统 prompt，这些内容就可以被映射到树的同一条路径上。这样后续的请求就不需要重新计算已有的部分。</li>
+<li>在多轮对话的生成任务中，前几轮的 KV 数据被保留在前缀缓存中，后续轮次的请求直接复用已有的前缀，减少重复计算。</li>
+</ul>
+<h3 id="1-2-Radix-Tree-与-Prefix-Tree-的区别"><a href="#1-2-Radix-Tree-与-Prefix-Tree-的区别" class="headerlink" title="1.2 Radix Tree 与 Prefix Tree 的区别"></a>1.2 Radix Tree 与 Prefix Tree 的区别</h3><p>Radix Tree 和 Prefix Tree 在结构上有所不同，尤其是在处理共享前缀的数据场景中，Radix Tree 更为灵活和高效。具体来说：</p>
+<ul>
+<li><strong>Radix Tree 的分片特性</strong>：Radix Tree 支持节点的内容以“片段”形式存储，即一个节点不仅可以包含一个字符（或一个 token），还可以包含一段连续的字符串或 token 序列。这样，当多个请求共享一段较长的前缀时，Radix Tree 可以将该前缀作为一个整体存储，而不是像 Prefix Tree 那样逐字符或逐 token 进行分解。</li>
+<li><strong>动态调整特性</strong>：Radix Tree 能够根据新请求的内容对现有节点进行动态分裂。例如，如果一个请求和已有缓存的前缀部分重合，但有部分不同，Radix Tree 会将共同的前缀保留为一个节点，随后创建新的分支节点。这一特性极大地提高了缓存的复用率和效率，尤其适用于大模型推理中的对话生成和长 prompt 处理。</li>
+</ul>
+<p>在多轮对话或长 prompt 场景中，这种动态分片和调整的能力让 Radix Tree 能更好地组织和管理大量重叠的上下文。例如，在对话系统中，如果用户在一轮对话中询问了多种问题，每个问题的开头可能相同，但后续内容不同。Radix Tree 可以在保留共同开头的同时，为每个分支问题创建单独的节点，最大限度地复用共享的前缀内容。</p>
+<h3 id="1-3-Prefix-Generated-KV-Caching"><a href="#1-3-Prefix-Generated-KV-Caching" class="headerlink" title="1.3 Prefix + Generated KV Caching"></a>1.3 Prefix + Generated KV Caching</h3><p>在大型语言模型推理过程中，生成任务涉及多个阶段的计算，特别是 <strong>Prefix 阶段</strong>（生成开始时的前缀部分）和 <strong>Generate 阶段</strong>（生成过程中新产生的部分）。为减少计算量并提高生成效率，PrefixCachingBlockAllocator 引入了 <strong>Prefix + Generated KV Caching</strong>，即在生成任务中缓存并复用 KV 数据，避免重复计算。</p>
+<h3 id="1-4-RadixAttention-的工作流程"><a href="#1-4-RadixAttention-的工作流程" class="headerlink" title="1.4 RadixAttention 的工作流程"></a>1.4 RadixAttention 的工作流程</h3><ul>
+<li><strong>构建基数树</strong>：对 prompt&#x2F;生成内容算哈希得到缓存标识，映射到树上节点，共享前缀落在同一分支。</li>
+<li><strong>复用</strong>：新请求到来时在树中查找已有路径，前缀相同则复用；仅当内容变化时创建新节点。</li>
+<li><strong>动态拆分</strong>：相似但不完全相同的 prompt 可对已有块做拆分、建分支，实现细粒度共享（如共享同一 system prompt）。</li>
+</ul>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89/vllm5-1.png" alt="RadixAttention 与 Prefix Caching 流程"></p>
+<p>上图展示了 RadixAttention 在对话和长 prompt 缓存中的工作流程。在最开始，基数树是空的。随着第一个用户请求 “Hello!” 到来，系统生成了回复 “Hi!”。整个对话（包括系统提示 “You are a helpful assistant”）被合并为一个节点 a 存储在基数树中。</p>
+<p>当用户再次请求 “Hello!” 时，系统直接复用了之前节点 a 中缓存的内容，生成同样的响应 “Hi!”。之后，用户提出新的问题（如 “Solve this problem …”），该对话内容被存储在一个新节点 b 中。此时基数树上保存了不同对话分支，并共享了同样的前缀节点 a。</p>
+<p>随着更多不同请求的加入（如 “What can you do?” 和 “Write a story …”），系统开始在不同请求中共享公共前缀，并在需要时分裂节点。对于共享的 prompt，系统不会重复计算，而是复用已有的前缀节点数据。</p>
+<p>当内存资源不足时，某些节点会被“逐出”（evicted），如图中第 5 步所示。节点 c 被清除以释放内存，为新的请求腾出空间。系统基于 <strong>LRU</strong>（最近最少使用）策略，将最久未使用的缓存逐出。基数树继续扩展，通过分支来适应更多请求；当缓存压力增大时，系统会优先保留那些可能重复使用的节点，逐出那些较长时间未被使用的节点（如 j 和 k 等）。</p>
+<h2 id="2-vLLM-Automatic-Prefix-Caching：核心架构"><a href="#2-vLLM-Automatic-Prefix-Caching：核心架构" class="headerlink" title="2 vLLM Automatic Prefix Caching：核心架构"></a>2 vLLM Automatic Prefix Caching：核心架构</h2><h3 id="2-1-核心组件与整体设计"><a href="#2-1-核心组件与整体设计" class="headerlink" title="2.1 核心组件与整体设计"></a>2.1 核心组件与整体设计</h3><p>PrefixCachingBlockAllocator 主要包含以下几个核心组件：</p>
+<ul>
+<li><strong>BlockTracker</strong>：用于追踪每个块的状态，包括是否活跃和上次访问时间。</li>
+<li><strong>Evictor</strong>：管理块的驱逐，按 <strong>LRU</strong> 策略释放未使用的块。</li>
+<li><strong>RefCounter</strong>：管理每个块的引用次数，确保块在没有被使用时可以被安全回收。</li>
+</ul>
+<p><strong>BlockTracker</strong> 是用于跟踪每个块状态的组件。它负责记录每个内存块是否处于活动状态、是否已完成计算（<strong>computed</strong>），以及上次访问的时间（<strong>last_accessed</strong>）。每个块在分配后会通过 BlockTracker 进行状态管理。例如，当一个块被标记为 “active” 后，可以通过 last_accessed 记录它的访问时间，从而帮助 Evictor 决定是否将其驱逐。此外，BlockTracker 的 <strong>enable</strong> 和 <strong>disable</strong> 方法可以在块的生命周期中灵活调整状态，确保内存资源得到高效利用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BlockTracker</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;用于追踪块的状态，包括是否活跃和上次访问时间。&quot;&quot;&quot;</span></span><br><span class="line">    __slots__ = (<span class="string">&quot;active&quot;</span>, <span class="string">&quot;last_accessed&quot;</span>, <span class="string">&quot;computed&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.active: <span class="built_in">bool</span> = <span class="literal">False</span></span><br><span class="line">        <span class="variable language_">self</span>.reset()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;重置块状态，包括访问时间和计算状态。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.last_accessed: <span class="built_in">float</span> = _DEFAULT_LAST_ACCESSED_TIME</span><br><span class="line">        <span class="variable language_">self</span>.computed: <span class="built_in">bool</span> = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">enable</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;激活块，重置状态。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="keyword">not</span> <span class="variable language_">self</span>.active</span><br><span class="line">        <span class="variable language_">self</span>.active = <span class="literal">True</span></span><br><span class="line">        <span class="variable language_">self</span>.reset()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">disable</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;禁用块，重置状态。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="variable language_">self</span>.active</span><br><span class="line">        <span class="variable language_">self</span>.active = <span class="literal">False</span></span><br><span class="line">        <span class="variable language_">self</span>.reset()</span><br></pre></td></tr></table></figure>
+
+<p>例如，在一个多轮对话中，前几轮对话产生的 KV 数据块可以被标记为“已完成计算”（computed）。这样，BlockTracker 确保系统不会重复计算这些已经存在的块，从而大大节省了计算资源。</p>
+<p><strong>Evictor</strong> 是 PrefixCachingBlockAllocator 中负责缓存块的驱逐和回收的组件。通过 <strong>LRU</strong>（Least Recently Used）策略，它可以有效地管理缓存中的数据，释放不再使用的块以供新的请求使用。Evictor 的设计基于一个 <strong>free_table</strong>，用于保存最近未使用的缓存块。当内存压力增大时，Evictor 会优先驱逐那些访问时间最久远的块，以腾出空间。通过 <strong>add</strong> 和 <strong>evict</strong> 方法，Evictor 实现了对未使用块的管理与回收。比如，当新的请求需要内存时，可以调用 evict 方法驱逐最旧的块，从而释放空间。举个例子：假设某个块在过去的对话轮次中已经被多次引用，但当前轮次不再需要它，那么 Evictor 会将该块标记为“待释放”。这种设计使得系统可以在内存压力增大时自动清理旧数据，以腾出空间供新请求使用，同时避免频繁的内存分配和回收。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Evictor</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;管理块的驱逐，按 LRU 策略释放未使用的块。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, block_id, content_hash, num_tokens_total, last_accessed</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;将块添加到 free_table 中，准备驱逐。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 代码省略，逻辑为按访问时间顺序排序</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">remove</span>(<span class="params">self, content_hash</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;从 free_table 中移除块，用于复用。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 逻辑实现略</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">evict</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;逐出最近最少使用的块。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 逻辑实现略</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>RefCounter</strong> 是用于管理每个块的引用次数的组件。它在 PrefixCachingBlockAllocator 中扮演关键角色，确保每个块在没有被使用时可以被安全回收，而在被多次引用时则保留在缓存中。通过 RefCounter，每个块的引用计数得以精确控制。例如，当引用计数减为零时，Evictor 可以将该块驱逐；而当引用计数增加时，则表示该块正在被活跃使用，不应回收。引用计数器的 <strong>incr</strong> 和 <strong>decr</strong> 方法确保了块的正确管理：每次分配新的块，引用计数器会自增，而当引用计数归零时，系统会将该块交给 Evictor 处理。这样，即便在高并发的生成任务中，系统也能合理分配和释放内存，确保生成的稳定性和缓存的高效利用。在实际应用中，比如在同一个对话 session 中，如果多个请求都引用了同一个 KV 缓存块，那么该块的引用计数将不断增加。这就确保了即使有多个请求同时访问同一个块，它也不会被 Evictor 回收。只有当所有引用都释放完毕时，引用计数归零，Evictor 才会考虑将其释放。这种机制使得内存管理更加精确，并最大限度地复用了已存在的数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">RefCounter</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;引用计数器，管理每个块的引用次数。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">incr</span>(<span class="params">self, block_id</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;增加块的引用计数。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 代码省略</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decr</span>(<span class="params">self, block_id</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;减少引用计数，为 0 时释放块。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 代码省略</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-哈希机制：内容哈希在缓存重用中的应用"><a href="#2-2-哈希机制：内容哈希在缓存重用中的应用" class="headerlink" title="2.2 哈希机制：内容哈希在缓存重用中的应用"></a>2.2 哈希机制：内容哈希在缓存重用中的应用</h3><p>在 PrefixCachingBlockAllocator 中，每一个块都拥有一个唯一的“<strong>内容哈希</strong>”（<strong>content_hash</strong>），它是实现缓存重用的关键。这种哈希机制确保了即使是内容完全相同的请求，系统也能正确识别并复用现有的数据块，从而避免重复计算。</p>
+<p>内容哈希是根据块的内容生成的唯一标识符。具体来说，PrefixCachingBlockAllocator 会对每个块中的 token 序列生成一个哈希值（content_hash）。如果两个请求的 token 序列相同，它们的哈希值也相同；而如果内容稍有不同，则会生成不同的哈希值。</p>
+<p>这种设计的一个典型应用场景是系统提示（system prompt）或长对话前缀的复用。在对话系统中，某些用户可能在多个请求中使用相同的前缀（例如系统提示），此时，系统会为第一个请求生成一个内容哈希值并缓存对应的 KV 数据；而对于后续的请求，系统只需检查哈希值即可判断该数据是否已存在，从而避免重新计算。</p>
+<p>当一个新的请求到达时，系统会生成该请求的内容哈希，并在缓存中查找是否已有匹配的 KV 块。如果找到匹配项，则直接复用缓存中的数据；如果找不到匹配项，则为该请求生成新的 KV 块，并记录其哈希值。这种机制让 PrefixCachingBlockAllocator 能够快速定位缓存中的数据块，而无需对每个块进行逐一比对，不仅节省了计算资源，还减少了内存查找的时间开销。</p>
+<h2 id="3-内存缓存与复用机制"><a href="#3-内存缓存与复用机制" class="headerlink" title="3 内存缓存与复用机制"></a>3 内存缓存与复用机制</h2><h3 id="3-1-缓存过程：allocate-immutable-block-方法解析"><a href="#3-1-缓存过程：allocate-immutable-block-方法解析" class="headerlink" title="3.1 缓存过程：allocate_immutable_block 方法解析"></a>3.1 缓存过程：allocate_immutable_block 方法解析</h3><p><strong>allocate_immutable_block</strong> 是 PrefixCachingBlockAllocator 中最核心的缓存机制实现部分，专门用于分配和复用 KV 缓存块。在缓存过程中，它通过检测 <strong>content_hash</strong>（内容哈希）来判断是否可以复用已有的缓存块，从而避免不必要的重复计算，提升性能。</p>
+<p>调度器在预填充阶段会调用 <strong>BlockTable.allocate</strong> 方法分配内存块，而 allocate_immutable_block 就是这个过程的核心实现之一。在 BlockTable 的 allocate 方法中，会进一步调用 <strong>_allocate_blocks_for_token_ids</strong>，在其中通过 <strong>allocate_immutable_blocks</strong> 检查缓存并分配块。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">allocate</span>(<span class="params">self, token_ids: <span class="type">List</span>[<span class="built_in">int</span>], device: Device = Device.GPU</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    blocks = <span class="variable language_">self</span>._allocate_blocks_for_token_ids(prev_block=<span class="literal">None</span>, token_ids=token_ids, device=device)</span><br><span class="line">    <span class="variable language_">self</span>.update(blocks)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_allocate_blocks_for_token_ids</span>(<span class="params">self, prev_block: <span class="type">Optional</span>[Block], token_ids: <span class="type">List</span>[<span class="built_in">int</span>], device: Device</span>) -&gt; <span class="type">List</span>[Block]:</span><br><span class="line">    block_token_ids = <span class="variable language_">self</span>._chunk_token_blocks_for_append(token_ids)</span><br><span class="line">    <span class="keyword">if</span> block_token_ids:</span><br><span class="line">        <span class="comment"># 调用 allocate_immutable_block 检查缓存并分配块</span></span><br><span class="line">        blocks.extend(<span class="variable language_">self</span>._allocator.allocate_immutable_blocks(prev_block, block_token_ids, device=device))</span><br></pre></td></tr></table></figure>
+
+<p><strong>allocate_immutable_block</strong> 核心逻辑如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">allocate_immutable_block</span>(<span class="params">self,</span></span><br><span class="line"><span class="params">                             prev_block: <span class="type">Optional</span>[Block],</span></span><br><span class="line"><span class="params">                             token_ids: <span class="type">List</span>[<span class="built_in">int</span>],</span></span><br><span class="line"><span class="params">                             device: <span class="type">Optional</span>[Device] = <span class="literal">None</span></span>) -&gt; Block:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Allocates an immutable block with the given token IDs, reusing cached</span></span><br><span class="line"><span class="string">    blocks if possible.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        prev_block (Optional[Block]): The previous block in the sequence.</span></span><br><span class="line"><span class="string">        token_ids (List[int]): The token IDs to be stored in the block.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        Block: The allocated immutable block.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> device <span class="keyword">is</span> <span class="literal">None</span></span><br><span class="line">    assert_prefix_caching_block_or_none(prev_block)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># First, try to create a block that points to cached data</span></span><br><span class="line">    block = <span class="variable language_">self</span>._block_pool.init_block(prev_block=prev_block,</span><br><span class="line">                                        token_ids=token_ids,</span><br><span class="line">                                        block_size=<span class="variable language_">self</span>._block_size,</span><br><span class="line">                                        physical_block_id=<span class="literal">None</span>)</span><br><span class="line">    <span class="keyword">assert</span> block.content_hash <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 查找缓存中是否存在匹配的内容哈希</span></span><br><span class="line">    cached_block_id = <span class="variable language_">self</span>._cached_blocks.get(block.content_hash, <span class="literal">None</span>)</span><br><span class="line">    <span class="keyword">if</span> cached_block_id <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 如果缓存命中，复用已有的缓存块</span></span><br><span class="line">        <span class="variable language_">self</span>.metric_data.query(hit=<span class="literal">True</span>)</span><br><span class="line">        block.block_id = cached_block_id</span><br><span class="line">        <span class="variable language_">self</span>._incr_refcount_cached_block(block)</span><br><span class="line">        <span class="keyword">return</span> block</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 如果缓存未命中，释放临时块并创建新的块</span></span><br><span class="line">    <span class="variable language_">self</span>.metric_data.query(hit=<span class="literal">False</span>)</span><br><span class="line">    <span class="variable language_">self</span>._block_pool.free_block(block)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># No cached block =&gt; Allocate a new block</span></span><br><span class="line">    block = <span class="variable language_">self</span>.allocate_mutable_block(prev_block)</span><br><span class="line">    block.append_token_ids(token_ids)</span><br><span class="line">    <span class="keyword">return</span> block</span><br></pre></td></tr></table></figure>
+
+<p>在 <strong>allocate_immutable_block</strong> 中，首先通过 <strong>self._block_pool.init_block</strong> 方法生成一个新的块对象，并初始化 token_ids 和 block_size。在此过程中，会生成当前块的 content_hash，用来判断块的内容是否在缓存中已存在。生成 content_hash 后，会在 <strong>self._cached_blocks</strong> 中查找是否已存在该哈希值对应的缓存块。</p>
+<p><strong>若缓存命中</strong>（找到匹配的 cached_block_id）：调用 <strong>self.metric_data.query(hit&#x3D;True)</strong> 记录缓存命中；将当前块的 block_id 设置为 cached_block_id，复用已有缓存；调用 <strong>_incr_refcount_cached_block(block)</strong> 增加引用计数，确保该块在有引用时不会被释放。这样系统就可以直接复用缓存中的块，无需重新计算和存储 KV 数据。</p>
+<p><strong>若缓存未命中</strong>：调用 <strong>self.metric_data.query(hit&#x3D;False)</strong> 记录未命中；调用 <strong>self._block_pool.free_block(block)</strong> 释放临时块；调用 <strong>self.allocate_mutable_block(prev_block)</strong> 分配新的可变块，并通过 <strong>append_token_ids(token_ids)</strong> 将内容写入。系统为未命中的请求创建新块，供后续请求复用。</p>
+<h3 id="3-2-块状态管理：BlockTracker-中的-enable-和-disable"><a href="#3-2-块状态管理：BlockTracker-中的-enable-和-disable" class="headerlink" title="3.2 块状态管理：BlockTracker 中的 enable 和 disable"></a>3.2 块状态管理：BlockTracker 中的 enable 和 disable</h3><p>在 PrefixCachingBlockAllocator 的缓存机制中，每个内存块的生命周期状态至关重要。为了有效追踪和管理这些块的状态，PrefixCachingBlockAllocator 使用了 <strong>BlockTracker</strong> 类。BlockTracker 负责记录每个块的状态（如是否处于活跃状态、最后一次访问时间、以及是否已完成计算），并通过 <strong>enable</strong> 和 <strong>disable</strong> 方法来管理块的生命周期。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BlockTracker</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;用于在前缀缓存分配器中追踪块的状态。&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    __slots__ = (<span class="string">&quot;active&quot;</span>, <span class="string">&quot;last_accessed&quot;</span>, <span class="string">&quot;computed&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.last_accessed: <span class="built_in">float</span> = _DEFAULT_LAST_ACCESSED_TIME</span><br><span class="line">        <span class="variable language_">self</span>.computed: <span class="built_in">bool</span> = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.active: <span class="built_in">bool</span> = <span class="literal">False</span></span><br><span class="line">        <span class="variable language_">self</span>.reset()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">enable</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;激活块，设置块为活跃状态并重置访问时间。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="keyword">not</span> <span class="variable language_">self</span>.active</span><br><span class="line">        <span class="variable language_">self</span>.active = <span class="literal">True</span></span><br><span class="line">        <span class="variable language_">self</span>.reset()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">disable</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;禁用块，设置块为非活跃状态并重置状态信息。&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="variable language_">self</span>.active</span><br><span class="line">        <span class="variable language_">self</span>.active = <span class="literal">False</span></span><br><span class="line">        <span class="variable language_">self</span>.reset()</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-命中率和性能优化：缓存命中率统计与优化策略"><a href="#3-3-命中率和性能优化：缓存命中率统计与优化策略" class="headerlink" title="3.3 命中率和性能优化：缓存命中率统计与优化策略"></a>3.3 命中率和性能优化：缓存命中率统计与优化策略</h3><p>在 PrefixCachingBlockAllocator 中，缓存命中率是衡量缓存系统效率的关键指标。通过统计缓存命中情况，系统可以了解有多少次请求成功复用了缓存中的数据，以及多少次缓存未命中而需要重新分配块或计算数据。这不仅帮助系统评估当前缓存策略的效果，还可以为进一步优化提供指导。</p>
+<p><strong>metric_data.query</strong> 方法用于记录每次缓存查询的结果。它接收一个参数 <strong>hit</strong>，表示缓存查询是否命中：当 hit&#x3D;True 时，表示查询成功复用了缓存块，统计数据中缓存命中次数会增加；当 hit&#x3D;False 时，表示查询未命中，未命中次数会增加。<strong>CacheMetricData</strong> 类中的 <strong>get_hit_rate</strong> 方法可以通过命中和未命中的次数计算缓存命中率。命中率定义为：<strong>Hit Rate &#x3D; hits &#x2F; (hits + misses)</strong>，表示在所有请求中有多少百分比成功复用了缓存。这种记录方式在系统运行过程中积累了足够的数据，可以帮助开发者在实际应用中监控缓存的表现，优化策略以提升系统性能。</p>
+<h2 id="4-多轮对话场景中的应用"><a href="#4-多轮对话场景中的应用" class="headerlink" title="4 多轮对话场景中的应用"></a>4 多轮对话场景中的应用</h2><p>在多轮对话场景中，PrefixCachingBlockAllocator 提供了一套高效的缓存管理方案，通过 <strong>Prefix Caching</strong> 与 <strong>Generated KV Caching</strong> 的结合，实现对历史对话内容的缓存和复用。该机制在长系统提示（system prompt）或多轮对话的上下文中表现出色，尤其在高负载的对话系统中能够显著减少计算开销，提升生成效率。</p>
+<h3 id="4-1-多轮对话的缓存管理"><a href="#4-1-多轮对话的缓存管理" class="headerlink" title="4.1 多轮对话的缓存管理"></a>4.1 多轮对话的缓存管理</h3><p>在多轮对话中，通常需要复用之前轮次的对话历史。PrefixCachingBlockAllocator 通过将对话内容缓存为 KV 数据块的方式实现对历史对话的复用。具体而言，分为两个阶段的缓存管理：</p>
+<ul>
+<li><strong>Prefix Caching</strong>：当对话中包含大量相同的前缀时，PrefixCachingBlockAllocator 会将这些前缀数据块缓存下来，后续对话轮次直接复用这些前缀，避免重复计算。在多轮对话中，尤其是相同的 system prompt 不断重复的情况下，Prefix Caching 能显著减少前缀部分的计算。</li>
+<li><strong>Generated KV Caching</strong>：在对话生成阶段，Generated KV Caching 会将新生成的 KV 数据块保存下来，便于后续轮次继续复用。这种缓存方法适用于多轮对话中每轮都基于上一轮生成的 KV 数据作为上下文继续生成的情况，能够避免每轮对话重新生成前几轮的内容，大幅降低开销。</li>
+</ul>
+<h3 id="4-2-典型应用"><a href="#4-2-典型应用" class="headerlink" title="4.2 典型应用"></a>4.2 典型应用</h3><p>多轮对话的缓存管理不仅适用于相同的系统 prompt，也支持在相似上下文中的缓存复用。以下是几个典型的应用场景：</p>
+<p><strong>相同系统 prompt 的复用</strong></p>
+<p>在许多应用中，如客户服务机器人或长期对话的智能助手，系统 prompt 通常保持不变。在这种情况下，PrefixCachingBlockAllocator 会将系统 prompt 的 KV 缓存下来，后续所有的对话轮次都直接复用该缓存。例如，客户服务的系统 prompt 为“您是一位专业的技术支持人员，请为客户提供帮助”，只需在首次生成时计算 KV 数据，在后续对话中直接从缓存中读取即可，这样可以极大地提升响应速度。</p>
+<p><strong>相似上下文的缓存复用</strong></p>
+<p>在一些多轮对话中，虽然系统 prompt 可能会略有不同，但上下文非常相似。此时 PrefixCachingBlockAllocator 通过 <strong>content_hash</strong> 识别相似的 KV 数据块，将这些类似的数据标记为相同的前缀来进行缓存。例如，两个用户的对话均涉及“技术支持”，仅细节部分有所差异，则系统会检测到大部分 KV 数据一致性，并在缓存中共享这些数据块。</p>
+<p><strong>高负载下的缓存管理策略</strong></p>
+<p>在高 QPS（Queries Per Second）负载情况下，系统的缓存可能面临较大的压力。为确保响应速度和资源合理分配，PrefixCachingBlockAllocator 结合 <strong>LRU</strong> 策略（Least Recently Used），优先保留高频访问的数据，逐出低优先级的缓存块。例如，当多个对话会话同时访问相似的历史上下文时，Evictor 会优先逐出较早未被访问的数据块，保证缓存的空间可用，避免内存溢出。</p>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5 总结"></a>5 总结</h2><p>PrefixCachingBlockAllocator 和 vLLM 中的 <strong>Automatic Prefix Caching</strong> 为高效生成任务提供了关键支持。通过 <strong>RadixAttention</strong> 的基数树结构以及哈希缓存管理，这一架构实现了前缀数据和生成数据的高效缓存与复用，在长系统提示和多轮对话场景中表现突出。</p>
+<p>首先，RadixAttention 利用基数树（Radix Tree）的特性，实现了对共享前缀的存储优化。无论是系统提示的重复生成还是多轮对话的历史上下文，这一结构都能够有效避免冗余计算。同时，Automatic Prefix Caching 通过内容哈希将每个 KV 数据块唯一标识，大幅提升了缓存的命中率，实现了资源的动态管理和分配。</p>
+<p>在多轮对话场景中，Prefix Caching 与 Generated KV Caching 相结合，确保了系统 prompt 和上下文的持续复用，使得对历史对话的依赖极大减少，显著提升了生成效率。在高 QPS 负载场景下，LRU 策略和引用计数的结合进一步优化了缓存管理，确保系统在高并发下依旧稳定。</p>
+<p>展望未来，进一步的优化方向可以包括提升缓存的调度策略，使得缓存的管理更加自适应，以应对更复杂的生成任务；另外，在高频数据块的压缩和复用上也存在提升空间。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vLLM/" rel="tag"># vLLM</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
+              <a href="/tags/%E6%8E%A8%E7%90%86/" rel="tag"># 推理</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/17/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89BlockSpaceManager/" rel="prev" title="vLLM 学习笔记（四）：BlockSpaceManager">
+                  <i class="fa fa-angle-left"></i> vLLM 学习笔记（四）：BlockSpaceManager
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

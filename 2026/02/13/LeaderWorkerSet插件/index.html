@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="LeaderWorkerSet 插件大规模语言模型（LLM）推理采用多节点、多 GPU 的分布式计算架构，通过 Tensor Parallelism 跨 GPU 切分模型参数，结合 Pipeline Parallelism 跨节点分配计算阶段，实现多设备协同推理。传统的 Kubernetes Deployment 和 StatefulSet 可以用于部署 LLM 分布式推理，但存在一些局限性：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeaderWorkerSet 插件">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/13/LeaderWorkerSet%E6%8F%92%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="LeaderWorkerSet 插件大规模语言模型（LLM）推理采用多节点、多 GPU 的分布式计算架构，通过 Tensor Parallelism 跨 GPU 切分模型参数，结合 Pipeline Parallelism 跨节点分配计算阶段，实现多设备协同推理。传统的 Kubernetes Deployment 和 StatefulSet 可以用于部署 LLM 分布式推理，但存在一些局限性：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/images/LeaderWorkerSet%E6%8F%92%E4%BB%B6/LeaderWorkerSet-1.png">
+<meta property="article:published_time" content="2026-02-13T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-18T07:39:56.546Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="插件">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/images/LeaderWorkerSet%E6%8F%92%E4%BB%B6/LeaderWorkerSet-1.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/13/LeaderWorkerSet%E6%8F%92%E4%BB%B6/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/13/LeaderWorkerSet%E6%8F%92%E4%BB%B6/","path":"2026/02/13/LeaderWorkerSet插件/","title":"LeaderWorkerSet 插件"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LeaderWorkerSet 插件 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LeaderWorkerSet-%E6%8F%92%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">LeaderWorkerSet 插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">1 基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6%E4%B8%8E%E7%BA%A6%E6%9D%9F"><span class="nav-number">1.2.</span> <span class="nav-text">2 前提条件与约束</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 前提条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%BA%A6%E6%9D%9F%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 约束与限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%89%E8%A3%85%E4%B8%8E%E5%8D%B8%E8%BD%BD"><span class="nav-number">1.3.</span> <span class="nav-text">3 安装与卸载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%AE%89%E8%A3%85"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%8D%B8%E8%BD%BD"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 卸载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%BB%84%E4%BB%B6%E8%AF%B4%E6%98%8E"><span class="nav-number">1.4.</span> <span class="nav-text">4 组件说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B%EF%BC%9AvLLM-%E5%88%86%E5%B8%83%E5%BC%8F%E6%8E%A8%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">5 使用示例：vLLM 分布式推理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%88%9B%E5%BB%BA%E9%83%A8%E7%BD%B2-YAML"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 创建部署 YAML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 部署与验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E"><span class="nav-number">1.6.</span> <span class="nav-text">6 版本说明</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/LeaderWorkerSet%E6%8F%92%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LeaderWorkerSet 插件 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeaderWorkerSet 插件
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-13 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-13T12:00:00+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-18 15:39:56" itemprop="dateModified" datetime="2026-02-18T15:39:56+08:00">2026-02-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/" itemprop="url" rel="index"><span itemprop="name">AI服务部署</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="LeaderWorkerSet-插件"><a href="#LeaderWorkerSet-插件" class="headerlink" title="LeaderWorkerSet 插件"></a>LeaderWorkerSet 插件</h1><p>大规模语言模型（LLM）推理采用多节点、多 GPU 的分布式计算架构，通过 <strong>Tensor Parallelism</strong> 跨 GPU 切分模型参数，结合 <strong>Pipeline Parallelism</strong> 跨节点分配计算阶段，实现多设备协同推理。传统的 Kubernetes <strong>Deployment</strong> 和 <strong>StatefulSet</strong> 可以用于部署 LLM 分布式推理，但存在一些局限性：</p>
+<ul>
+<li><strong>Deployment</strong>：用于部署无状态应用，难以管理 Pod 间的依赖关系和统一生命周期；滚动更新时可能导致部分 Pod 已更新、其他尚未更新，影响推理服务可用性。</li>
+<li><strong>StatefulSet</strong>：可保证 Pod 顺序部署和唯一身份，但伸缩与更新相对复杂，删除和重建策略较严格，不利于 LLM 推理所需的快速弹性伸缩与恢复。</li>
+</ul>
+<p>CCE Standard&#x2F;Turbo 集群提供的 <strong>LeaderWorkerSet 插件</strong>是一种专为 AI&#x2F;ML 推理设计的 CRD 资源，能更好解决上述局限，具有以下优势：</p>
+<ul>
+<li><strong>分布式推理优化</strong>：支持 Tensor Parallelism 与 Pipeline Parallelism，实现跨 Pod 的高效计算协同与零拷贝通信。</li>
+<li><strong>组级别生命周期管理</strong>：支持组级别的弹性伸缩、滚动升级和重启，提升服务高可用性。</li>
+<li><strong>身份标识与智能路由</strong>：每个 <strong>LeaderWorkerSet（LWS）</strong> 可被唯一标识，并支持基于 KV Cache 亲和性的智能路由。</li>
+<li><strong>多租户资源隔离</strong>：每个团队或用户可拥有独立的推理实例（Serve 实例），实现资源隔离与灵活管理。</li>
+</ul>
+<p><strong>适用场景</strong>：LLM 分布式推理服务（在线问答、文本生成、对话机器人等）、高性能多节点推理加速（vLLM、SGLang 等）、会话感知型推理服务（与 AI Gateway 联动实现基于 Session 的路由，提高 KV Cache 命中率）。</p>
+<h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1 基本概念"></a>1 基本概念</h2><p><strong>LeaderWorkerSet（LWS）</strong> 是 Kubernetes 为 AI&#x2F;大模型推理场景设计的一种工作负载类型，以**副本（Replica）**为单位将多 Pod 组成一个逻辑整体，实现分布式推理任务的统一生命周期管理，简化 vLLM、SGLang 等推理服务的弹性部署与运维。</p>
+<p><img src="/images/LeaderWorkerSet%E6%8F%92%E4%BB%B6/LeaderWorkerSet-1.png" alt="LeaderWorkerSet 架构示意"></p>
+<ul>
+<li>每个 <strong>LWS 副本（Replica）</strong> 对应一个独立对外服务的 AI 推理实例（<strong>Serve 实例</strong>）。</li>
+<li>Replica 内每个 <strong>Pod</strong> 对应 Serve 实例中的并行切片（如 Tensor Parallel 的一个分片），具有唯一编号，用于模型分片与通信。</li>
+<li>Replica 内 Pod 划分为 <strong>Leader</strong> 和 <strong>Worker</strong>：通常 Leader 承担业务负载并负责实例初始化、调度等；部分场景下 Leader 仅负责协调管理，不参与实际推理计算。</li>
+</ul>
+<h2 id="2-前提条件与约束"><a href="#2-前提条件与约束" class="headerlink" title="2 前提条件与约束"></a>2 前提条件与约束</h2><h3 id="2-1-前提条件"><a href="#2-1-前提条件" class="headerlink" title="2.1 前提条件"></a>2.1 前提条件</h3><ul>
+<li>已安装 <strong>v1.27 及以上</strong>的 CCE Standard&#x2F;Turbo 集群。</li>
+<li>根据业务类型准备节点与插件：<strong>NPU</strong> 需创建 NPU 节点并安装 CCE AI 套件（Ascend NPU）；<strong>GPU</strong> 需创建 GPU 节点并安装 CCE AI 套件（NVIDIA GPU）。</li>
+</ul>
+<h3 id="2-2-约束与限制"><a href="#2-2-约束与限制" class="headerlink" title="2.2 约束与限制"></a>2.2 约束与限制</h3><ul>
+<li>当前<strong>暂不支持在线升级</strong>；卸载前须先清除所有与 LWS 相关的 CRD 资源。</li>
+<li>插件处于<strong>公测阶段</strong>，已发布区域以控制台为准；公测版本稳定性未完全验证，不适用于 CCE 服务 SLA。</li>
+</ul>
+<h2 id="3-安装与卸载"><a href="#3-安装与卸载" class="headerlink" title="3 安装与卸载"></a>3 安装与卸载</h2><h3 id="3-1-安装"><a href="#3-1-安装" class="headerlink" title="3.1 安装"></a>3.1 安装</h3><ol>
+<li>登录 CCE 控制台，进入目标集群。</li>
+<li>左侧选择 <strong>插件中心</strong>，找到 <strong>LeaderWorkerSet</strong>，单击 <strong>安装</strong>。</li>
+<li>在安装页面确认并单击 <strong>安装</strong>；插件中心内该插件显示 <strong>已安装</strong> 即成功，此后可通过 kubectl 部署 LWS 类型负载。</li>
+</ol>
+<h3 id="3-2-卸载"><a href="#3-2-卸载" class="headerlink" title="3.2 卸载"></a>3.2 卸载</h3><ol>
+<li>登录 CCE 控制台，进入集群 → <strong>插件中心</strong> → <strong>LeaderWorkerSet</strong> → <strong>卸载</strong>。</li>
+<li>在弹窗中输入 <strong>DELETE</strong> 并确认；插件变为 <strong>未安装</strong> 即卸载成功。<strong>注意</strong>：须先清除所有与 LWS 相关的 CRD 资源再卸载。</li>
+</ol>
+<h2 id="4-组件说明"><a href="#4-组件说明" class="headerlink" title="4 组件说明"></a>4 组件说明</h2><table>
+<thead>
+<tr>
+<th>组件名称</th>
+<th>说明</th>
+<th>资源类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>leaderworkerset-lws-controller-manager</strong></td>
+<td>LWS 资源控制器，管理集群内相关资源</td>
+<td>Deployment</td>
+</tr>
+</tbody></table>
+<h2 id="5-使用示例：vLLM-分布式推理"><a href="#5-使用示例：vLLM-分布式推理" class="headerlink" title="5 使用示例：vLLM 分布式推理"></a>5 使用示例：vLLM 分布式推理</h2><p>本节基于 LeaderWorkerSet 提供的 vLLM 用例，演示如何通过 LWS 在 GPU 节点上部署 vLLM 分布式推理服务。vLLM 支持基于 Megatron-LM 张量并行的分布式推理，运行时由 <strong>Ray</strong> 管理。</p>
+<p><strong>环境要求</strong>：集群内 Pod 可访问公网（拉取 vLLM 镜像、HuggingFace Token 下载 Llama-3.1-405B）；可在 ECS 上安装 kubectl 并连接集群（参见通过 kubectl 连接集群）。配置 SNAT 等会产生费用，参见 NAT 网关价格计算器。</p>
+<h3 id="5-1-创建部署-YAML"><a href="#5-1-创建部署-YAML" class="headerlink" title="5.1 创建部署 YAML"></a>5.1 创建部署 YAML</h3><p>创建 <code>vllm-lws.yaml</code>，内容包含 <strong>LeaderWorkerSet</strong> 与 <strong>Service</strong>（集群内访问 Serve 实例）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">leaderworkerset.x-k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">LeaderWorkerSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">vllm</span>   <span class="comment"># LeaderWorkerSet 实例名称</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">2</span>   <span class="comment"># 部署 2 个 Serve 实例</span></span><br><span class="line">  <span class="attr">leaderWorkerTemplate:</span></span><br><span class="line">    <span class="attr">size:</span> <span class="number">2</span>     <span class="comment"># 每个实例 2 个 Pod：1 个 Leader + 1 个 Worker</span></span><br><span class="line">    <span class="attr">restartPolicy:</span> <span class="string">RecreateGroupOnPodRestart</span></span><br><span class="line">    <span class="attr">leaderTemplate:</span></span><br><span class="line">      <span class="attr">metadata:</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">role:</span> <span class="string">leader</span></span><br><span class="line">      <span class="attr">spec:</span></span><br><span class="line">        <span class="attr">containers:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">vllm-leader</span></span><br><span class="line">            <span class="attr">image:</span> <span class="string">vllm/vllm-openai:latest</span></span><br><span class="line">            <span class="attr">env:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HUGGING_FACE_HUB_TOKEN</span></span><br><span class="line">                <span class="attr">value:</span> <span class="string">&lt;your-hf-token&gt;</span>   <span class="comment"># 替换为 HuggingFace Token</span></span><br><span class="line">            <span class="attr">command:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="string">sh</span></span><br><span class="line">              <span class="bullet">-</span> <span class="string">-c</span></span><br><span class="line">              <span class="bullet">-</span> <span class="string">&quot;bash /vllm-workspace/examples/online_serving/multi-node-serving.sh leader --ray_cluster_size=$(LWS_GROUP_SIZE);</span></span><br><span class="line"><span class="string">                 python3 -m vllm.entrypoints.openai.api_server --port 8080 --model meta-llama/Meta-Llama-3.1-405B-Instruct --tensor-parallel-size 8 --pipeline_parallel_size 2&quot;</span></span><br><span class="line">            <span class="attr">resources:</span></span><br><span class="line">              <span class="attr">limits:</span></span><br><span class="line">                <span class="attr">nvidia.com/gpu:</span> <span class="string">&quot;8&quot;</span></span><br><span class="line">                <span class="attr">memory:</span> <span class="string">1124Gi</span></span><br><span class="line">                <span class="attr">ephemeral-storage:</span> <span class="string">800Gi</span></span><br><span class="line">              <span class="attr">requests:</span></span><br><span class="line">                <span class="attr">ephemeral-storage:</span> <span class="string">800Gi</span></span><br><span class="line">                <span class="attr">cpu:</span> <span class="number">125</span></span><br><span class="line">            <span class="attr">ports:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8080</span></span><br><span class="line">            <span class="attr">readinessProbe:</span></span><br><span class="line">              <span class="attr">tcpSocket:</span></span><br><span class="line">                <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">              <span class="attr">initialDelaySeconds:</span> <span class="number">15</span></span><br><span class="line">              <span class="attr">periodSeconds:</span> <span class="number">10</span></span><br><span class="line">            <span class="attr">volumeMounts:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/dev/shm</span></span><br><span class="line">                <span class="attr">name:</span> <span class="string">dshm</span></span><br><span class="line">        <span class="attr">volumes:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">dshm</span></span><br><span class="line">            <span class="attr">emptyDir:</span></span><br><span class="line">              <span class="attr">medium:</span> <span class="string">Memory</span></span><br><span class="line">              <span class="attr">sizeLimit:</span> <span class="string">15Gi</span></span><br><span class="line">    <span class="attr">workerTemplate:</span></span><br><span class="line">      <span class="attr">spec:</span></span><br><span class="line">        <span class="attr">containers:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">vllm-worker</span></span><br><span class="line">            <span class="attr">image:</span> <span class="string">vllm/vllm-openai:latest</span></span><br><span class="line">            <span class="attr">command:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="string">sh</span></span><br><span class="line">              <span class="bullet">-</span> <span class="string">-c</span></span><br><span class="line">              <span class="bullet">-</span> <span class="string">&quot;bash /vllm-workspace/examples/online_serving/multi-node-serving.sh worker --ray_address=$(LWS_LEADER_ADDRESS)&quot;</span></span><br><span class="line">            <span class="attr">resources:</span></span><br><span class="line">              <span class="attr">limits:</span></span><br><span class="line">                <span class="attr">nvidia.com/gpu:</span> <span class="string">&quot;8&quot;</span></span><br><span class="line">                <span class="attr">memory:</span> <span class="string">1124Gi</span></span><br><span class="line">                <span class="attr">ephemeral-storage:</span> <span class="string">800Gi</span></span><br><span class="line">              <span class="attr">requests:</span></span><br><span class="line">                <span class="attr">ephemeral-storage:</span> <span class="string">800Gi</span></span><br><span class="line">                <span class="attr">cpu:</span> <span class="number">125</span></span><br><span class="line">            <span class="attr">env:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HUGGING_FACE_HUB_TOKEN</span></span><br><span class="line">                <span class="attr">value:</span> <span class="string">&lt;your-hf-token&gt;</span></span><br><span class="line">            <span class="attr">volumeMounts:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/dev/shm</span></span><br><span class="line">                <span class="attr">name:</span> <span class="string">dshm</span></span><br><span class="line">        <span class="attr">volumes:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">dshm</span></span><br><span class="line">            <span class="attr">emptyDir:</span></span><br><span class="line">              <span class="attr">medium:</span> <span class="string">Memory</span></span><br><span class="line">              <span class="attr">sizeLimit:</span> <span class="string">15Gi</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">vllm-leader</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8080</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">leaderworkerset.sigs.k8s.io/name:</span> <span class="string">vllm</span></span><br><span class="line">    <span class="attr">role:</span> <span class="string">leader</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-部署与验证"><a href="#5-2-部署与验证" class="headerlink" title="5.2 部署与验证"></a>5.2 部署与验证</h3><p>创建资源并查看 Pod：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f vllm-lws.yaml</span><br></pre></td></tr></table></figure>
+
+<p>预期输出：<code>leaderworkerset.leaderworkerset.x-k8s.io/vllm created</code>、<code>service/vllm-leader created</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod</span><br></pre></td></tr></table></figure>
+
+<p>当所有 Pod 状态为 <strong>Running</strong> 即部署成功。其中 <code>vllm-0</code> 与 <code>vllm-0-1</code> 同属一个 Serve 实例，<code>vllm-1</code> 与 <code>vllm-1-1</code> 同属另一个，<code>vllm-0</code>、<code>vllm-1</code> 为 Leader。</p>
+<p>通过 Service 访问（例如本地 port-forward）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward svc/vllm-leader 8080:8080</span><br></pre></td></tr></table></figure>
+
+<p>调用接口后若返回类似以下 JSON，则说明 vllm-leader 实例可正常访问：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cmpl-1bb34faba88b43f9862cfbfb2200949d&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text_completion&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;created&quot;</span><span class="punctuation">:</span> <span class="number">1715138766</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;meta-llama/Meta-Llama-3.1-405B-Instruct&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;choices&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot; top destination for foodies, with&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;logprobs&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;finish_reason&quot;</span><span class="punctuation">:</span> <span class="string">&quot;length&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;stop_reason&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;usage&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;prompt_tokens&quot;</span><span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;total_tokens&quot;</span><span class="punctuation">:</span> <span class="number">12</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;completion_tokens&quot;</span><span class="punctuation">:</span> <span class="number">7</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-版本说明"><a href="#6-版本说明" class="headerlink" title="6 版本说明"></a>6 版本说明</h2><table>
+<thead>
+<tr>
+<th>插件版本</th>
+<th>支持的集群版本</th>
+<th>更新特性</th>
+<th>社区版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.6.1</td>
+<td>v1.27、v1.28、v1.29、v1.30、v1.31</td>
+<td>CCE Standard&#x2F;Turbo 集群支持使用 LeaderWorkerSet 插件</td>
+<td>v0.6.1</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+              <a href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag"># 插件</a>
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/10/nginx%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="prev" title="nginx源码分析-基础数据结构">
+                  <i class="fa fa-angle-left"></i> nginx源码分析-基础数据结构
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/13/Gateway-API-Inference-Extension/" rel="next" title="Gateway API Inference Extension">
+                  Gateway API Inference Extension <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

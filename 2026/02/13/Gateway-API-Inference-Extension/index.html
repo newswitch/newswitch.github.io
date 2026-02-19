@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Gateway API Inference Extension本文主要学习两个部分：vLLM Router（vLLM 官方推出的推理负载均衡器）与 Gateway API Inference Extension 中的智能负载均衡模块（基于 Kubernetes Gateway API 的推理路由与端点选择）。二者都面向 LLM 推理场景的“智能”负载均衡，可对比理解其定位与适用场景。 1 vLLM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gateway API Inference Extension">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/13/Gateway-API-Inference-Extension/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Gateway API Inference Extension本文主要学习两个部分：vLLM Router（vLLM 官方推出的推理负载均衡器）与 Gateway API Inference Extension 中的智能负载均衡模块（基于 Kubernetes Gateway API 的推理路由与端点选择）。二者都面向 LLM 推理场景的“智能”负载均衡，可对比理解其定位与适用场景。 1 vLLM">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-13T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-19T07:09:10.536Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Gateway API">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="vLLM Router">
+<meta property="article:tag" content="推理">
+<meta property="article:tag" content="插件">
+<meta property="article:tag" content="网关">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/13/Gateway-API-Inference-Extension/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/13/Gateway-API-Inference-Extension/","path":"2026/02/13/Gateway-API-Inference-Extension/","title":"Gateway API Inference Extension"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Gateway API Inference Extension | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Gateway-API-Inference-Extension"><span class="nav-number">1.</span> <span class="nav-text">Gateway API Inference Extension</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-vLLM-Router"><span class="nav-number">1.1.</span> <span class="nav-text">1 vLLM Router</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Round-Robin%EF%BC%88%E8%BD%AE%E8%AF%A2%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 Round Robin（轮询）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Random%EF%BC%88%E9%9A%8F%E6%9C%BA%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 Random（随机）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Consistent-Hash%EF%BC%88%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 Consistent Hash（一致性哈希）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-1-%E5%93%88%E5%B8%8C%E4%B8%8E%E7%8E%AF"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">1.3.1 哈希与环</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-2-%E8%B7%AF%E7%94%B1-Key-%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">1.3.2 路由 Key 的优先级</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-3-%E5%BC%82%E5%B8%B8%E4%B8%8E-DP"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">1.3.3 异常与 DP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-4-%E7%8A%B6%E6%80%81%E4%B8%8E-PD"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">1.3.4 状态与 PD</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-Power-of-Two-Choices%EF%BC%88%E4%B8%A4%E9%9A%8F%E6%9C%BA%E5%8F%96%E8%BD%BB%EF%BC%89"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 Power of Two Choices（两随机取轻）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-Cache-Aware%EF%BC%88%E5%89%8D%E7%BC%80%E7%BC%93%E5%AD%98%E6%84%9F%E7%9F%A5%EF%BC%89"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.5 Cache Aware（前缀缓存感知）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-1-%E8%B4%9F%E8%BD%BD%E6%98%AF%E5%90%A6%E2%80%9C%E5%A4%B1%E8%A1%A1%E2%80%9D"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">1.5.1 负载是否“失衡”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-2-%E5%9D%87%E8%A1%A1%E6%97%B6%E7%9A%84-Cache-Aware-%E9%80%BB%E8%BE%91"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">1.5.2 均衡时的 Cache-Aware 逻辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-3-%E5%A4%B1%E8%A1%A1%E6%97%B6"><span class="nav-number">1.1.5.3.</span> <span class="nav-text">1.5.3 失衡时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-4-%E5%8F%82%E6%95%B0"><span class="nav-number">1.1.5.4.</span> <span class="nav-text">1.5.4 参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-5-%E5%85%B6%E4%BB%96"><span class="nav-number">1.1.5.5.</span> <span class="nav-text">1.5.5 其他</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-%E7%AD%96%E7%95%A5%E5%AF%B9%E6%AF%94%E5%B0%8F%E7%BB%93"><span class="nav-number">1.1.6.</span> <span class="nav-text">1.6 策略对比小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-PD%EF%BC%88Prefill-Decode%EF%BC%89%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84%E7%AD%96%E7%95%A5"><span class="nav-number">1.1.7.</span> <span class="nav-text">1.7 PD（Prefill-Decode）模式下的策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%99%BA%E8%83%BD%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A8%A1%E5%9D%97%EF%BC%88Gateway-API-Inference-Extension%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2 智能负载均衡模块（Gateway API Inference Extension）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9C%E6%99%BA%E8%83%BD%E2%80%9D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 什么是“智能”负载均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%EF%BC%9A%E4%B8%89%E5%B1%82%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 整体架构：三层流水线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-PredictedLatency-Scorer-%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 PredictedLatency Scorer 详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-1-%E8%BE%93%E5%85%A5%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%9D%A5%E6%BA%90"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">2.3.1 输入与数据来源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-2-Headroom%EF%BC%88%E4%BD%99%E9%87%8F%EF%BC%89%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">2.3.2 Headroom（余量）概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-3-%E9%80%89%E7%82%B9%E6%B5%81%E7%A8%8B%EF%BC%88Score-%E5%86%85%E9%83%A8%EF%BC%89"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">2.3.3 选点流程（Score 内部）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Picker%EF%BC%9A%E4%BB%8E%E5%88%86%E6%95%B0%E5%88%B0%E5%AE%9E%E9%99%85%E8%B7%AF%E7%94%B1"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 Picker：从分数到实际路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E4%BB%BF%E7%9C%9F%E4%B8%AD%E7%9A%84-LoadBalancer%EF%BC%88%E5%8F%82%E8%80%83%E5%AE%9E%E7%8E%B0%EF%BC%89"><span class="nav-number">1.2.5.</span> <span class="nav-text">2.5 仿真中的 LoadBalancer（参考实现）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-1-%E8%B7%AF%E7%94%B1%E7%AD%96%E7%95%A5%EF%BC%88find-target-pod%EF%BC%89"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">2.5.1 路由策略（find_target_pod）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-2-%E6%8E%92%E9%98%9F%E4%B8%8E%E5%87%BA%E9%98%9F"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">2.5.2 排队与出队</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E5%85%B6%E4%BB%96%E7%9B%B8%E5%85%B3%E7%82%B9"><span class="nav-number">1.2.6.</span> <span class="nav-text">2.6 其他相关点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-%E5%B0%8F%E7%BB%93"><span class="nav-number">1.2.7.</span> <span class="nav-text">2.7 小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Gateway-API-Inference-Extension-%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">3 Gateway API Inference Extension 的部署与使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 前置条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B%E6%A6%82%E8%A7%88"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 整体流程概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E5%AE%89%E8%A3%85-Inference-Extension-CRDs"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 步骤 1：安装 Inference Extension CRDs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E5%AE%89%E8%A3%85%E7%BD%91%E5%85%B3%E5%AE%9E%E7%8E%B0%EF%BC%88%E5%9B%9B%E9%80%89%E4%B8%80%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 步骤 2：安装网关实现（四选一）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E9%83%A8%E7%BD%B2%E6%8E%A8%E7%90%86%E7%BD%91%E5%85%B3%EF%BC%88Gateway-%E8%B5%84%E6%BA%90%EF%BC%89"><span class="nav-number">1.3.5.</span> <span class="nav-text">3.5 步骤 3：部署推理网关（Gateway 资源）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.3.6.</span> <span class="nav-text">3.6 步骤 4：部署模型服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E6%AD%A5%E9%AA%A4-5%EF%BC%9A%E9%83%A8%E7%BD%B2-InferencePool-%E4%B8%8E-EPP%EF%BC%88%E2%80%9C%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6%E2%80%9D%E7%9A%84%E6%A0%B8%E5%BF%83%E4%B8%80%E6%AD%A5%EF%BC%89"><span class="nav-number">1.3.7.</span> <span class="nav-text">3.7 步骤 5：部署 InferencePool 与 EPP（“使用插件”的核心一步）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-%E6%AD%A5%E9%AA%A4-6%EF%BC%9A%E9%AA%8C%E8%AF%81%E7%8A%B6%E6%80%81"><span class="nav-number">1.3.8.</span> <span class="nav-text">3.8 步骤 6：验证状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-%E6%AD%A5%E9%AA%A4-7%EF%BC%9A%E5%8F%91%E9%80%81%E6%8E%A8%E7%90%86%E8%AF%B7%E6%B1%82%EF%BC%88%E5%AE%9E%E9%99%85%E2%80%9C%E4%BD%BF%E7%94%A8%E2%80%9D%E6%8F%92%E4%BB%B6%EF%BC%89"><span class="nav-number">1.3.9.</span> <span class="nav-text">3.9 步骤 7：发送推理请求（实际“使用”插件）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-10-%E5%8F%AF%E9%80%89%E8%83%BD%E5%8A%9B"><span class="nav-number">1.3.10.</span> <span class="nav-text">3.10 可选能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-11-%E6%B8%85%E7%90%86%EF%BC%88%E6%8C%89%E9%9C%80%E6%89%A7%E8%A1%8C%EF%BC%89"><span class="nav-number">1.3.11.</span> <span class="nav-text">3.11 清理（按需执行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-12-%E5%B0%8F%E7%BB%93%EF%BC%9A%E6%80%8E%E6%A0%B7%E7%AE%97%E2%80%9C%E4%BD%BF%E7%94%A8%E4%BA%86%E8%BF%99%E4%B8%AA%E6%8F%92%E4%BB%B6%E2%80%9D"><span class="nav-number">1.3.12.</span> <span class="nav-text">3.12 小结：怎样算“使用了这个插件”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AF%B9%E6%AF%94%E4%B8%8E%E5%B0%8F%E7%BB%93"><span class="nav-number">1.4.</span> <span class="nav-text">4 对比与小结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/Gateway-API-Inference-Extension/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Gateway API Inference Extension | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Gateway API Inference Extension
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-13 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-13T12:00:00+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-19 15:09:10" itemprop="dateModified" datetime="2026-02-19T15:09:10+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/" itemprop="url" rel="index"><span itemprop="name">AI服务部署</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Gateway-API-Inference-Extension"><a href="#Gateway-API-Inference-Extension" class="headerlink" title="Gateway API Inference Extension"></a>Gateway API Inference Extension</h1><p>本文主要学习两个部分：<strong>vLLM Router</strong>（vLLM 官方推出的推理负载均衡器）与 <strong>Gateway API Inference Extension 中的智能负载均衡模块</strong>（基于 Kubernetes Gateway API 的推理路由与端点选择）。二者都面向 LLM 推理场景的“智能”负载均衡，可对比理解其定位与适用场景。</p>
+<h2 id="1-vLLM-Router"><a href="#1-vLLM-Router" class="headerlink" title="1 vLLM Router"></a>1 vLLM Router</h2><p>所有策略均实现统一接口 <strong>LoadBalancingPolicy</strong>，只从健康且熔断器允许的 worker 中选取；选完后更新该 worker 的“已处理计数”并记录 Prometheus 指标。</p>
+<h3 id="1-1-Round-Robin（轮询）"><a href="#1-1-Round-Robin（轮询）" class="headerlink" title="1.1 Round Robin（轮询）"></a>1.1 Round Robin（轮询）</h3><ul>
+<li><strong>文件</strong>：<code>src/policies/round_robin.rs</code></li>
+<li><strong>做法</strong>：维护原子计数器，每次选 worker 时 <code>counter % len(健康worker)</code> 得到下标，然后计数器 +1；按健康 worker 列表顺序轮流：w0 → w1 → w2 → w0 → …</li>
+<li><strong>状态</strong>：有状态（一个 <strong>AtomicUsize</strong>），可通过 <strong>reset()</strong> 清零。</li>
+<li><strong>会话亲和</strong>：无；同一会话不同请求可能被分到不同 worker。</li>
+<li><strong>健康&#x2F;熔断</strong>：只从 <strong>get_healthy_worker_indices</strong> 里选，自动跳过不健康或熔断打开的 worker。</li>
+<li><strong>适用</strong>：无状态、单轮请求、希望简单均匀分配时。</li>
+</ul>
+<h3 id="1-2-Random（随机）"><a href="#1-2-Random（随机）" class="headerlink" title="1.2 Random（随机）"></a>1.2 Random（随机）</h3><ul>
+<li><strong>文件</strong>：<code>src/policies/random.rs</code></li>
+<li><strong>做法</strong>：在健康 worker 下标上均匀随机选一个（<code>rand::rng().random_range(0..healthy_indices.len())</code>）。</li>
+<li><strong>状态</strong>：无状态；<strong>会话亲和</strong>：无。</li>
+<li><strong>适用</strong>：简单部署、测试或想打破顺序规律时；请求量足够大时统计上接近均匀。</li>
+</ul>
+<h3 id="1-3-Consistent-Hash（一致性哈希）"><a href="#1-3-Consistent-Hash（一致性哈希）" class="headerlink" title="1.3 Consistent Hash（一致性哈希）"></a>1.3 Consistent Hash（一致性哈希）</h3><ul>
+<li><strong>文件</strong>：<code>src/policies/consistent_hash.rs</code></li>
+<li><strong>目标</strong>：同一会话&#x2F;用户尽量总是打到同一 worker，利于多轮对话和 <strong>KV cache</strong> 复用。</li>
+</ul>
+<h4 id="1-3-1-哈希与环"><a href="#1-3-1-哈希与环" class="headerlink" title="1.3.1 哈希与环"></a>1.3.1 哈希与环</h4><ul>
+<li><strong>算法</strong>：Facebook 风格 <strong>FurcHash + MurmurHash64A</strong>；每个物理 worker 对应 160 个虚拟节点上环。</li>
+<li><strong>环结构</strong>：<code>BTreeMap&lt;u64, String&gt;</code>，key 为 hash，value 为 worker URL；worker 变化时整环重建。</li>
+<li><strong>查找</strong>：对路由 key 做 <strong>fbi_hash</strong>，在环上找 ≥ 该 hash 的第一个节点；若无则取环上第一个（顺时针绕回）。</li>
+</ul>
+<h4 id="1-3-2-路由-Key-的优先级"><a href="#1-3-2-路由-Key-的优先级" class="headerlink" title="1.3.2 路由 Key 的优先级"></a>1.3.2 路由 Key 的优先级</h4><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>来源</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>HTTP Header</td>
+<td>x-session-id</td>
+</tr>
+<tr>
+<td>2</td>
+<td>HTTP Header</td>
+<td>x-user-id</td>
+</tr>
+<tr>
+<td>3</td>
+<td>HTTP Header</td>
+<td>x-tenant-id</td>
+</tr>
+<tr>
+<td>4</td>
+<td>HTTP Header</td>
+<td>x-request-id</td>
+</tr>
+<tr>
+<td>5</td>
+<td>HTTP Header</td>
+<td>x-correlation-id</td>
+</tr>
+<tr>
+<td>6</td>
+<td>HTTP Header</td>
+<td>x-trace-id</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Body</td>
+<td>session_params.session_id</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Body</td>
+<td>user（OpenAI）</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Body</td>
+<td>session_id（兼容）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Body</td>
+<td>user_id（兼容）</td>
+</tr>
+<tr>
+<td>11</td>
+<td>兜底</td>
+<td>请求体 hash（&gt;100 字符时）或 request:{body}</td>
+</tr>
+</tbody></table>
+<p>Header 优先且不依赖解析 body，推荐用 <strong>X-Session-ID</strong> 等 header 做会话亲和。</p>
+<h4 id="1-3-3-异常与-DP"><a href="#1-3-3-异常与-DP" class="headerlink" title="1.3.3 异常与 DP"></a>1.3.3 异常与 DP</h4><ul>
+<li>目标 worker 不健康&#x2F;熔断或不在当前列表：回退到当前<strong>第一个健康 worker</strong>。</li>
+<li><strong>DP 感知</strong>：支持带 <strong>@rank</strong> 的 worker URL（如 <code>http://worker:8000@0</code>），按“base URL + rank”在环上匹配；选人时先按 hash 得到 target URL，再在 workers 里按 URL 或 base+rank 找下标。</li>
+</ul>
+<h4 id="1-3-4-状态与-PD"><a href="#1-3-4-状态与-PD" class="headerlink" title="1.3.4 状态与 PD"></a>1.3.4 状态与 PD</h4><ul>
+<li><strong>状态</strong>：维护 hash 环和当前 worker 列表；worker 变化时 <strong>update_hash_ring</strong> 重建环。</li>
+<li><strong>PD 模式</strong>：prefill 和 decode 各自用同一套 consistent hash 选 worker（<strong>select_worker_pair_with_headers</strong> 里两边都调 <strong>select_worker_with_headers</strong>），便于同一会话的 prefill&#x2F;decode 落在可共享状态的 worker 上。</li>
+</ul>
+<h3 id="1-4-Power-of-Two-Choices（两随机取轻）"><a href="#1-4-Power-of-Two-Choices（两随机取轻）" class="headerlink" title="1.4 Power of Two Choices（两随机取轻）"></a>1.4 Power of Two Choices（两随机取轻）</h3><ul>
+<li><strong>文件</strong>：<code>src/policies/power_of_two.rs</code></li>
+<li><strong>做法</strong>：在健康 worker 中随机选 2 个（保证不同），比较两者 <strong>load</strong>，选 load 更小的那个。</li>
+<li><strong>Load 含义</strong>：优先用外部注入的 <strong>cached_loads</strong>（<strong>update_loads</strong> 写入）；若无则用 <strong>worker.load()</strong>，即当前未完成请求数（发请求时 <strong>increment_load</strong>，完成时 <strong>decrement_load</strong>），相当于“最短队列”。</li>
+<li><strong>单 worker</strong>：若健康 worker 只有 1 个，直接返回该 worker。</li>
+<li><strong>状态</strong>：无状态（除可选 cached_loads）；<strong>会话亲和</strong>：无。</li>
+<li><strong>适用</strong>：请求耗时差异大、希望减轻热点又不想做全局负载查询时；至少 2 个 worker 时才有“二选一”效果。</li>
+</ul>
+<h3 id="1-5-Cache-Aware（前缀缓存感知）"><a href="#1-5-Cache-Aware（前缀缓存感知）" class="headerlink" title="1.5 Cache Aware（前缀缓存感知）"></a>1.5 Cache Aware（前缀缓存感知）</h3><ul>
+<li><strong>文件</strong>：<code>src/policies/cache_aware.rs</code></li>
+<li><strong>思路</strong>：在“负载均衡”和“前缀缓存命中”之间切换：失衡时按最短队列；均衡时按请求前缀与各 worker 历史请求的匹配程度选人，以利用 vLLM 的 <strong>prefix cache</strong>。</li>
+</ul>
+<h4 id="1-5-1-负载是否“失衡”"><a href="#1-5-1-负载是否“失衡”" class="headerlink" title="1.5.1 负载是否“失衡”"></a>1.5.1 负载是否“失衡”</h4><p>同时满足以下两条才认为失衡，走“最短队列”：</p>
+<ul>
+<li><code>(max_load - min_load) &gt; balance_abs_threshold</code>（默认 32）</li>
+<li><code>max_load &gt; min_load * balance_rel_threshold</code>（默认 1.1）</li>
+</ul>
+<p>否则认为均衡，走 cache-aware 逻辑。</p>
+<h4 id="1-5-2-均衡时的-Cache-Aware-逻辑"><a href="#1-5-2-均衡时的-Cache-Aware-逻辑" class="headerlink" title="1.5.2 均衡时的 Cache-Aware 逻辑"></a>1.5.2 均衡时的 Cache-Aware 逻辑</h4><ul>
+<li><strong>数据结构</strong>：按 <strong>model_id</strong> 维护多棵近似 <strong>radix tree</strong>（<strong>tree::Tree</strong>），每棵存该 model 下各 worker 见过的请求前缀（按字符），用于估计“哪个 worker 更可能已 cache 当前请求的前缀”。</li>
+<li><strong>流程</strong>：用当前请求文本在对应 model 的树上做 <strong>prefix_match_with_counts</strong>，得匹配长度与 tenant（worker URL）→ 计算 <strong>match_rate &#x3D; matched_chars &#x2F; input_chars</strong> → 若 <strong>match_rate &gt; cache_threshold</strong>（默认 0.5）则选匹配到的 worker（若仍健康）；否则选当前 load 最小的健康 worker；无论选谁都 <strong>insert(text, worker_url)</strong> 更新树。</li>
+<li><strong>维护</strong>：后台按 <strong>eviction_interval_secs</strong> 做 LRU 驱逐，单棵树节点数不超过 <strong>max_tree_size</strong>（默认 10000）。</li>
+</ul>
+<h4 id="1-5-3-失衡时"><a href="#1-5-3-失衡时" class="headerlink" title="1.5.3 失衡时"></a>1.5.3 失衡时</h4><p>直接最短队列：选 <strong>load()</strong> 最小的健康 worker；同时仍对该请求做一次 <strong>tree.insert(text, worker_url)</strong>，保持树状态不落后。</p>
+<h4 id="1-5-4-参数"><a href="#1-5-4-参数" class="headerlink" title="1.5.4 参数"></a>1.5.4 参数</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cache_threshold</td>
+<td>0.5</td>
+<td>前缀匹配率超过此值才按“cache 命中”选 worker</td>
+</tr>
+<tr>
+<td>balance_abs_threshold</td>
+<td>32</td>
+<td>负载差超过此值才可能判定为失衡</td>
+</tr>
+<tr>
+<td>balance_rel_threshold</td>
+<td>1.1</td>
+<td>最大&#x2F;最小负载比超过此值才可能判定为失衡</td>
+</tr>
+<tr>
+<td>eviction_interval_secs</td>
+<td>30</td>
+<td>树 LRU 驱逐周期</td>
+</tr>
+<tr>
+<td>max_tree_size</td>
+<td>10000</td>
+<td>每棵树的节点上限</td>
+</tr>
+</tbody></table>
+<h4 id="1-5-5-其他"><a href="#1-5-5-其他" class="headerlink" title="1.5.5 其他"></a>1.5.5 其他</h4><ul>
+<li>需要 request text：<strong>needs_request_text() &#x3D;&#x3D; true</strong>；需要初始化：<strong>init_workers()</strong> 按 model 分组 worker 并往对应树里插入空前缀 <code>&quot;&quot;</code>，故 <strong>requires_initialization() &#x3D;&#x3D; true</strong>。</li>
+<li><strong>多模型</strong>：每个 model 独立一棵树（<strong>normalize_model_key(model_id)</strong>）。</li>
+<li><strong>PD 模式</strong>：若只用一个 policy，prefill 用 cache-aware 选，decode 用当前实现里的“最小 load”选。</li>
+</ul>
+<h3 id="1-6-策略对比小结"><a href="#1-6-策略对比小结" class="headerlink" title="1.6 策略对比小结"></a>1.6 策略对比小结</h3><table>
+<thead>
+<tr>
+<th>策略</th>
+<th>会话亲和</th>
+<th>是否感知负载</th>
+<th>状态</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>round_robin</td>
+<td>否</td>
+<td>否</td>
+<td>计数器</td>
+<td>通用、均匀、无状态</td>
+</tr>
+<tr>
+<td>random</td>
+<td>否</td>
+<td>否</td>
+<td>无</td>
+<td>简单&#x2F;测试</td>
+</tr>
+<tr>
+<td>consistent_hash</td>
+<td>是（key 见上表）</td>
+<td>否</td>
+<td>哈希环</td>
+<td>多轮对话、KV cache 复用</td>
+</tr>
+<tr>
+<td>power_of_two</td>
+<td>否</td>
+<td>是（二选一取轻）</td>
+<td>可选 cache</td>
+<td>负载敏感、请求时长差异大</td>
+</tr>
+<tr>
+<td>cache_aware</td>
+<td>是（基于前缀）</td>
+<td>是（失衡时最短队列）</td>
+<td>每 model 一棵树</td>
+<td>重复 system prompt、few-shot、prefix cache</td>
+</tr>
+</tbody></table>
+<h3 id="1-7-PD（Prefill-Decode）模式下的策略"><a href="#1-7-PD（Prefill-Decode）模式下的策略" class="headerlink" title="1.7 PD（Prefill-Decode）模式下的策略"></a>1.7 PD（Prefill-Decode）模式下的策略</h3><p>可在 PD 模式下为 prefill 和 decode 配置不同策略（如 <code>--prefill-policy consistent_hash --decode-policy round_robin</code>）。Prefill 常用 <strong>consistent_hash</strong> 或 <strong>cache_aware</strong> 提高 cache 局部性；Decode 常用 <strong>round_robin</strong> 或 <strong>power_of_two</strong> 做负载均衡。策略注册在 <strong>PolicyRegistry</strong> 中，支持按 model 的 policy 映射和 PD 的 prefill&#x2F;decode 独立策略。</p>
+<h2 id="2-智能负载均衡模块（Gateway-API-Inference-Extension）"><a href="#2-智能负载均衡模块（Gateway-API-Inference-Extension）" class="headerlink" title="2 智能负载均衡模块（Gateway API Inference Extension）"></a>2 智能负载均衡模块（Gateway API Inference Extension）</h2><h3 id="2-1-什么是“智能”负载均衡"><a href="#2-1-什么是“智能”负载均衡" class="headerlink" title="2.1 什么是“智能”负载均衡"></a>2.1 什么是“智能”负载均衡</h3><p>普通负载均衡（轮询、随机、最少连接）不关心请求内容和后端状态。这里的<strong>智能负载均衡</strong>是 LLM 推理专用的，会利用：</p>
+<ul>
+<li><strong>请求特征</strong>：prompt 长度、预估输出长度、SLO（TTFT&#x2F;TPOT）、是否带 LoRA、前缀是否可能命中缓存。</li>
+<li><strong>后端状态</strong>：KV Cache 占用、排队长度、预测的 TTFT&#x2F;TPOT。</li>
+</ul>
+<p><strong>目标</strong>：在满足 SLO 的前提下，提高 GPU 利用率、减少排队、利用前缀缓存。</p>
+<p>因此“智能”&#x3D; <strong>延迟预测 + SLO 感知 + 负载&#x2F;缓存感知 + 亲和性（前缀&#x2F;LoRA）</strong>。</p>
+<h3 id="2-2-整体架构：三层流水线"><a href="#2-2-整体架构：三层流水线" class="headerlink" title="2.2 整体架构：三层流水线"></a>2.2 整体架构：三层流水线</h3><p><strong>EPP（Endpoint Picker）</strong> 对每个请求的调度是 <strong>Filter → Scorer(s) → Picker</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">候选 Endpoints → [Filter] → 过滤后 Endpoints → [Scorer 1, Scorer 2, ...] → 加权分数 → [Picker] → 最终选中的 Endpoint(s)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Filter</strong>：按健康、能力等剔除不可用端点。</li>
+<li><strong>Scorer</strong>：每个插件对每个 endpoint 打 0~1 分，再乘插件权重，最后按 endpoint 汇总。</li>
+<li><strong>Picker</strong>：根据汇总的“加权分数”做加权随机选择（本仓库用 <strong>A-Res</strong>），分数高的被选中的概率大。</li>
+</ul>
+<p>智能负载均衡的“决策”主要在 <strong>Scorer</strong> 里（尤其是 <strong>PredictedLatency</strong>），Picker 负责把分数变成概率。</p>
+<h3 id="2-3-PredictedLatency-Scorer-详解"><a href="#2-3-PredictedLatency-Scorer-详解" class="headerlink" title="2.3 PredictedLatency Scorer 详解"></a>2.3 PredictedLatency Scorer 详解</h3><p>路径：<code>pkg/epp/framework/plugins/scheduling/scorer/predictedlatency/</code>。</p>
+<h4 id="2-3-1-输入与数据来源"><a href="#2-3-1-输入与数据来源" class="headerlink" title="2.3.1 输入与数据来源"></a>2.3.1 输入与数据来源</h4><ul>
+<li><strong>请求</strong>：body（prompt）、可选的 SLO 头（TTFT&#x2F;TPOT）。</li>
+<li><strong>候选 Endpoints</strong>：每个 endpoint 当前有 <strong>Metrics</strong>（如 KV 使用率、排队长度等）。</li>
+<li><strong>延迟预测</strong>：通过 sidecar 的 <strong>latency predictor</strong>，对「该请求到该 endpoint」预测 TTFT、TPOT。</li>
+<li><strong>前缀缓存</strong>：由 <strong>Prefix Cache</strong> 插件在 cycleState 里提供每个 endpoint 对当前请求的前缀命中长度&#x2F;比例，得到 <strong>PrefixCacheScore</strong>。</li>
+</ul>
+<h4 id="2-3-2-Headroom（余量）概念"><a href="#2-3-2-Headroom（余量）概念" class="headerlink" title="2.3.2 Headroom（余量）概念"></a>2.3.2 Headroom（余量）概念</h4><ul>
+<li><strong>TTFT Headroom</strong> &#x3D; TTFT SLO − 预测 TTFT（&gt;0 表示还能满足首 token 延迟）。</li>
+<li><strong>TPOT Headroom</strong> &#x3D; 经 buffer 后的 TPOT SLO − 预测 TPOT（&gt;0 表示能满足每 token 延迟）。</li>
+</ul>
+<p>若没有 SLO，或预测失败，则用 <strong>Composite</strong> 分数（KV 空闲、队列、前缀）做 fallback，不再区分 headroom。</p>
+<h4 id="2-3-3-选点流程（Score-内部）"><a href="#2-3-3-选点流程（Score-内部）" class="headerlink" title="2.3.3 选点流程（Score 内部）"></a>2.3.3 选点流程（Score 内部）</h4><ol>
+<li><strong>拿预测上下文</strong>；若没有 SLO 或预测数量与 endpoint 数不一致 → 直接用 <strong>scoreWithoutPredictions</strong>（仅 composite），返回。</li>
+<li><strong>全局前缀亲和性门控（ε-greedy）</strong>  <ul>
+<li>设阈值 <strong>AffinityGateTauGlobal</strong>（如 0.99）。  </li>
+<li>只有 <strong>PrefixCacheScore &gt;&#x3D; 阈值</strong> 的 endpoint 进入“sticky 候选集”。  </li>
+<li>以 <strong>EpsilonExploreSticky</strong>（如 1%）概率不用门控，从全部候选中选，避免永远只打高前缀命中节点。</li>
+</ul>
+</li>
+<li><strong>按 Headroom 分档</strong>  <ul>
+<li><strong>正 headroom</strong>：TTFT 和 TPOT headroom 都 ≥ 0 → 认为能满足 SLO。  </li>
+<li><strong>负 headroom</strong>：任一 &lt; 0 → 有 SLO 风险。  </li>
+<li><strong>策略</strong>：若正、负都有，以约 99% 从正里选、约 1% 从负里选（<strong>EpsilonExploreNeg</strong>）；若只有正或只有负，只在该集合内选。</li>
+</ul>
+</li>
+<li><strong>在“正 headroom”里选谁</strong>（<strong>selectFromPositiveHeadroomEndpoints</strong>）  <ul>
+<li>可配置 <strong>HeadroomSelectionStrategy</strong>：<strong>least</strong>（选 headroom 最小的，提高利用率）、<strong>most</strong>（选 headroom 最大的，更保守）、<strong>composite-least &#x2F; composite-most &#x2F; composite-only</strong>（用 KV 空闲、队列、前缀组成 composite 再选）。  </li>
+<li>再经一次 ε-greedy 亲和性门控（<strong>AffinityGateTau</strong>），在正 headroom 里优先选前缀得分高的，保留小概率探索。</li>
+</ul>
+</li>
+<li><strong>在“负 headroom”里选谁</strong>（<strong>selectFromNegativeHeadroomEndpoints</strong>）  <ul>
+<li>先按“当前运行请求数”分层（0 个请求的 vs 有请求的）；再用 TTFT&#x2F;TPOT deficit 加权（<strong>NegHeadroomTTFTWeight &#x2F; NegHeadroomTPOTWeight</strong>），选“相对伤害最小”的节点；同样可走 composite 或 hierarchical 策略。</li>
+</ul>
+</li>
+<li><strong>输出</strong>  <ul>
+<li>Scorer 只给一个选中的 endpoint 打 1，其余 0。若配置了多个 Scorer，各 Scorer 的分数乘权重后相加，得到每个 endpoint 的总加权分。</li>
+</ul>
+</li>
+</ol>
+<p>小结：<strong>智能 &#x3D; 预测 + SLO headroom 分层 + 前缀&#x2F;负载 composite + ε-greedy 探索</strong>。</p>
+<h3 id="2-4-Picker：从分数到实际路由"><a href="#2-4-Picker：从分数到实际路由" class="headerlink" title="2.4 Picker：从分数到实际路由"></a>2.4 Picker：从分数到实际路由</h3><p><strong>WeightedRandomPicker</strong>（<code>picker/weighted_random_picker.go</code>）：</p>
+<ul>
+<li><strong>输入</strong>：每个 endpoint 的加权总分（可能来自 PredictedLatency + 其他 Scorer）。</li>
+<li><strong>算法</strong>：<strong>A-Res</strong>  <ul>
+<li>对每个 endpoint 生成 <code>key = U^(1/score)</code>（U 为 (0,1) 随机数），score≤0 的 key&#x3D;0。  </li>
+<li>按 key 从大到小排序，取 top-k 作为本次选中的 endpoint(s)。  </li>
+<li>分数越高，key 的期望越大，被选中的概率越高，实现按智能打分的概率负载均衡。</li>
+</ul>
+</li>
+<li>若所有 score 都为 0，则退化为 <strong>RandomPicker</strong>，均匀选。</li>
+</ul>
+<p>因此：<strong>智能负载均衡 &#x3D; 多 Scorer 的智能打分 + 按分数加权的随机选择</strong>。</p>
+<h3 id="2-5-仿真中的-LoadBalancer（参考实现）"><a href="#2-5-仿真中的-LoadBalancer（参考实现）" class="headerlink" title="2.5 仿真中的 LoadBalancer（参考实现）"></a>2.5 仿真中的 LoadBalancer（参考实现）</h3><p>路径：<code>tools/simulations/llm_ig_simulation/src/loadbalancer.py</code>。用于仿真验证策略，和 EPP 无直接调用关系，但思路一致。</p>
+<h4 id="2-5-1-路由策略（find-target-pod）"><a href="#2-5-1-路由策略（find-target-pod）" class="headerlink" title="2.5.1 路由策略（find_target_pod）"></a>2.5.1 路由策略（find_target_pod）</h4><ul>
+<li><strong>random</strong>：均匀随机选 server。</li>
+<li><strong>least</strong>：选 KV cache 占用率最低的节点。</li>
+<li><strong>leastPseudo</strong>：选 pending tokens 最少的节点（不强制 eviction 安全）。</li>
+<li><strong>leastlatency</strong>：用历史 prefill&#x2F;decode 和队列长度估计延迟，选预估延迟最小的节点。</li>
+<li><strong>LoRA</strong>：先只在带该 LoRA 的 pods 里选；优先在满足延迟约束下选 pending 最多的（亲和+负载）；再 fallback 到 min_pending。</li>
+<li><strong>默认（smart）</strong>：先在满足目标延迟、未过载、prefill 队列未满的节点里选 <strong>pending 最多的</strong>（find_target_pod_based_on_max_pending）；若没有，再选 <strong>pending 最少的</strong>（find_target_pod_based_on_min_pending）。</li>
+</ul>
+<h4 id="2-5-2-排队与出队"><a href="#2-5-2-排队与出队" class="headerlink" title="2.5.2 排队与出队"></a>2.5.2 排队与出队</h4><ul>
+<li><strong>queueing_signal</strong>：当所有节点 KV 饱和或 prefill 队列都满时，新请求不入路由，进入按目标延迟分档的队列。</li>
+<li><strong>dequeue</strong>：负载下来后，按 <strong>weighted_dequeue</strong>（按目标延迟倒数加权）或 <strong>slo_based_dequeue</strong>（优先违反 SLO 的延迟档）从队列取请求，再重新 <strong>find_target_pod</strong> 做一次路由。</li>
+</ul>
+<p>仿真里的“智能”&#x3D; <strong>延迟估计 + KV&#x2F;队列状态 + LoRA 亲和 + 排队与 SLO 感知出队</strong>。</p>
+<h3 id="2-6-其他相关点"><a href="#2-6-其他相关点" class="headerlink" title="2.6 其他相关点"></a>2.6 其他相关点</h3><ul>
+<li><strong>前缀缓存（Prefix Cache）</strong>：在 Scorer 里通过 <strong>PrefixCacheScore</strong> 参与 composite 和亲和性门控，使请求尽量打到已缓存该前缀的节点。</li>
+<li><strong>LoRA 亲和性</strong>：仿真里显式实现；EPP 中可通过独立 <strong>LoRA Affinity</strong> 等 Scorer 与 PredictedLatency 一起加权。</li>
+<li><strong>延迟预测服务</strong>：<code>sidecars/latencypredictorasync</code> 在配置多个 Prediction URL 时用随机选 URL 做预测服务的负载均衡，与“对推理 endpoint 的智能负载均衡”是两回事。</li>
+</ul>
+<h3 id="2-7-小结"><a href="#2-7-小结" class="headerlink" title="2.7 小结"></a>2.7 小结</h3><p>智能负载均衡 &#x3D; 用<strong>延迟预测 + SLO headroom</strong> 把 endpoint 分成“能满足 SLO”和“有风险”两类，在满足 SLO 的里按 <strong>headroom 策略&#x2F;composite（KV、队列、前缀）</strong> 和 <strong>ε-greedy 前缀亲和</strong> 选点，再通过 <strong>加权随机 Picker</strong> 把分数变成路由概率，从而在延迟、利用率、前缀命中之间做平衡；仿真里用延迟估计、KV&#x2F;队列和排队策略实现了同一类思路的另一种实现。</p>
+<h2 id="3-Gateway-API-Inference-Extension-的部署与使用"><a href="#3-Gateway-API-Inference-Extension-的部署与使用" class="headerlink" title="3 Gateway API Inference Extension 的部署与使用"></a>3 Gateway API Inference Extension 的部署与使用</h2><p>本节按“从零开始”顺序整理，执行顺序即使用顺序。详见<a target="_blank" rel="noopener" href="https://gateway-api-inference-extension.sigs.k8s.io/guides/">官方 Getting Started</a>。</p>
+<h3 id="3-1-前置条件"><a href="#3-1-前置条件" class="headerlink" title="3.1 前置条件"></a>3.1 前置条件</h3><p><strong>集群：</strong></p>
+<ul>
+<li>支持最近三个小版本之一的 <strong>Kubernetes</strong>（见 <a target="_blank" rel="noopener" href="https://kubernetes.io/releases/">Kubernetes 发布说明</a>）。</li>
+<li>支持 <strong>LoadBalancer</strong> 类型 Service（例如 Kind 需按 <a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/user/loadbalancer">LoadBalancer 说明</a> 配置）。</li>
+<li>支持 <strong>Pod 侧车（Sidecar）</strong>，K8s 1.29+ 默认开启。</li>
+</ul>
+<p><strong>本机工具：</strong></p>
+<ul>
+<li><strong>Helm</strong>、<strong>jq</strong>（脚本会用到）</li>
+<li><strong>kubectl</strong> 已配置并能访问目标集群</li>
+</ul>
+<h3 id="3-2-整体流程概览"><a href="#3-2-整体流程概览" class="headerlink" title="3.2 整体流程概览"></a>3.2 整体流程概览</h3><ol>
+<li>安装 <strong>Inference Extension CRDs</strong></li>
+<li>安装并配置<strong>网关实现</strong>（GKE &#x2F; Istio &#x2F; Kgateway &#x2F; NGINX Gateway Fabric 四选一）</li>
+<li>部署 <strong>Gateway</strong> 资源（推理网关入口）</li>
+<li>部署<strong>模型服务器</strong>（如 vLLM）</li>
+<li>用 <strong>Helm</strong> 安装 <strong>InferencePool + EPP</strong>（“插件”实际在此步部署）</li>
+<li>验证状态并对推理请求做联调</li>
+</ol>
+<h3 id="3-3-步骤-1：安装-Inference-Extension-CRDs"><a href="#3-3-步骤-1：安装-Inference-Extension-CRDs" class="headerlink" title="3.3 步骤 1：安装 Inference Extension CRDs"></a>3.3 步骤 1：安装 Inference Extension CRDs</h3><p>CRD 为集群级，需先安装；业务资源可部署在任意 namespace。</p>
+<p><strong>使用 main 分支（紧跟最新）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -k https://github.com/kubernetes-sigs/gateway-api-inference-extension/config/crd</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用已发布版本（示例：最新 release）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IGW_LATEST_RELEASE=$(curl -s https://api.github.com/repos/kubernetes-sigs/gateway-api-inference-extension/releases \</span><br><span class="line">  | jq -r <span class="string">&#x27;.[] | select(.prerelease == false) | .tag_name&#x27;</span> | <span class="built_in">sort</span> -V | <span class="built_in">tail</span> -n1)</span><br><span class="line"></span><br><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/<span class="variable">$&#123;IGW_LATEST_RELEASE&#125;</span>/manifests.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-步骤-2：安装网关实现（四选一）"><a href="#3-4-步骤-2：安装网关实现（四选一）" class="headerlink" title="3.4 步骤 2：安装网关实现（四选一）"></a>3.4 步骤 2：安装网关实现（四选一）</h3><p>推理网关需要“<strong>网关实现 + 开启 Inference Extension</strong>”。按环境选一种即可。</p>
+<p><strong>选项 A：GKE</strong></p>
+<ul>
+<li>无需单独安装网关，使用 GKE 自带的推理网关能力。</li>
+<li>需在 GCP 控制台开启相关 API、配置代理子网等，详见 <a target="_blank" rel="noopener" href="https://cloud.google.com/kubernetes-engine/docs/how-to/deploy-gke-inference-gateway">Deploy Inference Gateways</a>。</li>
+<li>后续部署 Gateway 时用 GKE 的 manifest。</li>
+</ul>
+<p><strong>选项 B：Istio</strong></p>
+<ul>
+<li>先安装 <a target="_blank" rel="noopener" href="https://gateway-api.sigs.k8s.io/guides/#installing-gateway-api">Gateway API CRDs</a>。</li>
+<li>安装 Istio 并开启推理扩展：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ISTIO_VERSION=1.28.0</span><br><span class="line"><span class="comment"># Linux/macOS</span></span><br><span class="line">curl -L https://istio.io/downloadIstio | ISTIO_VERSION=<span class="variable">$&#123;ISTIO_VERSION&#125;</span> sh -</span><br><span class="line">./istio-<span class="variable">$&#123;ISTIO_VERSION&#125;</span>/bin/istioctl install \</span><br><span class="line">  --<span class="built_in">set</span> values.pilot.env.ENABLE_GATEWAY_API_INFERENCE_EXTENSION=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>建议使用 <strong>Istio 1.28.0 及以上</strong>以支持 InferencePool v1。</li>
+</ul>
+<p><strong>选项 C：Kgateway</strong></p>
+<ul>
+<li>安装 Gateway API CRDs 后，安装 Kgateway CRDs 和 Kgateway，并开启推理扩展：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">KGTW_VERSION=v2.1.0</span><br><span class="line">helm upgrade -i --create-namespace --namespace kgateway-system --version <span class="variable">$KGTW_VERSION</span> kgateway-crds oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds</span><br><span class="line">helm upgrade -i --namespace kgateway-system --version <span class="variable">$KGTW_VERSION</span> kgateway oci://cr.kgateway.dev/kgateway-dev/charts/kgateway --<span class="built_in">set</span> inferenceExtension.enabled=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>选项 D：NGINX Gateway Fabric</strong></p>
+<ul>
+<li>安装 Gateway API CRDs（Standard 或 Experimental channel）。</li>
+<li>安装时开启推理扩展：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">helm install ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric --create-namespace -n nginx-gateway --dependency-update \</span><br><span class="line">  --<span class="built_in">set</span> nginxGateway.gwAPIInferenceExtension.<span class="built_in">enable</span>=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-步骤-3：部署推理网关（Gateway-资源）"><a href="#3-5-步骤-3：部署推理网关（Gateway-资源）" class="headerlink" title="3.5 步骤 3：部署推理网关（Gateway 资源）"></a>3.5 步骤 3：部署推理网关（Gateway 资源）</h3><p>在集群中创建名为 <strong>inference-gateway</strong> 的 Gateway，作为流量入口。按所选实现选用对应 YAML；以下给出各实现对应的文件内容，可保存为本地文件后 <code>kubectl apply -f &lt;文件&gt;</code>，或直接对仓库 raw 链接执行 <code>kubectl apply -f &lt;url&gt;</code>（若用 release，将链接中的 <code>main</code> 换成 <code>refs/tags/${IGW_LATEST_RELEASE}</code>）。</p>
+<p><strong>GKE</strong>（<code>config/manifests/gateway/gke/gateway.yaml</code>）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">Gateway</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">inference-gateway</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">gatewayClassName:</span> <span class="string">gke-l7-regional-external-managed</span></span><br><span class="line">  <span class="attr">listeners:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">HTTP</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/gateway/gke/gateway.yaml</span><br></pre></td></tr></table></figure>
+
+<p><strong>Istio</strong>（<code>config/manifests/gateway/istio/gateway.yaml</code>）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Gateway</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">inference-gateway</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">gatewayClassName:</span> <span class="string">istio</span></span><br><span class="line">  <span class="attr">listeners:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">HTTP</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/gateway/istio/gateway.yaml</span><br></pre></td></tr></table></figure>
+
+<p><strong>Kgateway</strong>（<code>config/manifests/gateway/kgateway/gateway.yaml</code>）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Gateway</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">inference-gateway</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">gatewayClassName:</span> <span class="string">agentgateway</span></span><br><span class="line">  <span class="attr">listeners:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">HTTP</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/gateway/kgateway/gateway.yaml</span><br></pre></td></tr></table></figure>
+
+<p><strong>NGINX Gateway Fabric</strong>（<code>config/manifests/gateway/nginxgatewayfabric/gateway.yaml</code>）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Gateway</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">inference-gateway</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">gatewayClassName:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">listeners:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">HTTP</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/gateway/nginxgatewayfabric/gateway.yaml</span><br></pre></td></tr></table></figure>
+
+<p>确认网关已分配地址且已编程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl get gateway inference-gateway</span><br><span class="line"><span class="comment"># 期望：ADDRESS 有值，PROGRAMMED=True</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-6-步骤-4：部署模型服务器"><a href="#3-6-步骤-4：部署模型服务器" class="headerlink" title="3.6 步骤 4：部署模型服务器"></a>3.6 步骤 4：部署模型服务器</h3><p>EPP 将请求调度到“模型服务器”Pod，需先有带正确 <strong>label</strong> 的模型服务。部署中的 <code>app: vllm-llama3-8b-instruct</code> 等 label 需与后续 Helm 的 <strong>matchLabels</strong> 一致。</p>
+<p><strong>vLLM（GPU，需 Hugging Face token）</strong><br><code>gpu-deployment.yaml</code> 较长（含 LoRA、探针、优雅退出等），可直接从仓库 apply：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MODEL_SERVER=vllm</span><br><span class="line">kubectl create secret generic hf-token --from-literal=token=<span class="variable">$HF_TOKEN</span></span><br><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/<span class="variable">$&#123;MODEL_SERVER&#125;</span>/gpu-deployment.yaml</span><br></pre></td></tr></table></figure>
+
+<p><strong>vLLM（CPU）</strong><br><code>cpu-deployment.yaml</code> 完整内容见仓库，apply 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/vllm/cpu-deployment.yaml</span><br></pre></td></tr></table></figure>
+
+<p><strong>vLLM Simulator（无真实推理，用于联调）</strong><br><code>config/manifests/vllm/sim-deployment.yaml</code> 内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">vllm-llama3-8b-instruct</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">vllm-llama3-8b-instruct</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">vllm-llama3-8b-instruct</span></span><br><span class="line">        <span class="attr">inference.networking.k8s.io/engine-type:</span> <span class="string">vllm</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">vllm-sim</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">ghcr.io/llm-d/llm-d-inference-sim:v0.7.1</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">args:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">--model</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">meta-llama/Llama-3.1-8B-Instruct</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">--port</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;8000&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">--max-loras</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;2&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">--lora-modules</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#x27;&#123;&quot;name&quot;: &quot;food-review-1&quot;&#125;&#x27;</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.name</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NAMESPACE</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8000</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">10m</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/vllm/sim-deployment.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-7-步骤-5：部署-InferencePool-与-EPP（“使用插件”的核心一步）"><a href="#3-7-步骤-5：部署-InferencePool-与-EPP（“使用插件”的核心一步）" class="headerlink" title="3.7 步骤 5：部署 InferencePool 与 EPP（“使用插件”的核心一步）"></a>3.7 步骤 5：部署 InferencePool 与 EPP（“使用插件”的核心一步）</h3><p>“插件”在此体现为：通过 <strong>InferencePool Helm Chart</strong> 一并部署 <strong>Endpoint Picker（EPP）</strong> 和 <strong>InferencePool</strong>，并按 provider 创建 HttpRoute 等资源。即：<strong>使用插件 &#x3D; 安装该 Chart 并填对 inferencePool.modelServers.matchLabels</strong>。</p>
+<p><strong>先设 Chart 版本（二选一）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 紧跟 main</span></span><br><span class="line"><span class="built_in">export</span> IGW_CHART_VERSION=v0</span><br><span class="line"><span class="comment"># 或使用已发布版本</span></span><br><span class="line"><span class="built_in">export</span> IGW_CHART_VERSION=<span class="variable">$&#123;IGW_LATEST_RELEASE&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>再按网关实现选对应 Helm 命令</strong>（保持 <code>MODEL_SERVER=vllm</code> 与步骤 4 一致；label 需与模型服务器 Deployment 的 label 一致）：</p>
+<p><strong>GKE：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> GATEWAY_PROVIDER=gke</span><br><span class="line">helm install vllm-llama3-8b-instruct \</span><br><span class="line">  --dependency-update \</span><br><span class="line">  --<span class="built_in">set</span> inferencePool.modelServers.matchLabels.app=vllm-llama3-8b-instruct \</span><br><span class="line">  --<span class="built_in">set</span> provider.name=<span class="variable">$GATEWAY_PROVIDER</span> \</span><br><span class="line">  --<span class="built_in">set</span> inferencePool.modelServerType=vllm \</span><br><span class="line">  --<span class="built_in">set</span> experimentalHttpRoute.enabled=<span class="literal">true</span> \</span><br><span class="line">  --version <span class="variable">$IGW_CHART_VERSION</span> \</span><br><span class="line">  oci://us-central1-docker.pkg.dev/k8s-staging-images/gateway-api-inference-extension/charts/inferencepool</span><br></pre></td></tr></table></figure>
+
+<p><strong>Istio：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> GATEWAY_PROVIDER=istio</span><br><span class="line">helm install vllm-llama3-8b-instruct \</span><br><span class="line">  --dependency-update \</span><br><span class="line">  --<span class="built_in">set</span> inferencePool.modelServers.matchLabels.app=vllm-llama3-8b-instruct \</span><br><span class="line">  --<span class="built_in">set</span> provider.name=<span class="variable">$GATEWAY_PROVIDER</span> \</span><br><span class="line">  --<span class="built_in">set</span> inferencePool.modelServerType=vllm \</span><br><span class="line">  --<span class="built_in">set</span> experimentalHttpRoute.enabled=<span class="literal">true</span> \</span><br><span class="line">  --version <span class="variable">$IGW_CHART_VERSION</span> \</span><br><span class="line">  oci://us-central1-docker.pkg.dev/k8s-staging-images/gateway-api-inference-extension/charts/inferencepool</span><br></pre></td></tr></table></figure>
+
+<p><strong>Kgateway &#x2F; NGINX Gateway Fabric：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> GATEWAY_PROVIDER=none</span><br><span class="line">helm install vllm-llama3-8b-instruct \</span><br><span class="line">  --dependency-update \</span><br><span class="line">  --<span class="built_in">set</span> inferencePool.modelServers.matchLabels.app=vllm-llama3-8b-instruct \</span><br><span class="line">  --<span class="built_in">set</span> provider.name=<span class="variable">$GATEWAY_PROVIDER</span> \</span><br><span class="line">  --<span class="built_in">set</span> inferencePool.modelServerType=vllm \</span><br><span class="line">  --<span class="built_in">set</span> experimentalHttpRoute.enabled=<span class="literal">true</span> \</span><br><span class="line">  --version <span class="variable">$IGW_CHART_VERSION</span> \</span><br><span class="line">  oci://us-central1-docker.pkg.dev/k8s-staging-images/gateway-api-inference-extension/charts/inferencepool</span><br></pre></td></tr></table></figure>
+
+<p>若使用<strong>已发布版本</strong>的 Chart，可将上述 <code>oci://us-central1-docker.pkg.dev/...</code> 换成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oci://registry.k8s.io/gateway-api-inference-extension/charts/inferencepool</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，EPP 与 InferencePool 一并就绪，网关会把匹配流量交给 EPP 做端点选择，再转发到模型服务器。</p>
+<h3 id="3-8-步骤-6：验证状态"><a href="#3-8-步骤-6：验证状态" class="headerlink" title="3.8 步骤 6：验证状态"></a>3.8 步骤 6：验证状态</h3><p>确认 <strong>HttpRoute</strong> 和 <strong>InferencePool</strong> 被网关接受并解析到后端：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl get httproute vllm-llama3-8b-instruct -o yaml</span><br><span class="line"><span class="comment"># 期望 status: Accepted=True, ResolvedRefs=True</span></span><br><span class="line"></span><br><span class="line">kubectl get inferencepool vllm-llama3-8b-instruct -o yaml</span><br><span class="line"><span class="comment"># 期望 status: Accepted=True, ResolvedRefs=True</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-9-步骤-7：发送推理请求（实际“使用”插件）"><a href="#3-9-步骤-7：发送推理请求（实际“使用”插件）" class="headerlink" title="3.9 步骤 7：发送推理请求（实际“使用”插件）"></a>3.9 步骤 7：发送推理请求（实际“使用”插件）</h3><p><strong>网关地址（示例 80 端口）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GW_IP=$(kubectl get gateway/inference-gateway -o jsonpath=<span class="string">&#x27;&#123;.status.addresses[0].value&#125;&#x27;</span>)</span><br><span class="line">PORT=80</span><br></pre></td></tr></table></figure>
+
+<p><strong>简单补全请求（经 EPP 调度到池内某个模型 Pod）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -i <span class="variable">$&#123;GW_IP&#125;</span>:<span class="variable">$&#123;PORT&#125;</span>/v1/completions -H <span class="string">&#x27;Content-Type: application/json&#x27;</span> -d <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">  &quot;model&quot;: &quot;food-review-1&quot;,</span></span><br><span class="line"><span class="string">  &quot;prompt&quot;: &quot;Write as if you were a critic: San Francisco&quot;,</span></span><br><span class="line"><span class="string">  &quot;max_tokens&quot;: 100,</span></span><br><span class="line"><span class="string">  &quot;temperature&quot;: 0</span></span><br><span class="line"><span class="string">&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>模型名（如 <strong>food-review-1</strong>）由 InferencePool&#x2F;InferenceModel 等配置映射到后端；若只部署了默认示例，可参考 manifest 中的 model 或改为部署里声明的名称。</p>
+<p><strong>可选：带 SLO 的延迟感知路由（需先启用延迟预测）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -i <span class="variable">$&#123;GW_IP&#125;</span>:<span class="variable">$&#123;PORT&#125;</span>/v1/completions \</span><br><span class="line">  -H <span class="string">&#x27;Content-Type: application/json&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;x-slo-ttft-ms: 100&#x27;</span> \</span><br><span class="line">  -H <span class="string">&#x27;x-slo-tpot-ms: 100&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;&quot;model&quot;: &quot;food-review-1&quot;, &quot;prompt&quot;: &quot;Write as if you were a critic: San Francisco&quot;, &quot;max_tokens&quot;: 100, &quot;temperature&quot;: 0, &quot;stream&quot;: true&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-10-可选能力"><a href="#3-10-可选能力" class="headerlink" title="3.10 可选能力"></a>3.10 可选能力</h3><p><strong>InferenceObjective（优先级）</strong><br><code>config/manifests/inferenceobjective.yaml</code> 内容如下，用于为不同目标指定优先级与绑定的 InferencePool：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">inference.networking.x-k8s.io/v1alpha2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">InferenceObjective</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">food-review</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">priority:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">poolRef:</span></span><br><span class="line">    <span class="attr">group:</span> <span class="string">inference.networking.k8s.io</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">vllm-llama3-8b-instruct</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">inference.networking.x-k8s.io/v1alpha2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">InferenceObjective</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">base-model</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">priority:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">poolRef:</span></span><br><span class="line">    <span class="attr">group:</span> <span class="string">inference.networking.k8s.io</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">vllm-llama3-8b-instruct</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">inference.networking.x-k8s.io/v1alpha2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">InferenceObjective</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">base-model-cpu</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">priority:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">poolRef:</span></span><br><span class="line">    <span class="attr">group:</span> <span class="string">inference.networking.k8s.io</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">vllm-llama3-8b-instruct</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/inferenceobjective.yaml</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>延迟预测（TTFT&#x2F;TPOT 预测 + SLO 路由）</strong>：在 Helm 中设置 <code>inferenceExtension.latencyPredictor.enabled=true</code>，并配置好训练&#x2F;预测服务镜像等，见 <a target="_blank" rel="noopener" href="https://gateway-api-inference-extension.sigs.k8s.io/guides/latency-based-predictor.md">Latency-Based Routing</a>。</li>
+<li><strong>多推理池、LoRA、灰度等</strong>：见 Serving Multiple Inference Pools、Adapter Rollout 等文档。</li>
+</ul>
+<h3 id="3-11-清理（按需执行）"><a href="#3-11-清理（按需执行）" class="headerlink" title="3.11 清理（按需执行）"></a>3.11 清理（按需执行）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卸载 InferencePool + EPP 与示例目标</span></span><br><span class="line">helm uninstall vllm-llama3-8b-instruct --ignore-not-found</span><br><span class="line">kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/inferenceobjective.yaml --ignore-not-found</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除模型服务器与密钥</span></span><br><span class="line">kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/vllm/gpu-deployment.yaml --ignore-not-found</span><br><span class="line">kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/vllm/cpu-deployment.yaml --ignore-not-found</span><br><span class="line">kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/vllm/sim-deployment.yaml --ignore-not-found</span><br><span class="line">kubectl delete secret hf-token --ignore-not-found</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 Inference Extension CRDs</span></span><br><span class="line">kubectl delete -k https://github.com/kubernetes-sigs/gateway-api-inference-extension/config/crd --ignore-not-found</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按所用网关删除对应 Gateway 资源（示例：Istio）</span></span><br><span class="line">kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/gateway/istio/gateway.yaml --ignore-not-found</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-12-小结：怎样算“使用了这个插件”"><a href="#3-12-小结：怎样算“使用了这个插件”" class="headerlink" title="3.12 小结：怎样算“使用了这个插件”"></a>3.12 小结：怎样算“使用了这个插件”</h3><ul>
+<li><strong>从 K8s 视角</strong>：安装 CRD → 安装并启用推理扩展的网关 → 部署 Gateway → 部署模型服务器 → 用 <strong>InferencePool Helm Chart</strong> 部署 InferencePool + EPP。</li>
+<li><strong>从使用视角</strong>：流量进入 <strong>inference-gateway</strong> 入口，经 HttpRoute 到 <strong>EPP</strong>，EPP 根据 InferencePool 和调度策略选出模型 Pod，网关将请求转发到该 Pod；通过 curl 或客户端对网关发送 OpenAI 兼容的 <code>/v1/completions</code> 等请求，即在使用该插件。</li>
+<li>更细的 API（<strong>InferencePool</strong>、<strong>InferenceModel</strong>、<strong>InferenceObjective</strong> 等）可查<a target="_blank" rel="noopener" href="https://gateway-api-inference-extension.sigs.k8s.io/concepts/api-overview/">官网 API 文档</a>与<a target="_blank" rel="noopener" href="https://gateway-api-inference-extension.sigs.k8s.io/concepts/">概念说明</a>。</li>
+</ul>
+<h2 id="4-对比与小结"><a href="#4-对比与小结" class="headerlink" title="4 对比与小结"></a>4 对比与小结</h2><p>（待补充：vLLM Router 与 Gateway API Inference Extension 智能负载均衡的对比、适用场景、可组合使用方式等。）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%8E%A8%E7%90%86/" rel="tag"># 推理</a>
+              <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+              <a href="/tags/Gateway-API/" rel="tag"># Gateway API</a>
+              <a href="/tags/%E7%BD%91%E5%85%B3/" rel="tag"># 网关</a>
+              <a href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag"># 插件</a>
+              <a href="/tags/vLLM-Router/" rel="tag"># vLLM Router</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/13/LeaderWorkerSet%E6%8F%92%E4%BB%B6/" rel="prev" title="LeaderWorkerSet 插件">
+                  <i class="fa fa-angle-left"></i> LeaderWorkerSet 插件
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/13/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84/" rel="next" title="vLLM 学习笔记（一）：整体代码架构">
+                  vLLM 学习笔记（一）：整体代码架构 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
