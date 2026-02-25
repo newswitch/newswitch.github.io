@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="AI 组网第三阶段：自动化与架构进阶核心目标：从配置工进阶为 AI 集群网络架构师，实现大规模 AI 网络的自动化运维与智能调优。    1. AI 网络自动化运维核心学习内容 【沿用原计划】Python 基础、Netmiko&#x2F;Napalm&#x2F;Ansible 批量设备管理、Jinja2 模板配置生成 【新增 AI 专属】AI 集群网络自动化专项：交换机无损参数批量配置、RDMA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI 组网第三阶段：自动化与架构进阶">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="AI 组网第三阶段：自动化与架构进阶核心目标：从配置工进阶为 AI 集群网络架构师，实现大规模 AI 网络的自动化运维与智能调优。    1. AI 网络自动化运维核心学习内容 【沿用原计划】Python 基础、Netmiko&#x2F;Napalm&#x2F;Ansible 批量设备管理、Jinja2 模板配置生成 【新增 AI 专属】AI 集群网络自动化专项：交换机无损参数批量配置、RDMA">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-19T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-22T17:25:46.381Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="AI组网">
+<meta property="article:tag" content="NCCL">
+<meta property="article:tag" content="QoS">
+<meta property="article:tag" content="学习计划">
+<meta property="article:tag" content="灾备">
+<meta property="article:tag" content="自动化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/","path":"2026/02/19/AI组网第三阶段-自动化与架构进阶/","title":"AI 组网第三阶段：自动化与架构进阶"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI 组网第三阶段：自动化与架构进阶 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AI-%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6"><span class="nav-number">1.</span> <span class="nav-text">AI 组网第三阶段：自动化与架构进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-AI-%E7%BD%91%E7%BB%9C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4"><span class="nav-number">1.1.</span> <span class="nav-text">1. AI 网络自动化运维</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9"><span class="nav-number">1.1.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.1.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86"><span class="nav-number">1.1.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AI-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E8%B0%83%E5%BA%A6"><span class="nav-number">1.2.</span> <span class="nav-text">2. AI 网络性能优化与智能调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7-1"><span class="nav-number">1.2.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%A4%A7%E8%A7%84%E6%A8%A1-AI-%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%81%BE%E5%A4%87"><span class="nav-number">1.3.</span> <span class="nav-text">3. 大规模 AI 集群架构设计与灾备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86-2"><span class="nav-number">1.3.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7-2"><span class="nav-number">1.3.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%80%BB%E8%A1%A8%EF%BC%88%E9%98%B6%E6%AE%B5-%E4%B8%BB%E9%A2%98-%E5%86%85%E5%AE%B9%E8%A6%81%E7%82%B9%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI 组网第三阶段：自动化与架构进阶 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI 组网第三阶段：自动化与架构进阶
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:25:46" itemprop="dateModified" datetime="2026-02-23T01:25:46+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="AI-组网第三阶段：自动化与架构进阶"><a href="#AI-组网第三阶段：自动化与架构进阶" class="headerlink" title="AI 组网第三阶段：自动化与架构进阶"></a>AI 组网第三阶段：自动化与架构进阶</h1><p><strong>核心目标</strong>：从配置工进阶为 AI 集群网络架构师，实现大规模 AI 网络的自动化运维与智能调优。  </p>
+<hr>
+<h2 id="1-AI-网络自动化运维"><a href="#1-AI-网络自动化运维" class="headerlink" title="1. AI 网络自动化运维"></a>1. AI 网络自动化运维</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>【沿用原计划】Python 基础、Netmiko&#x2F;Napalm&#x2F;Ansible 批量设备管理、Jinja2 模板配置生成</li>
+<li>【新增 AI 专属】<strong>AI 集群网络自动化专项</strong>：交换机无损参数批量配置、RDMA 网卡参数批量调优、端口状态批量巡检</li>
+<li>【新增 AI 专属】<strong>RDMA 性能监控体系搭建</strong>：Prometheus+Grafana 监控 RDMA 带宽、时延、PFC 帧、丢包、拥塞情况</li>
+<li>【新增 AI 专属】<strong>AI 训练任务网络保障自动化</strong>：训练任务启动前的网络健康检查、故障自动告警与定位</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>编写 Python 脚本 + Ansible Playbook，实现 <strong>AI 集群 50+ 交换机的无损配置批量下发</strong>、配置备份、合规校验</li>
+<li>搭建 <strong>AI 集群网络监控大盘</strong>，实现 RDMA 性能、PFC 事件、端口状态、设备负载的实时监控与告警</li>
+<li>实现 <strong>AI 训练任务的网络健康度自动巡检</strong>，提前发现并预警网络瓶颈与故障风险</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能实现「一杯咖啡时间搞定 AI 集群百台交换机 &#x2F; 千张网卡的批量配置与巡检」，替代 90% 的重复手工操作</li>
+<li>能搭建完整的 AI 集群网络监控体系，实现故障的分钟级定位，提前预警网络风险</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：VS Code、Python、Ansible、Prometheus、Grafana、NVIDIA DCGM</li>
+<li>书籍：《Python 网络编程权威指南》</li>
+<li>文档：NVIDIA DCGM 官方文档、交换机开源运维工具指南</li>
+</ul>
+<hr>
+<h2 id="2-AI-网络性能优化与智能调度"><a href="#2-AI-网络性能优化与智能调度" class="headerlink" title="2. AI 网络性能优化与智能调度"></a>2. AI 网络性能优化与智能调度</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>NCCL 全解</strong>：NCCL 通信原理、拓扑感知、GPU 亲和性、NCCL 环境变量优化、通信性能调优</li>
+<li><strong>AI 流量专属 QoS</strong>：LLQ 低时延队列、RDMA 流量优先级保障、拥塞控制优化、训练流量与推理流量的带宽隔离</li>
+<li>【弱化】通用 SD-WAN 仅做了解，重点关注<strong>跨地域 AI 训练的智能选路、广域网 RDMA 优化</strong></li>
+<li><strong>AI 网络智能运维</strong>：基于 AI 算法的网络流量预测、拥塞预判、故障根因分析</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成<strong>分布式训练任务的 NCCL 全链路优化</strong>，实现 <strong>NCCL 带宽利用率≥90%</strong>，训练性能线性提升</li>
+<li>完成 <strong>AI 流量 QoS 设计</strong>，保障 RDMA 训练流量的零丢包、低时延，实现推理业务与训练业务的带宽隔离</li>
+<li>完成<strong>跨地域 AI 训练的网络优化</strong>，实现跨节点分布式训练的稳定运行</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能通过网络优化，解决大模型分布式训练的通信瓶颈，实现训练性能的线性提升</li>
+<li>能针对 AI 训练 &#x2F; 推理业务的不同特征，实现流量的智能调度与优先级保障，避免业务卡顿与训练中断</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：NCCL Tests、NVIDIA Nsight Systems、Wireshark、流量打流工具</li>
+<li>文档：NVIDIA NCCL 官方优化指南、大模型训练网络性能调优最佳实践</li>
+</ul>
+<hr>
+<h2 id="3-大规模-AI-集群架构设计与灾备"><a href="#3-大规模-AI-集群架构设计与灾备" class="headerlink" title="3. 大规模 AI 集群架构设计与灾备"></a>3. 大规模 AI 集群架构设计与灾备</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>万级 GPU 超大规模 AI 集群</strong>网络架构设计、可扩展性规划、故障域隔离</li>
+<li><strong>AI 集群同城双活、异地容灾</strong>网络架构设计、模型与数据同步网络优化</li>
+<li><strong>混合云 AI 组网</strong>：线下 IDC 与云上 GPU 资源的混合集群网络设计、训练任务跨云调度</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成<strong>超大规模 AI 集群网络架构方案设计</strong>，包含可扩展性、高可用、安全、灾备全维度规划</li>
+<li>完成<strong>混合云 AI 训练集群组网方案设计</strong>，实现线下与云上资源的网络互通与训练任务协同</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能站在架构师视角，完成企业级 AI 平台的全生命周期网络架构规划</li>
+<li>能匹配企业 AI 业务的发展，设计可扩展、高可用、高性能的 AI 组网方案</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>文档：头部云厂商超大规模 AI 集群架构白皮书、NVIDIA SuperPOD 组网方案</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第三阶段</td>
+<td>AI 网络自动化运维</td>
+<td>Python&#x2F;Ansible&#x2F;Jinja2、无损与 RDMA 批量配置、Prometheus+Grafana 监控、训练前健康检查；50+ 交换机批量下发与监控、训练网络巡检</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 网络性能优化与智能调度</td>
+<td>NCCL 原理与调优、AI QoS 与 RDMA&#x2F;LLQ、跨地域训练选路；NCCL≥90%、训练与推理带宽隔离、跨地域训练优化</td>
+</tr>
+<tr>
+<td></td>
+<td>大规模 AI 集群架构设计与灾备</td>
+<td>万级 GPU 可扩展与故障域、同城双活与异地容灾、混合云 IDC+云 GPU；超大规模与混合云 AI 组网方案设计</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">← AI 组网第二阶段：集群核心组网</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/" rel="tag"># 学习计划</a>
+              <a href="/tags/AI%E7%BB%84%E7%BD%91/" rel="tag"># AI组网</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 自动化</a>
+              <a href="/tags/NCCL/" rel="tag"># NCCL</a>
+              <a href="/tags/QoS/" rel="tag"># QoS</a>
+              <a href="/tags/%E7%81%BE%E5%A4%87/" rel="tag"># 灾备</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/" rel="prev" title="AI 组网第二阶段：集群核心组网">
+                  <i class="fa fa-angle-left"></i> AI 组网第二阶段：集群核心组网
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/" rel="next" title="AI 组网第一阶段：底层基础">
+                  AI 组网第一阶段：底层基础 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

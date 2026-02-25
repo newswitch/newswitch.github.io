@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="传统组网第一阶段：筑基与深耕核心目标：彻底掌控数据包流向，成为「协议大师」。 本阶段除 BGP 外，会涉及多类协议与技术：路由与转发（BGP、MPLS&#x2F;LDP、VRF、RD&#x2F;RT，以及 PE-CE 侧的静态&#x2F;RIP&#x2F;OSPF&#x2F;BGP）、安全与 VPN（基于 Zone 的防火墙、NAT、IPsec、GRE over IPSec）、无线（802.11a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="传统组网第一阶段：筑基与深耕">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="传统组网第一阶段：筑基与深耕核心目标：彻底掌控数据包流向，成为「协议大师」。 本阶段除 BGP 外，会涉及多类协议与技术：路由与转发（BGP、MPLS&#x2F;LDP、VRF、RD&#x2F;RT，以及 PE-CE 侧的静态&#x2F;RIP&#x2F;OSPF&#x2F;BGP）、安全与 VPN（基于 Zone 的防火墙、NAT、IPsec、GRE over IPSec）、无线（802.11a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-1.png">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-2.png">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-3.png">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-4.png">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-5.png">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-6.png">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-7.png">
+<meta property="og:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-8.png">
+<meta property="article:published_time" content="2026-02-19T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-23T17:34:06.479Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="BGP">
+<meta property="article:tag" content="MPLS">
+<meta property="article:tag" content="传统组网">
+<meta property="article:tag" content="学习计划">
+<meta property="article:tag" content="无线">
+<meta property="article:tag" content="防火墙">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://newswitch.github.io/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-1.png">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/","path":"2026/02/19/传统组网第一阶段-筑基与深耕/","title":"传统组网第一阶段：筑基与深耕"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>传统组网第一阶段：筑基与深耕 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95"><span class="nav-number">1.</span> <span class="nav-text">传统组网第一阶段：筑基与深耕</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-BGP-%E6%A0%B8%E5%BF%83%E8%BF%9B%E9%98%B6"><span class="nav-number">1.1.</span> <span class="nav-text">1. BGP 核心进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81BGP-%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.1.</span> <span class="nav-text">一、BGP 的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E8%87%AA%E6%B2%BB%E7%B3%BB%E7%BB%9F%EF%BC%88AS%EF%BC%89%E4%B8%8E-AS-%E5%8F%B7"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">01 自治系统（AS）与 AS 号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">02 动态路由分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-BGP-%E7%9A%84%E7%89%B9%E5%BE%81"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">03 BGP 的特征</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81BGP-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">二、BGP 的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-BGP-%E9%82%BB%E5%B1%85%E5%85%B3%E7%B3%BB"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">01 BGP 邻居关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E9%80%9A%E5%91%8A-BGP-%E8%B7%AF%E7%94%B1%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">02 通告 BGP 路由的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-BGP-%E8%B7%AF%E7%94%B1%E9%80%9A%E5%91%8A%E5%8E%9F%E5%88%99"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">03 BGP 路由通告原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#04-%E6%9B%B4%E6%96%B0%E6%BA%90%E5%BB%BA%E7%AB%8B%E9%82%BB%E5%B1%85%E5%85%B3%E7%B3%BB"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">04 更新源建立邻居关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#05-%E4%BF%9D%E8%AF%81-IBGP-%E4%B8%8B%E4%B8%80%E8%B7%B3%E5%8F%AF%E8%BE%BE"><span class="nav-number">1.1.2.5.</span> <span class="nav-text">05 保证 IBGP 下一跳可达</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#06-EBGP-%E5%A4%9A%E8%B7%B3"><span class="nav-number">1.1.2.6.</span> <span class="nav-text">06 EBGP 多跳</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#07-%E6%8E%A7%E5%88%B6-BGP-%E9%80%89%E8%B7%AF"><span class="nav-number">1.1.2.7.</span> <span class="nav-text">07 控制 BGP 选路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#08-BGP-%E9%80%89%E8%B7%AF%E8%A7%84%E5%88%99%EF%BC%8812-%E6%9D%A1%E9%A1%BA%E5%BA%8F%EF%BC%89"><span class="nav-number">1.1.2.8.</span> <span class="nav-text">08 BGP 选路规则（12 条顺序）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#09-%E6%B1%87%E6%80%BB%E3%80%81%E8%BF%87%E6%BB%A4%E4%B8%8E%E8%BF%9B%E9%98%B6%EF%BC%88%E6%8F%90%E8%A6%81%EF%BC%89"><span class="nav-number">1.1.2.9.</span> <span class="nav-text">09 汇总、过滤与进阶（提要）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81BGP-%E7%9A%84%E9%85%8D%E7%BD%AE%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.1.3.</span> <span class="nav-text">三、BGP 的配置实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E9%9C%80%E6%B1%82%E5%A6%82%E4%B8%8B"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">01 需求如下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E5%BC%80%E5%A7%8B%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">02 开始配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93"><span class="nav-number">1.1.4.</span> <span class="nav-text">四、配置总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-MPLS-VPN-%E9%AA%A8%E5%B9%B2%E6%8A%80%E6%9C%AF"><span class="nav-number">1.2.</span> <span class="nav-text">2. MPLS VPN 骨干技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9"><span class="nav-number">1.2.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86"><span class="nav-number">1.2.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%AB%98%E7%BA%A7%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8"><span class="nav-number">1.3.</span> <span class="nav-text">3. 高级网络安全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7-1"><span class="nav-number">1.3.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BC%81%E4%B8%9A%E6%97%A0%E7%BA%BF%E8%B0%83%E4%BC%98"><span class="nav-number">1.4.</span> <span class="nav-text">4. 企业无线调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7-2"><span class="nav-number">1.4.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%80%BB%E8%A1%A8%EF%BC%88%E9%98%B6%E6%AE%B5-%E4%B8%BB%E9%A2%98-%E5%86%85%E5%AE%B9%E8%A6%81%E7%82%B9%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="传统组网第一阶段：筑基与深耕 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          传统组网第一阶段：筑基与深耕
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-24 01:34:06" itemprop="dateModified" datetime="2026-02-24T01:34:06+08:00">2026-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="传统组网第一阶段：筑基与深耕"><a href="#传统组网第一阶段：筑基与深耕" class="headerlink" title="传统组网第一阶段：筑基与深耕"></a>传统组网第一阶段：筑基与深耕</h1><p><strong>核心目标</strong>：彻底掌控数据包流向，成为「协议大师」。</p>
+<p>本阶段除 <strong>BGP</strong> 外，会涉及多类协议与技术：<strong>路由与转发</strong>（BGP、MPLS&#x2F;LDP、VRF、RD&#x2F;RT，以及 PE-CE 侧的静态&#x2F;RIP&#x2F;OSPF&#x2F;BGP）、<strong>安全与 VPN</strong>（基于 Zone 的防火墙、NAT、IPsec、GRE over IPSec）、<strong>无线</strong>（802.11ax&#x2F;ac、802.11r&#x2F;k&#x2F;v、AC+FIT AP）等，覆盖广域网、骨干网、安全与无线四块，共同构成「筑基与深耕」的协议栈。</p>
+<hr>
+<h2 id="1-BGP-核心进阶"><a href="#1-BGP-核心进阶" class="headerlink" title="1. BGP 核心进阶"></a>1. BGP 核心进阶</h2><h3 id="一、BGP-的概念"><a href="#一、BGP-的概念" class="headerlink" title="一、BGP 的概念"></a>一、BGP 的概念</h3><p>BGP（边界网关协议）是基于 AS 的<strong>路径矢量</strong>协议，解决 AS 间选路问题，适合互联网。重点掌握：报文与建邻、路由属性、12 条选路原则及汇总&#x2F;过滤&#x2F;RR&#x2F;联盟等。</p>
+<h4 id="01-自治系统（AS）与-AS-号"><a href="#01-自治系统（AS）与-AS-号" class="headerlink" title="01 自治系统（AS）与 AS 号"></a>01 自治系统（AS）与 AS 号</h4><p>自治系统（AS）是同一管理机构下、使用统一选路策略的一组路由器。<strong>AS 号</strong>默认 2 字节，可扩展 4 字节，需申请。</p>
+<ul>
+<li><strong>1～64511</strong>：公有 AS 号，全球唯一</li>
+<li><strong>64512～65535</strong>：私有 AS 号，可重用，不出域</li>
+</ul>
+<h4 id="02-动态路由分类"><a href="#02-动态路由分类" class="headerlink" title="02 动态路由分类"></a>02 动态路由分类</h4><p>动态路由协议有很多分类方法，按自治系统分类、按协议类型分类是最常用的两种。</p>
+<p><strong>按自治系统分类：</strong></p>
+<ul>
+<li><strong>IGP</strong>（内部网关路由协议）：如 RIP、OSPF、ISIS、EIGRP（思科私有）。运行在 AS 内部，用于发现与计算路由。</li>
+<li><strong>EGP</strong>（外部网关路由协议）：通常指 BGP，运行在 AS 之间，用于控制路由传播与最优路由选择。</li>
+</ul>
+<p>一般会先使用IGP协议在自治系统内部计算和发现路由条目，再通过BGP协议将IGP协议产生的路由传递至其他的AS（自治系统）。</p>
+<h4 id="03-BGP-的特征"><a href="#03-BGP-的特征" class="headerlink" title="03 BGP 的特征"></a>03 BGP 的特征</h4><ul>
+<li>外部路由协议，在 AS 之间传递路由信息</li>
+<li><strong>路径矢量</strong>（Path-Vector）协议，通过 AS_PATH 防环，区别于距离矢量&#x2F;链路状态</li>
+<li>可靠更新：基于 <strong>TCP，目的端口 179</strong>，源端口随机</li>
+<li>丰富度量与策略：<strong>12 条选路原则</strong>、route-policy 等</li>
+<li>设计上避免环路</li>
+<li>为路由附带多种属性；支持 <strong>CIDR</strong></li>
+<li><strong>无周期更新</strong>，仅触发更新且只更新变化部分；周期（约 60s）发送 <strong>KeepAlive</strong> 检测 TCP 连通性</li>
+</ul>
+<p><strong>路由算法分类</strong>（便于对比理解）：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Distance-vector_routing_protocol">距离矢量</a>（如 RIP，按跳数、Bellman-Ford）、<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Link-state_routing_protocol">链路状态</a>（如 OSPF&#x2F;IS-IS，每节点维护拓扑图）、<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Path-vector_routing_protocol">路径矢量</a>（BGP，维护路径信息、易检测环路）。</p>
+<h3 id="二、BGP-的工作原理"><a href="#二、BGP-的工作原理" class="headerlink" title="二、BGP 的工作原理"></a>二、BGP 的工作原理</h3><p>BGP是跨公网、跨AS（自治系统）的路由协议，可以在AS之间学习路由。BGP的动态学习路由也是基于邻居，只有邻居关系正常，BGP才可以正常工作。</p>
+<h4 id="01-BGP-邻居关系"><a href="#01-BGP-邻居关系" class="headerlink" title="01 BGP 邻居关系"></a>01 BGP 邻居关系</h4><p>运行 BGP 的路由器通常被称为 BGP Speaker（发言者），相互之间传递报文的speaker之间互称为对等体（peer）。BGP邻居关系的建立、更新和删除是通过对等体之间的5种报文、6种状态机和5个表等信息来完成，最终形成BGP邻居。</p>
+<p><strong>（1）BGP 报文类型</strong></p>
+<ul>
+<li><strong>Open</strong>：与对等体建立邻接，建连后首包，携带版本、AS、Holdtime 等</li>
+<li><strong>KeepAlive</strong>：周期（约 60s）发送，维护 TCP 连接</li>
+<li><strong>Update</strong>：传递路由信息，用于通告或撤销路由</li>
+<li><strong>Notification</strong>：检测到错误时发送，随后断连</li>
+<li><strong>Route-Refresh</strong>：通知对端本端支持路由刷新能力</li>
+</ul>
+<p><strong>（2）BGP 状态机</strong></p>
+<ul>
+<li><strong>Idle</strong>：初始状态，等待启动事件；收到后发起 TCP，进入 Connect</li>
+<li><strong>Connect</strong>：发起 TCP；成功→OpenSent，失败→Active</li>
+<li><strong>Active</strong>：持续尝试 TCP；成功→OpenSent，超时回 Connect</li>
+<li><strong>OpenSent</strong>：已发 Open，等待对端 Open 并校验；无误发 KeepAlive→OpenConfirm，有误发 Notification→Idle</li>
+<li><strong>OpenConfirm</strong>：等待 KeepAlive；收到→<strong>Established</strong></li>
+<li><strong>Established</strong>：邻居建立，交换 Update，复位 Hold 计时器</li>
+</ul>
+<p>除 Idle 外任一步出错都会回退到 Idle。常见可见状态：Idle、Active、Established。</p>
+<p><strong>（3）BGP 路由信息处理（RIB）</strong></p>
+<p>对等体发来的 Update 先入 <strong>Adj-RIB-In</strong>，经<strong>输入策略</strong>过滤后参与<strong>路径选择</strong>；最优路径写入 <strong>Loc-RIB</strong> 并提交 <strong>IP RIB</strong>。Loc-RIB 再经<strong>输出策略</strong>，通过者写入 <strong>Adj-RIB-Out</strong> 发给对应对等体。另有邻居表记录 peer 信息。</p>
+<p><strong>（4）BGP 邻居关系类型</strong></p>
+<ul>
+<li><strong>IBGP</strong>：同一 AS 内 BGP 对等体之间的邻居关系。</li>
+<li><strong>EBGP</strong>：不同 AS 之间 BGP 对等体的邻居关系。</li>
+</ul>
+<p><strong>建邻要点</strong>：邻居基于 <strong>TCP 单播</strong>，无自动发现，需在 BGP 进程下手动配置对端地址。通过 IGP 或静态路由保证到对端的 TCP 可达性。</p>
+<p><strong>常见建邻失败原因</strong>：一直 Idle（无到 Peer 路由）、EBGP 多跳未配、源地址错误（对端看到的 IP 非本端配置的 peer 地址）、TCP 认证失败、路由错误或被过滤。华为：若经默认路由到达邻居，该邻居通告的所有路由视为无效。</p>
+<h4 id="02-通告-BGP-路由的方法"><a href="#02-通告-BGP-路由的方法" class="headerlink" title="02 通告 BGP 路由的方法"></a>02 通告 BGP 路由的方法</h4><p>BGP 路由是通过 BGP 命令通告而成的，而通告BGP路由的方法有两种：network和Import。</p>
+<p>（1）network方式：</p>
+<p>使用network命令可以将当前设备路由表中的路由（非BGP）发布到BGP路由表中并通告给邻居，和OSPF中使用network命令的方式大同小异，只不过在BGP宣告时，只需要宣告网段+掩码数即可，如：network 12.12.0.0 16。</p>
+<p>（2）Import方式：</p>
+<p>使用Import命令可以将该路由器学到的路由信息重分发到BGP路由表中，是BGP宣告路由的一种方式，可以引入BGP的路由包括：直连路由、静态路由及动态路由协议学到的路由。其命令格式与在RIP中重分发OSPF差不多。</p>
+<h4 id="03-BGP-路由通告原则"><a href="#03-BGP-路由通告原则" class="headerlink" title="03 BGP 路由通告原则"></a>03 BGP 路由通告原则</h4><ul>
+<li>只把<strong>最优路由</strong>加入路由表并只向对等体通告最优路由；多条路径时只选一条最优</li>
+<li><strong>从 EBGP 学到的路由</strong>：向所有 EBGP、IBGP 对等体通告；<strong>通告给 EBGP 时下一跳改为自己</strong>（若通告方与接收方 EBGP 在同一网段可不改）；通告给 IBGP 时<strong>不改下一跳</strong>，避免次优</li>
+<li><strong>从 IBGP 学到的路由</strong>：<strong>不</strong>再通告给其他 IBGP（<strong>IBGP 水平分割</strong>）；仅通告给 EBGP</li>
+<li>让所有 IBGP 都能收到某条路由的三种方式：<strong>全互联</strong>、<strong>RR（路由反射器）</strong>、<strong>联盟</strong></li>
+</ul>
+<p><strong>BGP 与 IGP 同步</strong>：同步关（默认）：从 IBGP 学到的路由可传给 eBGP。同步开：只有 IGP 里也有的路由才传给 eBGP，防 AS 内路由黑洞。华为默认关且不支持开启；思科可开。</p>
+<h4 id="04-更新源建立邻居关系"><a href="#04-更新源建立邻居关系" class="headerlink" title="04 更新源建立邻居关系"></a>04 更新源建立邻居关系</h4><p>这个概念说白了就是在指定对等体时，使用对方的loopback口，因为该接口比任何物理接口都要稳定，只要设备在运行，loopback口就不会关闭，只要有一条链路可以和对方的loopback地址通信，就不会造成BGP状态的改变，若使用物理接口，一旦这个物理接口down掉，那么BGP也就完了，所以这种使用loopback口建立BGP邻居的方法称为更新源建立邻居，通常会在同一个AS内使用冗余链路来确保BGP的稳定性。（若在不同AS内使用对端路由器的loopback地址来建立邻居关系，需要改变两个路由器上的TTL值，具体解释请参考博文末尾的配置总结）</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-1.png" alt="BGP"></p>
+<p>如在上图中，三个路由器同在AS 100区域中，若R1和R3要使用更新源建立邻居关系，那么配置如下：</p>
+<p>R1路由器：</p>
+<p>[R1]bgp 100              </p>
+<p>[R1-bgp]router-id 1.1.1.1</p>
+<p>[R1-bgp]peer 3.3.3.3 as-number 100    </p>
+<p>[R1-bgp]peer 3.3.3.3 connect-interface LoopBack0  </p>
+<p>R3路由器（相关命令解释参考R1路由器的配置）：</p>
+<p>[R3]bgp 100                    </p>
+<p>[R3-bgp]router-id 3.3.3.3              </p>
+<p>[R3-bgp]peer 1.1.1.1 as-number 100              </p>
+<p>[R3-bgp]peer 1.1.1.1 connect-interface LoopBack0          </p>
+<p>注意：本地loopback接口先要让对等体可达（就是可以ping通对方的loopback地址），需要手动添加对等体环回接口的路由条目或者使用OSPF、RIP等自动学习对方环回接口的路由。</p>
+<h4 id="05-保证-IBGP-下一跳可达"><a href="#05-保证-IBGP-下一跳可达" class="headerlink" title="05 保证 IBGP 下一跳可达"></a>05 保证 IBGP 下一跳可达</h4><p>在 AS 边缘的 BGP 设备，会接收到它的EBGP对等体邻居传递过来的BGP路由信息。上面说过：所有EBGP对等体在传递过程中下一跳改变， 所有IBGP对等体在传递过程中下一跳不变。上个图来直观的说一下：</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-2.png" alt="BGP"></p>
+<p>图中，用A——J分别来代替路由器的接口IP地址，结合所有EBGP对等体在传递过程中下一跳改变， 所有IBGP对等体在传递过程中下一跳不变这个结论，可以看到图中存在什么问题（自己看图理解吧，是在是懒癌晚期，不想解释了），就是图中R3路由器以后的路由器收到的路由条目中的下一跳是错误的，解决办法就是在R3和R5路由器上对R4和R6宣称下一跳为它自己，然后就会发现，R4学到的下一跳地址是E。R6学到的下一跳就是I。这只是解决了R1宣告路由时出现的问题，那么如果现在R6又宣告了一条路由，就还需要在R4和R2路由器上对R3和R1宣称下一跳为它自己。这样才算保证了IBGP的下一跳可达。</p>
+<p>配置如下（就拿一个路由器来举例，前三条配置命令的解释可以参考上面的注释，主要是最后一条命令，来改变路由的下一跳）：</p>
+<p>[R3]bgp 200</p>
+<p>[R3-bgp]router-id 3.3.3.3</p>
+<p>[R3-bgp]peer 34.1.1.4 as-number 200  </p>
+<p>[R3-bgp]peer 34.1.1.4 next-hop-local              </p>
+<h4 id="06-EBGP-多跳"><a href="#06-EBGP-多跳" class="headerlink" title="06 EBGP 多跳"></a>06 EBGP 多跳</h4><p>这个好理解，由于默认 BGP 中 EBGP 邻居之间的 TTL 值为 1，（TTL，数据包的生命周期值，每经过一个路由器该值会-1，当该值为0后，数据包将会被丢弃）。若EBGP对等体非直连（通信时需要经过一个以上的路由器，TTL值就不够用了），TTL值限制会使非直连的对等体无法正常建立邻居关系，所以需要用EBGP多跳的命令来解决非直连的邻居关系。如下图，若不配置EBGP多跳，那么R1和R3将无法正常建立邻居关系：</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-3.png" alt="BGP"></p>
+<p>配置上图中的R3路由器多跳（R1路由器也需要进行类似的配置，进而改变TTL值，这里只拿R3为例）：</p>
+<p>R3 配置如下：</p>
+<p>[R3]bgp 200</p>
+<p>[R3-bgp]router-id 3.3.3.3</p>
+<p>[R3-bgp]peer 12.0.0.1 as-number 100</p>
+<p>[R3-bgp]peer 12.0.0.1 ebgp-max-hop 2   # 跳数为 2，即 TTL&#x3D;2</p>
+<h4 id="07-控制-BGP-选路"><a href="#07-控制-BGP-选路" class="headerlink" title="07 控制 BGP 选路"></a>07 控制 BGP 选路</h4><p>BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP的选路。</p>
+<p><strong>属性四类</strong>：公认必遵（Origin、AS_Path、Next_Hop）→ 公认任意（Local_Pref、Atomic-Aggregate 等）→ 可选过渡（Community、Aggregator 等）→ 可选非过渡（MED、Originator-ID、Cluster-List）。不识别时：过渡属性可转给邻居；非过渡属性丢弃不转发。</p>
+<p><strong>常用属性简述</strong>：</p>
+<ul>
+<li><strong>Origin</strong>：路由来源。IGP（network 注入）&gt; EGP &gt; Incomplete（import 引入）</li>
+<li><strong>AS_Path</strong>：矢量顺序记录经过的 AS，含本 AS 则拒收（防环）。类型：AS-Sequence（有序）、AS-Set（无序）、AS-confed-sequence&#x2F;Set（联盟内）</li>
+<li><strong>Next_Hop</strong>：本端始发发给 IBGP 时设为建邻接口地址；发给 EBGP 时设为建邻接口地址；向 IBGP 转发从 EBGP 学来的路由时通常不改（需 next-hop-local 场景见前文）</li>
+<li><strong>Local_Pref</strong>：仅 IBGP 间传递，判断<strong>离开 AS</strong> 的最佳路由，值高优先，默认 100</li>
+<li><strong>MED</strong>：仅相邻 AS 间传递，判断<strong>进入 AS</strong> 的最佳路由，值小优先，默认 0</li>
+<li><strong>Community</strong>：aa:nn 或团体号；公认：Internet、No_Advertise、No_Export、No_Export_Subconfed</li>
+</ul>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-4.png" alt="BGP"> <img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-5.png" alt="BGP"> <img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-6.png" alt="BGP"> <img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-7.png" alt="BGP"></p>
+<h4 id="08-BGP-选路规则（12-条顺序）"><a href="#08-BGP-选路规则（12-条顺序）" class="headerlink" title="08 BGP 选路规则（12 条顺序）"></a>08 BGP 选路规则（12 条顺序）</h4><ol>
+<li>下一跳不可达则忽略</li>
+<li>PrefVal 大优先</li>
+<li>Local_Pref 大优先</li>
+<li>本地生成优先（聚合 &gt; 非聚合；手聚 &gt; 自聚；network &gt; import）</li>
+<li>AS_Path 短优先</li>
+<li>Origin：IGP &gt; EGP &gt; Incomplete</li>
+<li>MED 小优先</li>
+<li>EBGP 优于 IBGP</li>
+<li>到 BGP 下一跳的 IGP metric 小优先</li>
+<li>Cluster_List 短优先</li>
+<li>Originator_ID（无则 Router ID）小优先</li>
+<li>对等体 IP 小优先</li>
+</ol>
+<h4 id="09-汇总、过滤与进阶（提要）"><a href="#09-汇总、过滤与进阶（提要）" class="headerlink" title="09 汇总、过滤与进阶（提要）"></a>09 汇总、过滤与进阶（提要）</h4><p><strong>路由汇总</strong>：自动汇总仅对重分发进 BGP 的外部路由生效且为主类；手动汇总优先。常用：<code>detail-suppressed</code> 抑制明细、<code>suppress-policy</code> 指定抑制项、<code>as-set</code> 防环、<code>attribute-policy</code> 设属性。带 <code>detail-suppressed</code> 时汇总路由会带 Atomic-Aggregate，不继承明细的 community。</p>
+<p><strong>路由过滤</strong>：<code>peer x ip-prefix xx import</code>、<code>peer x filter-policy xx import</code>、<code>peer x as-path-filter xx import</code>（as-path-filter 用正则匹配 AS_PATH）。</p>
+<p><strong>路由反射器（RR）</strong>：反射原则——从 EBGP 收到的可反射给 Client、Non-Client、EBGP；从 Non-Client 收到的可反射给 Client 和 EBGP，不反射给 Non-Client；从 Client 收到的可反射给 Client、Non-Client、EBGP。Client 只与 RR 建 IBGP；RR 之间、Non-Client 之间需全互联。经 RR 反射的路由带 Cluster_List、Originator_ID 防环。</p>
+<p><strong>联盟</strong>：联盟内 EBGP 传路由时不改下一跳；用 loopback 建联盟 eBGP 时也需配 ebgp-max-hop。AS 号表示：<code>()</code> 联盟内有序、<code>[]</code> 联盟内无序（华为）、<code>{}</code> 联盟外无序。</p>
+<p><strong>默认路由</strong>：对 peer 通告默认、network&#x2F;import 默认路由、<code>default-route imported</code>。</p>
+<p><strong>常用命令</strong>：<code>active-route-advertise</code> 只通告活动路由；<code>bgp-rib-only</code> 在 IP RIB 侧过滤 BGP（与上一条互斥）；<code>as-path limit 1</code> 限制 AS_Path 长度（默认 255）。4 字节 AS 号：能力协商、AS4_Path&#x2F;AS4_Aggregator 属性、AS_Trans 23456 衔接 2&#x2F;4 字节。</p>
+<h3 id="三、BGP-的配置实例"><a href="#三、BGP-的配置实例" class="headerlink" title="三、BGP 的配置实例"></a>三、BGP 的配置实例</h3><p>上面是 BGP 理论概要，实际配置相对简单。下面按实验拓扑进行配置，网络拓扑如下：</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-8.png" alt="BGP"></p>
+<h4 id="01-需求如下"><a href="#01-需求如下" class="headerlink" title="01 需求如下"></a>01 需求如下</h4><ol>
+<li><p>AS 200 内部使用 OSPF 协议使 AS 200 内部互通，并在AS 200内部各个路由器上都运行BGP协议（R1和R2、R3建立邻居关系，R4和R2、R3及R5建立邻居关系，），各个AS之间运行BGP协议。</p>
+</li>
+<li><p>分别在 R1 和 R5 使用 BGP 协议宣告 21.0.0.0&#x2F;24 和 20.0.0.0&#x2F;24，使所有路由器学到这两条路由信息</p>
+</li>
+<li><p>通过 BGP 的属性控制选路，实现 PC1→R1→R2→R4→R5→PC2→R5→R4→R3→R2→R1→PC1 的路由通信，并测试多种控制选路方法</p>
+</li>
+<li><p>在 R2、R3 和 R4 上分别向 BGP 注入本地 OSPF 路由，使全网互通（满足第 3 点选路要求并不代表 PC1 能 ping 通所有设备，如 R2）</p>
+</li>
+<li><p>为演示 EBGP 多跳，尝试让 R1 与 R4 直接建立对等体关系</p>
+</li>
+</ol>
+<h4 id="02-开始配置"><a href="#02-开始配置" class="headerlink" title="02 开始配置"></a>02 开始配置</h4><ol>
+<li>自行配置各 PC、路由器物理接口及 loopback 的 IP（此处仅给出路由器 IP 配置参考）：</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;R1&gt;sys                              </span><br><span class="line"></span><br><span class="line">[R1]in g0/0/0                  </span><br><span class="line"></span><br><span class="line">[R1-GigabitEthernet0/0/0]ip add 12.1.1.1 24              </span><br><span class="line"></span><br><span class="line">[R1-GigabitEthernet0/0/0]int loop 0                   </span><br><span class="line"></span><br><span class="line">[R1-LoopBack0]ip add 1.1.1.1 32</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置 AS 200 内部的 OSPF 路由协议。</li>
+</ol>
+<p><strong>R2 配置示例：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[R2]ospf 1</span><br><span class="line">[R2-ospf-1]area 0</span><br><span class="line">[R2-ospf-1-area-0.0.0.0]net 2.2.2.2 0.0.0.0</span><br><span class="line">[R2-ospf-1-area-0.0.0.0]net 12.1.1.0 0.0.0.255</span><br><span class="line">[R2-ospf-1-area-0.0.0.0]net 24.1.1.0 0.0.0.255</span><br></pre></td></tr></table></figure>
+
+<p><strong>R3、R4</strong> 类似，仅将 <code>net</code> 改为各自 loopback 与直连网段即可。</p>
+<ol start="3">
+<li>配置 BGP，建立邻居关系。</li>
+</ol>
+<p><strong>R1 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[R1]bgp 100              </span><br><span class="line"></span><br><span class="line">[R1-bgp]router-id 1.1.1.1              </span><br><span class="line"></span><br><span class="line">[R1-bgp]peer 12.1.1.2 as 200              </span><br><span class="line"></span><br><span class="line">[R1-bgp]peer 13.1.1.3 as 200              </span><br><span class="line"></span><br><span class="line">[R1-bgp]network 21.0.0.0 24</span><br></pre></td></tr></table></figure>
+
+<p><strong>R2 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[R2]bgp 200</span><br><span class="line"></span><br><span class="line">[R2-bgp]router-id 2.2.2.2</span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 12.1.1.1 as 100              </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 as 200                  </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 connect-interface LoopBack 0  </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 next-hop-local</span><br></pre></td></tr></table></figure>
+
+<p><strong>R3 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[R3]bgp 200</span><br><span class="line"></span><br><span class="line">[R3-bgp]router-id 3.3.3.3</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 13.1.1.1 as 100</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 as 200</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 connect-interface LoopBack 0</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 next-hop-local</span><br></pre></td></tr></table></figure>
+
+<p><strong>R4 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[R4]bgp 200</span><br><span class="line"></span><br><span class="line">[R4-bgp]router-id 4.4.4.4</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 2.2.2.2 as 200</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 3.3.3.3 as 200</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 2.2.2.2 next-hop-local</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 3.3.3.3 next-hop-local</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 2.2.2.2 connect-interface LoopBack 0</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 3.3.3.3 connect-interface LoopBack 0</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 45.1.1.5 as 300</span><br></pre></td></tr></table></figure>
+
+<p><strong>R5 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[R5]bgp 300</span><br><span class="line"></span><br><span class="line">[R5-bgp]router-id 5.5.5.5</span><br><span class="line"></span><br><span class="line">[R5-bgp]peer 45.1.1.4 as 200</span><br><span class="line"></span><br><span class="line">[R5-bgp]network 20.0.0.0 24</span><br></pre></td></tr></table></figure>
+
+<p>BGP 邻居建立后可用以下命令查看：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[R1]dis bgp peer</span><br><span class="line"></span><br><span class="line"> BGP local router ID : 1.1.1.1</span><br><span class="line"> Local AS number : 100</span><br><span class="line"> Total number of peers : 2        Peers in established state : 2</span><br><span class="line"></span><br><span class="line">  Peer            V          AS  MsgRcvd  MsgSent  OutQ  Up/Down       State Pre</span><br><span class="line">fRcv</span><br><span class="line"></span><br><span class="line">  12.1.1.2        4         200        5        8     0 00:02:11 Established    </span><br><span class="line">   1</span><br><span class="line">  13.1.1.3        4         200        7       10     0 00:04:34 Established    1</span><br></pre></td></tr></table></figure>
+
+<p>至此 PC1 已可与 PC2 通信，当然是BGP协议做的咯，但是现在除了非直连网段及AS 200内部路由器以外，也只有PC1和PC2可以通信，如PC1并不能ping通R2路由器。</p>
+<ol start="4">
+<li>第三个需求：通过 BGP 属性控制选路，实现 PC1→R1→R2→R4→R5→PC2→R5→R4→R3→R2→R1→PC1 的路径。先用 <code>tracert</code> 查看实际经过的路由器。</li>
+</ol>
+<p><strong>PC1→PC2 路径示例：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 20.0.0.1</span><br><span class="line">traceroute to 20.0.0.1, 8 hops max (ICMP), press Ctrl+C to stop</span><br><span class="line"> 1  21.0.0.254   &lt;1 ms  16 ms  15 ms</span><br><span class="line"> 2  12.1.1.2   16 ms  15 ms  16 ms</span><br><span class="line"> 3  24.1.1.4   31 ms  32 ms  31 ms</span><br><span class="line"> 4  45.1.1.5   31 ms  47 ms  31 ms</span><br><span class="line"> 5  20.0.0.1   31 ms  32 ms</span><br></pre></td></tr></table></figure>
+
+<p><strong>PC2→PC1 路径示例：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 21.0.0.1</span><br><span class="line"></span><br><span class="line">traceroute to 21.0.0.1, 8 hops max (ICMP), press Ctrl+C to stop</span><br><span class="line"> 1  20.0.0.254   15 ms  &lt;1 ms  16 ms</span><br><span class="line"> 2  45.1.1.4   16 ms  31 ms  16 ms</span><br><span class="line"> 3  24.1.1.2   31 ms  31 ms  31 ms</span><br><span class="line"> 4  12.1.1.1   47 ms  16 ms  47 ms</span><br><span class="line"> 5  21.0.0.1   31 ms  31 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p>下面通过三种方式配置选路：</p>
+<p><strong>方法 1：修改 Local-Preference，使 R3 优先</strong></p>
+<p>在 R3 上执行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[R3]route-policy lop permit node 10    </span><br><span class="line"></span><br><span class="line">Info: New Sequence of this List.</span><br><span class="line"></span><br><span class="line">[R3-route-policy]apply local-preference 222      </span><br><span class="line"></span><br><span class="line">[R3-route-policy]quit</span><br><span class="line"></span><br><span class="line">[R3]bgp 200              </span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 route-policy lop export      </span><br><span class="line"></span><br><span class="line">[R3-bgp]quit</span><br><span class="line"></span><br><span class="line">[R3]quit&lt;R3&gt;reset bgp all        </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">此时从 PC2 再 tracert PC1，路径会经 R3 而非 R2：</span><br><span class="line"></span><br><span class="line">```text</span><br><span class="line">PC&gt;tracert 21.0.0.1</span><br><span class="line">traceroute to 21.0.0.1, 8 hops max</span><br><span class="line"></span><br><span class="line">(ICMP), press Ctrl+C to stop</span><br><span class="line"></span><br><span class="line"> 1  20.0.0.254   &lt;1 ms  16 ms  16 ms</span><br><span class="line"> 2  45.1.1.4   15 ms  16 ms  31 ms</span><br><span class="line"> 3  34.1.1.3   31 ms  32 ms  31 ms</span><br><span class="line"> 4  13.1.1.1   47 ms  31 ms  47 ms</span><br><span class="line"> 5  21.0.0.1   47 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法 2：使用 AS-PATH 控制选路</strong></p>
+<p>为还原走 R2 的路径，先在 R3 上取消 Local-Preference 策略：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R3]bgp 200</span><br><span class="line">[R3-bgp]undo peer 4.4.4.4 route-policy lop export</span><br></pre></td></tr></table></figure>
+
+<p>删除后稍等，可再 tracert 确认 PC2→PC1 是否恢复走 R2。</p>
+<p>在 R2 上通过 AS-PATH 拉长路径（向 R4 通告 21.0.0.0 时附加虚造 AS，使 R4 认为经 R2 的路径更长，从而选 R3）：</p>
+<p><strong>R2 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[R2]route-policy as permit node 10  </span><br><span class="line"></span><br><span class="line">Info: New Sequence of this List.</span><br><span class="line"></span><br><span class="line">[R2-route-policy]apply as-path 123 123 123 add  </span><br><span class="line"></span><br><span class="line">[R2-route-policy]quit</span><br><span class="line"></span><br><span class="line">[R2]bgp 200            </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 route-policy as export</span><br><span class="line">[R2-bgp]quit</span><br><span class="line">[R2]quit</span><br><span class="line">&lt;R2&gt;reset bgp all</span><br></pre></td></tr></table></figure>
+
+<p>在 PC2 再次 tracert 会改走 R3：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 21.0.0.1</span><br><span class="line"></span><br><span class="line">traceroute to 21.0.0.1, 8 hops max</span><br><span class="line"></span><br><span class="line">(ICMP), press Ctrl+C to stop</span><br><span class="line"></span><br><span class="line"> 1  20.0.0.254   16 ms  &lt;1 ms  15 ms</span><br><span class="line"> 2  45.1.1.4   32 ms  15 ms  31 ms</span><br><span class="line"> 3  34.1.1.3   16 ms  31 ms  32 ms</span><br><span class="line"> 4  13.1.1.1   31 ms  31 ms  31 ms</span><br><span class="line"> 5  21.0.0.1   47 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法 3：使用 MED 控制选路</strong></p>
+<p>初始时 PC1→PC5 经 R2；在 R2 上配置 MED 并向 R1 通告，使 R1 侧选 R3。R2 配置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[R2]route-policy med permit node 10  </span><br><span class="line"></span><br><span class="line">Info: New Sequence of this List.</span><br><span class="line"></span><br><span class="line">[R2-route-policy]apply cost + 500    </span><br><span class="line"></span><br><span class="line">[R2-route-policy]quit</span><br><span class="line"></span><br><span class="line">[R2]bgp 200</span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 12.1.1.1 route-policy med export</span><br><span class="line">[R2-bgp]quit</span><br><span class="line">[R2]quit</span><br><span class="line">&lt;R2&gt;reset bgp all</span><br></pre></td></tr></table></figure>
+
+<p>在 PC1 上 tracert 20.0.0.1：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 20.0.0.1</span><br><span class="line"></span><br><span class="line">traceroute to 20.0.0.1, 8 hops max</span><br><span class="line"></span><br><span class="line">(ICMP), press Ctrl+C to stop</span><br><span class="line"></span><br><span class="line"> 1  21.0.0.254   16 ms  &lt;1 ms  16 ms</span><br><span class="line"> 2  13.1.1.3   15 ms  16 ms  15 ms</span><br><span class="line"> 3  34.1.1.4   47 ms  16 ms  16 ms</span><br><span class="line"> 4  45.1.1.5   31 ms  31 ms  31 ms</span><br><span class="line"> 5  20.0.0.1   32 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p>路径已改为经 R3，说明配置生效。BGP 选路主要通过各类 BGP 属性调节完成，属性丰富，控制力强于 IGP。</p>
+<ol start="5">
+<li><strong>第四个需求</strong>：在 R2、R3、R4 上向 BGP 注入本地 OSPF 路由，使全网互通。</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R2]bgp 200</span><br><span class="line">[R2-bgp]import-route ospf 1</span><br></pre></td></tr></table></figure>
+
+<p>R3、R4 同样执行 <code>import-route ospf 1</code>。可用文末查看命令验证路由表。</p>
+<ol start="6">
+<li><strong>第五个需求</strong>：R1 与 R4 直接建立对等体（EBGP 多跳）。</li>
+</ol>
+<p><strong>R1：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[R1]bgp 100</span><br><span class="line">[R1-bgp]peer 34.1.1.4 as 200</span><br><span class="line">[R1-bgp]peer 34.1.1.4 ebgp-max-hop 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>R4：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[R4]bgp 200</span><br><span class="line">[R4-bgp]peer 13.1.1.1 as 100</span><br><span class="line">[R4-bgp]peer 13.1.1.1 ebgp-max-hop 2</span><br></pre></td></tr></table></figure>
+
+<p>验证（邻居建立可能需要约 1～2 分钟）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[R1]dis bgp peer      </span><br><span class="line"></span><br><span class="line"> BGP local router ID : 1.1.1.1</span><br><span class="line"> Local AS number : 100</span><br><span class="line"> Total number of peers : 3        Peers in established state : 3</span><br><span class="line"></span><br><span class="line">  Peer            V          AS  MsgRcvd  MsgSent  OutQ  Up/Down       State Pre</span><br><span class="line">fRcv</span><br><span class="line"></span><br><span class="line">  12.1.1.2        4         200       27       38     0 00:17:49 Established    </span><br><span class="line">   8</span><br><span class="line">  13.1.1.3        4         200       55       70     0 00:45:35 Established    </span><br><span class="line">   8</span><br><span class="line">  34.1.1.4        4         200       12       13     0 00:00:02 Established    8</span><br></pre></td></tr></table></figure>
+
+<p><strong>常用查看命令：</strong> <code>dis ip routing-table</code>、<code>dis ospf routing</code>、<code>dis bgp peer</code>。      </p>
+<h3 id="四、配置总结"><a href="#四、配置总结" class="headerlink" title="四、配置总结"></a>四、配置总结</h3><p>在配置过程中需注意：</p>
+<ol>
+<li>建立邻居前，务必保证能 ping 通对端（指定对端地址前先确认路由可达）。</li>
+<li>AS 内建立 BGP 邻居时，建议用对端 Loopback，并配置更新源：<code>peer x.x.x.x connect-interface LoopBack 0</code>。</li>
+<li>AS 内多台设备跑 BGP（IBGP）时，注意「保证 IBGP 下一跳可达」：<code>peer x.x.x.x next-hop-local</code>。</li>
+<li>跨 AS 建立邻居时，若用对端 Loopback（非直连网段），需配置 EBGP 多跳，否则 TTL&#x3D;1 会导致建邻失败。IBGP 默认 TTL&#x3D;255，无需改。命令示例：<code>peer x.x.x.x ebgp-max-hop 2</code>，数值不小于实际跳数即可。</li>
+</ol>
+<hr>
+<h2 id="2-MPLS-VPN-骨干技术"><a href="#2-MPLS-VPN-骨干技术" class="headerlink" title="2. MPLS VPN 骨干技术"></a>2. MPLS VPN 骨干技术</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>MPLS 标签转发原理、LSP 隧道建立与转发机制</li>
+<li>VRF 虚拟路由转发实例的配置与隔离逻辑</li>
+<li>RD&#x2F;RT 路由标识与导入导出规则、多租户路由隔离与互通实现</li>
+<li>PE-CE 路由协议（静态 &#x2F; RIP&#x2F;OSPF&#x2F;BGP）部署场景</li>
+<li>跨域 MPLS VPN（Option A&#x2F;B&#x2F;C）实现原理与适用场景</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建 3PE+2CE 的 MPLS VPN 骨干网，实现 2 个租户的完全隔离与指定租户互通</li>
+<li>完成跨域 MPLS VPN Option B 场景部署，验证跨 AS 的 VPN 路由发布与数据转发</li>
+<li>完成标签转发不通、VRF 路由丢失、跨租户访问异常等典型故障排障</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>彻底理解运营商 &#x2F; 大型专网的核心运作机制，能独立完成企业级 MPLS VPN 专网的规划与部署</li>
+<li>能精准设计 RD&#x2F;RT 值实现灵活的路由导入导出，解决多租户隔离与互通需求，定位并解决 MPLS VPN 全链路转发故障</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、Wireshark</li>
+<li>书籍：《MPLS VPN 架构》《华为 MPLS VPN 学习指南》</li>
+<li>文档：华为 &#x2F; 华三 MPLS VPN 官方产品文档</li>
+</ul>
+<hr>
+<h2 id="3-高级网络安全"><a href="#3-高级网络安全" class="headerlink" title="3. 高级网络安全"></a>3. 高级网络安全</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>基于 Zone 区域的状态防火墙核心原理、安全策略设计</li>
+<li>NAT 高级应用（源 NAT &#x2F; 目的 NAT &#x2F; 双向 NAT&#x2F;NAT Server、NAT 穿越、域内 NAT）</li>
+<li>IPSec VPN 核心架构（IKEv1&#x2F;IKEv2、AH&#x2F;ESP 协议、隧道 &#x2F; 传输模式）</li>
+<li>GRE over IPSec 等复杂 VPN 场景部署、高可用 VPN 设计</li>
+<li>防火墙会话表、攻击防范、安全策略优化</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建基于安全区域的防火墙组网，实现多域安全隔离、精细化 ACL 管控、多场景 NAT 部署</li>
+<li>完成 GRE over IPSec VPN 部署，实现分支与总部的跨公网安全私网互通，验证加密隧道的高可用切换</li>
+<li>完成 VPN 隧道不通、NAT 端口冲突、安全策略匹配异常等故障排障</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能脱离基础 ACL，完成企业级防火墙的域间安全策略设计与落地，实现业务的安全隔离与访问控制</li>
+<li>能独立完成复杂场景的 IPSec VPN 部署，解决跨公网的私网互通需求，精准定位 VPN 全链路的转发与加密故障</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器（华为 USG &#x2F; 山石网科防火墙镜像）、Wireshark</li>
+<li>课程：华为 HCIE-Security 防火墙与 VPN 专项</li>
+<li>文档：主流防火墙厂商官方配置指南</li>
+</ul>
+<hr>
+<h2 id="4-企业无线调优"><a href="#4-企业无线调优" class="headerlink" title="4. 企业无线调优"></a>4. 企业无线调优</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>无线射频原理、802.11ax&#x2F;ac 协议核心特性</li>
+<li>2.4G&#x2F;5G 双频信道规划、功率调整、频宽规划</li>
+<li>二层 &#x2F; 三层漫游优化（快速漫游、802.11r&#x2F;k&#x2F;v 协议）、漫游粘滞问题解决</li>
+<li>同频 &#x2F; 邻频抗干扰技术、无线空口资源优化</li>
+<li>无线 AC+FIT AP 架构、高可用无线组网设计</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成企业办公场景的无线 AP 点位规划、信道与功率规划，搭建 AC+AP 组网</li>
+<li>配置 802.11r 快速漫游，实现跨 AP 无缝漫游，测试漫游切换时延 &lt; 50ms</li>
+<li>完成无线干扰排查、漫游粘滞、弱覆盖等典型问题优化，实现无线吞吐量与接入稳定性提升</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能将无线网络从「能连上」进阶到「高可用、低时延、无卡顿」，独立完成企业级无线组网的规划、部署与调优</li>
+<li>能精准定位并解决无线覆盖、漫游、干扰相关的常见问题，保障视频会议、移动办公等业务的稳定运行</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、WiFi Analyzer、AirMagnet</li>
+<li>书籍：《企业无线网络架构与优化》</li>
+<li>课程：华为 HCIE-Datacom 无线专项</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一阶段</td>
+<td>BGP 核心进阶</td>
+<td>邻居与防环、13 条选路、Route-Map&#x2F;Community；双出口主备、3 AS 联邦&#x2F;RR、BGP 故障排障</td>
+</tr>
+<tr>
+<td></td>
+<td>MPLS VPN 骨干</td>
+<td>标签与 LSP、VRF、RD&#x2F;RT、PE-CE、跨域 Option A&#x2F;B&#x2F;C；3PE+2CE、Option B、标签&#x2F;VRF 排障</td>
+</tr>
+<tr>
+<td></td>
+<td>高级网络安全</td>
+<td>Zone 防火墙、高级 NAT、IPSec&#x2F;GRE over IPSec；多域+NAT、分支总部 VPN 高可用、VPN&#x2F;NAT 排障</td>
+</tr>
+<tr>
+<td></td>
+<td>企业无线调优</td>
+<td>802.11ax&#x2F;ac、信道功率、802.11r&#x2F;k&#x2F;v 漫游、AC+AP；AP 规划与漫游 &lt;50ms、干扰与粘滞优化</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E4%B8%8E%E4%BA%91/">传统组网第二阶段：数据中心与云 →</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/" rel="tag"># 学习计划</a>
+              <a href="/tags/BGP/" rel="tag"># BGP</a>
+              <a href="/tags/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91/" rel="tag"># 传统组网</a>
+              <a href="/tags/MPLS/" rel="tag"># MPLS</a>
+              <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag"># 防火墙</a>
+              <a href="/tags/%E6%97%A0%E7%BA%BF/" rel="tag"># 无线</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/" rel="prev" title="传统组网第三阶段：自动化与智能管控">
+                  <i class="fa fa-angle-left"></i> 传统组网第三阶段：自动化与智能管控
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/19/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8/" rel="next" title="vLLM 学习笔记（六）：参数使用">
+                  vLLM 学习笔记（六）：参数使用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

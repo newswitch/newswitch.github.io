@@ -27,7 +27,7 @@
 <meta property="og:description" content="Gateway API Inference Extension本文主要学习两个部分：vLLM Router（vLLM 官方推出的推理负载均衡器）与 Gateway API Inference Extension 中的智能负载均衡模块（基于 Kubernetes Gateway API 的推理路由与端点选择）。二者都面向 LLM 推理场景的“智能”负载均衡，可对比理解其定位与适用场景。 1 vLLM">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-02-13T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-02-19T07:09:10.536Z">
+<meta property="article:modified_time" content="2026-02-19T07:39:15.355Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Gateway API">
 <meta property="article:tag" content="Kubernetes">
@@ -139,17 +139,17 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -212,7 +212,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-19 15:09:10" itemprop="dateModified" datetime="2026-02-19T15:09:10+08:00">2026-02-19</time>
+      <time title="Modified: 2026-02-19 15:39:15" itemprop="dateModified" datetime="2026-02-19T15:39:15+08:00">2026-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -612,6 +612,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl get gateway inference-gateway</span><br><span class="line"><span class="comment"># 期望：ADDRESS 有值，PROGRAMMED=True</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="3-6-步骤-4：部署模型服务器"><a href="#3-6-步骤-4：部署模型服务器" class="headerlink" title="3.6 步骤 4：部署模型服务器"></a>3.6 步骤 4：部署模型服务器</h3><p>EPP 将请求调度到“模型服务器”Pod，需先有带正确 <strong>label</strong> 的模型服务。部署中的 <code>app: vllm-llama3-8b-instruct</code> 等 label 需与后续 Helm 的 <strong>matchLabels</strong> 一致。</p>
+<p><strong>大模型部署方式</strong>：生产环境中的<strong>大模型</strong>（多卡、多节点、Tensor&#x2F;Pipeline 并行）建议使用 <strong>LWS（LeaderWorkerSet）</strong> 方式部署，以便统一管理 Leader&#x2F;Worker 组、组级扩缩容与滚动升级，并与推理网关配合。LWS 的安装与 vLLM 示例见本站 <a href="/2026/02/13/LeaderWorkerSet%E6%8F%92%E4%BB%B6/">LeaderWorkerSet 插件</a> 一文；部署完成后，保证模型服务 Pod 带有与 InferencePool 的 <strong>matchLabels</strong> 一致的 label（如 <code>app: vllm-llama3-8b-instruct</code>、<code>role: leader</code> 等，按实际 LWS 与 Service 配置为准），即可被网关发现并纳入池内调度。下文为使用标准 Deployment&#x2F;Sim 的快速示例，仅用于联调或小模型。</p>
 <p><strong>vLLM（GPU，需 Hugging Face token）</strong><br><code>gpu-deployment.yaml</code> 较长（含 LoRA、探针、优雅退出等），可直接从仓库 apply：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MODEL_SERVER=vllm</span><br><span class="line">kubectl create secret generic hf-token --from-literal=token=<span class="variable">$HF_TOKEN</span></span><br><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/<span class="variable">$&#123;MODEL_SERVER&#125;</span>/gpu-deployment.yaml</span><br></pre></td></tr></table></figure>
 
@@ -680,9 +681,9 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E6%8E%A8%E7%90%86/" rel="tag"># 推理</a>
               <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
               <a href="/tags/Gateway-API/" rel="tag"># Gateway API</a>
+              <a href="/tags/%E6%8E%A8%E7%90%86/" rel="tag"># 推理</a>
               <a href="/tags/%E7%BD%91%E5%85%B3/" rel="tag"># 网关</a>
               <a href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag"># 插件</a>
               <a href="/tags/vLLM-Router/" rel="tag"># vLLM Router</a>
@@ -697,8 +698,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/02/13/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84/" rel="next" title="vLLM 学习笔记（一）：整体代码架构">
-                  vLLM 学习笔记（一）：整体代码架构 <i class="fa fa-angle-right"></i>
+                <a href="/2026/02/14/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89vLLM%E8%B0%83%E5%BA%A6%E5%89%8D%E7%9A%84%E9%A2%84%E5%A4%84%E7%90%86%E5%B7%A5%E4%BD%9C/" rel="next" title="vLLM 学习笔记（二）：vLLM 调度前的预处理工作">
+                  vLLM 学习笔记（二）：vLLM 调度前的预处理工作 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="传统组网第三阶段：自动化与智能管控核心目标：解放双手，从「配置工」进阶为「架构师」。    1. 网络自动化开发与落地核心学习内容 Python 基础语法、网络编程相关模块（re、logging、os） Netmiko&#x2F;Napalm 库实现多厂商网络设备 SSH 交互、配置管理 Ansible 核心原理（Inventory、Playbook、网络专用 Module） Jinja2 模板实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="传统组网第三阶段：自动化与智能管控">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="传统组网第三阶段：自动化与智能管控核心目标：解放双手，从「配置工」进阶为「架构师」。    1. 网络自动化开发与落地核心学习内容 Python 基础语法、网络编程相关模块（re、logging、os） Netmiko&#x2F;Napalm 库实现多厂商网络设备 SSH 交互、配置管理 Ansible 核心原理（Inventory、Playbook、网络专用 Module） Jinja2 模板实">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-19T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-22T17:24:45.400Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Ansible">
+<meta property="article:tag" content="QoS">
+<meta property="article:tag" content="SD-WAN">
+<meta property="article:tag" content="传统组网">
+<meta property="article:tag" content="学习计划">
+<meta property="article:tag" content="自动化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/","path":"2026/02/19/传统组网第三阶段-自动化与智能管控/","title":"传统组网第三阶段：自动化与智能管控"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>传统组网第三阶段：自动化与智能管控 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7"><span class="nav-number">1.</span> <span class="nav-text">传统组网第三阶段：自动化与智能管控</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%BD%91%E7%BB%9C%E8%87%AA%E5%8A%A8%E5%8C%96%E5%BC%80%E5%8F%91%E4%B8%8E%E8%90%BD%E5%9C%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1. 网络自动化开发与落地</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9"><span class="nav-number">1.1.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.1.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86"><span class="nav-number">1.1.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SD-WAN-%E6%99%BA%E8%83%BD%E5%B9%BF%E5%9F%9F%E7%BD%91"><span class="nav-number">1.2.</span> <span class="nav-text">2. SD-WAN 智能广域网</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7-1"><span class="nav-number">1.2.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-QoS-%E6%B5%81%E9%87%8F%E5%B7%A5%E7%A8%8B%E4%B8%8E%E6%9C%8D%E5%8A%A1%E8%B4%A8%E9%87%8F%E4%BF%9D%E9%9A%9C"><span class="nav-number">1.3.</span> <span class="nav-text">3. QoS 流量工程与服务质量保障</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">核心学习内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E5%AE%9E%E6%93%8D%E9%A1%B9%E7%9B%AE-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">必做实操项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86-2"><span class="nav-number">1.3.3.</span> <span class="nav-text">验收标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%A5%97%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90-%E5%B7%A5%E5%85%B7-2"><span class="nav-number">1.3.4.</span> <span class="nav-text">配套学习资源 &#x2F; 工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%80%BB%E8%A1%A8%EF%BC%88%E9%98%B6%E6%AE%B5-%E4%B8%BB%E9%A2%98-%E5%86%85%E5%AE%B9%E8%A6%81%E7%82%B9%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="传统组网第三阶段：自动化与智能管控 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          传统组网第三阶段：自动化与智能管控
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:24:45" itemprop="dateModified" datetime="2026-02-23T01:24:45+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="传统组网第三阶段：自动化与智能管控"><a href="#传统组网第三阶段：自动化与智能管控" class="headerlink" title="传统组网第三阶段：自动化与智能管控"></a>传统组网第三阶段：自动化与智能管控</h1><p><strong>核心目标</strong>：解放双手，从「配置工」进阶为「架构师」。  </p>
+<hr>
+<h2 id="1-网络自动化开发与落地"><a href="#1-网络自动化开发与落地" class="headerlink" title="1. 网络自动化开发与落地"></a>1. 网络自动化开发与落地</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>Python 基础语法、网络编程相关模块（re、logging、os）</li>
+<li>Netmiko&#x2F;Napalm 库实现多厂商网络设备 SSH 交互、配置管理</li>
+<li>Ansible 核心原理（Inventory、Playbook、网络专用 Module）</li>
+<li>Jinja2 模板实现网络设备标准化配置批量生成</li>
+<li>网络配置自动备份、批量下发、合规校验、状态巡检自动化实现</li>
+<li>VS Code 开发环境搭建、代码调试、异常处理机制</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>基于 Python+Netmiko 编写脚本，实现 100 台交换机配置批量备份、版本批量核查、端口状态批量巡检</li>
+<li>基于 Ansible+Jinja2 模板，实现交换机标准化开局配置批量生成与下发，适配不同设备型号</li>
+<li>搭建网络设备自动巡检平台，实现 CPU &#x2F; 内存、路由条目、邻居关系、告警信息的自动采集与报表输出</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立编写网络自动化脚本与 Ansible Playbook，实现「一杯咖啡时间搞定 100 台交换机」的批量管理需求</li>
+<li>脚本可适配多厂商设备，具备完善的异常处理能力，能替代 80% 以上的重复手工配置工作</li>
+<li>能基于业务需求，设计并落地标准化的网络自动化运维方案</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：VS Code、Python 3.8+、Ansible、Git、EVE-NG 模拟器</li>
+<li>书籍：《Python 网络编程权威指南》《Ansible for Networking》</li>
+<li>课程：网络自动化 Python 实战专项、华为 HCIE-Datacom 自动化专项</li>
+</ul>
+<hr>
+<h2 id="2-SD-WAN-智能广域网"><a href="#2-SD-WAN-智能广域网" class="headerlink" title="2. SD-WAN 智能广域网"></a>2. SD-WAN 智能广域网</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>SD-WAN 核心架构（控制 &#x2F; 转发 &#x2F; 管理平面分离）核心理念</li>
+<li>SD-WAN Underlay 与 Overlay 网络设计、隧道技术</li>
+<li>应用感知路由（App-aware Routing）实现原理、多链路智能选路</li>
+<li>链路质量检测（丢包 &#x2F; 时延 &#x2F; 抖动）、故障秒级切换机制</li>
+<li>零配置部署（ZTP）、广域网优化、安全集成、多分支组网设计</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建 4 分支 + 1 总部的 SD-WAN 拓扑，实现专线 + 互联网双链路的混合广域网组网</li>
+<li>配置应用感知智能选路，实现语音 &#x2F; 视频业务优先走低时延专线，普通互联网业务走宽带链路</li>
+<li>验证链路故障时业务秒级切换，完成选路策略异常、隧道不通等故障排障</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>彻底理解 SD-WAN 控制与转发分离的核心思想，能独立完成企业级多分支 SD-WAN 网络的规划与部署</li>
+<li>能基于应用类型、链路质量实现智能选路，解决广域网链路利用率低、关键业务卡顿、分支部署复杂等行业痛点</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG 模拟器（VMware SD-WAN &#x2F; 华为 SD-WAN 镜像）</li>
+<li>书籍：《SD-WAN 架构与技术》</li>
+<li>文档：主流 SD-WAN 厂商官方技术白皮书</li>
+</ul>
+<hr>
+<h2 id="3-QoS-流量工程与服务质量保障"><a href="#3-QoS-流量工程与服务质量保障" class="headerlink" title="3. QoS 流量工程与服务质量保障"></a>3. QoS 流量工程与服务质量保障</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>QoS 服务模型（Best-Effort、IntServ、DiffServ）</li>
+<li>流量分类与标记（ACL、DSCP&#x2F;802.1p）、端到端标记原则</li>
+<li>流量整形与监管（CAR、GTS）、带宽限速实现</li>
+<li>拥塞管理（FIFO、PQ、CQ、WFQ、CBWFQ、LLQ 低时延队列）</li>
+<li>拥塞避免（WRED 尾丢弃）、端到端 QoS 部署方案设计</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>在广域网链路上部署端到端 QoS 方案，对语音、视频、核心业务、普通流量进行分层分类标记</li>
+<li>通过 LLQ 队列保障语音业务低时延、低抖动，通过 CBWFQ 保障核心业务带宽，通过 WRED 避免全局同步</li>
+<li>在带宽拥塞场景下，验证关键业务的 SLA 达标情况，完成 QoS 策略异常、业务卡顿等问题排障</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成端到端 QoS 方案的设计与部署，在带宽有限的场景下，精准控制不同业务的带宽分配与转发优先级</li>
+<li>能保障语音 &#x2F; 视频等关键业务的 SLA（时延、抖动、丢包率）符合要求，彻底解决网络拥塞导致的业务卡顿问题</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、Wireshark、IxChariot 流量打流工具</li>
+<li>书籍：《QoS 设计与实现》</li>
+<li>课程：华为 HCIE-Datacom QoS 专项</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第三阶段</td>
+<td>网络自动化开发与落地</td>
+<td>Python&#x2F;Netmiko&#x2F;Ansible&#x2F;Jinja2、配置备份与批量下发、合规与巡检；百台设备备份与巡检、Ansible+Jinja2 开局、自动巡检与报表</td>
+</tr>
+<tr>
+<td></td>
+<td>SD-WAN 智能广域网</td>
+<td>控制&#x2F;转发&#x2F;管理分离、应用感知选路、链路质量与秒级切换、ZTP；4 分支+1 总部双链路、应用选路与故障切换、选路与隧道排障</td>
+</tr>
+<tr>
+<td></td>
+<td>QoS 流量工程与服务质量保障</td>
+<td>DiffServ、分类标记、整形监管、CBWFQ&#x2F;LLQ&#x2F;WRED；端到端 QoS、语音视频 SLA、拥塞下关键业务保障与排障</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E4%B8%8E%E4%BA%91/">← 传统组网第二阶段：数据中心与云</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/" rel="tag"># 学习计划</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 自动化</a>
+              <a href="/tags/QoS/" rel="tag"># QoS</a>
+              <a href="/tags/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91/" rel="tag"># 传统组网</a>
+              <a href="/tags/SD-WAN/" rel="tag"># SD-WAN</a>
+              <a href="/tags/Ansible/" rel="tag"># Ansible</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E4%B8%8E%E4%BA%91/" rel="prev" title="传统组网第二阶段：数据中心与云">
+                  <i class="fa fa-angle-left"></i> 传统组网第二阶段：数据中心与云
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/" rel="next" title="传统组网第一阶段：筑基与深耕">
+                  传统组网第一阶段：筑基与深耕 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="vLLM 学习笔记（六）：参数使用本系列基于 vLLM 0.6.3 版本。前五篇侧重源码与内部机制，本文整理 vLLM 的常用参数与配置，便于部署与调优时查阅。 概述vLLM 支持通过命令行参数或配置文件控制模型加载、KV Cache、并发、采样与分布式等行为。下文按功能分组说明常用参数，并与本系列（一）～（五）中的概念对应，便于结合源码理解。 下文在每个参数旁用 取值 标出可选值及含义、用 默认">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vLLM 学习笔记（六）：参数使用">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/19/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="vLLM 学习笔记（六）：参数使用本系列基于 vLLM 0.6.3 版本。前五篇侧重源码与内部机制，本文整理 vLLM 的常用参数与配置，便于部署与调优时查阅。 概述vLLM 支持通过命令行参数或配置文件控制模型加载、KV Cache、并发、采样与分布式等行为。下文按功能分组说明常用参数，并与本系列（一）～（五）中的概念对应，便于结合源码理解。 下文在每个参数旁用 取值 标出可选值及含义、用 默认">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-19T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-22T09:45:01.943Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="vLLM">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="推理">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/19/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/19/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8/","path":"2026/02/19/vLLM学习笔记（六）参数使用/","title":"vLLM 学习笔记（六）：参数使用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>vLLM 学习笔记（六）：参数使用 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vLLM-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%EF%BC%9A%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">vLLM 学习笔记（六）：参数使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8A%A0%E8%BD%BD"><span class="nav-number">1.2.</span> <span class="nav-text">1 模型与加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%A8%A1%E5%9E%8B%E8%B7%AF%E5%BE%84%E4%B8%8E%E6%9D%A5%E6%BA%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1 模型路径与来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%88%86%E8%AF%8D%E5%99%A8%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2 分词器与配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.3 数据类型与任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-vLLM-%E4%B8%8E-vLLM-Ascend-%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.4.</span> <span class="nav-text">1.4 vLLM 与 vLLM-Ascend 区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-KV-Cache-%E4%B8%8E%E5%86%85%E5%AD%98"><span class="nav-number">1.3.</span> <span class="nav-text">2 KV Cache 与内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-block-size%E3%80%81gpu-memory-utilization"><span class="nav-number">1.3.1.</span> <span class="nav-text">2.1 block-size、gpu-memory-utilization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-swap-space%E3%80%81CPU-%E5%8D%B8%E8%BD%BD"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.2 swap-space、CPU 卸载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%85%B6%E4%BB%96%E5%86%85%E5%AD%98%E4%B8%8E%E9%95%BF%E5%BA%A6"><span class="nav-number">1.3.3.</span> <span class="nav-text">2.3 其他内存与长度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%B9%B6%E5%8F%91%E4%B8%8E%E8%B0%83%E5%BA%A6"><span class="nav-number">1.4.</span> <span class="nav-text">3 并发与调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-max-num-seqs%E3%80%81max-num-batched-tokens"><span class="nav-number">1.4.1.</span> <span class="nav-text">3.1 max-num-seqs、max-num-batched-tokens</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%88%86%E5%9D%97%E9%A2%84%E5%A1%AB%E5%85%85%E4%B8%8E%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="nav-number">1.4.2.</span> <span class="nav-text">3.2 分块预填充与调度策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%87%87%E6%A0%B7%E4%B8%8E%E7%94%9F%E6%88%90"><span class="nav-number">1.5.</span> <span class="nav-text">4 采样与生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">1.6.</span> <span class="nav-text">5 分布式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%89%8D%E7%BC%80%E7%BC%93%E5%AD%98%E4%B8%8E-LoRA"><span class="nav-number">1.7.</span> <span class="nav-text">6 前缀缓存与 LoRA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%89%8D%E7%BC%80%E7%BC%93%E5%AD%98%E4%B8%8E%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-number">1.7.1.</span> <span class="nav-text">6.1 前缀缓存与滑动窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-LoRA"><span class="nav-number">1.7.2.</span> <span class="nav-text">6.2 LoRA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E9%87%8F%E5%8C%96%E3%80%81RoPE-%E4%B8%8E%E5%A4%9A%E6%A8%A1%E6%80%81"><span class="nav-number">1.8.</span> <span class="nav-text">7 量化、RoPE 与多模态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81"><span class="nav-number">1.9.</span> <span class="nav-text">8 投机解码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E5%85%B6%E4%BB%96%E4%B8%8E%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7"><span class="nav-number">1.10.</span> <span class="nav-text">9 其他与可观测性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E5%8F%82%E6%95%B0%E5%8F%96%E5%80%BC%E8%AF%B4%E6%98%8E%EF%BC%88%E6%9E%9A%E4%B8%BE-%E5%A4%9A%E9%80%89%E5%8F%82%E6%95%B0%EF%BC%89"><span class="nav-number">1.11.</span> <span class="nav-text">10 参数取值说明（枚举&#x2F;多选参数）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8A%A0%E8%BD%BD"><span class="nav-number">1.11.1.</span> <span class="nav-text">10.1 模型与加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-KV-Cache-%E4%B8%8E%E8%B0%83%E5%BA%A6"><span class="nav-number">1.11.2.</span> <span class="nav-text">10.2 KV Cache 与调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">1.11.3.</span> <span class="nav-text">10.3 分布式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-LoRA-%E4%B8%8E%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81"><span class="nav-number">1.11.4.</span> <span class="nav-text">10.4 LoRA 与投机解码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-5-%E5%85%B6%E4%BB%96"><span class="nav-number">1.11.5.</span> <span class="nav-text">10.5 其他</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-6-%E5%B8%83%E5%B0%94%E4%B8%8E%E6%95%B0%E5%80%BC%E7%B1%BB%EF%BC%88%E5%B8%B8%E8%A7%81%E5%90%AB%E4%B9%89%EF%BC%89"><span class="nav-number">1.11.6.</span> <span class="nav-text">10.6 布尔与数值类（常见含义）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E5%8F%82%E6%95%B0%E9%BB%98%E8%AE%A4%E5%80%BC%E4%B8%80%E8%A7%88"><span class="nav-number">1.12.</span> <span class="nav-text">11 参数默认值一览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E5%B8%B8%E7%94%A8%E5%90%AF%E5%8A%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.13.</span> <span class="nav-text">12 常用启动示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E6%80%BB%E7%BB%93"><span class="nav-number">1.14.</span> <span class="nav-text">13 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="vLLM 学习笔记（六）：参数使用 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vLLM 学习笔记（六）：参数使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-22 17:45:01" itemprop="dateModified" datetime="2026-02-22T17:45:01+08:00">2026-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="vLLM-学习笔记（六）：参数使用"><a href="#vLLM-学习笔记（六）：参数使用" class="headerlink" title="vLLM 学习笔记（六）：参数使用"></a>vLLM 学习笔记（六）：参数使用</h1><p>本系列基于 vLLM 0.6.3 版本。前五篇侧重源码与内部机制，本文整理 <strong>vLLM 的常用参数与配置</strong>，便于部署与调优时查阅。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>vLLM 支持通过命令行参数或配置文件控制模型加载、KV Cache、并发、采样与分布式等行为。下文按功能分组说明常用参数，并与本系列（一）～（五）中的概念对应，便于结合源码理解。</p>
+<p>下文在每个参数旁用 <strong>取值</strong> 标出可选值及含义、用 <strong>默认值</strong> 标出默认；<strong>第 10 节</strong>对枚举&#x2F;多选类参数逐值展开说明。参数与（一）中模型加载、KV 块估计、（三）调度器、（四）BlockSpaceManager、（五）PrefixCaching 等对应，便于对照源码理解。</p>
+<h2 id="1-模型与加载"><a href="#1-模型与加载" class="headerlink" title="1 模型与加载"></a>1 模型与加载</h2><h3 id="1-1-模型路径与来源"><a href="#1-1-模型路径与来源" class="headerlink" title="1.1 模型路径与来源"></a>1.1 模型路径与来源</h3><ul>
+<li><strong>–model</strong>：使用的 Hugging Face 模型名称或路径。<strong>取值</strong>：任意 HF 模型 ID（如 <code>facebook/opt-125m</code>）或本地目录路径。默认: <code>&quot;facebook/opt-125m&quot;</code>。</li>
+<li><strong>–download-dir</strong>：下载和加载权重的目录。<strong>取值</strong>：合法目录路径；空&#x2F;未指定时使用 Hugging Face 默认缓存目录。</li>
+<li><strong>–revision</strong>：使用的具体模型版本（分支名、标签名或提交 ID）。<strong>取值</strong>：如 <code>main</code>、<code>v1.0</code>、或 commit hash；<code>None</code> 表示仓库默认。默认: <code>None</code>。</li>
+<li><strong>–code-revision</strong>：模型代码的修订版本。<strong>取值</strong>：同 <code>--revision</code>。默认: <code>None</code>。</li>
+<li><strong>–trust-remote-code</strong>：是否信任并执行来自 Hugging Face 的远程代码。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–allowed-local-media-path</strong>：允许 API 从指定服务器目录读取本地图像&#x2F;视频；存在安全风险。<strong>取值</strong>：目录路径字符串；空字符串表示不开放任何本地路径。默认: <code>&quot;&quot;</code>。</li>
+</ul>
+<h3 id="1-2-分词器与配置"><a href="#1-2-分词器与配置" class="headerlink" title="1.2 分词器与配置"></a>1.2 分词器与配置</h3><ul>
+<li><strong>–tokenizer</strong>：分词器名称或路径。<strong>取值</strong>：HF 模型 ID 或本地路径；<code>None</code> 表示与 <code>--model</code> 相同。默认: <code>None</code>。</li>
+<li><strong>–skip-tokenizer-init</strong>：是否跳过分词器&#x2F;反分词器初始化。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。<strong>影响</strong>：设为 <code>True</code> 时，引擎内不加载分词器&#x2F;反分词器；请求必须提供<strong>已分词的</strong> <code>prompt_token_ids</code>，且不能传原始文本 <code>prompt</code>（需为 <code>None</code>）。适用于在外部或前置服务统一分词、避免重复加载分词器或减少内存占用的场景；若仍传文本 prompt 会报错或无法处理。</li>
+<li><strong>–tokenizer-revision</strong>：Hugging Face 分词器的修订版本。<strong>取值</strong>：同 <code>--revision</code>。</li>
+<li><strong>–tokenizer-mode</strong>：分词器模式。<strong>取值</strong>：<code>auto</code> 自动选择；<code>slow</code> 慢路径兼容；<code>mistral</code> Mistral 专用；<code>custom</code> 自定义。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–load-format</strong>：加载模型权重的格式。<strong>取值</strong>：<code>auto</code> 自动（优先 safetensors）；<code>pt</code> PyTorch；<code>safetensors</code>；<code>npcache</code> NP 缓存；<code>dummy</code> 占位；<code>tensorizer</code>；<code>sharded_state</code> 分片；<code>gguf</code>；<code>bitsandbytes</code>；<code>mistral</code>；<code>runai_streamer</code>。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–config-format</strong>：加载模型配置的格式。<strong>取值</strong>：<code>auto</code> 自动；<code>hf</code> HuggingFace 标准；<code>mistral</code> Mistral 格式。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–hf-overrides</strong>：Hugging Face 配置的额外覆盖。<strong>取值</strong>：JSON 字符串，如 <code>&quot;{\&quot;key\&quot;: \&quot;value\&quot;}&quot;</code>。</li>
+</ul>
+<h3 id="1-3-数据类型与任务"><a href="#1-3-数据类型与任务" class="headerlink" title="1.3 数据类型与任务"></a>1.3 数据类型与任务</h3><ul>
+<li><strong>–dtype</strong>：模型权重和激活的数值类型。<strong>取值</strong>：<code>auto</code>（按模型 config 的 <code>torch_dtype</code>，config 为 float32 时改用 float16）；<code>half</code>&#x2F;<code>float16</code>；<code>bfloat16</code>；<code>float</code>&#x2F;<code>float32</code>。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–kv-cache-dtype</strong>：KV 缓存存储的数据类型。<strong>取值</strong>：<code>auto</code> 与模型权重 dtype 一致（不读 config 单独字段）；<code>fp8</code>&#x2F;<code>fp8_e4m3</code>&#x2F;<code>fp8_e5m2</code> 8 比特，省显存。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–task</strong>：任务类型。<strong>取值</strong>：<code>auto</code> 由模型类型&#x2F;API 推断；<code>generate</code> 生成；<code>embedding</code>&#x2F;<code>embed</code> 嵌入；<code>classify</code> 分类；<code>score</code> 打分；<code>reward</code> 奖励模型；<code>transcription</code> 语音转写。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–model-impl</strong>：模型实现。<strong>取值</strong>：<code>auto</code> 由 vLLM 按模型架构选择实现（非 config）；<code>vllm</code> 内置（推荐）；<code>transformers</code> 走 HF。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–max-model-len</strong>：模型最大上下文长度（token 数）。<strong>取值</strong>：正整数或 <code>None</code>。<strong><code>None</code>&#x2F;未指定时</strong>：从模型 config（如 <code>max_position_embeddings</code>）推导，是少数直接读 config 的参数之一。默认: <code>None</code>。</li>
+<li><strong>–guided-decoding-backend</strong>：<strong>引导解码</strong>（Guided Decoding）所用引擎，即按<strong>语法&#x2F;JSON Schema&#x2F;正则</strong>等约束逐 token 生成，使输出符合指定格式（如合法 JSON、EBNF 文法、正则）。<strong>取值</strong>：<code>outlines-dev/outlines</code> Outlines；<code>mlc-ai/xgrammar</code> xGrammar（默认）；<code>noamgat/lm-format-enforcer</code> lm-format-enforcer。默认: <code>&quot;xgrammar&quot;</code>。</li>
+<li><strong>–logits-processor-pattern</strong>：允许的 logits 处理器名称正则。<strong>取值</strong>：正则字符串，如 <code>&quot;^my_processor$&quot;</code>。与 config 无关。</li>
+<li><strong>–device</strong>：执行设备。<strong>取值</strong>：<code>auto</code> 按当前环境与硬件选择（如检测到 CUDA 则 <code>cuda</code>），不读模型 config。其余：<code>cuda</code>、<code>neuron</code>、<code>cpu</code>、<code>openvino</code>、<code>tpu</code>、<code>xpu</code>、<code>hpu</code>。默认: <code>&quot;auto&quot;</code>。<strong>华为升腾（Ascend NPU）</strong>：上游 vLLM 不直接支持；需使用 <strong>vLLM-Ascend</strong>，并通过<strong>环境变量</strong>指定设备，例如 <code>export DEVICE=/dev/davinci0</code>（多卡可为 <code>davinci1</code> 等），再启动服务；Docker 运行时需挂载对应 <code>--device /dev/davinci0</code> 等。</li>
+</ul>
+<h3 id="1-4-vLLM-与-vLLM-Ascend-区别"><a href="#1-4-vLLM-与-vLLM-Ascend-区别" class="headerlink" title="1.4 vLLM 与 vLLM-Ascend 区别"></a>1.4 vLLM 与 vLLM-Ascend 区别</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>vLLM</th>
+<th>vLLM-Ascend</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>定位</strong></td>
+<td>上游主项目，通用 GPU（含 CUDA 等）推理框架</td>
+<td>面向华为昇腾 NPU 的<strong>硬件插件</strong>，非 fork，独立仓库与包</td>
+</tr>
+<tr>
+<td><strong>关系</strong></td>
+<td>主代码库，支持 PageAttention、连续批处理等</td>
+<td>遵循 vLLM 的「硬件可插拔」RFC，实现 Ascend 的 Executor &#x2F; Worker &#x2F; Attention 等后端，与主库解耦</td>
+</tr>
+<tr>
+<td><strong>设备</strong></td>
+<td><code>--device</code> 支持 cuda、cpu、neuron、tpu、xpu、hpu 等</td>
+<td>仅 Ascend NPU，通过环境变量 <code>DEVICE=/dev/davinci0</code> 等指定</td>
+</tr>
+<tr>
+<td><strong>安装</strong></td>
+<td><code>pip install vllm</code></td>
+<td><code>pip install vllm-ascend</code>（与 vLLM 版本对齐，如 v0.13.0 对应 vLLM v0.13.0）</td>
+</tr>
+<tr>
+<td><strong>维护</strong></td>
+<td>vLLM 社区</td>
+<td>vLLM 社区 + 昇腾相关适配（仓库 <code>vllm-project/vllm-ascend</code>）</td>
+</tr>
+</tbody></table>
+<p>二者 API 与使用方式尽量一致，便于在 GPU 与昇腾 NPU 间切换；昇腾上需用 vLLM-Ascend 并配置 CANN、驱动等环境。</p>
+<h2 id="2-KV-Cache-与内存"><a href="#2-KV-Cache-与内存" class="headerlink" title="2 KV Cache 与内存"></a>2 KV Cache 与内存</h2><p>与（一）中 <strong>determine_num_available_blocks</strong>、（四）<strong>BlockSpaceManager</strong> 的块数与显存分配对应。</p>
+<h3 id="2-1-block-size、gpu-memory-utilization"><a href="#2-1-block-size、gpu-memory-utilization" class="headerlink" title="2.1 block-size、gpu-memory-utilization"></a>2.1 block-size、gpu-memory-utilization</h3><ul>
+<li><strong>–block-size</strong>：每个 KV 块容纳的连续 token 数。<strong>取值</strong>：<code>8</code>、<code>16</code>、<code>32</code>、<code>64</code>、<code>128</code>（越小块越细、调度越灵活；CUDA 仅支持 ≤32）。<strong>未指定时</strong>：无 <code>auto</code> 字面值，不传则由 <code>Platform.check_and_update_config()</code> 在运行时设定；CUDA 上通常为 <strong>16</strong>，HPU 上通常为 <strong>128</strong>。</li>
+<li><strong>–gpu-memory-utilization</strong>：用于模型执行的 GPU 内存比例。<strong>取值</strong>：0～1 的浮点数（如 <code>0.9</code> 表示 90%）。默认: <code>0.9</code>。</li>
+<li><strong>–num-gpu-blocks-override</strong>：强制使用的 GPU 块数量，覆盖自动分析。<strong>取值</strong>：正整数或 <code>None</code>。默认: <code>None</code>。</li>
+</ul>
+<h3 id="2-2-swap-space、CPU-卸载"><a href="#2-2-swap-space、CPU-卸载" class="headerlink" title="2.2 swap-space、CPU 卸载"></a>2.2 swap-space、CPU 卸载</h3><ul>
+<li><strong>–swap-space</strong>：每个 GPU 对应的 <strong>KV cache 交换空间</strong>（CPU 侧，单位 GiB）。<strong>含义</strong>：当请求被抢占（preempt）时，可将该请求的 KV 块从 GPU 换出到这块 CPU 内存，等再次调度时再换回，从而避免从头重算（recompute）。<strong>取值</strong>：非负浮点数，如 <code>4</code>。默认: <code>4</code>。与 <code>preemption-mode=swap</code> 配合使用；设为 0 则无法做 KV swap，抢占时只能 recompute。</li>
+<li><strong>–cpu-offload-gb</strong>：每个 GPU 对应的 <strong>模型权重复制到 CPU 的容量</strong>（GiB）。<strong>含义</strong>：把一部分模型权重常驻在 CPU，前向时再按需拷到 GPU，相当于“虚拟扩大显存”，用于在显存不足时加载更大模型（如 24G 卡 + 10G offload ≈ 34G，可加载约 13B BF16）。<strong>取值</strong>：非负浮点数；<code>0</code> 表示不卸载。默认: <code>0</code>。需 CPU–GPU 带宽较好，否则前向会变慢。</li>
+</ul>
+<p><strong>区别简述</strong>：<code>swap-space</code> 管的是 <strong>KV 缓存的换入换出</strong>（给被抢占的请求腾显存）；<code>cpu-offload-gb</code> 管的是 <strong>模型权重</strong> 放在 CPU、按需拷到 GPU，二者作用对象不同。</p>
+<h3 id="2-3-其他内存与长度"><a href="#2-3-其他内存与长度" class="headerlink" title="2.3 其他内存与长度"></a>2.3 其他内存与长度</h3><ul>
+<li><p><strong>–max-model-len</strong>（最大上下文长度）<br>见 1.3。约束单条序列允许的最大 token 数（prompt + 生成），直接影响显存占用与调度预算：越大则 KV 块需求越多、单批可并发的序列数越少。未指定时从模型 config（如 <code>max_position_embeddings</code>）推导。<strong>取值</strong>：正整数或 <code>None</code>。</p>
+</li>
+<li><p><strong>–enforce-eager</strong>（强制 Eager 模式）<br>为 <code>True</code> 时<strong>完全禁用 CUDA Graph</strong>，所有前向均以 PyTorch 的 eager 模式执行。CUDA Graph 会把一段 GPU 算子序列录成图并复放，减少 kernel 启动开销、提升吞吐，但不利于调试且对动态 shape 等支持有限。<strong>适用</strong>：调试、遇到 CUDA Graph 相关报错或兼容性问题时。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–max-seq-len-to-capture</strong>（CUDA 图捕获的最大序列长度）<br>使用 CUDA Graph 时，仅对<strong>序列长度 ≤ 该值</strong>的 batch 进行图捕获与复放；超过该长度的请求会<strong>回退到 eager</strong>，避免为过长序列捕获图导致显存或兼容性问题。未指定时由编译&#x2F;图配置内部决定。<strong>取值</strong>：正整数或 <code>None</code>。默认: <code>None</code>。</p>
+</li>
+<li><p><strong>–disable-custom-all-reduce</strong>（禁用自定义 All-Reduce）<br>张量并行（TP）下，多卡间需做 all-reduce 同步。vLLM 提供<strong>自定义 all-reduce 内核</strong>以替代 NCCL，在某些拓扑下更快。设为 <code>True</code> 时强制使用 NCCL 等标准通信。<strong>适用</strong>：多节点、非常规 GPU 数（如 3&#x2F;5&#x2F;6 卡）时自定义实现可能不可用或报错，可显式关闭。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code> &#x2F; <code>None</code>。默认: <code>None</code>（自动；多节点等场景下会自动禁用）。</p>
+</li>
+<li><p><strong>–calculate-kv-scales</strong>（动态计算 KV FP8 缩放因子）<br>当 <code>--kv-cache-dtype</code> 为 fp8 时，KV 写入缓存前需用量化缩放因子（k_scale、v_scale）。为 <code>True</code> 时在<strong>运行时</strong>根据 warmup 或当前 batch 动态计算这些 scale；为 <code>False</code> 时使用 checkpoint 中预存的 scale，若无则默认为 1.0，可能影响 fp8 KV 精度。<strong>适用</strong>：无预校准或希望随数据自适应时设为 <code>True</code>。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+</ul>
+<h2 id="3-并发与调度"><a href="#3-并发与调度" class="headerlink" title="3 并发与调度"></a>3 并发与调度</h2><p>与（三）<strong>调度器</strong>、（四）<strong>SchedulingBudget</strong> 的 token 预算与序列数上限对应。</p>
+<h3 id="3-1-max-num-seqs、max-num-batched-tokens"><a href="#3-1-max-num-seqs、max-num-batched-tokens" class="headerlink" title="3.1 max-num-seqs、max-num-batched-tokens"></a>3.1 max-num-seqs、max-num-batched-tokens</h3><p>二者共同构成调度器每轮迭代的<strong>预算</strong>（对应本系列（三）调度器、（四）SchedulingBudget）：每次前向步内，同时参与的序列数不超过 <code>max_num_seqs</code>，总 token 数不超过 <code>max_num_batched_tokens</code>。显存一定时，二者越大则单步并发越高、吞吐潜力越大，但 KV 占用与抢占风险也上升；调小可减轻抢占、改善尾延迟，代价是并发与吞吐下降。</p>
+<ul>
+<li><p><strong>–max-num-seqs</strong>（每轮最大序列数）<br>单次调度迭代中<strong>最多允许同时参与计算</strong>的序列（请求）数。越大则同一时刻能跑的请求越多，有利于高 QPS；但每条序列都会占用 KV 块，过大易导致显存不足、触发抢占（recompute&#x2F;swap），反而拉高延迟。<strong>调优</strong>：若日志中抢占频繁，可适当减小以稳定延迟；显存充裕且追求吞吐时可增大。<strong>取值</strong>：正整数（如 64、128、256）。默认: 未指定时由引擎根据配置填入（SchedulerConfig 默认 128）。</p>
+</li>
+<li><p><strong>–max-num-batched-tokens</strong>（每轮 token 预算）<br>单次调度迭代中<strong>允许处理的总 token 数上限</strong>（prefill 与 decode 共享该预算）。调度器会在此预算内尽量多排请求：先满足正在 decode 的序列，再在剩余预算内排 prefill。<strong>与 max_model_len 关系</strong>：若不开启 chunked prefill，单条 prompt 必须在一轮内全部 prefill，因此 <code>max_num_batched_tokens</code> 需 ≥ <code>max_model_len</code>，否则长 prompt 无法被调度；开启 chunked prefill 后，长 prompt 可多轮分块 prefill，该值可小于 max_model_len（如 512、2048）。<strong>调优</strong>：值越大，单步可处理的 prefill 越多，首 token 延迟（TTFT）易改善，但步内 decode 与 prefill 争抢预算，可能拉长 inter-token 延迟（ITL）；减小则 TTFT 可能变差、ITL 更稳。<strong>取值</strong>：正整数（如 2048、4096）。默认: 未指定时由引擎填入（SchedulerConfig 默认 2048）。</p>
+</li>
+</ul>
+<h3 id="3-2-分块预填充与调度策略"><a href="#3-2-分块预填充与调度策略" class="headerlink" title="3.2 分块预填充与调度策略"></a>3.2 分块预填充与调度策略</h3><ul>
+<li><strong>–max-num-partial-prefills</strong>：分块预填充时，可同时进行部分预填充的最大序列数。<strong>取值</strong>：正整数，≥1。默认: <code>1</code>。</li>
+<li><strong>–max-long-partial-prefills</strong>：分块预填充时，长请求（超过 long_prefill_tokens_threshold）中可同时部分预填充的最大数。<strong>取值</strong>：正整数，≤ max_num_partial_prefills。默认: <code>1</code>。</li>
+<li><strong>–long-prefill-token-threshold</strong>：prompt 超过该 token 数即视为“长请求”。<strong>取值</strong>：非负整数，0 表示不区分长短。默认: <code>0</code>。</li>
+<li><strong>–enable-chunked-prefill</strong>：是否启用按 token 预算分块的预填充。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>；支持时多为 True。默认: 由模型&#x2F;引擎决定。</li>
+<li><strong>–scheduler-delay-factor</strong>：调度下一个 prompt 前的延迟系数（延迟 &#x3D; 系数 × 上一 prompt 延迟）。<strong>取值</strong>：浮点数。默认: 未指定。</li>
+<li><strong>–num-scheduler-steps</strong>：每次调度器调用最多执行的前向步数。<strong>取值</strong>：正整数。默认: <code>1</code>。</li>
+<li><strong>–multi-step-stream-outputs</strong>：多步调度时是否每步流式输出。<strong>取值</strong>：<code>True</code> 每步流式；<code>False</code> 全部步完成后再输出。默认: <code>True</code>。</li>
+<li><strong>–scheduling-policy</strong>：调度策略。<strong>取值</strong>：<code>fcfs</code> 先到先服务；<code>priority</code> 按优先级（数小优先）。默认: <code>&quot;fcfs&quot;</code>。</li>
+<li><strong>–scheduler-cls</strong>：调度器类名或类。<strong>取值</strong>：如 <code>vllm.v1.core.sched.scheduler.Scheduler</code> 或 <code>None</code> 用内置。默认: <code>None</code>。</li>
+<li><strong>–preemption-mode</strong>：被抢占序列的处理方式。<strong>取值</strong>：<code>recompute</code> 释放 KV、下次重算；<code>swap</code> 换出到 CPU、恢复时换回。默认: 未指定。</li>
+</ul>
+<h2 id="4-采样与生成"><a href="#4-采样与生成" class="headerlink" title="4 采样与生成"></a>4 采样与生成</h2><ul>
+<li><strong>–max-logprobs</strong>：每个 token 返回的最大 log 概率个数。<strong>取值</strong>：非负整数（0 表示不返回）。默认: <code>20</code>。</li>
+<li><strong>–served-model-name</strong>：API 暴露的模型名，可多个。<strong>取值</strong>：单个字符串或列表；<code>None</code> 表示与 <code>--model</code> 一致。默认: <code>None</code>。</li>
+<li><strong>–seed</strong>：随机种子，用于采样可复现。<strong>取值</strong>：整数。默认: <code>0</code>。</li>
+<li><strong>–disable-log-stats</strong>：是否禁用日志中的统计信息。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–generation-config</strong>：生成配置所在目录路径。<strong>取值</strong>：目录路径字符串。默认: 由 ModelConfig 决定。</li>
+<li><strong>–override-generation-config</strong>：覆盖生成配置的键值。<strong>取值</strong>：JSON 对象（如 <code>{&quot;temperature&quot;: 0.7}</code>）。默认: 空字典。</li>
+</ul>
+<p>（temperature、top_p、stop、max_tokens 等多为请求级参数，在 API 请求体中指定，此处为引擎&#x2F;服务端全局相关参数。）</p>
+<h2 id="5-分布式"><a href="#5-分布式" class="headerlink" title="5 分布式"></a>5 分布式</h2><ul>
+<li><p><strong>–distributed-executor-backend</strong>（分布式执行后端）<br>决定多 GPU&#x2F;多节点时如何启动与通信。<strong>uni</strong>：单进程单卡，不启分布式；<strong>mp</strong>（multiprocessing）：单机多卡时常用，同一节点内多进程、通信低延迟；<strong>ray</strong>：多节点或需 Ray 编排时使用（如 <code>ray symmetric-run</code> 启动）；<strong>external_launcher</strong>：由外部启动器（如 torchrun）管理进程，vLLM 内只起一个 worker。单卡默认 <code>uni</code>，多卡单节点默认多为 <code>mp</code>，多节点需显式设 <code>ray</code> 或配合外部启动器。<strong>取值</strong>：<code>ray</code>、<code>mp</code>、<code>uni</code>、<code>external_launcher</code>。</p>
+</li>
+<li><p><strong>–tensor-parallel-size, -tp</strong>（张量并行大小）<br>把<strong>同一层</strong>的矩阵运算沿维度切分到多张 GPU 上，单层内需频繁 all-reduce&#x2F;all-gather，对卡间带宽（NVLink&#x2F;InfiniBand）要求高。<strong>适用</strong>：单机多卡、模型单卡放不下时；通常设为<strong>该节点内参与推理的 GPU 数</strong>（如 2、4、8）。<strong>与 pp 区别</strong>：tp 是“层内”切分、同节点；pp 是“层间”切分、可跨节点。<strong>取值</strong>：正整数。默认: <code>1</code>。</p>
+</li>
+<li><p><strong>–pipeline-parallel-size, -pp</strong>（管道并行阶段数）<br>把模型<strong>按层</strong>切成若干段，每段在一个 pipeline 阶段（可对应不同节点）上执行，阶段间传递激活。<strong>适用</strong>：模型跨多节点（如 70B+ 两节点各 8 卡），常与 tp 组合：<code>tp</code>&#x3D;每节点 GPU 数，<code>pp</code>&#x3D;节点数。<strong>注意</strong>：pp 会引入 pipeline 气泡与阶段间传输，小 batch 时延迟可能上升。<strong>取值</strong>：正整数。默认: <code>1</code>。</p>
+</li>
+<li><p><strong>–max-parallel-loading-workers</strong>（并行加载 worker 数上限）<br>启动时<strong>并行加载模型权重</strong>的 worker 数上限。TP 下若不使用分片 checkpoint，每个进程会读完整权重再切分，多进程同时读会推高 CPU RAM 与 I&#x2F;O；限制该值可降低加载阶段内存峰值，避免 OOM，代价是加载时间可能变长。使用<strong>分片 checkpoint</strong>（每 rank 只读自己的分片）时压力较小。<strong>取值</strong>：正整数或 <code>None</code>（不限制）。默认: <code>None</code>。</p>
+</li>
+<li><p><strong>–ray-workers-use-nsight</strong>（Ray worker 使用 Nsight）<br>使用 Ray 后端时，是否对 worker 进程启用 <strong>NVIDIA Nsight</strong> 性能分析（如 profiling、trace）。仅在做多节点&#x2F;Ray 下的性能调优时使用。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–worker-cls</strong>（Worker 类）<br>指定实际执行前向的 <strong>Worker 类</strong>（负责模型加载、KV 与计算）。一般保持 <code>auto</code> 由 vLLM 按设备与后端选择；仅在自定义或调试时改为指定类名（如 <code>vllm.worker.worker.Worker</code>）。<strong>取值</strong>：类名字符串或 <code>auto</code>。默认: <code>&quot;auto&quot;</code>。</p>
+</li>
+<li><p><strong>–kv-transfer-config</strong>（KV 传输配置）<br>在使用 <strong>pipeline 并行</strong>或跨节点时，<strong>阶段&#x2F;节点间传输 KV 或中间结果</strong>的配置（如传输方式、缓冲、压缩）。不设则使用默认传输逻辑。<strong>取值</strong>：JSON 或配置对象；<code>None</code> 表示默认。默认: <code>None</code>。</p>
+</li>
+</ul>
+<h2 id="6-前缀缓存与-LoRA"><a href="#6-前缀缓存与-LoRA" class="headerlink" title="6 前缀缓存与 LoRA"></a>6 前缀缓存与 LoRA</h2><p>与（五）<strong>PrefixCachingBlockAllocator</strong> 对应；前缀缓存与 LoRA 影响块复用与路由。</p>
+<h3 id="6-1-前缀缓存与滑动窗口"><a href="#6-1-前缀缓存与滑动窗口" class="headerlink" title="6.1 前缀缓存与滑动窗口"></a>6.1 前缀缓存与滑动窗口</h3><ul>
+<li><strong>–enable-prefix-caching &#x2F; –no-enable-prefix-caching</strong>：是否启用前缀缓存（相同前缀复用 KV）。<strong>取值</strong>：带 <code>--enable-prefix-caching</code> 为 True，带 <code>--no-enable-prefix-caching</code> 为 False。默认: 引擎层可为 <code>None</code>；CacheConfig 默认 True。</li>
+<li><strong>–disable-sliding-window</strong>（禁用滑动窗口）<br><strong>是什么</strong>：部分模型（如 Mistral）使用<strong>滑动窗口注意力</strong>——每个位置只对<strong>前若干 token</strong>（窗口）做 attention，而不是全序列，从而省显存、支持更长上下文。该参数为 <code>True</code> 时禁用该机制或严格按窗口大小限制 KV 缓存（视实现而定），一般保持 <code>False</code> 让模型按设计使用滑动窗口。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–num-lookahead-slots</strong>（Lookahead 槽数）<br><strong>是什么</strong>：在<strong>投机解码</strong>（speculative decoding）中，为 <strong>lookahead</strong> 预留的 token 槽数。草稿模型一次可提议多个候选 token，目标模型在一次前向中同时验证这些 token；该值影响“一次验证多少 slot”，与调度&#x2F;内存中为多 token 预留的槽位对应，用于减少步数、降低延迟。需与 <code>--speculative-model</code>、<code>--num-speculative-tokens</code> 等配合使用。<strong>取值</strong>：非负整数。默认: 未指定。</li>
+</ul>
+<h3 id="6-2-LoRA"><a href="#6-2-LoRA" class="headerlink" title="6.2 LoRA"></a>6.2 LoRA</h3><p>vLLM 支持在基座模型上挂载 <strong>LoRA 适配器</strong>做轻量微调推理。启用后，请求可指定要使用的 LoRA（如 <code>lora_request</code>），同一批内可混合不同 LoRA；以下参数控制容量、显存与多 LoRA 行为。</p>
+<ul>
+<li><p><strong>–enable-lora</strong>（启用 LoRA）<br>总开关：为 <code>True</code> 时才加载与执行 LoRA 适配器，并启用 <code>--max-loras</code>、<code>--max-lora-rank</code> 等配置。仅用基座、不用 LoRA 时保持 <code>False</code>。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–enable-lora-bias</strong>（启用 LoRA bias）<br>部分 LoRA 实现带有可训练的 bias 项。为 <code>True</code> 时启用该类参数；若适配器本身无 bias 则无影响。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</p>
+</li>
+<li><p><strong>–max-loras</strong>（单批最大 LoRA 数）<br>同一调度批内<strong>最多可同时使用</strong>的 LoRA 适配器数量。每个 slot 会预分配张量，越大显存越高，但不同 LoRA 的请求可在同批内并行；设为 1 时同一时刻只服务一种 LoRA，其余请求排队。<strong>调优</strong>：显存紧张或仅单 LoRA 时用 1；多租户&#x2F;多风格并行时适当增大。<strong>取值</strong>：正整数。默认: <code>1</code>。</p>
+</li>
+<li><p><strong>–max-lora-rank</strong>（LoRA 秩上限）<br>所有已加载 LoRA 的 <strong>rank 不得超过此值</strong>（需 ≥ 任一适配器的实际 rank）。秩越大单 LoRA 参数量越多，此处设大则预分配缓冲更大、显存占用增加；若所有 LoRA 均为同一较小 rank，建议设为该 rank 以省显存。<strong>取值</strong>：正整数（如 8、16、32）。默认: <code>16</code>。</p>
+</li>
+<li><p><strong>–lora-extra-vocab-size</strong>（LoRA 扩展词表大小）<br>若 LoRA 引入<strong>新 token</strong>（如特殊标记、新语言），需在基座词表外预留扩展词表大小。该参数为扩展部分的 <strong>token 数上限</strong>，不足时可能报错或截断。<strong>取值</strong>：非负整数。默认: <code>256</code>。</p>
+</li>
+<li><p><strong>–lora-dtype</strong>（LoRA 权重精度）<br>LoRA 权重在引擎内的数据类型。<code>auto</code> 与基座一致；显存或带宽敏感时可显式设为 <code>float16</code>&#x2F;<code>bfloat16</code>。<strong>取值</strong>：<code>auto</code>、<code>float16</code>、<code>bfloat16</code>。默认: <code>&quot;auto&quot;</code>。</p>
+</li>
+<li><p><strong>–long-lora-scaling-factors</strong>（LongLoRA 缩放因子）<br><strong>LongLoRA</strong> 等方案通过缩放注意力&#x2F;位置扩展长上下文，此处为各维度的缩放因子，多个用逗号分隔（如 <code>&quot;1,2,4&quot;</code>）。仅在使用 LongLoRA 类适配器时需要。<strong>取值</strong>：逗号分隔的数字字符串。默认: 未指定。</p>
+</li>
+<li><p><strong>–max-cpu-loras</strong>（CPU 侧 LoRA 缓存数）<br>可将部分 LoRA 权重缓存在 <strong>CPU</strong>，用时再拷到 GPU，以节省显存、支持更多 LoRA 数量（换入换出）。该值为 CPU 侧最多缓存的 LoRA 数；<code>None</code> 表示不限制或不用 CPU 缓存。<strong>取值</strong>：正整数或 <code>None</code>。默认: <code>None</code>。</p>
+</li>
+<li><p><strong>–fully-sharded-loras</strong>（LoRA 完全分片）<br>在多卡&#x2F;分布式下，是否对 LoRA 权重做<strong>完全分片</strong>（各 rank 只持有一部分），减少单卡显存。适用于单卡放不下多 LoRA 或大 rank 时。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–qlora-adapter-name-or-path</strong>（QLoRA 适配器）<br>若使用 <strong>QLoRA</strong>（量化基座 + LoRA）训出的适配器，可在此指定该适配器的 HF 名称或本地路径，引擎会按 QLoRA 约定加载。<strong>取值</strong>：字符串（HF 名或路径）。默认: 未指定。</p>
+</li>
+</ul>
+<h2 id="7-量化、RoPE-与多模态"><a href="#7-量化、RoPE-与多模态" class="headerlink" title="7 量化、RoPE 与多模态"></a>7 量化、RoPE 与多模态</h2><ul>
+<li><strong>–quantization, -q</strong>：权重量化方法。<strong>取值</strong>：<code>None</code> 不量化；<code>awq</code>、<code>gptq</code>、<code>squeezellm</code>、<code>fp8</code>、<code>marlin</code> 等（以当前版本 <code>--help</code> 为准）。默认: <code>None</code>。</li>
+<li><strong>–rope-scaling</strong>：RoPE 位置编码缩放。<strong>取值</strong>：JSON 对象，如 <code>{&quot;type&quot;: &quot;yarn&quot;, &quot;factor&quot;: 2.0}</code>。默认: 未指定。</li>
+<li><strong>–rope-theta</strong>：RoPE 的 theta 基值。<strong>取值</strong>：浮点数（如 10000）。默认: 未指定。</li>
+<li><strong>–limit-mm-per-prompt</strong>：每个多模态插件每条 prompt 允许的输入实例数上限。<strong>取值</strong>：整数字典或 JSON。默认: 由 MultiModalConfig 决定。</li>
+<li><strong>–mm-processor-kwargs</strong>：多模态处理器覆盖参数。<strong>取值</strong>：JSON 对象或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–disable-mm-preprocessor-cache</strong>：是否禁用多模态预处理器缓存。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+</ul>
+<h2 id="8-投机解码"><a href="#8-投机解码" class="headerlink" title="8 投机解码"></a>8 投机解码</h2><ul>
+<li><strong>–speculative-model</strong>：投机解码用的草稿模型。<strong>取值</strong>：HF 模型名或路径，需与主模型兼容。默认: 未指定。</li>
+<li><strong>–speculative-model-quantization</strong>：草稿模型量化方式。<strong>取值</strong>：同 <code>--quantization</code> 的取值。默认: 未指定。</li>
+<li><strong>–num-speculative-tokens</strong>：每步从草稿模型采样的 token 数。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–speculative-disable-mqa-scorer</strong>：是否在投机解码中禁用 MQA 评分器。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+<li><strong>–speculative-draft-tensor-parallel-size, -spec-draft-tp</strong>：草稿模型的 TP 数。<strong>取值</strong>：正整数，常 ≤ 主模型 tp。默认: 未指定。</li>
+<li><strong>–speculative-max-model-len</strong>：草稿模型支持的最大序列长度。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–speculative-disable-by-batch-size</strong>：排队请求数超过该值时对新请求关闭投机解码。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–ngram-prompt-lookup-max &#x2F; –ngram-prompt-lookup-min</strong>：ngram 提示查找的窗口上下界。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–spec-decoding-acceptance-method</strong>：投机 token 的接受方式。<strong>取值</strong>：<code>rejection_sampler</code> 概率比较拒绝&#x2F;接受（默认）；<code>typical_acceptance_sampler</code> 典型集接受。默认: <code>&quot;rejection_sampler&quot;</code>。</li>
+<li><strong>–typical-acceptance-sampler-posterior-threshold</strong>：typical 接受的后验概率下限。<strong>取值</strong>：0～1 浮点数。默认: 未指定。</li>
+<li><strong>–typical-acceptance-sampler-posterior-alpha</strong>：typical 接受的熵缩放因子。<strong>取值</strong>：浮点数。默认: 未指定。</li>
+<li><strong>–disable-logprobs-during-spec-decoding</strong>：投机解码时是否不返回 logprobs。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+</ul>
+<h2 id="9-其他与可观测性"><a href="#9-其他与可观测性" class="headerlink" title="9 其他与可观测性"></a>9 其他与可观测性</h2><ul>
+<li><strong>–tokenizer-pool-size</strong>：异步分词时分词器池大小。<strong>取值</strong>：非负整数，0 表示同步分词。默认: 未指定。</li>
+<li><strong>–tokenizer-pool-type</strong>：分词器池实现。<strong>取值</strong>：<code>ray</code> 使用 Ray 管理池；其他以 <code>--help</code> 为准。默认: <code>&quot;ray&quot;</code>。</li>
+<li><strong>–tokenizer-pool-extra-config</strong>：分词器池的额外配置。<strong>取值</strong>：JSON 字符串。默认: 未指定。</li>
+<li><strong>–model-loader-extra-config</strong>：模型加载器额外配置。<strong>取值</strong>：JSON 或字典。默认: 空字典。</li>
+<li><strong>–ignore-patterns</strong>：加载权重时忽略的文件&#x2F;目录模式。<strong>取值</strong>：glob 模式或列表，如 <code>original/**/*</code>。默认: 视版本而定，以 –help 为准。</li>
+<li><strong>–disable-async-output-proc</strong>：是否禁用异步输出处理。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+<li><strong>–show-hidden-metrics-for-version</strong>：自某版本起展示被隐藏的 Prometheus 指标。<strong>取值</strong>：版本号字符串或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–otlp-traces-endpoint</strong>：OpenTelemetry  traces 上报地址。<strong>取值</strong>：URL 字符串或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–collect-detailed-traces</strong>：要收集的详细 trace 模块。<strong>取值</strong>：<code>model</code>、<code>worker</code>、<code>all</code> 等列表或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–override-neuron-config</strong>：Neuron 设备配置覆盖。<strong>取值</strong>：JSON 或配置对象。默认: 未指定。</li>
+<li><strong>–override-pooler-config</strong>：池化层（pooler）配置覆盖。<strong>取值</strong>：JSON 或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–compilation-config, -O</strong>：编译&#x2F;优化配置。<strong>取值</strong>：配置对象或 JSON。默认: 由 VllmConfig 决定。</li>
+<li><strong>–enable-sleep-mode</strong>：是否启用引擎空闲时睡眠（仅 cuda）。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–additional-config</strong>：平台相关额外配置。<strong>取值</strong>：JSON 对象。默认: 空字典。</li>
+</ul>
+<h2 id="10-参数取值说明（枚举-多选参数）"><a href="#10-参数取值说明（枚举-多选参数）" class="headerlink" title="10 参数取值说明（枚举&#x2F;多选参数）"></a>10 参数取值说明（枚举&#x2F;多选参数）</h2><p>以下对<strong>有固定可选值的参数</strong>逐项说明每个取值的含义，便于按场景选择。</p>
+<h3 id="10-1-模型与加载"><a href="#10-1-模型与加载" class="headerlink" title="10.1 模型与加载"></a>10.1 模型与加载</h3><ul>
+<li><p><strong>–tokenizer-mode</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型自动选择分词器（如 HuggingFace 通用或模型特化）。</li>
+<li><strong>slow</strong>：使用兼容性更好的“慢”路径，适合非常规或老版本分词器。</li>
+<li><strong>mistral</strong>：Mistral 专用分词逻辑（如截断 tool call ID 等），配合 Mistral 系列模型使用。</li>
+<li><strong>custom</strong>：通过注册机制使用自定义分词器。</li>
+</ul>
+</li>
+<li><p><strong>–load-format</strong></p>
+<ul>
+<li><strong>auto</strong>：优先尝试 safetensors，失败则回退到 PyTorch <code>.pt</code>。</li>
+<li><strong>pt</strong>：仅用 PyTorch 的 <code>.bin</code> &#x2F; <code>.pt</code> 权重文件加载。</li>
+<li><strong>safetensors</strong>：仅用 SafeTensors 格式加载（推荐，更安全、可流式）。</li>
+<li><strong>npcache</strong>：从 vLLM 的 NP 缓存格式加载，加快重复加载。</li>
+<li><strong>dummy</strong>：不加载真实权重，用于测流程或占位。</li>
+<li><strong>tensorizer</strong>：使用 Tensorizer 格式&#x2F;管线加载。</li>
+<li><strong>sharded_state</strong>：从按 rank 分片的检查点加载，每个 worker 只读自己的分片，适合大模型 TP 加载。</li>
+<li><strong>gguf</strong>：从 GGUF 量化格式加载。</li>
+<li><strong>bitsandbytes</strong>：配合 bitsandbytes 量化加载。</li>
+<li><strong>mistral</strong>：Mistral 官方&#x2F;定制权重格式。</li>
+<li><strong>runai_streamer</strong>：通过 RunAI Streamer 流式加载。</li>
+</ul>
+</li>
+<li><p><strong>–config-format</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型目录自动选择配置解析方式。</li>
+<li><strong>hf</strong>：按 HuggingFace 的 <code>config.json</code> 等标准格式解析。</li>
+<li><strong>mistral</strong>：按 Mistral 的配置格式解析。</li>
+</ul>
+</li>
+<li><p><strong>–dtype</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型配置或权重自动选择（常见为 bfloat16&#x2F;float16）。</li>
+<li><strong>half</strong> &#x2F; <strong>float16</strong>：FP16，兼容性好，部分卡上更快。</li>
+<li><strong>bfloat16</strong>：BF16，数值范围大，多数新卡推荐。</li>
+<li><strong>float</strong> &#x2F; <strong>float32</strong>：全精度，显存占用大，一般用于调试或特殊需求。</li>
+</ul>
+</li>
+<li><p><strong>–kv-cache-dtype</strong></p>
+<ul>
+<li><strong>auto</strong>：与模型权重 dtype 一致（如 bfloat16）。</li>
+<li><strong>fp8</strong>：一般指 fp8_e4m3，KV 用 8 比特存储，省显存、可能略损精度。</li>
+<li><strong>fp8_e5m2</strong>：FP8 指数 5 位、尾数 2 位；动态范围更大，适合数值范围较大的激活。</li>
+<li><strong>fp8_e4m3</strong>：FP8 指数 4 位、尾数 3 位；精度略好，常用作 KV 缓存默认 fp8 选项。</li>
+</ul>
+</li>
+<li><p><strong>–task</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型或 API 自动推断（生成&#x2F;嵌入等）。</li>
+<li><strong>generate</strong>：文本生成（对话&#x2F;补全）。</li>
+<li><strong>embedding</strong> &#x2F; <strong>embed</strong>：向量嵌入。</li>
+<li><strong>classify</strong>：分类。</li>
+<li><strong>score</strong>：序列&#x2F;候选打分。</li>
+<li><strong>reward</strong>：奖励模型。</li>
+<li><strong>transcription</strong>：语音转文字。</li>
+</ul>
+</li>
+<li><p><strong>–model-impl</strong></p>
+<ul>
+<li><strong>auto</strong>：由 vLLM 根据模型类型选择实现。</li>
+<li><strong>vllm</strong>：使用 vLLM 内置实现（优化多、推荐）。</li>
+<li><strong>transformers</strong>：走 HuggingFace Transformers 实现，兼容性优先。</li>
+</ul>
+</li>
+<li><p><strong>–device</strong></p>
+<ul>
+<li><strong>auto</strong>：根据环境自动选择（有 CUDA 则 GPU，否则 CPU 等）。</li>
+<li><strong>cuda</strong>：NVIDIA GPU。</li>
+<li><strong>neuron</strong>：AWS Inferentia。</li>
+<li><strong>cpu</strong>：CPU 推理。</li>
+<li><strong>openvino</strong>：Intel OpenVINO。</li>
+<li><strong>tpu</strong>：Google TPU。</li>
+<li><strong>xpu</strong>：Intel GPU（XPU）。</li>
+<li><strong>hpu</strong>：Habana HPU。</li>
+</ul>
+</li>
+<li><p><strong>–guided-decoding-backend</strong></p>
+<ul>
+<li><strong>outlines-dev&#x2F;outlines</strong>：Outlines 库，用于结构化&#x2F;约束生成。</li>
+<li><strong>mlc-ai&#x2F;xgrammar</strong>：xGrammar，语法约束解码（默认）。</li>
+<li><strong>noamgat&#x2F;lm-format-enforcer</strong>：lm-format-enforcer，格式约束解码。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-2-KV-Cache-与调度"><a href="#10-2-KV-Cache-与调度" class="headerlink" title="10.2 KV Cache 与调度"></a>10.2 KV Cache 与调度</h3><ul>
+<li><p><strong>–block-size</strong></p>
+<ul>
+<li><strong>8 &#x2F; 16 &#x2F; 32 &#x2F; 64 &#x2F; 128</strong>：每个 KV 块容纳的连续 token 数。越小块越细、调度越灵活、元数据开销略大；越大块越大、适合长序列、CUDA 上通常只支持到 32。具体支持以平台为准。</li>
+</ul>
+</li>
+<li><p><strong>–scheduling-policy</strong></p>
+<ul>
+<li><strong>fcfs</strong>：先到先服务，按请求到达顺序调度（默认）。</li>
+<li><strong>priority</strong>：按优先级调度，数值越小越优先，可做交互优先于批处理等策略。</li>
+</ul>
+</li>
+<li><p><strong>–preemption-mode</strong></p>
+<ul>
+<li><strong>recompute</strong>：被抢占的序列释放 KV 后，下次调度时从 prompt 重新计算（省显存、增加计算）。</li>
+<li><strong>swap</strong>：将 KV 换出到 CPU&#x2F;交换区，恢复时换回，减少重复计算、需要额外内存与带宽。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-3-分布式"><a href="#10-3-分布式" class="headerlink" title="10.3 分布式"></a>10.3 分布式</h3><ul>
+<li><strong>–distributed-executor-backend</strong><ul>
+<li><strong>ray</strong>：用 Ray 做多节点&#x2F;多进程编排，适合多机或复杂部署。</li>
+<li><strong>mp</strong>：单机多进程（multiprocessing），多卡同机时常用默认。</li>
+<li><strong>uni</strong>：单进程单卡，不启用分布式。</li>
+<li><strong>external_launcher</strong>：由外部启动器（如 torchrun）管理进程，引擎内只起一个 worker，适合已有编排的场景。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-4-LoRA-与投机解码"><a href="#10-4-LoRA-与投机解码" class="headerlink" title="10.4 LoRA 与投机解码"></a>10.4 LoRA 与投机解码</h3><ul>
+<li><p><strong>–lora-dtype</strong></p>
+<ul>
+<li><strong>auto</strong>：与模型权重 dtype 一致。</li>
+<li><strong>float16</strong>：LoRA 权重 FP16。</li>
+<li><strong>bfloat16</strong>：LoRA 权重 BF16。</li>
+</ul>
+</li>
+<li><p><strong>–spec-decoding-acceptance-method</strong></p>
+<ul>
+<li><strong>rejection_sampler</strong>：经典投机解码：用 draft 与 target 概率比较决定接受&#x2F;拒绝，拒绝时从修正分布重采样（默认）。</li>
+<li><strong>typical_acceptance_sampler</strong>：基于典型集合（typical set）的接受策略，可调节接受阈值与熵缩放。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-5-其他"><a href="#10-5-其他" class="headerlink" title="10.5 其他"></a>10.5 其他</h3><ul>
+<li><p><strong>–tokenizer-pool-type</strong></p>
+<ul>
+<li><strong>ray</strong>：使用 Ray 管理分词器进程池，用于异步分词（多进程&#x2F;多节点）。</li>
+<li>其他类型以当前版本 <code>--help</code> 为准。</li>
+</ul>
+</li>
+<li><p><strong>–collect-detailed-traces</strong>（示例取值）</p>
+<ul>
+<li><strong>model</strong>：只收集模型相关跟踪。</li>
+<li><strong>worker</strong>：只收集 worker 相关跟踪。</li>
+<li><strong>all</strong>：收集上述全部详细跟踪。</li>
+</ul>
+</li>
+<li><p><strong>–quantization, -q</strong>（常见取值，以当前版本 <code>--help</code> 为准）</p>
+<ul>
+<li><strong>awq</strong>：Activation-aware Weight Quantization，4bit 权重量化。</li>
+<li><strong>gptq</strong>：GPTQ 权重量化。</li>
+<li><strong>squeezellm</strong>：SqueezeLLM 量化。</li>
+<li><strong>fp8</strong>：FP8 权重量化（如 fp8_e4m3）。</li>
+<li><strong>marlin</strong> 等：其他内核&#x2F;格式，依版本支持。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-6-布尔与数值类（常见含义）"><a href="#10-6-布尔与数值类（常见含义）" class="headerlink" title="10.6 布尔与数值类（常见含义）"></a>10.6 布尔与数值类（常见含义）</h3><p>以下为常见布尔&#x2F;数值参数的取值含义，便于与上文<strong>取值</strong>对照。</p>
+<ul>
+<li><p><strong>–enable-prefix-caching</strong>（True&#x2F;False）</p>
+<ul>
+<li><strong>True</strong>：启用前缀缓存，相同 prompt 前缀可复用 KV 块，省显存、提高吞吐。</li>
+<li><strong>False</strong>：不复用，每条序列独立占块，适合前缀几乎不重复的场景。</li>
+</ul>
+</li>
+<li><p><strong>–enable-chunked-prefill</strong>（True&#x2F;False）</p>
+<ul>
+<li><strong>True</strong>：长 prompt 按 max_num_batched_tokens 分块多步预填充，避免单步过长。</li>
+<li><strong>False</strong>：整段 prompt 一次预填充，超过 token 预算的请求会被拒绝或排队。</li>
+</ul>
+</li>
+<li><p><strong>–gpu-memory-utilization</strong>（0～1）</p>
+<ul>
+<li>数值表示 GPU 显存中用于 vLLM 引擎的比例；如 <code>0.9</code> 即 90% 给 KV&#x2F;模型，其余留给系统与其它进程。</li>
+</ul>
+</li>
+<li><p><strong>–preemption-mode</strong>（见 10.2）</p>
+<ul>
+<li><strong>recompute</strong>：抢占时释放 KV，恢复时从 prompt 重新算，省显存、多算力。</li>
+<li><strong>swap</strong>：抢占时把 KV 换出到 CPU，恢复时换回，少重算、多内存与带宽。</li>
+</ul>
+</li>
+</ul>
+<p>（未在以上列出的参数多为自由数值、路径或 JSON，其含义见前文各节<strong>取值</strong>与说明。）</p>
+<h2 id="11-参数默认值一览"><a href="#11-参数默认值一览" class="headerlink" title="11 参数默认值一览"></a>11 参数默认值一览</h2><p>下表汇总上文各节参数的默认值，便于快速查阅。未列出或标为「未指定」的，以当前运行环境的 <code>python -m vllm.entrypoints.openai.api_server --help</code> 及 vLLM 源码（如 <code>vllm/engine/arg_utils.py</code>、<code>vllm/config/</code>）为准；不同小版本可能略有差异。</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>参数</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1 模型与加载</strong></td>
+<td><code>--model</code></td>
+<td>依版本（如 0.6.x 常用 <code>facebook/opt-125m</code>，新版可能为 <code>Qwen/Qwen3-0.6B</code> 等）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--download-dir</code></td>
+<td>Hugging Face 默认缓存目录</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--revision</code> &#x2F; <code>--code-revision</code> &#x2F; <code>--tokenizer-revision</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--trust-remote-code</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--allowed-local-media-path</code></td>
+<td><code>&quot;&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--tokenizer</code></td>
+<td><code>None</code>（同 model）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--skip-tokenizer-init</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--tokenizer-mode</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--load-format</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--config-format</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--dtype</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--kv-cache-dtype</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--model-impl</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-model-len</code></td>
+<td><code>None</code>（由模型 config 推导）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--device</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td><strong>2 KV Cache 与内存</strong></td>
+<td><code>--block-size</code></td>
+<td>未指定（由平台设置，如 CUDA 常用 16）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--gpu-memory-utilization</code></td>
+<td><code>0.9</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--swap-space</code></td>
+<td><code>4</code>（GiB）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--cpu-offload-gb</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--num-gpu-blocks-override</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--enforce-eager</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--calculate-kv-scales</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><strong>3 并发与调度</strong></td>
+<td><code>--max-num-seqs</code></td>
+<td>未显式指定时由引擎填入（SchedulerConfig 默认 <code>128</code>）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-num-batched-tokens</code></td>
+<td>未显式指定时由引擎填入（SchedulerConfig 默认 <code>2048</code>）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-num-partial-prefills</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-long-partial-prefills</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--long-prefill-token-threshold</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--num-scheduler-steps</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--multi-step-stream-outputs</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--scheduling-policy</code></td>
+<td><code>&quot;fcfs&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--scheduler-cls</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><strong>4 采样与生成</strong></td>
+<td><code>--max-logprobs</code></td>
+<td><code>20</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--seed</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--disable-log-stats</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><strong>5 分布式</strong></td>
+<td><code>--distributed-executor-backend</code></td>
+<td>单卡 <code>uni</code>，多卡单节点多为 <code>mp</code>，多节点需显式设置</td>
+</tr>
+<tr>
+<td></td>
+<td><code>-tp</code> &#x2F; <code>--tensor-parallel-size</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>-pp</code> &#x2F; <code>--pipeline-parallel-size</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--worker-cls</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td><strong>6 前缀缓存与 LoRA</strong></td>
+<td><code>--enable-prefix-caching</code></td>
+<td>引擎层可为 <code>None</code>；CacheConfig 默认 <code>True</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--disable-sliding-window</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--enable-lora</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-loras</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-lora-rank</code></td>
+<td><code>16</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--lora-extra-vocab-size</code></td>
+<td><code>256</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--lora-dtype</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td><strong>8 投机解码</strong></td>
+<td><code>--spec-decoding-acceptance-method</code></td>
+<td><code>&quot;rejection_sampler&quot;</code></td>
+</tr>
+<tr>
+<td><strong>9 其他</strong></td>
+<td><code>--tokenizer-pool-type</code></td>
+<td><code>&quot;ray&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--ignore-patterns</code></td>
+<td>如 <code>original/**/*</code>（以 –help 为准）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--enable-sleep-mode</code></td>
+<td><code>False</code></td>
+</tr>
+</tbody></table>
+<h2 id="12-常用启动示例"><a href="#12-常用启动示例" class="headerlink" title="12 常用启动示例"></a>12 常用启动示例</h2><p>（待补充：单卡、多卡、开启 prefix caching、开启 swap、LoRA 等典型 <code>python -m vllm.entrypoints.openai.api_server</code> 命令示例。）</p>
+<h2 id="13-总结"><a href="#13-总结" class="headerlink" title="13 总结"></a>13 总结</h2><ul>
+<li><strong>模型与加载</strong>（1）：<code>--model</code>、<code>--download-dir</code>、<code>--dtype</code>、<code>--max-model-len</code> 等决定加载哪类模型与上下文长度。</li>
+<li><strong>KV Cache 与内存</strong>（2）：<code>--block-size</code>、<code>--gpu-memory-utilization</code>、<code>--swap-space</code> 等与（一）（四）中块数与显存分配对应。</li>
+<li><strong>并发与调度</strong>（3）：<code>--max-num-seqs</code>、<code>--max-num-batched-tokens</code>、<code>--preemption-mode</code> 等与（三）调度预算与抢占对应。</li>
+<li><strong>分布式</strong>（5）：<code>-tp</code>、<code>-pp</code>、<code>--distributed-executor-backend</code> 用于多卡&#x2F;多节点。</li>
+<li><strong>前缀缓存与 LoRA</strong>（6）：<code>--enable-prefix-caching</code> 与（五）PrefixCaching 对应；LoRA 相关参数用于多适配器场景。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%8E%A8%E7%90%86/" rel="tag"># 推理</a>
+              <a href="/tags/vLLM/" rel="tag"># vLLM</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/" rel="prev" title="传统组网第一阶段：筑基与深耕">
+                  <i class="fa fa-angle-left"></i> 传统组网第一阶段：筑基与深耕
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/" rel="next" title="AI 组网第二阶段：集群核心组网">
+                  AI 组网第二阶段：集群核心组网 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

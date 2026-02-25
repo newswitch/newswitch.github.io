@@ -128,17 +128,17 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -155,6 +155,2023 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">AI 组网第一阶段：底层基础</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:25:19" itemprop="dateModified" datetime="2026-02-23T01:25:19+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="AI-组网第一阶段：底层基础"><a href="#AI-组网第一阶段：底层基础" class="headerlink" title="AI 组网第一阶段：底层基础"></a>AI 组网第一阶段：底层基础</h1><p><strong>核心目标</strong>：吃透 AI 组网的底层转发逻辑，筑牢路由交换与安全基础。  </p>
+<hr>
+<h2 id="1-底层网络基础"><a href="#1-底层网络基础" class="headerlink" title="1. 底层网络基础"></a>1. 底层网络基础</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
+<li>TCP&#x2F;IP 协议栈深度拆解、以太网二层转发全流程、VLAN&#x2F;Trunk&#x2F; 链路聚合进阶</li>
+<li>IGP 路由协议（OSPF&#x2F;IS-IS）深度原理，重点掌握 <strong>IS-IS</strong>（AI 集群 Underlay 主流协议）</li>
+<li>弱化：无线调优砍掉，MPLS VPN 仅做基础了解</li>
+</ul>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
+<li>搭建标准三层 CLOS 底层 Underlay 网络，基于 IS-IS 实现全网络路由互通，ECMP 等价路由负载分担</li>
+<li>完成链路故障、路由震荡、转发不通等典型故障排障，Wireshark 抓包吃透数据包全链路转发</li>
+</ul>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群 Underlay 网络的规划与部署，保障底层无阻塞、高可用</li>
+<li>能精准定位并解决二层 &#x2F; 三层转发全流程的故障，彻底掌握数据包的流向控制</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、Wireshark</li>
+<li>书籍：《TCP&#x2F;IP 详解 卷 1》《IS-IS 协议原理与应用》</li>
+<li>文档：华为 CE 系列 &#x2F; 思科 N9K 数据中心交换机官方文档</li>
+</ul>
+<hr>
+<h2 id="2-BGP-与-EVPN-基础"><a href="#2-BGP-与-EVPN-基础" class="headerlink" title="2. BGP 与 EVPN 基础"></a>2. BGP 与 EVPN 基础</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
+<li>BGP 核心原理、邻居建立、13 条选路原则、路由控制工具（Route-Map &#x2F; 团体属性）</li>
+<li><strong>EVPN 协议核心、路由类型、VXLAN 基础转发原理</strong>，重点掌握 EVPN 作为 Underlay&#x2F;Overlay 控制平面的应用</li>
+<li>BGP 广域网仅做了解，重点聚焦<strong>数据中心内 BGP EVPN 应用</strong></li>
+</ul>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
+<li>基于 BGP EVPN 搭建 VXLAN Overlay 网络，实现 AI 集群多租户隔离、大二层互通</li>
+<li>通过 BGP 选路原则与路由工具，实现 AI 业务流量的精细化路径控制</li>
+</ul>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群多租户网络的设计与部署，通过 EVPN 实现 VM &#x2F; 容器 &#x2F; GPU 资源的灵活迁移与隔离</li>
+<li>能灵活使用 BGP 工具控制 AI 业务流量的走向，符合集群业务设计预期</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG 模拟器（数据中心交换机镜像）、Wireshark</li>
+<li>书籍：《BGP 设计与实现》《VXLAN 技术与实践》</li>
+<li>课程：华为 HCIE-Datacom 数据中心 EVPN 专项</li>
+</ul>
+<hr>
+<h2 id="3-AI-网络安全基础"><a href="#3-AI-网络安全基础" class="headerlink" title="3. AI 网络安全基础"></a>3. AI 网络安全基础</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
+<li>基于 Zone 的状态防火墙核心原理、安全策略设计</li>
+<li>高级 NAT 应用、ACL 精细化管控、VPN 技术（重点关注 <strong>IPsec VPN</strong>，用于跨地域 AI 集群互通）</li>
+<li><strong>AI 集群专属安全</strong>：多租户隔离、训练数据安全传输、GPU 资源访问控制、运维面安全管控</li>
+</ul>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
+<li>搭建 <strong>AI 集群三平面隔离架构</strong>，实现计算网 &#x2F; 存储网 &#x2F; 管理网的安全隔离与精细化访问控制</li>
+<li>完成 AI 集群多租户安全策略设计，实现不同训练任务、不同用户的资源与数据隔离</li>
+</ul>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群全场景安全架构设计，保障训练数据、模型、GPU 资源的安全访问</li>
+<li>能解决 AI 集群跨网络、跨租户的安全互通与隔离需求</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG 模拟器（企业级防火墙镜像）、Wireshark</li>
+<li>课程：华为 HCIE-Security 数据中心安全专项</li>
+<li>文档：主流 AI 平台安全组网最佳实践</li>
+</ul>
+<hr>
+<h2 id="阶段总表"><a href="#阶段总表" class="headerlink" title="阶段总表"></a>阶段总表</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一阶段</td>
+<td>底层网络基础</td>
+<td>TCP&#x2F;IP、二层与 VLAN&#x2F;Trunk、IGP 重点 IS-IS；CLOS Underlay+IS-IS+ECMP、排障与抓包</td>
+</tr>
+<tr>
+<td></td>
+<td>BGP 与 EVPN 基础</td>
+<td>BGP 与选路、EVPN 与 VXLAN 控制面；BGP EVPN 多租户 Overlay、AI 业务路径控制</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 网络安全基础</td>
+<td>Zone 防火墙、NAT&#x2F;ACL、IPsec VPN；三平面隔离、多租户与 GPU 访问控制</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">AI 组网第二阶段：集群核心组网 →</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/" class="post-title-link" itemprop="url">AI 组网第三阶段：自动化与架构进阶</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:25:46" itemprop="dateModified" datetime="2026-02-23T01:25:46+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="AI-组网第三阶段：自动化与架构进阶"><a href="#AI-组网第三阶段：自动化与架构进阶" class="headerlink" title="AI 组网第三阶段：自动化与架构进阶"></a>AI 组网第三阶段：自动化与架构进阶</h1><p><strong>核心目标</strong>：从配置工进阶为 AI 集群网络架构师，实现大规模 AI 网络的自动化运维与智能调优。  </p>
+<hr>
+<h2 id="1-AI-网络自动化运维"><a href="#1-AI-网络自动化运维" class="headerlink" title="1. AI 网络自动化运维"></a>1. AI 网络自动化运维</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>【沿用原计划】Python 基础、Netmiko&#x2F;Napalm&#x2F;Ansible 批量设备管理、Jinja2 模板配置生成</li>
+<li>【新增 AI 专属】<strong>AI 集群网络自动化专项</strong>：交换机无损参数批量配置、RDMA 网卡参数批量调优、端口状态批量巡检</li>
+<li>【新增 AI 专属】<strong>RDMA 性能监控体系搭建</strong>：Prometheus+Grafana 监控 RDMA 带宽、时延、PFC 帧、丢包、拥塞情况</li>
+<li>【新增 AI 专属】<strong>AI 训练任务网络保障自动化</strong>：训练任务启动前的网络健康检查、故障自动告警与定位</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>编写 Python 脚本 + Ansible Playbook，实现 <strong>AI 集群 50+ 交换机的无损配置批量下发</strong>、配置备份、合规校验</li>
+<li>搭建 <strong>AI 集群网络监控大盘</strong>，实现 RDMA 性能、PFC 事件、端口状态、设备负载的实时监控与告警</li>
+<li>实现 <strong>AI 训练任务的网络健康度自动巡检</strong>，提前发现并预警网络瓶颈与故障风险</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能实现「一杯咖啡时间搞定 AI 集群百台交换机 &#x2F; 千张网卡的批量配置与巡检」，替代 90% 的重复手工操作</li>
+<li>能搭建完整的 AI 集群网络监控体系，实现故障的分钟级定位，提前预警网络风险</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：VS Code、Python、Ansible、Prometheus、Grafana、NVIDIA DCGM</li>
+<li>书籍：《Python 网络编程权威指南》</li>
+<li>文档：NVIDIA DCGM 官方文档、交换机开源运维工具指南</li>
+</ul>
+<hr>
+<h2 id="2-AI-网络性能优化与智能调度"><a href="#2-AI-网络性能优化与智能调度" class="headerlink" title="2. AI 网络性能优化与智能调度"></a>2. AI 网络性能优化与智能调度</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>NCCL 全解</strong>：NCCL 通信原理、拓扑感知、GPU 亲和性、NCCL 环境变量优化、通信性能调优</li>
+<li><strong>AI 流量专属 QoS</strong>：LLQ 低时延队列、RDMA 流量优先级保障、拥塞控制优化、训练流量与推理流量的带宽隔离</li>
+<li>【弱化】通用 SD-WAN 仅做了解，重点关注<strong>跨地域 AI 训练的智能选路、广域网 RDMA 优化</strong></li>
+<li><strong>AI 网络智能运维</strong>：基于 AI 算法的网络流量预测、拥塞预判、故障根因分析</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成<strong>分布式训练任务的 NCCL 全链路优化</strong>，实现 <strong>NCCL 带宽利用率≥90%</strong>，训练性能线性提升</li>
+<li>完成 <strong>AI 流量 QoS 设计</strong>，保障 RDMA 训练流量的零丢包、低时延，实现推理业务与训练业务的带宽隔离</li>
+<li>完成<strong>跨地域 AI 训练的网络优化</strong>，实现跨节点分布式训练的稳定运行</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能通过网络优化，解决大模型分布式训练的通信瓶颈，实现训练性能的线性提升</li>
+<li>能针对 AI 训练 &#x2F; 推理业务的不同特征，实现流量的智能调度与优先级保障，避免业务卡顿与训练中断</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：NCCL Tests、NVIDIA Nsight Systems、Wireshark、流量打流工具</li>
+<li>文档：NVIDIA NCCL 官方优化指南、大模型训练网络性能调优最佳实践</li>
+</ul>
+<hr>
+<h2 id="3-大规模-AI-集群架构设计与灾备"><a href="#3-大规模-AI-集群架构设计与灾备" class="headerlink" title="3. 大规模 AI 集群架构设计与灾备"></a>3. 大规模 AI 集群架构设计与灾备</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>万级 GPU 超大规模 AI 集群</strong>网络架构设计、可扩展性规划、故障域隔离</li>
+<li><strong>AI 集群同城双活、异地容灾</strong>网络架构设计、模型与数据同步网络优化</li>
+<li><strong>混合云 AI 组网</strong>：线下 IDC 与云上 GPU 资源的混合集群网络设计、训练任务跨云调度</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成<strong>超大规模 AI 集群网络架构方案设计</strong>，包含可扩展性、高可用、安全、灾备全维度规划</li>
+<li>完成<strong>混合云 AI 训练集群组网方案设计</strong>，实现线下与云上资源的网络互通与训练任务协同</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能站在架构师视角，完成企业级 AI 平台的全生命周期网络架构规划</li>
+<li>能匹配企业 AI 业务的发展，设计可扩展、高可用、高性能的 AI 组网方案</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>文档：头部云厂商超大规模 AI 集群架构白皮书、NVIDIA SuperPOD 组网方案</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第三阶段</td>
+<td>AI 网络自动化运维</td>
+<td>Python&#x2F;Ansible&#x2F;Jinja2、无损与 RDMA 批量配置、Prometheus+Grafana 监控、训练前健康检查；50+ 交换机批量下发与监控、训练网络巡检</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 网络性能优化与智能调度</td>
+<td>NCCL 原理与调优、AI QoS 与 RDMA&#x2F;LLQ、跨地域训练选路；NCCL≥90%、训练与推理带宽隔离、跨地域训练优化</td>
+</tr>
+<tr>
+<td></td>
+<td>大规模 AI 集群架构设计与灾备</td>
+<td>万级 GPU 可扩展与故障域、同城双活与异地容灾、混合云 IDC+云 GPU；超大规模与混合云 AI 组网方案设计</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">← AI 组网第二阶段：集群核心组网</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/" class="post-title-link" itemprop="url">AI 组网第二阶段：集群核心组网</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:25:26" itemprop="dateModified" datetime="2026-02-23T01:25:26+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="AI-组网第二阶段：集群核心组网"><a href="#AI-组网第二阶段：集群核心组网" class="headerlink" title="AI 组网第二阶段：集群核心组网"></a>AI 组网第二阶段：集群核心组网</h1><p><strong>核心目标</strong>：彻底掌握 AI 部署环境的灵魂技术，能独立设计与部署大模型训练 &#x2F; 推理集群网络。  </p>
+<hr>
+<h2 id="1-无损以太网与-RoCEv2-RDMA"><a href="#1-无损以太网与-RoCEv2-RDMA" class="headerlink" title="1. 无损以太网与 RoCEv2 RDMA"></a>1. 无损以太网与 RoCEv2 RDMA</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>RDMA 技术全解</strong>：IB&#x2F;RoCE&#x2F;iWARP 协议对比、RoCEv1&#x2F;v2 核心原理、RDMA 转发机制、QP 队列、内存注册原理</li>
+<li><strong>无损以太网核心技术</strong>：PFC 优先级流量控制、ECN 显式拥塞通知、DCQCN 拥塞控制算法、死锁预防与化解</li>
+<li><strong>RoCEv2 网络设计</strong>：PFC 域规划、DSCP 优先级映射、无损队列配置、端到端无损参数调优</li>
+<li><strong>RDMA 性能调优</strong>：网卡固件优化、操作系统内核参数调优、队列深度优化、时延与吞吐优化</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建最小化 RoCEv2 无损网络环境（2 台服务器 + 2 台交换机），完成端到端 PFC&#x2F;ECN 配置，验证无损转发</li>
+<li>使用 perftest、ib_write_bw 等工具完成 RDMA 带宽、时延、丢包测试，优化参数实现线速带宽、亚微秒级时延</li>
+<li>完成 RDMA 丢包、PFC 死锁、拥塞失控等典型故障排障，定位并解决性能瓶颈</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>彻底掌握 AI 组网的核心灵魂技术，能独立完成 RoCEv2 无损网络的规划、配置与调优</li>
+<li>能实现端到端零丢包的 RDMA 转发，保障 GPU 并行通信的性能，<strong>RDMA 带宽利用率≥95%</strong></li>
+<li>能精准定位并解决 RDMA 无损网络的全场景故障与性能问题</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：带 Mellanox ConnectX-5&#x2F;6 网卡的服务器、支持 PFC&#x2F;ECN 的 25G+ 交换机、perftest、ibutils、Wireshark</li>
+<li>文档：NVIDIA RoCE 官方文档、Mellanox 无损网络最佳实践、《RDMA 高性能网络编程》</li>
+<li>课程：NVIDIA 网络学院 RDMA 专项课程</li>
+</ul>
+<hr>
+<h2 id="2-AI-集群网络架构设计"><a href="#2-AI-集群网络架构设计" class="headerlink" title="2. AI 集群网络架构设计"></a>2. AI 集群网络架构设计</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>AI 集群专用拓扑</strong>：CLOS &#x2F; 胖树架构设计、1:1 无收敛带宽规划、Spine-Leaf 超宽端口设计</li>
+<li><strong>多平面网络架构</strong>：计算网 &#x2F; 存储网 &#x2F; 管理网三物理平面隔离设计、多轨网络（Multi-Rail）规划</li>
+<li><strong>大规模 AI 集群网络扩展</strong>：超大规模集群的 CLOS 架构分级、端口收敛比设计、故障域隔离</li>
+<li><strong>推理集群网络轻量化设计</strong>：推理业务的流量特征、低时延高可用网络架构</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>设计并搭建 2 Spine + 4 Leaf 的 AI 训练集群标准拓扑，实现 1:1 无收敛带宽、三平面隔离</li>
+<li>完成千级 GPU 规模的 AI 集群网络架构方案设计，包含可扩展性、高可用、故障隔离规划</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能读懂并设计 AI 训练 &#x2F; 推理集群的拓扑图，理解每一处设计的业务意义</li>
+<li>能独立完成中小规模 AI 集群网络的全方案设计，匹配大模型训练的带宽、时延、高可用需求</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：AutoCAD&#x2F;Visio、EVE-NG 模拟器</li>
+<li>书籍：《数据中心网络架构与技术》《高性能计算网络设计》</li>
+<li>文档：阿里云 &#x2F; 腾讯云 AI 集群组网最佳实践、NVIDIA DGX 集群组网方案</li>
+</ul>
+<hr>
+<h2 id="3-AI-存储网络"><a href="#3-AI-存储网络" class="headerlink" title="3. AI 存储网络"></a>3. AI 存储网络</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>AI 存储网络核心诉求</strong>：大模型训练的高带宽、低时延 IO 需求、并行文件系统网络特性</li>
+<li><strong>NVMe over RoCE 技术全解</strong>：协议原理、无损网络配置、性能调优、故障排障</li>
+<li>**并行文件系统（Lustre&#x2F;Beegfs）**的网络设计、多路径 IO、带宽优化</li>
+<li>计算网络与存储网络的协同设计、流量隔离与优先级保障</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建 NVMe over RoCE 环境，完成无损网络配置，验证远端 NVMe 设备的低时延访问</li>
+<li>完成并行文件系统的网络规划与部署，优化存储网络带宽，实现存储 IO 性能匹配 GPU 计算能力</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群存储网络的设计与部署，解决大模型训练的海量数据读写需求</li>
+<li>能优化存储网络性能，实现计算与存储的带宽匹配，避免存储 IO 成为训练瓶颈</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：NVMe 固态硬盘、Mellanox 网卡、支持 NVMe over RoCE 的交换机、fio&#x2F;iozone 测试工具</li>
+<li>文档：NVIDIA 存储网络官方文档、Lustre&#x2F;Beegfs 官方组网指南</li>
+</ul>
+<hr>
+<h2 id="4-云原生-AI-网络"><a href="#4-云原生-AI-网络" class="headerlink" title="4. 云原生 AI 网络"></a>4. 云原生 AI 网络</h2><h3 id="核心学习内容-3"><a href="#核心学习内容-3" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>Kubernetes CNI 网络深度原理</strong>，重点掌握 <strong>Macvlan&#x2F;IPvlan&#x2F;SR-IOV</strong>（GPU 直通主流方案）</li>
+<li><strong>AI 容器的多网卡多平面隔离设计</strong>、GPU 直通网络配置、<strong>RDMA 容器化部署</strong></li>
+<li><strong>MPI Operator&#x2F;Kubeflow</strong> 训练任务的网络优化、<strong>NCCL 通信环境配置</strong></li>
+<li>云 AI 平台网络架构：VPC、GPU 实例网络、弹性裸金属集群网络、混合云 AI 训练组网</li>
+</ol>
+<h3 id="必做实操项目-3"><a href="#必做实操项目-3" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>基于 K8s 搭建云原生 AI 环境，通过 <strong>SR-IOV 实现 GPU 容器的 RDMA 直通</strong>，验证容器内 RDMA 通信性能</li>
+<li>完成 Kubeflow 训练任务的网络配置，优化 NCCL 通信参数，实现分布式训练任务正常运行</li>
+</ol>
+<h3 id="验收标准-3"><a href="#验收标准-3" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成云原生 AI 平台的网络设计与部署，实现容器化 AI 训练任务的无损 RDMA 通信</li>
+<li>能适配主流 AI 训练框架，解决分布式训练的网络互通、性能优化问题</li>
+</ul>
+<h3 id="配套学习资源-工具-3"><a href="#配套学习资源-工具-3" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：Kubernetes 集群、NVIDIA GPU Operator、SR-IOV 网卡、Kubeflow</li>
+<li>书籍：《Kubernetes 网络权威指南》</li>
+<li>文档：NVIDIA GPU Operator 官方文档、Kubeflow 网络最佳实践</li>
+</ul>
+<hr>
+<h2 id="阶段总表"><a href="#阶段总表" class="headerlink" title="阶段总表"></a>阶段总表</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第二阶段</td>
+<td>无损以太网与 RoCEv2 RDMA</td>
+<td>RDMA&#x2F;RoCE、PFC&#x2F;ECN&#x2F;DCQCN、PFC 域与无损队列；最小 RoCEv2 环境、perftest 调优、RDMA&#x2F;PFC 排障</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 集群网络架构设计</td>
+<td>CLOS&#x2F;胖树、1:1 无收敛、三平面与 Multi-Rail；2 Spine+4 Leaf、千级 GPU 方案设计</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 存储网络</td>
+<td>大模型 IO、NVMe over RoCE、Lustre&#x2F;Beegfs；NVMe over RoCE 部署、存储与计算带宽匹配</td>
+</tr>
+<tr>
+<td></td>
+<td>云原生 AI 网络</td>
+<td>K8s CNI、SR-IOV、RDMA 容器化、Kubeflow 与 NCCL；SR-IOV GPU RDMA、Kubeflow 调优</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/">← AI 组网第一阶段：底层基础</a> | <a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">AI 组网第三阶段：自动化与架构进阶 →</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">vLLM 学习笔记（六）：参数使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-22 17:45:01" itemprop="dateModified" datetime="2026-02-22T17:45:01+08:00">2026-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="vLLM-学习笔记（六）：参数使用"><a href="#vLLM-学习笔记（六）：参数使用" class="headerlink" title="vLLM 学习笔记（六）：参数使用"></a>vLLM 学习笔记（六）：参数使用</h1><p>本系列基于 vLLM 0.6.3 版本。前五篇侧重源码与内部机制，本文整理 <strong>vLLM 的常用参数与配置</strong>，便于部署与调优时查阅。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>vLLM 支持通过命令行参数或配置文件控制模型加载、KV Cache、并发、采样与分布式等行为。下文按功能分组说明常用参数，并与本系列（一）～（五）中的概念对应，便于结合源码理解。</p>
+<p>下文在每个参数旁用 <strong>取值</strong> 标出可选值及含义、用 <strong>默认值</strong> 标出默认；<strong>第 10 节</strong>对枚举&#x2F;多选类参数逐值展开说明。参数与（一）中模型加载、KV 块估计、（三）调度器、（四）BlockSpaceManager、（五）PrefixCaching 等对应，便于对照源码理解。</p>
+<h2 id="1-模型与加载"><a href="#1-模型与加载" class="headerlink" title="1 模型与加载"></a>1 模型与加载</h2><h3 id="1-1-模型路径与来源"><a href="#1-1-模型路径与来源" class="headerlink" title="1.1 模型路径与来源"></a>1.1 模型路径与来源</h3><ul>
+<li><strong>–model</strong>：使用的 Hugging Face 模型名称或路径。<strong>取值</strong>：任意 HF 模型 ID（如 <code>facebook/opt-125m</code>）或本地目录路径。默认: <code>&quot;facebook/opt-125m&quot;</code>。</li>
+<li><strong>–download-dir</strong>：下载和加载权重的目录。<strong>取值</strong>：合法目录路径；空&#x2F;未指定时使用 Hugging Face 默认缓存目录。</li>
+<li><strong>–revision</strong>：使用的具体模型版本（分支名、标签名或提交 ID）。<strong>取值</strong>：如 <code>main</code>、<code>v1.0</code>、或 commit hash；<code>None</code> 表示仓库默认。默认: <code>None</code>。</li>
+<li><strong>–code-revision</strong>：模型代码的修订版本。<strong>取值</strong>：同 <code>--revision</code>。默认: <code>None</code>。</li>
+<li><strong>–trust-remote-code</strong>：是否信任并执行来自 Hugging Face 的远程代码。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–allowed-local-media-path</strong>：允许 API 从指定服务器目录读取本地图像&#x2F;视频；存在安全风险。<strong>取值</strong>：目录路径字符串；空字符串表示不开放任何本地路径。默认: <code>&quot;&quot;</code>。</li>
+</ul>
+<h3 id="1-2-分词器与配置"><a href="#1-2-分词器与配置" class="headerlink" title="1.2 分词器与配置"></a>1.2 分词器与配置</h3><ul>
+<li><strong>–tokenizer</strong>：分词器名称或路径。<strong>取值</strong>：HF 模型 ID 或本地路径；<code>None</code> 表示与 <code>--model</code> 相同。默认: <code>None</code>。</li>
+<li><strong>–skip-tokenizer-init</strong>：是否跳过分词器&#x2F;反分词器初始化。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。<strong>影响</strong>：设为 <code>True</code> 时，引擎内不加载分词器&#x2F;反分词器；请求必须提供<strong>已分词的</strong> <code>prompt_token_ids</code>，且不能传原始文本 <code>prompt</code>（需为 <code>None</code>）。适用于在外部或前置服务统一分词、避免重复加载分词器或减少内存占用的场景；若仍传文本 prompt 会报错或无法处理。</li>
+<li><strong>–tokenizer-revision</strong>：Hugging Face 分词器的修订版本。<strong>取值</strong>：同 <code>--revision</code>。</li>
+<li><strong>–tokenizer-mode</strong>：分词器模式。<strong>取值</strong>：<code>auto</code> 自动选择；<code>slow</code> 慢路径兼容；<code>mistral</code> Mistral 专用；<code>custom</code> 自定义。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–load-format</strong>：加载模型权重的格式。<strong>取值</strong>：<code>auto</code> 自动（优先 safetensors）；<code>pt</code> PyTorch；<code>safetensors</code>；<code>npcache</code> NP 缓存；<code>dummy</code> 占位；<code>tensorizer</code>；<code>sharded_state</code> 分片；<code>gguf</code>；<code>bitsandbytes</code>；<code>mistral</code>；<code>runai_streamer</code>。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–config-format</strong>：加载模型配置的格式。<strong>取值</strong>：<code>auto</code> 自动；<code>hf</code> HuggingFace 标准；<code>mistral</code> Mistral 格式。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–hf-overrides</strong>：Hugging Face 配置的额外覆盖。<strong>取值</strong>：JSON 字符串，如 <code>&quot;{\&quot;key\&quot;: \&quot;value\&quot;}&quot;</code>。</li>
+</ul>
+<h3 id="1-3-数据类型与任务"><a href="#1-3-数据类型与任务" class="headerlink" title="1.3 数据类型与任务"></a>1.3 数据类型与任务</h3><ul>
+<li><strong>–dtype</strong>：模型权重和激活的数值类型。<strong>取值</strong>：<code>auto</code>（按模型 config 的 <code>torch_dtype</code>，config 为 float32 时改用 float16）；<code>half</code>&#x2F;<code>float16</code>；<code>bfloat16</code>；<code>float</code>&#x2F;<code>float32</code>。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–kv-cache-dtype</strong>：KV 缓存存储的数据类型。<strong>取值</strong>：<code>auto</code> 与模型权重 dtype 一致（不读 config 单独字段）；<code>fp8</code>&#x2F;<code>fp8_e4m3</code>&#x2F;<code>fp8_e5m2</code> 8 比特，省显存。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–task</strong>：任务类型。<strong>取值</strong>：<code>auto</code> 由模型类型&#x2F;API 推断；<code>generate</code> 生成；<code>embedding</code>&#x2F;<code>embed</code> 嵌入；<code>classify</code> 分类；<code>score</code> 打分；<code>reward</code> 奖励模型；<code>transcription</code> 语音转写。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–model-impl</strong>：模型实现。<strong>取值</strong>：<code>auto</code> 由 vLLM 按模型架构选择实现（非 config）；<code>vllm</code> 内置（推荐）；<code>transformers</code> 走 HF。默认: <code>&quot;auto&quot;</code>。</li>
+<li><strong>–max-model-len</strong>：模型最大上下文长度（token 数）。<strong>取值</strong>：正整数或 <code>None</code>。<strong><code>None</code>&#x2F;未指定时</strong>：从模型 config（如 <code>max_position_embeddings</code>）推导，是少数直接读 config 的参数之一。默认: <code>None</code>。</li>
+<li><strong>–guided-decoding-backend</strong>：<strong>引导解码</strong>（Guided Decoding）所用引擎，即按<strong>语法&#x2F;JSON Schema&#x2F;正则</strong>等约束逐 token 生成，使输出符合指定格式（如合法 JSON、EBNF 文法、正则）。<strong>取值</strong>：<code>outlines-dev/outlines</code> Outlines；<code>mlc-ai/xgrammar</code> xGrammar（默认）；<code>noamgat/lm-format-enforcer</code> lm-format-enforcer。默认: <code>&quot;xgrammar&quot;</code>。</li>
+<li><strong>–logits-processor-pattern</strong>：允许的 logits 处理器名称正则。<strong>取值</strong>：正则字符串，如 <code>&quot;^my_processor$&quot;</code>。与 config 无关。</li>
+<li><strong>–device</strong>：执行设备。<strong>取值</strong>：<code>auto</code> 按当前环境与硬件选择（如检测到 CUDA 则 <code>cuda</code>），不读模型 config。其余：<code>cuda</code>、<code>neuron</code>、<code>cpu</code>、<code>openvino</code>、<code>tpu</code>、<code>xpu</code>、<code>hpu</code>。默认: <code>&quot;auto&quot;</code>。<strong>华为升腾（Ascend NPU）</strong>：上游 vLLM 不直接支持；需使用 <strong>vLLM-Ascend</strong>，并通过<strong>环境变量</strong>指定设备，例如 <code>export DEVICE=/dev/davinci0</code>（多卡可为 <code>davinci1</code> 等），再启动服务；Docker 运行时需挂载对应 <code>--device /dev/davinci0</code> 等。</li>
+</ul>
+<h3 id="1-4-vLLM-与-vLLM-Ascend-区别"><a href="#1-4-vLLM-与-vLLM-Ascend-区别" class="headerlink" title="1.4 vLLM 与 vLLM-Ascend 区别"></a>1.4 vLLM 与 vLLM-Ascend 区别</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>vLLM</th>
+<th>vLLM-Ascend</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>定位</strong></td>
+<td>上游主项目，通用 GPU（含 CUDA 等）推理框架</td>
+<td>面向华为昇腾 NPU 的<strong>硬件插件</strong>，非 fork，独立仓库与包</td>
+</tr>
+<tr>
+<td><strong>关系</strong></td>
+<td>主代码库，支持 PageAttention、连续批处理等</td>
+<td>遵循 vLLM 的「硬件可插拔」RFC，实现 Ascend 的 Executor &#x2F; Worker &#x2F; Attention 等后端，与主库解耦</td>
+</tr>
+<tr>
+<td><strong>设备</strong></td>
+<td><code>--device</code> 支持 cuda、cpu、neuron、tpu、xpu、hpu 等</td>
+<td>仅 Ascend NPU，通过环境变量 <code>DEVICE=/dev/davinci0</code> 等指定</td>
+</tr>
+<tr>
+<td><strong>安装</strong></td>
+<td><code>pip install vllm</code></td>
+<td><code>pip install vllm-ascend</code>（与 vLLM 版本对齐，如 v0.13.0 对应 vLLM v0.13.0）</td>
+</tr>
+<tr>
+<td><strong>维护</strong></td>
+<td>vLLM 社区</td>
+<td>vLLM 社区 + 昇腾相关适配（仓库 <code>vllm-project/vllm-ascend</code>）</td>
+</tr>
+</tbody></table>
+<p>二者 API 与使用方式尽量一致，便于在 GPU 与昇腾 NPU 间切换；昇腾上需用 vLLM-Ascend 并配置 CANN、驱动等环境。</p>
+<h2 id="2-KV-Cache-与内存"><a href="#2-KV-Cache-与内存" class="headerlink" title="2 KV Cache 与内存"></a>2 KV Cache 与内存</h2><p>与（一）中 <strong>determine_num_available_blocks</strong>、（四）<strong>BlockSpaceManager</strong> 的块数与显存分配对应。</p>
+<h3 id="2-1-block-size、gpu-memory-utilization"><a href="#2-1-block-size、gpu-memory-utilization" class="headerlink" title="2.1 block-size、gpu-memory-utilization"></a>2.1 block-size、gpu-memory-utilization</h3><ul>
+<li><strong>–block-size</strong>：每个 KV 块容纳的连续 token 数。<strong>取值</strong>：<code>8</code>、<code>16</code>、<code>32</code>、<code>64</code>、<code>128</code>（越小块越细、调度越灵活；CUDA 仅支持 ≤32）。<strong>未指定时</strong>：无 <code>auto</code> 字面值，不传则由 <code>Platform.check_and_update_config()</code> 在运行时设定；CUDA 上通常为 <strong>16</strong>，HPU 上通常为 <strong>128</strong>。</li>
+<li><strong>–gpu-memory-utilization</strong>：用于模型执行的 GPU 内存比例。<strong>取值</strong>：0～1 的浮点数（如 <code>0.9</code> 表示 90%）。默认: <code>0.9</code>。</li>
+<li><strong>–num-gpu-blocks-override</strong>：强制使用的 GPU 块数量，覆盖自动分析。<strong>取值</strong>：正整数或 <code>None</code>。默认: <code>None</code>。</li>
+</ul>
+<h3 id="2-2-swap-space、CPU-卸载"><a href="#2-2-swap-space、CPU-卸载" class="headerlink" title="2.2 swap-space、CPU 卸载"></a>2.2 swap-space、CPU 卸载</h3><ul>
+<li><strong>–swap-space</strong>：每个 GPU 对应的 <strong>KV cache 交换空间</strong>（CPU 侧，单位 GiB）。<strong>含义</strong>：当请求被抢占（preempt）时，可将该请求的 KV 块从 GPU 换出到这块 CPU 内存，等再次调度时再换回，从而避免从头重算（recompute）。<strong>取值</strong>：非负浮点数，如 <code>4</code>。默认: <code>4</code>。与 <code>preemption-mode=swap</code> 配合使用；设为 0 则无法做 KV swap，抢占时只能 recompute。</li>
+<li><strong>–cpu-offload-gb</strong>：每个 GPU 对应的 <strong>模型权重复制到 CPU 的容量</strong>（GiB）。<strong>含义</strong>：把一部分模型权重常驻在 CPU，前向时再按需拷到 GPU，相当于“虚拟扩大显存”，用于在显存不足时加载更大模型（如 24G 卡 + 10G offload ≈ 34G，可加载约 13B BF16）。<strong>取值</strong>：非负浮点数；<code>0</code> 表示不卸载。默认: <code>0</code>。需 CPU–GPU 带宽较好，否则前向会变慢。</li>
+</ul>
+<p><strong>区别简述</strong>：<code>swap-space</code> 管的是 <strong>KV 缓存的换入换出</strong>（给被抢占的请求腾显存）；<code>cpu-offload-gb</code> 管的是 <strong>模型权重</strong> 放在 CPU、按需拷到 GPU，二者作用对象不同。</p>
+<h3 id="2-3-其他内存与长度"><a href="#2-3-其他内存与长度" class="headerlink" title="2.3 其他内存与长度"></a>2.3 其他内存与长度</h3><ul>
+<li><p><strong>–max-model-len</strong>（最大上下文长度）<br>见 1.3。约束单条序列允许的最大 token 数（prompt + 生成），直接影响显存占用与调度预算：越大则 KV 块需求越多、单批可并发的序列数越少。未指定时从模型 config（如 <code>max_position_embeddings</code>）推导。<strong>取值</strong>：正整数或 <code>None</code>。</p>
+</li>
+<li><p><strong>–enforce-eager</strong>（强制 Eager 模式）<br>为 <code>True</code> 时<strong>完全禁用 CUDA Graph</strong>，所有前向均以 PyTorch 的 eager 模式执行。CUDA Graph 会把一段 GPU 算子序列录成图并复放，减少 kernel 启动开销、提升吞吐，但不利于调试且对动态 shape 等支持有限。<strong>适用</strong>：调试、遇到 CUDA Graph 相关报错或兼容性问题时。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–max-seq-len-to-capture</strong>（CUDA 图捕获的最大序列长度）<br>使用 CUDA Graph 时，仅对<strong>序列长度 ≤ 该值</strong>的 batch 进行图捕获与复放；超过该长度的请求会<strong>回退到 eager</strong>，避免为过长序列捕获图导致显存或兼容性问题。未指定时由编译&#x2F;图配置内部决定。<strong>取值</strong>：正整数或 <code>None</code>。默认: <code>None</code>。</p>
+</li>
+<li><p><strong>–disable-custom-all-reduce</strong>（禁用自定义 All-Reduce）<br>张量并行（TP）下，多卡间需做 all-reduce 同步。vLLM 提供<strong>自定义 all-reduce 内核</strong>以替代 NCCL，在某些拓扑下更快。设为 <code>True</code> 时强制使用 NCCL 等标准通信。<strong>适用</strong>：多节点、非常规 GPU 数（如 3&#x2F;5&#x2F;6 卡）时自定义实现可能不可用或报错，可显式关闭。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code> &#x2F; <code>None</code>。默认: <code>None</code>（自动；多节点等场景下会自动禁用）。</p>
+</li>
+<li><p><strong>–calculate-kv-scales</strong>（动态计算 KV FP8 缩放因子）<br>当 <code>--kv-cache-dtype</code> 为 fp8 时，KV 写入缓存前需用量化缩放因子（k_scale、v_scale）。为 <code>True</code> 时在<strong>运行时</strong>根据 warmup 或当前 batch 动态计算这些 scale；为 <code>False</code> 时使用 checkpoint 中预存的 scale，若无则默认为 1.0，可能影响 fp8 KV 精度。<strong>适用</strong>：无预校准或希望随数据自适应时设为 <code>True</code>。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+</ul>
+<h2 id="3-并发与调度"><a href="#3-并发与调度" class="headerlink" title="3 并发与调度"></a>3 并发与调度</h2><p>与（三）<strong>调度器</strong>、（四）<strong>SchedulingBudget</strong> 的 token 预算与序列数上限对应。</p>
+<h3 id="3-1-max-num-seqs、max-num-batched-tokens"><a href="#3-1-max-num-seqs、max-num-batched-tokens" class="headerlink" title="3.1 max-num-seqs、max-num-batched-tokens"></a>3.1 max-num-seqs、max-num-batched-tokens</h3><p>二者共同构成调度器每轮迭代的<strong>预算</strong>（对应本系列（三）调度器、（四）SchedulingBudget）：每次前向步内，同时参与的序列数不超过 <code>max_num_seqs</code>，总 token 数不超过 <code>max_num_batched_tokens</code>。显存一定时，二者越大则单步并发越高、吞吐潜力越大，但 KV 占用与抢占风险也上升；调小可减轻抢占、改善尾延迟，代价是并发与吞吐下降。</p>
+<ul>
+<li><p><strong>–max-num-seqs</strong>（每轮最大序列数）<br>单次调度迭代中<strong>最多允许同时参与计算</strong>的序列（请求）数。越大则同一时刻能跑的请求越多，有利于高 QPS；但每条序列都会占用 KV 块，过大易导致显存不足、触发抢占（recompute&#x2F;swap），反而拉高延迟。<strong>调优</strong>：若日志中抢占频繁，可适当减小以稳定延迟；显存充裕且追求吞吐时可增大。<strong>取值</strong>：正整数（如 64、128、256）。默认: 未指定时由引擎根据配置填入（SchedulerConfig 默认 128）。</p>
+</li>
+<li><p><strong>–max-num-batched-tokens</strong>（每轮 token 预算）<br>单次调度迭代中<strong>允许处理的总 token 数上限</strong>（prefill 与 decode 共享该预算）。调度器会在此预算内尽量多排请求：先满足正在 decode 的序列，再在剩余预算内排 prefill。<strong>与 max_model_len 关系</strong>：若不开启 chunked prefill，单条 prompt 必须在一轮内全部 prefill，因此 <code>max_num_batched_tokens</code> 需 ≥ <code>max_model_len</code>，否则长 prompt 无法被调度；开启 chunked prefill 后，长 prompt 可多轮分块 prefill，该值可小于 max_model_len（如 512、2048）。<strong>调优</strong>：值越大，单步可处理的 prefill 越多，首 token 延迟（TTFT）易改善，但步内 decode 与 prefill 争抢预算，可能拉长 inter-token 延迟（ITL）；减小则 TTFT 可能变差、ITL 更稳。<strong>取值</strong>：正整数（如 2048、4096）。默认: 未指定时由引擎填入（SchedulerConfig 默认 2048）。</p>
+</li>
+</ul>
+<h3 id="3-2-分块预填充与调度策略"><a href="#3-2-分块预填充与调度策略" class="headerlink" title="3.2 分块预填充与调度策略"></a>3.2 分块预填充与调度策略</h3><ul>
+<li><strong>–max-num-partial-prefills</strong>：分块预填充时，可同时进行部分预填充的最大序列数。<strong>取值</strong>：正整数，≥1。默认: <code>1</code>。</li>
+<li><strong>–max-long-partial-prefills</strong>：分块预填充时，长请求（超过 long_prefill_tokens_threshold）中可同时部分预填充的最大数。<strong>取值</strong>：正整数，≤ max_num_partial_prefills。默认: <code>1</code>。</li>
+<li><strong>–long-prefill-token-threshold</strong>：prompt 超过该 token 数即视为“长请求”。<strong>取值</strong>：非负整数，0 表示不区分长短。默认: <code>0</code>。</li>
+<li><strong>–enable-chunked-prefill</strong>：是否启用按 token 预算分块的预填充。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>；支持时多为 True。默认: 由模型&#x2F;引擎决定。</li>
+<li><strong>–scheduler-delay-factor</strong>：调度下一个 prompt 前的延迟系数（延迟 &#x3D; 系数 × 上一 prompt 延迟）。<strong>取值</strong>：浮点数。默认: 未指定。</li>
+<li><strong>–num-scheduler-steps</strong>：每次调度器调用最多执行的前向步数。<strong>取值</strong>：正整数。默认: <code>1</code>。</li>
+<li><strong>–multi-step-stream-outputs</strong>：多步调度时是否每步流式输出。<strong>取值</strong>：<code>True</code> 每步流式；<code>False</code> 全部步完成后再输出。默认: <code>True</code>。</li>
+<li><strong>–scheduling-policy</strong>：调度策略。<strong>取值</strong>：<code>fcfs</code> 先到先服务；<code>priority</code> 按优先级（数小优先）。默认: <code>&quot;fcfs&quot;</code>。</li>
+<li><strong>–scheduler-cls</strong>：调度器类名或类。<strong>取值</strong>：如 <code>vllm.v1.core.sched.scheduler.Scheduler</code> 或 <code>None</code> 用内置。默认: <code>None</code>。</li>
+<li><strong>–preemption-mode</strong>：被抢占序列的处理方式。<strong>取值</strong>：<code>recompute</code> 释放 KV、下次重算；<code>swap</code> 换出到 CPU、恢复时换回。默认: 未指定。</li>
+</ul>
+<h2 id="4-采样与生成"><a href="#4-采样与生成" class="headerlink" title="4 采样与生成"></a>4 采样与生成</h2><ul>
+<li><strong>–max-logprobs</strong>：每个 token 返回的最大 log 概率个数。<strong>取值</strong>：非负整数（0 表示不返回）。默认: <code>20</code>。</li>
+<li><strong>–served-model-name</strong>：API 暴露的模型名，可多个。<strong>取值</strong>：单个字符串或列表；<code>None</code> 表示与 <code>--model</code> 一致。默认: <code>None</code>。</li>
+<li><strong>–seed</strong>：随机种子，用于采样可复现。<strong>取值</strong>：整数。默认: <code>0</code>。</li>
+<li><strong>–disable-log-stats</strong>：是否禁用日志中的统计信息。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–generation-config</strong>：生成配置所在目录路径。<strong>取值</strong>：目录路径字符串。默认: 由 ModelConfig 决定。</li>
+<li><strong>–override-generation-config</strong>：覆盖生成配置的键值。<strong>取值</strong>：JSON 对象（如 <code>{&quot;temperature&quot;: 0.7}</code>）。默认: 空字典。</li>
+</ul>
+<p>（temperature、top_p、stop、max_tokens 等多为请求级参数，在 API 请求体中指定，此处为引擎&#x2F;服务端全局相关参数。）</p>
+<h2 id="5-分布式"><a href="#5-分布式" class="headerlink" title="5 分布式"></a>5 分布式</h2><ul>
+<li><p><strong>–distributed-executor-backend</strong>（分布式执行后端）<br>决定多 GPU&#x2F;多节点时如何启动与通信。<strong>uni</strong>：单进程单卡，不启分布式；<strong>mp</strong>（multiprocessing）：单机多卡时常用，同一节点内多进程、通信低延迟；<strong>ray</strong>：多节点或需 Ray 编排时使用（如 <code>ray symmetric-run</code> 启动）；<strong>external_launcher</strong>：由外部启动器（如 torchrun）管理进程，vLLM 内只起一个 worker。单卡默认 <code>uni</code>，多卡单节点默认多为 <code>mp</code>，多节点需显式设 <code>ray</code> 或配合外部启动器。<strong>取值</strong>：<code>ray</code>、<code>mp</code>、<code>uni</code>、<code>external_launcher</code>。</p>
+</li>
+<li><p><strong>–tensor-parallel-size, -tp</strong>（张量并行大小）<br>把<strong>同一层</strong>的矩阵运算沿维度切分到多张 GPU 上，单层内需频繁 all-reduce&#x2F;all-gather，对卡间带宽（NVLink&#x2F;InfiniBand）要求高。<strong>适用</strong>：单机多卡、模型单卡放不下时；通常设为<strong>该节点内参与推理的 GPU 数</strong>（如 2、4、8）。<strong>与 pp 区别</strong>：tp 是“层内”切分、同节点；pp 是“层间”切分、可跨节点。<strong>取值</strong>：正整数。默认: <code>1</code>。</p>
+</li>
+<li><p><strong>–pipeline-parallel-size, -pp</strong>（管道并行阶段数）<br>把模型<strong>按层</strong>切成若干段，每段在一个 pipeline 阶段（可对应不同节点）上执行，阶段间传递激活。<strong>适用</strong>：模型跨多节点（如 70B+ 两节点各 8 卡），常与 tp 组合：<code>tp</code>&#x3D;每节点 GPU 数，<code>pp</code>&#x3D;节点数。<strong>注意</strong>：pp 会引入 pipeline 气泡与阶段间传输，小 batch 时延迟可能上升。<strong>取值</strong>：正整数。默认: <code>1</code>。</p>
+</li>
+<li><p><strong>–max-parallel-loading-workers</strong>（并行加载 worker 数上限）<br>启动时<strong>并行加载模型权重</strong>的 worker 数上限。TP 下若不使用分片 checkpoint，每个进程会读完整权重再切分，多进程同时读会推高 CPU RAM 与 I&#x2F;O；限制该值可降低加载阶段内存峰值，避免 OOM，代价是加载时间可能变长。使用<strong>分片 checkpoint</strong>（每 rank 只读自己的分片）时压力较小。<strong>取值</strong>：正整数或 <code>None</code>（不限制）。默认: <code>None</code>。</p>
+</li>
+<li><p><strong>–ray-workers-use-nsight</strong>（Ray worker 使用 Nsight）<br>使用 Ray 后端时，是否对 worker 进程启用 <strong>NVIDIA Nsight</strong> 性能分析（如 profiling、trace）。仅在做多节点&#x2F;Ray 下的性能调优时使用。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–worker-cls</strong>（Worker 类）<br>指定实际执行前向的 <strong>Worker 类</strong>（负责模型加载、KV 与计算）。一般保持 <code>auto</code> 由 vLLM 按设备与后端选择；仅在自定义或调试时改为指定类名（如 <code>vllm.worker.worker.Worker</code>）。<strong>取值</strong>：类名字符串或 <code>auto</code>。默认: <code>&quot;auto&quot;</code>。</p>
+</li>
+<li><p><strong>–kv-transfer-config</strong>（KV 传输配置）<br>在使用 <strong>pipeline 并行</strong>或跨节点时，<strong>阶段&#x2F;节点间传输 KV 或中间结果</strong>的配置（如传输方式、缓冲、压缩）。不设则使用默认传输逻辑。<strong>取值</strong>：JSON 或配置对象；<code>None</code> 表示默认。默认: <code>None</code>。</p>
+</li>
+</ul>
+<h2 id="6-前缀缓存与-LoRA"><a href="#6-前缀缓存与-LoRA" class="headerlink" title="6 前缀缓存与 LoRA"></a>6 前缀缓存与 LoRA</h2><p>与（五）<strong>PrefixCachingBlockAllocator</strong> 对应；前缀缓存与 LoRA 影响块复用与路由。</p>
+<h3 id="6-1-前缀缓存与滑动窗口"><a href="#6-1-前缀缓存与滑动窗口" class="headerlink" title="6.1 前缀缓存与滑动窗口"></a>6.1 前缀缓存与滑动窗口</h3><ul>
+<li><strong>–enable-prefix-caching &#x2F; –no-enable-prefix-caching</strong>：是否启用前缀缓存（相同前缀复用 KV）。<strong>取值</strong>：带 <code>--enable-prefix-caching</code> 为 True，带 <code>--no-enable-prefix-caching</code> 为 False。默认: 引擎层可为 <code>None</code>；CacheConfig 默认 True。</li>
+<li><strong>–disable-sliding-window</strong>（禁用滑动窗口）<br><strong>是什么</strong>：部分模型（如 Mistral）使用<strong>滑动窗口注意力</strong>——每个位置只对<strong>前若干 token</strong>（窗口）做 attention，而不是全序列，从而省显存、支持更长上下文。该参数为 <code>True</code> 时禁用该机制或严格按窗口大小限制 KV 缓存（视实现而定），一般保持 <code>False</code> 让模型按设计使用滑动窗口。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–num-lookahead-slots</strong>（Lookahead 槽数）<br><strong>是什么</strong>：在<strong>投机解码</strong>（speculative decoding）中，为 <strong>lookahead</strong> 预留的 token 槽数。草稿模型一次可提议多个候选 token，目标模型在一次前向中同时验证这些 token；该值影响“一次验证多少 slot”，与调度&#x2F;内存中为多 token 预留的槽位对应，用于减少步数、降低延迟。需与 <code>--speculative-model</code>、<code>--num-speculative-tokens</code> 等配合使用。<strong>取值</strong>：非负整数。默认: 未指定。</li>
+</ul>
+<h3 id="6-2-LoRA"><a href="#6-2-LoRA" class="headerlink" title="6.2 LoRA"></a>6.2 LoRA</h3><p>vLLM 支持在基座模型上挂载 <strong>LoRA 适配器</strong>做轻量微调推理。启用后，请求可指定要使用的 LoRA（如 <code>lora_request</code>），同一批内可混合不同 LoRA；以下参数控制容量、显存与多 LoRA 行为。</p>
+<ul>
+<li><p><strong>–enable-lora</strong>（启用 LoRA）<br>总开关：为 <code>True</code> 时才加载与执行 LoRA 适配器，并启用 <code>--max-loras</code>、<code>--max-lora-rank</code> 等配置。仅用基座、不用 LoRA 时保持 <code>False</code>。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–enable-lora-bias</strong>（启用 LoRA bias）<br>部分 LoRA 实现带有可训练的 bias 项。为 <code>True</code> 时启用该类参数；若适配器本身无 bias 则无影响。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</p>
+</li>
+<li><p><strong>–max-loras</strong>（单批最大 LoRA 数）<br>同一调度批内<strong>最多可同时使用</strong>的 LoRA 适配器数量。每个 slot 会预分配张量，越大显存越高，但不同 LoRA 的请求可在同批内并行；设为 1 时同一时刻只服务一种 LoRA，其余请求排队。<strong>调优</strong>：显存紧张或仅单 LoRA 时用 1；多租户&#x2F;多风格并行时适当增大。<strong>取值</strong>：正整数。默认: <code>1</code>。</p>
+</li>
+<li><p><strong>–max-lora-rank</strong>（LoRA 秩上限）<br>所有已加载 LoRA 的 <strong>rank 不得超过此值</strong>（需 ≥ 任一适配器的实际 rank）。秩越大单 LoRA 参数量越多，此处设大则预分配缓冲更大、显存占用增加；若所有 LoRA 均为同一较小 rank，建议设为该 rank 以省显存。<strong>取值</strong>：正整数（如 8、16、32）。默认: <code>16</code>。</p>
+</li>
+<li><p><strong>–lora-extra-vocab-size</strong>（LoRA 扩展词表大小）<br>若 LoRA 引入<strong>新 token</strong>（如特殊标记、新语言），需在基座词表外预留扩展词表大小。该参数为扩展部分的 <strong>token 数上限</strong>，不足时可能报错或截断。<strong>取值</strong>：非负整数。默认: <code>256</code>。</p>
+</li>
+<li><p><strong>–lora-dtype</strong>（LoRA 权重精度）<br>LoRA 权重在引擎内的数据类型。<code>auto</code> 与基座一致；显存或带宽敏感时可显式设为 <code>float16</code>&#x2F;<code>bfloat16</code>。<strong>取值</strong>：<code>auto</code>、<code>float16</code>、<code>bfloat16</code>。默认: <code>&quot;auto&quot;</code>。</p>
+</li>
+<li><p><strong>–long-lora-scaling-factors</strong>（LongLoRA 缩放因子）<br><strong>LongLoRA</strong> 等方案通过缩放注意力&#x2F;位置扩展长上下文，此处为各维度的缩放因子，多个用逗号分隔（如 <code>&quot;1,2,4&quot;</code>）。仅在使用 LongLoRA 类适配器时需要。<strong>取值</strong>：逗号分隔的数字字符串。默认: 未指定。</p>
+</li>
+<li><p><strong>–max-cpu-loras</strong>（CPU 侧 LoRA 缓存数）<br>可将部分 LoRA 权重缓存在 <strong>CPU</strong>，用时再拷到 GPU，以节省显存、支持更多 LoRA 数量（换入换出）。该值为 CPU 侧最多缓存的 LoRA 数；<code>None</code> 表示不限制或不用 CPU 缓存。<strong>取值</strong>：正整数或 <code>None</code>。默认: <code>None</code>。</p>
+</li>
+<li><p><strong>–fully-sharded-loras</strong>（LoRA 完全分片）<br>在多卡&#x2F;分布式下，是否对 LoRA 权重做<strong>完全分片</strong>（各 rank 只持有一部分），减少单卡显存。适用于单卡放不下多 LoRA 或大 rank 时。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</p>
+</li>
+<li><p><strong>–qlora-adapter-name-or-path</strong>（QLoRA 适配器）<br>若使用 <strong>QLoRA</strong>（量化基座 + LoRA）训出的适配器，可在此指定该适配器的 HF 名称或本地路径，引擎会按 QLoRA 约定加载。<strong>取值</strong>：字符串（HF 名或路径）。默认: 未指定。</p>
+</li>
+</ul>
+<h2 id="7-量化、RoPE-与多模态"><a href="#7-量化、RoPE-与多模态" class="headerlink" title="7 量化、RoPE 与多模态"></a>7 量化、RoPE 与多模态</h2><ul>
+<li><strong>–quantization, -q</strong>：权重量化方法。<strong>取值</strong>：<code>None</code> 不量化；<code>awq</code>、<code>gptq</code>、<code>squeezellm</code>、<code>fp8</code>、<code>marlin</code> 等（以当前版本 <code>--help</code> 为准）。默认: <code>None</code>。</li>
+<li><strong>–rope-scaling</strong>：RoPE 位置编码缩放。<strong>取值</strong>：JSON 对象，如 <code>{&quot;type&quot;: &quot;yarn&quot;, &quot;factor&quot;: 2.0}</code>。默认: 未指定。</li>
+<li><strong>–rope-theta</strong>：RoPE 的 theta 基值。<strong>取值</strong>：浮点数（如 10000）。默认: 未指定。</li>
+<li><strong>–limit-mm-per-prompt</strong>：每个多模态插件每条 prompt 允许的输入实例数上限。<strong>取值</strong>：整数字典或 JSON。默认: 由 MultiModalConfig 决定。</li>
+<li><strong>–mm-processor-kwargs</strong>：多模态处理器覆盖参数。<strong>取值</strong>：JSON 对象或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–disable-mm-preprocessor-cache</strong>：是否禁用多模态预处理器缓存。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+</ul>
+<h2 id="8-投机解码"><a href="#8-投机解码" class="headerlink" title="8 投机解码"></a>8 投机解码</h2><ul>
+<li><strong>–speculative-model</strong>：投机解码用的草稿模型。<strong>取值</strong>：HF 模型名或路径，需与主模型兼容。默认: 未指定。</li>
+<li><strong>–speculative-model-quantization</strong>：草稿模型量化方式。<strong>取值</strong>：同 <code>--quantization</code> 的取值。默认: 未指定。</li>
+<li><strong>–num-speculative-tokens</strong>：每步从草稿模型采样的 token 数。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–speculative-disable-mqa-scorer</strong>：是否在投机解码中禁用 MQA 评分器。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+<li><strong>–speculative-draft-tensor-parallel-size, -spec-draft-tp</strong>：草稿模型的 TP 数。<strong>取值</strong>：正整数，常 ≤ 主模型 tp。默认: 未指定。</li>
+<li><strong>–speculative-max-model-len</strong>：草稿模型支持的最大序列长度。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–speculative-disable-by-batch-size</strong>：排队请求数超过该值时对新请求关闭投机解码。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–ngram-prompt-lookup-max &#x2F; –ngram-prompt-lookup-min</strong>：ngram 提示查找的窗口上下界。<strong>取值</strong>：正整数。默认: 未指定。</li>
+<li><strong>–spec-decoding-acceptance-method</strong>：投机 token 的接受方式。<strong>取值</strong>：<code>rejection_sampler</code> 概率比较拒绝&#x2F;接受（默认）；<code>typical_acceptance_sampler</code> 典型集接受。默认: <code>&quot;rejection_sampler&quot;</code>。</li>
+<li><strong>–typical-acceptance-sampler-posterior-threshold</strong>：typical 接受的后验概率下限。<strong>取值</strong>：0～1 浮点数。默认: 未指定。</li>
+<li><strong>–typical-acceptance-sampler-posterior-alpha</strong>：typical 接受的熵缩放因子。<strong>取值</strong>：浮点数。默认: 未指定。</li>
+<li><strong>–disable-logprobs-during-spec-decoding</strong>：投机解码时是否不返回 logprobs。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+</ul>
+<h2 id="9-其他与可观测性"><a href="#9-其他与可观测性" class="headerlink" title="9 其他与可观测性"></a>9 其他与可观测性</h2><ul>
+<li><strong>–tokenizer-pool-size</strong>：异步分词时分词器池大小。<strong>取值</strong>：非负整数，0 表示同步分词。默认: 未指定。</li>
+<li><strong>–tokenizer-pool-type</strong>：分词器池实现。<strong>取值</strong>：<code>ray</code> 使用 Ray 管理池；其他以 <code>--help</code> 为准。默认: <code>&quot;ray&quot;</code>。</li>
+<li><strong>–tokenizer-pool-extra-config</strong>：分词器池的额外配置。<strong>取值</strong>：JSON 字符串。默认: 未指定。</li>
+<li><strong>–model-loader-extra-config</strong>：模型加载器额外配置。<strong>取值</strong>：JSON 或字典。默认: 空字典。</li>
+<li><strong>–ignore-patterns</strong>：加载权重时忽略的文件&#x2F;目录模式。<strong>取值</strong>：glob 模式或列表，如 <code>original/**/*</code>。默认: 视版本而定，以 –help 为准。</li>
+<li><strong>–disable-async-output-proc</strong>：是否禁用异步输出处理。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: 未指定。</li>
+<li><strong>–show-hidden-metrics-for-version</strong>：自某版本起展示被隐藏的 Prometheus 指标。<strong>取值</strong>：版本号字符串或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–otlp-traces-endpoint</strong>：OpenTelemetry  traces 上报地址。<strong>取值</strong>：URL 字符串或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–collect-detailed-traces</strong>：要收集的详细 trace 模块。<strong>取值</strong>：<code>model</code>、<code>worker</code>、<code>all</code> 等列表或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–override-neuron-config</strong>：Neuron 设备配置覆盖。<strong>取值</strong>：JSON 或配置对象。默认: 未指定。</li>
+<li><strong>–override-pooler-config</strong>：池化层（pooler）配置覆盖。<strong>取值</strong>：JSON 或 <code>None</code>。默认: <code>None</code>。</li>
+<li><strong>–compilation-config, -O</strong>：编译&#x2F;优化配置。<strong>取值</strong>：配置对象或 JSON。默认: 由 VllmConfig 决定。</li>
+<li><strong>–enable-sleep-mode</strong>：是否启用引擎空闲时睡眠（仅 cuda）。<strong>取值</strong>：<code>True</code> &#x2F; <code>False</code>。默认: <code>False</code>。</li>
+<li><strong>–additional-config</strong>：平台相关额外配置。<strong>取值</strong>：JSON 对象。默认: 空字典。</li>
+</ul>
+<h2 id="10-参数取值说明（枚举-多选参数）"><a href="#10-参数取值说明（枚举-多选参数）" class="headerlink" title="10 参数取值说明（枚举&#x2F;多选参数）"></a>10 参数取值说明（枚举&#x2F;多选参数）</h2><p>以下对<strong>有固定可选值的参数</strong>逐项说明每个取值的含义，便于按场景选择。</p>
+<h3 id="10-1-模型与加载"><a href="#10-1-模型与加载" class="headerlink" title="10.1 模型与加载"></a>10.1 模型与加载</h3><ul>
+<li><p><strong>–tokenizer-mode</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型自动选择分词器（如 HuggingFace 通用或模型特化）。</li>
+<li><strong>slow</strong>：使用兼容性更好的“慢”路径，适合非常规或老版本分词器。</li>
+<li><strong>mistral</strong>：Mistral 专用分词逻辑（如截断 tool call ID 等），配合 Mistral 系列模型使用。</li>
+<li><strong>custom</strong>：通过注册机制使用自定义分词器。</li>
+</ul>
+</li>
+<li><p><strong>–load-format</strong></p>
+<ul>
+<li><strong>auto</strong>：优先尝试 safetensors，失败则回退到 PyTorch <code>.pt</code>。</li>
+<li><strong>pt</strong>：仅用 PyTorch 的 <code>.bin</code> &#x2F; <code>.pt</code> 权重文件加载。</li>
+<li><strong>safetensors</strong>：仅用 SafeTensors 格式加载（推荐，更安全、可流式）。</li>
+<li><strong>npcache</strong>：从 vLLM 的 NP 缓存格式加载，加快重复加载。</li>
+<li><strong>dummy</strong>：不加载真实权重，用于测流程或占位。</li>
+<li><strong>tensorizer</strong>：使用 Tensorizer 格式&#x2F;管线加载。</li>
+<li><strong>sharded_state</strong>：从按 rank 分片的检查点加载，每个 worker 只读自己的分片，适合大模型 TP 加载。</li>
+<li><strong>gguf</strong>：从 GGUF 量化格式加载。</li>
+<li><strong>bitsandbytes</strong>：配合 bitsandbytes 量化加载。</li>
+<li><strong>mistral</strong>：Mistral 官方&#x2F;定制权重格式。</li>
+<li><strong>runai_streamer</strong>：通过 RunAI Streamer 流式加载。</li>
+</ul>
+</li>
+<li><p><strong>–config-format</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型目录自动选择配置解析方式。</li>
+<li><strong>hf</strong>：按 HuggingFace 的 <code>config.json</code> 等标准格式解析。</li>
+<li><strong>mistral</strong>：按 Mistral 的配置格式解析。</li>
+</ul>
+</li>
+<li><p><strong>–dtype</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型配置或权重自动选择（常见为 bfloat16&#x2F;float16）。</li>
+<li><strong>half</strong> &#x2F; <strong>float16</strong>：FP16，兼容性好，部分卡上更快。</li>
+<li><strong>bfloat16</strong>：BF16，数值范围大，多数新卡推荐。</li>
+<li><strong>float</strong> &#x2F; <strong>float32</strong>：全精度，显存占用大，一般用于调试或特殊需求。</li>
+</ul>
+</li>
+<li><p><strong>–kv-cache-dtype</strong></p>
+<ul>
+<li><strong>auto</strong>：与模型权重 dtype 一致（如 bfloat16）。</li>
+<li><strong>fp8</strong>：一般指 fp8_e4m3，KV 用 8 比特存储，省显存、可能略损精度。</li>
+<li><strong>fp8_e5m2</strong>：FP8 指数 5 位、尾数 2 位；动态范围更大，适合数值范围较大的激活。</li>
+<li><strong>fp8_e4m3</strong>：FP8 指数 4 位、尾数 3 位；精度略好，常用作 KV 缓存默认 fp8 选项。</li>
+</ul>
+</li>
+<li><p><strong>–task</strong></p>
+<ul>
+<li><strong>auto</strong>：根据模型或 API 自动推断（生成&#x2F;嵌入等）。</li>
+<li><strong>generate</strong>：文本生成（对话&#x2F;补全）。</li>
+<li><strong>embedding</strong> &#x2F; <strong>embed</strong>：向量嵌入。</li>
+<li><strong>classify</strong>：分类。</li>
+<li><strong>score</strong>：序列&#x2F;候选打分。</li>
+<li><strong>reward</strong>：奖励模型。</li>
+<li><strong>transcription</strong>：语音转文字。</li>
+</ul>
+</li>
+<li><p><strong>–model-impl</strong></p>
+<ul>
+<li><strong>auto</strong>：由 vLLM 根据模型类型选择实现。</li>
+<li><strong>vllm</strong>：使用 vLLM 内置实现（优化多、推荐）。</li>
+<li><strong>transformers</strong>：走 HuggingFace Transformers 实现，兼容性优先。</li>
+</ul>
+</li>
+<li><p><strong>–device</strong></p>
+<ul>
+<li><strong>auto</strong>：根据环境自动选择（有 CUDA 则 GPU，否则 CPU 等）。</li>
+<li><strong>cuda</strong>：NVIDIA GPU。</li>
+<li><strong>neuron</strong>：AWS Inferentia。</li>
+<li><strong>cpu</strong>：CPU 推理。</li>
+<li><strong>openvino</strong>：Intel OpenVINO。</li>
+<li><strong>tpu</strong>：Google TPU。</li>
+<li><strong>xpu</strong>：Intel GPU（XPU）。</li>
+<li><strong>hpu</strong>：Habana HPU。</li>
+</ul>
+</li>
+<li><p><strong>–guided-decoding-backend</strong></p>
+<ul>
+<li><strong>outlines-dev&#x2F;outlines</strong>：Outlines 库，用于结构化&#x2F;约束生成。</li>
+<li><strong>mlc-ai&#x2F;xgrammar</strong>：xGrammar，语法约束解码（默认）。</li>
+<li><strong>noamgat&#x2F;lm-format-enforcer</strong>：lm-format-enforcer，格式约束解码。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-2-KV-Cache-与调度"><a href="#10-2-KV-Cache-与调度" class="headerlink" title="10.2 KV Cache 与调度"></a>10.2 KV Cache 与调度</h3><ul>
+<li><p><strong>–block-size</strong></p>
+<ul>
+<li><strong>8 &#x2F; 16 &#x2F; 32 &#x2F; 64 &#x2F; 128</strong>：每个 KV 块容纳的连续 token 数。越小块越细、调度越灵活、元数据开销略大；越大块越大、适合长序列、CUDA 上通常只支持到 32。具体支持以平台为准。</li>
+</ul>
+</li>
+<li><p><strong>–scheduling-policy</strong></p>
+<ul>
+<li><strong>fcfs</strong>：先到先服务，按请求到达顺序调度（默认）。</li>
+<li><strong>priority</strong>：按优先级调度，数值越小越优先，可做交互优先于批处理等策略。</li>
+</ul>
+</li>
+<li><p><strong>–preemption-mode</strong></p>
+<ul>
+<li><strong>recompute</strong>：被抢占的序列释放 KV 后，下次调度时从 prompt 重新计算（省显存、增加计算）。</li>
+<li><strong>swap</strong>：将 KV 换出到 CPU&#x2F;交换区，恢复时换回，减少重复计算、需要额外内存与带宽。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-3-分布式"><a href="#10-3-分布式" class="headerlink" title="10.3 分布式"></a>10.3 分布式</h3><ul>
+<li><strong>–distributed-executor-backend</strong><ul>
+<li><strong>ray</strong>：用 Ray 做多节点&#x2F;多进程编排，适合多机或复杂部署。</li>
+<li><strong>mp</strong>：单机多进程（multiprocessing），多卡同机时常用默认。</li>
+<li><strong>uni</strong>：单进程单卡，不启用分布式。</li>
+<li><strong>external_launcher</strong>：由外部启动器（如 torchrun）管理进程，引擎内只起一个 worker，适合已有编排的场景。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-4-LoRA-与投机解码"><a href="#10-4-LoRA-与投机解码" class="headerlink" title="10.4 LoRA 与投机解码"></a>10.4 LoRA 与投机解码</h3><ul>
+<li><p><strong>–lora-dtype</strong></p>
+<ul>
+<li><strong>auto</strong>：与模型权重 dtype 一致。</li>
+<li><strong>float16</strong>：LoRA 权重 FP16。</li>
+<li><strong>bfloat16</strong>：LoRA 权重 BF16。</li>
+</ul>
+</li>
+<li><p><strong>–spec-decoding-acceptance-method</strong></p>
+<ul>
+<li><strong>rejection_sampler</strong>：经典投机解码：用 draft 与 target 概率比较决定接受&#x2F;拒绝，拒绝时从修正分布重采样（默认）。</li>
+<li><strong>typical_acceptance_sampler</strong>：基于典型集合（typical set）的接受策略，可调节接受阈值与熵缩放。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-5-其他"><a href="#10-5-其他" class="headerlink" title="10.5 其他"></a>10.5 其他</h3><ul>
+<li><p><strong>–tokenizer-pool-type</strong></p>
+<ul>
+<li><strong>ray</strong>：使用 Ray 管理分词器进程池，用于异步分词（多进程&#x2F;多节点）。</li>
+<li>其他类型以当前版本 <code>--help</code> 为准。</li>
+</ul>
+</li>
+<li><p><strong>–collect-detailed-traces</strong>（示例取值）</p>
+<ul>
+<li><strong>model</strong>：只收集模型相关跟踪。</li>
+<li><strong>worker</strong>：只收集 worker 相关跟踪。</li>
+<li><strong>all</strong>：收集上述全部详细跟踪。</li>
+</ul>
+</li>
+<li><p><strong>–quantization, -q</strong>（常见取值，以当前版本 <code>--help</code> 为准）</p>
+<ul>
+<li><strong>awq</strong>：Activation-aware Weight Quantization，4bit 权重量化。</li>
+<li><strong>gptq</strong>：GPTQ 权重量化。</li>
+<li><strong>squeezellm</strong>：SqueezeLLM 量化。</li>
+<li><strong>fp8</strong>：FP8 权重量化（如 fp8_e4m3）。</li>
+<li><strong>marlin</strong> 等：其他内核&#x2F;格式，依版本支持。</li>
+</ul>
+</li>
+</ul>
+<h3 id="10-6-布尔与数值类（常见含义）"><a href="#10-6-布尔与数值类（常见含义）" class="headerlink" title="10.6 布尔与数值类（常见含义）"></a>10.6 布尔与数值类（常见含义）</h3><p>以下为常见布尔&#x2F;数值参数的取值含义，便于与上文<strong>取值</strong>对照。</p>
+<ul>
+<li><p><strong>–enable-prefix-caching</strong>（True&#x2F;False）</p>
+<ul>
+<li><strong>True</strong>：启用前缀缓存，相同 prompt 前缀可复用 KV 块，省显存、提高吞吐。</li>
+<li><strong>False</strong>：不复用，每条序列独立占块，适合前缀几乎不重复的场景。</li>
+</ul>
+</li>
+<li><p><strong>–enable-chunked-prefill</strong>（True&#x2F;False）</p>
+<ul>
+<li><strong>True</strong>：长 prompt 按 max_num_batched_tokens 分块多步预填充，避免单步过长。</li>
+<li><strong>False</strong>：整段 prompt 一次预填充，超过 token 预算的请求会被拒绝或排队。</li>
+</ul>
+</li>
+<li><p><strong>–gpu-memory-utilization</strong>（0～1）</p>
+<ul>
+<li>数值表示 GPU 显存中用于 vLLM 引擎的比例；如 <code>0.9</code> 即 90% 给 KV&#x2F;模型，其余留给系统与其它进程。</li>
+</ul>
+</li>
+<li><p><strong>–preemption-mode</strong>（见 10.2）</p>
+<ul>
+<li><strong>recompute</strong>：抢占时释放 KV，恢复时从 prompt 重新算，省显存、多算力。</li>
+<li><strong>swap</strong>：抢占时把 KV 换出到 CPU，恢复时换回，少重算、多内存与带宽。</li>
+</ul>
+</li>
+</ul>
+<p>（未在以上列出的参数多为自由数值、路径或 JSON，其含义见前文各节<strong>取值</strong>与说明。）</p>
+<h2 id="11-参数默认值一览"><a href="#11-参数默认值一览" class="headerlink" title="11 参数默认值一览"></a>11 参数默认值一览</h2><p>下表汇总上文各节参数的默认值，便于快速查阅。未列出或标为「未指定」的，以当前运行环境的 <code>python -m vllm.entrypoints.openai.api_server --help</code> 及 vLLM 源码（如 <code>vllm/engine/arg_utils.py</code>、<code>vllm/config/</code>）为准；不同小版本可能略有差异。</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>参数</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1 模型与加载</strong></td>
+<td><code>--model</code></td>
+<td>依版本（如 0.6.x 常用 <code>facebook/opt-125m</code>，新版可能为 <code>Qwen/Qwen3-0.6B</code> 等）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--download-dir</code></td>
+<td>Hugging Face 默认缓存目录</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--revision</code> &#x2F; <code>--code-revision</code> &#x2F; <code>--tokenizer-revision</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--trust-remote-code</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--allowed-local-media-path</code></td>
+<td><code>&quot;&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--tokenizer</code></td>
+<td><code>None</code>（同 model）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--skip-tokenizer-init</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--tokenizer-mode</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--load-format</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--config-format</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--dtype</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--kv-cache-dtype</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--model-impl</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-model-len</code></td>
+<td><code>None</code>（由模型 config 推导）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--device</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td><strong>2 KV Cache 与内存</strong></td>
+<td><code>--block-size</code></td>
+<td>未指定（由平台设置，如 CUDA 常用 16）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--gpu-memory-utilization</code></td>
+<td><code>0.9</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--swap-space</code></td>
+<td><code>4</code>（GiB）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--cpu-offload-gb</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--num-gpu-blocks-override</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--enforce-eager</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--calculate-kv-scales</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><strong>3 并发与调度</strong></td>
+<td><code>--max-num-seqs</code></td>
+<td>未显式指定时由引擎填入（SchedulerConfig 默认 <code>128</code>）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-num-batched-tokens</code></td>
+<td>未显式指定时由引擎填入（SchedulerConfig 默认 <code>2048</code>）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-num-partial-prefills</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-long-partial-prefills</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--long-prefill-token-threshold</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--num-scheduler-steps</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--multi-step-stream-outputs</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--scheduling-policy</code></td>
+<td><code>&quot;fcfs&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--scheduler-cls</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><strong>4 采样与生成</strong></td>
+<td><code>--max-logprobs</code></td>
+<td><code>20</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--seed</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--disable-log-stats</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><strong>5 分布式</strong></td>
+<td><code>--distributed-executor-backend</code></td>
+<td>单卡 <code>uni</code>，多卡单节点多为 <code>mp</code>，多节点需显式设置</td>
+</tr>
+<tr>
+<td></td>
+<td><code>-tp</code> &#x2F; <code>--tensor-parallel-size</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>-pp</code> &#x2F; <code>--pipeline-parallel-size</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--worker-cls</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td><strong>6 前缀缓存与 LoRA</strong></td>
+<td><code>--enable-prefix-caching</code></td>
+<td>引擎层可为 <code>None</code>；CacheConfig 默认 <code>True</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--disable-sliding-window</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--enable-lora</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-loras</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--max-lora-rank</code></td>
+<td><code>16</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--lora-extra-vocab-size</code></td>
+<td><code>256</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--lora-dtype</code></td>
+<td><code>&quot;auto&quot;</code></td>
+</tr>
+<tr>
+<td><strong>8 投机解码</strong></td>
+<td><code>--spec-decoding-acceptance-method</code></td>
+<td><code>&quot;rejection_sampler&quot;</code></td>
+</tr>
+<tr>
+<td><strong>9 其他</strong></td>
+<td><code>--tokenizer-pool-type</code></td>
+<td><code>&quot;ray&quot;</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>--ignore-patterns</code></td>
+<td>如 <code>original/**/*</code>（以 –help 为准）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--enable-sleep-mode</code></td>
+<td><code>False</code></td>
+</tr>
+</tbody></table>
+<h2 id="12-常用启动示例"><a href="#12-常用启动示例" class="headerlink" title="12 常用启动示例"></a>12 常用启动示例</h2><p>（待补充：单卡、多卡、开启 prefix caching、开启 swap、LoRA 等典型 <code>python -m vllm.entrypoints.openai.api_server</code> 命令示例。）</p>
+<h2 id="13-总结"><a href="#13-总结" class="headerlink" title="13 总结"></a>13 总结</h2><ul>
+<li><strong>模型与加载</strong>（1）：<code>--model</code>、<code>--download-dir</code>、<code>--dtype</code>、<code>--max-model-len</code> 等决定加载哪类模型与上下文长度。</li>
+<li><strong>KV Cache 与内存</strong>（2）：<code>--block-size</code>、<code>--gpu-memory-utilization</code>、<code>--swap-space</code> 等与（一）（四）中块数与显存分配对应。</li>
+<li><strong>并发与调度</strong>（3）：<code>--max-num-seqs</code>、<code>--max-num-batched-tokens</code>、<code>--preemption-mode</code> 等与（三）调度预算与抢占对应。</li>
+<li><strong>分布式</strong>（5）：<code>-tp</code>、<code>-pp</code>、<code>--distributed-executor-backend</code> 用于多卡&#x2F;多节点。</li>
+<li><strong>前缀缓存与 LoRA</strong>（6）：<code>--enable-prefix-caching</code> 与（五）PrefixCaching 对应；LoRA 相关参数用于多适配器场景。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/" class="post-title-link" itemprop="url">传统组网第一阶段：筑基与深耕</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-24 01:34:06" itemprop="dateModified" datetime="2026-02-24T01:34:06+08:00">2026-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="传统组网第一阶段：筑基与深耕"><a href="#传统组网第一阶段：筑基与深耕" class="headerlink" title="传统组网第一阶段：筑基与深耕"></a>传统组网第一阶段：筑基与深耕</h1><p><strong>核心目标</strong>：彻底掌控数据包流向，成为「协议大师」。</p>
+<p>本阶段除 <strong>BGP</strong> 外，会涉及多类协议与技术：<strong>路由与转发</strong>（BGP、MPLS&#x2F;LDP、VRF、RD&#x2F;RT，以及 PE-CE 侧的静态&#x2F;RIP&#x2F;OSPF&#x2F;BGP）、<strong>安全与 VPN</strong>（基于 Zone 的防火墙、NAT、IPsec、GRE over IPSec）、<strong>无线</strong>（802.11ax&#x2F;ac、802.11r&#x2F;k&#x2F;v、AC+FIT AP）等，覆盖广域网、骨干网、安全与无线四块，共同构成「筑基与深耕」的协议栈。</p>
+<hr>
+<h2 id="1-BGP-核心进阶"><a href="#1-BGP-核心进阶" class="headerlink" title="1. BGP 核心进阶"></a>1. BGP 核心进阶</h2><h3 id="一、BGP-的概念"><a href="#一、BGP-的概念" class="headerlink" title="一、BGP 的概念"></a>一、BGP 的概念</h3><p>BGP（边界网关协议）是基于 AS 的<strong>路径矢量</strong>协议，解决 AS 间选路问题，适合互联网。重点掌握：报文与建邻、路由属性、12 条选路原则及汇总&#x2F;过滤&#x2F;RR&#x2F;联盟等。</p>
+<h4 id="01-自治系统（AS）与-AS-号"><a href="#01-自治系统（AS）与-AS-号" class="headerlink" title="01 自治系统（AS）与 AS 号"></a>01 自治系统（AS）与 AS 号</h4><p>自治系统（AS）是同一管理机构下、使用统一选路策略的一组路由器。<strong>AS 号</strong>默认 2 字节，可扩展 4 字节，需申请。</p>
+<ul>
+<li><strong>1～64511</strong>：公有 AS 号，全球唯一</li>
+<li><strong>64512～65535</strong>：私有 AS 号，可重用，不出域</li>
+</ul>
+<h4 id="02-动态路由分类"><a href="#02-动态路由分类" class="headerlink" title="02 动态路由分类"></a>02 动态路由分类</h4><p>动态路由协议有很多分类方法，按自治系统分类、按协议类型分类是最常用的两种。</p>
+<p><strong>按自治系统分类：</strong></p>
+<ul>
+<li><strong>IGP</strong>（内部网关路由协议）：如 RIP、OSPF、ISIS、EIGRP（思科私有）。运行在 AS 内部，用于发现与计算路由。</li>
+<li><strong>EGP</strong>（外部网关路由协议）：通常指 BGP，运行在 AS 之间，用于控制路由传播与最优路由选择。</li>
+</ul>
+<p>一般会先使用IGP协议在自治系统内部计算和发现路由条目，再通过BGP协议将IGP协议产生的路由传递至其他的AS（自治系统）。</p>
+<h4 id="03-BGP-的特征"><a href="#03-BGP-的特征" class="headerlink" title="03 BGP 的特征"></a>03 BGP 的特征</h4><ul>
+<li>外部路由协议，在 AS 之间传递路由信息</li>
+<li><strong>路径矢量</strong>（Path-Vector）协议，通过 AS_PATH 防环，区别于距离矢量&#x2F;链路状态</li>
+<li>可靠更新：基于 <strong>TCP，目的端口 179</strong>，源端口随机</li>
+<li>丰富度量与策略：<strong>12 条选路原则</strong>、route-policy 等</li>
+<li>设计上避免环路</li>
+<li>为路由附带多种属性；支持 <strong>CIDR</strong></li>
+<li><strong>无周期更新</strong>，仅触发更新且只更新变化部分；周期（约 60s）发送 <strong>KeepAlive</strong> 检测 TCP 连通性</li>
+</ul>
+<p><strong>路由算法分类</strong>（便于对比理解）：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Distance-vector_routing_protocol">距离矢量</a>（如 RIP，按跳数、Bellman-Ford）、<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Link-state_routing_protocol">链路状态</a>（如 OSPF&#x2F;IS-IS，每节点维护拓扑图）、<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Path-vector_routing_protocol">路径矢量</a>（BGP，维护路径信息、易检测环路）。</p>
+<h3 id="二、BGP-的工作原理"><a href="#二、BGP-的工作原理" class="headerlink" title="二、BGP 的工作原理"></a>二、BGP 的工作原理</h3><p>BGP是跨公网、跨AS（自治系统）的路由协议，可以在AS之间学习路由。BGP的动态学习路由也是基于邻居，只有邻居关系正常，BGP才可以正常工作。</p>
+<h4 id="01-BGP-邻居关系"><a href="#01-BGP-邻居关系" class="headerlink" title="01 BGP 邻居关系"></a>01 BGP 邻居关系</h4><p>运行 BGP 的路由器通常被称为 BGP Speaker（发言者），相互之间传递报文的speaker之间互称为对等体（peer）。BGP邻居关系的建立、更新和删除是通过对等体之间的5种报文、6种状态机和5个表等信息来完成，最终形成BGP邻居。</p>
+<p><strong>（1）BGP 报文类型</strong></p>
+<ul>
+<li><strong>Open</strong>：与对等体建立邻接，建连后首包，携带版本、AS、Holdtime 等</li>
+<li><strong>KeepAlive</strong>：周期（约 60s）发送，维护 TCP 连接</li>
+<li><strong>Update</strong>：传递路由信息，用于通告或撤销路由</li>
+<li><strong>Notification</strong>：检测到错误时发送，随后断连</li>
+<li><strong>Route-Refresh</strong>：通知对端本端支持路由刷新能力</li>
+</ul>
+<p><strong>（2）BGP 状态机</strong></p>
+<ul>
+<li><strong>Idle</strong>：初始状态，等待启动事件；收到后发起 TCP，进入 Connect</li>
+<li><strong>Connect</strong>：发起 TCP；成功→OpenSent，失败→Active</li>
+<li><strong>Active</strong>：持续尝试 TCP；成功→OpenSent，超时回 Connect</li>
+<li><strong>OpenSent</strong>：已发 Open，等待对端 Open 并校验；无误发 KeepAlive→OpenConfirm，有误发 Notification→Idle</li>
+<li><strong>OpenConfirm</strong>：等待 KeepAlive；收到→<strong>Established</strong></li>
+<li><strong>Established</strong>：邻居建立，交换 Update，复位 Hold 计时器</li>
+</ul>
+<p>除 Idle 外任一步出错都会回退到 Idle。常见可见状态：Idle、Active、Established。</p>
+<p><strong>（3）BGP 路由信息处理（RIB）</strong></p>
+<p>对等体发来的 Update 先入 <strong>Adj-RIB-In</strong>，经<strong>输入策略</strong>过滤后参与<strong>路径选择</strong>；最优路径写入 <strong>Loc-RIB</strong> 并提交 <strong>IP RIB</strong>。Loc-RIB 再经<strong>输出策略</strong>，通过者写入 <strong>Adj-RIB-Out</strong> 发给对应对等体。另有邻居表记录 peer 信息。</p>
+<p><strong>（4）BGP 邻居关系类型</strong></p>
+<ul>
+<li><strong>IBGP</strong>：同一 AS 内 BGP 对等体之间的邻居关系。</li>
+<li><strong>EBGP</strong>：不同 AS 之间 BGP 对等体的邻居关系。</li>
+</ul>
+<p><strong>建邻要点</strong>：邻居基于 <strong>TCP 单播</strong>，无自动发现，需在 BGP 进程下手动配置对端地址。通过 IGP 或静态路由保证到对端的 TCP 可达性。</p>
+<p><strong>常见建邻失败原因</strong>：一直 Idle（无到 Peer 路由）、EBGP 多跳未配、源地址错误（对端看到的 IP 非本端配置的 peer 地址）、TCP 认证失败、路由错误或被过滤。华为：若经默认路由到达邻居，该邻居通告的所有路由视为无效。</p>
+<h4 id="02-通告-BGP-路由的方法"><a href="#02-通告-BGP-路由的方法" class="headerlink" title="02 通告 BGP 路由的方法"></a>02 通告 BGP 路由的方法</h4><p>BGP 路由是通过 BGP 命令通告而成的，而通告BGP路由的方法有两种：network和Import。</p>
+<p>（1）network方式：</p>
+<p>使用network命令可以将当前设备路由表中的路由（非BGP）发布到BGP路由表中并通告给邻居，和OSPF中使用network命令的方式大同小异，只不过在BGP宣告时，只需要宣告网段+掩码数即可，如：network 12.12.0.0 16。</p>
+<p>（2）Import方式：</p>
+<p>使用Import命令可以将该路由器学到的路由信息重分发到BGP路由表中，是BGP宣告路由的一种方式，可以引入BGP的路由包括：直连路由、静态路由及动态路由协议学到的路由。其命令格式与在RIP中重分发OSPF差不多。</p>
+<h4 id="03-BGP-路由通告原则"><a href="#03-BGP-路由通告原则" class="headerlink" title="03 BGP 路由通告原则"></a>03 BGP 路由通告原则</h4><ul>
+<li>只把<strong>最优路由</strong>加入路由表并只向对等体通告最优路由；多条路径时只选一条最优</li>
+<li><strong>从 EBGP 学到的路由</strong>：向所有 EBGP、IBGP 对等体通告；<strong>通告给 EBGP 时下一跳改为自己</strong>（若通告方与接收方 EBGP 在同一网段可不改）；通告给 IBGP 时<strong>不改下一跳</strong>，避免次优</li>
+<li><strong>从 IBGP 学到的路由</strong>：<strong>不</strong>再通告给其他 IBGP（<strong>IBGP 水平分割</strong>）；仅通告给 EBGP</li>
+<li>让所有 IBGP 都能收到某条路由的三种方式：<strong>全互联</strong>、<strong>RR（路由反射器）</strong>、<strong>联盟</strong></li>
+</ul>
+<p><strong>BGP 与 IGP 同步</strong>：同步关（默认）：从 IBGP 学到的路由可传给 eBGP。同步开：只有 IGP 里也有的路由才传给 eBGP，防 AS 内路由黑洞。华为默认关且不支持开启；思科可开。</p>
+<h4 id="04-更新源建立邻居关系"><a href="#04-更新源建立邻居关系" class="headerlink" title="04 更新源建立邻居关系"></a>04 更新源建立邻居关系</h4><p>这个概念说白了就是在指定对等体时，使用对方的loopback口，因为该接口比任何物理接口都要稳定，只要设备在运行，loopback口就不会关闭，只要有一条链路可以和对方的loopback地址通信，就不会造成BGP状态的改变，若使用物理接口，一旦这个物理接口down掉，那么BGP也就完了，所以这种使用loopback口建立BGP邻居的方法称为更新源建立邻居，通常会在同一个AS内使用冗余链路来确保BGP的稳定性。（若在不同AS内使用对端路由器的loopback地址来建立邻居关系，需要改变两个路由器上的TTL值，具体解释请参考博文末尾的配置总结）</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-1.png" alt="BGP"></p>
+<p>如在上图中，三个路由器同在AS 100区域中，若R1和R3要使用更新源建立邻居关系，那么配置如下：</p>
+<p>R1路由器：</p>
+<p>[R1]bgp 100              </p>
+<p>[R1-bgp]router-id 1.1.1.1</p>
+<p>[R1-bgp]peer 3.3.3.3 as-number 100    </p>
+<p>[R1-bgp]peer 3.3.3.3 connect-interface LoopBack0  </p>
+<p>R3路由器（相关命令解释参考R1路由器的配置）：</p>
+<p>[R3]bgp 100                    </p>
+<p>[R3-bgp]router-id 3.3.3.3              </p>
+<p>[R3-bgp]peer 1.1.1.1 as-number 100              </p>
+<p>[R3-bgp]peer 1.1.1.1 connect-interface LoopBack0          </p>
+<p>注意：本地loopback接口先要让对等体可达（就是可以ping通对方的loopback地址），需要手动添加对等体环回接口的路由条目或者使用OSPF、RIP等自动学习对方环回接口的路由。</p>
+<h4 id="05-保证-IBGP-下一跳可达"><a href="#05-保证-IBGP-下一跳可达" class="headerlink" title="05 保证 IBGP 下一跳可达"></a>05 保证 IBGP 下一跳可达</h4><p>在 AS 边缘的 BGP 设备，会接收到它的EBGP对等体邻居传递过来的BGP路由信息。上面说过：所有EBGP对等体在传递过程中下一跳改变， 所有IBGP对等体在传递过程中下一跳不变。上个图来直观的说一下：</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-2.png" alt="BGP"></p>
+<p>图中，用A——J分别来代替路由器的接口IP地址，结合所有EBGP对等体在传递过程中下一跳改变， 所有IBGP对等体在传递过程中下一跳不变这个结论，可以看到图中存在什么问题（自己看图理解吧，是在是懒癌晚期，不想解释了），就是图中R3路由器以后的路由器收到的路由条目中的下一跳是错误的，解决办法就是在R3和R5路由器上对R4和R6宣称下一跳为它自己，然后就会发现，R4学到的下一跳地址是E。R6学到的下一跳就是I。这只是解决了R1宣告路由时出现的问题，那么如果现在R6又宣告了一条路由，就还需要在R4和R2路由器上对R3和R1宣称下一跳为它自己。这样才算保证了IBGP的下一跳可达。</p>
+<p>配置如下（就拿一个路由器来举例，前三条配置命令的解释可以参考上面的注释，主要是最后一条命令，来改变路由的下一跳）：</p>
+<p>[R3]bgp 200</p>
+<p>[R3-bgp]router-id 3.3.3.3</p>
+<p>[R3-bgp]peer 34.1.1.4 as-number 200  </p>
+<p>[R3-bgp]peer 34.1.1.4 next-hop-local              </p>
+<h4 id="06-EBGP-多跳"><a href="#06-EBGP-多跳" class="headerlink" title="06 EBGP 多跳"></a>06 EBGP 多跳</h4><p>这个好理解，由于默认 BGP 中 EBGP 邻居之间的 TTL 值为 1，（TTL，数据包的生命周期值，每经过一个路由器该值会-1，当该值为0后，数据包将会被丢弃）。若EBGP对等体非直连（通信时需要经过一个以上的路由器，TTL值就不够用了），TTL值限制会使非直连的对等体无法正常建立邻居关系，所以需要用EBGP多跳的命令来解决非直连的邻居关系。如下图，若不配置EBGP多跳，那么R1和R3将无法正常建立邻居关系：</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-3.png" alt="BGP"></p>
+<p>配置上图中的R3路由器多跳（R1路由器也需要进行类似的配置，进而改变TTL值，这里只拿R3为例）：</p>
+<p>R3 配置如下：</p>
+<p>[R3]bgp 200</p>
+<p>[R3-bgp]router-id 3.3.3.3</p>
+<p>[R3-bgp]peer 12.0.0.1 as-number 100</p>
+<p>[R3-bgp]peer 12.0.0.1 ebgp-max-hop 2   # 跳数为 2，即 TTL&#x3D;2</p>
+<h4 id="07-控制-BGP-选路"><a href="#07-控制-BGP-选路" class="headerlink" title="07 控制 BGP 选路"></a>07 控制 BGP 选路</h4><p>BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP的选路。</p>
+<p><strong>属性四类</strong>：公认必遵（Origin、AS_Path、Next_Hop）→ 公认任意（Local_Pref、Atomic-Aggregate 等）→ 可选过渡（Community、Aggregator 等）→ 可选非过渡（MED、Originator-ID、Cluster-List）。不识别时：过渡属性可转给邻居；非过渡属性丢弃不转发。</p>
+<p><strong>常用属性简述</strong>：</p>
+<ul>
+<li><strong>Origin</strong>：路由来源。IGP（network 注入）&gt; EGP &gt; Incomplete（import 引入）</li>
+<li><strong>AS_Path</strong>：矢量顺序记录经过的 AS，含本 AS 则拒收（防环）。类型：AS-Sequence（有序）、AS-Set（无序）、AS-confed-sequence&#x2F;Set（联盟内）</li>
+<li><strong>Next_Hop</strong>：本端始发发给 IBGP 时设为建邻接口地址；发给 EBGP 时设为建邻接口地址；向 IBGP 转发从 EBGP 学来的路由时通常不改（需 next-hop-local 场景见前文）</li>
+<li><strong>Local_Pref</strong>：仅 IBGP 间传递，判断<strong>离开 AS</strong> 的最佳路由，值高优先，默认 100</li>
+<li><strong>MED</strong>：仅相邻 AS 间传递，判断<strong>进入 AS</strong> 的最佳路由，值小优先，默认 0</li>
+<li><strong>Community</strong>：aa:nn 或团体号；公认：Internet、No_Advertise、No_Export、No_Export_Subconfed</li>
+</ul>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-4.png" alt="BGP"> <img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-5.png" alt="BGP"> <img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-6.png" alt="BGP"> <img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-7.png" alt="BGP"></p>
+<h4 id="08-BGP-选路规则（12-条顺序）"><a href="#08-BGP-选路规则（12-条顺序）" class="headerlink" title="08 BGP 选路规则（12 条顺序）"></a>08 BGP 选路规则（12 条顺序）</h4><ol>
+<li>下一跳不可达则忽略</li>
+<li>PrefVal 大优先</li>
+<li>Local_Pref 大优先</li>
+<li>本地生成优先（聚合 &gt; 非聚合；手聚 &gt; 自聚；network &gt; import）</li>
+<li>AS_Path 短优先</li>
+<li>Origin：IGP &gt; EGP &gt; Incomplete</li>
+<li>MED 小优先</li>
+<li>EBGP 优于 IBGP</li>
+<li>到 BGP 下一跳的 IGP metric 小优先</li>
+<li>Cluster_List 短优先</li>
+<li>Originator_ID（无则 Router ID）小优先</li>
+<li>对等体 IP 小优先</li>
+</ol>
+<h4 id="09-汇总、过滤与进阶（提要）"><a href="#09-汇总、过滤与进阶（提要）" class="headerlink" title="09 汇总、过滤与进阶（提要）"></a>09 汇总、过滤与进阶（提要）</h4><p><strong>路由汇总</strong>：自动汇总仅对重分发进 BGP 的外部路由生效且为主类；手动汇总优先。常用：<code>detail-suppressed</code> 抑制明细、<code>suppress-policy</code> 指定抑制项、<code>as-set</code> 防环、<code>attribute-policy</code> 设属性。带 <code>detail-suppressed</code> 时汇总路由会带 Atomic-Aggregate，不继承明细的 community。</p>
+<p><strong>路由过滤</strong>：<code>peer x ip-prefix xx import</code>、<code>peer x filter-policy xx import</code>、<code>peer x as-path-filter xx import</code>（as-path-filter 用正则匹配 AS_PATH）。</p>
+<p><strong>路由反射器（RR）</strong>：反射原则——从 EBGP 收到的可反射给 Client、Non-Client、EBGP；从 Non-Client 收到的可反射给 Client 和 EBGP，不反射给 Non-Client；从 Client 收到的可反射给 Client、Non-Client、EBGP。Client 只与 RR 建 IBGP；RR 之间、Non-Client 之间需全互联。经 RR 反射的路由带 Cluster_List、Originator_ID 防环。</p>
+<p><strong>联盟</strong>：联盟内 EBGP 传路由时不改下一跳；用 loopback 建联盟 eBGP 时也需配 ebgp-max-hop。AS 号表示：<code>()</code> 联盟内有序、<code>[]</code> 联盟内无序（华为）、<code>{}</code> 联盟外无序。</p>
+<p><strong>默认路由</strong>：对 peer 通告默认、network&#x2F;import 默认路由、<code>default-route imported</code>。</p>
+<p><strong>常用命令</strong>：<code>active-route-advertise</code> 只通告活动路由；<code>bgp-rib-only</code> 在 IP RIB 侧过滤 BGP（与上一条互斥）；<code>as-path limit 1</code> 限制 AS_Path 长度（默认 255）。4 字节 AS 号：能力协商、AS4_Path&#x2F;AS4_Aggregator 属性、AS_Trans 23456 衔接 2&#x2F;4 字节。</p>
+<h3 id="三、BGP-的配置实例"><a href="#三、BGP-的配置实例" class="headerlink" title="三、BGP 的配置实例"></a>三、BGP 的配置实例</h3><p>上面是 BGP 理论概要，实际配置相对简单。下面按实验拓扑进行配置，网络拓扑如下：</p>
+<p><img src="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%EF%BC%88%E4%B8%80%EF%BC%89/BGP-8.png" alt="BGP"></p>
+<h4 id="01-需求如下"><a href="#01-需求如下" class="headerlink" title="01 需求如下"></a>01 需求如下</h4><ol>
+<li><p>AS 200 内部使用 OSPF 协议使 AS 200 内部互通，并在AS 200内部各个路由器上都运行BGP协议（R1和R2、R3建立邻居关系，R4和R2、R3及R5建立邻居关系，），各个AS之间运行BGP协议。</p>
+</li>
+<li><p>分别在 R1 和 R5 使用 BGP 协议宣告 21.0.0.0&#x2F;24 和 20.0.0.0&#x2F;24，使所有路由器学到这两条路由信息</p>
+</li>
+<li><p>通过 BGP 的属性控制选路，实现 PC1→R1→R2→R4→R5→PC2→R5→R4→R3→R2→R1→PC1 的路由通信，并测试多种控制选路方法</p>
+</li>
+<li><p>在 R2、R3 和 R4 上分别向 BGP 注入本地 OSPF 路由，使全网互通（满足第 3 点选路要求并不代表 PC1 能 ping 通所有设备，如 R2）</p>
+</li>
+<li><p>为演示 EBGP 多跳，尝试让 R1 与 R4 直接建立对等体关系</p>
+</li>
+</ol>
+<h4 id="02-开始配置"><a href="#02-开始配置" class="headerlink" title="02 开始配置"></a>02 开始配置</h4><ol>
+<li>自行配置各 PC、路由器物理接口及 loopback 的 IP（此处仅给出路由器 IP 配置参考）：</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;R1&gt;sys                              </span><br><span class="line"></span><br><span class="line">[R1]in g0/0/0                  </span><br><span class="line"></span><br><span class="line">[R1-GigabitEthernet0/0/0]ip add 12.1.1.1 24              </span><br><span class="line"></span><br><span class="line">[R1-GigabitEthernet0/0/0]int loop 0                   </span><br><span class="line"></span><br><span class="line">[R1-LoopBack0]ip add 1.1.1.1 32</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置 AS 200 内部的 OSPF 路由协议。</li>
+</ol>
+<p><strong>R2 配置示例：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[R2]ospf 1</span><br><span class="line">[R2-ospf-1]area 0</span><br><span class="line">[R2-ospf-1-area-0.0.0.0]net 2.2.2.2 0.0.0.0</span><br><span class="line">[R2-ospf-1-area-0.0.0.0]net 12.1.1.0 0.0.0.255</span><br><span class="line">[R2-ospf-1-area-0.0.0.0]net 24.1.1.0 0.0.0.255</span><br></pre></td></tr></table></figure>
+
+<p><strong>R3、R4</strong> 类似，仅将 <code>net</code> 改为各自 loopback 与直连网段即可。</p>
+<ol start="3">
+<li>配置 BGP，建立邻居关系。</li>
+</ol>
+<p><strong>R1 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[R1]bgp 100              </span><br><span class="line"></span><br><span class="line">[R1-bgp]router-id 1.1.1.1              </span><br><span class="line"></span><br><span class="line">[R1-bgp]peer 12.1.1.2 as 200              </span><br><span class="line"></span><br><span class="line">[R1-bgp]peer 13.1.1.3 as 200              </span><br><span class="line"></span><br><span class="line">[R1-bgp]network 21.0.0.0 24</span><br></pre></td></tr></table></figure>
+
+<p><strong>R2 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[R2]bgp 200</span><br><span class="line"></span><br><span class="line">[R2-bgp]router-id 2.2.2.2</span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 12.1.1.1 as 100              </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 as 200                  </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 connect-interface LoopBack 0  </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 next-hop-local</span><br></pre></td></tr></table></figure>
+
+<p><strong>R3 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[R3]bgp 200</span><br><span class="line"></span><br><span class="line">[R3-bgp]router-id 3.3.3.3</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 13.1.1.1 as 100</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 as 200</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 connect-interface LoopBack 0</span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 next-hop-local</span><br></pre></td></tr></table></figure>
+
+<p><strong>R4 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[R4]bgp 200</span><br><span class="line"></span><br><span class="line">[R4-bgp]router-id 4.4.4.4</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 2.2.2.2 as 200</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 3.3.3.3 as 200</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 2.2.2.2 next-hop-local</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 3.3.3.3 next-hop-local</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 2.2.2.2 connect-interface LoopBack 0</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 3.3.3.3 connect-interface LoopBack 0</span><br><span class="line"></span><br><span class="line">[R4-bgp]peer 45.1.1.5 as 300</span><br></pre></td></tr></table></figure>
+
+<p><strong>R5 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[R5]bgp 300</span><br><span class="line"></span><br><span class="line">[R5-bgp]router-id 5.5.5.5</span><br><span class="line"></span><br><span class="line">[R5-bgp]peer 45.1.1.4 as 200</span><br><span class="line"></span><br><span class="line">[R5-bgp]network 20.0.0.0 24</span><br></pre></td></tr></table></figure>
+
+<p>BGP 邻居建立后可用以下命令查看：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[R1]dis bgp peer</span><br><span class="line"></span><br><span class="line"> BGP local router ID : 1.1.1.1</span><br><span class="line"> Local AS number : 100</span><br><span class="line"> Total number of peers : 2        Peers in established state : 2</span><br><span class="line"></span><br><span class="line">  Peer            V          AS  MsgRcvd  MsgSent  OutQ  Up/Down       State Pre</span><br><span class="line">fRcv</span><br><span class="line"></span><br><span class="line">  12.1.1.2        4         200        5        8     0 00:02:11 Established    </span><br><span class="line">   1</span><br><span class="line">  13.1.1.3        4         200        7       10     0 00:04:34 Established    1</span><br></pre></td></tr></table></figure>
+
+<p>至此 PC1 已可与 PC2 通信，当然是BGP协议做的咯，但是现在除了非直连网段及AS 200内部路由器以外，也只有PC1和PC2可以通信，如PC1并不能ping通R2路由器。</p>
+<ol start="4">
+<li>第三个需求：通过 BGP 属性控制选路，实现 PC1→R1→R2→R4→R5→PC2→R5→R4→R3→R2→R1→PC1 的路径。先用 <code>tracert</code> 查看实际经过的路由器。</li>
+</ol>
+<p><strong>PC1→PC2 路径示例：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 20.0.0.1</span><br><span class="line">traceroute to 20.0.0.1, 8 hops max (ICMP), press Ctrl+C to stop</span><br><span class="line"> 1  21.0.0.254   &lt;1 ms  16 ms  15 ms</span><br><span class="line"> 2  12.1.1.2   16 ms  15 ms  16 ms</span><br><span class="line"> 3  24.1.1.4   31 ms  32 ms  31 ms</span><br><span class="line"> 4  45.1.1.5   31 ms  47 ms  31 ms</span><br><span class="line"> 5  20.0.0.1   31 ms  32 ms</span><br></pre></td></tr></table></figure>
+
+<p><strong>PC2→PC1 路径示例：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 21.0.0.1</span><br><span class="line"></span><br><span class="line">traceroute to 21.0.0.1, 8 hops max (ICMP), press Ctrl+C to stop</span><br><span class="line"> 1  20.0.0.254   15 ms  &lt;1 ms  16 ms</span><br><span class="line"> 2  45.1.1.4   16 ms  31 ms  16 ms</span><br><span class="line"> 3  24.1.1.2   31 ms  31 ms  31 ms</span><br><span class="line"> 4  12.1.1.1   47 ms  16 ms  47 ms</span><br><span class="line"> 5  21.0.0.1   31 ms  31 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p>下面通过三种方式配置选路：</p>
+<p><strong>方法 1：修改 Local-Preference，使 R3 优先</strong></p>
+<p>在 R3 上执行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[R3]route-policy lop permit node 10    </span><br><span class="line"></span><br><span class="line">Info: New Sequence of this List.</span><br><span class="line"></span><br><span class="line">[R3-route-policy]apply local-preference 222      </span><br><span class="line"></span><br><span class="line">[R3-route-policy]quit</span><br><span class="line"></span><br><span class="line">[R3]bgp 200              </span><br><span class="line"></span><br><span class="line">[R3-bgp]peer 4.4.4.4 route-policy lop export      </span><br><span class="line"></span><br><span class="line">[R3-bgp]quit</span><br><span class="line"></span><br><span class="line">[R3]quit&lt;R3&gt;reset bgp all        </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">此时从 PC2 再 tracert PC1，路径会经 R3 而非 R2：</span><br><span class="line"></span><br><span class="line">```text</span><br><span class="line">PC&gt;tracert 21.0.0.1</span><br><span class="line">traceroute to 21.0.0.1, 8 hops max</span><br><span class="line"></span><br><span class="line">(ICMP), press Ctrl+C to stop</span><br><span class="line"></span><br><span class="line"> 1  20.0.0.254   &lt;1 ms  16 ms  16 ms</span><br><span class="line"> 2  45.1.1.4   15 ms  16 ms  31 ms</span><br><span class="line"> 3  34.1.1.3   31 ms  32 ms  31 ms</span><br><span class="line"> 4  13.1.1.1   47 ms  31 ms  47 ms</span><br><span class="line"> 5  21.0.0.1   47 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法 2：使用 AS-PATH 控制选路</strong></p>
+<p>为还原走 R2 的路径，先在 R3 上取消 Local-Preference 策略：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R3]bgp 200</span><br><span class="line">[R3-bgp]undo peer 4.4.4.4 route-policy lop export</span><br></pre></td></tr></table></figure>
+
+<p>删除后稍等，可再 tracert 确认 PC2→PC1 是否恢复走 R2。</p>
+<p>在 R2 上通过 AS-PATH 拉长路径（向 R4 通告 21.0.0.0 时附加虚造 AS，使 R4 认为经 R2 的路径更长，从而选 R3）：</p>
+<p><strong>R2 配置：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[R2]route-policy as permit node 10  </span><br><span class="line"></span><br><span class="line">Info: New Sequence of this List.</span><br><span class="line"></span><br><span class="line">[R2-route-policy]apply as-path 123 123 123 add  </span><br><span class="line"></span><br><span class="line">[R2-route-policy]quit</span><br><span class="line"></span><br><span class="line">[R2]bgp 200            </span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 4.4.4.4 route-policy as export</span><br><span class="line">[R2-bgp]quit</span><br><span class="line">[R2]quit</span><br><span class="line">&lt;R2&gt;reset bgp all</span><br></pre></td></tr></table></figure>
+
+<p>在 PC2 再次 tracert 会改走 R3：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 21.0.0.1</span><br><span class="line"></span><br><span class="line">traceroute to 21.0.0.1, 8 hops max</span><br><span class="line"></span><br><span class="line">(ICMP), press Ctrl+C to stop</span><br><span class="line"></span><br><span class="line"> 1  20.0.0.254   16 ms  &lt;1 ms  15 ms</span><br><span class="line"> 2  45.1.1.4   32 ms  15 ms  31 ms</span><br><span class="line"> 3  34.1.1.3   16 ms  31 ms  32 ms</span><br><span class="line"> 4  13.1.1.1   31 ms  31 ms  31 ms</span><br><span class="line"> 5  21.0.0.1   47 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法 3：使用 MED 控制选路</strong></p>
+<p>初始时 PC1→PC5 经 R2；在 R2 上配置 MED 并向 R1 通告，使 R1 侧选 R3。R2 配置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[R2]route-policy med permit node 10  </span><br><span class="line"></span><br><span class="line">Info: New Sequence of this List.</span><br><span class="line"></span><br><span class="line">[R2-route-policy]apply cost + 500    </span><br><span class="line"></span><br><span class="line">[R2-route-policy]quit</span><br><span class="line"></span><br><span class="line">[R2]bgp 200</span><br><span class="line"></span><br><span class="line">[R2-bgp]peer 12.1.1.1 route-policy med export</span><br><span class="line">[R2-bgp]quit</span><br><span class="line">[R2]quit</span><br><span class="line">&lt;R2&gt;reset bgp all</span><br></pre></td></tr></table></figure>
+
+<p>在 PC1 上 tracert 20.0.0.1：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PC&gt;tracert 20.0.0.1</span><br><span class="line"></span><br><span class="line">traceroute to 20.0.0.1, 8 hops max</span><br><span class="line"></span><br><span class="line">(ICMP), press Ctrl+C to stop</span><br><span class="line"></span><br><span class="line"> 1  21.0.0.254   16 ms  &lt;1 ms  16 ms</span><br><span class="line"> 2  13.1.1.3   15 ms  16 ms  15 ms</span><br><span class="line"> 3  34.1.1.4   47 ms  16 ms  16 ms</span><br><span class="line"> 4  45.1.1.5   31 ms  31 ms  31 ms</span><br><span class="line"> 5  20.0.0.1   32 ms  31 ms</span><br></pre></td></tr></table></figure>
+
+<p>路径已改为经 R3，说明配置生效。BGP 选路主要通过各类 BGP 属性调节完成，属性丰富，控制力强于 IGP。</p>
+<ol start="5">
+<li><strong>第四个需求</strong>：在 R2、R3、R4 上向 BGP 注入本地 OSPF 路由，使全网互通。</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R2]bgp 200</span><br><span class="line">[R2-bgp]import-route ospf 1</span><br></pre></td></tr></table></figure>
+
+<p>R3、R4 同样执行 <code>import-route ospf 1</code>。可用文末查看命令验证路由表。</p>
+<ol start="6">
+<li><strong>第五个需求</strong>：R1 与 R4 直接建立对等体（EBGP 多跳）。</li>
+</ol>
+<p><strong>R1：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[R1]bgp 100</span><br><span class="line">[R1-bgp]peer 34.1.1.4 as 200</span><br><span class="line">[R1-bgp]peer 34.1.1.4 ebgp-max-hop 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>R4：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[R4]bgp 200</span><br><span class="line">[R4-bgp]peer 13.1.1.1 as 100</span><br><span class="line">[R4-bgp]peer 13.1.1.1 ebgp-max-hop 2</span><br></pre></td></tr></table></figure>
+
+<p>验证（邻居建立可能需要约 1～2 分钟）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[R1]dis bgp peer      </span><br><span class="line"></span><br><span class="line"> BGP local router ID : 1.1.1.1</span><br><span class="line"> Local AS number : 100</span><br><span class="line"> Total number of peers : 3        Peers in established state : 3</span><br><span class="line"></span><br><span class="line">  Peer            V          AS  MsgRcvd  MsgSent  OutQ  Up/Down       State Pre</span><br><span class="line">fRcv</span><br><span class="line"></span><br><span class="line">  12.1.1.2        4         200       27       38     0 00:17:49 Established    </span><br><span class="line">   8</span><br><span class="line">  13.1.1.3        4         200       55       70     0 00:45:35 Established    </span><br><span class="line">   8</span><br><span class="line">  34.1.1.4        4         200       12       13     0 00:00:02 Established    8</span><br></pre></td></tr></table></figure>
+
+<p><strong>常用查看命令：</strong> <code>dis ip routing-table</code>、<code>dis ospf routing</code>、<code>dis bgp peer</code>。      </p>
+<h3 id="四、配置总结"><a href="#四、配置总结" class="headerlink" title="四、配置总结"></a>四、配置总结</h3><p>在配置过程中需注意：</p>
+<ol>
+<li>建立邻居前，务必保证能 ping 通对端（指定对端地址前先确认路由可达）。</li>
+<li>AS 内建立 BGP 邻居时，建议用对端 Loopback，并配置更新源：<code>peer x.x.x.x connect-interface LoopBack 0</code>。</li>
+<li>AS 内多台设备跑 BGP（IBGP）时，注意「保证 IBGP 下一跳可达」：<code>peer x.x.x.x next-hop-local</code>。</li>
+<li>跨 AS 建立邻居时，若用对端 Loopback（非直连网段），需配置 EBGP 多跳，否则 TTL&#x3D;1 会导致建邻失败。IBGP 默认 TTL&#x3D;255，无需改。命令示例：<code>peer x.x.x.x ebgp-max-hop 2</code>，数值不小于实际跳数即可。</li>
+</ol>
+<hr>
+<h2 id="2-MPLS-VPN-骨干技术"><a href="#2-MPLS-VPN-骨干技术" class="headerlink" title="2. MPLS VPN 骨干技术"></a>2. MPLS VPN 骨干技术</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>MPLS 标签转发原理、LSP 隧道建立与转发机制</li>
+<li>VRF 虚拟路由转发实例的配置与隔离逻辑</li>
+<li>RD&#x2F;RT 路由标识与导入导出规则、多租户路由隔离与互通实现</li>
+<li>PE-CE 路由协议（静态 &#x2F; RIP&#x2F;OSPF&#x2F;BGP）部署场景</li>
+<li>跨域 MPLS VPN（Option A&#x2F;B&#x2F;C）实现原理与适用场景</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建 3PE+2CE 的 MPLS VPN 骨干网，实现 2 个租户的完全隔离与指定租户互通</li>
+<li>完成跨域 MPLS VPN Option B 场景部署，验证跨 AS 的 VPN 路由发布与数据转发</li>
+<li>完成标签转发不通、VRF 路由丢失、跨租户访问异常等典型故障排障</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>彻底理解运营商 &#x2F; 大型专网的核心运作机制，能独立完成企业级 MPLS VPN 专网的规划与部署</li>
+<li>能精准设计 RD&#x2F;RT 值实现灵活的路由导入导出，解决多租户隔离与互通需求，定位并解决 MPLS VPN 全链路转发故障</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、Wireshark</li>
+<li>书籍：《MPLS VPN 架构》《华为 MPLS VPN 学习指南》</li>
+<li>文档：华为 &#x2F; 华三 MPLS VPN 官方产品文档</li>
+</ul>
+<hr>
+<h2 id="3-高级网络安全"><a href="#3-高级网络安全" class="headerlink" title="3. 高级网络安全"></a>3. 高级网络安全</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>基于 Zone 区域的状态防火墙核心原理、安全策略设计</li>
+<li>NAT 高级应用（源 NAT &#x2F; 目的 NAT &#x2F; 双向 NAT&#x2F;NAT Server、NAT 穿越、域内 NAT）</li>
+<li>IPSec VPN 核心架构（IKEv1&#x2F;IKEv2、AH&#x2F;ESP 协议、隧道 &#x2F; 传输模式）</li>
+<li>GRE over IPSec 等复杂 VPN 场景部署、高可用 VPN 设计</li>
+<li>防火墙会话表、攻击防范、安全策略优化</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建基于安全区域的防火墙组网，实现多域安全隔离、精细化 ACL 管控、多场景 NAT 部署</li>
+<li>完成 GRE over IPSec VPN 部署，实现分支与总部的跨公网安全私网互通，验证加密隧道的高可用切换</li>
+<li>完成 VPN 隧道不通、NAT 端口冲突、安全策略匹配异常等故障排障</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能脱离基础 ACL，完成企业级防火墙的域间安全策略设计与落地，实现业务的安全隔离与访问控制</li>
+<li>能独立完成复杂场景的 IPSec VPN 部署，解决跨公网的私网互通需求，精准定位 VPN 全链路的转发与加密故障</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器（华为 USG &#x2F; 山石网科防火墙镜像）、Wireshark</li>
+<li>课程：华为 HCIE-Security 防火墙与 VPN 专项</li>
+<li>文档：主流防火墙厂商官方配置指南</li>
+</ul>
+<hr>
+<h2 id="4-企业无线调优"><a href="#4-企业无线调优" class="headerlink" title="4. 企业无线调优"></a>4. 企业无线调优</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>无线射频原理、802.11ax&#x2F;ac 协议核心特性</li>
+<li>2.4G&#x2F;5G 双频信道规划、功率调整、频宽规划</li>
+<li>二层 &#x2F; 三层漫游优化（快速漫游、802.11r&#x2F;k&#x2F;v 协议）、漫游粘滞问题解决</li>
+<li>同频 &#x2F; 邻频抗干扰技术、无线空口资源优化</li>
+<li>无线 AC+FIT AP 架构、高可用无线组网设计</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成企业办公场景的无线 AP 点位规划、信道与功率规划，搭建 AC+AP 组网</li>
+<li>配置 802.11r 快速漫游，实现跨 AP 无缝漫游，测试漫游切换时延 &lt; 50ms</li>
+<li>完成无线干扰排查、漫游粘滞、弱覆盖等典型问题优化，实现无线吞吐量与接入稳定性提升</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能将无线网络从「能连上」进阶到「高可用、低时延、无卡顿」，独立完成企业级无线组网的规划、部署与调优</li>
+<li>能精准定位并解决无线覆盖、漫游、干扰相关的常见问题，保障视频会议、移动办公等业务的稳定运行</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、WiFi Analyzer、AirMagnet</li>
+<li>书籍：《企业无线网络架构与优化》</li>
+<li>课程：华为 HCIE-Datacom 无线专项</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一阶段</td>
+<td>BGP 核心进阶</td>
+<td>邻居与防环、13 条选路、Route-Map&#x2F;Community；双出口主备、3 AS 联邦&#x2F;RR、BGP 故障排障</td>
+</tr>
+<tr>
+<td></td>
+<td>MPLS VPN 骨干</td>
+<td>标签与 LSP、VRF、RD&#x2F;RT、PE-CE、跨域 Option A&#x2F;B&#x2F;C；3PE+2CE、Option B、标签&#x2F;VRF 排障</td>
+</tr>
+<tr>
+<td></td>
+<td>高级网络安全</td>
+<td>Zone 防火墙、高级 NAT、IPSec&#x2F;GRE over IPSec；多域+NAT、分支总部 VPN 高可用、VPN&#x2F;NAT 排障</td>
+</tr>
+<tr>
+<td></td>
+<td>企业无线调优</td>
+<td>802.11ax&#x2F;ac、信道功率、802.11r&#x2F;k&#x2F;v 漫游、AC+AP；AP 规划与漫游 &lt;50ms、干扰与粘滞优化</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E4%B8%8E%E4%BA%91/">传统组网第二阶段：数据中心与云 →</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/" class="post-title-link" itemprop="url">传统组网第三阶段：自动化与智能管控</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:24:45" itemprop="dateModified" datetime="2026-02-23T01:24:45+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="传统组网第三阶段：自动化与智能管控"><a href="#传统组网第三阶段：自动化与智能管控" class="headerlink" title="传统组网第三阶段：自动化与智能管控"></a>传统组网第三阶段：自动化与智能管控</h1><p><strong>核心目标</strong>：解放双手，从「配置工」进阶为「架构师」。  </p>
+<hr>
+<h2 id="1-网络自动化开发与落地"><a href="#1-网络自动化开发与落地" class="headerlink" title="1. 网络自动化开发与落地"></a>1. 网络自动化开发与落地</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>Python 基础语法、网络编程相关模块（re、logging、os）</li>
+<li>Netmiko&#x2F;Napalm 库实现多厂商网络设备 SSH 交互、配置管理</li>
+<li>Ansible 核心原理（Inventory、Playbook、网络专用 Module）</li>
+<li>Jinja2 模板实现网络设备标准化配置批量生成</li>
+<li>网络配置自动备份、批量下发、合规校验、状态巡检自动化实现</li>
+<li>VS Code 开发环境搭建、代码调试、异常处理机制</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>基于 Python+Netmiko 编写脚本，实现 100 台交换机配置批量备份、版本批量核查、端口状态批量巡检</li>
+<li>基于 Ansible+Jinja2 模板，实现交换机标准化开局配置批量生成与下发，适配不同设备型号</li>
+<li>搭建网络设备自动巡检平台，实现 CPU &#x2F; 内存、路由条目、邻居关系、告警信息的自动采集与报表输出</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立编写网络自动化脚本与 Ansible Playbook，实现「一杯咖啡时间搞定 100 台交换机」的批量管理需求</li>
+<li>脚本可适配多厂商设备，具备完善的异常处理能力，能替代 80% 以上的重复手工配置工作</li>
+<li>能基于业务需求，设计并落地标准化的网络自动化运维方案</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：VS Code、Python 3.8+、Ansible、Git、EVE-NG 模拟器</li>
+<li>书籍：《Python 网络编程权威指南》《Ansible for Networking》</li>
+<li>课程：网络自动化 Python 实战专项、华为 HCIE-Datacom 自动化专项</li>
+</ul>
+<hr>
+<h2 id="2-SD-WAN-智能广域网"><a href="#2-SD-WAN-智能广域网" class="headerlink" title="2. SD-WAN 智能广域网"></a>2. SD-WAN 智能广域网</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>SD-WAN 核心架构（控制 &#x2F; 转发 &#x2F; 管理平面分离）核心理念</li>
+<li>SD-WAN Underlay 与 Overlay 网络设计、隧道技术</li>
+<li>应用感知路由（App-aware Routing）实现原理、多链路智能选路</li>
+<li>链路质量检测（丢包 &#x2F; 时延 &#x2F; 抖动）、故障秒级切换机制</li>
+<li>零配置部署（ZTP）、广域网优化、安全集成、多分支组网设计</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建 4 分支 + 1 总部的 SD-WAN 拓扑，实现专线 + 互联网双链路的混合广域网组网</li>
+<li>配置应用感知智能选路，实现语音 &#x2F; 视频业务优先走低时延专线，普通互联网业务走宽带链路</li>
+<li>验证链路故障时业务秒级切换，完成选路策略异常、隧道不通等故障排障</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>彻底理解 SD-WAN 控制与转发分离的核心思想，能独立完成企业级多分支 SD-WAN 网络的规划与部署</li>
+<li>能基于应用类型、链路质量实现智能选路，解决广域网链路利用率低、关键业务卡顿、分支部署复杂等行业痛点</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG 模拟器（VMware SD-WAN &#x2F; 华为 SD-WAN 镜像）</li>
+<li>书籍：《SD-WAN 架构与技术》</li>
+<li>文档：主流 SD-WAN 厂商官方技术白皮书</li>
+</ul>
+<hr>
+<h2 id="3-QoS-流量工程与服务质量保障"><a href="#3-QoS-流量工程与服务质量保障" class="headerlink" title="3. QoS 流量工程与服务质量保障"></a>3. QoS 流量工程与服务质量保障</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>QoS 服务模型（Best-Effort、IntServ、DiffServ）</li>
+<li>流量分类与标记（ACL、DSCP&#x2F;802.1p）、端到端标记原则</li>
+<li>流量整形与监管（CAR、GTS）、带宽限速实现</li>
+<li>拥塞管理（FIFO、PQ、CQ、WFQ、CBWFQ、LLQ 低时延队列）</li>
+<li>拥塞避免（WRED 尾丢弃）、端到端 QoS 部署方案设计</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>在广域网链路上部署端到端 QoS 方案，对语音、视频、核心业务、普通流量进行分层分类标记</li>
+<li>通过 LLQ 队列保障语音业务低时延、低抖动，通过 CBWFQ 保障核心业务带宽，通过 WRED 避免全局同步</li>
+<li>在带宽拥塞场景下，验证关键业务的 SLA 达标情况，完成 QoS 策略异常、业务卡顿等问题排障</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成端到端 QoS 方案的设计与部署，在带宽有限的场景下，精准控制不同业务的带宽分配与转发优先级</li>
+<li>能保障语音 &#x2F; 视频等关键业务的 SLA（时延、抖动、丢包率）符合要求，彻底解决网络拥塞导致的业务卡顿问题</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、Wireshark、IxChariot 流量打流工具</li>
+<li>书籍：《QoS 设计与实现》</li>
+<li>课程：华为 HCIE-Datacom QoS 专项</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第三阶段</td>
+<td>网络自动化开发与落地</td>
+<td>Python&#x2F;Netmiko&#x2F;Ansible&#x2F;Jinja2、配置备份与批量下发、合规与巡检；百台设备备份与巡检、Ansible+Jinja2 开局、自动巡检与报表</td>
+</tr>
+<tr>
+<td></td>
+<td>SD-WAN 智能广域网</td>
+<td>控制&#x2F;转发&#x2F;管理分离、应用感知选路、链路质量与秒级切换、ZTP；4 分支+1 总部双链路、应用选路与故障切换、选路与隧道排障</td>
+</tr>
+<tr>
+<td></td>
+<td>QoS 流量工程与服务质量保障</td>
+<td>DiffServ、分类标记、整形监管、CBWFQ&#x2F;LLQ&#x2F;WRED；端到端 QoS、语音视频 SLA、拥塞下关键业务保障与排障</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E4%B8%8E%E4%BA%91/">← 传统组网第二阶段：数据中心与云</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E4%B8%8E%E4%BA%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E4%B8%8E%E4%BA%91/" class="post-title-link" itemprop="url">传统组网第二阶段：数据中心与云</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:24:40" itemprop="dateModified" datetime="2026-02-23T01:24:40+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="传统组网第二阶段：数据中心与云"><a href="#传统组网第二阶段：数据中心与云" class="headerlink" title="传统组网第二阶段：数据中心与云"></a>传统组网第二阶段：数据中心与云</h1><p><strong>核心目标</strong>：读懂 Spine-Leaf 拓扑的灵魂，吃透虚拟化网络。  </p>
+<hr>
+<h2 id="1-VXLAN-EVPN-数据中心网络"><a href="#1-VXLAN-EVPN-数据中心网络" class="headerlink" title="1. VXLAN &amp; EVPN 数据中心网络"></a>1. VXLAN &amp; EVPN 数据中心网络</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>传统数据中心网络痛点、Spine-Leaf 叶脊架构设计核心逻辑</li>
+<li>Underlay 物理网络规划（OSPF&#x2F;IS-IS、ECMP 等价路由）</li>
+<li>VXLAN 隧道封装原理、VNI 虚拟网络标识、Overlay 虚拟隧道转发机制</li>
+<li>EVPN 控制平面核心（7 类路由类型、MAC&#x2F;IP 地址通告、ARP 抑制、IRB 集成路由桥接）</li>
+<li>集中式 &#x2F; 分布式网关部署、大二层互通、多租户隔离、VM 迁移无感知实现</li>
+<li>VXLAN 双活、DCI 数据中心互联、VXLAN 故障排障全流程</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建 2 Spine + 4 Leaf 的标准 Spine-Leaf 数据中心拓扑，完成 Underlay 网络规划与部署</li>
+<li>基于 EVPN 作为控制平面，构建 VXLAN Overlay 网络，实现分布式网关、3 个租户的完全隔离、跨 Leaf 大二层互通</li>
+<li>验证虚拟机跨 Leaf 迁移业务无中断，完成 VXLAN 隧道不通、EVPN 路由发布异常、跨子网互通故障等排障</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>彻底掌握现代数据中心网络的标准技术，能独立完成 Spine-Leaf 架构的规划、设计与部署</li>
+<li>能清晰区分 Underlay 与 Overlay 的边界与转发逻辑，灵活实现大二层互通与多租户隔离</li>
+<li>能独立完成 VXLAN EVPN 全场景的故障定位与排障</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG 模拟器（华为 CE 系列 &#x2F; 思科 N9K 系列数据中心交换机镜像）、Wireshark</li>
+<li>书籍：《VXLAN 技术与实践》《数据中心网络架构与技术》</li>
+<li>课程：华为 HCIE-Datacom 数据中心专项、阿里云 ACP 云网络工程师课程</li>
+</ul>
+<hr>
+<h2 id="2-云原生网络架构"><a href="#2-云原生网络架构" class="headerlink" title="2. 云原生网络架构"></a>2. 云原生网络架构</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>阿里云 VPC 核心原理（虚拟交换机、路由器、安全组、网络 ACL）</li>
+<li>云上网络隔离与互通、VPC 对等连接、云企业网 CEN</li>
+<li>混合云专线（Direct Connect）架构、IPsec VPN 云上云下互通方案</li>
+<li>云负载均衡 SLB（四层）&#x2F;ALB（七层）核心原理、转发策略、高可用设计</li>
+<li>云上 NAT 网关、公网出口架构、云上高可用网络设计、云网络故障排障</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>基于阿里云账号，搭建多 VPC 互通架构，完成安全组与网络 ACL 的精细化隔离设计</li>
+<li>配置 SLB&#x2F;ALB 实现业务的四层 &#x2F; 七层负载分担、会话保持、健康检查，验证业务高可用</li>
+<li>通过 IPsec VPN 实现线下模拟器环境与阿里云 VPC 的混合云互通，验证端到端流量走向</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能结合 ECS 使用经验，独立完成云上 VPC 网络的规划与部署，理解云网络的全链路转发逻辑</li>
+<li>能独立设计混合云网络架构，实现线下 IDC 与云上资源的安全稳定互通</li>
+<li>能排查云上网络互通、负载均衡、安全隔离相关的典型故障</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：阿里云账号（免费试用 &#x2F; 个人版）、阿里云 VPC &#x2F; 负载均衡官方控制台</li>
+<li>文档：阿里云官方云网络产品文档、最佳实践手册</li>
+<li>课程：阿里云 ACP&#x2F;ACE 云网络工程师认证课程</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第二阶段</td>
+<td>VXLAN &amp; EVPN 数据中心网络</td>
+<td>Spine-Leaf、Underlay&#x2F;Overlay、VNI、EVPN 路由类型与 IRB、分布式网关、DCI；2 Spine+4 Leaf、多租户与 VM 迁移、VXLAN&#x2F;EVPN 排障</td>
+</tr>
+<tr>
+<td></td>
+<td>云原生网络架构</td>
+<td>阿里云 VPC&#x2F;安全组&#x2F;CEN、专线与 IPsec 混合云、SLB&#x2F;ALB、NAT 与高可用；多 VPC、SLB&#x2F;ALB、线下与云 IPsec 互通</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E7%AD%91%E5%9F%BA%E4%B8%8E%E6%B7%B1%E8%80%95/">← 传统组网第一阶段：筑基与深耕</a> | <a href="/%E4%BC%A0%E7%BB%9F%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%99%BA%E8%83%BD%E7%AE%A1%E6%8E%A7/">传统组网第三阶段：自动化与智能管控 →</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1058,209 +3075,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/UE5%E8%BE%93%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/13/UE5%E8%BE%93%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">UE5 输入系统学习笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2026-02-13 12:00:00 / Modified: 11:34:48" itemprop="dateCreated datePublished" datetime="2026-02-13T12:00:00+08:00">2026-02-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/UE5/" itemprop="url" rel="index"><span itemprop="name">UE5</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="UE5-输入系统学习笔记"><a href="#UE5-输入系统学习笔记" class="headerlink" title="UE5 输入系统学习笔记"></a>UE5 输入系统学习笔记</h1><blockquote>
-<p>本文用于记录 UE5 中输入系统（含增强型输入 Enhanced Input）的学习与使用，便于后续查阅与补充。</p>
-</blockquote>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/13/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">vLLM 学习笔记（一）：整体代码架构</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-02-13 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-13T12:00:00+08:00">2026-02-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-14 15:12:46" itemprop="dateModified" datetime="2026-02-14T15:12:46+08:00">2026-02-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="vLLM-学习笔记（一）：整体代码架构"><a href="#vLLM-学习笔记（一）：整体代码架构" class="headerlink" title="vLLM 学习笔记（一）：整体代码架构"></a>vLLM 学习笔记（一）：整体代码架构</h1><p>本系列基于 vLLM 0.6.3 版本。</p>
-<h2 id="1-vLLM-代码结构介绍"><a href="#1-vLLM-代码结构介绍" class="headerlink" title="1 vLLM 代码结构介绍"></a>1 vLLM 代码结构介绍</h2><p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm1.png" alt="vLLM 整体架构"></p>
-<p>vLLM 的代码架构以 LLMEngine 作为核心组件展开，是整个推理过程的起点。在架构图中，LLMEngine 是处理请求的主要入口，它和 Centralized Controller（中央控制器）在同一个进程中运行，且都位于 CPU 上。LLMEngine 的任务是接收用户请求，并与中央控制器配合，确保请求能够被分配到合适的计算资源中处理。</p>
-<h3 id="1-1-Centralized-Controller-集中控制器"><a href="#1-1-Centralized-Controller-集中控制器" class="headerlink" title="1.1 Centralized Controller 集中控制器"></a>1.1 Centralized Controller 集中控制器</h3><p>Centralized Controller 实际上是实现了调度功能的模块，叫做 Scheduler（调度器）。它决定每个推理阶段的任务调度，主要负责选择哪些数据需要送到模型去推理，并且管理 KV Cache 的分配。然而，调度器并不直接处理这些物理缓存块的实际存储与管理，只是分配了缓存块的 ID，而数据的实际存储则由分布式 Worker 处理，这些 Worker 分布在 GPU 上。</p>
-<p>在调度器之下，架构图中展示了 BlockSpaceManager 和 BlockAllocator，它们的任务是管理计算所需的内存块。BlockSpaceManager 是一种抽象管理器，而 BlockAllocator 则是真正参与内存分配的类，它有 CPU 和 GPU 两种类型，用于管理不同设备上的内存块。BlockAllocator 的作用不仅限于 GPU 上的内存管理，还包括当 GPU 显存不足时，将某些缓存块卸载到 CPU 并进行管理，以便稍后再重新加载到 GPU 中。这种内存管理机制确保系统可以处理更大规模的模型而不受显存限制。</p>
-<h3 id="1-2-Distributed-Workers-分布式工作节点"><a href="#1-2-Distributed-Workers-分布式工作节点" class="headerlink" title="1.2 Distributed Workers 分布式工作节点"></a>1.2 Distributed Workers 分布式工作节点</h3><p>右侧的 Distributed Workers 是整个推理任务的执行者，图中绿色部分展示了这些 Worker 的结构。你可以将它们理解为多个 GPU 进程，每个 GPU 都有一个对应的 Worker，它们负责模型的实际加载和推理。架构中称它们为 Worker，但更准确的说法可能是 Executor，因为它不仅执行推理，还对这些 Worker 实例进行整体管理和协调。</p>
-<p>每个 Worker 中都有两个关键模块：CacheEngine 和 Worker.model（model_runner）。CacheEngine 负责管理实际的缓存数据，确保所有的计算任务都有合适的资源可用。而 Worker.model 则负责模型的加载和执行，利用 PagedAttention 这样的组件来高效处理注意力机制，从而保证推理任务的性能。</p>
-<h2 id="2-vLLM-处理请求的流程"><a href="#2-vLLM-处理请求的流程" class="headerlink" title="2 vLLM 处理请求的流程"></a>2 vLLM 处理请求的流程</h2><p>当一个请求到达时，vLLM 的各个模块是如何协同工作的？下面按流程说明。</p>
-<h3 id="2-1-初始化并加载模型权重"><a href="#2-1-初始化并加载模型权重" class="headerlink" title="2.1 初始化并加载模型权重"></a>2.1 初始化并加载模型权重</h3><p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm2.png" alt="模型加载流程"></p>
-<p>在具体执行之前，vLLM 需要初始化并加载模型权重。vLLM 支持从 HF Hub 加载模型，也支持从本地加载模型。在加载模型的过程中，vLLM 会将模型权重加载到 GPU 中，以便后续的推理任务可以直接在 GPU 上执行。</p>
-<h4 id="2-1-1-估计-KV-Cache-的物理块数量"><a href="#2-1-1-估计-KV-Cache-的物理块数量" class="headerlink" title="2.1.1 估计 KV Cache 的物理块数量"></a>2.1.1 估计 KV Cache 的物理块数量</h4><p>在模型部署的初始化阶段，vLLM 会通过一个模拟实验步骤来决定 GPU 和 CPU 上可以分配的 KV cache 物理块数量，确保后续推理时的内存分配不会导致显存溢出。这个步骤在 vLLM 中被称为 determine_num_available_blocks。</p>
-<p>首先，在启动 LLMEngine 时，系统会进行一个 “假数据模拟” 来测量模型的内存使用情况。它通过构造假数据并执行一次模拟前向推理，来观察 GPU 上模型运行时的峰值内存需求。在这次前向推理中，系统不使用 KV cache，而是单纯地模拟模型推理所需的基本内存。这种方式可以帮助确定整个推理过程会占用多少显存，从而为后续的内存分配提供依据。</p>
-<p>在完成内存需求的测量后，vLLM 会使用测得的内存数据来计算可分配给 KV cache 的显存总量。具体来说，分配给 KV cache 的显存等于 GPU 总显存减去在不使用 KV cache 时推理所占用的显存（包括模型本身和推理过程中的中间数据）。这样可以确保显存分配合理，不会因为内存不足而导致 OOM（Out Of Memory）错误。</p>
-<p>接下来，通过计算显存中可以分配的物理块数量，vLLM 会确定 GPU 上可以使用的 KV cache 数量。物理块的大小由用户定义，包括多个参数，例如 block_size、num_heads、head_size、num_layers 以及数据类型的大小（如 fp16 对应的字节数是 2）。计算公式会依据这些参数来估算单个物理块的大小，然后根据剩余显存估算出可以分配的物理块总数。</p>
-<p>总之，determine_num_available_blocks 的主要作用是通过模拟一次推理，来确定 GPU 和 CPU 上的内存可以容纳多少个 KV cache 物理块，从而在推理正式开始之前完成显存的预分配。这种方法确保了系统可以在推理阶段高效地使用内存资源，最大程度地避免因为显存不足而导致的推理失败问题。</p>
-<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm3.png" alt="KV Cache 块数量估计"></p>
-<h4 id="2-1-2-预分配-KV-Cache"><a href="#2-1-2-预分配-KV-Cache" class="headerlink" title="2.1.2 预分配 KV Cache"></a>2.1.2 预分配 KV Cache</h4><p>在确定好 KV cache 块的大小之后，vLLM 会进行显存的预分配，以确保后续推理过程中有足够的内存来存储 KV cache。这一过程的核心是创建空的张量（empty tensor），并将它们直接分配到 GPU 上，从而锁定一定的显存空间专门用于 KV cache。这种显存预分配的方式能够避免推理过程中频繁的动态内存分配，提升系统的稳定性和推理效率。</p>
-<p>预分配的显存专门用于 KV cache，因此在 vLLM 初始化后，你可能会注意到显存的占用比单纯加载模型时要多一些。这是因为这些额外的显存已经被预先分配给了 KV cache，确保它们在推理时不会受到其他任务的影响。通过这种显存的预先规划和锁定，系统在处理推理请求时能够更高效地管理内存资源，避免了推理阶段因显存分配不足而出现的瓶颈。</p>
-<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm4.png" alt="KV Cache 预分配"></p>
-<h3 id="2-2-处理-Request"><a href="#2-2-处理-Request" class="headerlink" title="2.2 处理 Request"></a>2.2 处理 Request</h3><p>在完成了模型的加载和 KV cache 的预分配之后，vLLM 就可以开始处理用户的请求了。</p>
-<h4 id="2-2-1-请求到达-LLMEngine"><a href="#2-2-1-请求到达-LLMEngine" class="headerlink" title="2.2.1 请求到达 LLMEngine"></a>2.2.1 请求到达 LLMEngine</h4><p>当用户发送请求时，例如输入了一个文本提示 “The future of Artificial Intelligence”，LLMEngine 首先会对请求进行处理。第一步是将输入文本进行 Tokenization（即将文本转换为一系列标识符，称为 tokens），这些 tokens 可以被模型识别和处理。之后，LLMEngine 将这些 tokens 加入到 Scheduler 的等待队列中，准备进一步处理。</p>
-<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm5.png" alt="请求到达与 Tokenization"></p>
-<h4 id="2-2-2-调度器的任务"><a href="#2-2-2-调度器的任务" class="headerlink" title="2.2.2 调度器的任务"></a>2.2.2 调度器的任务</h4><p>在请求进入调度器后，Scheduler 会根据当前的资源情况（如可用的 KV 缓存块）来决定如何执行任务。调度器维护了三个请求队列：</p>
-<ul>
-<li><strong>Waiting Queue</strong>：等待执行的请求。</li>
-<li><strong>Running Queue</strong>：当前正在处理的请求。</li>
-<li><strong>Swapped Queue</strong>：由于显存不足而被暂时置换出去的请求。</li>
-</ul>
-<p>调度器会判断是否有足够的内存块可以分配给新的 tokens。如果有足够的可用 KV 块，则请求从等待队列移动到正在运行的队列（waiting → running）；如果内存不足，调度器会将一些运行中的请求交换到 CPU 内存（running → swapped），以腾出空间让新请求进入运行队列。</p>
-<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm6.png" alt="调度器队列"></p>
-<h4 id="2-2-3-执行推理"><a href="#2-2-3-执行推理" class="headerlink" title="2.2.3 执行推理"></a>2.2.3 执行推理</h4><p>当请求进入运行队列后，Scheduler 会将任务分发给多个 Worker。每个 Worker 在 GPU 上运行，负责实际的推理计算。在这一过程中，CacheEngine 会按照调度器的指示管理缓存块，包括在 GPU 和 CPU 之间交换内存块，确保内存资源得到高效利用。此外，CacheEngine 还会对共享缓存块执行写时复制（copy-on-write），以确保数据的一致性和高效性。</p>
-<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm7.png" alt="执行推理与 CacheEngine"></p>
-<h4 id="2-2-4-模型的推理过程"><a href="#2-2-4-模型的推理过程" class="headerlink" title="2.2.4 模型的推理过程"></a>2.2.4 模型的推理过程</h4><p>每个 Worker 中的 Worker.model 模块负责加载并执行模型推理。在这个过程中，它会依赖 PagedAttention 来实现高效的注意力计算。PagedAttention 是优化的注意力机制实现，适用于大规模的 Transformer 模型，并使用诸如 xformers 或 FlashAttention 等技术来加速推理。</p>
-<p>此外，模型的其他部分（例如线性层、量化层等）也进行了优化，以便在分布式执行和张量并行的情况下达到最高性能。在推理阶段，Sampler 会负责选择下一个生成的 token，使用贪心算法、随机采样或者 Beam Search 等策略。</p>
-<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm8.png" alt="Worker 推理与 Sampler"></p>
-<h4 id="2-2-5-请求的完成与结果返回"><a href="#2-2-5-请求的完成与结果返回" class="headerlink" title="2.2.5 请求的完成与结果返回"></a>2.2.5 请求的完成与结果返回</h4><p>推理完成后，结果会被发送回 LLMEngine。LLMEngine 会对生成的 tokens 进行 detokenization，将它们转换回可读的文本，并最终将生成的结果流式地返回给用户。这一流程使得生成的结果可以尽快交付给用户，而无需等待整个请求的完全完成。</p>
-<p>整个请求的处理流程由 LLMEngine 进行协调调度，通过 Scheduler 管理内存和资源的有效利用，Worker 在 GPU 上执行具体的推理计算，最终将结果流式地返回给用户。</p>
-<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm9.png" alt="请求完成与结果返回"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/Gateway-API-Inference-Extension/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1297,7 +3111,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-19 15:09:10" itemprop="dateModified" datetime="2026-02-19T15:09:10+08:00">2026-02-19</time>
+      <time title="Modified: 2026-02-19 15:39:15" itemprop="dateModified" datetime="2026-02-19T15:39:15+08:00">2026-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1698,6 +3512,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl get gateway inference-gateway</span><br><span class="line"><span class="comment"># 期望：ADDRESS 有值，PROGRAMMED=True</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="3-6-步骤-4：部署模型服务器"><a href="#3-6-步骤-4：部署模型服务器" class="headerlink" title="3.6 步骤 4：部署模型服务器"></a>3.6 步骤 4：部署模型服务器</h3><p>EPP 将请求调度到“模型服务器”Pod，需先有带正确 <strong>label</strong> 的模型服务。部署中的 <code>app: vllm-llama3-8b-instruct</code> 等 label 需与后续 Helm 的 <strong>matchLabels</strong> 一致。</p>
+<p><strong>大模型部署方式</strong>：生产环境中的<strong>大模型</strong>（多卡、多节点、Tensor&#x2F;Pipeline 并行）建议使用 <strong>LWS（LeaderWorkerSet）</strong> 方式部署，以便统一管理 Leader&#x2F;Worker 组、组级扩缩容与滚动升级，并与推理网关配合。LWS 的安装与 vLLM 示例见本站 <a href="/2026/02/13/LeaderWorkerSet%E6%8F%92%E4%BB%B6/">LeaderWorkerSet 插件</a> 一文；部署完成后，保证模型服务 Pod 带有与 InferencePool 的 <strong>matchLabels</strong> 一致的 label（如 <code>app: vllm-llama3-8b-instruct</code>、<code>role: leader</code> 等，按实际 LWS 与 Service 配置为准），即可被网关发现并纳入池内调度。下文为使用标准 Deployment&#x2F;Sim 的快速示例，仅用于联调或小模型。</p>
 <p><strong>vLLM（GPU，需 Hugging Face token）</strong><br><code>gpu-deployment.yaml</code> 较长（含 LoRA、探针、优雅退出等），可直接从仓库 apply：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MODEL_SERVER=vllm</span><br><span class="line">kubectl create secret generic hf-token --from-literal=token=<span class="variable">$HF_TOKEN</span></span><br><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/raw/main/config/manifests/<span class="variable">$&#123;MODEL_SERVER&#125;</span>/gpu-deployment.yaml</span><br></pre></td></tr></table></figure>
 
@@ -1926,6 +3741,209 @@
 <td>v0.6.1</td>
 </tr>
 </tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/UE5%E8%BE%93%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/13/UE5%E8%BE%93%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">UE5 输入系统学习笔记</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-02-13 12:00:00 / Modified: 11:34:48" itemprop="dateCreated datePublished" datetime="2026-02-13T12:00:00+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/UE5/" itemprop="url" rel="index"><span itemprop="name">UE5</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="UE5-输入系统学习笔记"><a href="#UE5-输入系统学习笔记" class="headerlink" title="UE5 输入系统学习笔记"></a>UE5 输入系统学习笔记</h1><blockquote>
+<p>本文用于记录 UE5 中输入系统（含增强型输入 Enhanced Input）的学习与使用，便于后续查阅与补充。</p>
+</blockquote>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/13/vLLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">vLLM 学习笔记（一）：整体代码架构</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-13 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-13T12:00:00+08:00">2026-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-14 15:12:46" itemprop="dateModified" datetime="2026-02-14T15:12:46+08:00">2026-02-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="vLLM-学习笔记（一）：整体代码架构"><a href="#vLLM-学习笔记（一）：整体代码架构" class="headerlink" title="vLLM 学习笔记（一）：整体代码架构"></a>vLLM 学习笔记（一）：整体代码架构</h1><p>本系列基于 vLLM 0.6.3 版本。</p>
+<h2 id="1-vLLM-代码结构介绍"><a href="#1-vLLM-代码结构介绍" class="headerlink" title="1 vLLM 代码结构介绍"></a>1 vLLM 代码结构介绍</h2><p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm1.png" alt="vLLM 整体架构"></p>
+<p>vLLM 的代码架构以 LLMEngine 作为核心组件展开，是整个推理过程的起点。在架构图中，LLMEngine 是处理请求的主要入口，它和 Centralized Controller（中央控制器）在同一个进程中运行，且都位于 CPU 上。LLMEngine 的任务是接收用户请求，并与中央控制器配合，确保请求能够被分配到合适的计算资源中处理。</p>
+<h3 id="1-1-Centralized-Controller-集中控制器"><a href="#1-1-Centralized-Controller-集中控制器" class="headerlink" title="1.1 Centralized Controller 集中控制器"></a>1.1 Centralized Controller 集中控制器</h3><p>Centralized Controller 实际上是实现了调度功能的模块，叫做 Scheduler（调度器）。它决定每个推理阶段的任务调度，主要负责选择哪些数据需要送到模型去推理，并且管理 KV Cache 的分配。然而，调度器并不直接处理这些物理缓存块的实际存储与管理，只是分配了缓存块的 ID，而数据的实际存储则由分布式 Worker 处理，这些 Worker 分布在 GPU 上。</p>
+<p>在调度器之下，架构图中展示了 BlockSpaceManager 和 BlockAllocator，它们的任务是管理计算所需的内存块。BlockSpaceManager 是一种抽象管理器，而 BlockAllocator 则是真正参与内存分配的类，它有 CPU 和 GPU 两种类型，用于管理不同设备上的内存块。BlockAllocator 的作用不仅限于 GPU 上的内存管理，还包括当 GPU 显存不足时，将某些缓存块卸载到 CPU 并进行管理，以便稍后再重新加载到 GPU 中。这种内存管理机制确保系统可以处理更大规模的模型而不受显存限制。</p>
+<h3 id="1-2-Distributed-Workers-分布式工作节点"><a href="#1-2-Distributed-Workers-分布式工作节点" class="headerlink" title="1.2 Distributed Workers 分布式工作节点"></a>1.2 Distributed Workers 分布式工作节点</h3><p>右侧的 Distributed Workers 是整个推理任务的执行者，图中绿色部分展示了这些 Worker 的结构。你可以将它们理解为多个 GPU 进程，每个 GPU 都有一个对应的 Worker，它们负责模型的实际加载和推理。架构中称它们为 Worker，但更准确的说法可能是 Executor，因为它不仅执行推理，还对这些 Worker 实例进行整体管理和协调。</p>
+<p>每个 Worker 中都有两个关键模块：CacheEngine 和 Worker.model（model_runner）。CacheEngine 负责管理实际的缓存数据，确保所有的计算任务都有合适的资源可用。而 Worker.model 则负责模型的加载和执行，利用 PagedAttention 这样的组件来高效处理注意力机制，从而保证推理任务的性能。</p>
+<h2 id="2-vLLM-处理请求的流程"><a href="#2-vLLM-处理请求的流程" class="headerlink" title="2 vLLM 处理请求的流程"></a>2 vLLM 处理请求的流程</h2><p>当一个请求到达时，vLLM 的各个模块是如何协同工作的？下面按流程说明。</p>
+<h3 id="2-1-初始化并加载模型权重"><a href="#2-1-初始化并加载模型权重" class="headerlink" title="2.1 初始化并加载模型权重"></a>2.1 初始化并加载模型权重</h3><p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm2.png" alt="模型加载流程"></p>
+<p>在具体执行之前，vLLM 需要初始化并加载模型权重。vLLM 支持从 HF Hub 加载模型，也支持从本地加载模型。在加载模型的过程中，vLLM 会将模型权重加载到 GPU 中，以便后续的推理任务可以直接在 GPU 上执行。</p>
+<h4 id="2-1-1-估计-KV-Cache-的物理块数量"><a href="#2-1-1-估计-KV-Cache-的物理块数量" class="headerlink" title="2.1.1 估计 KV Cache 的物理块数量"></a>2.1.1 估计 KV Cache 的物理块数量</h4><p>在模型部署的初始化阶段，vLLM 会通过一个模拟实验步骤来决定 GPU 和 CPU 上可以分配的 KV cache 物理块数量，确保后续推理时的内存分配不会导致显存溢出。这个步骤在 vLLM 中被称为 determine_num_available_blocks。</p>
+<p>首先，在启动 LLMEngine 时，系统会进行一个 “假数据模拟” 来测量模型的内存使用情况。它通过构造假数据并执行一次模拟前向推理，来观察 GPU 上模型运行时的峰值内存需求。在这次前向推理中，系统不使用 KV cache，而是单纯地模拟模型推理所需的基本内存。这种方式可以帮助确定整个推理过程会占用多少显存，从而为后续的内存分配提供依据。</p>
+<p>在完成内存需求的测量后，vLLM 会使用测得的内存数据来计算可分配给 KV cache 的显存总量。具体来说，分配给 KV cache 的显存等于 GPU 总显存减去在不使用 KV cache 时推理所占用的显存（包括模型本身和推理过程中的中间数据）。这样可以确保显存分配合理，不会因为内存不足而导致 OOM（Out Of Memory）错误。</p>
+<p>接下来，通过计算显存中可以分配的物理块数量，vLLM 会确定 GPU 上可以使用的 KV cache 数量。物理块的大小由用户定义，包括多个参数，例如 block_size、num_heads、head_size、num_layers 以及数据类型的大小（如 fp16 对应的字节数是 2）。计算公式会依据这些参数来估算单个物理块的大小，然后根据剩余显存估算出可以分配的物理块总数。</p>
+<p>总之，determine_num_available_blocks 的主要作用是通过模拟一次推理，来确定 GPU 和 CPU 上的内存可以容纳多少个 KV cache 物理块，从而在推理正式开始之前完成显存的预分配。这种方法确保了系统可以在推理阶段高效地使用内存资源，最大程度地避免因为显存不足而导致的推理失败问题。</p>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm3.png" alt="KV Cache 块数量估计"></p>
+<h4 id="2-1-2-预分配-KV-Cache"><a href="#2-1-2-预分配-KV-Cache" class="headerlink" title="2.1.2 预分配 KV Cache"></a>2.1.2 预分配 KV Cache</h4><p>在确定好 KV cache 块的大小之后，vLLM 会进行显存的预分配，以确保后续推理过程中有足够的内存来存储 KV cache。这一过程的核心是创建空的张量（empty tensor），并将它们直接分配到 GPU 上，从而锁定一定的显存空间专门用于 KV cache。这种显存预分配的方式能够避免推理过程中频繁的动态内存分配，提升系统的稳定性和推理效率。</p>
+<p>预分配的显存专门用于 KV cache，因此在 vLLM 初始化后，你可能会注意到显存的占用比单纯加载模型时要多一些。这是因为这些额外的显存已经被预先分配给了 KV cache，确保它们在推理时不会受到其他任务的影响。通过这种显存的预先规划和锁定，系统在处理推理请求时能够更高效地管理内存资源，避免了推理阶段因显存分配不足而出现的瓶颈。</p>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm4.png" alt="KV Cache 预分配"></p>
+<h3 id="2-2-处理-Request"><a href="#2-2-处理-Request" class="headerlink" title="2.2 处理 Request"></a>2.2 处理 Request</h3><p>在完成了模型的加载和 KV cache 的预分配之后，vLLM 就可以开始处理用户的请求了。</p>
+<h4 id="2-2-1-请求到达-LLMEngine"><a href="#2-2-1-请求到达-LLMEngine" class="headerlink" title="2.2.1 请求到达 LLMEngine"></a>2.2.1 请求到达 LLMEngine</h4><p>当用户发送请求时，例如输入了一个文本提示 “The future of Artificial Intelligence”，LLMEngine 首先会对请求进行处理。第一步是将输入文本进行 Tokenization（即将文本转换为一系列标识符，称为 tokens），这些 tokens 可以被模型识别和处理。之后，LLMEngine 将这些 tokens 加入到 Scheduler 的等待队列中，准备进一步处理。</p>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm5.png" alt="请求到达与 Tokenization"></p>
+<h4 id="2-2-2-调度器的任务"><a href="#2-2-2-调度器的任务" class="headerlink" title="2.2.2 调度器的任务"></a>2.2.2 调度器的任务</h4><p>在请求进入调度器后，Scheduler 会根据当前的资源情况（如可用的 KV 缓存块）来决定如何执行任务。调度器维护了三个请求队列：</p>
+<ul>
+<li><strong>Waiting Queue</strong>：等待执行的请求。</li>
+<li><strong>Running Queue</strong>：当前正在处理的请求。</li>
+<li><strong>Swapped Queue</strong>：由于显存不足而被暂时置换出去的请求。</li>
+</ul>
+<p>调度器会判断是否有足够的内存块可以分配给新的 tokens。如果有足够的可用 KV 块，则请求从等待队列移动到正在运行的队列（waiting → running）；如果内存不足，调度器会将一些运行中的请求交换到 CPU 内存（running → swapped），以腾出空间让新请求进入运行队列。</p>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm6.png" alt="调度器队列"></p>
+<h4 id="2-2-3-执行推理"><a href="#2-2-3-执行推理" class="headerlink" title="2.2.3 执行推理"></a>2.2.3 执行推理</h4><p>当请求进入运行队列后，Scheduler 会将任务分发给多个 Worker。每个 Worker 在 GPU 上运行，负责实际的推理计算。在这一过程中，CacheEngine 会按照调度器的指示管理缓存块，包括在 GPU 和 CPU 之间交换内存块，确保内存资源得到高效利用。此外，CacheEngine 还会对共享缓存块执行写时复制（copy-on-write），以确保数据的一致性和高效性。</p>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm7.png" alt="执行推理与 CacheEngine"></p>
+<h4 id="2-2-4-模型的推理过程"><a href="#2-2-4-模型的推理过程" class="headerlink" title="2.2.4 模型的推理过程"></a>2.2.4 模型的推理过程</h4><p>每个 Worker 中的 Worker.model 模块负责加载并执行模型推理。在这个过程中，它会依赖 PagedAttention 来实现高效的注意力计算。PagedAttention 是优化的注意力机制实现，适用于大规模的 Transformer 模型，并使用诸如 xformers 或 FlashAttention 等技术来加速推理。</p>
+<p>此外，模型的其他部分（例如线性层、量化层等）也进行了优化，以便在分布式执行和张量并行的情况下达到最高性能。在推理阶段，Sampler 会负责选择下一个生成的 token，使用贪心算法、随机采样或者 Beam Search 等策略。</p>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm8.png" alt="Worker 推理与 Sampler"></p>
+<h4 id="2-2-5-请求的完成与结果返回"><a href="#2-2-5-请求的完成与结果返回" class="headerlink" title="2.2.5 请求的完成与结果返回"></a>2.2.5 请求的完成与结果返回</h4><p>推理完成后，结果会被发送回 LLMEngine。LLMEngine 会对生成的 tokens 进行 detokenization，将它们转换回可读的文本，并最终将生成的结果流式地返回给用户。这一流程使得生成的结果可以尽快交付给用户，而无需等待整个请求的完全完成。</p>
+<p>整个请求的处理流程由 LLMEngine 进行协调调度，通过 Scheduler 管理内存和资源的有效利用，Worker 在 GPU 上执行具体的推理计算，最终将结果流式地返回给用户。</p>
+<p><img src="/images/vllm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/vllm9.png" alt="请求完成与结果返回"></p>
 
       
     </div>
