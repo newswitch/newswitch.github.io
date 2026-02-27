@@ -1127,7 +1127,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-27 15:59:38" itemprop="dateModified" datetime="2026-02-27T15:59:38+08:00">2026-02-27</time>
+      <time title="Modified: 2026-02-27 16:46:37" itemprop="dateModified" datetime="2026-02-27T16:46:37+08:00">2026-02-27</time>
     </span>
 
   
@@ -1140,7 +1140,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Gateway-API-Inference-Extension：智能负载均衡原理与使用"><a href="#Gateway-API-Inference-Extension：智能负载均衡原理与使用" class="headerlink" title="Gateway API Inference Extension：智能负载均衡原理与使用"></a>Gateway API Inference Extension：智能负载均衡原理与使用</h1><p>本文按<strong>从上到下、逐步深入</strong>的方式组织：先建立<strong>概览</strong>（智能负载均衡是什么、在架构中的位置、从配置到请求的完整路径），再进入<strong>原理</strong>（整体数据流 → 调度层 → Predicted Latency Scorer → Picker → 前缀缓存 → 延迟预测服务），然后介绍<strong>使用方式</strong>（部署、请求头、模型名改写、延迟预测、验证），接着是<strong>配置与调优</strong>，最后是<strong>监控与可观测性</strong>及仿真、小结与参考。按顺序阅读即可由浅入深理解整个负载均衡机制。</p>
+          <h1 id="Gateway-API-Inference-Extension：智能负载均衡原理与使用"><a href="#Gateway-API-Inference-Extension：智能负载均衡原理与使用" class="headerlink" title="Gateway API Inference Extension：智能负载均衡原理与使用"></a>Gateway API Inference Extension：智能负载均衡原理与使用</h1><p>本文按<strong>从上到下、逐步深入</strong>的方式组织：先建立<strong>概览</strong>（智能负载均衡是什么、在架构中的位置、从配置到请求的完整路径），再进入<strong>原理</strong>（整体数据流 → 调度层与 <strong>Scorer 一览</strong> → <strong>各类 Scorer 的评分方式</strong>（含 Predicted Latency 与<strong>延迟预测服务（可选）</strong>、Prefix Cache、Queue&#x2F;KV&#x2F;Running、LoRA Affinity）→ <strong>Weighted Random Picker</strong>），然后介绍<strong>使用方式</strong>（部署、请求头、模型名改写、延迟预测、验证），接着是<strong>配置与调优</strong>，最后是<strong>监控与可观测性</strong>及仿真、小结与参考。按顺序阅读即可由浅入深理解整个负载均衡机制。</p>
 <hr>
 <h2 id="第一篇：概览"><a href="#第一篇：概览" class="headerlink" title="第一篇：概览"></a>第一篇：概览</h2><h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><h3 id="1-1-什么是智能负载均衡"><a href="#1-1-什么是智能负载均衡" class="headerlink" title="1.1 什么是智能负载均衡"></a>1.1 什么是智能负载均衡</h3><p>本项目的智能负载均衡指：在 <strong>Inference Gateway</strong> 中，由 <strong>Endpoint Picker (EPP)</strong> 根据请求内容、SLO、后端实时状态（KV 缓存、队列、前缀缓存命中、预测延迟等）为每个推理请求<strong>选择最合适的模型服务 Pod</strong>，而不是简单轮询或随机。</p>
 <p>目标包括：</p>
@@ -1192,7 +1192,7 @@
 <p>因此，<strong>智能负载均衡</strong>是网关在“选哪个 Pod”上的核心能力；<strong>路由与改写、优先级与准入、LoRA 与多池、可观测与声明式运维</strong>共同构成完整的推理网关能力。</p>
 <h3 id="1-4-从大模型部署到请求的完整路径"><a href="#1-4-从大模型部署到请求的完整路径" class="headerlink" title="1.4 从大模型部署到请求的完整路径"></a>1.4 从大模型部署到请求的完整路径</h3><p>本节分三部分：<strong>一、一步一步怎么配置</strong>（从模型部署到网关与推理池）；<strong>二、部署完成后模型与网关如何对外发布</strong>；<strong>三、请求进来时如何一步一步解析、经过哪些服务、最终到达模型</strong>。</p>
 <hr>
-<h4 id="一、一步一步怎么配置"><a href="#一、一步一步怎么配置" class="headerlink" title="一、一步一步怎么配置"></a>一、一步一步怎么配置</h4><p>按以下顺序完成配置后，流量即可从公网&#x2F;内网入口到达大模型。</p>
+<h4 id="1-4-1-一步一步怎么配置"><a href="#1-4-1-一步一步怎么配置" class="headerlink" title="1.4.1 一步一步怎么配置"></a>1.4.1 一步一步怎么配置</h4><p>按以下顺序完成配置后，流量即可从公网&#x2F;内网入口到达大模型。</p>
 <table>
 <thead>
 <tr>
@@ -1253,7 +1253,7 @@
 </tr>
 </tbody></table>
 <hr>
-<h4 id="二、部署完成后：模型与网关是如何对外发布的"><a href="#二、部署完成后：模型与网关是如何对外发布的" class="headerlink" title="二、部署完成后：模型与网关是如何对外发布的"></a>二、部署完成后：模型与网关是如何对外发布的</h4><ul>
+<h4 id="1-4-2-部署完成后：模型与网关是如何对外发布的"><a href="#1-4-2-部署完成后：模型与网关是如何对外发布的" class="headerlink" title="1.4.2 部署完成后：模型与网关是如何对外发布的"></a>1.4.2 部署完成后：模型与网关是如何对外发布的</h4><ul>
 <li><p><strong>网关如何对外发布</strong><br><strong>Gateway</strong> 资源定义了监听端口与协议；网关控制器会为该 Gateway 分配<strong>入口 IP 或域名</strong>（具体方式取决于实现，如 LoadBalancer、NodePort、或 Ingress 的 host）。客户端<strong>只接触这个地址</strong>，不直接访问集群内的 Pod 或 Service。因此“网关对外发布”&#x3D; 对外暴露 <strong>Gateway 的地址</strong>，请求发往该地址即进入网关。</p>
 </li>
 <li><p><strong>模型如何对外发布</strong><br>模型 Pod 本身<strong>不直接对外暴露</strong>。对外暴露的是 <strong>Gateway 地址 + HTTPRoute 匹配的路径</strong>：<br>1）HTTPRoute 的 backendRef 指向 <strong>InferencePool</strong>，表示“该路径的流量由这个推理池承接”；<br>2）InferencePool 通过 <strong>selector</strong> 声明“哪些 Pod 属于这个池”，EPP 根据池内 Pod 做智能调度；<br>3）网关在转发前通过 <strong>ext-proc</strong> 调用 EPP，拿到“应转发到哪个 Pod 的 ip:port”后再转发。<br>因此，“模型对外发布”&#x3D; 通过 <strong>InferencePool + HTTPRoute</strong> 把“路径 → 推理池 → 池内 Pod”的关系打通，对外只暴露 Gateway 的地址；客户端访问 <code>http://&lt;Gateway-地址&gt;/&lt;路径&gt;</code> 即可间接访问到池内被选中的模型 Pod。</p>
@@ -1318,7 +1318,7 @@
 
 <p>客户端在请求头中设置 <code>x-gateway-inference-objective: high-priority-app</code> 或 <code>low-priority-app</code>，即可关联到对应 Objective。</p>
 <hr>
-<h4 id="三、请求进来时：一步一步解析、经过哪些服务、最终到达模型"><a href="#三、请求进来时：一步一步解析、经过哪些服务、最终到达模型" class="headerlink" title="三、请求进来时：一步一步解析、经过哪些服务、最终到达模型"></a>三、请求进来时：一步一步解析、经过哪些服务、最终到达模型</h4><p><strong>请求会经过哪些服务（链路概览）</strong></p>
+<h4 id="1-4-3-请求进来时：一步一步解析、经过哪些服务、最终到达模型"><a href="#1-4-3-请求进来时：一步一步解析、经过哪些服务、最终到达模型" class="headerlink" title="1.4.3 请求进来时：一步一步解析、经过哪些服务、最终到达模型"></a>1.4.3 请求进来时：一步一步解析、经过哪些服务、最终到达模型</h4><p><strong>请求会经过哪些服务（链路概览）</strong></p>
 <p>一次推理请求从客户端到模型 Pod，依次经过 <strong>3 类实体</strong>（网关是入口，EPP 是决策点，模型服务是终点）：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">客户端</span><br><span class="line">  → [1] 网关（Gateway 实现，如 Envoy）</span><br><span class="line">  → [2] EPP（Endpoint Picker，经 ext-proc 被网关调用）</span><br><span class="line">  → [3] 模型服务 Pod（如 vLLM）</span><br><span class="line">  → 响应原路返回：模型 Pod → 网关 → 客户端</span><br></pre></td></tr></table></figure>
 
@@ -1365,7 +1365,7 @@
 </tbody></table>
 <p><strong>名词说明</strong>：<strong>InferencePool</strong> 的 <strong>selector</strong>（<code>spec.selector.matchLabels</code>）指定哪些 Pod 属于该池；<strong>PodLocator</strong> 从 <strong>Datastore</strong> 取该池的候选 Pod 列表（控制器已按 selector watch 并写入），供 Filter&#x2F;Scorer&#x2F;Picker 使用。请求在目标 Pod 执行完成后，EPP 可能更新前缀缓存、上报延迟等，用于后续调度，与本次“到达模型”的时序无关。</p>
 <hr>
-<h4 id="小结（路径一览）"><a href="#小结（路径一览）" class="headerlink" title="小结（路径一览）"></a>小结（路径一览）</h4><table>
+<h4 id="1-4-4-小结（路径一览）"><a href="#1-4-4-小结（路径一览）" class="headerlink" title="1.4.4 小结（路径一览）"></a>1.4.4 小结（路径一览）</h4><table>
 <thead>
 <tr>
 <th>阶段</th>
@@ -1392,7 +1392,7 @@
 <li><strong>输入</strong>：当前请求（body、header）、候选 Pod 列表、各 Pod 的 metrics（KV、队列等）、前缀缓存索引、延迟预测结果（若启用）。</li>
 <li><strong>输出</strong>：一个（或带 fallback 的多个）<code>ip:port</code>，以及可选的新 body。</li>
 </ul>
-<h3 id="池饱和判断与准入"><a href="#池饱和判断与准入" class="headerlink" title="池饱和判断与准入"></a>池饱和判断与准入</h3><p>准入阶段会判断当前推理池是否<strong>饱和</strong>；若饱和且请求为<strong>负优先级</strong>，则直接拒绝（如 429），不进入调度。下面说明 EPP 如何判断池饱和。</p>
+<h3 id="2-1-池饱和判断与准入"><a href="#2-1-池饱和判断与准入" class="headerlink" title="2.1 池饱和判断与准入"></a>2.1 池饱和判断与准入</h3><p>准入阶段会判断当前推理池是否<strong>饱和</strong>；若饱和且请求为<strong>负优先级</strong>，则直接拒绝（如 429），不进入调度。下面说明 EPP 如何判断池饱和。</p>
 <p><strong>1. 饱和的定义</strong></p>
 <ul>
 <li>EPP 通过 <strong>SaturationDetector</strong> 接口得到池的负载程度：<code>Saturation(ctx, 候选Pod列表)</code> 返回 0～1 的数值。</li>
@@ -1454,19 +1454,83 @@
 <li><strong>Picker</strong>：根据各端点的<strong>最终得分</strong>做<strong>加权随机</strong>选择（本项目使用 A-Res 算法），得分越高被选中的概率越大。</li>
 </ul>
 <p>代码入口：<code>pkg/epp/scheduling/scheduler_profile.go</code> 的 <code>Run()</code> 依次调用 <code>runFilterPlugins</code>、<code>runScorerPlugins</code>、<code>runPickerPlugin</code>。</p>
-<h3 id="3-2-默认-常用插件"><a href="#3-2-默认-常用插件" class="headerlink" title="3.2 默认&#x2F;常用插件"></a>3.2 默认&#x2F;常用插件</h3><ul>
-<li><strong>Prefix Cache Scorer</strong>：根据请求 prompt 的 prefix 与各 Pod 的“近似前缀缓存”匹配长度打分，用于前缀缓存感知。</li>
-<li><strong>Predicted Latency Scorer</strong>：结合延迟预测与 SLO 计算 headroom，再结合前缀、KV、队列等做正&#x2F;负 headroom 分层与选择（见下节）。</li>
-<li><strong>Weighted Random Picker</strong>：A-Res 加权随机；若所有端点得分均为 0，则退化为均匀随机。</li>
-</ul>
+<h3 id="3-2-Scorer-一览"><a href="#3-2-Scorer-一览" class="headerlink" title="3.2 Scorer 一览"></a>3.2 Scorer 一览</h3><p>调度层可配置多个 <strong>Scorer</strong>，每个对候选端点打 0~1 分并带权重，最终每个端点总得分 &#x3D; Σ(score_i × weight_i)，限制在 [0,1]。当前项目<strong>共实现 6 类 Scorer</strong>，如下表；默认配置只启用其中 3 个（queue、kv-cache-utilization、prefix-cache），其余需在 EndpointPickerConfig 中显式启用。</p>
+<table>
+<thead>
+<tr>
+<th>Scorer 类型（type）</th>
+<th>说明</th>
+<th>默认启用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>prefix-cache-scorer</strong></td>
+<td>根据请求 prompt 的 prefix 与各 Pod 的“近似前缀缓存”匹配长度打分，前缀命中越多分数越高。</td>
+<td>是（默认权重 3）</td>
+</tr>
+<tr>
+<td><strong>predicted-latency-scorer</strong></td>
+<td>结合延迟预测与 SLO 计算 headroom，按策略在正&#x2F;负 headroom 层内选一个端点打 1、其余 0；无预测时退化为 Composite（KV+队列+前缀）。</td>
+<td>否（启用延迟预测时由配置加入）</td>
+</tr>
+<tr>
+<td><strong>queue-scorer</strong></td>
+<td>按 Pod 等待队列长度打分，队列越短分数越高（越空闲越适合接新请求）。</td>
+<td>是（默认权重 2）</td>
+</tr>
+<tr>
+<td><strong>kv-cache-utilization-scorer</strong></td>
+<td>按 KV 缓存利用率打分，利用率越低分数越高（显存越空闲越好）。</td>
+<td>是（默认权重 2）</td>
+</tr>
+<tr>
+<td><strong>running-requests-size-scorer</strong></td>
+<td>按当前正在处理的请求数打分，数量越少分数越高。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>lora-affinity-scorer</strong></td>
+<td>按请求所需 LoRA 与各 Pod 已加载 LoRA 的匹配程度打分，优先选已加载该 LoRA 的 Pod。</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p>下文先分节介绍<strong>每一类 Scorer 的评分方式</strong>，再说明 <strong>Weighted Random Picker</strong> 如何根据各端点的总得分做最终选择。</p>
 <hr>
-<h2 id="四、Predicted-Latency-Scorer-原理（核心“智能”）"><a href="#四、Predicted-Latency-Scorer-原理（核心“智能”）" class="headerlink" title="四、Predicted Latency Scorer 原理（核心“智能”）"></a>四、Predicted Latency Scorer 原理（核心“智能”）</h2><h3 id="4-1-输入与数据来源"><a href="#4-1-输入与数据来源" class="headerlink" title="4.1 输入与数据来源"></a>4.1 输入与数据来源</h3><ul>
+<h2 id="四、各类-Scorer-的评分方式"><a href="#四、各类-Scorer-的评分方式" class="headerlink" title="四、各类 Scorer 的评分方式"></a>四、各类 Scorer 的评分方式</h2><h3 id="4-1-Prefix-Cache-Scorer（前缀缓存）"><a href="#4-1-Prefix-Cache-Scorer（前缀缓存）" class="headerlink" title="4.1 Prefix Cache Scorer（前缀缓存）"></a>4.1 Prefix Cache Scorer（前缀缓存）</h3><p><strong>思路</strong>：EPP 不向模型节点查询“你缓存了哪些 prefix”，而是在本地维护<strong>近似前缀索引</strong>：若某请求曾被调度到某 Pod 并执行完，则认为该 Pod 上有该请求的 prefix；后续相同&#x2F;相似 prefix 的请求倾向再选该 Pod，以命中 KV 缓存。</p>
+<p><strong>评分方式</strong>：</p>
+<ol>
+<li><p><strong>对当前请求算 prefix block hash</strong><br>从 body 取出 prompt，按固定 block 大小（字符）切块，第一块带 model（及可选 cache_salt），后续块链式 hash，得到 <code>hashes[]</code>。</p>
+</li>
+<li><p><strong>在本地 indexer 中查每个 block 在哪些节点“有”</strong><br><code>matchLongestPrefix(hashes)</code>：从第 0 块起顺序查，每个 hash 查 <code>indexer.Get(hash)</code> 得到“拥有该 block”的 server 集合；对每个 server 统计<strong>从第 0 块起连续命中的块数</strong> matchLen。</p>
+</li>
+<li><p><strong>得分</strong><br>对每个端点：<strong>PrefixCacheScore &#x3D; matchLen &#x2F; total</strong>（total 为当前请求的 prefix 总块数），即 0~1 的连续分数。<br>索引来源：请求被调度到某 endpoint 并<strong>执行完后</strong>，在 PreRequest 中对该 endpoint 调用 <code>indexer.Add(state.PrefixHashes, server)</code>；索引按 per-pod LRU 淘汰。</p>
+</li>
+</ol>
+<p>代码：<code>pkg/epp/framework/plugins/scheduling/scorer/prefix/</code>（plugin.go、indexer.go）。</p>
+<hr>
+<h3 id="4-2-Predicted-Latency-Scorer（延迟预测，核心“智能”）"><a href="#4-2-Predicted-Latency-Scorer（延迟预测，核心“智能”）" class="headerlink" title="4.2 Predicted Latency Scorer（延迟预测，核心“智能”）"></a>4.2 Predicted Latency Scorer（延迟预测，核心“智能”）</h3><p>本 Scorer 依赖可选的<strong>延迟预测服务</strong>得到「请求 × 端点」的 TTFT&#x2F;TPOT 预测，再结合 SLO 算 headroom 并选点；若未启用或预测不可用，则退化为仅用 Composite 分数。下面先说明延迟预测服务（可选）的作用与实现，再说明 Scorer 的输入、headroom 与选点逻辑。</p>
+<h4 id="4-2-1-延迟预测服务（可选）"><a href="#4-2-1-延迟预测服务（可选）" class="headerlink" title="4.2.1 延迟预测服务（可选）"></a>4.2.1 延迟预测服务（可选）</h4><p><strong>作用</strong>：为 Predicted Latency Scorer 提供每个「请求 × 端点」的 <strong>TTFT&#x2F;TPOT 预测</strong>，用于计算 headroom，不把请求真实发到模型服务。</p>
+<ul>
+<li><strong>预测对象</strong>：对<strong>每个候选端点单独</strong>给出预测（同一条请求在 Pod A &#x2F; Pod B 上各有一组预测），而非“某个模型整体”或“仅基于请求内容”的单一延迟。</li>
+<li><strong>预测用途</strong>：Scorer 根据这些 <code>请求 × 端点</code> 级别预测与 SLO 算 headroom，决定当前请求更适合发到哪台机器。</li>
+</ul>
+<p><strong>实现方式</strong>：</p>
+<ul>
+<li><strong>模型类型</strong>：支持 <strong>Bayesian Ridge &#x2F; XGBoost &#x2F; LightGBM</strong>，专门做 TTFT&#x2F;TPOT 回归；通常同时维护 TTFT 与 TPOT 两组模型。<code>bayesian_ridge</code> 时训练服务用 sklearn 的 <code>BayesianRidge</code> 自动估计正则化参数；<code>xgboost</code>&#x2F;<code>lightgbm</code> 支持更复杂非线性关系。</li>
+<li><strong>训练服务</strong>：暴露 <code>POST /add_training_data_bulk</code>，接收 EPP 上报的“真实请求完成后的 (特征, actual_ttft_ms, actual_tpot_ms)”列表。数据来源：EPP 在请求真实发到模型 Pod 后观察响应流，首 token 到达时记录 <code>actual_ttft_ms = now - request_received_time</code>，后续 token 间隔作为 <code>actual_tpot_ms</code>；按 <code>请求 × 端点</code> 填充特征、构造 TrainingEntry，经 sidecar 批量上报。样本数达到 <code>MIN_SAMPLES_FOR_RETRAIN</code> 后重训并持久化；样本不足时使用默认模型。</li>
+<li><strong>预测服务</strong>：周期性从训练服务拉取模型&#x2F;系数；对每个「请求 × 端点」特征向量输出 TTFT&#x2F;TPOT；EPP 对 N 个候选端点做 <strong>bulk 预测</strong>，一次 HTTP 得到 N 组结果。</li>
+<li><strong>输入特征（请求 × 端点）</strong>：请求侧（<code>InputTokenLength</code>、<code>NumTokensGenerated</code>）、端点侧（<code>KVCachePercentage</code>、<code>NumRequestWaiting</code>、<code>NumRequestRunning</code>、<code>PodType</code>）、交互特征（<code>PrefixCacheScore</code>）。</li>
+<li><strong>部署形态</strong>：训练&#x2F;预测服务 CPU 即可；通过 Helm <code>inferenceExtension.latencyPredictor.enabled=true</code> 以 sidecar 与 EPP 同机部署，sidecar 负责缓冲样本、调用 <code>/add_training_data_bulk</code>、刷新模型并对外提供预测（含 bulk）接口。</li>
+</ul>
+<p><strong>与智能负载均衡的关系</strong>：启用后 Scorer 多一个“延迟维度”，按预测与 SLO 划分正&#x2F;负 headroom 并精细选点；与前缀缓存 Scorer（刻画 KV 命中可能）、饱和检测（池级满载信号）配合，实现感知缓存、感知延迟、避免过载。<strong>降级</strong>：未启用或预测失败时退化为仅用 Composite 分数；请求头 <code>x-prediction-based-scheduling-off</code> 可显式关闭基于预测的调度。</p>
+<hr>
+<h4 id="4-2-2-输入与数据来源"><a href="#4-2-2-输入与数据来源" class="headerlink" title="4.2.2 输入与数据来源"></a>4.2.2 输入与数据来源</h4><ul>
 <li><strong>请求</strong>：body（prompt）、header 中的 SLO（<code>x-slo-ttft-ms</code>、<code>x-slo-tpot-ms</code>）等。</li>
 <li><strong>候选端点</strong>：每个端点的 <strong>Metrics</strong>（KV 使用率、排队长度、运行中请求数等），来自数据层对模型服务器 metrics 的拉取。</li>
 <li><strong>延迟预测</strong>：若启用延迟预测服务，对「当前请求 + 该端点」预测 <strong>TTFT</strong>、<strong>TPOT</strong>（不把请求真实发到模型服务，而是调用独立的预测服务做轻量 ML 推理）。</li>
 <li><strong>前缀缓存</strong>：由 Prefix Cache 插件在 cycleState 中提供每个端点对当前请求的 <strong>PrefixCacheScore</strong>（0~1）。</li>
 </ul>
-<h3 id="4-2-Headroom（余量）"><a href="#4-2-Headroom（余量）" class="headerlink" title="4.2 Headroom（余量）"></a>4.2 Headroom（余量）</h3><ul>
+<h4 id="4-2-3-Headroom（余量）"><a href="#4-2-3-Headroom（余量）" class="headerlink" title="4.2.3 Headroom（余量）"></a>4.2.3 Headroom（余量）</h4><ul>
 <li><strong>TTFT Headroom</strong> &#x3D; TTFT SLO − 预测 TTFT  <ul>
 <li>&gt;0 表示预计能满足首 token 延迟。</li>
 </ul>
@@ -1477,7 +1541,7 @@
 </li>
 </ul>
 <p>若未配置 SLO 或预测不可用，则退化为仅用 <strong>Composite 分数</strong>（KV 空闲、队列、前缀）打分，不再区分 headroom。</p>
-<h3 id="4-3-选点逻辑（Score-内部）"><a href="#4-3-选点逻辑（Score-内部）" class="headerlink" title="4.3 选点逻辑（Score 内部）"></a>4.3 选点逻辑（Score 内部）</h3><ol>
+<h4 id="4-2-4-选点逻辑（Score-内部）"><a href="#4-2-4-选点逻辑（Score-内部）" class="headerlink" title="4.2.4 选点逻辑（Score 内部）"></a>4.2.4 选点逻辑（Score 内部）</h4><ol>
 <li><p><strong>获取预测与 SLO 上下文</strong><br>若无有效预测，或<strong>预测数量与端点数量不一致</strong>（例如对 N 个候选端点做 bulk 预测时，只拿到少于 N 条或条数不对的预测结果，无法一一对应到端点），则使用 <code>scoreWithoutPredictions</code>（仅 composite），直接返回。</p>
 </li>
 <li><p><strong>全局前缀亲和性门控（ε-greedy）</strong>  </p>
@@ -1550,11 +1614,21 @@
 <li><strong>无预测时</strong>：不进行 headroom 分层，也不使用上述“正&#x2F;负 + 策略”，而是<strong>仅用 Composite 分数</strong>选点（逻辑上相当于强制走 composite-only）。</li>
 </ul>
 <p>相关代码：<code>pkg/epp/framework/plugins/scheduling/scorer/predictedlatency/</code>（scorer.go、scorer_helpers.go、helpers.go、selection.go 等）。</p>
-<h3 id="4-4-Composite-分数（无预测或-composite-only-时）"><a href="#4-4-Composite-分数（无预测或-composite-only-时）" class="headerlink" title="4.4 Composite 分数（无预测或 composite-only 时）"></a>4.4 Composite 分数（无预测或 composite-only 时）</h3><ul>
+<h4 id="4-2-5-Composite-分数（无预测或-composite-only-时）"><a href="#4-2-5-Composite-分数（无预测或-composite-only-时）" class="headerlink" title="4.2.5 Composite 分数（无预测或 composite-only 时）"></a>4.2.5 Composite 分数（无预测或 composite-only 时）</h4><ul>
 <li>三项：<strong>KV 剩余</strong>（1 − kv_usage）、<strong>队列相对空闲</strong>、<strong>PrefixCacheScore</strong>。</li>
 <li>权重可配置：<code>CompositeKVWeight</code>、<code>CompositeQueueWeight</code>、<code>CompositePrefixWeight</code>。</li>
 <li>在 <code>buildCompositeChoices</code> 中计算每个端点的 composite，再按策略做加权随机或选最大（<code>SelectionMode</code>: linear &#x2F; max）。</li>
 </ul>
+<hr>
+<h3 id="4-3-Queue-KV-Cache-Utilization-Running-Requests-Size-Scorer"><a href="#4-3-Queue-KV-Cache-Utilization-Running-Requests-Size-Scorer" class="headerlink" title="4.3 Queue &#x2F; KV Cache Utilization &#x2F; Running Requests Size Scorer"></a>4.3 Queue &#x2F; KV Cache Utilization &#x2F; Running Requests Size Scorer</h3><p>三者均为<strong>基于 Pod metrics 的连续打分</strong>（0~1），数据来自数据层对模型服务 Prometheus 的拉取。</p>
+<ul>
+<li><strong>queue-scorer</strong>：按 <strong>WaitingQueueSize</strong>（等待队列长度）打分。队列越短分数越高，表示该 Pod 越“空闲”，更适合接新请求。典型做法是将队列长度映射到 [0,1]（如用阈值归一化后取 1− 或类似单调递减函数）。</li>
+<li><strong>kv-cache-utilization-scorer</strong>：按 <strong>KVCacheUsagePercent</strong>（KV 缓存利用率）打分。利用率越低分数越高，表示显存越有余量，越不易发生 eviction。</li>
+<li><strong>running-requests-size-scorer</strong>：按 <strong>RunningRequestsSize</strong>（当前正在处理的请求数）打分。数量越少分数越高，表示该 Pod 当前负载越轻。</li>
+</ul>
+<p>以上三个 Scorer 输出均为每个端点一个 0~1 的分数，与其他 Scorer 的分数按配置权重加权求和后，再交给 Picker。</p>
+<hr>
+<h3 id="4-4-LoRA-Affinity-Scorer"><a href="#4-4-LoRA-Affinity-Scorer" class="headerlink" title="4.4 LoRA Affinity Scorer"></a>4.4 LoRA Affinity Scorer</h3><p>按<strong>请求所需 LoRA</strong> 与<strong>各 Pod 已加载的 LoRA</strong> 的匹配程度打分：若某 Pod 已加载该 LoRA，则得分更高（或为 1），否则更低（或为 0）。用于多 LoRA 场景下优先把请求路由到已加载对应 adapter 的 Pod，避免动态加载开销。需模型服务暴露 LoRA 加载状态（如通过 Prometheus 或协议），EPP 从数据层获取后计算亲和分数。</p>
 <hr>
 <h2 id="五、Weighted-Random-Picker（从分数到概率）"><a href="#五、Weighted-Random-Picker（从分数到概率）" class="headerlink" title="五、Weighted Random Picker（从分数到概率）"></a>五、Weighted Random Picker（从分数到概率）</h2><ul>
 <li><strong>输入</strong>：每个端点的加权总分（可能来自 PredictedLatency + 其他 Scorer）。</li>
@@ -1564,127 +1638,7 @@
 </ul>
 <p>代码：<code>pkg/epp/framework/plugins/scheduling/picker/weighted_random_picker.go</code>。</p>
 <hr>
-<h2 id="六、前缀缓存感知"><a href="#六、前缀缓存感知" class="headerlink" title="六、前缀缓存感知"></a>六、前缀缓存感知</h2><h3 id="6-1-思路"><a href="#6-1-思路" class="headerlink" title="6.1 思路"></a>6.1 思路</h3><p>EPP <strong>不</strong>向模型节点查询“你缓存了哪些 prefix”，而是在本地维护<strong>近似前缀索引</strong>：<br>若某请求曾被调度到某 Pod 并执行完，则认为该 Pod 上有该请求的 prefix；后续相同&#x2F;相似 prefix 的请求倾向再选该 Pod，以命中 KV 缓存。</p>
-<h3 id="6-2-当前请求如何匹配到“最优前缀”节点"><a href="#6-2-当前请求如何匹配到“最优前缀”节点" class="headerlink" title="6.2 当前请求如何匹配到“最优前缀”节点"></a>6.2 当前请求如何匹配到“最优前缀”节点</h3><ol>
-<li><p><strong>对当前请求算 prefix block hash</strong>  </p>
-<ul>
-<li>从 body 取出 prompt，按固定 block 大小（字符）切块，第一块带 model（及可选 cache_salt），后续块链式 hash。  </li>
-<li>得到 <code>hashes[]</code>，表示当前请求的 prefix 由哪些 block 组成。</li>
-</ul>
-</li>
-<li><p><strong>在本地 indexer 中查每个 block 在哪些节点“有”</strong>  </p>
-<ul>
-<li><code>matchLongestPrefix(hashes)</code>：从第 0 块起顺序查，每个 hash 查 <code>indexer.Get(hash)</code> 得到“拥有该 block”的 server 集合；若某 hash 无任何 server 则停止（前缀需连续）。  </li>
-<li>对每个 server 统计<strong>从第 0 块起连续命中的块数</strong> matchLen。</li>
-</ul>
-</li>
-<li><p><strong>得分</strong>  </p>
-<ul>
-<li>对每个端点：<strong>PrefixCacheScore &#x3D; matchLen &#x2F; total</strong>（total 为当前请求的 prefix 总块数）。  </li>
-<li>Score 最高的端点即为当前请求在 EPP 视角下“前缀缓存最匹配”的节点。</li>
-</ul>
-</li>
-</ol>
-<h3 id="6-3-索引数据从哪来"><a href="#6-3-索引数据从哪来" class="headerlink" title="6.3 索引数据从哪来"></a>6.3 索引数据从哪来</h3><ul>
-<li>请求被调度到某 endpoint 并<strong>执行完后</strong>，在 <strong>PreRequest</strong> 中对该 endpoint 调用 <code>indexer.Add(state.PrefixHashes, server)</code>，表示“该 server 上曾处理过这段 prefix”。  </li>
-<li>索引会按 per-pod LRU 做淘汰，避免长期认为某节点仍有已 evict 的 prefix。</li>
-</ul>
-<p>代码：<code>pkg/epp/framework/plugins/scheduling/scorer/prefix/</code>（plugin.go、indexer.go）。</p>
-<hr>
-<h2 id="七、延迟预测服务（可选）"><a href="#七、延迟预测服务（可选）" class="headerlink" title="七、延迟预测服务（可选）"></a>七、延迟预测服务（可选）</h2><h3 id="7-1-作用"><a href="#7-1-作用" class="headerlink" title="7.1 作用"></a>7.1 作用</h3><p>为 Predicted Latency Scorer 提供每个「请求 × 端点（即“这条请求如果发到这个具体 Pod 上”）」的 <strong>TTFT&#x2F;TPOT 预测</strong>，用于计算 headroom，不把请求真实发到模型服务。</p>
-<ul>
-<li><strong>预测对象</strong>：不是“某个模型整体”或“仅基于请求内容”的单一延迟，而是对<strong>每个候选端点单独</strong>给出预测：  <ul>
-<li>这条请求发送到 <strong>Pod A</strong> 时的 TTFT&#x2F;TPOT 预测；  </li>
-<li>同一条请求发送到 <strong>Pod B</strong> 时的 TTFT&#x2F;TPOT 预测；  </li>
-<li>…对所有候选 Pod 都算一遍。</li>
-</ul>
-</li>
-<li><strong>预测用途</strong>：Predicted Latency Scorer 根据这些 <code>请求 × 端点</code> 级别的预测与 SLO 算 headroom，决定<strong>当前请求更适合发到哪台机器</strong>。</li>
-</ul>
-<h3 id="7-2-实现方式"><a href="#7-2-实现方式" class="headerlink" title="7.2 实现方式"></a>7.2 实现方式</h3><ul>
-<li><p><strong>模型类型（只用于 TTFT&#x2F;TPOT 回归）</strong><br>延迟预测当前支持三种模型类型：<strong>Bayesian Ridge &#x2F; XGBoost &#x2F; LightGBM</strong>。它们在本项目中<strong>专门用于做 TTFT&#x2F;TPOT 回归</strong>，不会参与其他业务预测：  </p>
-<ul>
-<li>通常同时维护一组 <strong>TTFT 回归模型</strong> 与一组 <strong>TPOT 回归模型</strong>；  </li>
-<li>配置为 <code>bayesian_ridge</code> 时，训练服务会用 sklearn 的 <code>BayesianRidge</code> 自动估计正则化参数；  </li>
-<li>配置为 <code>xgboost</code> &#x2F; <code>lightgbm</code> 时，则使用对应库的回归模型（支持更复杂非线性关系）。</li>
-</ul>
-</li>
-<li><p><strong>训练服务</strong>  </p>
-<ul>
-<li>接口：暴露 HTTP API，核心是 <code>POST /add_training_data_bulk</code>，接收 EPP 上报的“真实请求完成后的 (特征, actual_ttft_ms, actual_tpot_ms)&#96; 列表；  </li>
-<li>数据来源：  <ul>
-<li>EPP 在请求真实发送到模型 Pod 后，<strong>观察响应流</strong>：  <ul>
-<li>首 token 到达时，记录 <code>actual_ttft_ms = now - request_received_time</code>（请求进 EPP 到首 token 的时间）；  </li>
-<li>每个后续 token 的间隔作为 <code>actual_tpot_ms</code>（inter-token 延迟）；</li>
-</ul>
-</li>
-<li>对每个 <code>请求 × 端点</code> 填充特征（见下文），构造 TrainingEntry，通过 sidecar 批量上报给训练服务；</li>
-</ul>
-</li>
-<li>训练：当样本数达到 <code>MIN_SAMPLES_FOR_RETRAIN</code>（可配）后，分别重训 TTFT&#x2F;TPOT 模型，并持久化模型文件或系数。样本不足时会使用一个 <strong>默认模型</strong>（带先验或简单数据训练）。</li>
-</ul>
-</li>
-<li><p><strong>预测服务</strong>  </p>
-<ul>
-<li>周期性从训练服务拉取最新模型 &#x2F; 系数（如 <code>/model/download/*</code>、<code>/metrics</code>）；  </li>
-<li>对每个「特征向量（请求 × 端点）」输出 TTFT&#x2F;TPOT 预测；  </li>
-<li>EPP 调度时对 N 个候选端点构造长度为 N 的特征列表，调用 <strong>bulk 预测接口</strong>（如 <code>/predict/bulk</code>），一次 HTTP 调用得到 N 组 <code>TTFT/TPOT</code> 结果。</li>
-</ul>
-</li>
-<li><p><strong>输入特征（请求 × 端点）</strong><br>延迟预测的特征既包含<strong>请求侧</strong>信息，也包含<strong>端点自身状态</strong>以及两者的交互，而不是“只看请求内容”：  </p>
-<ul>
-<li><strong>请求侧</strong>：  <ul>
-<li><code>InputTokenLength</code>：根据请求 prompt 长度估算的输入 token 数；  </li>
-<li><code>NumTokensGenerated</code>：TPOT 模型中使用的“当前已生成 token 数”（预测后续 token 间隔）。</li>
-</ul>
-</li>
-<li><strong>端点侧（每个 Pod 不同）</strong>：  <ul>
-<li><code>KVCachePercentage</code>：该 Pod 当前 KV 缓存利用率；  </li>
-<li><code>NumRequestWaiting</code>：该 Pod 等待队列长度；  </li>
-<li><code>NumRequestRunning</code>：该 Pod 正在处理的请求数；  </li>
-<li><code>PodType</code>：prefill &#x2F; decode 等角色（在拆分部署场景下）。</li>
-</ul>
-</li>
-<li><strong>交互特征（请求 × 端点）</strong>：  <ul>
-<li><code>PrefixCacheScore</code>：对“这条请求 + 这个 Pod” 的前缀缓存命中度（0~1）。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>部署形态</strong>  </p>
-<ul>
-<li>训练&#x2F;预测服务本身只做轻量级 ML 推理与线性代数，<strong>CPU 即可</strong>，不占用 GPU&#x2F;NPU；  </li>
-<li>通过 Helm 的 <code>inferenceExtension.latencyPredictor.enabled=true</code> 以 sidecar 形式与 EPP 一起部署，由 sidecar 负责：  <ul>
-<li>缓冲并采样训练样本，按批调用训练服务 <code>/add_training_data_bulk</code>；  </li>
-<li>周期性刷新模型&#x2F;系数，并对 EPP 提供预测接口（包括 bulk 预测）。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="7-3-与智能负载均衡的关系"><a href="#7-3-与智能负载均衡的关系" class="headerlink" title="7.3 与智能负载均衡的关系"></a>7.3 与智能负载均衡的关系</h3><ul>
-<li><p><strong>对 Scorer 来说：多一个“延迟维度”的感知</strong>  </p>
-<ul>
-<li>启用延迟预测后，Predicted Latency Scorer 会基于「请求 × 端点」的预测 TTFT&#x2F;TPOT 与 SLO 计算 headroom，并据此将端点划分为 <strong>正 headroom</strong> &#x2F; <strong>负 headroom</strong> 两大类，再结合前缀缓存、KV&#x2F;队列等做精细选择；  </li>
-<li>由于预测是按端点粒度的，同一条请求在不同 Pod 上会得到不同的预测延迟，从而指导“更适合发到哪台机器”。</li>
-</ul>
-</li>
-<li><p><strong>与前缀缓存和饱和度的配合</strong>  </p>
-<ul>
-<li>前缀缓存 Scorer 更多刻画“这个 Pod 是否<strong>更有可能命中 KV</strong>”；  </li>
-<li>延迟预测服务则从历史样本中学习“在当前负载 + 缓存条件下，延迟大致是多少”；  </li>
-<li>饱和检测（Utilization &#x2F; Concurrency Detector）在池级别提供“是否已经满载”的信号。三者合起来，让调度既<strong>感知缓存</strong>、又<strong>感知延迟</strong>、还<strong>避免过载</strong>。</li>
-</ul>
-</li>
-<li><p><strong>降级路径</strong>  </p>
-<ul>
-<li>若未启用延迟预测，或预测服务不可用&#x2F;失败，Predicted Latency Scorer 会自动退化为仅用 <strong>Composite 分数</strong>（KV 剩余、队列空闲度、PrefixCacheScore 等）打分；  </li>
-<li>业务可以通过请求头 <code>x-prediction-based-scheduling-off</code> 显式关闭基于预测的调度，按需回退到“仅看实时状态 + 前缀缓存”的策略。</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="第三篇：使用与配置"><a href="#第三篇：使用与配置" class="headerlink" title="第三篇：使用与配置"></a>第三篇：使用与配置</h2><h2 id="八、使用方式"><a href="#八、使用方式" class="headerlink" title="八、使用方式"></a>八、使用方式</h2><h3 id="8-1-部署（简要）"><a href="#8-1-部署（简要）" class="headerlink" title="8.1 部署（简要）"></a>8.1 部署（简要）</h3><ol>
+<h2 id="第三篇：使用与配置"><a href="#第三篇：使用与配置" class="headerlink" title="第三篇：使用与配置"></a>第三篇：使用与配置</h2><h2 id="六、使用方式"><a href="#六、使用方式" class="headerlink" title="六、使用方式"></a>六、使用方式</h2><h3 id="6-1-部署（简要）"><a href="#6-1-部署（简要）" class="headerlink" title="6.1 部署（简要）"></a>6.1 部署（简要）</h3><ol>
 <li>安装 <strong>Inference Extension CRDs</strong>。  </li>
 <li>安装并配置<strong>支持 ext-proc 与 Gateway API 的网关</strong>（如 Istio、Kgateway、NGINX Gateway Fabric）。  </li>
 <li>部署 <strong>Gateway</strong> 资源（如 inference-gateway）。  </li>
@@ -1692,30 +1646,30 @@
 <li>使用 <strong>InferencePool Helm Chart</strong> 部署 <strong>InferencePool + EPP</strong>（<code>inferencePool.modelServers.matchLabels</code> 指向模型服务 Pod）。</li>
 </ol>
 <p>EPP 默认即带智能负载均衡（Prefix Cache Scorer、Predicted Latency 若配置则启用、Weighted Random Picker）。无需单独“开启智能负载均衡”开关。</p>
-<h3 id="8-2-请求头（可选）"><a href="#8-2-请求头（可选）" class="headerlink" title="8.2 请求头（可选）"></a>8.2 请求头（可选）</h3><ul>
+<h3 id="6-2-请求头（可选）"><a href="#6-2-请求头（可选）" class="headerlink" title="6.2 请求头（可选）"></a>6.2 请求头（可选）</h3><ul>
 <li><strong>x-slo-ttft-ms</strong>：TTFT SLO（毫秒），用于延迟预测与 headroom。  </li>
 <li><strong>x-slo-tpot-ms</strong>：TPOT SLO（毫秒）。  </li>
 <li><strong>x-prediction-based-scheduling-off</strong>：设为 true 可关闭基于预测的调度（退化为 composite 等）。  </li>
 <li><strong>x-gateway-model-name</strong>：若提供，可覆盖 body 中的 model，用于路由与改写。</li>
 </ul>
-<h3 id="8-3-模型名改写（报文字段替换）"><a href="#8-3-模型名改写（报文字段替换）" class="headerlink" title="8.3 模型名改写（报文字段替换）"></a>8.3 模型名改写（报文字段替换）</h3><p>通过 <strong>InferenceModelRewrite</strong> CRD 可对 body 中的 <strong>model</strong> 字段做：</p>
+<h3 id="6-3-模型名改写（报文字段替换）"><a href="#6-3-模型名改写（报文字段替换）" class="headerlink" title="6.3 模型名改写（报文字段替换）"></a>6.3 模型名改写（报文字段替换）</h3><p>通过 <strong>InferenceModelRewrite</strong> CRD 可对 body 中的 <strong>model</strong> 字段做：</p>
 <ul>
 <li><strong>别名</strong>：如 <code>food-review</code> → <code>food-review-v1</code>。  </li>
 <li><strong>默认回退</strong>：未匹配的 model 改写为默认模型名。  </li>
 <li><strong>按权重拆分</strong>：如 90% → <code>food-review-v1</code>，10% → <code>food-review-v2</code>。</li>
 </ul>
 <p>改写后的 model 会写回请求 body，并随 BodyMutation 发给后端。<br>详见：<code>site-src/api-types/inferencemodelrewrite.md</code> 及 <code>pkg/epp/requestcontrol/director.go</code> 中的 <code>applyWeightedModelRewrite</code> 与 <code>reqCtx.Request.Body[&quot;model&quot;] = reqCtx.TargetModelName</code>。</p>
-<h3 id="8-4-启用延迟预测（可选）"><a href="#8-4-启用延迟预测（可选）" class="headerlink" title="8.4 启用延迟预测（可选）"></a>8.4 启用延迟预测（可选）</h3><ul>
+<h3 id="6-4-启用延迟预测（可选）"><a href="#6-4-启用延迟预测（可选）" class="headerlink" title="6.4 启用延迟预测（可选）"></a>6.4 启用延迟预测（可选）</h3><ul>
 <li>在 Helm 中设置 <code>inferenceExtension.latencyPredictor.enabled=true</code>，并配置训练&#x2F;预测服务镜像与必要参数。  </li>
 <li>部署后，Predicted Latency Scorer 会调用预测服务做 bulk 预测，用于 headroom 计算。  </li>
 <li>文档：<code>site-src/guides/latency-based-predictor.md</code>。</li>
 </ul>
-<h3 id="8-5-验证与发请求"><a href="#8-5-验证与发请求" class="headerlink" title="8.5 验证与发请求"></a>8.5 验证与发请求</h3><ul>
+<h3 id="6-5-验证与发请求"><a href="#6-5-验证与发请求" class="headerlink" title="6.5 验证与发请求"></a>6.5 验证与发请求</h3><ul>
 <li>确认 HttpRoute、InferencePool 为 <code>Accepted=True</code>、<code>ResolvedRefs=True</code>。  </li>
 <li>获取 Gateway 地址后，向 <code>/v1/completions</code> 或 <code>/v1/chat/completions</code> 发请求；可带 <code>x-slo-ttft-ms</code>、<code>x-slo-tpot-ms</code> 验证 SLO 感知路由。</li>
 </ul>
 <hr>
-<h2 id="九、主要配置项与调优"><a href="#九、主要配置项与调优" class="headerlink" title="九、主要配置项与调优"></a>九、主要配置项与调优</h2><h3 id="9-1-Predicted-Latency-Scorer（若启用）"><a href="#9-1-Predicted-Latency-Scorer（若启用）" class="headerlink" title="9.1 Predicted Latency Scorer（若启用）"></a>9.1 Predicted Latency Scorer（若启用）</h3><ul>
+<h2 id="七、主要配置项与调优"><a href="#七、主要配置项与调优" class="headerlink" title="七、主要配置项与调优"></a>七、主要配置项与调优</h2><h3 id="7-1-Predicted-Latency-Scorer（若启用）"><a href="#7-1-Predicted-Latency-Scorer（若启用）" class="headerlink" title="7.1 Predicted Latency Scorer（若启用）"></a>7.1 Predicted Latency Scorer（若启用）</h3><ul>
 <li><strong>HeadroomSelectionStrategy</strong>：least &#x2F; most &#x2F; composite-least &#x2F; composite-most &#x2F; composite-only。  </li>
 <li><strong>EpsilonExploreSticky</strong>：前缀亲和门控的探索概率。  </li>
 <li><strong>EpsilonExploreNeg</strong>：从负 headroom 中选取的概率。  </li>
@@ -1723,17 +1677,17 @@
 <li><strong>CompositeKVWeight &#x2F; CompositeQueueWeight &#x2F; CompositePrefixWeight</strong>：composite 三项权重。  </li>
 <li><strong>NegHeadroomTTFTWeight &#x2F; NegHeadroomTPOTWeight</strong>：负 headroom 时 TTFT&#x2F;TPOT deficit 权重。</li>
 </ul>
-<h3 id="9-2-Prefix-Cache-Scorer"><a href="#9-2-Prefix-Cache-Scorer" class="headerlink" title="9.2 Prefix Cache Scorer"></a>9.2 Prefix Cache Scorer</h3><ul>
+<h3 id="7-2-Prefix-Cache-Scorer"><a href="#7-2-Prefix-Cache-Scorer" class="headerlink" title="7.2 Prefix Cache Scorer"></a>7.2 Prefix Cache Scorer</h3><ul>
 <li><strong>blockSize</strong>、<strong>maxPrefixBlocksToMatch</strong> 等（见 prefix 插件配置）。  </li>
 <li><strong>LRU 容量</strong>：可与模型服务暴露的 <code>CacheNumGPUBlocks</code> 等对齐（若支持 auto-tune）。</li>
 </ul>
-<h3 id="9-3-Picker"><a href="#9-3-Picker" class="headerlink" title="9.3 Picker"></a>9.3 Picker</h3><ul>
+<h3 id="7-3-Picker"><a href="#7-3-Picker" class="headerlink" title="7.3 Picker"></a>7.3 Picker</h3><ul>
 <li><strong>maxNumOfEndpoints</strong>：通常为 1；若支持多 fallback，可大于 1。</li>
 </ul>
 <p>以上多通过 EPP&#x2F;InferencePool 的 Helm values 或 EndpointPickerConfig 等传递，具体字段以仓库当前配置为准。</p>
 <hr>
-<h2 id="第四篇：监控与其它"><a href="#第四篇：监控与其它" class="headerlink" title="第四篇：监控与其它"></a>第四篇：监控与其它</h2><h2 id="十、监控与可观测性"><a href="#十、监控与可观测性" class="headerlink" title="十、监控与可观测性"></a>十、监控与可观测性</h2><p>智能负载均衡与推理网关的<strong>可观测性</strong>依赖 EPP 及相关组件暴露的 <strong>Prometheus 指标</strong>，用于监控尾延迟、SLO 违反率、预测准确度、负载均衡效果，并与 Grafana 等集成做告警与容量规划。以下为 <strong>EPP 暴露的指标</strong>详解（各模型实例自身的 metrics 需单独配置 Prometheus 抓取，见前文说明）。</p>
-<h3 id="10-1-EPP-指标详解"><a href="#10-1-EPP-指标详解" class="headerlink" title="10.1 EPP 指标详解"></a>10.1 EPP 指标详解</h3><p>EPP 默认在 <strong>9090</strong> 端口暴露 <code>/metrics</code>，指标均带 <strong>ALPHA</strong> 稳定性。为得到完整的响应延迟与 token 统计，需将 body 模式设为 <code>Buffered</code> 或 <code>Streamed</code>；若使用 vLLM 流式请求并希望包含 usage，请在请求中设置 <code>stream_options: {&quot;include_usage&quot;: true}</code>。</p>
+<h2 id="第四篇：监控与其它"><a href="#第四篇：监控与其它" class="headerlink" title="第四篇：监控与其它"></a>第四篇：监控与其它</h2><h2 id="八、监控与可观测性"><a href="#八、监控与可观测性" class="headerlink" title="八、监控与可观测性"></a>八、监控与可观测性</h2><p>智能负载均衡与推理网关的<strong>可观测性</strong>依赖 EPP 及相关组件暴露的 <strong>Prometheus 指标</strong>，用于监控尾延迟、SLO 违反率、预测准确度、负载均衡效果，并与 Grafana 等集成做告警与容量规划。以下为 <strong>EPP 暴露的指标</strong>详解（各模型实例自身的 metrics 需单独配置 Prometheus 抓取，见前文说明）。</p>
+<h3 id="8-1-EPP-指标详解"><a href="#8-1-EPP-指标详解" class="headerlink" title="8.1 EPP 指标详解"></a>8.1 EPP 指标详解</h3><p>EPP 默认在 <strong>9090</strong> 端口暴露 <code>/metrics</code>，指标均带 <strong>ALPHA</strong> 稳定性。为得到完整的响应延迟与 token 统计，需将 body 模式设为 <code>Buffered</code> 或 <code>Streamed</code>；若使用 vLLM 流式请求并希望包含 usage，请在请求中设置 <code>stream_options: {&quot;include_usage&quot;: true}</code>。</p>
 <p><strong>（1）请求与错误（按模型维度）</strong></p>
 <table>
 <thead>
@@ -1874,7 +1828,7 @@
 <td><code>commit</code>、<code>build_ref</code></td>
 </tr>
 </tbody></table>
-<h3 id="10-2-流控指标（实验性）"><a href="#10-2-流控指标（实验性）" class="headerlink" title="10.2 流控指标（实验性）"></a>10.2 流控指标（实验性）</h3><p>启用实验性 <strong>Flow Control</strong> 时，EPP 会额外暴露以下指标，用于观测排队时长、队列长度与派发周期。</p>
+<h3 id="8-2-流控指标（实验性）"><a href="#8-2-流控指标（实验性）" class="headerlink" title="8.2 流控指标（实验性）"></a>8.2 流控指标（实验性）</h3><p>启用实验性 <strong>Flow Control</strong> 时，EPP 会额外暴露以下指标，用于观测排队时长、队列长度与派发周期。</p>
 <table>
 <thead>
 <tr>
@@ -1915,30 +1869,30 @@
 <td><code>fairness_id</code>、<code>priority</code>、<code>outcome</code></td>
 </tr>
 </tbody></table>
-<h3 id="10-3-采集与访问"><a href="#10-3-采集与访问" class="headerlink" title="10.3 采集与访问"></a>10.3 采集与访问</h3><ul>
+<h3 id="8-3-采集与访问"><a href="#8-3-采集与访问" class="headerlink" title="8.3 采集与访问"></a>8.3 采集与访问</h3><ul>
 <li>EPP 默认在 <strong>9090</strong> 端口暴露 <code>/metrics</code>；需配置 Prometheus 抓取该端点（及模型服务等端点）。  </li>
 <li>抓取权限：客户端需具备 <code>nonResourceURLs: [&quot;/metrics&quot;]</code>、<code>verbs: [&quot;get&quot;]</code> 的 ClusterRole。  </li>
 <li>更多说明（含 pprof、Grafana&#x2F;Prometheus 部署、告警示例）见：<strong><code>site-src/guides/metrics-and-observability.md</code></strong>。</li>
 </ul>
-<h3 id="10-4-建议监控与告警"><a href="#10-4-建议监控与告警" class="headerlink" title="10.4 建议监控与告警"></a>10.4 建议监控与告警</h3><ul>
+<h3 id="8-4-建议监控与告警"><a href="#8-4-建议监控与告警" class="headerlink" title="8.4 建议监控与告警"></a>8.4 建议监控与告警</h3><ul>
 <li><strong>SLO 与延迟</strong>：使用 <code>inference_objective_request_duration_seconds</code>、<code>inference_objective_normalized_time_per_output_token_seconds</code> 的尾分位（如 P99），与请求头中的 <code>x-slo-ttft-ms</code> &#x2F; <code>x-slo-tpot-ms</code> 对比做违反率告警。  </li>
 <li><strong>错误率</strong>：<code>rate(inference_objective_request_error_total)</code> &#x2F; <code>rate(inference_objective_request_total)</code> 按 model 监控。  </li>
 <li><strong>池健康与饱和</strong>：<code>inference_pool_ready_pods</code>、<code>inference_pool_average_kv_cache_utilization</code>、<code>inference_pool_average_queue_size</code> 用于容量规划与饱和前预警（如 KV 利用率 &gt; 0.9 或队列深度超过阈值告警）。  </li>
 <li><strong>预测与调度</strong>：若启用延迟预测，可结合预测耗时、预测与真实延迟的偏差等指标评估预测质量与 headroom 策略效果。</li>
 </ul>
 <hr>
-<h2 id="十一、仿真-LoadBalancer-的定位"><a href="#十一、仿真-LoadBalancer-的定位" class="headerlink" title="十一、仿真 LoadBalancer 的定位"></a>十一、仿真 LoadBalancer 的定位</h2><ul>
+<h2 id="九、仿真-LoadBalancer-的定位"><a href="#九、仿真-LoadBalancer-的定位" class="headerlink" title="九、仿真 LoadBalancer 的定位"></a>九、仿真 LoadBalancer 的定位</h2><ul>
 <li><strong>位置</strong>：<code>tools/simulations/llm_ig_simulation/src/loadbalancer.py</code>。  </li>
 <li><strong>作用</strong>：在 <strong>SimPy 离散事件仿真</strong> 中，对<strong>模拟请求</strong>做多种策略（random、least、leastPseudo、leastlatency、smart、LoRA 等）的选点与排队&#x2F;出队，用于策略对比、参数扫描、容量规划与问题复现。  </li>
 <li><strong>与生产关系</strong>：<strong>不参与</strong>线上请求；不向 EPP 提供数据；生产智能负载均衡由 EPP 的 Go 代码实现。仿真仅作离线研究与验证用。</li>
 </ul>
 <hr>
-<h2 id="十二、小结"><a href="#十二、小结" class="headerlink" title="十二、小结"></a>十二、小结</h2><ul>
+<h2 id="十、小结"><a href="#十、小结" class="headerlink" title="十、小结"></a>十、小结</h2><ul>
 <li><strong>原理</strong>：在网关与模型服务之间插入 EPP，通过 ext-proc 接收请求；在 EPP 内做路由（含 model 改写）、准入和<strong>调度</strong>；调度层对候选端点做 Filter → 多 Scorer 打分（含延迟预测 headroom、前缀缓存、KV&#x2F;队列 composite）→ Weighted Random Picker，得到目标 endpoint；再通过 <strong>HeaderMutation + DynamicMetadata + BodyMutation</strong> 把 endpoint 与（可选）修改后的 body 返回给网关，由网关完成转发。  </li>
-<li><strong>使用</strong>：部署好网关 + InferencePool（含 EPP）+ 模型服务后，智能负载均衡即生效；通过请求头与 InferenceModelRewrite 控制 SLO 与模型名；可选启用延迟预测以增强 headroom 决策；配置项用于策略与权重的细粒度调优。监控与指标见<strong>第十章</strong>及 <code>site-src/guides/metrics-and-observability.md</code>。</li>
+<li><strong>使用</strong>：部署好网关 + InferencePool（含 EPP）+ 模型服务后，智能负载均衡即生效；通过请求头与 InferenceModelRewrite 控制 SLO 与模型名；可选启用延迟预测以增强 headroom 决策；配置项用于策略与权重的细粒度调优。监控与指标见<strong>第八章</strong>及 <code>site-src/guides/metrics-and-observability.md</code>。</li>
 </ul>
 <hr>
-<h2 id="十三、参考"><a href="#十三、参考" class="headerlink" title="十三、参考"></a>十三、参考</h2><ul>
+<h2 id="十一、参考"><a href="#十一、参考" class="headerlink" title="十一、参考"></a>十一、参考</h2><ul>
 <li>架构提议：<code>docs/proposals/0683-epp-architecture-proposal/README.md</code>  </li>
 <li>端点与网关协议：<code>docs/proposals/004-endpoint-picker-protocol/README.md</code>  </li>
 <li>前缀缓存设计：<code>docs/proposals/0602-prefix-cache-aware-routing-proposal/README.md</code>  </li>
