@@ -128,7 +128,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -138,7 +138,7 @@
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-count">56</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -1091,6 +1091,543 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">AI 组网第一阶段：底层基础</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:25:19" itemprop="dateModified" datetime="2026-02-23T01:25:19+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="AI-组网第一阶段：底层基础"><a href="#AI-组网第一阶段：底层基础" class="headerlink" title="AI 组网第一阶段：底层基础"></a>AI 组网第一阶段：底层基础</h1><p><strong>核心目标</strong>：吃透 AI 组网的底层转发逻辑，筑牢路由交换与安全基础。  </p>
+<hr>
+<h2 id="1-底层网络基础"><a href="#1-底层网络基础" class="headerlink" title="1. 底层网络基础"></a>1. 底层网络基础</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
+<li>TCP&#x2F;IP 协议栈深度拆解、以太网二层转发全流程、VLAN&#x2F;Trunk&#x2F; 链路聚合进阶</li>
+<li>IGP 路由协议（OSPF&#x2F;IS-IS）深度原理，重点掌握 <strong>IS-IS</strong>（AI 集群 Underlay 主流协议）</li>
+<li>弱化：无线调优砍掉，MPLS VPN 仅做基础了解</li>
+</ul>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
+<li>搭建标准三层 CLOS 底层 Underlay 网络，基于 IS-IS 实现全网络路由互通，ECMP 等价路由负载分担</li>
+<li>完成链路故障、路由震荡、转发不通等典型故障排障，Wireshark 抓包吃透数据包全链路转发</li>
+</ul>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群 Underlay 网络的规划与部署，保障底层无阻塞、高可用</li>
+<li>能精准定位并解决二层 &#x2F; 三层转发全流程的故障，彻底掌握数据包的流向控制</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG&#x2F;ENSP 模拟器、Wireshark</li>
+<li>书籍：《TCP&#x2F;IP 详解 卷 1》《IS-IS 协议原理与应用》</li>
+<li>文档：华为 CE 系列 &#x2F; 思科 N9K 数据中心交换机官方文档</li>
+</ul>
+<hr>
+<h2 id="2-BGP-与-EVPN-基础"><a href="#2-BGP-与-EVPN-基础" class="headerlink" title="2. BGP 与 EVPN 基础"></a>2. BGP 与 EVPN 基础</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
+<li>BGP 核心原理、邻居建立、13 条选路原则、路由控制工具（Route-Map &#x2F; 团体属性）</li>
+<li><strong>EVPN 协议核心、路由类型、VXLAN 基础转发原理</strong>，重点掌握 EVPN 作为 Underlay&#x2F;Overlay 控制平面的应用</li>
+<li>BGP 广域网仅做了解，重点聚焦<strong>数据中心内 BGP EVPN 应用</strong></li>
+</ul>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
+<li>基于 BGP EVPN 搭建 VXLAN Overlay 网络，实现 AI 集群多租户隔离、大二层互通</li>
+<li>通过 BGP 选路原则与路由工具，实现 AI 业务流量的精细化路径控制</li>
+</ul>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群多租户网络的设计与部署，通过 EVPN 实现 VM &#x2F; 容器 &#x2F; GPU 资源的灵活迁移与隔离</li>
+<li>能灵活使用 BGP 工具控制 AI 业务流量的走向，符合集群业务设计预期</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG 模拟器（数据中心交换机镜像）、Wireshark</li>
+<li>书籍：《BGP 设计与实现》《VXLAN 技术与实践》</li>
+<li>课程：华为 HCIE-Datacom 数据中心 EVPN 专项</li>
+</ul>
+<hr>
+<h2 id="3-AI-网络安全基础"><a href="#3-AI-网络安全基础" class="headerlink" title="3. AI 网络安全基础"></a>3. AI 网络安全基础</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
+<li>基于 Zone 的状态防火墙核心原理、安全策略设计</li>
+<li>高级 NAT 应用、ACL 精细化管控、VPN 技术（重点关注 <strong>IPsec VPN</strong>，用于跨地域 AI 集群互通）</li>
+<li><strong>AI 集群专属安全</strong>：多租户隔离、训练数据安全传输、GPU 资源访问控制、运维面安全管控</li>
+</ul>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
+<li>搭建 <strong>AI 集群三平面隔离架构</strong>，实现计算网 &#x2F; 存储网 &#x2F; 管理网的安全隔离与精细化访问控制</li>
+<li>完成 AI 集群多租户安全策略设计，实现不同训练任务、不同用户的资源与数据隔离</li>
+</ul>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群全场景安全架构设计，保障训练数据、模型、GPU 资源的安全访问</li>
+<li>能解决 AI 集群跨网络、跨租户的安全互通与隔离需求</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：EVE-NG 模拟器（企业级防火墙镜像）、Wireshark</li>
+<li>课程：华为 HCIE-Security 数据中心安全专项</li>
+<li>文档：主流 AI 平台安全组网最佳实践</li>
+</ul>
+<hr>
+<h2 id="阶段总表"><a href="#阶段总表" class="headerlink" title="阶段总表"></a>阶段总表</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一阶段</td>
+<td>底层网络基础</td>
+<td>TCP&#x2F;IP、二层与 VLAN&#x2F;Trunk、IGP 重点 IS-IS；CLOS Underlay+IS-IS+ECMP、排障与抓包</td>
+</tr>
+<tr>
+<td></td>
+<td>BGP 与 EVPN 基础</td>
+<td>BGP 与选路、EVPN 与 VXLAN 控制面；BGP EVPN 多租户 Overlay、AI 业务路径控制</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 网络安全基础</td>
+<td>Zone 防火墙、NAT&#x2F;ACL、IPsec VPN；三平面隔离、多租户与 GPU 访问控制</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">AI 组网第二阶段：集群核心组网 →</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/" class="post-title-link" itemprop="url">AI 组网第三阶段：自动化与架构进阶</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:25:46" itemprop="dateModified" datetime="2026-02-23T01:25:46+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="AI-组网第三阶段：自动化与架构进阶"><a href="#AI-组网第三阶段：自动化与架构进阶" class="headerlink" title="AI 组网第三阶段：自动化与架构进阶"></a>AI 组网第三阶段：自动化与架构进阶</h1><p><strong>核心目标</strong>：从配置工进阶为 AI 集群网络架构师，实现大规模 AI 网络的自动化运维与智能调优。  </p>
+<hr>
+<h2 id="1-AI-网络自动化运维"><a href="#1-AI-网络自动化运维" class="headerlink" title="1. AI 网络自动化运维"></a>1. AI 网络自动化运维</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li>【沿用原计划】Python 基础、Netmiko&#x2F;Napalm&#x2F;Ansible 批量设备管理、Jinja2 模板配置生成</li>
+<li>【新增 AI 专属】<strong>AI 集群网络自动化专项</strong>：交换机无损参数批量配置、RDMA 网卡参数批量调优、端口状态批量巡检</li>
+<li>【新增 AI 专属】<strong>RDMA 性能监控体系搭建</strong>：Prometheus+Grafana 监控 RDMA 带宽、时延、PFC 帧、丢包、拥塞情况</li>
+<li>【新增 AI 专属】<strong>AI 训练任务网络保障自动化</strong>：训练任务启动前的网络健康检查、故障自动告警与定位</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>编写 Python 脚本 + Ansible Playbook，实现 <strong>AI 集群 50+ 交换机的无损配置批量下发</strong>、配置备份、合规校验</li>
+<li>搭建 <strong>AI 集群网络监控大盘</strong>，实现 RDMA 性能、PFC 事件、端口状态、设备负载的实时监控与告警</li>
+<li>实现 <strong>AI 训练任务的网络健康度自动巡检</strong>，提前发现并预警网络瓶颈与故障风险</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能实现「一杯咖啡时间搞定 AI 集群百台交换机 &#x2F; 千张网卡的批量配置与巡检」，替代 90% 的重复手工操作</li>
+<li>能搭建完整的 AI 集群网络监控体系，实现故障的分钟级定位，提前预警网络风险</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：VS Code、Python、Ansible、Prometheus、Grafana、NVIDIA DCGM</li>
+<li>书籍：《Python 网络编程权威指南》</li>
+<li>文档：NVIDIA DCGM 官方文档、交换机开源运维工具指南</li>
+</ul>
+<hr>
+<h2 id="2-AI-网络性能优化与智能调度"><a href="#2-AI-网络性能优化与智能调度" class="headerlink" title="2. AI 网络性能优化与智能调度"></a>2. AI 网络性能优化与智能调度</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>NCCL 全解</strong>：NCCL 通信原理、拓扑感知、GPU 亲和性、NCCL 环境变量优化、通信性能调优</li>
+<li><strong>AI 流量专属 QoS</strong>：LLQ 低时延队列、RDMA 流量优先级保障、拥塞控制优化、训练流量与推理流量的带宽隔离</li>
+<li>【弱化】通用 SD-WAN 仅做了解，重点关注<strong>跨地域 AI 训练的智能选路、广域网 RDMA 优化</strong></li>
+<li><strong>AI 网络智能运维</strong>：基于 AI 算法的网络流量预测、拥塞预判、故障根因分析</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成<strong>分布式训练任务的 NCCL 全链路优化</strong>，实现 <strong>NCCL 带宽利用率≥90%</strong>，训练性能线性提升</li>
+<li>完成 <strong>AI 流量 QoS 设计</strong>，保障 RDMA 训练流量的零丢包、低时延，实现推理业务与训练业务的带宽隔离</li>
+<li>完成<strong>跨地域 AI 训练的网络优化</strong>，实现跨节点分布式训练的稳定运行</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能通过网络优化，解决大模型分布式训练的通信瓶颈，实现训练性能的线性提升</li>
+<li>能针对 AI 训练 &#x2F; 推理业务的不同特征，实现流量的智能调度与优先级保障，避免业务卡顿与训练中断</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：NCCL Tests、NVIDIA Nsight Systems、Wireshark、流量打流工具</li>
+<li>文档：NVIDIA NCCL 官方优化指南、大模型训练网络性能调优最佳实践</li>
+</ul>
+<hr>
+<h2 id="3-大规模-AI-集群架构设计与灾备"><a href="#3-大规模-AI-集群架构设计与灾备" class="headerlink" title="3. 大规模 AI 集群架构设计与灾备"></a>3. 大规模 AI 集群架构设计与灾备</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>万级 GPU 超大规模 AI 集群</strong>网络架构设计、可扩展性规划、故障域隔离</li>
+<li><strong>AI 集群同城双活、异地容灾</strong>网络架构设计、模型与数据同步网络优化</li>
+<li><strong>混合云 AI 组网</strong>：线下 IDC 与云上 GPU 资源的混合集群网络设计、训练任务跨云调度</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>完成<strong>超大规模 AI 集群网络架构方案设计</strong>，包含可扩展性、高可用、安全、灾备全维度规划</li>
+<li>完成<strong>混合云 AI 训练集群组网方案设计</strong>，实现线下与云上资源的网络互通与训练任务协同</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能站在架构师视角，完成企业级 AI 平台的全生命周期网络架构规划</li>
+<li>能匹配企业 AI 业务的发展，设计可扩展、高可用、高性能的 AI 组网方案</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>文档：头部云厂商超大规模 AI 集群架构白皮书、NVIDIA SuperPOD 组网方案</li>
+</ul>
+<hr>
+<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第三阶段</td>
+<td>AI 网络自动化运维</td>
+<td>Python&#x2F;Ansible&#x2F;Jinja2、无损与 RDMA 批量配置、Prometheus+Grafana 监控、训练前健康检查；50+ 交换机批量下发与监控、训练网络巡检</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 网络性能优化与智能调度</td>
+<td>NCCL 原理与调优、AI QoS 与 RDMA&#x2F;LLQ、跨地域训练选路；NCCL≥90%、训练与推理带宽隔离、跨地域训练优化</td>
+</tr>
+<tr>
+<td></td>
+<td>大规模 AI 集群架构设计与灾备</td>
+<td>万级 GPU 可扩展与故障域、同城双活与异地容灾、混合云 IDC+云 GPU；超大规模与混合云 AI 组网方案设计</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">← AI 组网第二阶段：集群核心组网</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/" class="post-title-link" itemprop="url">AI 组网第二阶段：集群核心组网</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-23 01:25:26" itemprop="dateModified" datetime="2026-02-23T01:25:26+08:00">2026-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="AI-组网第二阶段：集群核心组网"><a href="#AI-组网第二阶段：集群核心组网" class="headerlink" title="AI 组网第二阶段：集群核心组网"></a>AI 组网第二阶段：集群核心组网</h1><p><strong>核心目标</strong>：彻底掌握 AI 部署环境的灵魂技术，能独立设计与部署大模型训练 &#x2F; 推理集群网络。  </p>
+<hr>
+<h2 id="1-无损以太网与-RoCEv2-RDMA"><a href="#1-无损以太网与-RoCEv2-RDMA" class="headerlink" title="1. 无损以太网与 RoCEv2 RDMA"></a>1. 无损以太网与 RoCEv2 RDMA</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>RDMA 技术全解</strong>：IB&#x2F;RoCE&#x2F;iWARP 协议对比、RoCEv1&#x2F;v2 核心原理、RDMA 转发机制、QP 队列、内存注册原理</li>
+<li><strong>无损以太网核心技术</strong>：PFC 优先级流量控制、ECN 显式拥塞通知、DCQCN 拥塞控制算法、死锁预防与化解</li>
+<li><strong>RoCEv2 网络设计</strong>：PFC 域规划、DSCP 优先级映射、无损队列配置、端到端无损参数调优</li>
+<li><strong>RDMA 性能调优</strong>：网卡固件优化、操作系统内核参数调优、队列深度优化、时延与吞吐优化</li>
+</ol>
+<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建最小化 RoCEv2 无损网络环境（2 台服务器 + 2 台交换机），完成端到端 PFC&#x2F;ECN 配置，验证无损转发</li>
+<li>使用 perftest、ib_write_bw 等工具完成 RDMA 带宽、时延、丢包测试，优化参数实现线速带宽、亚微秒级时延</li>
+<li>完成 RDMA 丢包、PFC 死锁、拥塞失控等典型故障排障，定位并解决性能瓶颈</li>
+</ol>
+<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>彻底掌握 AI 组网的核心灵魂技术，能独立完成 RoCEv2 无损网络的规划、配置与调优</li>
+<li>能实现端到端零丢包的 RDMA 转发，保障 GPU 并行通信的性能，<strong>RDMA 带宽利用率≥95%</strong></li>
+<li>能精准定位并解决 RDMA 无损网络的全场景故障与性能问题</li>
+</ul>
+<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：带 Mellanox ConnectX-5&#x2F;6 网卡的服务器、支持 PFC&#x2F;ECN 的 25G+ 交换机、perftest、ibutils、Wireshark</li>
+<li>文档：NVIDIA RoCE 官方文档、Mellanox 无损网络最佳实践、《RDMA 高性能网络编程》</li>
+<li>课程：NVIDIA 网络学院 RDMA 专项课程</li>
+</ul>
+<hr>
+<h2 id="2-AI-集群网络架构设计"><a href="#2-AI-集群网络架构设计" class="headerlink" title="2. AI 集群网络架构设计"></a>2. AI 集群网络架构设计</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>AI 集群专用拓扑</strong>：CLOS &#x2F; 胖树架构设计、1:1 无收敛带宽规划、Spine-Leaf 超宽端口设计</li>
+<li><strong>多平面网络架构</strong>：计算网 &#x2F; 存储网 &#x2F; 管理网三物理平面隔离设计、多轨网络（Multi-Rail）规划</li>
+<li><strong>大规模 AI 集群网络扩展</strong>：超大规模集群的 CLOS 架构分级、端口收敛比设计、故障域隔离</li>
+<li><strong>推理集群网络轻量化设计</strong>：推理业务的流量特征、低时延高可用网络架构</li>
+</ol>
+<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>设计并搭建 2 Spine + 4 Leaf 的 AI 训练集群标准拓扑，实现 1:1 无收敛带宽、三平面隔离</li>
+<li>完成千级 GPU 规模的 AI 集群网络架构方案设计，包含可扩展性、高可用、故障隔离规划</li>
+</ol>
+<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能读懂并设计 AI 训练 &#x2F; 推理集群的拓扑图，理解每一处设计的业务意义</li>
+<li>能独立完成中小规模 AI 集群网络的全方案设计，匹配大模型训练的带宽、时延、高可用需求</li>
+</ul>
+<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：AutoCAD&#x2F;Visio、EVE-NG 模拟器</li>
+<li>书籍：《数据中心网络架构与技术》《高性能计算网络设计》</li>
+<li>文档：阿里云 &#x2F; 腾讯云 AI 集群组网最佳实践、NVIDIA DGX 集群组网方案</li>
+</ul>
+<hr>
+<h2 id="3-AI-存储网络"><a href="#3-AI-存储网络" class="headerlink" title="3. AI 存储网络"></a>3. AI 存储网络</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>AI 存储网络核心诉求</strong>：大模型训练的高带宽、低时延 IO 需求、并行文件系统网络特性</li>
+<li><strong>NVMe over RoCE 技术全解</strong>：协议原理、无损网络配置、性能调优、故障排障</li>
+<li>**并行文件系统（Lustre&#x2F;Beegfs）**的网络设计、多路径 IO、带宽优化</li>
+<li>计算网络与存储网络的协同设计、流量隔离与优先级保障</li>
+</ol>
+<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>搭建 NVMe over RoCE 环境，完成无损网络配置，验证远端 NVMe 设备的低时延访问</li>
+<li>完成并行文件系统的网络规划与部署，优化存储网络带宽，实现存储 IO 性能匹配 GPU 计算能力</li>
+</ol>
+<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成 AI 集群存储网络的设计与部署，解决大模型训练的海量数据读写需求</li>
+<li>能优化存储网络性能，实现计算与存储的带宽匹配，避免存储 IO 成为训练瓶颈</li>
+</ul>
+<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：NVMe 固态硬盘、Mellanox 网卡、支持 NVMe over RoCE 的交换机、fio&#x2F;iozone 测试工具</li>
+<li>文档：NVIDIA 存储网络官方文档、Lustre&#x2F;Beegfs 官方组网指南</li>
+</ul>
+<hr>
+<h2 id="4-云原生-AI-网络"><a href="#4-云原生-AI-网络" class="headerlink" title="4. 云原生 AI 网络"></a>4. 云原生 AI 网络</h2><h3 id="核心学习内容-3"><a href="#核心学习内容-3" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
+<li><strong>Kubernetes CNI 网络深度原理</strong>，重点掌握 <strong>Macvlan&#x2F;IPvlan&#x2F;SR-IOV</strong>（GPU 直通主流方案）</li>
+<li><strong>AI 容器的多网卡多平面隔离设计</strong>、GPU 直通网络配置、<strong>RDMA 容器化部署</strong></li>
+<li><strong>MPI Operator&#x2F;Kubeflow</strong> 训练任务的网络优化、<strong>NCCL 通信环境配置</strong></li>
+<li>云 AI 平台网络架构：VPC、GPU 实例网络、弹性裸金属集群网络、混合云 AI 训练组网</li>
+</ol>
+<h3 id="必做实操项目-3"><a href="#必做实操项目-3" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
+<li>基于 K8s 搭建云原生 AI 环境，通过 <strong>SR-IOV 实现 GPU 容器的 RDMA 直通</strong>，验证容器内 RDMA 通信性能</li>
+<li>完成 Kubeflow 训练任务的网络配置，优化 NCCL 通信参数，实现分布式训练任务正常运行</li>
+</ol>
+<h3 id="验收标准-3"><a href="#验收标准-3" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
+<li>能独立完成云原生 AI 平台的网络设计与部署，实现容器化 AI 训练任务的无损 RDMA 通信</li>
+<li>能适配主流 AI 训练框架，解决分布式训练的网络互通、性能优化问题</li>
+</ul>
+<h3 id="配套学习资源-工具-3"><a href="#配套学习资源-工具-3" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
+<li>工具：Kubernetes 集群、NVIDIA GPU Operator、SR-IOV 网卡、Kubeflow</li>
+<li>书籍：《Kubernetes 网络权威指南》</li>
+<li>文档：NVIDIA GPU Operator 官方文档、Kubeflow 网络最佳实践</li>
+</ul>
+<hr>
+<h2 id="阶段总表"><a href="#阶段总表" class="headerlink" title="阶段总表"></a>阶段总表</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主题</th>
+<th>内容要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第二阶段</td>
+<td>无损以太网与 RoCEv2 RDMA</td>
+<td>RDMA&#x2F;RoCE、PFC&#x2F;ECN&#x2F;DCQCN、PFC 域与无损队列；最小 RoCEv2 环境、perftest 调优、RDMA&#x2F;PFC 排障</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 集群网络架构设计</td>
+<td>CLOS&#x2F;胖树、1:1 无收敛、三平面与 Multi-Rail；2 Spine+4 Leaf、千级 GPU 方案设计</td>
+</tr>
+<tr>
+<td></td>
+<td>AI 存储网络</td>
+<td>大模型 IO、NVMe over RoCE、Lustre&#x2F;Beegfs；NVMe over RoCE 部署、存储与计算带宽匹配</td>
+</tr>
+<tr>
+<td></td>
+<td>云原生 AI 网络</td>
+<td>K8s CNI、SR-IOV、RDMA 容器化、Kubeflow 与 NCCL；SR-IOV GPU RDMA、Kubeflow 调优</td>
+</tr>
+</tbody></table>
+<hr>
+<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/">← AI 组网第一阶段：底层基础</a> | <a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">AI 组网第三阶段：自动化与架构进阶 →</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/Gateway-API-Inference-Extension/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1109,7 +1646,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/19/Gateway-API-Inference-Extension/" class="post-title-link" itemprop="url">Untitled</a>
+          <a href="/2026/02/19/Gateway-API-Inference-Extension/" class="post-title-link" itemprop="url">Gateway API Inference Extension：智能负载均衡原理与使用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1120,14 +1657,23 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2026-02-19 14:00:14" itemprop="dateCreated datePublished" datetime="2026-02-19T14:00:14+08:00">2026-02-19</time>
+      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-27 16:46:37" itemprop="dateModified" datetime="2026-02-27T16:46:37+08:00">2026-02-27</time>
+      <time title="Modified: 2026-02-27 17:05:37" itemprop="dateModified" datetime="2026-02-27T17:05:37+08:00">2026-02-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/" itemprop="url" rel="index"><span itemprop="name">云原生</span></a>
+        </span>
     </span>
 
   
@@ -1901,543 +2447,6 @@
 <li><strong>指标与可观测性</strong>：<code>site-src/guides/metrics-and-observability.md</code>  </li>
 <li>入门与部署：<code>site-src/guides/getting-started-latest.md</code>、<code>README.md</code></li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">AI 组网第一阶段：底层基础</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-23 01:25:19" itemprop="dateModified" datetime="2026-02-23T01:25:19+08:00">2026-02-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="AI-组网第一阶段：底层基础"><a href="#AI-组网第一阶段：底层基础" class="headerlink" title="AI 组网第一阶段：底层基础"></a>AI 组网第一阶段：底层基础</h1><p><strong>核心目标</strong>：吃透 AI 组网的底层转发逻辑，筑牢路由交换与安全基础。  </p>
-<hr>
-<h2 id="1-底层网络基础"><a href="#1-底层网络基础" class="headerlink" title="1. 底层网络基础"></a>1. 底层网络基础</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
-<li>TCP&#x2F;IP 协议栈深度拆解、以太网二层转发全流程、VLAN&#x2F;Trunk&#x2F; 链路聚合进阶</li>
-<li>IGP 路由协议（OSPF&#x2F;IS-IS）深度原理，重点掌握 <strong>IS-IS</strong>（AI 集群 Underlay 主流协议）</li>
-<li>弱化：无线调优砍掉，MPLS VPN 仅做基础了解</li>
-</ul>
-<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
-<li>搭建标准三层 CLOS 底层 Underlay 网络，基于 IS-IS 实现全网络路由互通，ECMP 等价路由负载分担</li>
-<li>完成链路故障、路由震荡、转发不通等典型故障排障，Wireshark 抓包吃透数据包全链路转发</li>
-</ul>
-<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能独立完成 AI 集群 Underlay 网络的规划与部署，保障底层无阻塞、高可用</li>
-<li>能精准定位并解决二层 &#x2F; 三层转发全流程的故障，彻底掌握数据包的流向控制</li>
-</ul>
-<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：EVE-NG&#x2F;ENSP 模拟器、Wireshark</li>
-<li>书籍：《TCP&#x2F;IP 详解 卷 1》《IS-IS 协议原理与应用》</li>
-<li>文档：华为 CE 系列 &#x2F; 思科 N9K 数据中心交换机官方文档</li>
-</ul>
-<hr>
-<h2 id="2-BGP-与-EVPN-基础"><a href="#2-BGP-与-EVPN-基础" class="headerlink" title="2. BGP 与 EVPN 基础"></a>2. BGP 与 EVPN 基础</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
-<li>BGP 核心原理、邻居建立、13 条选路原则、路由控制工具（Route-Map &#x2F; 团体属性）</li>
-<li><strong>EVPN 协议核心、路由类型、VXLAN 基础转发原理</strong>，重点掌握 EVPN 作为 Underlay&#x2F;Overlay 控制平面的应用</li>
-<li>BGP 广域网仅做了解，重点聚焦<strong>数据中心内 BGP EVPN 应用</strong></li>
-</ul>
-<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
-<li>基于 BGP EVPN 搭建 VXLAN Overlay 网络，实现 AI 集群多租户隔离、大二层互通</li>
-<li>通过 BGP 选路原则与路由工具，实现 AI 业务流量的精细化路径控制</li>
-</ul>
-<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能独立完成 AI 集群多租户网络的设计与部署，通过 EVPN 实现 VM &#x2F; 容器 &#x2F; GPU 资源的灵活迁移与隔离</li>
-<li>能灵活使用 BGP 工具控制 AI 业务流量的走向，符合集群业务设计预期</li>
-</ul>
-<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：EVE-NG 模拟器（数据中心交换机镜像）、Wireshark</li>
-<li>书籍：《BGP 设计与实现》《VXLAN 技术与实践》</li>
-<li>课程：华为 HCIE-Datacom 数据中心 EVPN 专项</li>
-</ul>
-<hr>
-<h2 id="3-AI-网络安全基础"><a href="#3-AI-网络安全基础" class="headerlink" title="3. AI 网络安全基础"></a>3. AI 网络安全基础</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ul>
-<li>基于 Zone 的状态防火墙核心原理、安全策略设计</li>
-<li>高级 NAT 应用、ACL 精细化管控、VPN 技术（重点关注 <strong>IPsec VPN</strong>，用于跨地域 AI 集群互通）</li>
-<li><strong>AI 集群专属安全</strong>：多租户隔离、训练数据安全传输、GPU 资源访问控制、运维面安全管控</li>
-</ul>
-<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ul>
-<li>搭建 <strong>AI 集群三平面隔离架构</strong>，实现计算网 &#x2F; 存储网 &#x2F; 管理网的安全隔离与精细化访问控制</li>
-<li>完成 AI 集群多租户安全策略设计，实现不同训练任务、不同用户的资源与数据隔离</li>
-</ul>
-<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能独立完成 AI 集群全场景安全架构设计，保障训练数据、模型、GPU 资源的安全访问</li>
-<li>能解决 AI 集群跨网络、跨租户的安全互通与隔离需求</li>
-</ul>
-<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：EVE-NG 模拟器（企业级防火墙镜像）、Wireshark</li>
-<li>课程：华为 HCIE-Security 数据中心安全专项</li>
-<li>文档：主流 AI 平台安全组网最佳实践</li>
-</ul>
-<hr>
-<h2 id="阶段总表"><a href="#阶段总表" class="headerlink" title="阶段总表"></a>阶段总表</h2><table>
-<thead>
-<tr>
-<th>阶段</th>
-<th>主题</th>
-<th>内容要点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>第一阶段</td>
-<td>底层网络基础</td>
-<td>TCP&#x2F;IP、二层与 VLAN&#x2F;Trunk、IGP 重点 IS-IS；CLOS Underlay+IS-IS+ECMP、排障与抓包</td>
-</tr>
-<tr>
-<td></td>
-<td>BGP 与 EVPN 基础</td>
-<td>BGP 与选路、EVPN 与 VXLAN 控制面；BGP EVPN 多租户 Overlay、AI 业务路径控制</td>
-</tr>
-<tr>
-<td></td>
-<td>AI 网络安全基础</td>
-<td>Zone 防火墙、NAT&#x2F;ACL、IPsec VPN；三平面隔离、多租户与 GPU 访问控制</td>
-</tr>
-</tbody></table>
-<hr>
-<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">AI 组网第二阶段：集群核心组网 →</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/" class="post-title-link" itemprop="url">AI 组网第三阶段：自动化与架构进阶</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-23 01:25:46" itemprop="dateModified" datetime="2026-02-23T01:25:46+08:00">2026-02-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="AI-组网第三阶段：自动化与架构进阶"><a href="#AI-组网第三阶段：自动化与架构进阶" class="headerlink" title="AI 组网第三阶段：自动化与架构进阶"></a>AI 组网第三阶段：自动化与架构进阶</h1><p><strong>核心目标</strong>：从配置工进阶为 AI 集群网络架构师，实现大规模 AI 网络的自动化运维与智能调优。  </p>
-<hr>
-<h2 id="1-AI-网络自动化运维"><a href="#1-AI-网络自动化运维" class="headerlink" title="1. AI 网络自动化运维"></a>1. AI 网络自动化运维</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
-<li>【沿用原计划】Python 基础、Netmiko&#x2F;Napalm&#x2F;Ansible 批量设备管理、Jinja2 模板配置生成</li>
-<li>【新增 AI 专属】<strong>AI 集群网络自动化专项</strong>：交换机无损参数批量配置、RDMA 网卡参数批量调优、端口状态批量巡检</li>
-<li>【新增 AI 专属】<strong>RDMA 性能监控体系搭建</strong>：Prometheus+Grafana 监控 RDMA 带宽、时延、PFC 帧、丢包、拥塞情况</li>
-<li>【新增 AI 专属】<strong>AI 训练任务网络保障自动化</strong>：训练任务启动前的网络健康检查、故障自动告警与定位</li>
-</ol>
-<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
-<li>编写 Python 脚本 + Ansible Playbook，实现 <strong>AI 集群 50+ 交换机的无损配置批量下发</strong>、配置备份、合规校验</li>
-<li>搭建 <strong>AI 集群网络监控大盘</strong>，实现 RDMA 性能、PFC 事件、端口状态、设备负载的实时监控与告警</li>
-<li>实现 <strong>AI 训练任务的网络健康度自动巡检</strong>，提前发现并预警网络瓶颈与故障风险</li>
-</ol>
-<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能实现「一杯咖啡时间搞定 AI 集群百台交换机 &#x2F; 千张网卡的批量配置与巡检」，替代 90% 的重复手工操作</li>
-<li>能搭建完整的 AI 集群网络监控体系，实现故障的分钟级定位，提前预警网络风险</li>
-</ul>
-<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：VS Code、Python、Ansible、Prometheus、Grafana、NVIDIA DCGM</li>
-<li>书籍：《Python 网络编程权威指南》</li>
-<li>文档：NVIDIA DCGM 官方文档、交换机开源运维工具指南</li>
-</ul>
-<hr>
-<h2 id="2-AI-网络性能优化与智能调度"><a href="#2-AI-网络性能优化与智能调度" class="headerlink" title="2. AI 网络性能优化与智能调度"></a>2. AI 网络性能优化与智能调度</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
-<li><strong>NCCL 全解</strong>：NCCL 通信原理、拓扑感知、GPU 亲和性、NCCL 环境变量优化、通信性能调优</li>
-<li><strong>AI 流量专属 QoS</strong>：LLQ 低时延队列、RDMA 流量优先级保障、拥塞控制优化、训练流量与推理流量的带宽隔离</li>
-<li>【弱化】通用 SD-WAN 仅做了解，重点关注<strong>跨地域 AI 训练的智能选路、广域网 RDMA 优化</strong></li>
-<li><strong>AI 网络智能运维</strong>：基于 AI 算法的网络流量预测、拥塞预判、故障根因分析</li>
-</ol>
-<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
-<li>完成<strong>分布式训练任务的 NCCL 全链路优化</strong>，实现 <strong>NCCL 带宽利用率≥90%</strong>，训练性能线性提升</li>
-<li>完成 <strong>AI 流量 QoS 设计</strong>，保障 RDMA 训练流量的零丢包、低时延，实现推理业务与训练业务的带宽隔离</li>
-<li>完成<strong>跨地域 AI 训练的网络优化</strong>，实现跨节点分布式训练的稳定运行</li>
-</ol>
-<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能通过网络优化，解决大模型分布式训练的通信瓶颈，实现训练性能的线性提升</li>
-<li>能针对 AI 训练 &#x2F; 推理业务的不同特征，实现流量的智能调度与优先级保障，避免业务卡顿与训练中断</li>
-</ul>
-<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：NCCL Tests、NVIDIA Nsight Systems、Wireshark、流量打流工具</li>
-<li>文档：NVIDIA NCCL 官方优化指南、大模型训练网络性能调优最佳实践</li>
-</ul>
-<hr>
-<h2 id="3-大规模-AI-集群架构设计与灾备"><a href="#3-大规模-AI-集群架构设计与灾备" class="headerlink" title="3. 大规模 AI 集群架构设计与灾备"></a>3. 大规模 AI 集群架构设计与灾备</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
-<li><strong>万级 GPU 超大规模 AI 集群</strong>网络架构设计、可扩展性规划、故障域隔离</li>
-<li><strong>AI 集群同城双活、异地容灾</strong>网络架构设计、模型与数据同步网络优化</li>
-<li><strong>混合云 AI 组网</strong>：线下 IDC 与云上 GPU 资源的混合集群网络设计、训练任务跨云调度</li>
-</ol>
-<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
-<li>完成<strong>超大规模 AI 集群网络架构方案设计</strong>，包含可扩展性、高可用、安全、灾备全维度规划</li>
-<li>完成<strong>混合云 AI 训练集群组网方案设计</strong>，实现线下与云上资源的网络互通与训练任务协同</li>
-</ol>
-<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能站在架构师视角，完成企业级 AI 平台的全生命周期网络架构规划</li>
-<li>能匹配企业 AI 业务的发展，设计可扩展、高可用、高性能的 AI 组网方案</li>
-</ul>
-<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>文档：头部云厂商超大规模 AI 集群架构白皮书、NVIDIA SuperPOD 组网方案</li>
-</ul>
-<hr>
-<h2 id="阶段总表（阶段-主题-内容要点）"><a href="#阶段总表（阶段-主题-内容要点）" class="headerlink" title="阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）"></a>阶段总表（阶段 &#x2F; 主题 &#x2F; 内容要点）</h2><table>
-<thead>
-<tr>
-<th>阶段</th>
-<th>主题</th>
-<th>内容要点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>第三阶段</td>
-<td>AI 网络自动化运维</td>
-<td>Python&#x2F;Ansible&#x2F;Jinja2、无损与 RDMA 批量配置、Prometheus+Grafana 监控、训练前健康检查；50+ 交换机批量下发与监控、训练网络巡检</td>
-</tr>
-<tr>
-<td></td>
-<td>AI 网络性能优化与智能调度</td>
-<td>NCCL 原理与调优、AI QoS 与 RDMA&#x2F;LLQ、跨地域训练选路；NCCL≥90%、训练与推理带宽隔离、跨地域训练优化</td>
-</tr>
-<tr>
-<td></td>
-<td>大规模 AI 集群架构设计与灾备</td>
-<td>万级 GPU 可扩展与故障域、同城双活与异地容灾、混合云 IDC+云 GPU；超大规模与混合云 AI 组网方案设计</td>
-</tr>
-</tbody></table>
-<hr>
-<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">← AI 组网第二阶段：集群核心组网</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E9%9B%86%E7%BE%A4%E6%A0%B8%E5%BF%83%E7%BB%84%E7%BD%91/" class="post-title-link" itemprop="url">AI 组网第二阶段：集群核心组网</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-02-19 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-19T12:00:00+08:00">2026-02-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-23 01:25:26" itemprop="dateModified" datetime="2026-02-23T01:25:26+08:00">2026-02-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="AI-组网第二阶段：集群核心组网"><a href="#AI-组网第二阶段：集群核心组网" class="headerlink" title="AI 组网第二阶段：集群核心组网"></a>AI 组网第二阶段：集群核心组网</h1><p><strong>核心目标</strong>：彻底掌握 AI 部署环境的灵魂技术，能独立设计与部署大模型训练 &#x2F; 推理集群网络。  </p>
-<hr>
-<h2 id="1-无损以太网与-RoCEv2-RDMA"><a href="#1-无损以太网与-RoCEv2-RDMA" class="headerlink" title="1. 无损以太网与 RoCEv2 RDMA"></a>1. 无损以太网与 RoCEv2 RDMA</h2><h3 id="核心学习内容"><a href="#核心学习内容" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
-<li><strong>RDMA 技术全解</strong>：IB&#x2F;RoCE&#x2F;iWARP 协议对比、RoCEv1&#x2F;v2 核心原理、RDMA 转发机制、QP 队列、内存注册原理</li>
-<li><strong>无损以太网核心技术</strong>：PFC 优先级流量控制、ECN 显式拥塞通知、DCQCN 拥塞控制算法、死锁预防与化解</li>
-<li><strong>RoCEv2 网络设计</strong>：PFC 域规划、DSCP 优先级映射、无损队列配置、端到端无损参数调优</li>
-<li><strong>RDMA 性能调优</strong>：网卡固件优化、操作系统内核参数调优、队列深度优化、时延与吞吐优化</li>
-</ol>
-<h3 id="必做实操项目"><a href="#必做实操项目" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
-<li>搭建最小化 RoCEv2 无损网络环境（2 台服务器 + 2 台交换机），完成端到端 PFC&#x2F;ECN 配置，验证无损转发</li>
-<li>使用 perftest、ib_write_bw 等工具完成 RDMA 带宽、时延、丢包测试，优化参数实现线速带宽、亚微秒级时延</li>
-<li>完成 RDMA 丢包、PFC 死锁、拥塞失控等典型故障排障，定位并解决性能瓶颈</li>
-</ol>
-<h3 id="验收标准"><a href="#验收标准" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>彻底掌握 AI 组网的核心灵魂技术，能独立完成 RoCEv2 无损网络的规划、配置与调优</li>
-<li>能实现端到端零丢包的 RDMA 转发，保障 GPU 并行通信的性能，<strong>RDMA 带宽利用率≥95%</strong></li>
-<li>能精准定位并解决 RDMA 无损网络的全场景故障与性能问题</li>
-</ul>
-<h3 id="配套学习资源-工具"><a href="#配套学习资源-工具" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：带 Mellanox ConnectX-5&#x2F;6 网卡的服务器、支持 PFC&#x2F;ECN 的 25G+ 交换机、perftest、ibutils、Wireshark</li>
-<li>文档：NVIDIA RoCE 官方文档、Mellanox 无损网络最佳实践、《RDMA 高性能网络编程》</li>
-<li>课程：NVIDIA 网络学院 RDMA 专项课程</li>
-</ul>
-<hr>
-<h2 id="2-AI-集群网络架构设计"><a href="#2-AI-集群网络架构设计" class="headerlink" title="2. AI 集群网络架构设计"></a>2. AI 集群网络架构设计</h2><h3 id="核心学习内容-1"><a href="#核心学习内容-1" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
-<li><strong>AI 集群专用拓扑</strong>：CLOS &#x2F; 胖树架构设计、1:1 无收敛带宽规划、Spine-Leaf 超宽端口设计</li>
-<li><strong>多平面网络架构</strong>：计算网 &#x2F; 存储网 &#x2F; 管理网三物理平面隔离设计、多轨网络（Multi-Rail）规划</li>
-<li><strong>大规模 AI 集群网络扩展</strong>：超大规模集群的 CLOS 架构分级、端口收敛比设计、故障域隔离</li>
-<li><strong>推理集群网络轻量化设计</strong>：推理业务的流量特征、低时延高可用网络架构</li>
-</ol>
-<h3 id="必做实操项目-1"><a href="#必做实操项目-1" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
-<li>设计并搭建 2 Spine + 4 Leaf 的 AI 训练集群标准拓扑，实现 1:1 无收敛带宽、三平面隔离</li>
-<li>完成千级 GPU 规模的 AI 集群网络架构方案设计，包含可扩展性、高可用、故障隔离规划</li>
-</ol>
-<h3 id="验收标准-1"><a href="#验收标准-1" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能读懂并设计 AI 训练 &#x2F; 推理集群的拓扑图，理解每一处设计的业务意义</li>
-<li>能独立完成中小规模 AI 集群网络的全方案设计，匹配大模型训练的带宽、时延、高可用需求</li>
-</ul>
-<h3 id="配套学习资源-工具-1"><a href="#配套学习资源-工具-1" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：AutoCAD&#x2F;Visio、EVE-NG 模拟器</li>
-<li>书籍：《数据中心网络架构与技术》《高性能计算网络设计》</li>
-<li>文档：阿里云 &#x2F; 腾讯云 AI 集群组网最佳实践、NVIDIA DGX 集群组网方案</li>
-</ul>
-<hr>
-<h2 id="3-AI-存储网络"><a href="#3-AI-存储网络" class="headerlink" title="3. AI 存储网络"></a>3. AI 存储网络</h2><h3 id="核心学习内容-2"><a href="#核心学习内容-2" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
-<li><strong>AI 存储网络核心诉求</strong>：大模型训练的高带宽、低时延 IO 需求、并行文件系统网络特性</li>
-<li><strong>NVMe over RoCE 技术全解</strong>：协议原理、无损网络配置、性能调优、故障排障</li>
-<li>**并行文件系统（Lustre&#x2F;Beegfs）**的网络设计、多路径 IO、带宽优化</li>
-<li>计算网络与存储网络的协同设计、流量隔离与优先级保障</li>
-</ol>
-<h3 id="必做实操项目-2"><a href="#必做实操项目-2" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
-<li>搭建 NVMe over RoCE 环境，完成无损网络配置，验证远端 NVMe 设备的低时延访问</li>
-<li>完成并行文件系统的网络规划与部署，优化存储网络带宽，实现存储 IO 性能匹配 GPU 计算能力</li>
-</ol>
-<h3 id="验收标准-2"><a href="#验收标准-2" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能独立完成 AI 集群存储网络的设计与部署，解决大模型训练的海量数据读写需求</li>
-<li>能优化存储网络性能，实现计算与存储的带宽匹配，避免存储 IO 成为训练瓶颈</li>
-</ul>
-<h3 id="配套学习资源-工具-2"><a href="#配套学习资源-工具-2" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：NVMe 固态硬盘、Mellanox 网卡、支持 NVMe over RoCE 的交换机、fio&#x2F;iozone 测试工具</li>
-<li>文档：NVIDIA 存储网络官方文档、Lustre&#x2F;Beegfs 官方组网指南</li>
-</ul>
-<hr>
-<h2 id="4-云原生-AI-网络"><a href="#4-云原生-AI-网络" class="headerlink" title="4. 云原生 AI 网络"></a>4. 云原生 AI 网络</h2><h3 id="核心学习内容-3"><a href="#核心学习内容-3" class="headerlink" title="核心学习内容"></a>核心学习内容</h3><ol>
-<li><strong>Kubernetes CNI 网络深度原理</strong>，重点掌握 <strong>Macvlan&#x2F;IPvlan&#x2F;SR-IOV</strong>（GPU 直通主流方案）</li>
-<li><strong>AI 容器的多网卡多平面隔离设计</strong>、GPU 直通网络配置、<strong>RDMA 容器化部署</strong></li>
-<li><strong>MPI Operator&#x2F;Kubeflow</strong> 训练任务的网络优化、<strong>NCCL 通信环境配置</strong></li>
-<li>云 AI 平台网络架构：VPC、GPU 实例网络、弹性裸金属集群网络、混合云 AI 训练组网</li>
-</ol>
-<h3 id="必做实操项目-3"><a href="#必做实操项目-3" class="headerlink" title="必做实操项目"></a>必做实操项目</h3><ol>
-<li>基于 K8s 搭建云原生 AI 环境，通过 <strong>SR-IOV 实现 GPU 容器的 RDMA 直通</strong>，验证容器内 RDMA 通信性能</li>
-<li>完成 Kubeflow 训练任务的网络配置，优化 NCCL 通信参数，实现分布式训练任务正常运行</li>
-</ol>
-<h3 id="验收标准-3"><a href="#验收标准-3" class="headerlink" title="验收标准"></a>验收标准</h3><ul>
-<li>能独立完成云原生 AI 平台的网络设计与部署，实现容器化 AI 训练任务的无损 RDMA 通信</li>
-<li>能适配主流 AI 训练框架，解决分布式训练的网络互通、性能优化问题</li>
-</ul>
-<h3 id="配套学习资源-工具-3"><a href="#配套学习资源-工具-3" class="headerlink" title="配套学习资源 &#x2F; 工具"></a>配套学习资源 &#x2F; 工具</h3><ul>
-<li>工具：Kubernetes 集群、NVIDIA GPU Operator、SR-IOV 网卡、Kubeflow</li>
-<li>书籍：《Kubernetes 网络权威指南》</li>
-<li>文档：NVIDIA GPU Operator 官方文档、Kubeflow 网络最佳实践</li>
-</ul>
-<hr>
-<h2 id="阶段总表"><a href="#阶段总表" class="headerlink" title="阶段总表"></a>阶段总表</h2><table>
-<thead>
-<tr>
-<th>阶段</th>
-<th>主题</th>
-<th>内容要点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>第二阶段</td>
-<td>无损以太网与 RoCEv2 RDMA</td>
-<td>RDMA&#x2F;RoCE、PFC&#x2F;ECN&#x2F;DCQCN、PFC 域与无损队列；最小 RoCEv2 环境、perftest 调优、RDMA&#x2F;PFC 排障</td>
-</tr>
-<tr>
-<td></td>
-<td>AI 集群网络架构设计</td>
-<td>CLOS&#x2F;胖树、1:1 无收敛、三平面与 Multi-Rail；2 Spine+4 Leaf、千级 GPU 方案设计</td>
-</tr>
-<tr>
-<td></td>
-<td>AI 存储网络</td>
-<td>大模型 IO、NVMe over RoCE、Lustre&#x2F;Beegfs；NVMe over RoCE 部署、存储与计算带宽匹配</td>
-</tr>
-<tr>
-<td></td>
-<td>云原生 AI 网络</td>
-<td>K8s CNI、SR-IOV、RDMA 容器化、Kubeflow 与 NCCL；SR-IOV GPU RDMA、Kubeflow 调优</td>
-</tr>
-</tbody></table>
-<hr>
-<p><a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/">← AI 组网第一阶段：底层基础</a> | <a href="/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%BF%9B%E9%98%B6/">AI 组网第三阶段：自动化与架构进阶 →</a></p>
 
       
     </div>
@@ -4982,87 +4991,6 @@
 </tr>
 </tbody></table>
 
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/13/UE5%E8%BE%93%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/13/UE5%E8%BE%93%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">UE5 输入系统学习笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2026-02-13 12:00:00 / Modified: 11:34:48" itemprop="dateCreated datePublished" datetime="2026-02-13T12:00:00+08:00">2026-02-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/UE5/" itemprop="url" rel="index"><span itemprop="name">UE5</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="UE5-输入系统学习笔记"><a href="#UE5-输入系统学习笔记" class="headerlink" title="UE5 输入系统学习笔记"></a>UE5 输入系统学习笔记</h1><blockquote>
-<p>本文用于记录 UE5 中输入系统（含增强型输入 Enhanced Input）的学习与使用，便于后续查阅与补充。</p>
-</blockquote>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
       
     </div>
 
