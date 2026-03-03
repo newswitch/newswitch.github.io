@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="UE5学习（四）AI系统 本文是 UE5 学习系列的第四篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 AI 系统的原理，并通过完整的代码示例学会如何使用。  1. AI 系统概述1.1 什么是 AI 系统AI 系统（Artificial Intelligence System） 是 UE5 中用于创建智能 NPC、敌人、友军等角色的完整框架。它提供了行为树、黑板、感知系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE5学习（四）AI系统">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89AI%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="UE5学习（四）AI系统 本文是 UE5 学习系列的第四篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 AI 系统的原理，并通过完整的代码示例学会如何使用。  1. AI 系统概述1.1 什么是 AI 系统AI 系统（Artificial Intelligence System） 是 UE5 中用于创建智能 NPC、敌人、友军等角色的完整框架。它提供了行为树、黑板、感知系统">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-24T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-28T17:15:21.814Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="AI系统">
+<meta property="article:tag" content="Behavior Tree">
+<meta property="article:tag" content="Blackboard">
+<meta property="article:tag" content="EQS">
+<meta property="article:tag" content="UE5">
+<meta property="article:tag" content="Unreal Engine">
+<meta property="article:tag" content="感知系统">
+<meta property="article:tag" content="游戏开发">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89AI%E7%B3%BB%E7%BB%9F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89AI%E7%B3%BB%E7%BB%9F/","path":"2026/02/24/UE5学习（四）AI系统/","title":"UE5学习（四）AI系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>UE5学习（四）AI系统 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89AI%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">UE5学习（四）AI系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-AI-%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1. AI 系统概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-AI-%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 什么是 AI 系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-AI-%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 为什么需要 AI 系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-AI-%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 AI 系统的核心组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-AI-%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 AI 系统的工作流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AI-Controller%EF%BC%88AI-%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2. AI Controller（AI 控制器）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BB%80%E4%B9%88%E6%98%AF-AI-Controller"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 什么是 AI Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%88%9B%E5%BB%BA-AI-Controller"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 创建 AI Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-AI-Controller-%E7%9A%84%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 AI Controller 的常用功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Blackboard%EF%BC%88%E9%BB%91%E6%9D%BF%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">3. Blackboard（黑板）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BB%80%E4%B9%88%E6%98%AF-Blackboard"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 什么是 Blackboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%88%9B%E5%BB%BA-Blackboard"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 创建 Blackboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E4%BD%BF%E7%94%A8-Blackboard"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 在代码中使用 Blackboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Blackboard-%E8%A7%82%E5%AF%9F%E8%80%85%EF%BC%88Observers%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 Blackboard 观察者（Observers）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Behavior-Tree%EF%BC%88%E8%A1%8C%E4%B8%BA%E6%A0%91%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">4. Behavior Tree（行为树）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E4%BB%80%E4%B9%88%E6%98%AF-Behavior-Tree"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 什么是 Behavior Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%88%9B%E5%BB%BA-Behavior-Tree"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 创建 Behavior Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%9F%BA%E7%A1%80-Behavior-Tree-%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 基础 Behavior Tree 示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E8%87%AA%E5%AE%9A%E4%B9%89-Task-%E8%8A%82%E7%82%B9"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4 自定义 Task 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E8%87%AA%E5%AE%9A%E4%B9%89-Decorator-%E8%8A%82%E7%82%B9"><span class="nav-number">1.4.5.</span> <span class="nav-text">4.5 自定义 Decorator 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%84%9F%E7%9F%A5%E7%B3%BB%E7%BB%9F%EF%BC%88Perception-System%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">5. 感知系统（Perception System）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%BB%80%E4%B9%88%E6%98%AF%E6%84%9F%E7%9F%A5%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 什么是感知系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E8%AE%BE%E7%BD%AE%E6%84%9F%E7%9F%A5%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 设置感知系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E9%85%8D%E7%BD%AE%E6%84%9F%E7%9F%A5%E5%8F%82%E6%95%B0"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 配置感知参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-EQS%EF%BC%88%E7%8E%AF%E5%A2%83%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F%EF%BC%89"><span class="nav-number">1.6.</span> <span class="nav-text">6. EQS（环境查询系统）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E4%BB%80%E4%B9%88%E6%98%AF-EQS"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 什么是 EQS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%88%9B%E5%BB%BA-EQS-%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 创建 EQS 查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E4%BD%BF%E7%94%A8-EQS"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 在代码中使用 EQS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-EQS-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%EF%BC%9A%E5%AF%BB%E6%89%BE%E6%8E%A9%E4%BD%93"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 EQS 实际应用：寻找掩体</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.7.</span> <span class="nav-text">7. 实际应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%9C%BA%E6%99%AF-1%EF%BC%9A%E5%AE%8C%E6%95%B4%E7%9A%84%E6%95%8C%E4%BA%BA-AI"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 场景 1：完整的敌人 AI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E5%9C%BA%E6%99%AF-2%EF%BC%9A%E4%BD%BF%E7%94%A8-EQS-%E5%AF%BB%E6%89%BE%E6%8E%A9%E4%BD%93"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 场景 2：使用 EQS 寻找掩体</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.</span> <span class="nav-text">8. 性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-Behavior-Tree-%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 Behavior Tree 优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E6%84%9F%E7%9F%A5%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.2 感知系统优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-EQS-%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.3.</span> <span class="nav-text">8.3 EQS 优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.9.</span> <span class="nav-text">9. 常见问题与最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 常见问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.9.2.</span> <span class="nav-text">9.2 最佳实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%80%BB%E7%BB%93"><span class="nav-number">1.10.</span> <span class="nav-text">10. 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89AI%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="UE5学习（四）AI系统 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UE5学习（四）AI系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-24 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-24T12:00:00+08:00">2026-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-03-01 01:15:21" itemprop="dateModified" datetime="2026-03-01T01:15:21+08:00">2026-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/UE5/" itemprop="url" rel="index"><span itemprop="name">UE5</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="UE5学习（四）AI系统"><a href="#UE5学习（四）AI系统" class="headerlink" title="UE5学习（四）AI系统"></a>UE5学习（四）AI系统</h1><blockquote>
+<p>本文是 UE5 学习系列的第四篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 AI 系统的原理，并通过完整的代码示例学会如何使用。</p>
+</blockquote>
+<h2 id="1-AI-系统概述"><a href="#1-AI-系统概述" class="headerlink" title="1. AI 系统概述"></a>1. AI 系统概述</h2><h3 id="1-1-什么是-AI-系统"><a href="#1-1-什么是-AI-系统" class="headerlink" title="1.1 什么是 AI 系统"></a>1.1 什么是 AI 系统</h3><p><strong>AI 系统（Artificial Intelligence System）</strong> 是 UE5 中用于创建智能 NPC、敌人、友军等角色的完整框架。它提供了行为树、黑板、感知系统、环境查询系统等工具，让开发者能够创建复杂的 AI 行为。</p>
+<p><strong>通俗理解：</strong></p>
+<p>想象你在设计一个智能机器人，需要告诉它：</p>
+<ul>
+<li>什么时候做什么（行为树）</li>
+<li>记住什么信息（黑板）</li>
+<li>如何感知周围环境（感知系统）</li>
+<li>如何选择最佳位置（环境查询系统）</li>
+</ul>
+<p>UE5 的 AI 系统就是提供这些功能的完整工具集。</p>
+<h3 id="1-2-为什么需要-AI-系统"><a href="#1-2-为什么需要-AI-系统" class="headerlink" title="1.2 为什么需要 AI 系统"></a>1.2 为什么需要 AI 系统</h3><p>在游戏开发中，AI 系统有广泛的应用：</p>
+<ol>
+<li><p><strong>敌人 AI</strong>：</p>
+<ul>
+<li>自动巡逻</li>
+<li>发现玩家后追击</li>
+<li>寻找掩体</li>
+<li>攻击玩家</li>
+</ul>
+</li>
+<li><p><strong>NPC AI</strong>：</p>
+<ul>
+<li>对话系统</li>
+<li>任务系统</li>
+<li>日常行为模拟</li>
+</ul>
+</li>
+<li><p><strong>友军 AI</strong>：</p>
+<ul>
+<li>跟随玩家</li>
+<li>协助战斗</li>
+<li>自动治疗</li>
+</ul>
+</li>
+<li><p><strong>群体 AI</strong>：</p>
+<ul>
+<li>多个 AI 协调行动</li>
+<li>群体行为模拟</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-3-AI-系统的核心组件"><a href="#1-3-AI-系统的核心组件" class="headerlink" title="1.3 AI 系统的核心组件"></a>1.3 AI 系统的核心组件</h3><p>UE5 的 AI 系统由以下几个核心组件组成：</p>
+<ol>
+<li><p><strong>AI Controller（AI 控制器）</strong>：</p>
+<ul>
+<li>AI 的”大脑”，控制 AI 的行为</li>
+<li>管理行为树、黑板、感知系统</li>
+</ul>
+</li>
+<li><p><strong>Behavior Tree（行为树）</strong>：</p>
+<ul>
+<li>定义 AI 的行为逻辑</li>
+<li>使用节点树结构组织行为</li>
+</ul>
+</li>
+<li><p><strong>Blackboard（黑板）</strong>：</p>
+<ul>
+<li>AI 的”记忆”，存储共享数据</li>
+<li>行为树和感知系统都可以读写</li>
+</ul>
+</li>
+<li><p><strong>Perception System（感知系统）</strong>：</p>
+<ul>
+<li>AI 的”感官”，检测周围环境</li>
+<li>视觉、听觉、伤害感知等</li>
+</ul>
+</li>
+<li><p><strong>EQS（Environment Query System，环境查询系统）</strong>：</p>
+<ul>
+<li>查询环境中的最佳位置</li>
+<li>用于寻找掩体、攻击位置等</li>
+</ul>
+</li>
+<li><p><strong>Navigation System（导航系统）</strong>：</p>
+<ul>
+<li>AI 的”导航能力”（见第三篇文章）</li>
+<li>与 AI 系统紧密集成</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-4-AI-系统的工作流程"><a href="#1-4-AI-系统的工作流程" class="headerlink" title="1.4 AI 系统的工作流程"></a>1.4 AI 系统的工作流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">1. AI Controller 初始化</span><br><span class="line">   - 创建行为树、黑板、感知系统</span><br><span class="line">   ↓</span><br><span class="line">2. 感知系统检测环境</span><br><span class="line">   - 检测玩家、敌人、声音等</span><br><span class="line">   - 更新 Blackboard 数据</span><br><span class="line">   ↓</span><br><span class="line">3. Behavior Tree 执行</span><br><span class="line">   - 根据 Blackboard 数据选择行为</span><br><span class="line">   - 执行对应的任务（移动、攻击等）</span><br><span class="line">   ↓</span><br><span class="line">4. 任务执行</span><br><span class="line">   - 移动、攻击、寻找掩体等</span><br><span class="line">   - 使用导航系统、EQS 等</span><br><span class="line">   ↓</span><br><span class="line">5. 循环执行</span><br><span class="line">   - 持续感知和执行</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-AI-Controller（AI-控制器）"><a href="#2-AI-Controller（AI-控制器）" class="headerlink" title="2. AI Controller（AI 控制器）"></a>2. AI Controller（AI 控制器）</h2><h3 id="2-1-什么是-AI-Controller"><a href="#2-1-什么是-AI-Controller" class="headerlink" title="2.1 什么是 AI Controller"></a>2.1 什么是 AI Controller</h3><p><strong>AI Controller</strong> 是 AI 角色的”大脑”，负责控制 AI 的所有行为。它继承自 <code>AController</code>，类似于 <code>PlayerController</code>，但用于 AI 控制。</p>
+<p><strong>主要功能：</strong></p>
+<ul>
+<li>管理 Behavior Tree 的执行</li>
+<li>管理 Blackboard 数据</li>
+<li>管理感知系统</li>
+<li>控制 AI 的移动和行动</li>
+</ul>
+<h3 id="2-2-创建-AI-Controller"><a href="#2-2-创建-AI-Controller" class="headerlink" title="2.2 创建 AI Controller"></a>2.2 创建 AI Controller</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyAIController.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CoreMinimal.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Perception/AIPerceptionComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Perception/AISightPerceptionComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/BehaviorTreeComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/BlackboardComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyAIController.generated.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> AMyAIController : <span class="keyword">public</span> AAIController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">AMyAIController</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">OnPossess</span><span class="params">(APawn* InPawn)</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">OnUnPossess</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Behavior Tree 组件</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UBehaviorTreeComponent</span>* BehaviorTreeComponent;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Blackboard 组件</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UBlackboardComponent</span>* BlackboardComponent;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 感知组件</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UAIPerceptionComponent</span>* PerceptionComponent;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 视觉感知组件</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UAISightPerceptionComponent</span>* SightPerceptionComponent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// Behavior Tree 资源</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UBehaviorTree</span>* BehaviorTree;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Blackboard 资源</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UBlackboardData</span>* BlackboardData;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyAIController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyAIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/BehaviorTreeComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/BlackboardComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Perception/AIPerceptionComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Perception/AISightPerceptionComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Perception/AIPerceptionStimuliSourceComponent.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">AMyAIController::<span class="built_in">AMyAIController</span>()</span><br><span class="line">&#123;</span><br><span class="line">    PrimaryActorTick.bCanEverTick = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 Behavior Tree 组件</span></span><br><span class="line">    BehaviorTreeComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UBehaviorTreeComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;BehaviorTreeComponent&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 Blackboard 组件</span></span><br><span class="line">    BlackboardComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UBlackboardComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;BlackboardComponent&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建感知组件</span></span><br><span class="line">    PerceptionComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UAIPerceptionComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;PerceptionComponent&quot;</span>));</span><br><span class="line">    SightPerceptionComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UAISightPerceptionComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;SightPerceptionComponent&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 Blackboard</span></span><br><span class="line">    <span class="keyword">if</span> (BlackboardData)</span><br><span class="line">    &#123;</span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">InitializeBlackboard</span>(*BlackboardData);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启动 Behavior Tree</span></span><br><span class="line">    <span class="keyword">if</span> (BehaviorTree)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">RunBehaviorTree</span>(BehaviorTree);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::OnPossess</span><span class="params">(APawn* InPawn)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">OnPossess</span>(InPawn);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当控制 Pawn 时，初始化 AI 系统</span></span><br><span class="line">    <span class="keyword">if</span> (BlackboardData)</span><br><span class="line">    &#123;</span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">InitializeBlackboard</span>(*BlackboardData);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (BehaviorTree)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">RunBehaviorTree</span>(BehaviorTree);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::OnUnPossess</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">OnUnPossess</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 停止 Behavior Tree</span></span><br><span class="line">    <span class="keyword">if</span> (BehaviorTreeComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        BehaviorTreeComponent-&gt;<span class="built_in">StopTree</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-AI-Controller-的常用功能"><a href="#2-3-AI-Controller-的常用功能" class="headerlink" title="2.3 AI Controller 的常用功能"></a>2.3 AI Controller 的常用功能</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyAIController.h</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 设置 Blackboard 值</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">SetBlackboardValue</span><span class="params">(FName KeyName, <span class="type">bool</span> Value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">SetBlackboardValueVector</span><span class="params">(FName KeyName, FVector Value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">SetBlackboardValueObject</span><span class="params">(FName KeyName, UObject* Value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取 Blackboard 值</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">GetBlackboardValueBool</span><span class="params">(FName KeyName)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function">FVector <span class="title">GetBlackboardValueVector</span><span class="params">(FName KeyName)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function">AActor* <span class="title">GetBlackboardValueObject</span><span class="params">(FName KeyName)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyAIController.cpp</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::SetBlackboardValue</span><span class="params">(FName KeyName, <span class="type">bool</span> Value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(KeyName, Value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::SetBlackboardValueVector</span><span class="params">(FName KeyName, FVector Value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">SetValueAsVector</span>(KeyName, Value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::SetBlackboardValueObject</span><span class="params">(FName KeyName, UObject* Value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">SetValueAsObject</span>(KeyName, Value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">AMyAIController::GetBlackboardValueBool</span><span class="params">(FName KeyName)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> BlackboardComponent-&gt;<span class="built_in">GetValueAsBool</span>(KeyName);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">FVector <span class="title">AMyAIController::GetBlackboardValueVector</span><span class="params">(FName KeyName)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> BlackboardComponent-&gt;<span class="built_in">GetValueAsVector</span>(KeyName);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> FVector::ZeroVector;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">AActor* <span class="title">AMyAIController::GetBlackboardValueObject</span><span class="params">(FName KeyName)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Cast</span>&lt;AActor&gt;(BlackboardComponent-&gt;<span class="built_in">GetValueAsObject</span>(KeyName));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Blackboard（黑板）"><a href="#3-Blackboard（黑板）" class="headerlink" title="3. Blackboard（黑板）"></a>3. Blackboard（黑板）</h2><h3 id="3-1-什么是-Blackboard"><a href="#3-1-什么是-Blackboard" class="headerlink" title="3.1 什么是 Blackboard"></a>3.1 什么是 Blackboard</h3><p><strong>Blackboard（黑板）</strong> 是 AI 系统的”记忆”，用于存储和共享数据。Behavior Tree、感知系统、任务节点等都可以读写 Blackboard 中的数据。</p>
+<p><strong>通俗理解：</strong></p>
+<p>想象 Blackboard 是一个公告板，不同的系统可以在上面写信息、读信息：</p>
+<ul>
+<li>感知系统：”我看到玩家在 (100, 200, 50)”</li>
+<li>行为树：”好的，我去追击玩家”</li>
+<li>任务节点：”玩家位置已更新”</li>
+</ul>
+<h3 id="3-2-创建-Blackboard"><a href="#3-2-创建-Blackboard" class="headerlink" title="3.2 创建 Blackboard"></a>3.2 创建 Blackboard</h3><p><strong>步骤 1：创建 Blackboard 资源</strong></p>
+<ol>
+<li>在内容浏览器中右键点击</li>
+<li>选择 <code>Artificial Intelligence &gt; Blackboard</code></li>
+<li>命名并创建（例如：<code>BB_EnemyAI</code>）</li>
+</ol>
+<p><strong>步骤 2：添加 Keys（键）</strong></p>
+<p>在 Blackboard 编辑器中，点击 <code>New Key</code> 添加键：</p>
+<ul>
+<li><strong>Bool</strong>：布尔值（例如：<code>HasTarget</code>、<code>IsPatrolling</code>）</li>
+<li><strong>Int</strong>：整数（例如：<code>Health</code>、<code>AmmoCount</code>）</li>
+<li><strong>Float</strong>：浮点数（例如：<code>DistanceToTarget</code>）</li>
+<li><strong>Vector</strong>：向量（例如：<code>TargetLocation</code>、<code>PatrolPoint</code>）</li>
+<li><strong>Object</strong>：对象引用（例如：<code>TargetActor</code>、<code>EnemyActor</code>）</li>
+<li><strong>Enum</strong>：枚举（例如：<code>AIState</code>、<code>CombatState</code>）</li>
+</ul>
+<p><strong>常用 Keys 示例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- TargetActor (Object) - 目标 Actor</span><br><span class="line">- TargetLocation (Vector) - 目标位置</span><br><span class="line">- HasTarget (Bool) - 是否有目标</span><br><span class="line">- IsPatrolling (Bool) - 是否在巡逻</span><br><span class="line">- PatrolPoint (Vector) - 巡逻点</span><br><span class="line">- CanSeePlayer (Bool) - 是否能看到玩家</span><br><span class="line">- DistanceToTarget (Float) - 到目标的距离</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-在代码中使用-Blackboard"><a href="#3-3-在代码中使用-Blackboard" class="headerlink" title="3.3 在代码中使用 Blackboard"></a>3.3 在代码中使用 Blackboard</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置 Blackboard 值</span></span><br><span class="line">BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;HasTarget&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">BlackboardComponent-&gt;<span class="built_in">SetValueAsVector</span>(<span class="string">&quot;TargetLocation&quot;</span>, <span class="built_in">FVector</span>(<span class="number">100</span>, <span class="number">200</span>, <span class="number">50</span>));</span><br><span class="line">BlackboardComponent-&gt;<span class="built_in">SetValueAsObject</span>(<span class="string">&quot;TargetActor&quot;</span>, PlayerActor);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取 Blackboard 值</span></span><br><span class="line"><span class="type">bool</span> bHasTarget = BlackboardComponent-&gt;<span class="built_in">GetValueAsBool</span>(<span class="string">&quot;HasTarget&quot;</span>);</span><br><span class="line">FVector TargetLoc = BlackboardComponent-&gt;<span class="built_in">GetValueAsVector</span>(<span class="string">&quot;TargetLocation&quot;</span>);</span><br><span class="line">AActor* Target = <span class="built_in">Cast</span>&lt;AActor&gt;(BlackboardComponent-&gt;<span class="built_in">GetValueAsObject</span>(<span class="string">&quot;TargetActor&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-Blackboard-观察者（Observers）"><a href="#3-4-Blackboard-观察者（Observers）" class="headerlink" title="3.4 Blackboard 观察者（Observers）"></a>3.4 Blackboard 观察者（Observers）</h3><p>Blackboard 观察者可以在值改变时触发事件。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 AI Controller 中</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 注册观察者</span></span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">RegisterObserver</span>(</span><br><span class="line">            <span class="string">&quot;HasTarget&quot;</span>,</span><br><span class="line">            <span class="keyword">this</span>,</span><br><span class="line">            FOnBlackboardChangeNotification::<span class="built_in">CreateUObject</span>(<span class="keyword">this</span>, &amp;AMyAIController::OnTargetChanged)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::OnTargetChanged</span><span class="params">(<span class="type">const</span> UBlackboardComponent&amp; Blackboard, FBlackboard::FKey ChangedKeyID)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 当 HasTarget 改变时调用</span></span><br><span class="line">    <span class="type">bool</span> bHasTarget = BlackboardComponent-&gt;<span class="built_in">GetValueAsBool</span>(<span class="string">&quot;HasTarget&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (bHasTarget)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Target acquired!&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Target lost!&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Behavior-Tree（行为树）"><a href="#4-Behavior-Tree（行为树）" class="headerlink" title="4. Behavior Tree（行为树）"></a>4. Behavior Tree（行为树）</h2><h3 id="4-1-什么是-Behavior-Tree"><a href="#4-1-什么是-Behavior-Tree" class="headerlink" title="4.1 什么是 Behavior Tree"></a>4.1 什么是 Behavior Tree</h3><p><strong>Behavior Tree（行为树）</strong> 是定义 AI 行为逻辑的节点树结构。它使用节点来表示不同的行为，通过组合节点来创建复杂的 AI 行为。</p>
+<p><strong>通俗理解：</strong></p>
+<p>想象行为树是一个决策树：</p>
+<ul>
+<li>根节点：开始执行</li>
+<li>选择器（Selector）：尝试执行子节点，直到有一个成功</li>
+<li>序列（Sequence）：依次执行所有子节点，直到有一个失败</li>
+<li>任务节点：执行具体的行为（移动、攻击等）</li>
+</ul>
+<h3 id="4-2-创建-Behavior-Tree"><a href="#4-2-创建-Behavior-Tree" class="headerlink" title="4.2 创建 Behavior Tree"></a>4.2 创建 Behavior Tree</h3><p><strong>步骤 1：创建 Behavior Tree 资源</strong></p>
+<ol>
+<li>在内容浏览器中右键点击</li>
+<li>选择 <code>Artificial Intelligence &gt; Behavior Tree</code></li>
+<li>命名并创建（例如：<code>BT_EnemyAI</code>）</li>
+<li>选择对应的 Blackboard</li>
+</ol>
+<p><strong>步骤 2：添加节点</strong></p>
+<p>在 Behavior Tree 编辑器中：</p>
+<ol>
+<li><p><strong>根节点</strong>：自动创建，不能删除</p>
+</li>
+<li><p><strong>Composite 节点</strong>：</p>
+<ul>
+<li><strong>Selector</strong>：选择器，尝试执行子节点直到成功</li>
+<li><strong>Sequence</strong>：序列，依次执行所有子节点</li>
+<li><strong>Simple Parallel</strong>：简单并行，同时执行多个任务</li>
+</ul>
+</li>
+<li><p><strong>Decorator 节点</strong>：装饰器，修改节点的执行条件</p>
+<ul>
+<li><strong>Blackboard</strong>：检查 Blackboard 值</li>
+<li><strong>Time Limit</strong>：时间限制</li>
+<li><strong>Cooldown</strong>：冷却时间</li>
+</ul>
+</li>
+<li><p><strong>Service 节点</strong>：服务，在节点执行期间定期执行</p>
+<ul>
+<li><strong>Default Focus</strong>：设置默认焦点</li>
+<li><strong>Run Behavior</strong>：运行子行为树</li>
+</ul>
+</li>
+<li><p><strong>Task 节点</strong>：任务，执行具体行为</p>
+<ul>
+<li><strong>Move To</strong>：移动到位置</li>
+<li><strong>Wait</strong>：等待</li>
+<li><strong>Rotate to Face BB Entry</strong>：转向 Blackboard 中的目标</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-3-基础-Behavior-Tree-示例"><a href="#4-3-基础-Behavior-Tree-示例" class="headerlink" title="4.3 基础 Behavior Tree 示例"></a>4.3 基础 Behavior Tree 示例</h3><p><strong>简单的巡逻 Behavior Tree：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Root</span><br><span class="line">└── Selector (巡逻或追击)</span><br><span class="line">    ├── Sequence (追击玩家)</span><br><span class="line">    │   ├── Decorator: Blackboard (HasTarget == true)</span><br><span class="line">    │   └── Task: Move To (TargetLocation)</span><br><span class="line">    └── Sequence (巡逻)</span><br><span class="line">        ├── Task: Move To (PatrolPoint)</span><br><span class="line">        └── Task: Wait (5秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建步骤：</strong></p>
+<ol>
+<li>添加 <strong>Selector</strong> 节点作为根节点的子节点</li>
+<li>添加 <strong>Sequence</strong> 节点作为 Selector 的第一个子节点</li>
+<li>添加 <strong>Blackboard Decorator</strong>，检查 <code>HasTarget</code></li>
+<li>添加 <strong>Move To</strong> 任务，目标设置为 <code>TargetLocation</code></li>
+<li>添加另一个 <strong>Sequence</strong> 节点作为 Selector 的第二个子节点</li>
+<li>添加 <strong>Move To</strong> 任务，目标设置为 <code>PatrolPoint</code></li>
+<li>添加 <strong>Wait</strong> 任务，等待 5 秒</li>
+</ol>
+<h3 id="4-4-自定义-Task-节点"><a href="#4-4-自定义-Task-节点" class="headerlink" title="4.4 自定义 Task 节点"></a>4.4 自定义 Task 节点</h3><p>创建自定义任务节点，实现特定的 AI 行为。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BTTask_Attack.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CoreMinimal.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/Tasks/BTTaskNode.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BTTask_Attack.generated.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UBTTask_Attack : <span class="keyword">public</span> UBTTaskNode</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">UBTTask_Attack</span>();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> EBTNodeResult::Type <span class="title">ExecuteTask</span><span class="params">(UBehaviorTreeComponent&amp; OwnerComp, uint8* NodeMemory)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="comment">// 攻击完成回调</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnAttackFinished</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 攻击目标</span></span><br><span class="line">    AActor* TargetActor = <span class="literal">nullptr</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// BTTask_Attack.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BTTask_Attack.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/BehaviorTreeComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;GameFramework/Character.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/SkeletalMeshComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Animation/AnimMontage.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">UBTTask_Attack::<span class="built_in">UBTTask_Attack</span>()</span><br><span class="line">&#123;</span><br><span class="line">    NodeName = <span class="built_in">TEXT</span>(<span class="string">&quot;Attack&quot;</span>);</span><br><span class="line">    bNotifyTick = <span class="literal">false</span>;</span><br><span class="line">    bNotifyTaskFinished = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">EBTNodeResult::Type <span class="title">UBTTask_Attack::ExecuteTask</span><span class="params">(UBehaviorTreeComponent&amp; OwnerComp, uint8* NodeMemory)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AAIController* AIController = OwnerComp.<span class="built_in">GetAIOwner</span>();</span><br><span class="line">    <span class="keyword">if</span> (!AIController)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> EBTNodeResult::Failed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    APawn* ControlledPawn = AIController-&gt;<span class="built_in">GetPawn</span>();</span><br><span class="line">    <span class="keyword">if</span> (!ControlledPawn)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> EBTNodeResult::Failed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 Blackboard 获取目标</span></span><br><span class="line">    UBlackboardComponent* BlackboardComp = OwnerComp.<span class="built_in">GetBlackboardComponent</span>();</span><br><span class="line">    <span class="keyword">if</span> (!BlackboardComp)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> EBTNodeResult::Failed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    TargetActor = <span class="built_in">Cast</span>&lt;AActor&gt;(BlackboardComp-&gt;<span class="built_in">GetValueAsObject</span>(<span class="string">&quot;TargetActor&quot;</span>));</span><br><span class="line">    <span class="keyword">if</span> (!TargetActor)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> EBTNodeResult::Failed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行攻击（这里假设角色有攻击动画）</span></span><br><span class="line">    ACharacter* Character = <span class="built_in">Cast</span>&lt;ACharacter&gt;(ControlledPawn);</span><br><span class="line">    <span class="keyword">if</span> (Character)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 播放攻击动画</span></span><br><span class="line">        <span class="comment">// UAnimMontage* AttackMontage = ...;</span></span><br><span class="line">        <span class="comment">// Character-&gt;PlayAnimMontage(AttackMontage);</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;AI is attacking!&quot;</span>));</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 这里可以添加实际的攻击逻辑</span></span><br><span class="line">        <span class="comment">// 例如：造成伤害、播放特效等</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果攻击是即时的，直接返回成功</span></span><br><span class="line">        <span class="keyword">return</span> EBTNodeResult::Succeeded;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果攻击需要时间，返回 InProgress，并在完成后调用 FinishLatentTask</span></span><br><span class="line">        <span class="comment">// return EBTNodeResult::InProgress;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> EBTNodeResult::Failed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-5-自定义-Decorator-节点"><a href="#4-5-自定义-Decorator-节点" class="headerlink" title="4.5 自定义 Decorator 节点"></a>4.5 自定义 Decorator 节点</h3><p>创建自定义装饰器，实现复杂的条件判断。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BTDecorator_HealthCheck.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CoreMinimal.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/Decorators/BTDecorator.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BTDecorator_HealthCheck.generated.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UBTDecorator_HealthCheck : <span class="keyword">public</span> UBTDecorator</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">UBTDecorator_HealthCheck</span>();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">CalculateRawConditionValue</span><span class="params">(UBehaviorTreeComponent&amp; OwnerComp, uint8* NodeMemory)</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="comment">// 最小生命值（低于此值返回 false）</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;Health&quot;</span>)</span><br><span class="line">    <span class="type">float</span> MinHealth = <span class="number">30.0f</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// BTDecorator_HealthCheck.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BTDecorator_HealthCheck.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BehaviorTree/BehaviorTreeComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;GameFramework/Pawn.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/HealthComponent.h&quot;</span> <span class="comment">// 假设有生命值组件</span></span></span><br><span class="line"></span><br><span class="line">UBTDecorator_HealthCheck::<span class="built_in">UBTDecorator_HealthCheck</span>()</span><br><span class="line">&#123;</span><br><span class="line">    NodeName = <span class="built_in">TEXT</span>(<span class="string">&quot;Health Check&quot;</span>);</span><br><span class="line">    bNotifyActivation = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">UBTDecorator_HealthCheck::CalculateRawConditionValue</span><span class="params">(UBehaviorTreeComponent&amp; OwnerComp, uint8* NodeMemory)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AAIController* AIController = OwnerComp.<span class="built_in">GetAIOwner</span>();</span><br><span class="line">    <span class="keyword">if</span> (!AIController)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    APawn* ControlledPawn = AIController-&gt;<span class="built_in">GetPawn</span>();</span><br><span class="line">    <span class="keyword">if</span> (!ControlledPawn)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查生命值（这里假设有生命值组件）</span></span><br><span class="line">    <span class="comment">// UHealthComponent* HealthComp = ControlledPawn-&gt;FindComponentByClass&lt;UHealthComponent&gt;();</span></span><br><span class="line">    <span class="comment">// if (HealthComp)</span></span><br><span class="line">    <span class="comment">// &#123;</span></span><br><span class="line">    <span class="comment">//     return HealthComp-&gt;GetHealth() &gt;= MinHealth;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 简化示例：总是返回 true</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-感知系统（Perception-System）"><a href="#5-感知系统（Perception-System）" class="headerlink" title="5. 感知系统（Perception System）"></a>5. 感知系统（Perception System）</h2><h3 id="5-1-什么是感知系统"><a href="#5-1-什么是感知系统" class="headerlink" title="5.1 什么是感知系统"></a>5.1 什么是感知系统</h3><p><strong>感知系统（Perception System）</strong> 是 AI 的”感官”，用于检测周围环境。它可以检测视觉、听觉、伤害等刺激，并更新 Blackboard 数据。</p>
+<p><strong>感知类型：</strong></p>
+<ol>
+<li><strong>Sight（视觉）</strong>：检测视野内的物体</li>
+<li><strong>Hearing（听觉）</strong>：检测声音</li>
+<li><strong>Damage（伤害）</strong>：检测受到的伤害</li>
+<li><strong>Team（团队）</strong>：检测团队成员</li>
+<li><strong>Prediction（预测）</strong>：预测目标位置</li>
+</ol>
+<h3 id="5-2-设置感知系统"><a href="#5-2-设置感知系统" class="headerlink" title="5.2 设置感知系统"></a>5.2 设置感知系统</h3><p><strong>步骤 1：在 AI Controller 中添加感知组件</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 AI Controller 构造函数中</span></span><br><span class="line">PerceptionComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UAIPerceptionComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;PerceptionComponent&quot;</span>));</span><br><span class="line">SightPerceptionComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UAISightPerceptionComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;SightPerceptionComponent&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 2：配置感知设置</strong></p>
+<ol>
+<li>创建 <strong>AIPerception Stimuli Source</strong> 组件（在需要被感知的 Actor 上）</li>
+<li>配置感知范围、角度等参数</li>
+</ol>
+<p><strong>步骤 3：绑定感知事件</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyAIController.h</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="comment">// 感知更新事件</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnPerceptionUpdated</span><span class="params">(<span class="type">const</span> TArray&lt;AActor*&gt;&amp; UpdatedActors)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyAIController.cpp</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (PerceptionComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 绑定感知更新事件</span></span><br><span class="line">        PerceptionComponent-&gt;OnPerceptionUpdated.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;AMyAIController::OnPerceptionUpdated);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::OnPerceptionUpdated</span><span class="params">(<span class="type">const</span> TArray&lt;AActor*&gt;&amp; UpdatedActors)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (AActor* Actor : UpdatedActors)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 检查感知到的 Actor</span></span><br><span class="line">        FActorPerceptionInfo PerceptionInfo;</span><br><span class="line">        <span class="keyword">if</span> (PerceptionComponent-&gt;<span class="built_in">GetActorsPerception</span>(Actor, PerceptionInfo))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 检查是否通过视觉感知</span></span><br><span class="line">            <span class="keyword">if</span> (PerceptionInfo.LastSensedStimuli.<span class="built_in">Num</span>() &gt; <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">const</span> FAIStimulus&amp; Stimulus : PerceptionInfo.LastSensedStimuli)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (Stimulus.Type.Name == <span class="string">&quot;Default__AISightSense&quot;</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span> (Stimulus.<span class="built_in">WasSuccessfullySensed</span>())</span><br><span class="line">                        &#123;</span><br><span class="line">                            <span class="comment">// 看到目标</span></span><br><span class="line">                            <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Detected: %s&quot;</span>), *Actor-&gt;<span class="built_in">GetName</span>());</span><br><span class="line">                            </span><br><span class="line">                            <span class="comment">// 更新 Blackboard</span></span><br><span class="line">                            <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">                            &#123;</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsObject</span>(<span class="string">&quot;TargetActor&quot;</span>, Actor);</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;HasTarget&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsVector</span>(<span class="string">&quot;TargetLocation&quot;</span>, Actor-&gt;<span class="built_in">GetActorLocation</span>());</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">else</span></span><br><span class="line">                        &#123;</span><br><span class="line">                            <span class="comment">// 失去目标</span></span><br><span class="line">                            <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Lost sight of: %s&quot;</span>), *Actor-&gt;<span class="built_in">GetName</span>());</span><br><span class="line">                            </span><br><span class="line">                            <span class="comment">// 更新 Blackboard</span></span><br><span class="line">                            <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">                            &#123;</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsObject</span>(<span class="string">&quot;TargetActor&quot;</span>, <span class="literal">nullptr</span>);</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;HasTarget&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-配置感知参数"><a href="#5-3-配置感知参数" class="headerlink" title="5.3 配置感知参数"></a>5.3 配置感知参数</h3><p>在 AI Controller 的 <code>Details</code> 面板中配置感知参数：</p>
+<ul>
+<li><strong>Sight Radius</strong>：视野半径</li>
+<li><strong>Sight Angle</strong>：视野角度</li>
+<li><strong>Lose Sight Radius</strong>：失去视野半径</li>
+<li><strong>Hearing Range</strong>：听觉范围</li>
+</ul>
+<p>或在代码中配置：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::ConfigurePerception</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (SightPerceptionComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 设置视野半径</span></span><br><span class="line">        SightPerceptionComponent-&gt;SightRadius = <span class="number">2000.0f</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置视野角度（度）</span></span><br><span class="line">        SightPerceptionComponent-&gt;PeripheralVisionAngleDegrees = <span class="number">90.0f</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置失去视野半径</span></span><br><span class="line">        SightPerceptionComponent-&gt;LoseSightRadius = <span class="number">2500.0f</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置检测间隔</span></span><br><span class="line">        SightPerceptionComponent-&gt;<span class="built_in">SetMaxAge</span>(<span class="number">5.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-EQS（环境查询系统）"><a href="#6-EQS（环境查询系统）" class="headerlink" title="6. EQS（环境查询系统）"></a>6. EQS（环境查询系统）</h2><h3 id="6-1-什么是-EQS"><a href="#6-1-什么是-EQS" class="headerlink" title="6.1 什么是 EQS"></a>6.1 什么是 EQS</h3><p><strong>EQS（Environment Query System，环境查询系统）</strong> 用于查询环境中的最佳位置。它可以根据多个条件（距离、可见性、安全性等）评估位置，返回最优位置。</p>
+<p><strong>应用场景：</strong></p>
+<ul>
+<li>寻找掩体</li>
+<li>寻找攻击位置</li>
+<li>寻找逃跑路线</li>
+<li>寻找集合点</li>
+</ul>
+<h3 id="6-2-创建-EQS-查询"><a href="#6-2-创建-EQS-查询" class="headerlink" title="6.2 创建 EQS 查询"></a>6.2 创建 EQS 查询</h3><p><strong>步骤 1：创建 EQS 查询资源</strong></p>
+<ol>
+<li>在内容浏览器中右键点击</li>
+<li>选择 <code>Artificial Intelligence &gt; Environment Query</code></li>
+<li>命名并创建（例如：<code>EQS_FindCover</code>）</li>
+</ol>
+<p><strong>步骤 2：添加生成器（Generator）</strong></p>
+<p>生成器定义在哪里生成测试点：</p>
+<ul>
+<li><strong>Points: Circle</strong>：在圆形区域内生成点</li>
+<li><strong>Points: Grid</strong>：在网格中生成点</li>
+<li><strong>Points: Pathing Grid</strong>：在导航网格上生成点</li>
+<li><strong>Actors Of Class</strong>：在特定 Actor 周围生成点</li>
+</ul>
+<p><strong>步骤 3：添加测试（Tests）</strong></p>
+<p>测试评估每个点的质量：</p>
+<ul>
+<li><strong>Distance</strong>：距离测试</li>
+<li><strong>Dot</strong>：方向测试</li>
+<li><strong>Trace</strong>：射线检测测试</li>
+<li><strong>Overlap</strong>：重叠测试</li>
+<li><strong>Pathfinding</strong>：路径查找测试</li>
+</ul>
+<h3 id="6-3-在代码中使用-EQS"><a href="#6-3-在代码中使用-EQS" class="headerlink" title="6.3 在代码中使用 EQS"></a>6.3 在代码中使用 EQS</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyAIController.h</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 使用 EQS 查找位置</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function">FVector <span class="title">FindBestLocation</span><span class="params">(UEnvQuery* QueryTemplate, FVector QueryLocation)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyAIController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;EnvironmentQuery/EnvQueryManager.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">FVector <span class="title">AMyAIController::FindBestLocation</span><span class="params">(UEnvQuery* QueryTemplate, FVector QueryLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!QueryTemplate)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> FVector::ZeroVector;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建查询请求</span></span><br><span class="line">    <span class="function">FEnvQueryRequest <span class="title">QueryRequest</span><span class="params">(QueryTemplate, <span class="keyword">this</span>)</span></span>;</span><br><span class="line">    QueryRequest.<span class="built_in">SetFloatParam</span>(<span class="string">&quot;Distance&quot;</span>, <span class="number">1000.0f</span>); <span class="comment">// 设置查询参数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行查询</span></span><br><span class="line">    FEnvQueryRequest::FQueryFinishedSignature OnQueryFinished;</span><br><span class="line">    OnQueryFinished.<span class="built_in">BindLambda</span>([<span class="keyword">this</span>](TSharedPtr&lt;FEnvQueryResult&gt; Result)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (Result-&gt;<span class="built_in">IsSuccessful</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 获取最佳位置</span></span><br><span class="line">            FVector BestLocation = Result-&gt;<span class="built_in">GetItemAsLocation</span>(<span class="number">0</span>);</span><br><span class="line">            <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Best location found: %s&quot;</span>), *BestLocation.<span class="built_in">ToString</span>());</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 更新 Blackboard</span></span><br><span class="line">            <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">            &#123;</span><br><span class="line">                BlackboardComponent-&gt;<span class="built_in">SetValueAsVector</span>(<span class="string">&quot;BestLocation&quot;</span>, BestLocation);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    QueryRequest.<span class="built_in">Execute</span>(EEnvQueryRunMode::SingleResult, OnQueryFinished);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> FVector::ZeroVector; <span class="comment">// 异步查询，这里返回零向量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-EQS-实际应用：寻找掩体"><a href="#6-4-EQS-实际应用：寻找掩体" class="headerlink" title="6.4 EQS 实际应用：寻找掩体"></a>6.4 EQS 实际应用：寻找掩体</h3><p>创建一个 EQS 查询来寻找掩体：</p>
+<ol>
+<li><strong>生成器</strong>：使用 <code>Points: Pathing Grid</code>，在 AI 周围生成点</li>
+<li><strong>测试 1</strong>：<code>Trace</code> - 检查从 AI 到点的路径是否被阻挡（有掩体）</li>
+<li><strong>测试 2</strong>：<code>Distance</code> - 优先选择较近的掩体</li>
+<li><strong>测试 3</strong>：<code>Trace</code> - 检查从掩体到目标的视线是否被阻挡</li>
+</ol>
+<h2 id="7-实际应用场景"><a href="#7-实际应用场景" class="headerlink" title="7. 实际应用场景"></a>7. 实际应用场景</h2><h3 id="7-1-场景-1：完整的敌人-AI"><a href="#7-1-场景-1：完整的敌人-AI" class="headerlink" title="7.1 场景 1：完整的敌人 AI"></a>7.1 场景 1：完整的敌人 AI</h3><p>实现一个完整的敌人 AI，包括巡逻、发现玩家、追击、攻击等行为。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// EnemyAIController.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> AEnemyAIController : <span class="keyword">public</span> AMyAIController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">AEnemyAIController</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 感知更新</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">OnPerceptionUpdated</span><span class="params">(<span class="type">const</span> TArray&lt;AActor*&gt;&amp; UpdatedActors)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 巡逻点</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    TArray&lt;FVector&gt; PatrolPoints;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当前巡逻点索引</span></span><br><span class="line">    int32 CurrentPatrolIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动到下一个巡逻点</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">MoveToNextPatrolPoint</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// EnemyAIController.cpp</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AEnemyAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化巡逻</span></span><br><span class="line">    <span class="keyword">if</span> (PatrolPoints.<span class="built_in">Num</span>() &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">        &#123;</span><br><span class="line">            BlackboardComponent-&gt;<span class="built_in">SetValueAsVector</span>(<span class="string">&quot;PatrolPoint&quot;</span>, PatrolPoints[<span class="number">0</span>]);</span><br><span class="line">            BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;IsPatrolling&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AEnemyAIController::OnPerceptionUpdated</span><span class="params">(<span class="type">const</span> TArray&lt;AActor*&gt;&amp; UpdatedActors)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">OnPerceptionUpdated</span>(UpdatedActors);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查是否看到玩家</span></span><br><span class="line">    <span class="keyword">for</span> (AActor* Actor : UpdatedActors)</span><br><span class="line">    &#123;</span><br><span class="line">        ACharacter* PlayerCharacter = <span class="built_in">Cast</span>&lt;ACharacter&gt;(Actor);</span><br><span class="line">        <span class="keyword">if</span> (PlayerCharacter &amp;&amp; PlayerCharacter-&gt;<span class="built_in">IsPlayerControlled</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            FActorPerceptionInfo PerceptionInfo;</span><br><span class="line">            <span class="keyword">if</span> (PerceptionComponent-&gt;<span class="built_in">GetActorsPerception</span>(Actor, PerceptionInfo))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">const</span> FAIStimulus&amp; Stimulus : PerceptionInfo.LastSensedStimuli)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (Stimulus.Type.Name == <span class="string">&quot;Default__AISightSense&quot;</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span> (Stimulus.<span class="built_in">WasSuccessfullySensed</span>())</span><br><span class="line">                        &#123;</span><br><span class="line">                            <span class="comment">// 发现玩家，停止巡逻，开始追击</span></span><br><span class="line">                            <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">                            &#123;</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsObject</span>(<span class="string">&quot;TargetActor&quot;</span>, PlayerCharacter);</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;HasTarget&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;IsPatrolling&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">else</span></span><br><span class="line">                        &#123;</span><br><span class="line">                            <span class="comment">// 失去玩家，恢复巡逻</span></span><br><span class="line">                            <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">                            &#123;</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsObject</span>(<span class="string">&quot;TargetActor&quot;</span>, <span class="literal">nullptr</span>);</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;HasTarget&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">                                BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;IsPatrolling&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">                                <span class="built_in">MoveToNextPatrolPoint</span>();</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AEnemyAIController::MoveToNextPatrolPoint</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (PatrolPoints.<span class="built_in">Num</span>() == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    CurrentPatrolIndex = (CurrentPatrolIndex + <span class="number">1</span>) % PatrolPoints.<span class="built_in">Num</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">SetValueAsVector</span>(<span class="string">&quot;PatrolPoint&quot;</span>, PatrolPoints[CurrentPatrolIndex]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>对应的 Behavior Tree：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Root</span><br><span class="line">└── Selector</span><br><span class="line">    ├── Sequence (攻击玩家)</span><br><span class="line">    │   ├── Decorator: Blackboard (HasTarget == true)</span><br><span class="line">    │   ├── Decorator: Distance (DistanceToTarget &lt; 200)</span><br><span class="line">    │   └── Task: Attack</span><br><span class="line">    ├── Sequence (追击玩家)</span><br><span class="line">    │   ├── Decorator: Blackboard (HasTarget == true)</span><br><span class="line">    │   └── Task: Move To (TargetLocation)</span><br><span class="line">    └── Sequence (巡逻)</span><br><span class="line">        ├── Decorator: Blackboard (IsPatrolling == true)</span><br><span class="line">        ├── Task: Move To (PatrolPoint)</span><br><span class="line">        └── Task: Wait (3秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-场景-2：使用-EQS-寻找掩体"><a href="#7-2-场景-2：使用-EQS-寻找掩体" class="headerlink" title="7.2 场景 2：使用 EQS 寻找掩体"></a>7.2 场景 2：使用 EQS 寻找掩体</h3><p>实现 AI 在受到攻击时寻找掩体的行为。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CoverSeekingAIController.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> ACoverSeekingAIController : <span class="keyword">public</span> AMyAIController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ACoverSeekingAIController</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 伤害感知</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnDamageTaken</span><span class="params">(AActor* DamagedActor, <span class="type">float</span> Damage, <span class="type">const</span> UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// EQS 查询（寻找掩体）</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UEnvQuery</span>* FindCoverQuery;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 寻找掩体</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">SeekCover</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// CoverSeekingAIController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CoverSeekingAIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;EnvironmentQuery/EnvQueryManager.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;GameFramework/DamageType.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">ACoverSeekingAIController::<span class="built_in">ACoverSeekingAIController</span>()</span><br><span class="line">&#123;</span><br><span class="line">    PrimaryActorTick.bCanEverTick = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ACoverSeekingAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绑定伤害事件</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">GetPawn</span>()-&gt;OnTakeAnyDamage.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;ACoverSeekingAIController::OnDamageTaken);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ACoverSeekingAIController::OnDamageTaken</span><span class="params">(AActor* DamagedActor, <span class="type">float</span> Damage, <span class="type">const</span> UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 受到伤害，寻找掩体</span></span><br><span class="line">    <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        BlackboardComponent-&gt;<span class="built_in">SetValueAsBool</span>(<span class="string">&quot;IsUnderFire&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">SeekCover</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ACoverSeekingAIController::SeekCover</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!FindCoverQuery || !<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建查询请求</span></span><br><span class="line">    <span class="function">FEnvQueryRequest <span class="title">QueryRequest</span><span class="params">(FindCoverQuery, <span class="keyword">this</span>)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 设置查询位置（AI 当前位置）</span></span><br><span class="line">    QueryRequest.<span class="built_in">SetFloatParam</span>(<span class="string">&quot;Distance&quot;</span>, <span class="number">500.0f</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行查询</span></span><br><span class="line">    QueryRequest.<span class="built_in">Execute</span>(EEnvQueryRunMode::SingleResult, [<span class="keyword">this</span>](TSharedPtr&lt;FEnvQueryResult&gt; Result)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (Result-&gt;<span class="built_in">IsSuccessful</span>() &amp;&amp; Result-&gt;Items.<span class="built_in">Num</span>() &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 获取最佳掩体位置</span></span><br><span class="line">            FVector CoverLocation = Result-&gt;<span class="built_in">GetItemAsLocation</span>(<span class="number">0</span>);</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Cover found at: %s&quot;</span>), *CoverLocation.<span class="built_in">ToString</span>());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 更新 Blackboard 并移动到掩体</span></span><br><span class="line">            <span class="keyword">if</span> (BlackboardComponent)</span><br><span class="line">            &#123;</span><br><span class="line">                BlackboardComponent-&gt;<span class="built_in">SetValueAsVector</span>(<span class="string">&quot;CoverLocation&quot;</span>, CoverLocation);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 移动到掩体</span></span><br><span class="line">            <span class="built_in">MoveToLocation</span>(CoverLocation);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-性能优化"><a href="#8-性能优化" class="headerlink" title="8. 性能优化"></a>8. 性能优化</h2><h3 id="8-1-Behavior-Tree-优化"><a href="#8-1-Behavior-Tree-优化" class="headerlink" title="8.1 Behavior Tree 优化"></a>8.1 Behavior Tree 优化</h3><p><strong>问题：</strong> 复杂的 Behavior Tree 可能影响性能。</p>
+<p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>减少节点数量</strong>：</p>
+<ul>
+<li>合并相似的任务</li>
+<li>使用 Service 节点代替重复的检查</li>
+</ul>
+</li>
+<li><p><strong>使用 Decorator 提前退出</strong>：</p>
+<ul>
+<li>使用 Decorator 快速失败</li>
+<li>避免执行不必要的任务</li>
+</ul>
+</li>
+<li><p><strong>优化 Service 节点频率</strong>：</p>
+<ul>
+<li>不要每帧都执行 Service</li>
+<li>使用合理的更新间隔</li>
+</ul>
+</li>
+</ol>
+<h3 id="8-2-感知系统优化"><a href="#8-2-感知系统优化" class="headerlink" title="8.2 感知系统优化"></a>8.2 感知系统优化</h3><p><strong>问题：</strong> 感知系统每帧检测可能影响性能。</p>
+<p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>调整感知频率</strong>：</p>
+<ul>
+<li>在 AI Controller 中设置感知更新频率</li>
+<li>不要每帧都更新</li>
+</ul>
+</li>
+<li><p><strong>限制感知范围</strong>：</p>
+<ul>
+<li>使用合理的感知半径</li>
+<li>避免过大的感知范围</li>
+</ul>
+</li>
+<li><p><strong>使用感知刺激源过滤</strong>：</p>
+<ul>
+<li>只感知需要的 Actor 类型</li>
+<li>使用感知配置过滤</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::OptimizePerception</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (SightPerceptionComponent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 设置感知配置</span></span><br><span class="line">        FAISenseAffiliationFilter AffiliationFilter;</span><br><span class="line">        AffiliationFilter.bDetectEnemies = <span class="literal">true</span>;</span><br><span class="line">        AffiliationFilter.bDetectFriendlies = <span class="literal">false</span>;</span><br><span class="line">        AffiliationFilter.bDetectNeutrals = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        SightPerceptionComponent-&gt;<span class="built_in">SetSenseAffiliationFilter</span>(AffiliationFilter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-EQS-优化"><a href="#8-3-EQS-优化" class="headerlink" title="8.3 EQS 优化"></a>8.3 EQS 优化</h3><p><strong>问题：</strong> EQS 查询可能很耗时。</p>
+<p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>限制生成点数量</strong>：</p>
+<ul>
+<li>使用合理的生成器设置</li>
+<li>避免生成过多测试点</li>
+</ul>
+</li>
+<li><p><strong>使用异步查询</strong>：</p>
+<ul>
+<li>对于非关键查询，使用异步模式</li>
+<li>避免阻塞游戏线程</li>
+</ul>
+</li>
+<li><p><strong>缓存查询结果</strong>：</p>
+<ul>
+<li>如果查询条件不变，缓存结果</li>
+<li>只在必要时重新查询</li>
+</ul>
+</li>
+</ol>
+<h2 id="9-常见问题与最佳实践"><a href="#9-常见问题与最佳实践" class="headerlink" title="9. 常见问题与最佳实践"></a>9. 常见问题与最佳实践</h2><h3 id="9-1-常见问题"><a href="#9-1-常见问题" class="headerlink" title="9.1 常见问题"></a>9.1 常见问题</h3><p><strong>Q: Behavior Tree 不执行？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>AI Controller 是否正确设置了 Behavior Tree 和 Blackboard？</li>
+<li>是否调用了 <code>RunBehaviorTree</code>？</li>
+<li>Behavior Tree 的根节点是否正确连接？</li>
+</ol>
+<p><strong>Q: 感知系统不工作？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>是否添加了感知组件？</li>
+<li>目标 Actor 是否有 <code>AIPerceptionStimuliSourceComponent</code>？</li>
+<li>感知范围是否合理？</li>
+<li>是否绑定了感知事件？</li>
+</ol>
+<p><strong>Q: Blackboard 值不更新？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>Blackboard 是否正确初始化？</li>
+<li>Key 名称是否正确？</li>
+<li>值类型是否匹配？</li>
+</ol>
+<p><strong>Q: EQS 查询失败？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>EQS 查询资源是否正确设置？</li>
+<li>生成器是否生成了点？</li>
+<li>测试条件是否太严格？</li>
+</ol>
+<h3 id="9-2-最佳实践"><a href="#9-2-最佳实践" class="headerlink" title="9.2 最佳实践"></a>9.2 最佳实践</h3><ol>
+<li><p><strong>合理组织 Behavior Tree</strong>：</p>
+<ul>
+<li>使用清晰的节点命名</li>
+<li>合理使用 Selector 和 Sequence</li>
+<li>避免过深的树结构</li>
+</ul>
+</li>
+<li><p><strong>有效使用 Blackboard</strong>：</p>
+<ul>
+<li>使用有意义的 Key 名称</li>
+<li>合理组织数据</li>
+<li>使用观察者处理值变化</li>
+</ul>
+</li>
+<li><p><strong>优化感知系统</strong>：</p>
+<ul>
+<li>使用合理的感知范围</li>
+<li>配置感知过滤</li>
+<li>避免过度检测</li>
+</ul>
+</li>
+<li><p><strong>合理使用 EQS</strong>：</p>
+<ul>
+<li>只在需要时使用</li>
+<li>优化查询参数</li>
+<li>缓存查询结果</li>
+</ul>
+</li>
+<li><p><strong>测试和调试</strong>：</p>
+<ul>
+<li>使用 Behavior Tree 调试工具</li>
+<li>可视化 Blackboard 值</li>
+<li>使用 EQS 测试工具</li>
+</ul>
+</li>
+</ol>
+<h2 id="10-总结"><a href="#10-总结" class="headerlink" title="10. 总结"></a>10. 总结</h2><p>本文从零开始全面介绍了 UE5 的 AI 系统，包括：</p>
+<ol>
+<li><strong>AI 系统概述</strong>：核心组件和工作流程</li>
+<li><strong>AI Controller</strong>：AI 控制器的创建和使用</li>
+<li><strong>Blackboard</strong>：数据存储和共享</li>
+<li><strong>Behavior Tree</strong>：行为逻辑的定义和执行</li>
+<li><strong>感知系统</strong>：环境检测和刺激响应</li>
+<li><strong>EQS</strong>：环境查询和位置选择</li>
+<li><strong>实际应用</strong>：完整的敌人 AI、掩体寻找等场景</li>
+<li><strong>性能优化</strong>：Behavior Tree、感知系统、EQS 优化</li>
+<li><strong>最佳实践</strong>：常见问题的解决方案和开发建议</li>
+</ol>
+<p>AI 系统是 UE5 游戏开发的核心功能，掌握它能够创建各种复杂的 AI 行为。通过本文的学习，你应该能够：</p>
+<ul>
+<li>理解 AI 系统的核心组件</li>
+<li>创建和使用 AI Controller</li>
+<li>设置和使用 Blackboard</li>
+<li>创建和执行 Behavior Tree</li>
+<li>配置感知系统</li>
+<li>使用 EQS 查询环境</li>
+<li>实现完整的 AI 行为</li>
+<li>优化 AI 系统性能</li>
+<li>解决常见的 AI 问题</li>
+</ul>
+<p>希望这篇文章能帮助你快速掌握 UE5 的 AI 系统！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/UE5/" rel="tag"># UE5</a>
+              <a href="/tags/Unreal-Engine/" rel="tag"># Unreal Engine</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" rel="tag"># 游戏开发</a>
+              <a href="/tags/AI%E7%B3%BB%E7%BB%9F/" rel="tag"># AI系统</a>
+              <a href="/tags/Behavior-Tree/" rel="tag"># Behavior Tree</a>
+              <a href="/tags/Blackboard/" rel="tag"># Blackboard</a>
+              <a href="/tags/EQS/" rel="tag"># EQS</a>
+              <a href="/tags/%E6%84%9F%E7%9F%A5%E7%B3%BB%E7%BB%9F/" rel="tag"># 感知系统</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/19/AI%E7%BB%84%E7%BD%91%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80/" rel="prev" title="AI 组网第一阶段：底层基础">
+                  <i class="fa fa-angle-left"></i> AI 组网第一阶段：底层基础
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%94%EF%BC%89UMG%20UI%E7%B3%BB%E7%BB%9F/" rel="next" title="UE5学习（五）UMG UI系统">
+                  UE5学习（五）UMG UI系统 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

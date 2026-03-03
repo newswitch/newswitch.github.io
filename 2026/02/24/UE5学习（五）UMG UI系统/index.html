@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="UE5学习（五）UMG UI系统 本文是 UE5 学习系列的第五篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 UMG UI 系统的原理，并通过完整的代码示例学会如何使用。  1. UMG UI 系统概述1.1 什么是 UMGUMG（Unreal Motion Graphics） 是 UE5 的 UI 系统，用于创建游戏中的用户界面。它提供了可视化的编辑器，让开发者可以通过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE5学习（五）UMG UI系统">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%94%EF%BC%89UMG%20UI%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="UE5学习（五）UMG UI系统 本文是 UE5 学习系列的第五篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 UMG UI 系统的原理，并通过完整的代码示例学会如何使用。  1. UMG UI 系统概述1.1 什么是 UMGUMG（Unreal Motion Graphics） 是 UE5 的 UI 系统，用于创建游戏中的用户界面。它提供了可视化的编辑器，让开发者可以通过">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-24T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-01T11:15:56.717Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="UE5">
+<meta property="article:tag" content="UI系统">
+<meta property="article:tag" content="UMG">
+<meta property="article:tag" content="Unreal Engine">
+<meta property="article:tag" content="Widget">
+<meta property="article:tag" content="游戏开发">
+<meta property="article:tag" content="用户界面">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%94%EF%BC%89UMG%20UI%E7%B3%BB%E7%BB%9F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%94%EF%BC%89UMG%20UI%E7%B3%BB%E7%BB%9F/","path":"2026/02/24/UE5学习（五）UMG UI系统/","title":"UE5学习（五）UMG UI系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>UE5学习（五）UMG UI系统 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%94%EF%BC%89UMG-UI%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">UE5学习（五）UMG UI系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-UMG-UI-%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1. UMG UI 系统概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-UMG"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 什么是 UMG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-UMG"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 为什么需要 UMG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-UMG-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 UMG 的核心概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-UMG-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 UMG 的工作流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%9F%BA%E7%A1%80%E6%8E%A7%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">2. 基础控件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%B8%B8%E7%94%A8%E6%8E%A7%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 常用控件类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%8E%A7%E4%BB%B6%E7%9A%84%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 控件的常用属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%88%9B%E5%BB%BA-Widget"><span class="nav-number">1.3.</span> <span class="nav-text">3. 创建 Widget</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%88%9B%E5%BB%BA-Widget-Blueprint"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 创建 Widget Blueprint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%9F%BA%E7%A1%80-UI-%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%B8%BB%E8%8F%9C%E5%8D%95"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 基础 UI 示例：主菜单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E4%BD%BF%E7%94%A8-Widget"><span class="nav-number">1.4.</span> <span class="nav-text">4. 在代码中使用 Widget</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%88%9B%E5%BB%BA-Widget-%E7%B1%BB"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 创建 Widget 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%98%BE%E7%A4%BA-Widget"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 显示 Widget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%8A%A8%E6%80%81%E6%9B%B4%E6%96%B0-UI"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 动态更新 UI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%B8%83%E5%B1%80%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.5.</span> <span class="nav-text">5. 布局系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%B8%83%E5%B1%80%E6%8E%A7%E4%BB%B6"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 布局控件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-Anchors%EF%BC%88%E9%94%9A%E7%82%B9%EF%BC%89"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 Anchors（锚点）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 响应式布局</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%8A%A8%E7%94%BB%E5%92%8C%E8%BF%87%E6%B8%A1"><span class="nav-number">1.6.</span> <span class="nav-text">6. 动画和过渡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Widget-%E5%8A%A8%E7%94%BB"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 Widget 动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8E%A7%E5%88%B6%E5%8A%A8%E7%94%BB"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 在代码中控制动画</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.7.</span> <span class="nav-text">7. 实际应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%9C%BA%E6%99%AF-1%EF%BC%9A%E6%B8%B8%E6%88%8F-HUD"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 场景 1：游戏 HUD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E5%9C%BA%E6%99%AF-2%EF%BC%9A%E5%AF%B9%E8%AF%9D%E6%A1%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 场景 2：对话框系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E5%9C%BA%E6%99%AF-3%EF%BC%9A%E8%AE%BE%E7%BD%AE%E8%8F%9C%E5%8D%95"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 场景 3：设置菜单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.</span> <span class="nav-text">8. 性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-Widget-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 Widget 性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E6%B8%B2%E6%9F%93%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.2 渲染优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="nav-number">1.8.3.</span> <span class="nav-text">8.3 内存优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.9.</span> <span class="nav-text">9. 常见问题与最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 常见问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.9.2.</span> <span class="nav-text">9.2 最佳实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%80%BB%E7%BB%93"><span class="nav-number">1.10.</span> <span class="nav-text">10. 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%94%EF%BC%89UMG%20UI%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="UE5学习（五）UMG UI系统 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UE5学习（五）UMG UI系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-24 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-24T12:00:00+08:00">2026-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-03-01 19:15:56" itemprop="dateModified" datetime="2026-03-01T19:15:56+08:00">2026-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/UE5/" itemprop="url" rel="index"><span itemprop="name">UE5</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="UE5学习（五）UMG-UI系统"><a href="#UE5学习（五）UMG-UI系统" class="headerlink" title="UE5学习（五）UMG UI系统"></a>UE5学习（五）UMG UI系统</h1><blockquote>
+<p>本文是 UE5 学习系列的第五篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 UMG UI 系统的原理，并通过完整的代码示例学会如何使用。</p>
+</blockquote>
+<h2 id="1-UMG-UI-系统概述"><a href="#1-UMG-UI-系统概述" class="headerlink" title="1. UMG UI 系统概述"></a>1. UMG UI 系统概述</h2><h3 id="1-1-什么是-UMG"><a href="#1-1-什么是-UMG" class="headerlink" title="1.1 什么是 UMG"></a>1.1 什么是 UMG</h3><p><strong>UMG（Unreal Motion Graphics）</strong> 是 UE5 的 UI 系统，用于创建游戏中的用户界面。它提供了可视化的编辑器，让开发者可以通过拖拽的方式创建 UI，无需编写大量代码。</p>
+<p><strong>通俗理解：</strong></p>
+<p>想象你在设计一个手机 App 的界面，UMG 就像是 UE5 的”界面设计器”。你可以：</p>
+<ul>
+<li>拖拽按钮、文本、图片等控件</li>
+<li>设置它们的位置、大小、颜色</li>
+<li>添加动画和交互效果</li>
+<li>在代码中控制 UI 的显示和隐藏</li>
+</ul>
+<h3 id="1-2-为什么需要-UMG"><a href="#1-2-为什么需要-UMG" class="headerlink" title="1.2 为什么需要 UMG"></a>1.2 为什么需要 UMG</h3><p>在游戏开发中，UI 系统有广泛的应用：</p>
+<ol>
+<li><p><strong>游戏 HUD</strong>：</p>
+<ul>
+<li>生命值、魔法值显示</li>
+<li>小地图</li>
+<li>武器信息</li>
+<li>任务提示</li>
+</ul>
+</li>
+<li><p><strong>菜单系统</strong>：</p>
+<ul>
+<li>主菜单</li>
+<li>设置菜单</li>
+<li>暂停菜单</li>
+<li>背包菜单</li>
+</ul>
+</li>
+<li><p><strong>对话框系统</strong>：</p>
+<ul>
+<li>NPC 对话</li>
+<li>任务对话框</li>
+<li>确认对话框</li>
+</ul>
+</li>
+<li><p><strong>游戏内 UI</strong>：</p>
+<ul>
+<li>商店界面</li>
+<li>技能树</li>
+<li>成就系统</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-3-UMG-的核心概念"><a href="#1-3-UMG-的核心概念" class="headerlink" title="1.3 UMG 的核心概念"></a>1.3 UMG 的核心概念</h3><p><strong>Widget（控件）</strong>：</p>
+<ul>
+<li>UI 的基本单位</li>
+<li>可以是按钮、文本、图片等</li>
+<li>可以嵌套组合成复杂的 UI</li>
+</ul>
+<p><strong>Widget Blueprint（控件蓝图）</strong>：</p>
+<ul>
+<li>可视化的 UI 编辑器</li>
+<li>类似于普通蓝图，但专门用于 UI</li>
+</ul>
+<p><strong>Slot（插槽）</strong>：</p>
+<ul>
+<li>控件在父控件中的位置和大小</li>
+<li>每个控件都有一个 Slot</li>
+</ul>
+<p><strong>Anchors（锚点）</strong>：</p>
+<ul>
+<li>定义控件相对于父控件的位置</li>
+<li>用于响应式布局</li>
+</ul>
+<p><strong>Animation（动画）</strong>：</p>
+<ul>
+<li>UI 的动画效果</li>
+<li>淡入淡出、滑动等</li>
+</ul>
+<h3 id="1-4-UMG-的工作流程"><a href="#1-4-UMG-的工作流程" class="headerlink" title="1.4 UMG 的工作流程"></a>1.4 UMG 的工作流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1. 创建 Widget Blueprint</span><br><span class="line">   - 在内容浏览器中创建</span><br><span class="line">   ↓</span><br><span class="line">2. 设计 UI 布局</span><br><span class="line">   - 添加控件（按钮、文本等）</span><br><span class="line">   - 设置位置、大小、样式</span><br><span class="line">   ↓</span><br><span class="line">3. 添加交互逻辑</span><br><span class="line">   - 绑定按钮事件</span><br><span class="line">   - 设置数据绑定</span><br><span class="line">   ↓</span><br><span class="line">4. 在代码中创建和显示</span><br><span class="line">   - 创建 Widget 实例</span><br><span class="line">   - 添加到视口</span><br><span class="line">   ↓</span><br><span class="line">5. 更新和销毁</span><br><span class="line">   - 更新 UI 数据</span><br><span class="line">   - 移除 UI</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-基础控件"><a href="#2-基础控件" class="headerlink" title="2. 基础控件"></a>2. 基础控件</h2><h3 id="2-1-常用控件类型"><a href="#2-1-常用控件类型" class="headerlink" title="2.1 常用控件类型"></a>2.1 常用控件类型</h3><p>UMG 提供了丰富的控件类型：</p>
+<p><strong>基础控件：</strong></p>
+<ul>
+<li><strong>Text</strong>：文本显示</li>
+<li><strong>Rich Text</strong>：富文本（支持样式）</li>
+<li><strong>Editable Text</strong>：可编辑文本</li>
+<li><strong>Multi-line Editable Text</strong>：多行可编辑文本</li>
+</ul>
+<p><strong>按钮控件：</strong></p>
+<ul>
+<li><strong>Button</strong>：按钮</li>
+<li><strong>Check Box</strong>：复选框</li>
+<li><strong>Radio Button</strong>：单选按钮</li>
+<li><strong>Combo Box</strong>：下拉框</li>
+</ul>
+<p><strong>图片控件：</strong></p>
+<ul>
+<li><strong>Image</strong>：图片</li>
+<li><strong>Border</strong>：边框</li>
+<li><strong>Background Blur</strong>：背景模糊</li>
+</ul>
+<p><strong>布局控件：</strong></p>
+<ul>
+<li><strong>Canvas Panel</strong>：画布面板（自由布局）</li>
+<li><strong>Vertical Box</strong>：垂直盒子</li>
+<li><strong>Horizontal Box</strong>：水平盒子</li>
+<li><strong>Grid Panel</strong>：网格面板</li>
+<li><strong>Uniform Grid Panel</strong>：均匀网格面板</li>
+<li><strong>Wrap Box</strong>：换行盒子</li>
+<li><strong>Size Box</strong>：尺寸盒子</li>
+<li><strong>Scroll Box</strong>：滚动盒子</li>
+</ul>
+<p><strong>进度控件：</strong></p>
+<ul>
+<li><strong>Progress Bar</strong>：进度条</li>
+<li><strong>Circular Throbber</strong>：圆形加载动画</li>
+<li><strong>Spinning Throbber</strong>：旋转加载动画</li>
+</ul>
+<p><strong>列表控件：</strong></p>
+<ul>
+<li><strong>List View</strong>：列表视图</li>
+<li><strong>Tree View</strong>：树形视图</li>
+</ul>
+<h3 id="2-2-控件的常用属性"><a href="#2-2-控件的常用属性" class="headerlink" title="2.2 控件的常用属性"></a>2.2 控件的常用属性</h3><p><strong>通用属性：</strong></p>
+<ul>
+<li><strong>Visibility</strong>：可见性（Visible、Collapsed、Hidden、Hit Test Invisible）</li>
+<li><strong>Is Enabled</strong>：是否启用</li>
+<li><strong>Render Transform</strong>：渲染变换（位置、旋转、缩放）</li>
+<li><strong>Render Opacity</strong>：透明度（0-1）</li>
+</ul>
+<p><strong>布局属性：</strong></p>
+<ul>
+<li><strong>Anchors</strong>：锚点</li>
+<li><strong>Offsets</strong>：偏移量</li>
+<li><strong>Size To Content</strong>：根据内容调整大小</li>
+<li><strong>Auto Size</strong>：自动调整大小</li>
+</ul>
+<p><strong>样式属性：</strong></p>
+<ul>
+<li><strong>Color and Opacity</strong>：颜色和透明度</li>
+<li><strong>Font</strong>：字体</li>
+<li><strong>Justification</strong>：对齐方式</li>
+</ul>
+<h2 id="3-创建-Widget"><a href="#3-创建-Widget" class="headerlink" title="3. 创建 Widget"></a>3. 创建 Widget</h2><h3 id="3-1-创建-Widget-Blueprint"><a href="#3-1-创建-Widget-Blueprint" class="headerlink" title="3.1 创建 Widget Blueprint"></a>3.1 创建 Widget Blueprint</h3><p><strong>步骤 1：创建 Widget Blueprint</strong></p>
+<ol>
+<li>在内容浏览器中右键点击</li>
+<li>选择 <code>User Interface &gt; Widget Blueprint</code></li>
+<li>命名并创建（例如：<code>WBP_MainMenu</code>）</li>
+</ol>
+<p><strong>步骤 2：打开 Widget 编辑器</strong></p>
+<p>双击 Widget Blueprint 打开编辑器，你会看到：</p>
+<ul>
+<li><strong>Designer</strong>：可视化设计界面</li>
+<li><strong>Graph</strong>：蓝图逻辑编辑</li>
+<li><strong>Details</strong>：属性面板</li>
+<li><strong>Palette</strong>：控件面板</li>
+</ul>
+<p><strong>步骤 3：添加控件</strong></p>
+<ol>
+<li>从 <strong>Palette</strong> 面板拖拽控件到 <strong>Designer</strong></li>
+<li>在 <strong>Details</strong> 面板中设置属性</li>
+<li>使用 <strong>Anchors</strong> 设置位置</li>
+</ol>
+<h3 id="3-2-基础-UI-示例：主菜单"><a href="#3-2-基础-UI-示例：主菜单" class="headerlink" title="3.2 基础 UI 示例：主菜单"></a>3.2 基础 UI 示例：主菜单</h3><p>创建一个简单的主菜单：</p>
+<p><strong>步骤：</strong></p>
+<ol>
+<li><p>创建 Widget Blueprint：<code>WBP_MainMenu</code></p>
+</li>
+<li><p>添加控件：</p>
+<ul>
+<li><strong>Canvas Panel</strong>（根控件）</li>
+<li><strong>Text</strong>：标题 “游戏标题”</li>
+<li><strong>Button</strong>：开始游戏</li>
+<li><strong>Button</strong>：设置</li>
+<li><strong>Button</strong>：退出游戏</li>
+</ul>
+</li>
+<li><p>设置布局：</p>
+<ul>
+<li>使用 Anchors 居中排列按钮</li>
+<li>设置按钮大小和间距</li>
+</ul>
+</li>
+<li><p>设置样式：</p>
+<ul>
+<li>设置文本字体和颜色</li>
+<li>设置按钮背景和文本</li>
+</ul>
+</li>
+</ol>
+<h2 id="4-在代码中使用-Widget"><a href="#4-在代码中使用-Widget" class="headerlink" title="4. 在代码中使用 Widget"></a>4. 在代码中使用 Widget</h2><h3 id="4-1-创建-Widget-类"><a href="#4-1-创建-Widget-类" class="headerlink" title="4.1 创建 Widget 类"></a>4.1 创建 Widget 类</h3><p>首先创建一个 C++ Widget 类：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MainMenuWidget.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CoreMinimal.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Blueprint/UserWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MainMenuWidget.generated.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UMainMenuWidget : <span class="keyword">public</span> UUserWidget</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">UMainMenuWidget</span>(<span class="type">const</span> FObjectInitializer&amp; ObjectInitializer);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeConstruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeDestruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="comment">// 按钮引用（在 Widget Blueprint 中绑定）</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UButton</span>* StartGameButton;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UButton</span>* SettingsButton;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UButton</span>* QuitGameButton;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 文本引用</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* TitleText;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 按钮事件</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnStartGameClicked</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnSettingsClicked</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnQuitGameClicked</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MainMenuWidget.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MainMenuWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/Button.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/TextBlock.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Kismet/GameplayStatics.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Engine/World.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">UMainMenuWidget::<span class="built_in">UMainMenuWidget</span>(<span class="type">const</span> FObjectInitializer&amp; ObjectInitializer)</span><br><span class="line">    : <span class="built_in">Super</span>(ObjectInitializer)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UMainMenuWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绑定按钮事件</span></span><br><span class="line">    <span class="keyword">if</span> (StartGameButton)</span><br><span class="line">    &#123;</span><br><span class="line">        StartGameButton-&gt;OnClicked.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;UMainMenuWidget::OnStartGameClicked);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (SettingsButton)</span><br><span class="line">    &#123;</span><br><span class="line">        SettingsButton-&gt;OnClicked.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;UMainMenuWidget::OnSettingsClicked);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (QuitGameButton)</span><br><span class="line">    &#123;</span><br><span class="line">        QuitGameButton-&gt;OnClicked.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;UMainMenuWidget::OnQuitGameClicked);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置标题文本</span></span><br><span class="line">    <span class="keyword">if</span> (TitleText)</span><br><span class="line">    &#123;</span><br><span class="line">        TitleText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(<span class="built_in">TEXT</span>(<span class="string">&quot;我的游戏&quot;</span>)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UMainMenuWidget::NativeDestruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeDestruct</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解绑事件（通常不需要，但最好做）</span></span><br><span class="line">    <span class="keyword">if</span> (StartGameButton)</span><br><span class="line">    &#123;</span><br><span class="line">        StartGameButton-&gt;OnClicked.<span class="built_in">RemoveAll</span>(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (SettingsButton)</span><br><span class="line">    &#123;</span><br><span class="line">        SettingsButton-&gt;OnClicked.<span class="built_in">RemoveAll</span>(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (QuitGameButton)</span><br><span class="line">    &#123;</span><br><span class="line">        QuitGameButton-&gt;OnClicked.<span class="built_in">RemoveAll</span>(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UMainMenuWidget::OnStartGameClicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Start Game clicked!&quot;</span>));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 加载游戏关卡</span></span><br><span class="line">    UGameplayStatics::<span class="built_in">OpenLevel</span>(<span class="built_in">GetWorld</span>(), <span class="built_in">TEXT</span>(<span class="string">&quot;GameLevel&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UMainMenuWidget::OnSettingsClicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Settings clicked!&quot;</span>));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 打开设置菜单</span></span><br><span class="line">    <span class="comment">// 这里可以创建并显示设置 Widget</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UMainMenuWidget::OnQuitGameClicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Quit Game clicked!&quot;</span>));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 退出游戏</span></span><br><span class="line">    UKismetSystemLibrary::<span class="built_in">QuitGame</span>(</span><br><span class="line">        <span class="built_in">GetWorld</span>(),</span><br><span class="line">        <span class="built_in">GetOwningPlayer</span>(),</span><br><span class="line">        EQuitPreference::Quit,</span><br><span class="line">        <span class="literal">false</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-显示-Widget"><a href="#4-2-显示-Widget" class="headerlink" title="4.2 显示 Widget"></a>4.2 显示 Widget</h3><p>在 Player Controller 或 Game Mode 中创建并显示 Widget：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyPlayerController.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> AMyPlayerController : <span class="keyword">public</span> APlayerController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">AMyPlayerController</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Widget 类引用</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;UI&quot;</span>)</span><br><span class="line">    TSubclassOf&lt;<span class="keyword">class</span> <span class="title class_">UUserWidget</span>&gt; MainMenuWidgetClass;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Widget 实例</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>()</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UMainMenuWidget</span>* MainMenuWidget;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyPlayerController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyPlayerController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MainMenuWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Blueprint/UserWidget.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">AMyPlayerController::<span class="built_in">AMyPlayerController</span>()</span><br><span class="line">&#123;</span><br><span class="line">    PrimaryActorTick.bCanEverTick = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyPlayerController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建并显示主菜单</span></span><br><span class="line">    <span class="keyword">if</span> (MainMenuWidgetClass)</span><br><span class="line">    &#123;</span><br><span class="line">        MainMenuWidget = <span class="built_in">CreateWidget</span>&lt;UMainMenuWidget&gt;(<span class="keyword">this</span>, MainMenuWidgetClass);</span><br><span class="line">        <span class="keyword">if</span> (MainMenuWidget)</span><br><span class="line">        &#123;</span><br><span class="line">            MainMenuWidget-&gt;<span class="built_in">AddToViewport</span>();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 设置输入模式（显示鼠标，暂停游戏）</span></span><br><span class="line">            <span class="built_in">SetInputMode</span>(<span class="built_in">FInputModeUIOnly</span>());</span><br><span class="line">            <span class="built_in">SetShowMouseCursor</span>(<span class="literal">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-动态更新-UI"><a href="#4-3-动态更新-UI" class="headerlink" title="4.3 动态更新 UI"></a>4.3 动态更新 UI</h3><p>在运行时更新 UI 内容：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HUDWidget.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UHUDWidget : <span class="keyword">public</span> UUserWidget</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeConstruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新生命值显示</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;UI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">UpdateHealth</span><span class="params">(<span class="type">float</span> CurrentHealth, <span class="type">float</span> MaxHealth)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新分数显示</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;UI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">UpdateScore</span><span class="params">(int32 NewScore)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UProgressBar</span>* HealthBar;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* HealthText;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* ScoreText;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HUDWidget.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;HUDWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/ProgressBar.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/TextBlock.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UHUDWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UHUDWidget::UpdateHealth</span><span class="params">(<span class="type">float</span> CurrentHealth, <span class="type">float</span> MaxHealth)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (HealthBar)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 更新进度条（0.0 - 1.0）</span></span><br><span class="line">        <span class="type">float</span> HealthPercent = MaxHealth &gt; <span class="number">0.0f</span> ? CurrentHealth / MaxHealth : <span class="number">0.0f</span>;</span><br><span class="line">        HealthBar-&gt;<span class="built_in">SetPercent</span>(HealthPercent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (HealthText)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 更新文本</span></span><br><span class="line">        FString HealthString = FString::<span class="built_in">Printf</span>(<span class="built_in">TEXT</span>(<span class="string">&quot;%.0f / %.0f&quot;</span>), CurrentHealth, MaxHealth);</span><br><span class="line">        HealthText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(HealthString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UHUDWidget::UpdateScore</span><span class="params">(int32 NewScore)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ScoreText)</span><br><span class="line">    &#123;</span><br><span class="line">        FString ScoreString = FString::<span class="built_in">Printf</span>(<span class="built_in">TEXT</span>(<span class="string">&quot;Score: %d&quot;</span>), NewScore);</span><br><span class="line">        ScoreText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(ScoreString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-布局系统"><a href="#5-布局系统" class="headerlink" title="5. 布局系统"></a>5. 布局系统</h2><h3 id="5-1-布局控件"><a href="#5-1-布局控件" class="headerlink" title="5.1 布局控件"></a>5.1 布局控件</h3><p><strong>Canvas Panel（画布面板）</strong>：</p>
+<ul>
+<li>自由布局，可以任意放置控件</li>
+<li>使用 Anchors 和 Offsets 定位</li>
+<li>适合复杂的自定义布局</li>
+</ul>
+<p><strong>Vertical Box（垂直盒子）</strong>：</p>
+<ul>
+<li>垂直排列子控件</li>
+<li>自动处理间距和对齐</li>
+<li>适合列表布局</li>
+</ul>
+<p><strong>Horizontal Box（水平盒子）</strong>：</p>
+<ul>
+<li>水平排列子控件</li>
+<li>自动处理间距和对齐</li>
+<li>适合工具栏、按钮组</li>
+</ul>
+<p><strong>Grid Panel（网格面板）</strong>：</p>
+<ul>
+<li>网格布局</li>
+<li>可以设置行和列</li>
+<li>适合表格、技能树</li>
+</ul>
+<p><strong>示例：使用 Vertical Box 创建按钮列表</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 Widget Blueprint 中：</span></span><br><span class="line"><span class="comment">// 1. 添加 Vertical Box</span></span><br><span class="line"><span class="comment">// 2. 添加多个 Button 作为子控件</span></span><br><span class="line"><span class="comment">// 3. 设置 Vertical Box 的 Padding 和 Spacing</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-Anchors（锚点）"><a href="#5-2-Anchors（锚点）" class="headerlink" title="5.2 Anchors（锚点）"></a>5.2 Anchors（锚点）</h3><p><strong>什么是锚点：</strong></p>
+<p>锚点定义了控件相对于父控件的位置关系。当屏幕大小改变时，控件会根据锚点自动调整位置。</p>
+<p><strong>锚点类型：</strong></p>
+<ul>
+<li><strong>Top Left</strong>：左上角</li>
+<li><strong>Top Center</strong>：顶部居中</li>
+<li><strong>Top Right</strong>：右上角</li>
+<li><strong>Center Left</strong>：左侧居中</li>
+<li><strong>Center</strong>：居中</li>
+<li><strong>Center Right</strong>：右侧居中</li>
+<li><strong>Bottom Left</strong>：左下角</li>
+<li><strong>Bottom Center</strong>：底部居中</li>
+<li><strong>Bottom Right</strong>：右下角</li>
+</ul>
+<p><strong>使用示例：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在代码中设置锚点</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UMyWidget::SetAnchors</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (MyButton)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 设置锚点为底部居中</span></span><br><span class="line">        MyButton-&gt;<span class="built_in">SetAnchorsInViewport</span>(<span class="built_in">FAnchors</span>(<span class="number">0.5f</span>, <span class="number">1.0f</span>, <span class="number">0.5f</span>, <span class="number">1.0f</span>));</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置偏移量（距离底部 50 像素，宽度 200，高度 50）</span></span><br><span class="line">        MyButton-&gt;<span class="built_in">SetOffsetsInViewport</span>(<span class="built_in">FMargin</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">200</span>, <span class="number">50</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-响应式布局"><a href="#5-3-响应式布局" class="headerlink" title="5.3 响应式布局"></a>5.3 响应式布局</h3><p>创建适应不同屏幕尺寸的 UI：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ResponsiveWidget.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UResponsiveWidget : <span class="keyword">public</span> UUserWidget</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeConstruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeTick</span><span class="params">(<span class="type">const</span> FGeometry&amp; MyGeometry, <span class="type">float</span> InDeltaTime)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 响应屏幕大小变化</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">UpdateLayout</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UCanvasPanel</span>* RootCanvas;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* TitleText;</span><br><span class="line"></span><br><span class="line">    FVector2D LastViewportSize;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ResponsiveWidget.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ResponsiveWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/CanvasPanel.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/TextBlock.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Engine/Engine.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UResponsiveWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取初始视口大小</span></span><br><span class="line">    <span class="keyword">if</span> (GEngine &amp;&amp; GEngine-&gt;GameViewport)</span><br><span class="line">    &#123;</span><br><span class="line">        FVector2D ViewportSize;</span><br><span class="line">        GEngine-&gt;GameViewport-&gt;<span class="built_in">GetViewportSize</span>(ViewportSize);</span><br><span class="line">        LastViewportSize = ViewportSize;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UResponsiveWidget::NativeTick</span><span class="params">(<span class="type">const</span> FGeometry&amp; MyGeometry, <span class="type">float</span> InDeltaTime)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeTick</span>(MyGeometry, InDeltaTime);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查视口大小是否改变</span></span><br><span class="line">    <span class="keyword">if</span> (GEngine &amp;&amp; GEngine-&gt;GameViewport)</span><br><span class="line">    &#123;</span><br><span class="line">        FVector2D ViewportSize;</span><br><span class="line">        GEngine-&gt;GameViewport-&gt;<span class="built_in">GetViewportSize</span>(ViewportSize);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (ViewportSize != LastViewportSize)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">UpdateLayout</span>();</span><br><span class="line">            LastViewportSize = ViewportSize;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UResponsiveWidget::UpdateLayout</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 根据屏幕大小调整布局</span></span><br><span class="line">    <span class="comment">// 例如：在小屏幕上缩小字体，调整按钮位置等</span></span><br><span class="line">    <span class="keyword">if</span> (TitleText)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 可以根据屏幕大小调整字体大小</span></span><br><span class="line">        <span class="comment">// FSlateFontInfo FontInfo = TitleText-&gt;GetFont();</span></span><br><span class="line">        <span class="comment">// FontInfo.Size = ...;</span></span><br><span class="line">        <span class="comment">// TitleText-&gt;SetFont(FontInfo);</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-动画和过渡"><a href="#6-动画和过渡" class="headerlink" title="6. 动画和过渡"></a>6. 动画和过渡</h2><h3 id="6-1-Widget-动画"><a href="#6-1-Widget-动画" class="headerlink" title="6.1 Widget 动画"></a>6.1 Widget 动画</h3><p>在 Widget Blueprint 中创建动画：</p>
+<p><strong>步骤：</strong></p>
+<ol>
+<li>打开 Widget Blueprint</li>
+<li>切换到 <strong>Animations</strong> 标签</li>
+<li>点击 <strong>+ Animation</strong> 创建新动画</li>
+<li>添加关键帧和属性变化</li>
+<li>在 Graph 中播放动画</li>
+</ol>
+<p><strong>示例：淡入动画</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 Widget Blueprint 的 Graph 中：</span></span><br><span class="line"><span class="comment">// 1. 创建动画：FadeIn</span></span><br><span class="line"><span class="comment">// 2. 设置 Render Opacity 从 0 到 1</span></span><br><span class="line"><span class="comment">// 3. 在 NativeConstruct 中播放动画</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UMyWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 播放淡入动画</span></span><br><span class="line">    <span class="built_in">PlayAnimation</span>(FadeInAnimation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-在代码中控制动画"><a href="#6-2-在代码中控制动画" class="headerlink" title="6.2 在代码中控制动画"></a>6.2 在代码中控制动画</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AnimatedWidget.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UAnimatedWidget : <span class="keyword">public</span> UUserWidget</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeConstruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示 Widget（带动画）</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;UI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ShowWidget</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 隐藏 Widget（带动画）</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;UI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">HideWidget</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="comment">// 动画引用（在 Widget Blueprint 中创建）</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(BlueprintReadOnly, meta = (BindWidgetAnim), Category = <span class="string">&quot;Animations&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UWidgetAnimation</span>* FadeInAnimation;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(BlueprintReadOnly, meta = (BindWidgetAnim), Category = <span class="string">&quot;Animations&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UWidgetAnimation</span>* FadeOutAnimation;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// AnimatedWidget.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AnimatedWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Animation/WidgetAnimation.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UAnimatedWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 初始状态：隐藏</span></span><br><span class="line">    <span class="built_in">SetRenderOpacity</span>(<span class="number">0.0f</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UAnimatedWidget::ShowWidget</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 显示并播放淡入动画</span></span><br><span class="line">    <span class="built_in">SetVisibility</span>(ESlateVisibility::Visible);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (FadeInAnimation)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">PlayAnimation</span>(FadeInAnimation);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 如果没有动画，直接设置透明度</span></span><br><span class="line">        <span class="built_in">SetRenderOpacity</span>(<span class="number">1.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UAnimatedWidget::HideWidget</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (FadeOutAnimation)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 播放淡出动画，完成后隐藏</span></span><br><span class="line">        <span class="built_in">PlayAnimation</span>(FadeOutAnimation);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 在动画完成后隐藏（需要在动画完成事件中调用）</span></span><br><span class="line">        <span class="comment">// SetVisibility(ESlateVisibility::Hidden);</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 如果没有动画，直接隐藏</span></span><br><span class="line">        <span class="built_in">SetRenderOpacity</span>(<span class="number">0.0f</span>);</span><br><span class="line">        <span class="built_in">SetVisibility</span>(ESlateVisibility::Hidden);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-实际应用场景"><a href="#7-实际应用场景" class="headerlink" title="7. 实际应用场景"></a>7. 实际应用场景</h2><h3 id="7-1-场景-1：游戏-HUD"><a href="#7-1-场景-1：游戏-HUD" class="headerlink" title="7.1 场景 1：游戏 HUD"></a>7.1 场景 1：游戏 HUD</h3><p>创建一个游戏 HUD，显示生命值、魔法值、分数等。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// GameHUDWidget.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UGameHUDWidget : <span class="keyword">public</span> UUserWidget</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeConstruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新生命值</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;HUD&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">UpdateHealth</span><span class="params">(<span class="type">float</span> Current, <span class="type">float</span> Max)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新魔法值</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;HUD&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">UpdateMana</span><span class="params">(<span class="type">float</span> Current, <span class="type">float</span> Max)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新分数</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;HUD&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">UpdateScore</span><span class="params">(int32 Score)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示/隐藏伤害数字</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;HUD&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ShowDamageNumber</span><span class="params">(<span class="type">float</span> Damage, FVector WorldLocation)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UProgressBar</span>* HealthBar;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* HealthText;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UProgressBar</span>* ManaBar;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* ManaText;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* ScoreText;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UCanvasPanel</span>* DamageNumberCanvas;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 伤害数字 Widget 类</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;HUD&quot;</span>)</span><br><span class="line">    TSubclassOf&lt;<span class="keyword">class</span> <span class="title class_">UUserWidget</span>&gt; DamageNumberWidgetClass;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GameHUDWidget.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;GameHUDWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/ProgressBar.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/TextBlock.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/CanvasPanel.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Kismet/GameplayStatics.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Camera/CameraComponent.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UGameHUDWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UGameHUDWidget::UpdateHealth</span><span class="params">(<span class="type">float</span> Current, <span class="type">float</span> Max)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (HealthBar)</span><br><span class="line">    &#123;</span><br><span class="line">        HealthBar-&gt;<span class="built_in">SetPercent</span>(Max &gt; <span class="number">0.0f</span> ? Current / Max : <span class="number">0.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (HealthText)</span><br><span class="line">    &#123;</span><br><span class="line">        FString HealthString = FString::<span class="built_in">Printf</span>(<span class="built_in">TEXT</span>(<span class="string">&quot;%.0f / %.0f&quot;</span>), Current, Max);</span><br><span class="line">        HealthText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(HealthString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UGameHUDWidget::UpdateMana</span><span class="params">(<span class="type">float</span> Current, <span class="type">float</span> Max)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ManaBar)</span><br><span class="line">    &#123;</span><br><span class="line">        ManaBar-&gt;<span class="built_in">SetPercent</span>(Max &gt; <span class="number">0.0f</span> ? Current / Max : <span class="number">0.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ManaText)</span><br><span class="line">    &#123;</span><br><span class="line">        FString ManaString = FString::<span class="built_in">Printf</span>(<span class="built_in">TEXT</span>(<span class="string">&quot;%.0f / %.0f&quot;</span>), Current, Max);</span><br><span class="line">        ManaText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(ManaString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UGameHUDWidget::UpdateScore</span><span class="params">(int32 Score)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ScoreText)</span><br><span class="line">    &#123;</span><br><span class="line">        FString ScoreString = FString::<span class="built_in">Printf</span>(<span class="built_in">TEXT</span>(<span class="string">&quot;Score: %d&quot;</span>), Score);</span><br><span class="line">        ScoreText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(ScoreString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UGameHUDWidget::ShowDamageNumber</span><span class="params">(<span class="type">float</span> Damage, FVector WorldLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!DamageNumberWidgetClass || !DamageNumberCanvas)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建伤害数字 Widget</span></span><br><span class="line">    UUserWidget* DamageWidget = <span class="built_in">CreateWidget</span>&lt;UUserWidget&gt;(<span class="built_in">GetWorld</span>(), DamageNumberWidgetClass);</span><br><span class="line">    <span class="keyword">if</span> (DamageWidget)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 添加到画布</span></span><br><span class="line">        DamageNumberCanvas-&gt;<span class="built_in">AddChild</span>(DamageWidget);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将世界坐标转换为屏幕坐标</span></span><br><span class="line">        APlayerController* PC = <span class="built_in">GetOwningPlayer</span>();</span><br><span class="line">        <span class="keyword">if</span> (PC)</span><br><span class="line">        &#123;</span><br><span class="line">            FVector2D ScreenLocation;</span><br><span class="line">            <span class="keyword">if</span> (UGameplayStatics::<span class="built_in">ProjectWorldToScreen</span>(PC, WorldLocation, ScreenLocation))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// 设置位置</span></span><br><span class="line">                DamageWidget-&gt;<span class="built_in">SetPositionInViewport</span>(ScreenLocation);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 播放动画（假设 Widget 有淡出动画）</span></span><br><span class="line">        <span class="comment">// DamageWidget-&gt;PlayAnimation(...);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 延迟后移除（可以在动画完成事件中处理）</span></span><br><span class="line">        FTimerHandle TimerHandle;</span><br><span class="line">        <span class="built_in">GetWorld</span>()-&gt;<span class="built_in">GetTimerManager</span>().<span class="built_in">SetTimer</span>(</span><br><span class="line">            TimerHandle,</span><br><span class="line">            [DamageWidget]()</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (DamageWidget)</span><br><span class="line">                &#123;</span><br><span class="line">                    DamageWidget-&gt;<span class="built_in">RemoveFromParent</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="number">2.0f</span>,</span><br><span class="line">            <span class="literal">false</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-场景-2：对话框系统"><a href="#7-2-场景-2：对话框系统" class="headerlink" title="7.2 场景 2：对话框系统"></a>7.2 场景 2：对话框系统</h3><p>创建一个对话框系统，用于 NPC 对话。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DialogueWidget.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UDialogueWidget : <span class="keyword">public</span> UUserWidget</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeConstruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示对话</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;Dialogue&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ShowDialogue</span><span class="params">(<span class="type">const</span> FString&amp; SpeakerName, <span class="type">const</span> FString&amp; DialogueText)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示下一句对话</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;Dialogue&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ShowNextDialogue</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭对话</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;Dialogue&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">CloseDialogue</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* SpeakerNameText;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UTextBlock</span>* DialogueText;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UButton</span>* NextButton;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UButton</span>* CloseButton;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对话数据</span></span><br><span class="line">    TArray&lt;FDialogueData&gt; DialogueQueue;</span><br><span class="line">    int32 CurrentDialogueIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnNextButtonClicked</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnCloseButtonClicked</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对话数据结构</span></span><br><span class="line">    <span class="built_in">USTRUCT</span>(BlueprintType)</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">FDialogueData</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line">        <span class="built_in">UPROPERTY</span>(BlueprintReadWrite)</span><br><span class="line">        FString SpeakerName;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">UPROPERTY</span>(BlueprintReadWrite)</span><br><span class="line">        FString Text;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// DialogueWidget.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;DialogueWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/TextBlock.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/Button.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UDialogueWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (NextButton)</span><br><span class="line">    &#123;</span><br><span class="line">        NextButton-&gt;OnClicked.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;UDialogueWidget::OnNextButtonClicked);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (CloseButton)</span><br><span class="line">    &#123;</span><br><span class="line">        CloseButton-&gt;OnClicked.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;UDialogueWidget::OnCloseButtonClicked);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UDialogueWidget::ShowDialogue</span><span class="params">(<span class="type">const</span> FString&amp; SpeakerName, <span class="type">const</span> FString&amp; DialogueText)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 添加对话到队列</span></span><br><span class="line">    FDialogueData NewDialogue;</span><br><span class="line">    NewDialogue.SpeakerName = SpeakerName;</span><br><span class="line">    NewDialogue.Text = DialogueText;</span><br><span class="line">    DialogueQueue.<span class="built_in">Add</span>(NewDialogue);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果是第一条对话，立即显示</span></span><br><span class="line">    <span class="keyword">if</span> (DialogueQueue.<span class="built_in">Num</span>() == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">ShowNextDialogue</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UDialogueWidget::ShowNextDialogue</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (CurrentDialogueIndex &lt; DialogueQueue.<span class="built_in">Num</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        FDialogueData CurrentDialogue = DialogueQueue[CurrentDialogueIndex];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (SpeakerNameText)</span><br><span class="line">        &#123;</span><br><span class="line">            SpeakerNameText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(CurrentDialogue.SpeakerName));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (DialogueText)</span><br><span class="line">        &#123;</span><br><span class="line">            DialogueText-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(CurrentDialogue.Text));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        CurrentDialogueIndex++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 所有对话显示完毕</span></span><br><span class="line">        <span class="built_in">CloseDialogue</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UDialogueWidget::CloseDialogue</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 清空队列</span></span><br><span class="line">    DialogueQueue.<span class="built_in">Empty</span>();</span><br><span class="line">    CurrentDialogueIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 隐藏 Widget</span></span><br><span class="line">    <span class="built_in">SetVisibility</span>(ESlateVisibility::Hidden);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 恢复游戏输入</span></span><br><span class="line">    APlayerController* PC = <span class="built_in">GetOwningPlayer</span>();</span><br><span class="line">    <span class="keyword">if</span> (PC)</span><br><span class="line">    &#123;</span><br><span class="line">        PC-&gt;<span class="built_in">SetInputMode</span>(<span class="built_in">FInputModeGameOnly</span>());</span><br><span class="line">        PC-&gt;<span class="built_in">SetShowMouseCursor</span>(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UDialogueWidget::OnNextButtonClicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">ShowNextDialogue</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UDialogueWidget::OnCloseButtonClicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CloseDialogue</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-场景-3：设置菜单"><a href="#7-3-场景-3：设置菜单" class="headerlink" title="7.3 场景 3：设置菜单"></a>7.3 场景 3：设置菜单</h3><p>创建一个设置菜单，允许玩家调整游戏设置。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SettingsWidget.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> USettingsWidget : <span class="keyword">public</span> UUserWidget</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">NativeConstruct</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 应用设置</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;Settings&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ApplySettings</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 恢复默认设置</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;Settings&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ResetToDefaults</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">USlider</span>* MasterVolumeSlider;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">USlider</span>* MusicVolumeSlider;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">USlider</span>* SFXVolumeSlider;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UCheckBox</span>* FullscreenCheckBox;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UComboBoxString</span>* ResolutionComboBox;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UButton</span>* ApplyButton;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(meta = (BindWidget))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UButton</span>* CancelButton;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnMasterVolumeChanged</span><span class="params">(<span class="type">float</span> Value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnMusicVolumeChanged</span><span class="params">(<span class="type">float</span> Value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnSFXVolumeChanged</span><span class="params">(<span class="type">float</span> Value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnApplyButtonClicked</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UFUNCTION</span>()</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnCancelButtonClicked</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 保存设置</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">SaveSettings</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">LoadSettings</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SettingsWidget.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;SettingsWidget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/Slider.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/CheckBox.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/ComboBoxString.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/Button.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Kismet/GameplayStatics.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;GameFramework/GameUserSettings.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::NativeConstruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">NativeConstruct</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绑定事件</span></span><br><span class="line">    <span class="keyword">if</span> (MasterVolumeSlider)</span><br><span class="line">    &#123;</span><br><span class="line">        MasterVolumeSlider-&gt;OnValueChanged.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;USettingsWidget::OnMasterVolumeChanged);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (MusicVolumeSlider)</span><br><span class="line">    &#123;</span><br><span class="line">        MusicVolumeSlider-&gt;OnValueChanged.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;USettingsWidget::OnMusicVolumeChanged);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (SFXVolumeSlider)</span><br><span class="line">    &#123;</span><br><span class="line">        SFXVolumeSlider-&gt;OnValueChanged.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;USettingsWidget::OnSFXVolumeChanged);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ApplyButton)</span><br><span class="line">    &#123;</span><br><span class="line">        ApplyButton-&gt;OnClicked.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;USettingsWidget::OnApplyButtonClicked);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (CancelButton)</span><br><span class="line">    &#123;</span><br><span class="line">        CancelButton-&gt;OnClicked.<span class="built_in">AddDynamic</span>(<span class="keyword">this</span>, &amp;USettingsWidget::OnCancelButtonClicked);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 加载设置</span></span><br><span class="line">    <span class="built_in">LoadSettings</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::OnMasterVolumeChanged</span><span class="params">(<span class="type">float</span> Value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 实时更新音量（可选）</span></span><br><span class="line">    <span class="comment">// UGameplayStatics::SetSoundClassVolume(...);</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::OnMusicVolumeChanged</span><span class="params">(<span class="type">float</span> Value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 实时更新音乐音量</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::OnSFXVolumeChanged</span><span class="params">(<span class="type">float</span> Value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 实时更新音效音量</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::OnApplyButtonClicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">ApplySettings</span>();</span><br><span class="line">    <span class="built_in">SaveSettings</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 关闭设置菜单</span></span><br><span class="line">    <span class="built_in">RemoveFromParent</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::OnCancelButtonClicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 恢复设置</span></span><br><span class="line">    <span class="built_in">LoadSettings</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 关闭设置菜单</span></span><br><span class="line">    <span class="built_in">RemoveFromParent</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::ApplySettings</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 应用音量设置</span></span><br><span class="line">    <span class="keyword">if</span> (MasterVolumeSlider)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">float</span> MasterVolume = MasterVolumeSlider-&gt;<span class="built_in">GetValue</span>();</span><br><span class="line">        <span class="comment">// UGameplayStatics::SetSoundClassVolume(...);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 应用显示设置</span></span><br><span class="line">    UGameUserSettings* UserSettings = UGameUserSettings::<span class="built_in">GetGameUserSettings</span>();</span><br><span class="line">    <span class="keyword">if</span> (UserSettings)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (FullscreenCheckBox)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">bool</span> bFullscreen = FullscreenCheckBox-&gt;<span class="built_in">IsChecked</span>();</span><br><span class="line">            UserSettings-&gt;<span class="built_in">SetFullscreenMode</span>(bFullscreen ? EWindowMode::Fullscreen : EWindowMode::Windowed);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (ResolutionComboBox)</span><br><span class="line">        &#123;</span><br><span class="line">            FString SelectedResolution = ResolutionComboBox-&gt;<span class="built_in">GetSelectedOption</span>();</span><br><span class="line">            <span class="comment">// 解析分辨率字符串并设置</span></span><br><span class="line">            <span class="comment">// UserSettings-&gt;SetScreenResolution(...);</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        UserSettings-&gt;<span class="built_in">ApplySettings</span>(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::SaveSettings</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 保存设置到配置文件</span></span><br><span class="line">    <span class="comment">// 可以使用 UGameplayStatics::SaveGameToSlot(...)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">USettingsWidget::LoadSettings</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 从配置文件加载设置</span></span><br><span class="line">    <span class="comment">// 可以使用 UGameplayStatics::LoadGameFromSlot(...)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 设置滑块值</span></span><br><span class="line">    <span class="comment">// MasterVolumeSlider-&gt;SetValue(...);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-性能优化"><a href="#8-性能优化" class="headerlink" title="8. 性能优化"></a>8. 性能优化</h2><h3 id="8-1-Widget-性能优化"><a href="#8-1-Widget-性能优化" class="headerlink" title="8.1 Widget 性能优化"></a>8.1 Widget 性能优化</h3><p><strong>问题：</strong> 复杂的 UI 可能影响性能。</p>
+<p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>减少 Widget 数量</strong>：</p>
+<ul>
+<li>合并相似的控件</li>
+<li>使用单个复杂控件代替多个简单控件</li>
+</ul>
+</li>
+<li><p><strong>使用 Widget Pooling（对象池）</strong>：</p>
+<ul>
+<li>对于频繁创建和销毁的 Widget，使用对象池</li>
+<li>减少内存分配开销</li>
+</ul>
+</li>
+<li><p><strong>优化动画</strong>：</p>
+<ul>
+<li>避免同时播放过多动画</li>
+<li>使用简单的动画代替复杂的动画</li>
+</ul>
+</li>
+<li><p><strong>减少 Tick</strong>：</p>
+<ul>
+<li>避免在 Widget 中使用 Tick</li>
+<li>使用事件驱动代替轮询</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// WidgetPool.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UWidgetPool : <span class="keyword">public</span> UObject</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 获取 Widget（从池中获取或创建新的）</span></span><br><span class="line">    <span class="function">UUserWidget* <span class="title">GetWidget</span><span class="params">(TSubclassOf&lt;UUserWidget&gt; WidgetClass)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 归还 Widget（放回池中）</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ReturnWidget</span><span class="params">(UUserWidget* Widget)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// Widget 池</span></span><br><span class="line">    TMap&lt;TSubclassOf&lt;UUserWidget&gt;, TArray&lt;UUserWidget*&gt;&gt; WidgetPool;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// WidgetPool.cpp</span></span><br><span class="line"><span class="function">UUserWidget* <span class="title">UWidgetPool::GetWidget</span><span class="params">(TSubclassOf&lt;UUserWidget&gt; WidgetClass)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!WidgetClass)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查池中是否有可用的 Widget</span></span><br><span class="line">    <span class="keyword">if</span> (WidgetPool.<span class="built_in">Contains</span>(WidgetClass) &amp;&amp; WidgetPool[WidgetClass].<span class="built_in">Num</span>() &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        UUserWidget* Widget = WidgetPool[WidgetClass].<span class="built_in">Pop</span>();</span><br><span class="line">        Widget-&gt;<span class="built_in">SetVisibility</span>(ESlateVisibility::Visible);</span><br><span class="line">        <span class="keyword">return</span> Widget;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建新的 Widget</span></span><br><span class="line">    <span class="comment">// 注意：需要传入有效的 World 和 Player</span></span><br><span class="line">    <span class="comment">// UUserWidget* NewWidget = CreateWidget&lt;UUserWidget&gt;(World, WidgetClass);</span></span><br><span class="line">    <span class="comment">// return NewWidget;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">UWidgetPool::ReturnWidget</span><span class="params">(UUserWidget* Widget)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!Widget)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 隐藏 Widget</span></span><br><span class="line">    Widget-&gt;<span class="built_in">SetVisibility</span>(ESlateVisibility::Collapsed);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 放回池中</span></span><br><span class="line">    TSubclassOf&lt;UUserWidget&gt; WidgetClass = Widget-&gt;<span class="built_in">GetClass</span>();</span><br><span class="line">    <span class="keyword">if</span> (!WidgetPool.<span class="built_in">Contains</span>(WidgetClass))</span><br><span class="line">    &#123;</span><br><span class="line">        WidgetPool.<span class="built_in">Add</span>(WidgetClass, <span class="built_in">TArray</span>&lt;UUserWidget*&gt;());</span><br><span class="line">    &#125;</span><br><span class="line">    WidgetPool[WidgetClass].<span class="built_in">Add</span>(Widget);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-渲染优化"><a href="#8-2-渲染优化" class="headerlink" title="8.2 渲染优化"></a>8.2 渲染优化</h3><p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>使用 Render Transform 代替重新布局</strong>：</p>
+<ul>
+<li>对于动画，使用 Render Transform</li>
+<li>避免频繁改变布局</li>
+</ul>
+</li>
+<li><p><strong>减少透明度变化</strong>：</p>
+<ul>
+<li>透明度变化需要重新渲染</li>
+<li>批量处理透明度变化</li>
+</ul>
+</li>
+<li><p><strong>使用 Texture Atlas</strong>：</p>
+<ul>
+<li>将多个小图片合并成大图</li>
+<li>减少 Draw Call</li>
+</ul>
+</li>
+</ol>
+<h3 id="8-3-内存优化"><a href="#8-3-内存优化" class="headerlink" title="8.3 内存优化"></a>8.3 内存优化</h3><p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>及时销毁 Widget</strong>：</p>
+<ul>
+<li>不再使用的 Widget 及时调用 <code>RemoveFromParent()</code></li>
+<li>避免内存泄漏</li>
+</ul>
+</li>
+<li><p><strong>使用 Soft References</strong>：</p>
+<ul>
+<li>对于不常用的 Widget，使用软引用</li>
+<li>延迟加载</li>
+</ul>
+</li>
+<li><p><strong>避免循环引用</strong>：</p>
+<ul>
+<li>Widget 之间避免相互引用</li>
+<li>使用弱引用或事件系统</li>
+</ul>
+</li>
+</ol>
+<h2 id="9-常见问题与最佳实践"><a href="#9-常见问题与最佳实践" class="headerlink" title="9. 常见问题与最佳实践"></a>9. 常见问题与最佳实践</h2><h3 id="9-1-常见问题"><a href="#9-1-常见问题" class="headerlink" title="9.1 常见问题"></a>9.1 常见问题</h3><p><strong>Q: Widget 不显示？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>是否调用了 <code>AddToViewport()</code>？</li>
+<li>Widget 的 Visibility 是否正确？</li>
+<li>Widget 是否在屏幕范围内？</li>
+<li>Z-Order 是否被其他 Widget 遮挡？</li>
+</ol>
+<p><strong>Q: 按钮点击无响应？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>按钮是否启用（Is Enabled）？</li>
+<li>是否绑定了点击事件？</li>
+<li>是否有其他控件遮挡按钮？</li>
+<li>输入模式是否正确？</li>
+</ol>
+<p><strong>Q: 动画不播放？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>动画是否在 Widget Blueprint 中正确创建？</li>
+<li>是否调用了 <code>PlayAnimation()</code>？</li>
+<li>Widget 是否可见？</li>
+<li>动画时长是否正确？</li>
+</ol>
+<p><strong>Q: 布局不正确？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>Anchors 设置是否正确？</li>
+<li>父控件类型是否合适？</li>
+<li>Size To Content 是否启用？</li>
+<li>Padding 和 Margin 是否正确？</li>
+</ol>
+<h3 id="9-2-最佳实践"><a href="#9-2-最佳实践" class="headerlink" title="9.2 最佳实践"></a>9.2 最佳实践</h3><ol>
+<li><p><strong>合理组织 Widget 结构</strong>：</p>
+<ul>
+<li>使用清晰的命名</li>
+<li>合理嵌套 Widget</li>
+<li>避免过深的层级</li>
+</ul>
+</li>
+<li><p><strong>使用 Widget 蓝图继承</strong>：</p>
+<ul>
+<li>创建基础 Widget 类</li>
+<li>其他 Widget 继承基础类</li>
+<li>减少重复代码</li>
+</ul>
+</li>
+<li><p><strong>响应式设计</strong>：</p>
+<ul>
+<li>使用 Anchors 实现响应式布局</li>
+<li>测试不同屏幕尺寸</li>
+<li>考虑不同分辨率</li>
+</ul>
+</li>
+<li><p><strong>性能考虑</strong>：</p>
+<ul>
+<li>避免在 Tick 中更新 UI</li>
+<li>使用事件驱动</li>
+<li>合理使用对象池</li>
+</ul>
+</li>
+<li><p><strong>用户体验</strong>：</p>
+<ul>
+<li>添加适当的动画和过渡</li>
+<li>提供视觉反馈</li>
+<li>保持界面简洁</li>
+</ul>
+</li>
+</ol>
+<h2 id="10-总结"><a href="#10-总结" class="headerlink" title="10. 总结"></a>10. 总结</h2><p>本文从零开始全面介绍了 UE5 的 UMG UI 系统，包括：</p>
+<ol>
+<li><strong>UMG 概述</strong>：核心概念和工作流程</li>
+<li><strong>基础控件</strong>：常用控件类型和属性</li>
+<li><strong>创建 Widget</strong>：Widget Blueprint 的使用</li>
+<li><strong>代码集成</strong>：在 C++ 中创建和使用 Widget</li>
+<li><strong>布局系统</strong>：布局控件和响应式设计</li>
+<li><strong>动画和过渡</strong>：Widget 动画的使用</li>
+<li><strong>实际应用</strong>：HUD、对话框、设置菜单等场景</li>
+<li><strong>性能优化</strong>：Widget 性能、渲染、内存优化</li>
+<li><strong>最佳实践</strong>：常见问题的解决方案和开发建议</li>
+</ol>
+<p>UMG UI 系统是 UE5 游戏开发的重要组成部分，掌握它能够创建各种游戏界面。通过本文的学习，你应该能够：</p>
+<ul>
+<li>理解 UMG 的核心概念</li>
+<li>创建和使用 Widget Blueprint</li>
+<li>在代码中创建和控制 Widget</li>
+<li>实现响应式布局</li>
+<li>添加动画和过渡效果</li>
+<li>创建常见的游戏 UI</li>
+<li>优化 UI 性能</li>
+<li>解决常见的 UI 问题</li>
+</ul>
+<p>希望这篇文章能帮助你快速掌握 UE5 的 UMG UI 系统！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/UE5/" rel="tag"># UE5</a>
+              <a href="/tags/Unreal-Engine/" rel="tag"># Unreal Engine</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" rel="tag"># 游戏开发</a>
+              <a href="/tags/UMG/" rel="tag"># UMG</a>
+              <a href="/tags/UI%E7%B3%BB%E7%BB%9F/" rel="tag"># UI系统</a>
+              <a href="/tags/%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2/" rel="tag"># 用户界面</a>
+              <a href="/tags/Widget/" rel="tag"># Widget</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89AI%E7%B3%BB%E7%BB%9F/" rel="prev" title="UE5学习（四）AI系统">
+                  <i class="fa fa-angle-left"></i> UE5学习（四）AI系统
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%B0%84%E7%BA%BF%E6%A3%80%E6%B5%8B/" rel="next" title="UE5学习（二）射线检测">
+                  UE5学习（二）射线检测 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

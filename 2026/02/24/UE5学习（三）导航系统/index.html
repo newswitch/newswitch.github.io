@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="UE5学习（三）导航系统 本文是 UE5 学习系列的第三篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 导航系统的原理，并通过完整的代码示例学会如何使用。  1. 导航系统概述1.1 什么是导航系统导航系统（Navigation System） 是 UE5 中用于 AI 寻路和角色移动的核心系统。它允许 AI 角色自动找到从起点到终点的路径，避开障碍物，在复杂的地形中导航。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE5学习（三）导航系统">
+<meta property="og:url" content="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="UE5学习（三）导航系统 本文是 UE5 学习系列的第三篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 导航系统的原理，并通过完整的代码示例学会如何使用。  1. 导航系统概述1.1 什么是导航系统导航系统（Navigation System） 是 UE5 中用于 AI 寻路和角色移动的核心系统。它允许 AI 角色自动找到从起点到终点的路径，避开障碍物，在复杂的地形中导航。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-24T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-28T17:08:34.297Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="AI寻路">
+<meta property="article:tag" content="NavMesh">
+<meta property="article:tag" content="Navigation System">
+<meta property="article:tag" content="UE5">
+<meta property="article:tag" content="Unreal Engine">
+<meta property="article:tag" content="导航系统">
+<meta property="article:tag" content="游戏开发">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/","path":"2026/02/24/UE5学习（三）导航系统/","title":"UE5学习（三）导航系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>UE5学习（三）导航系统 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">UE5学习（三）导航系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1. 导航系统概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 什么是导航系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 为什么需要导航系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 导航系统的工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 核心概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%9F%BA%E7%A1%80%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">2. 基础设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%94%9F%E6%88%90-NavMesh"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 生成 NavMesh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%AA%8C%E8%AF%81-NavMesh"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 验证 NavMesh</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">3. 基础使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%AE%80%E5%8D%95%E7%9A%84-AI-%E5%AF%BB%E8%B7%AF"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 简单的 AI 寻路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%9C%A8%E8%93%9D%E5%9B%BE%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 在蓝图中使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%A3%80%E6%9F%A5%E8%B7%AF%E5%BE%84%E6%98%AF%E5%90%A6%E5%8F%AF%E8%BE%BE"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 检查路径是否可达</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD"><span class="nav-number">1.4.</span> <span class="nav-text">4. 高级功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%8A%A8%E6%80%81%E9%9A%9C%E7%A2%8D%E7%89%A9"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 动态障碍物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%BC%E8%88%AA%E5%8C%BA%E5%9F%9F"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 自定义导航区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E8%B7%AF%E5%BE%84%E6%9F%A5%E8%AF%A2%E5%92%8C%E8%B0%83%E8%AF%95"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 路径查询和调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E8%B7%AF%E5%BE%84%E6%88%90%E6%9C%AC%EF%BC%88Path-Cost%EF%BC%89"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4 路径成本（Path Cost）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.</span> <span class="nav-text">5. 实际应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%9C%BA%E6%99%AF-1%EF%BC%9A%E6%95%8C%E4%BA%BA-AI-%E8%BF%BD%E5%87%BB%E7%8E%A9%E5%AE%B6"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 场景 1：敌人 AI 追击玩家</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%9C%BA%E6%99%AF-2%EF%BC%9ARTS-%E9%A3%8E%E6%A0%BC%E7%9A%84%E7%82%B9%E5%87%BB%E7%A7%BB%E5%8A%A8"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 场景 2：RTS 风格的点击移动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%9C%BA%E6%99%AF-3%EF%BC%9A%E7%BE%A4%E4%BD%93%E7%A7%BB%E5%8A%A8%E5%92%8C%E9%81%BF%E8%AE%A9"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 场景 3：群体移动和避让</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">1.6.</span> <span class="nav-text">6. 性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-NavMesh-%E6%9E%84%E5%BB%BA%E4%BC%98%E5%8C%96"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 NavMesh 构建优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E8%B7%AF%E5%BE%84%E6%9F%A5%E6%89%BE%E4%BC%98%E5%8C%96"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 路径查找优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%8A%A8%E6%80%81%E9%9A%9C%E7%A2%8D%E7%89%A9%E4%BC%98%E5%8C%96"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 动态障碍物优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.7.</span> <span class="nav-text">7. 常见问题与最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 常见问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 最佳实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">8. 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="UE5学习（三）导航系统 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UE5学习（三）导航系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-24 12:00:00" itemprop="dateCreated datePublished" datetime="2026-02-24T12:00:00+08:00">2026-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-03-01 01:08:34" itemprop="dateModified" datetime="2026-03-01T01:08:34+08:00">2026-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/UE5/" itemprop="url" rel="index"><span itemprop="name">UE5</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="UE5学习（三）导航系统"><a href="#UE5学习（三）导航系统" class="headerlink" title="UE5学习（三）导航系统"></a>UE5学习（三）导航系统</h1><blockquote>
+<p>本文是 UE5 学习系列的第三篇，面向刚开始接触 UE5 的开发者。我们将从零开始，深入理解 UE5 导航系统的原理，并通过完整的代码示例学会如何使用。</p>
+</blockquote>
+<h2 id="1-导航系统概述"><a href="#1-导航系统概述" class="headerlink" title="1. 导航系统概述"></a>1. 导航系统概述</h2><h3 id="1-1-什么是导航系统"><a href="#1-1-什么是导航系统" class="headerlink" title="1.1 什么是导航系统"></a>1.1 什么是导航系统</h3><p><strong>导航系统（Navigation System）</strong> 是 UE5 中用于 AI 寻路和角色移动的核心系统。它允许 AI 角色自动找到从起点到终点的路径，避开障碍物，在复杂的地形中导航。</p>
+<p><strong>通俗理解：</strong></p>
+<p>想象你在一个迷宫中，需要找到从入口到出口的路径。导航系统就像是给 AI 角色一张”地图”，告诉它哪些地方可以走，哪些地方不能走，以及如何找到最短或最优的路径。</p>
+<h3 id="1-2-为什么需要导航系统"><a href="#1-2-为什么需要导航系统" class="headerlink" title="1.2 为什么需要导航系统"></a>1.2 为什么需要导航系统</h3><p>在游戏开发中，导航系统有广泛的应用：</p>
+<ol>
+<li><p><strong>AI 寻路</strong>：</p>
+<ul>
+<li>NPC 自动移动到目标位置</li>
+<li>敌人追击玩家</li>
+<li>友军跟随玩家</li>
+</ul>
+</li>
+<li><p><strong>自动移动</strong>：</p>
+<ul>
+<li>点击地面让角色自动移动（RTS 游戏）</li>
+<li>自动寻路到任务目标</li>
+<li>自动避开障碍物</li>
+</ul>
+</li>
+<li><p><strong>路径规划</strong>：</p>
+<ul>
+<li>计算最优路径</li>
+<li>避开动态障碍物</li>
+<li>处理复杂地形</li>
+</ul>
+</li>
+<li><p><strong>群体行为</strong>：</p>
+<ul>
+<li>多个 AI 协调移动</li>
+<li>避免 AI 之间相互碰撞</li>
+<li>群体寻路优化</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-3-导航系统的工作原理"><a href="#1-3-导航系统的工作原理" class="headerlink" title="1.3 导航系统的工作原理"></a>1.3 导航系统的工作原理</h3><p>UE5 的导航系统基于 <strong>NavMesh（导航网格）</strong> 技术，工作流程如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">1. 生成 NavMesh（导航网格）</span><br><span class="line">   - 分析场景中的静态几何体</span><br><span class="line">   - 生成可行走区域的网格</span><br><span class="line">   ↓</span><br><span class="line">2. AI 请求路径</span><br><span class="line">   - AI 角色请求从 A 点到 B 点的路径</span><br><span class="line">   ↓</span><br><span class="line">3. 路径查找（Pathfinding）</span><br><span class="line">   - 使用 A* 算法在 NavMesh 上查找路径</span><br><span class="line">   - 考虑障碍物、成本等因素</span><br><span class="line">   ↓</span><br><span class="line">4. 返回路径点</span><br><span class="line">   - 返回一系列路径点（Waypoints）</span><br><span class="line">   ↓</span><br><span class="line">5. AI 移动</span><br><span class="line">   - AI 沿着路径点移动</span><br><span class="line">   - 实时调整以避开动态障碍物</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-核心概念"><a href="#1-4-核心概念" class="headerlink" title="1.4 核心概念"></a>1.4 核心概念</h3><p><strong>NavMesh（导航网格）</strong>：</p>
+<ul>
+<li>一个由多边形组成的网格，表示场景中可行走的区域</li>
+<li>自动生成，基于场景中的静态几何体</li>
+<li>可以手动调整和编辑</li>
+</ul>
+<p><strong>NavMesh Bounds Volume</strong>：</p>
+<ul>
+<li>定义 NavMesh 生成的范围</li>
+<li>只有在这个体积内的区域才会生成 NavMesh</li>
+</ul>
+<p><strong>Nav Modifier Volume</strong>：</p>
+<ul>
+<li>修改 NavMesh 的属性（如成本、是否可行走）</li>
+</ul>
+<p><strong>Pathfinding（路径查找）</strong>：</p>
+<ul>
+<li>在 NavMesh 上查找从起点到终点的路径</li>
+<li>使用 A* 算法</li>
+</ul>
+<p><strong>Path Following（路径跟随）</strong>：</p>
+<ul>
+<li>AI 沿着计算出的路径移动</li>
+<li>处理转向、速度调整等</li>
+</ul>
+<h2 id="2-基础设置"><a href="#2-基础设置" class="headerlink" title="2. 基础设置"></a>2. 基础设置</h2><h3 id="2-1-生成-NavMesh"><a href="#2-1-生成-NavMesh" class="headerlink" title="2.1 生成 NavMesh"></a>2.1 生成 NavMesh</h3><p><strong>步骤 1：添加 NavMesh Bounds Volume</strong></p>
+<ol>
+<li>在编辑器中，点击 <code>Window &gt; Place Actors</code></li>
+<li>搜索 <code>Nav Mesh Bounds Volume</code></li>
+<li>拖拽到场景中</li>
+<li>调整大小，覆盖需要生成 NavMesh 的区域</li>
+</ol>
+<p><strong>步骤 2：设置导航代理（Navigation Agent）</strong></p>
+<p>导航代理定义了哪些类型的角色可以使用这个 NavMesh。</p>
+<ol>
+<li>打开项目设置：<code>Edit &gt; Project Settings</code></li>
+<li>导航到 <code>Engine &gt; Navigation System</code></li>
+<li>配置默认的导航代理设置：<ul>
+<li><strong>Agent Radius</strong>：代理半径（通常与角色胶囊体半径相同）</li>
+<li><strong>Agent Height</strong>：代理高度（通常与角色胶囊体高度相同）</li>
+<li><strong>Agent Max Step Height</strong>：最大可跨越高度</li>
+<li><strong>Agent Max Slope</strong>：最大可行走坡度</li>
+</ul>
+</li>
+</ol>
+<p><strong>步骤 3：构建 NavMesh</strong></p>
+<ol>
+<li>在编辑器中，点击 <code>Build</code> 按钮（或按 <code>Ctrl+Shift+P</code>）</li>
+<li>选择 <code>Build &gt; Build Paths</code></li>
+<li>等待构建完成</li>
+</ol>
+<p>构建完成后，你可以在编辑器中看到绿色的 NavMesh 网格（按 <code>P</code> 键切换显示）。</p>
+<h3 id="2-2-验证-NavMesh"><a href="#2-2-验证-NavMesh" class="headerlink" title="2.2 验证 NavMesh"></a>2.2 验证 NavMesh</h3><p><strong>查看 NavMesh：</strong></p>
+<ol>
+<li>在编辑器中按 <code>P</code> 键，显示 NavMesh</li>
+<li>绿色区域表示可行走区域</li>
+<li>没有绿色的区域表示不可行走</li>
+</ol>
+<p><strong>测试路径查找：</strong></p>
+<ol>
+<li>在场景中选择一个 AI 角色</li>
+<li>在 <code>Details</code> 面板中找到 <code>Navigation</code> 相关设置</li>
+<li>设置目标位置</li>
+<li>观察 AI 是否能够找到路径</li>
+</ol>
+<h2 id="3-基础使用"><a href="#3-基础使用" class="headerlink" title="3. 基础使用"></a>3. 基础使用</h2><h3 id="3-1-简单的-AI-寻路"><a href="#3-1-简单的-AI-寻路" class="headerlink" title="3.1 简单的 AI 寻路"></a>3.1 简单的 AI 寻路</h3><p>创建一个简单的 AI 角色，让它自动移动到目标位置。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SimpleAIController.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CoreMinimal.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Navigation/PathFollowingComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;SimpleAIController.generated.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> ASimpleAIController : <span class="keyword">public</span> AAIController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ASimpleAIController</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 移动到目标位置</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">MoveToLocation</span><span class="params">(FVector TargetLocation)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动到目标 Actor</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">MoveToActor</span><span class="params">(AActor* TargetActor)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 停止移动</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">StopMovement</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 路径跟随组件</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;Components&quot;</span>, meta = (AllowPrivateAccess = <span class="string">&quot;true&quot;</span>))</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UPathFollowingComponent</span>* PathFollowingComponent;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SimpleAIController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;SimpleAIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Navigation/PathFollowingComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;NavigationSystem.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Engine/TargetPoint.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">ASimpleAIController::<span class="built_in">ASimpleAIController</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 创建路径跟随组件</span></span><br><span class="line">    PathFollowingComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UPathFollowingComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;PathFollowingComponent&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ASimpleAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ASimpleAIController::MoveToLocation</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取导航系统</span></span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (!NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Navigation System not found!&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查找路径并移动</span></span><br><span class="line">    FNavPathSharedPtr NavPath;</span><br><span class="line">    EPathFollowingRequestResult::Type Result = <span class="built_in">MoveToLocation</span>(</span><br><span class="line">        TargetLocation,</span><br><span class="line">        <span class="number">50.0f</span>, <span class="comment">// 接受半径（到达目标点 50 单位内就算到达）</span></span><br><span class="line">        <span class="literal">false</span>, <span class="comment">// 不使用路径查找</span></span><br><span class="line">        <span class="literal">true</span>,  <span class="comment">// 允许部分路径</span></span><br><span class="line">        <span class="literal">true</span>,  <span class="comment">// 使用项目设置</span></span><br><span class="line">        <span class="literal">nullptr</span>, <span class="comment">// 自定义过滤器</span></span><br><span class="line">        <span class="literal">true</span>    <span class="comment">// 使用导航数据</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (Result == EPathFollowingRequestResult::RequestSuccessful)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Move to location started successfully&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Failed to move to location&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ASimpleAIController::MoveToActor</span><span class="params">(AActor* TargetActor)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!TargetActor || !<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动到 Actor 的位置</span></span><br><span class="line">    EPathFollowingRequestResult::Type Result = <span class="built_in">MoveToActor</span>(</span><br><span class="line">        TargetActor,</span><br><span class="line">        <span class="number">50.0f</span>, <span class="comment">// 接受半径</span></span><br><span class="line">        <span class="literal">false</span>, <span class="comment">// 不使用路径查找</span></span><br><span class="line">        <span class="literal">true</span>,  <span class="comment">// 允许部分路径</span></span><br><span class="line">        <span class="literal">true</span>,  <span class="comment">// 使用项目设置</span></span><br><span class="line">        <span class="literal">nullptr</span>, <span class="comment">// 自定义过滤器</span></span><br><span class="line">        <span class="literal">true</span>    <span class="comment">// 使用导航数据</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (Result == EPathFollowingRequestResult::RequestSuccessful)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Move to actor started successfully&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ASimpleAIController::StopMovement</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">StopMovement</span>();</span><br><span class="line">    <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Movement stopped&quot;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-在蓝图中使用"><a href="#3-2-在蓝图中使用" class="headerlink" title="3.2 在蓝图中使用"></a>3.2 在蓝图中使用</h3><p><strong>方法 1：使用 AI Move To 节点</strong></p>
+<ol>
+<li>在 AI Controller 蓝图中</li>
+<li>添加 <code>AI Move To</code> 节点</li>
+<li>设置目标位置或目标 Actor</li>
+<li>连接执行流程</li>
+</ol>
+<p><strong>方法 2：使用 Behavior Tree</strong></p>
+<ol>
+<li>创建 Behavior Tree</li>
+<li>添加 <code>Move To</code> 任务节点</li>
+<li>设置 Blackboard Key（目标位置）</li>
+<li>在 AI Controller 中运行 Behavior Tree</li>
+</ol>
+<h3 id="3-3-检查路径是否可达"><a href="#3-3-检查路径是否可达" class="headerlink" title="3.3 检查路径是否可达"></a>3.3 检查路径是否可达</h3><p>在移动之前，检查目标位置是否可达。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyAIController.h</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 检查位置是否可达</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">IsLocationReachable</span><span class="params">(FVector TargetLocation)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyAIController.cpp</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">AMyAIController::IsLocationReachable</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (!NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取导航数据</span></span><br><span class="line">    ANavigationData* NavData = NavSystem-&gt;<span class="built_in">GetNavDataForProps</span>(</span><br><span class="line">        <span class="built_in">GetNavAgentPropertiesRef</span>(),</span><br><span class="line">        <span class="built_in">GetNavAgentLocation</span>()</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!NavData)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查路径是否存在</span></span><br><span class="line">    FNavLocation NavLocation;</span><br><span class="line">    <span class="type">bool</span> bFound = NavSystem-&gt;<span class="built_in">ProjectPointToNavigation</span>(</span><br><span class="line">        TargetLocation,</span><br><span class="line">        NavLocation,</span><br><span class="line">        <span class="built_in">FVector</span>(<span class="number">1000.0f</span>, <span class="number">1000.0f</span>, <span class="number">1000.0f</span>), <span class="comment">// 搜索范围</span></span><br><span class="line">        NavData</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> bFound;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-高级功能"><a href="#4-高级功能" class="headerlink" title="4. 高级功能"></a>4. 高级功能</h2><h3 id="4-1-动态障碍物"><a href="#4-1-动态障碍物" class="headerlink" title="4.1 动态障碍物"></a>4.1 动态障碍物</h3><p><strong>问题：</strong> 场景中的动态物体（如可移动的箱子、门）会阻挡 AI 路径，但 NavMesh 是基于静态几何体生成的。</p>
+<p><strong>解决方案：</strong> 使用 Nav Modifier Volume 或动态障碍物组件。</p>
+<p><strong>方法 1：使用 Nav Modifier Volume</strong></p>
+<ol>
+<li>在编辑器中添加 <code>Nav Modifier Volume</code></li>
+<li>设置体积大小，覆盖动态障碍物区域</li>
+<li>设置 <code>Area Class</code> 为 <code>NavArea_Obstacle</code>（不可行走）</li>
+<li>在代码中动态启用&#x2F;禁用这个 Volume</li>
+</ol>
+<p><strong>方法 2：使用 Dynamic Obstacle</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DynamicObstacle.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> ADynamicObstacle : <span class="keyword">public</span> AActor</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ADynamicObstacle</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">Tick</span><span class="params">(<span class="type">float</span> DeltaTime)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 碰撞组件（用于阻挡 AI）</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;Components&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UBoxComponent</span>* ObstacleCollision;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 导航障碍物组件</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = <span class="string">&quot;Components&quot;</span>)</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UNavModifierComponent</span>* NavModifierComponent;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// DynamicObstacle.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;DynamicObstacle.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/BoxComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Navigation/NavModifierComponent.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AI/Navigation/NavAreas/NavArea_Obstacle.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">ADynamicObstacle::<span class="built_in">ADynamicObstacle</span>()</span><br><span class="line">&#123;</span><br><span class="line">    PrimaryActorTick.bCanEverTick = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建碰撞组件</span></span><br><span class="line">    ObstacleCollision = <span class="built_in">CreateDefaultSubobject</span>&lt;UBoxComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;ObstacleCollision&quot;</span>));</span><br><span class="line">    RootComponent = ObstacleCollision;</span><br><span class="line">    ObstacleCollision-&gt;<span class="built_in">SetBoxExtent</span>(<span class="built_in">FVector</span>(<span class="number">50.0f</span>, <span class="number">50.0f</span>, <span class="number">50.0f</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建导航修改器组件</span></span><br><span class="line">    NavModifierComponent = <span class="built_in">CreateDefaultSubobject</span>&lt;UNavModifierComponent&gt;(<span class="built_in">TEXT</span>(<span class="string">&quot;NavModifierComponent&quot;</span>));</span><br><span class="line">    NavModifierComponent-&gt;<span class="built_in">SetAreaClass</span>(UNavArea_Obstacle::<span class="built_in">StaticClass</span>());</span><br><span class="line">    NavModifierComponent-&gt;<span class="built_in">SetFailsafeExtent</span>(<span class="built_in">FVector</span>(<span class="number">100.0f</span>, <span class="number">100.0f</span>, <span class="number">100.0f</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ADynamicObstacle::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 更新导航网格</span></span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        NavSystem-&gt;<span class="built_in">UpdateComponentInNavOctree</span>(*NavModifierComponent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ADynamicObstacle::Tick</span><span class="params">(<span class="type">float</span> DeltaTime)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">Tick</span>(DeltaTime);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果障碍物移动了，更新导航网格</span></span><br><span class="line">    <span class="comment">// 注意：频繁更新会影响性能，应该只在必要时更新</span></span><br><span class="line">    <span class="type">static</span> FVector LastLocation = FVector::ZeroVector;</span><br><span class="line">    FVector CurrentLocation = <span class="built_in">GetActorLocation</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (FVector::<span class="built_in">Dist</span>(CurrentLocation, LastLocation) &gt; <span class="number">10.0f</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">        <span class="keyword">if</span> (NavSystem)</span><br><span class="line">        &#123;</span><br><span class="line">            NavSystem-&gt;<span class="built_in">UpdateComponentInNavOctree</span>(*NavModifierComponent);</span><br><span class="line">        &#125;</span><br><span class="line">        LastLocation = CurrentLocation;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-自定义导航区域"><a href="#4-2-自定义导航区域" class="headerlink" title="4.2 自定义导航区域"></a>4.2 自定义导航区域</h3><p>创建自定义的导航区域，用于标记不同类型的区域（如水域、危险区域等）。</p>
+<p><strong>步骤 1：创建导航区域类</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NavArea_Water.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;CoreMinimal.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AI/Navigation/NavAreas/NavArea.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;NavArea_Water.generated.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UNavArea_Water : <span class="keyword">public</span> UNavArea</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">UNavArea_Water</span>(<span class="type">const</span> FObjectInitializer&amp; ObjectInitializer)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 设置区域成本（水域更难行走，成本更高）</span></span><br><span class="line">        FNavAreaHelper::<span class="built_in">Set</span>(AreaFlags, ENavAreaFlag::Cost);</span><br><span class="line">        DefaultCost = <span class="number">5.0f</span>; <span class="comment">// 默认成本是 1.0，水域是 5.0（更难走）</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置是否可以行走（如果设置为 false，AI 会完全避开）</span></span><br><span class="line">        <span class="comment">// DrawColor = FColor::Blue; // 在编辑器中显示为蓝色</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 2：在编辑器中应用</strong></p>
+<ol>
+<li>添加 <code>Nav Modifier Volume</code></li>
+<li>设置 <code>Area Class</code> 为你创建的自定义区域类</li>
+<li>调整体积大小，覆盖目标区域</li>
+</ol>
+<p><strong>步骤 3：在代码中使用</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 AI Controller 中，可以检查当前所在的区域类型</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::CheckCurrentArea</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (!NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FNavLocation NavLocation;</span><br><span class="line">    <span class="type">bool</span> bFound = NavSystem-&gt;<span class="built_in">ProjectPointToNavigation</span>(</span><br><span class="line">        <span class="built_in">GetPawn</span>()-&gt;<span class="built_in">GetActorLocation</span>(),</span><br><span class="line">        NavLocation</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (bFound)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 获取当前区域的类型</span></span><br><span class="line">        <span class="type">const</span> UNavArea* CurrentArea = NavLocation.NodeRef.<span class="built_in">IsValid</span>() </span><br><span class="line">            ? NavSystem-&gt;<span class="built_in">GetNavAreaClass</span>(NavLocation.NodeRef) </span><br><span class="line">            : <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (CurrentArea &amp;&amp; CurrentArea-&gt;<span class="built_in">IsA</span>&lt;UNavArea_Water&gt;())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;AI is in water area!&quot;</span>));</span><br><span class="line">            <span class="comment">// 可以在这里添加特殊逻辑，如减速、播放水花特效等</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-路径查询和调试"><a href="#4-3-路径查询和调试" class="headerlink" title="4.3 路径查询和调试"></a>4.3 路径查询和调试</h3><p>获取路径信息，用于调试或显示路径。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyAIController.h</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 获取路径点</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function">TArray&lt;FVector&gt; <span class="title">GetPathPoints</span><span class="params">(FVector TargetLocation)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制路径（调试用）</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">DrawPath</span><span class="params">(FVector TargetLocation)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyAIController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;DrawDebugHelpers.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">TArray&lt;FVector&gt; <span class="title">AMyAIController::GetPathPoints</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TArray&lt;FVector&gt; PathPoints;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> PathPoints;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (!NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> PathPoints;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建路径查询</span></span><br><span class="line">    FPathFindingQuery Query;</span><br><span class="line">    Query.StartLocation = <span class="built_in">GetPawn</span>()-&gt;<span class="built_in">GetActorLocation</span>();</span><br><span class="line">    Query.EndLocation = TargetLocation;</span><br><span class="line">    Query.NavData = NavSystem-&gt;<span class="built_in">GetNavDataForProps</span>(<span class="built_in">GetNavAgentPropertiesRef</span>(), Query.StartLocation);</span><br><span class="line">    Query.Owner = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查找路径</span></span><br><span class="line">    FPathFindingResult Result = NavSystem-&gt;<span class="built_in">FindPathSync</span>(Query);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (Result.<span class="built_in">IsSuccessful</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 获取路径点</span></span><br><span class="line">        <span class="type">const</span> FNavPathSharedPtr&amp; Path = Result.Path;</span><br><span class="line">        <span class="keyword">if</span> (Path.<span class="built_in">IsValid</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">const</span> TArray&lt;FNavPathPoint&gt;&amp; PathPointsRef = Path-&gt;<span class="built_in">GetPathPoints</span>();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">const</span> FNavPathPoint&amp; Point : PathPointsRef)</span><br><span class="line">            &#123;</span><br><span class="line">                PathPoints.<span class="built_in">Add</span>(Point.Location);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> PathPoints;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::DrawPath</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TArray&lt;FVector&gt; PathPoints = <span class="built_in">GetPathPoints</span>(TargetLocation);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (PathPoints.<span class="built_in">Num</span>() &lt; <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;No valid path found&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制路径</span></span><br><span class="line">    <span class="keyword">for</span> (int32 i = <span class="number">0</span>; i &lt; PathPoints.<span class="built_in">Num</span>() - <span class="number">1</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">DrawDebugLine</span>(</span><br><span class="line">            <span class="built_in">GetWorld</span>(),</span><br><span class="line">            PathPoints[i],</span><br><span class="line">            PathPoints[i + <span class="number">1</span>],</span><br><span class="line">            FColor::Green,</span><br><span class="line">            <span class="literal">false</span>,</span><br><span class="line">            <span class="number">5.0f</span>,</span><br><span class="line">            <span class="number">0</span>,</span><br><span class="line">            <span class="number">3.0f</span></span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 绘制路径点</span></span><br><span class="line">        <span class="built_in">DrawDebugSphere</span>(</span><br><span class="line">            <span class="built_in">GetWorld</span>(),</span><br><span class="line">            PathPoints[i],</span><br><span class="line">            <span class="number">20.0f</span>,</span><br><span class="line">            <span class="number">12</span>,</span><br><span class="line">            FColor::Yellow,</span><br><span class="line">            <span class="literal">false</span>,</span><br><span class="line">            <span class="number">5.0f</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制最后一个点</span></span><br><span class="line">    <span class="built_in">DrawDebugSphere</span>(</span><br><span class="line">        <span class="built_in">GetWorld</span>(),</span><br><span class="line">        PathPoints.<span class="built_in">Last</span>(),</span><br><span class="line">        <span class="number">20.0f</span>,</span><br><span class="line">        <span class="number">12</span>,</span><br><span class="line">        FColor::Red,</span><br><span class="line">        <span class="literal">false</span>,</span><br><span class="line">        <span class="number">5.0f</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-路径成本（Path-Cost）"><a href="#4-4-路径成本（Path-Cost）" class="headerlink" title="4.4 路径成本（Path Cost）"></a>4.4 路径成本（Path Cost）</h3><p>使用路径成本来影响 AI 的路径选择。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在自定义导航区域中设置成本</span></span><br><span class="line"><span class="comment">// NavArea_Danger.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> UNavArea_Danger : <span class="keyword">public</span> UNavArea</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">UNavArea_Danger</span>(<span class="type">const</span> FObjectInitializer&amp; ObjectInitializer)</span><br><span class="line">    &#123;</span><br><span class="line">        FNavAreaHelper::<span class="built_in">Set</span>(AreaFlags, ENavAreaFlag::Cost);</span><br><span class="line">        DefaultCost = <span class="number">10.0f</span>; <span class="comment">// 危险区域成本很高，AI 会尽量避免</span></span><br><span class="line">        DrawColor = FColor::Red; <span class="comment">// 在编辑器中显示为红色</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>在路径查找时考虑成本：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::FindPathWithCost</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (!NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FPathFindingQuery Query;</span><br><span class="line">    Query.StartLocation = <span class="built_in">GetPawn</span>()-&gt;<span class="built_in">GetActorLocation</span>();</span><br><span class="line">    Query.EndLocation = TargetLocation;</span><br><span class="line">    Query.NavData = NavSystem-&gt;<span class="built_in">GetNavDataForProps</span>(<span class="built_in">GetNavAgentPropertiesRef</span>(), Query.StartLocation);</span><br><span class="line">    Query.Owner = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置路径查找参数</span></span><br><span class="line">    Query.<span class="built_in">SetAllowPartialPaths</span>(<span class="literal">false</span>); <span class="comment">// 不允许部分路径</span></span><br><span class="line">    Query.<span class="built_in">SetRequireNavigableEndLocation</span>(<span class="literal">true</span>); <span class="comment">// 要求终点可导航</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查找路径（会自动考虑区域成本）</span></span><br><span class="line">    FPathFindingResult Result = NavSystem-&gt;<span class="built_in">FindPathSync</span>(Query);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (Result.<span class="built_in">IsSuccessful</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Path found! Cost: %f&quot;</span>), Result.Path-&gt;<span class="built_in">GetCost</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-实际应用场景"><a href="#5-实际应用场景" class="headerlink" title="5. 实际应用场景"></a>5. 实际应用场景</h2><h3 id="5-1-场景-1：敌人-AI-追击玩家"><a href="#5-1-场景-1：敌人-AI-追击玩家" class="headerlink" title="5.1 场景 1：敌人 AI 追击玩家"></a>5.1 场景 1：敌人 AI 追击玩家</h3><p>实现一个敌人 AI，当发现玩家时自动追击。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// EnemyAIController.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> AEnemyAIController : <span class="keyword">public</span> AAIController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">AEnemyAIController</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">Tick</span><span class="params">(<span class="type">float</span> DeltaTime)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 检测玩家</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">CheckForPlayer</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 追击玩家</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ChasePlayer</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 玩家引用</span></span><br><span class="line">    AActor* PlayerActor = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测距离</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="type">float</span> DetectionDistance = <span class="number">1000.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 追击距离</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="type">float</span> ChaseDistance = <span class="number">2000.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否正在追击</span></span><br><span class="line">    <span class="type">bool</span> bIsChasing = <span class="literal">false</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// EnemyAIController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;EnemyAIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Kismet/GameplayStatics.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;NavigationSystem.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">AEnemyAIController::<span class="built_in">AEnemyAIController</span>()</span><br><span class="line">&#123;</span><br><span class="line">    PrimaryActorTick.bCanEverTick = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AEnemyAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取玩家引用</span></span><br><span class="line">    PlayerActor = UGameplayStatics::<span class="built_in">GetPlayerCharacter</span>(<span class="built_in">GetWorld</span>(), <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AEnemyAIController::Tick</span><span class="params">(<span class="type">float</span> DeltaTime)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">Tick</span>(DeltaTime);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>() || !PlayerActor)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测玩家</span></span><br><span class="line">    <span class="built_in">CheckForPlayer</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果正在追击，更新目标位置</span></span><br><span class="line">    <span class="keyword">if</span> (bIsChasing)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">ChasePlayer</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AEnemyAIController::CheckForPlayer</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>() || !PlayerActor)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">float</span> DistanceToPlayer = FVector::<span class="built_in">Dist</span>(</span><br><span class="line">        <span class="built_in">GetPawn</span>()-&gt;<span class="built_in">GetActorLocation</span>(),</span><br><span class="line">        PlayerActor-&gt;<span class="built_in">GetActorLocation</span>()</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果玩家在检测范围内</span></span><br><span class="line">    <span class="keyword">if</span> (DistanceToPlayer &lt;= DetectionDistance)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!bIsChasing)</span><br><span class="line">        &#123;</span><br><span class="line">            bIsChasing = <span class="literal">true</span>;</span><br><span class="line">            <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Enemy started chasing player!&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (DistanceToPlayer &gt; ChaseDistance)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 玩家超出追击距离，停止追击</span></span><br><span class="line">        <span class="keyword">if</span> (bIsChasing)</span><br><span class="line">        &#123;</span><br><span class="line">            bIsChasing = <span class="literal">false</span>;</span><br><span class="line">            <span class="built_in">StopMovement</span>();</span><br><span class="line">            <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Enemy stopped chasing player&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AEnemyAIController::ChasePlayer</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>() || !PlayerActor)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动到玩家位置</span></span><br><span class="line">    EPathFollowingRequestResult::Type Result = <span class="built_in">MoveToActor</span>(</span><br><span class="line">        PlayerActor,</span><br><span class="line">        <span class="number">100.0f</span>, <span class="comment">// 接受半径</span></span><br><span class="line">        <span class="literal">false</span>,</span><br><span class="line">        <span class="literal">true</span>,</span><br><span class="line">        <span class="literal">true</span>,</span><br><span class="line">        <span class="literal">nullptr</span>,</span><br><span class="line">        <span class="literal">true</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (Result != EPathFollowingRequestResult::RequestSuccessful)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Failed to chase player&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-场景-2：RTS-风格的点击移动"><a href="#5-2-场景-2：RTS-风格的点击移动" class="headerlink" title="5.2 场景 2：RTS 风格的点击移动"></a>5.2 场景 2：RTS 风格的点击移动</h3><p>实现点击地面让角色自动移动的功能。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RTSCharacter.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> ARTSCharacter : <span class="keyword">public</span> ACharacter</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ARTSCharacter</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">SetupPlayerInputComponent</span><span class="params">(UInputComponent* PlayerInputComponent)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 处理鼠标点击</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">OnMouseClick</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动到目标位置</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">MoveToTarget</span><span class="params">(FVector TargetLocation)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// AI Controller 引用</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">AAIController</span>* AIController;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// RTSCharacter.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;RTSCharacter.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;AIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;NavigationSystem.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Engine/World.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Components/InputComponent.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">ARTSCharacter::<span class="built_in">ARTSCharacter</span>()</span><br><span class="line">&#123;</span><br><span class="line">    PrimaryActorTick.bCanEverTick = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ARTSCharacter::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取 AI Controller</span></span><br><span class="line">    AIController = <span class="built_in">Cast</span>&lt;AAIController&gt;(<span class="built_in">GetController</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ARTSCharacter::SetupPlayerInputComponent</span><span class="params">(UInputComponent* PlayerInputComponent)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">SetupPlayerInputComponent</span>(PlayerInputComponent);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绑定鼠标左键</span></span><br><span class="line">    PlayerInputComponent-&gt;<span class="built_in">BindAction</span>(<span class="string">&quot;LeftMouseClick&quot;</span>, IE_Pressed, <span class="keyword">this</span>, &amp;ARTSCharacter::OnMouseClick);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ARTSCharacter::OnMouseClick</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!AIController)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取鼠标位置</span></span><br><span class="line">    APlayerController* PC = <span class="built_in">Cast</span>&lt;APlayerController&gt;(<span class="built_in">GetController</span>());</span><br><span class="line">    <span class="keyword">if</span> (!PC)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FVector WorldLocation, WorldDirection;</span><br><span class="line">    <span class="keyword">if</span> (PC-&gt;<span class="built_in">DeprojectMousePositionToWorld</span>(WorldLocation, WorldDirection))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 执行射线检测，找到点击的地面位置</span></span><br><span class="line">        FHitResult HitResult;</span><br><span class="line">        FVector StartLocation = WorldLocation;</span><br><span class="line">        FVector EndLocation = WorldLocation + (WorldDirection * <span class="number">10000.0f</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">GetWorld</span>()-&gt;<span class="built_in">LineTraceSingleByChannel</span>(</span><br><span class="line">            HitResult,</span><br><span class="line">            StartLocation,</span><br><span class="line">            EndLocation,</span><br><span class="line">            ECC_Visibility</span><br><span class="line">        ))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 移动到点击位置</span></span><br><span class="line">            <span class="built_in">MoveToTarget</span>(HitResult.Location);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ARTSCharacter::MoveToTarget</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!AIController)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查位置是否可达</span></span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (!NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FNavLocation NavLocation;</span><br><span class="line">    <span class="keyword">if</span> (NavSystem-&gt;<span class="built_in">ProjectPointToNavigation</span>(TargetLocation, NavLocation, <span class="built_in">FVector</span>(<span class="number">500.0f</span>, <span class="number">500.0f</span>, <span class="number">500.0f</span>)))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 移动到导航位置</span></span><br><span class="line">        AIController-&gt;<span class="built_in">MoveToLocation</span>(NavLocation.Location, <span class="number">50.0f</span>);</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Moving to: %s&quot;</span>), *NavLocation.Location.<span class="built_in">ToString</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Target location is not reachable&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-场景-3：群体移动和避让"><a href="#5-3-场景-3：群体移动和避让" class="headerlink" title="5.3 场景 3：群体移动和避让"></a>5.3 场景 3：群体移动和避让</h3><p>实现多个 AI 协调移动，避免相互碰撞。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// GroupAIController.h</span></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MYGAME_API</span> AGroupAIController : <span class="keyword">public</span> AAIController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">AGroupAIController</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BeginPlay</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 移动到目标位置（考虑其他 AI）</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">MoveToLocationWithAvoidance</span><span class="params">(FVector TargetLocation)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 检查是否有其他 AI 在路径上</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">HasObstacleInPath</span><span class="params">(FVector StartLocation, FVector EndLocation)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 避让半径</span></span><br><span class="line">    <span class="built_in">UPROPERTY</span>(EditAnywhere, BlueprintReadWrite, Category = <span class="string">&quot;AI&quot;</span>)</span><br><span class="line">    <span class="type">float</span> AvoidanceRadius = <span class="number">200.0f</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GroupAIController.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;GroupAIController.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;NavigationSystem.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;GameFramework/Character.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Kismet/KismetSystemLibrary.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">AGroupAIController::<span class="built_in">AGroupAIController</span>()</span><br><span class="line">&#123;</span><br><span class="line">    PrimaryActorTick.bCanEverTick = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AGroupAIController::BeginPlay</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">BeginPlay</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AGroupAIController::MoveToLocationWithAvoidance</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetPawn</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FVector StartLocation = <span class="built_in">GetPawn</span>()-&gt;<span class="built_in">GetActorLocation</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 检查路径上是否有障碍物</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">HasObstacleInPath</span>(StartLocation, TargetLocation))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 如果有障碍物，尝试绕行</span></span><br><span class="line">        <span class="comment">// 这里可以使用更复杂的避让算法</span></span><br><span class="line">        <span class="built_in">UE_LOG</span>(LogTemp, Warning, <span class="built_in">TEXT</span>(<span class="string">&quot;Obstacle detected, calculating alternative path&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动到目标位置</span></span><br><span class="line">    <span class="built_in">MoveToLocation</span>(TargetLocation, <span class="number">50.0f</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">AGroupAIController::HasObstacleInPath</span><span class="params">(FVector StartLocation, FVector EndLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 使用 Sphere Trace 检测路径上的障碍物</span></span><br><span class="line">    TArray&lt;FHitResult&gt; HitResults;</span><br><span class="line">    </span><br><span class="line">    UKismetSystemLibrary::<span class="built_in">SphereTraceMulti</span>(</span><br><span class="line">        <span class="built_in">GetWorld</span>(),</span><br><span class="line">        StartLocation,</span><br><span class="line">        EndLocation,</span><br><span class="line">        AvoidanceRadius,</span><br><span class="line">        UEngineTypes::<span class="built_in">ConvertToTraceType</span>(ECC_Pawn), <span class="comment">// 检测其他角色</span></span><br><span class="line">        <span class="literal">false</span>,</span><br><span class="line">        <span class="built_in">TArray</span>&lt;AActor*&gt;(),</span><br><span class="line">        EDrawDebugTrace::None,</span><br><span class="line">        HitResults,</span><br><span class="line">        <span class="literal">true</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查是否命中其他 AI（排除自己）</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> FHitResult&amp; Hit : HitResults)</span><br><span class="line">    &#123;</span><br><span class="line">        AActor* HitActor = Hit.<span class="built_in">GetActor</span>();</span><br><span class="line">        <span class="keyword">if</span> (HitActor &amp;&amp; HitActor != <span class="built_in">GetPawn</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 检查是否是 AI 角色</span></span><br><span class="line">            <span class="keyword">if</span> (HitActor-&gt;<span class="built_in">IsA</span>&lt;ACharacter&gt;())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-性能优化"><a href="#6-性能优化" class="headerlink" title="6. 性能优化"></a>6. 性能优化</h2><h3 id="6-1-NavMesh-构建优化"><a href="#6-1-NavMesh-构建优化" class="headerlink" title="6.1 NavMesh 构建优化"></a>6.1 NavMesh 构建优化</h3><p><strong>问题：</strong> 大型场景的 NavMesh 构建可能很慢。</p>
+<p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>使用多个 NavMesh Bounds Volume</strong>：</p>
+<ul>
+<li>将场景分成多个区域</li>
+<li>每个区域使用独立的 Volume</li>
+<li>只构建需要的区域</li>
+</ul>
+</li>
+<li><p><strong>调整 NavMesh 精度</strong>：</p>
+<ul>
+<li>在项目设置中调整 <code>Cell Size</code> 和 <code>Cell Height</code></li>
+<li>较大的值 &#x3D; 更快的构建，但精度较低</li>
+<li>较小的值 &#x3D; 更慢的构建，但精度较高</li>
+</ul>
+</li>
+<li><p><strong>使用 NavMesh 代理过滤</strong>：</p>
+<ul>
+<li>只为需要的代理类型生成 NavMesh</li>
+<li>减少不必要的 NavMesh 数据</li>
+</ul>
+</li>
+</ol>
+<h3 id="6-2-路径查找优化"><a href="#6-2-路径查找优化" class="headerlink" title="6.2 路径查找优化"></a>6.2 路径查找优化</h3><p><strong>问题：</strong> 频繁的路径查找会影响性能。</p>
+<p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>缓存路径</strong>：</p>
+<ul>
+<li>如果目标位置不变，缓存路径结果</li>
+<li>只在目标改变时重新查找</li>
+</ul>
+</li>
+<li><p><strong>异步路径查找</strong>：</p>
+<ul>
+<li>使用异步路径查找，避免阻塞游戏线程</li>
+<li>适用于非关键路径</li>
+</ul>
+</li>
+<li><p><strong>限制路径查找频率</strong>：</p>
+<ul>
+<li>不要每帧都查找路径</li>
+<li>使用定时器或事件驱动</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 异步路径查找示例</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::FindPathAsync</span><span class="params">(FVector TargetLocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UNavigationSystemV1* NavSystem = UNavigationSystemV1::<span class="built_in">GetCurrent</span>(<span class="built_in">GetWorld</span>());</span><br><span class="line">    <span class="keyword">if</span> (!NavSystem)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FPathFindingQuery Query;</span><br><span class="line">    Query.StartLocation = <span class="built_in">GetPawn</span>()-&gt;<span class="built_in">GetActorLocation</span>();</span><br><span class="line">    Query.EndLocation = TargetLocation;</span><br><span class="line">    Query.NavData = NavSystem-&gt;<span class="built_in">GetNavDataForProps</span>(<span class="built_in">GetNavAgentPropertiesRef</span>(), Query.StartLocation);</span><br><span class="line">    Query.Owner = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 异步查找路径</span></span><br><span class="line">    NavSystem-&gt;<span class="built_in">FindPathAsync</span>(</span><br><span class="line">        Query,</span><br><span class="line">        FOnPathFindingResult::<span class="built_in">CreateUObject</span>(<span class="keyword">this</span>, &amp;AMyAIController::OnPathFound)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyAIController::OnPathFound</span><span class="params">(uint32 PathId, ENavigationQueryResult::Type Result, FNavPathSharedPtr Path)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Result == ENavigationQueryResult::Success &amp;&amp; Path.<span class="built_in">IsValid</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 使用找到的路径</span></span><br><span class="line">        <span class="built_in">MoveToLocation</span>(Path-&gt;<span class="built_in">GetEndLocation</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-动态障碍物优化"><a href="#6-3-动态障碍物优化" class="headerlink" title="6.3 动态障碍物优化"></a>6.3 动态障碍物优化</h3><p><strong>问题：</strong> 频繁更新动态障碍物会影响性能。</p>
+<p><strong>优化方法：</strong></p>
+<ol>
+<li><p><strong>只在必要时更新</strong>：</p>
+<ul>
+<li>只在障碍物移动超过阈值时更新</li>
+<li>使用距离或时间阈值</li>
+</ul>
+</li>
+<li><p><strong>批量更新</strong>：</p>
+<ul>
+<li>将多个障碍物的更新合并</li>
+<li>减少 NavMesh 更新次数</li>
+</ul>
+</li>
+<li><p><strong>使用 Nav Modifier Volume</strong>：</p>
+<ul>
+<li>对于大型动态区域，使用 Volume 而不是组件</li>
+<li>性能更好</li>
+</ul>
+</li>
+</ol>
+<h2 id="7-常见问题与最佳实践"><a href="#7-常见问题与最佳实践" class="headerlink" title="7. 常见问题与最佳实践"></a>7. 常见问题与最佳实践</h2><h3 id="7-1-常见问题"><a href="#7-1-常见问题" class="headerlink" title="7.1 常见问题"></a>7.1 常见问题</h3><p><strong>Q: NavMesh 没有生成？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>是否添加了 NavMesh Bounds Volume？</li>
+<li>Volume 是否覆盖了需要生成 NavMesh 的区域？</li>
+<li>场景中是否有静态几何体？</li>
+<li>是否执行了构建操作？</li>
+</ol>
+<p><strong>Q: AI 找不到路径？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>起点和终点是否在 NavMesh 上？</li>
+<li>导航代理设置是否正确（半径、高度等）？</li>
+<li>是否有障碍物阻挡路径？</li>
+<li>NavMesh 是否已正确构建？</li>
+</ol>
+<p><strong>Q: AI 移动不流畅？</strong></p>
+<p>A: 优化建议：</p>
+<ol>
+<li>检查移动速度设置</li>
+<li>调整路径跟随参数（接受半径、转向速度等）</li>
+<li>使用更平滑的移动插值</li>
+</ol>
+<p><strong>Q: 动态障碍物不生效？</strong></p>
+<p>A: 检查以下几点：</p>
+<ol>
+<li>是否添加了 Nav Modifier Component？</li>
+<li>是否调用了 <code>UpdateComponentInNavOctree</code>？</li>
+<li>NavMesh 是否支持动态更新？</li>
+</ol>
+<h3 id="7-2-最佳实践"><a href="#7-2-最佳实践" class="headerlink" title="7.2 最佳实践"></a>7.2 最佳实践</h3><ol>
+<li><p><strong>合理设置导航代理</strong>：</p>
+<ul>
+<li>代理半径应该与角色胶囊体半径匹配</li>
+<li>代理高度应该与角色胶囊体高度匹配</li>
+</ul>
+</li>
+<li><p><strong>使用合适的 NavMesh 精度</strong>：</p>
+<ul>
+<li>简单场景使用较低的精度（较大的 Cell Size）</li>
+<li>复杂场景使用较高的精度（较小的 Cell Size）</li>
+</ul>
+</li>
+<li><p><strong>优化路径查找频率</strong>：</p>
+<ul>
+<li>不要每帧都查找路径</li>
+<li>使用缓存和异步查找</li>
+</ul>
+</li>
+<li><p><strong>合理使用动态障碍物</strong>：</p>
+<ul>
+<li>只在必要时更新</li>
+<li>使用批量更新</li>
+</ul>
+</li>
+<li><p><strong>测试和调试</strong>：</p>
+<ul>
+<li>使用路径绘制功能调试</li>
+<li>检查 NavMesh 覆盖范围</li>
+<li>验证路径可达性</li>
+</ul>
+</li>
+</ol>
+<h2 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h2><p>本文从零开始全面介绍了 UE5 的导航系统，包括：</p>
+<ol>
+<li><strong>基础概念</strong>：NavMesh、导航代理、路径查找等核心概念</li>
+<li><strong>基础设置</strong>：如何生成和使用 NavMesh</li>
+<li><strong>基础使用</strong>：简单的 AI 寻路实现</li>
+<li><strong>高级功能</strong>：动态障碍物、自定义导航区域、路径查询等</li>
+<li><strong>实际应用</strong>：敌人追击、RTS 移动、群体避让等场景</li>
+<li><strong>性能优化</strong>：NavMesh 构建、路径查找、动态障碍物优化</li>
+<li><strong>最佳实践</strong>：常见问题的解决方案和开发建议</li>
+</ol>
+<p>导航系统是 UE5 AI 开发的核心功能，掌握它能够实现各种复杂的 AI 行为。通过本文的学习，你应该能够：</p>
+<ul>
+<li>理解导航系统的工作原理</li>
+<li>生成和使用 NavMesh</li>
+<li>实现基本的 AI 寻路</li>
+<li>处理动态障碍物和自定义区域</li>
+<li>优化导航系统性能</li>
+<li>解决常见的导航问题</li>
+</ul>
+<p>希望这篇文章能帮助你快速掌握 UE5 的导航系统！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/UE5/" rel="tag"># UE5</a>
+              <a href="/tags/Unreal-Engine/" rel="tag"># Unreal Engine</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" rel="tag"># 游戏开发</a>
+              <a href="/tags/%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/" rel="tag"># 导航系统</a>
+              <a href="/tags/Navigation-System/" rel="tag"># Navigation System</a>
+              <a href="/tags/NavMesh/" rel="tag"># NavMesh</a>
+              <a href="/tags/AI%E5%AF%BB%E8%B7%AF/" rel="tag"># AI寻路</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89%E5%B0%84%E7%BA%BF%E6%A3%80%E6%B5%8B/" rel="prev" title="UE5学习（二）射线检测">
+                  <i class="fa fa-angle-left"></i> UE5学习（二）射线检测
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/24/UE5%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89%E8%BE%93%E5%85%A5%E7%B3%BB%E7%BB%9F/" rel="next" title="UE5学习（一）输入系统">
+                  UE5学习（一）输入系统 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
