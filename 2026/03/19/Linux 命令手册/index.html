@@ -1,0 +1,4397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"newswitch.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Linux 命令手册你给出的命令清单按“命令族&#x2F;用途”分为 11 类：文件管理、文档编辑、文件传输、磁盘管理、磁盘维护、网络通讯、系统管理、系统设置、备份压缩、设备管理、其他命令。  本页先把你提供的“文件管理”部分补全为可写作的索引；后续如果你确认范围，我再把每条命令按“参数表 + 参数由来 + 示例 + 常见坑”的模板逐条展开。  文件管理（统一表格）   命令 完整命令（全称） 核">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 命令手册">
+<meta property="og:url" content="https://newswitch.github.io/2026/03/19/Linux%20%E5%91%BD%E4%BB%A4%E6%89%8B%E5%86%8C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Linux 命令手册你给出的命令清单按“命令族&#x2F;用途”分为 11 类：文件管理、文档编辑、文件传输、磁盘管理、磁盘维护、网络通讯、系统管理、系统设置、备份压缩、设备管理、其他命令。  本页先把你提供的“文件管理”部分补全为可写作的索引；后续如果你确认范围，我再把每条命令按“参数表 + 参数由来 + 示例 + 常见坑”的模板逐条展开。  文件管理（统一表格）   命令 完整命令（全称） 核">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-03-19T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-19T01:24:05.198Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="写作规范">
+<meta property="article:tag" content="命令大全">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://newswitch.github.io/2026/03/19/Linux%20%E5%91%BD%E4%BB%A4%E6%89%8B%E5%86%8C/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://newswitch.github.io/2026/03/19/Linux%20%E5%91%BD%E4%BB%A4%E6%89%8B%E5%86%8C/","path":"2026/03/19/Linux 命令手册/","title":"Linux 命令手册"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux 命令手册 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-%E5%91%BD%E4%BB%A4%E6%89%8B%E5%86%8C"><span class="nav-number">1.</span> <span class="nav-text">Linux 命令手册</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">文件管理（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E7%BC%96%E8%BE%91%EF%BC%88%E5%90%AB%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">文档编辑（含文本处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">文件传输（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">磁盘管理（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E7%BB%B4%E6%8A%A4%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">磁盘维护（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.6.</span> <span class="nav-text">网络通讯（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.7.</span> <span class="nav-text">系统管理（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E7%BD%AE%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.8.</span> <span class="nav-text">系统设置（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E5%8E%8B%E7%BC%A9%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.9.</span> <span class="nav-text">备份压缩（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%AE%A1%E7%90%86%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.10.</span> <span class="nav-text">设备管理（统一表格）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4%EF%BC%88%E7%BB%9F%E4%B8%80%E8%A1%A8%E6%A0%BC%EF%BC%89"><span class="nav-number">1.11.</span> <span class="nav-text">其他命令（统一表格）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://newswitch.github.io/2026/03/19/Linux%20%E5%91%BD%E4%BB%A4%E6%89%8B%E5%86%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux 命令手册 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux 命令手册
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-03-19 12:00:00 / Modified: 09:24:05" itemprop="dateCreated datePublished" datetime="2026-03-19T12:00:00+08:00">2026-03-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Linux-命令手册"><a href="#Linux-命令手册" class="headerlink" title="Linux 命令手册"></a>Linux 命令手册</h1><p>你给出的命令清单按“命令族&#x2F;用途”分为 11 类：文件管理、文档编辑、文件传输、磁盘管理、磁盘维护、网络通讯、系统管理、系统设置、备份压缩、设备管理、其他命令。</p>
+<blockquote>
+<p>本页先把你提供的“文件管理”部分补全为可写作的索引；后续如果你确认范围，我再把每条命令按“参数表 + 参数由来 + 示例 + 常见坑”的模板逐条展开。</p>
+</blockquote>
+<h2 id="文件管理（统一表格）"><a href="#文件管理（统一表格）" class="headerlink" title="文件管理（统一表格）"></a>文件管理（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cat</code></td>
+<td>concatenate FILE(s)</td>
+<td>连接并显示文件内容</td>
+<td><code>-A&lt;br&gt;-b&lt;br&gt;-e&lt;br&gt;-E&lt;br&gt;-n&lt;br&gt;-s&lt;br&gt;-t&lt;br&gt;-T&lt;br&gt;-u&lt;br&gt;-v</code></td>
+<td><code>--show-all&lt;br&gt;--number-nonblank&lt;br&gt;--show-ends&lt;br&gt;--number&lt;br&gt;--squeeze-blank&lt;br&gt;--show-tabs&lt;br&gt;--show-nonprinting&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>显示文件或标准输入；可显示不可打印字符、行号、行尾与制表符标记、压缩连续空行</td>
+<td><code>cat -n file.txt</code></td>
+</tr>
+<tr>
+<td><code>chattr</code></td>
+<td>change file attributes</td>
+<td>更改文件属性</td>
+<td><code>-R&lt;br&gt;-V&lt;br&gt;-f&lt;br&gt;-v&lt;br&gt;-p</code></td>
+<td><code>无</code></td>
+<td>修改 Linux 文件系统扩展属性；<code>mode</code> 形如 <code>+-=[aAcCdDeFijmPsStTux]</code></td>
+<td><code>chattr +i /path/to/file</code></td>
+</tr>
+<tr>
+<td><code>chgrp</code></td>
+<td>change group</td>
+<td>更改文件所属组</td>
+<td><code>-c&lt;br&gt;-f&lt;br&gt;-v&lt;br&gt;-H&lt;br&gt;-L&lt;br&gt;-P&lt;br&gt;-R</code></td>
+<td><code>--changes&lt;br&gt;--silent&lt;br&gt;--quiet&lt;br&gt;--verbose&lt;br&gt;--dereference&lt;br&gt;--no-dereference&lt;br&gt;--no-preserve-root&lt;br&gt;--preserve-root&lt;br&gt;--reference=RFILE&lt;br&gt;--recursive&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>更改所属组；支持递归与符号链接遍历策略</td>
+<td><code>chgrp -R staff /u</code></td>
+</tr>
+<tr>
+<td><code>chmod</code></td>
+<td>change mode</td>
+<td>更改文件权限</td>
+<td><code>-c&lt;br&gt;-f&lt;br&gt;-v&lt;br&gt;-R</code></td>
+<td><code>--changes&lt;br&gt;--silent&lt;br&gt;--quiet&lt;br&gt;--verbose&lt;br&gt;--no-preserve-root&lt;br&gt;--preserve-root&lt;br&gt;--reference=RFILE&lt;br&gt;--recursive&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>改变权限模式；支持符号模式或八进制模式</td>
+<td><code>chmod u+rwx file</code></td>
+</tr>
+<tr>
+<td><code>chown</code></td>
+<td>change owner</td>
+<td>更改文件所有者</td>
+<td><code>-c&lt;br&gt;-f&lt;br&gt;-v&lt;br&gt;-h&lt;br&gt;-R&lt;br&gt;-H&lt;br&gt;-L&lt;br&gt;-P</code></td>
+<td><code>--changes&lt;br&gt;--silent&lt;br&gt;--quiet&lt;br&gt;--verbose&lt;br&gt;--dereference&lt;br&gt;--no-dereference&lt;br&gt;--from=CURRENT_OWNER:CURRENT_GROUP&lt;br&gt;--no-preserve-root&lt;br&gt;--preserve-root&lt;br&gt;--reference=RFILE&lt;br&gt;--recursive&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>更改 owner&#x2F;可选 group；支持条件 <code>--from</code> 与递归&#x2F;链接策略</td>
+<td><code>chown root:staff /u</code></td>
+</tr>
+<tr>
+<td><code>cksum</code></td>
+<td>print CRC checksum</td>
+<td>计算文件校验和</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>计算 CRC 校验和并输出字节计数</td>
+<td><code>cksum /etc/hosts</code></td>
+</tr>
+<tr>
+<td><code>cmp</code></td>
+<td>compare files byte-by-byte</td>
+<td>逐字节比较两个文件</td>
+<td><code>-b&lt;br&gt;-i&lt;br&gt;-l&lt;br&gt;-n&lt;br&gt;-s</code></td>
+<td><code>--print-bytes&lt;br&gt;--ignore-initial=SKIP&lt;br&gt;--ignore-initial=SKIP1:SKIP2&lt;br&gt;--verbose&lt;br&gt;--bytes=LIMIT&lt;br&gt;--quiet&lt;br&gt;--silent&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>逐字节比较；可跳过初始字节并限制比较长度</td>
+<td><code>cmp -l a b</code></td>
+</tr>
+<tr>
+<td><code>diff</code></td>
+<td>compare files line-by-line</td>
+<td>比较文件内容差异</td>
+<td><code>-q&lt;br&gt;-s&lt;br&gt;-c&lt;br&gt;-C&lt;br&gt;-u&lt;br&gt;-U&lt;br&gt;-e&lt;br&gt;-n&lt;br&gt;-y&lt;br&gt;-W&lt;br&gt;-p&lt;br&gt;-F&lt;br&gt;-t&lt;br&gt;-T&lt;br&gt;-l&lt;br&gt;-r&lt;br&gt;-N&lt;br&gt;-x&lt;br&gt;-X&lt;br&gt;-S&lt;br&gt;-i&lt;br&gt;-E&lt;br&gt;-Z&lt;br&gt;-b&lt;br&gt;-w&lt;br&gt;-B&lt;br&gt;-I&lt;br&gt;-a&lt;br&gt;-v</code></td>
+<td><code>--normal&lt;br&gt;--brief&lt;br&gt;--report-identical-files&lt;br&gt;--context[=NUM]&lt;br&gt;--unified[=NUM]&lt;br&gt;--ed&lt;br&gt;--rcs&lt;br&gt;--side-by-side&lt;br&gt;--width=NUM&lt;br&gt;--left-column&lt;br&gt;--suppress-common-lines&lt;br&gt;--show-c-function&lt;br&gt;--show-function-line=RE&lt;br&gt;--label=LABEL&lt;br&gt;--expand-tabs&lt;br&gt;--initial-tab&lt;br&gt;--tabsize=NUM&lt;br&gt;--suppress-blank-empty&lt;br&gt;--paginate&lt;br&gt;--recursive&lt;br&gt;--no-dereference&lt;br&gt;--new-file&lt;br&gt;--unidirectional-new-file&lt;br&gt;--ignore-file-name-case&lt;br&gt;--no-ignore-file-name-case&lt;br&gt;--exclude=PAT&lt;br&gt;--exclude-from=FILE&lt;br&gt;--starting-file=FILE&lt;br&gt;--from-file=FILE1&lt;br&gt;--to-file=FILE2&lt;br&gt;--ignore-case&lt;br&gt;--ignore-tab-expansion&lt;br&gt;--ignore-trailing-space&lt;br&gt;--ignore-space-change&lt;br&gt;--ignore-all-space&lt;br&gt;--ignore-blank-lines&lt;br&gt;--ignore-matching-lines=RE&lt;br&gt;--text&lt;br&gt;--strip-trailing-cr&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>按行比较；支持 context&#x2F;unified 输出、排除规则、以及忽略大小写&#x2F;空白差异</td>
+<td><code>diff -u a.txt b.txt</code></td>
+</tr>
+<tr>
+<td><code>diffstat</code></td>
+<td>show diff statistics</td>
+<td>显示diff统计信息</td>
+<td><code>-s&lt;br&gt;-w</code></td>
+<td><code>--stat-width=NUM&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>对比差异并汇总每个文件的改动行数&#x2F;文件规模</td>
+<td>&#96;diff -u a b</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>determine file type</td>
+<td>识别文件类型</td>
+<td><code>-v&lt;br&gt;-m&lt;br&gt;-z&lt;br&gt;-Z&lt;br&gt;-b&lt;br&gt;-c&lt;br&gt;-e&lt;br&gt;-f&lt;br&gt;-F&lt;br&gt;-i&lt;br&gt;-k&lt;br&gt;-l&lt;br&gt;-L&lt;br&gt;-h&lt;br&gt;-n&lt;br&gt;-N&lt;br&gt;-0&lt;br&gt;-p&lt;br&gt;-P&lt;br&gt;-r&lt;br&gt;-s&lt;br&gt;-S&lt;br&gt;-C&lt;br&gt;-d</code></td>
+<td><code>--help&lt;br&gt;--version&lt;br&gt;--magic-file=LIST&lt;br&gt;--uncompress&lt;br&gt;--uncompress-noreport&lt;br&gt;--brief&lt;br&gt;--checking-printout&lt;br&gt;--exclude TEST&lt;br&gt;--exclude-quiet TEST&lt;br&gt;--files-from FILE&lt;br&gt;--separator=STRING&lt;br&gt;--mime&lt;br&gt;--apple&lt;br&gt;--extension&lt;br&gt;--mime-type&lt;br&gt;--mime-encoding&lt;br&gt;--keep-going&lt;br&gt;--list&lt;br&gt;--dereference&lt;br&gt;--no-dereference&lt;br&gt;--no-buffer&lt;br&gt;--no-pad&lt;br&gt;--print0&lt;br&gt;--preserve-date&lt;br&gt;--parameter=parameter&lt;br&gt;--raw&lt;br&gt;--special-files&lt;br&gt;--no-sandbox&lt;br&gt;--compile&lt;br&gt;--debug</code></td>
+<td>根据 magic numbers 识别文件类型；支持输出 MIME 等信息</td>
+<td><code>file /bin/ls</code></td>
+</tr>
+<tr>
+<td><code>find</code></td>
+<td>find files</td>
+<td>查找文件或目录</td>
+<td><code>-name&lt;br&gt;-type&lt;br&gt;-mtime</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按名称&#x2F;类型&#x2F;修改时间等条件递归查找文件</td>
+<td>&#96;find &#x2F;var -type f -name “*.log”</td>
+</tr>
+<tr>
+<td><code>git</code></td>
+<td>distributed version control</td>
+<td>分布式版本控制</td>
+<td><code>-C&lt;br&gt;clone&lt;br&gt;pull&lt;br&gt;push</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>管理代码版本与协作（也可用于文件&#x2F;目录的仓库化）</td>
+<td><code>git clone https://...</code></td>
+</tr>
+<tr>
+<td><code>gitview</code></td>
+<td>git visualization</td>
+<td>git仓库可视化工具</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>用于可视化浏览 git 提交&#x2F;分支关系（具体参数依实现而定）</td>
+<td><code>gitview</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td>format C code</td>
+<td>格式化C语言代码</td>
+<td><code>-n&lt;br&gt;-kr</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按指定风格对 C 源码进行缩进与排版</td>
+<td><code>indent -kr -npro file.c</code></td>
+</tr>
+<tr>
+<td><code>cut</code></td>
+<td>cut by fields&#x2F;columns</td>
+<td>按列提取文本</td>
+<td><code>-d&lt;br&gt;-f&lt;br&gt;-b</code></td>
+<td><code>--delimiter=CHAR&lt;br&gt;--fields=LIST&lt;br&gt;--bytes=LIST&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>按分隔符&#x2F;字段或字节范围裁剪输出文本列</td>
+<td><code>cut -d: -f1 /etc/passwd</code></td>
+</tr>
+<tr>
+<td><code>ln</code></td>
+<td>link</td>
+<td>创建链接文件</td>
+<td><code>-s&lt;br&gt;-f&lt;br&gt;-n</code></td>
+<td><code>--symbolic&lt;br&gt;--force&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>创建硬链接或符号链接（symlink）</td>
+<td><code>ln -s /opt/app/app.log ./app.log</code></td>
+</tr>
+<tr>
+<td><code>less</code></td>
+<td>view page by page</td>
+<td>分页查看文件内容</td>
+<td><code>-N&lt;br&gt;-R</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>适合长文本逐屏滚动查看；支持搜索（&#x2F;）</td>
+<td><code>less /var/log/syslog</code></td>
+</tr>
+<tr>
+<td><code>locate</code></td>
+<td>find by database</td>
+<td>快速查找文件</td>
+<td><code>-i&lt;br&gt;-n&lt;br&gt;-b</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>通过定位数据库（通常配合 updatedb）快速查找路径</td>
+<td><code>locate passwd</code></td>
+</tr>
+<tr>
+<td><code>lsattr</code></td>
+<td>list file attributes</td>
+<td>显示文件属性</td>
+<td><code>-R&lt;br&gt;-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>显示 ext2&#x2F;3&#x2F;4 扩展属性（immutable 等）</td>
+<td><code>lsattr /etc/hosts</code></td>
+</tr>
+<tr>
+<td><code>mattrib</code></td>
+<td>MS-DOS attribute tool</td>
+<td>修改MS-DOS文件属性</td>
+<td><code>-a&lt;br&gt;-r&lt;br&gt;-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>修改 MS-DOS 文件的属性（适用于 mtools 体系）</td>
+<td><code>mattrib -s ::/AUTOEXEC.BAT</code></td>
+</tr>
+<tr>
+<td><code>mc</code></td>
+<td>Midnight Commander</td>
+<td>文件管理器Midnight Commander</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>交互式双面板文件管理（复制&#x2F;移动&#x2F;编辑）</td>
+<td><code>mc</code></td>
+</tr>
+<tr>
+<td><code>mdel</code></td>
+<td>MS-DOS delete</td>
+<td>删除MS-DOS文件</td>
+<td><code>-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>删除 MS-DOS 文件（mtools 语法）</td>
+<td><code>mdel ::/old.txt</code></td>
+</tr>
+<tr>
+<td><code>mdir</code></td>
+<td>MS-DOS directory list</td>
+<td>列出MS-DOS目录内容</td>
+<td><code>-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>列出 MS-DOS 驱动器上的目录&#x2F;文件</td>
+<td><code>mdir ::/</code></td>
+</tr>
+<tr>
+<td><code>mktemp</code></td>
+<td>make temp file</td>
+<td>创建临时文件或目录</td>
+<td><code>-p&lt;br&gt;-t</code></td>
+<td><code>--tmpdir=DIR&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>在安全方式下创建临时文件&#x2F;目录，避免竞态</td>
+<td><code>mktemp -p /tmp tmp.XXXXXX</code></td>
+</tr>
+<tr>
+<td><code>more</code></td>
+<td>page through text</td>
+<td>分页显示文本内容</td>
+<td><code>+NUM&lt;br&gt;-d</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>分页显示文本（比 less 简单）</td>
+<td><code>more /etc/hosts</code></td>
+</tr>
+<tr>
+<td><code>mread</code></td>
+<td>MS-DOS read</td>
+<td>读取MS-DOS文件</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从 MS-DOS 虚拟路径读取文件到本地</td>
+<td><code>mread ::/AUTOEXEC.BAT ./AUTOEXEC.BAT</code></td>
+</tr>
+<tr>
+<td><code>mren</code></td>
+<td>MS-DOS rename</td>
+<td>重命名MS-DOS文件</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>重命名 MS-DOS 虚拟路径上的文件</td>
+<td><code>mren ::/a.txt ::/b.txt</code></td>
+</tr>
+<tr>
+<td><code>mtools</code></td>
+<td>MS-DOS tools</td>
+<td>MS-DOS工具集</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>mtools 工具集合（处理 MS-DOS 文件系统）</td>
+<td><code>mtools</code></td>
+</tr>
+<tr>
+<td><code>mtoolstest</code></td>
+<td>test mtools config</td>
+<td>测试mtools配置</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>检查 mtools 配置是否可用（常用于排查 ::&#x2F; 路径问题）</td>
+<td><code>mtoolstest</code></td>
+</tr>
+<tr>
+<td><code>mv</code></td>
+<td>move&#x2F;rename</td>
+<td>移动或重命名文件</td>
+<td><code>-i&lt;br&gt;-f&lt;br&gt;-n</code></td>
+<td><code>--interactive&lt;br&gt;--force&lt;br&gt;--no-clobber&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>移动或重命名文件&#x2F;目录；支持交互确认</td>
+<td><code>mv -i a.txt ./bak/</code></td>
+</tr>
+<tr>
+<td><code>od</code></td>
+<td>octal dump</td>
+<td>以八进制等格式输出文件</td>
+<td><code>-An&lt;br&gt;-t&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>将文件按指定格式输出为数值&#x2F;字符视图</td>
+<td><code>od -An -tx1 -N 32 /etc/hosts</code></td>
+</tr>
+<tr>
+<td><code>paste</code></td>
+<td>merge lines</td>
+<td>合并文件内容</td>
+<td><code>-d&lt;br&gt;-s</code></td>
+<td><code>--delimiters=LIST&lt;br&gt;--serial&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>合并多文件按行拼接输出</td>
+<td><code>paste -d: f1 f2</code></td>
+</tr>
+<tr>
+<td><code>patch</code></td>
+<td>apply patch</td>
+<td>为文件打补丁</td>
+<td><code>-pN&lt;br&gt;-i</code></td>
+<td><code>--strip=N&lt;br&gt;--input=FILE&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>将补丁文件应用到源文件以实现差异更新</td>
+<td><code>patch -p1 &lt; fix.patch</code></td>
+</tr>
+<tr>
+<td><code>rcp</code></td>
+<td>remote copy</td>
+<td>远程文件复制</td>
+<td><code>-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>远程拷贝文件（rcp 传统工具，安全性较弱，生产建议替代方案）</td>
+<td><code>rcp file user@host:/path/</code></td>
+</tr>
+<tr>
+<td><code>rm</code></td>
+<td>remove</td>
+<td>删除文件或目录</td>
+<td><code>-i&lt;br&gt;-f&lt;br&gt;-r</code></td>
+<td><code>--interactive&lt;br&gt;--force&lt;br&gt;--recursive&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>删除文件&#x2F;目录；<code>-r</code> 递归删除；<code>-i</code> 交互确认，<code>-f</code> 强制不提示</td>
+<td><code>rm -rf logs/</code></td>
+</tr>
+<tr>
+<td><code>slocate</code></td>
+<td>locate securely</td>
+<td>安全快速查找文件</td>
+<td><code>-n&lt;br&gt;-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>基于 slocate 数据库的安全快速文件检索（权限控制通常更严格）</td>
+<td><code>slocate passwd</code></td>
+</tr>
+<tr>
+<td><code>split</code></td>
+<td>split file</td>
+<td>分割大文件</td>
+<td><code>-b&lt;br&gt;-l&lt;br&gt;-n</code></td>
+<td><code>--bytes=SIZE&lt;br&gt;--lines=NUM&lt;br&gt;--number=CHUNKS&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>将大文件按大小&#x2F;行数&#x2F;块数切分为多个片段文件</td>
+<td><code>split -b 1M big.log part_</code></td>
+</tr>
+<tr>
+<td><code>tee</code></td>
+<td>pipe to file</td>
+<td>输出重定向并保存</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从标准输入读取并同时写到标准输出与文件（管道常用）</td>
+<td>&#96;cmd</td>
+</tr>
+<tr>
+<td><code>tmpwatch</code></td>
+<td>watch temp files</td>
+<td>清理临时文件</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按时间&#x2F;大小策略清理 <code>/tmp</code> 等临时文件（不同发行版实现参数略有差异）</td>
+<td><code>tmpwatch -a /tmp</code></td>
+</tr>
+<tr>
+<td><code>touch</code></td>
+<td>change timestamps</td>
+<td>修改文件时间戳</td>
+<td><code>-a&lt;br&gt;-m&lt;br&gt;-c&lt;br&gt;-d</code></td>
+<td><code>--date=STRING&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>更新访问时间&#x2F;修改时间；可用于创建空文件</td>
+<td><code>touch -d &quot;2026-01-01&quot; file.txt</code></td>
+</tr>
+<tr>
+<td><code>umask</code></td>
+<td>user mask</td>
+<td>设置默认权限掩码</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>设置新建文件&#x2F;目录的默认权限掩码（配合权限计算）</td>
+<td><code>umask 027</code></td>
+</tr>
+<tr>
+<td><code>which</code></td>
+<td>locate executable</td>
+<td>查找可执行文件路径</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>显示命令对应的可执行文件路径（可查多个匹配）</td>
+<td><code>which -a ls</code></td>
+</tr>
+<tr>
+<td><code>cp</code></td>
+<td>copy</td>
+<td>复制文件或目录</td>
+<td><code>-a&lt;br&gt;-i&lt;br&gt;-p&lt;br&gt;-R</code></td>
+<td><code>--archive&lt;br&gt;--interactive&lt;br&gt;--preserve&lt;br&gt;--recursive&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>复制文件&#x2F;目录；<code>-a</code> 通常等价于归档复制（保留元数据）</td>
+<td><code>cp -a src/ dest/</code></td>
+</tr>
+<tr>
+<td><code>whereis</code></td>
+<td>locate binaries</td>
+<td>定位命令的二进制&#x2F;源码&#x2F;帮助</td>
+<td><code>-b&lt;br&gt;-m&lt;br&gt;-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>在标准位置查找指定命令的二进制、man 手册与源码位置</td>
+<td><code>whereis nginx</code></td>
+</tr>
+<tr>
+<td><code>mcopy</code></td>
+<td>MS-DOS copy</td>
+<td>复制MS-DOS文件</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>mtools 工具的 MS-DOS 文件复制（使用 <code>::/</code> 虚拟路径语法）</td>
+<td><code>mcopy ::/AUTOEXEC.BAT .</code></td>
+</tr>
+<tr>
+<td><code>mshowfat</code></td>
+<td>show FAT</td>
+<td>显示FAT表信息</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>显示软&#x2F;硬盘或镜像的 FAT 分配表信息（mtools 体系）</td>
+<td><code>mshowfat ::/</code></td>
+</tr>
+<tr>
+<td><code>rhmask</code></td>
+<td>RedHat mask tool</td>
+<td>RedHat权限掩码工具</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>RedHat 系列旧工具：用于管理安全策略&#x2F;掩码（具体行为随系统版本）</td>
+<td><code>rhmask -h</code></td>
+</tr>
+<tr>
+<td><code>scp</code></td>
+<td>secure copy</td>
+<td>安全复制文件</td>
+<td><code>-r&lt;br&gt;-P</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>基于 SSH 的远程文件复制（比 rcp 更安全）</td>
+<td><code>scp -r ./app user@host:/opt/</code></td>
+</tr>
+<tr>
+<td><code>awk</code></td>
+<td>pattern scanning and processing</td>
+<td>文本处理与分析工具</td>
+<td><code>-F&lt;br&gt;-v&lt;br&gt;-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按规则匹配并处理文本（常用于日志抽取、字段加工）</td>
+<td><code>awk -F: &#39;{print $1}&#39; /etc/passwd</code></td>
+</tr>
+<tr>
+<td><code>read</code></td>
+<td>read from stdin</td>
+<td>读取标准输入内容</td>
+<td><code>-p&lt;br&gt;-r&lt;br&gt;-a&lt;br&gt;-t</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>在 shell 中读取一行输入到变量；<code>-r</code> 不处理反斜杠转义</td>
+<td><code>read -p &quot;Name: &quot; name</code></td>
+</tr>
+<tr>
+<td><code>rename</code></td>
+<td>rename files</td>
+<td>批量重命名文件</td>
+<td><code>-v</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>批量按规则重命名文件（具体语法因实现不同）</td>
+<td><code>rename -v &#39;s/old/new/&#39; *</code></td>
+</tr>
+<tr>
+<td><code>realpath</code></td>
+<td>resolve real path</td>
+<td>显示文件的绝对路径</td>
+<td><code>-e&lt;br&gt;-m</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>解析并输出规范路径（可用于去除 <code>..</code>&#x2F;符号链接等）</td>
+<td><code>realpath ../file.txt</code></td>
+</tr>
+<tr>
+<td><code>shred</code></td>
+<td>shred files</td>
+<td>安全删除文件（覆盖后删除）</td>
+<td><code>-n&lt;br&gt;-z&lt;br&gt;-u&lt;br&gt;-v</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>通过多次覆盖降低数据恢复风险（适用于特定场景；SSD 不一定可用）</td>
+<td><code>shred -n 3 -z -u secret.txt</code></td>
+</tr>
+<tr>
+<td><code>install</code></td>
+<td>install files</td>
+<td>复制文件并设置属性</td>
+<td><code>-m&lt;br&gt;-o&lt;br&gt;-g&lt;br&gt;-D</code></td>
+<td><code>--mode=MODE&lt;br&gt;--owner=USER&lt;br&gt;--group=GROUP&lt;br&gt;--directory&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>将文件复制到目标位置并设置权限&#x2F;属主（常用于部署脚本）</td>
+<td><code>install -m 755 app.sh /usr/local/bin/</code></td>
+</tr>
+<tr>
+<td><code>updatedb</code></td>
+<td>update locate db</td>
+<td>更新 locate 数据库</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>手工更新 mlocate&#x2F;slocate 的文件索引数据库</td>
+<td><code>updatedb</code></td>
+</tr>
+</tbody></table>
+<h2 id="文档编辑（含文本处理）"><a href="#文档编辑（含文本处理）" class="headerlink" title="文档编辑（含文本处理）"></a>文档编辑（含文本处理）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>col</code></td>
+<td>filter for terminals</td>
+<td>过滤并整理终端控制字符</td>
+<td><code>-b&lt;br&gt;-f&lt;br&gt;-x</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>常用于把退格&#x2F;控制字符转换为更适合终端展示的文本；配合管道清理输出</td>
+<td>&#96;dmesg</td>
+</tr>
+<tr>
+<td><code>colrm</code></td>
+<td>remove columns</td>
+<td>删除指定列区间</td>
+<td><code>-l&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从输入中移除指定列范围</td>
+<td>&#96;seq 1 20</td>
+</tr>
+<tr>
+<td><code>comm</code></td>
+<td>compare files</td>
+<td>比较两个文件（按行）</td>
+<td><code>-1&lt;br&gt;-2&lt;br&gt;-3</code></td>
+<td><code>--total&lt;br&gt;--help</code></td>
+<td>并排输出两文件行的差异：三列分别表示仅左&#x2F;仅右&#x2F;共同</td>
+<td><code>comm -3 a.txt b.txt</code></td>
+</tr>
+<tr>
+<td><code>csplit</code></td>
+<td>context split</td>
+<td>按模式分割文件</td>
+<td><code>-n&lt;br&gt;-f</code></td>
+<td><code>--digits=NUM&lt;br&gt;--prefix=STR</code></td>
+<td>按行号&#x2F;正则&#x2F;分割点把文件切成多段</td>
+<td><code>csplit -f part a.txt &#39;/^##/&#39; {1}</code></td>
+</tr>
+<tr>
+<td><code>ed</code></td>
+<td>line editor</td>
+<td>行编辑器</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>经典行编辑器，适合在极简环境进行逐行编辑</td>
+<td><code>ed file</code></td>
+</tr>
+<tr>
+<td><code>egrep</code></td>
+<td>grep -E</td>
+<td>扩展正则匹配</td>
+<td><code>-i&lt;br&gt;-n&lt;br&gt;-r</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>等价于 <code>grep -E</code>：支持扩展正则</td>
+<td>&#96;egrep -n ‘foo</td>
+</tr>
+<tr>
+<td><code>ex</code></td>
+<td>visual&#x2F;line editor</td>
+<td>行&#x2F;可视编辑器（ex 模式）</td>
+<td><code>-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>ex 相关编辑模式（通常与 vi&#x2F;vim 家族工具组合出现）</td>
+<td><code>ex file</code></td>
+</tr>
+<tr>
+<td><code>fgrep</code></td>
+<td>grep -F</td>
+<td>固定字符串查找</td>
+<td><code>-n&lt;br&gt;-r&lt;br&gt;-i</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>等价于 <code>grep -F</code>：把 pattern 当作固定字符串</td>
+<td><code>fgrep -n &#39;ERROR 500&#39; app.log</code></td>
+</tr>
+<tr>
+<td><code>fmt</code></td>
+<td>simple formatter</td>
+<td>简单文本格式化</td>
+<td><code>-w</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按宽度重排段落（常用于纯文本排版）</td>
+<td><code>fmt -w 80 README.md</code></td>
+</tr>
+<tr>
+<td><code>fold</code></td>
+<td>fold lines</td>
+<td>按宽度换行</td>
+<td><code>-s&lt;br&gt;-w</code></td>
+<td><code>--spaces&lt;br&gt;--help</code></td>
+<td>把长行折叠成指定宽度的多行</td>
+<td><code>fold -w 80 file</code></td>
+</tr>
+<tr>
+<td><code>grep</code></td>
+<td>global regular expression print</td>
+<td>文本搜索工具</td>
+<td><code>-i&lt;br&gt;-n&lt;br&gt;-r</code></td>
+<td><code>--color=auto&lt;br&gt;--help&lt;br&gt;--version</code></td>
+<td>按正则搜索行内容；常用于日志检索</td>
+<td><code>grep -nri &quot;timeout&quot; /var/log</code></td>
+</tr>
+<tr>
+<td><code>ispell</code></td>
+<td>spelling checker</td>
+<td>拼写检查工具</td>
+<td><code>-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>基于词典的拼写检查（交互或批处理）</td>
+<td><code>ispell *.txt</code></td>
+</tr>
+<tr>
+<td><code>jed</code></td>
+<td>text editor JED</td>
+<td>文本编辑器 JED</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>控制台文本编辑器</td>
+<td><code>jed file.txt</code></td>
+</tr>
+<tr>
+<td><code>joe</code></td>
+<td>text editor JOE</td>
+<td>文本编辑器 JOE</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>控制台文本编辑器</td>
+<td><code>joe file.txt</code></td>
+</tr>
+<tr>
+<td><code>join</code></td>
+<td>relational join</td>
+<td>合并相同行（按字段）</td>
+<td><code>-a&lt;br&gt;-e&lt;br&gt;-o</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>把两个文件按指定字段对齐后合并输出（类似数据库 join）</td>
+<td><code>join -t: -1 1 -2 1 &lt;(cut -d: -f1 a) &lt;(cut -d: -f1 b)</code></td>
+</tr>
+<tr>
+<td><code>look</code></td>
+<td>dictionary lookup</td>
+<td>查找字典单词（前缀）</td>
+<td><code>-t</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>在词典中做前缀&#x2F;范围查找</td>
+<td>&#96;look for</td>
+</tr>
+<tr>
+<td><code>mtype</code></td>
+<td>MS-DOS type</td>
+<td>显示 MS-DOS 文件内容</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：读取 MS-DOS 虚拟路径并输出内容</td>
+<td><code>mtype ::/AUTOEXEC.BAT</code></td>
+</tr>
+<tr>
+<td><code>pico</code></td>
+<td>pico editor</td>
+<td>简单文本编辑器</td>
+<td><code>-w</code></td>
+<td><code>--help</code></td>
+<td>基于终端的轻量编辑器</td>
+<td><code>pico file.txt</code></td>
+</tr>
+<tr>
+<td><code>rgrep</code></td>
+<td>recursive grep</td>
+<td>递归查找文本</td>
+<td><code>-n&lt;br&gt;-i</code></td>
+<td><code>--help</code></td>
+<td>递归 grep 的封装（不同系统实现可能略有差异）</td>
+<td><code>rgrep -n &quot;ERROR&quot; .</code></td>
+</tr>
+<tr>
+<td><code>sed</code></td>
+<td>stream editor</td>
+<td>流编辑器</td>
+<td><code>-n&lt;br&gt;-e&lt;br&gt;-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>用脚本对输入流做替换&#x2F;删除&#x2F;插入等变换</td>
+<td><code>sed -n &#39;1,20p&#39; file</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>sort lines</td>
+<td>排序文本内容</td>
+<td><code>-n&lt;br&gt;-r&lt;br&gt;-u</code></td>
+<td><code>-k KEY,KEY&lt;br&gt;--help</code></td>
+<td>对行排序，支持数值&#x2F;唯一&#x2F;按字段排序</td>
+<td><code>sort -t: -k3,3n users.txt</code></td>
+</tr>
+<tr>
+<td><code>spell</code></td>
+<td>spelling checker</td>
+<td>拼写检查工具</td>
+<td><code>-l</code></td>
+<td><code>--help</code></td>
+<td>基于词典的拼写检查（批处理&#x2F;交互因实现而异）</td>
+<td>&#96;spell &lt; file.txt</td>
+</tr>
+<tr>
+<td><code>tr</code></td>
+<td>translate</td>
+<td>字符替换或删除</td>
+<td><code>-d&lt;br&gt;-s&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按字符集进行替换、删除或压缩重复字符</td>
+<td>&#96;echo “a  b”</td>
+</tr>
+<tr>
+<td><code>expr</code></td>
+<td>expression</td>
+<td>表达式计算工具</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>对参数做表达式计算（适合 shell 内简单计算）</td>
+<td><code>expr 3 \* 7</code></td>
+</tr>
+<tr>
+<td><code>uniq</code></td>
+<td>unique</td>
+<td>去除重复行</td>
+<td><code>-c&lt;br&gt;-d&lt;br&gt;-u</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>报告或过滤重复行（通常配合 sort 使用）</td>
+<td>&#96;sort file</td>
+</tr>
+<tr>
+<td><code>wc</code></td>
+<td>word count</td>
+<td>统计字数&#x2F;行数</td>
+<td><code>-l&lt;br&gt;-w&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>输出行数&#x2F;词数&#x2F;字节数&#x2F;字符数等统计</td>
+<td><code>wc -l file</code></td>
+</tr>
+<tr>
+<td><code>vi/vim</code></td>
+<td>text editor</td>
+<td>强大的文本编辑器</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>交互式编辑器（vi&#x2F;vim 都属于可视化编辑体系）</td>
+<td><code>vim file.txt</code></td>
+</tr>
+<tr>
+<td><code>let</code></td>
+<td>shell arithmetic (builtin)</td>
+<td>计算表达式值（Shell 内建）</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>多数 shell 的算术运算内建命令</td>
+<td><code>let &quot;a=1+2&quot;</code></td>
+</tr>
+<tr>
+<td><code>column</code></td>
+<td>column format</td>
+<td>按列格式化</td>
+<td><code>-t&lt;br&gt;-s&lt;br&gt;-c</code></td>
+<td><code>--table&lt;br&gt;--help</code></td>
+<td>把文本按分隔符对齐成列（表格化输出）</td>
+<td>&#96;ps aux</td>
+</tr>
+<tr>
+<td><code>jq</code></td>
+<td>JSON query tool</td>
+<td>JSON 数据处理</td>
+<td><code>-r&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>jq 查询&#x2F;过滤&#x2F;格式化 JSON</td>
+<td>&#96;cat a.json</td>
+</tr>
+<tr>
+<td><code>iconv</code></td>
+<td>encoding converter</td>
+<td>转换文件编码</td>
+<td><code>-f&lt;br&gt;-t&lt;br&gt;-o</code></td>
+<td><code>--from-code=ENC&lt;br&gt;--to-code=ENC&lt;br&gt;--help</code></td>
+<td>把文本从一种字符编码转换到另一种编码</td>
+<td><code>iconv -f UTF-8 -t GBK in.txt -o out.txt</code></td>
+</tr>
+<tr>
+<td><code>dos2unix</code></td>
+<td>convert DOS to Unix</td>
+<td>转换行尾为 Unix（LF）</td>
+<td><code>-n&lt;br&gt;-k</code></td>
+<td><code>--help</code></td>
+<td>把 CRLF 转换为 LF</td>
+<td><code>dos2unix file.txt</code></td>
+</tr>
+<tr>
+<td><code>unix2dos</code></td>
+<td>convert Unix to DOS</td>
+<td>转换行尾为 DOS（CRLF）</td>
+<td><code>-n&lt;br&gt;-k</code></td>
+<td><code>--help</code></td>
+<td>把 LF 转换为 CRLF</td>
+<td><code>unix2dos file.txt</code></td>
+</tr>
+</tbody></table>
+<h2 id="文件传输（统一表格）"><a href="#文件传输（统一表格）" class="headerlink" title="文件传输（统一表格）"></a>文件传输（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lprm</code></td>
+<td>remove print job</td>
+<td>删除打印队列任务</td>
+<td><code>-P</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从打印队列中移除指定作业（依打印系统实现）</td>
+<td><code>lprm -P PRINTER 123</code></td>
+</tr>
+<tr>
+<td><code>lpr</code></td>
+<td>submit print job</td>
+<td>提交打印任务</td>
+<td><code>-P&lt;br&gt;-#</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>把文件提交到打印队列进行打印</td>
+<td><code>lpr -P PRINTER -# 2 file.txt</code></td>
+</tr>
+<tr>
+<td><code>lpq</code></td>
+<td>print queue status</td>
+<td>显示打印队列</td>
+<td><code>-P</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查询打印队列状态</td>
+<td><code>lpq -P PRINTER</code></td>
+</tr>
+<tr>
+<td><code>lpd</code></td>
+<td>print service daemon</td>
+<td>打印服务守护进程</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>LPD&#x2F;LPR 打印服务后台进程（依发行版&#x2F;实现）</td>
+<td><code>systemctl start lpd</code></td>
+</tr>
+<tr>
+<td><code>bye</code></td>
+<td>FTP session end</td>
+<td>结束 FTP 会话</td>
+<td><code>无</code></td>
+<td><code>无</code></td>
+<td>在 FTP 交互会话中退出</td>
+<td><code>ftp host</code> → 输入 <code>bye</code></td>
+</tr>
+<tr>
+<td><code>ftp</code></td>
+<td>file transfer protocol client</td>
+<td>FTP 客户端</td>
+<td><code>-n&lt;br&gt;-v</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>交互式上传&#x2F;下载文件</td>
+<td><code>ftp example.com</code></td>
+</tr>
+<tr>
+<td><code>uuto</code></td>
+<td>UUCP send</td>
+<td>UUCP 文件发送</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>UUCP 体系的文件发送工具（依实现）</td>
+<td><code>uuto remote!path file</code></td>
+</tr>
+<tr>
+<td><code>uupick</code></td>
+<td>UUCP receive</td>
+<td>UUCP 文件接收</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从 UUCP 队列接收文件（依实现）</td>
+<td><code>uupick</code></td>
+</tr>
+<tr>
+<td><code>uucp</code></td>
+<td>Unix to Unix copy</td>
+<td>Unix 到 Unix 拷贝</td>
+<td><code>-r</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>UUCP 文件拷贝工具</td>
+<td><code>uucp file host!~/dest</code></td>
+</tr>
+<tr>
+<td><code>uucico</code></td>
+<td>UUCP transfer daemon</td>
+<td>UUCP 传输守护进程</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>UUCP 传输后台进程</td>
+<td><code>systemctl start uucico</code></td>
+</tr>
+<tr>
+<td><code>tftp</code></td>
+<td>trivial file transfer protocol</td>
+<td>简单文件传输协议</td>
+<td><code>-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>通过 TFTP 上传&#x2F;下载（常用于固件）</td>
+<td><code>tftp 192.168.1.10 -c get boot.bin</code></td>
+</tr>
+<tr>
+<td><code>ncftp</code></td>
+<td>ncftp enhanced ftp client</td>
+<td>增强型 FTP 客户端</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>ncftp 命令行 FTP 客户端</td>
+<td><code>ncftp example.com</code></td>
+</tr>
+<tr>
+<td><code>ftpshut</code></td>
+<td>FTP server shutdown</td>
+<td>关闭 FTP 服务器&#x2F;服务</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>用于停止 FTP 服务（依具体实现）</td>
+<td><code>ftpshut</code></td>
+</tr>
+<tr>
+<td><code>ftpwho</code></td>
+<td>ftp who</td>
+<td>显示 FTP 用户信息</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>显示 FTP 会话&#x2F;用户信息（依实现）</td>
+<td><code>ftpwho</code></td>
+</tr>
+<tr>
+<td><code>ftpcount</code></td>
+<td>ftp count</td>
+<td>显示 FTP 连接数</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>统计 FTP 连接&#x2F;会话数量（依实现）</td>
+<td><code>ftpcount</code></td>
+</tr>
+</tbody></table>
+<h2 id="磁盘管理（统一表格）"><a href="#磁盘管理（统一表格）" class="headerlink" title="磁盘管理（统一表格）"></a>磁盘管理（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cd</code></td>
+<td>change directory</td>
+<td>切换当前目录</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>切换工作目录；常与相对路径&#x2F;绝对路径结合</td>
+<td><code>cd /etc/nginx</code></td>
+</tr>
+<tr>
+<td><code>df</code></td>
+<td>disk free</td>
+<td>显示磁盘空间使用</td>
+<td><code>-h&lt;br&gt;-T&lt;br&gt;-i</code></td>
+<td><code>--human-readable&lt;br&gt;--type&lt;br&gt;--inodes</code></td>
+<td>查看文件系统空间占用；可显示类型&#x2F; inode</td>
+<td><code>df -h</code></td>
+</tr>
+<tr>
+<td><code>dirs</code></td>
+<td>directory stack</td>
+<td>显示目录栈内容</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>显示 shell 目录栈（bash 的 dirs 多为内建）</td>
+<td><code>dirs -p</code></td>
+</tr>
+<tr>
+<td><code>du</code></td>
+<td>disk usage</td>
+<td>显示目录或文件大小</td>
+<td><code>-h&lt;br&gt;-s&lt;br&gt;-a</code></td>
+<td><code>--human-readable&lt;br&gt;--summarize&lt;br&gt;--all</code></td>
+<td>递归统计磁盘使用；可汇总&#x2F;显示所有文件</td>
+<td><code>du -sh /var/log</code></td>
+</tr>
+<tr>
+<td><code>edquota</code></td>
+<td>edit disk quota</td>
+<td>编辑磁盘配额</td>
+<td><code>-u&lt;br&gt;-g</code></td>
+<td><code>--help</code></td>
+<td>修改用户&#x2F;组的配额策略（需 quota 工具与权限）</td>
+<td><code>edquota -u alice</code></td>
+</tr>
+<tr>
+<td><code>eject</code></td>
+<td>eject removable media</td>
+<td>弹出可移动设备</td>
+<td><code>-n&lt;br&gt;-t</code></td>
+<td><code>--help</code></td>
+<td>安全弹出光驱&#x2F;USB 设备（依系统实现）</td>
+<td><code>eject /dev/sdb</code></td>
+</tr>
+<tr>
+<td><code>mcd</code></td>
+<td>mtools cd</td>
+<td>切换 MS-DOS 目录</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：在 MS-DOS 虚拟路径之间切换目录</td>
+<td><code>mcd ::/</code></td>
+</tr>
+<tr>
+<td><code>mdeltree</code></td>
+<td>mtools deltree</td>
+<td>删除 MS-DOS 目录树</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>删除 MS-DOS 虚拟路径下的目录树（mtools）</td>
+<td><code>mdeltree ::/docs</code></td>
+</tr>
+<tr>
+<td><code>mdu</code></td>
+<td>mtools disk usage</td>
+<td>显示 MS-DOS 磁盘使用</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：统计 MS-DOS 虚拟路径占用</td>
+<td><code>mdu ::/</code></td>
+</tr>
+<tr>
+<td><code>mkdir</code></td>
+<td>make directory</td>
+<td>创建新目录</td>
+<td><code>-p&lt;br&gt;-v</code></td>
+<td><code>--parents&lt;br&gt;--verbose</code></td>
+<td>创建目录；<code>-p</code> 支持递归创建</td>
+<td><code>mkdir -p /opt/app/logs</code></td>
+</tr>
+<tr>
+<td><code>mlabel</code></td>
+<td>mtools label</td>
+<td>设置 MS-DOS 卷标</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：设置盘符卷标（label）</td>
+<td><code>mlabel :: Aicloud</code></td>
+</tr>
+<tr>
+<td><code>mmd</code></td>
+<td>mtools make dir</td>
+<td>创建 MS-DOS 目录</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：创建 MS-DOS 虚拟目录</td>
+<td><code>mmd ::/docs</code></td>
+</tr>
+<tr>
+<td><code>mrd</code></td>
+<td>mtools remove dir</td>
+<td>删除 MS-DOS 目录</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：删除 MS-DOS 虚拟目录</td>
+<td><code>mrd ::/docs</code></td>
+</tr>
+<tr>
+<td><code>mzip</code></td>
+<td>mtools zip drive</td>
+<td>管理 ZIP 磁盘</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：管理 ZIP 相关虚拟设备（依实现）</td>
+<td><code>mzip -h</code></td>
+</tr>
+<tr>
+<td><code>pwd</code></td>
+<td>print working directory</td>
+<td>显示当前目录路径</td>
+<td><code>-P</code></td>
+<td><code>--help</code></td>
+<td>输出当前工作目录；<code>-P</code> 展开物理路径</td>
+<td><code>pwd</code></td>
+</tr>
+<tr>
+<td><code>quota</code></td>
+<td>disk quota</td>
+<td>显示磁盘配额</td>
+<td><code>-v</code></td>
+<td><code>--help</code></td>
+<td>查看用户&#x2F;组配额使用情况（依系统配置）</td>
+<td><code>quota -v</code></td>
+</tr>
+<tr>
+<td><code>mount</code></td>
+<td>mount a filesystem</td>
+<td>挂载文件系统</td>
+<td><code>-t&lt;br&gt;-o&lt;br&gt;-a</code></td>
+<td><code>--types=TYPE&lt;br&gt;--options=OPTS</code></td>
+<td>把文件系统挂载到目录（支持挂载类型与选项）</td>
+<td><code>mount -t nfs -o vers=4 nfs-server:/ /mnt/nfs</code></td>
+</tr>
+<tr>
+<td><code>mmount</code></td>
+<td>mtools mount (DOS)</td>
+<td>挂载 MS-DOS 文件系统</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools：为 MS-DOS 卷&#x2F;设备建立映射（依实现）</td>
+<td><code>mmount</code></td>
+</tr>
+<tr>
+<td><code>rmdir</code></td>
+<td>remove empty directory</td>
+<td>删除空目录</td>
+<td><code>-p</code></td>
+<td><code>--ignore-fail-on-non-empty</code></td>
+<td>删除空目录；<code>-p</code> 递归删除父目录（空时）</td>
+<td><code>rmdir -p /tmp/a/b</code></td>
+</tr>
+<tr>
+<td><code>rmt</code></td>
+<td>remote magnetic tape</td>
+<td>远程磁带操作</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>远程磁带控制（传统工具，依环境可用）</td>
+<td><code>rmt localhost</code></td>
+</tr>
+<tr>
+<td><code>stat</code></td>
+<td>file status</td>
+<td>显示文件状态信息</td>
+<td><code>-c</code></td>
+<td><code>--format=FORMAT</code></td>
+<td>输出文件的元数据（大小&#x2F;时间&#x2F;权限等）；可格式化</td>
+<td><code>stat -c &#39;%n %s&#39; file</code></td>
+</tr>
+<tr>
+<td><code>tree</code></td>
+<td>directory tree</td>
+<td>以树状图显示目录</td>
+<td><code>-L&lt;br&gt;-a&lt;br&gt;-d</code></td>
+<td><code>--level=NUM&lt;br&gt;--all-files</code></td>
+<td>以树结构展示目录层级（可限制深度&#x2F;隐藏）</td>
+<td><code>tree -L 2 /etc</code></td>
+</tr>
+<tr>
+<td><code>umount</code></td>
+<td>unmount filesystem</td>
+<td>卸载文件系统</td>
+<td><code>-l&lt;br&gt;-f</code></td>
+<td><code>--help</code></td>
+<td>卸载挂载点；<code>-l</code> 延迟卸载（依系统）</td>
+<td><code>umount /mnt/nfs</code></td>
+</tr>
+<tr>
+<td><code>ls</code></td>
+<td>list directory contents</td>
+<td>列出目录内容</td>
+<td><code>-l&lt;br&gt;-a&lt;br&gt;-h&lt;br&gt;-R</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>列出文件&#x2F;目录信息；可显示长格式&#x2F;隐藏&#x2F;递归</td>
+<td><code>ls -lah</code></td>
+</tr>
+<tr>
+<td><code>quotacheck</code></td>
+<td>quota file check</td>
+<td>检查磁盘配额文件</td>
+<td><code>-c&lt;br&gt;-u&lt;br&gt;-g</code></td>
+<td><code>--help</code></td>
+<td>检查并生成配额数据文件（quota 系统相关）</td>
+<td><code>quotacheck -cug /</code></td>
+</tr>
+<tr>
+<td><code>quotaoff</code></td>
+<td>disable quotas</td>
+<td>关闭磁盘配额</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>禁用配额检查（需权限）</td>
+<td><code>quotaoff -a</code></td>
+</tr>
+<tr>
+<td><code>lndir</code></td>
+<td>link directory</td>
+<td>创建目录软链接树</td>
+<td><code>-L</code></td>
+<td><code>--help</code></td>
+<td>为目录树创建软链接（lndir 典型用途）</td>
+<td><code>lndir src/ backup_links/</code></td>
+</tr>
+<tr>
+<td><code>repquota</code></td>
+<td>report quotas</td>
+<td>报告磁盘配额</td>
+<td><code>-a&lt;br&gt;-s</code></td>
+<td><code>--help</code></td>
+<td>汇总并显示分区&#x2F;文件系统上的配额情况</td>
+<td><code>repquota -a</code></td>
+</tr>
+<tr>
+<td><code>quotaon</code></td>
+<td>enable quotas</td>
+<td>启用磁盘配额</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>开启配额系统（需权限）</td>
+<td><code>quotaon -a</code></td>
+</tr>
+</tbody></table>
+<h2 id="磁盘维护（统一表格）"><a href="#磁盘维护（统一表格）" class="headerlink" title="磁盘维护（统一表格）"></a>磁盘维护（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>badblocks</code></td>
+<td>detect bad blocks</td>
+<td>检测磁盘坏块</td>
+<td><code>-s&lt;br&gt;-v</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>扫描块设备&#x2F;分区以发现坏扇区</td>
+<td><code>badblocks -sv /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>cfdisk</code></td>
+<td>cfdisk disk partition</td>
+<td>交互式磁盘分区工具</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>以交互方式编辑分区表（常见于部分发行版）</td>
+<td><code>cfdisk /dev/sdb</code></td>
+</tr>
+<tr>
+<td><code>dd</code></td>
+<td>disk data copy</td>
+<td>转换和复制文件&#x2F;块设备</td>
+<td><code>if&lt;br&gt;of&lt;br&gt;bs&lt;br&gt;count</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从输入复制到输出；用于刷盘&#x2F;拷贝镜像&#x2F;生成文件</td>
+<td><code>dd if=/dev/zero of=/swapfile bs=1M count=1024</code></td>
+</tr>
+<tr>
+<td><code>e2fsck</code></td>
+<td>check ext2&#x2F;ext3&#x2F;ext4</td>
+<td>检查修复 ext2&#x2F;ext3&#x2F;ext4 文件系统</td>
+<td><code>-f&lt;br&gt;-p&lt;br&gt;-y&lt;br&gt;-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>扫描 ext 文件系统一致性并执行修复</td>
+<td><code>e2fsck -fy /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>ext2ed</code></td>
+<td>ext2 filesystem editor</td>
+<td>ext2 文件系统编辑器</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>以工具方式修改 ext2 文件系统结构（高风险）</td>
+<td><code>ext2ed /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>fsck</code></td>
+<td>filesystem consistency check</td>
+<td>文件系统一致性检查</td>
+<td><code>-A&lt;br&gt;-T&lt;br&gt;-M</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>对挂载&#x2F;未挂载文件系统做一致性检查与修复</td>
+<td><code>fsck -Af -V</code></td>
+</tr>
+<tr>
+<td><code>fsck.minix</code></td>
+<td>fsck for minix</td>
+<td>检查修复 minix 文件系统</td>
+<td><code>-a&lt;br&gt;-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>对 minix 分区执行 fsck</td>
+<td><code>fsck.minix -a /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>fsconf</code></td>
+<td>filesystem configuration</td>
+<td>文件系统配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>配置与生成文件系统相关参数（依发行版实现）</td>
+<td><code>fsconf --help</code></td>
+</tr>
+<tr>
+<td><code>fdformat</code></td>
+<td>floppy low-level format</td>
+<td>软盘低级格式化</td>
+<td><code>-n&lt;br&gt;-v</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>对软盘执行低级格式化（仅兼容场景）</td>
+<td><code>fdformat -n /dev/fd0</code></td>
+</tr>
+<tr>
+<td><code>hdparm</code></td>
+<td>hard disk parameter</td>
+<td>硬盘参数设置工具</td>
+<td><code>-I&lt;br&gt;-t&lt;br&gt;-T&lt;br&gt;-C</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看&#x2F;设置硬盘参数，并做读写性能测试</td>
+<td><code>hdparm -I /dev/sda</code></td>
+</tr>
+<tr>
+<td><code>mformat</code></td>
+<td>format MS-DOS</td>
+<td>格式化 MS-DOS 磁盘（mtools）</td>
+<td><code>-i&lt;br&gt;-n&lt;br&gt;-v</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>mtools 体系的 MS-DOS&#x2F;FAT 初始化与格式化</td>
+<td><code>mformat -i a.img a:</code></td>
+</tr>
+<tr>
+<td><code>mkbootdisk</code></td>
+<td>make boot disk</td>
+<td>创建启动软盘</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>生成启动软盘&#x2F;引导介质（依发行版实现）</td>
+<td><code>mkbootdisk --help</code></td>
+</tr>
+<tr>
+<td><code>mkdosfs</code></td>
+<td>make DOS filesystem</td>
+<td>创建 DOS 文件系统（FAT）</td>
+<td><code>-F&lt;br&gt;-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>在分区&#x2F;设备上创建 FAT 文件系统</td>
+<td><code>mkdosfs -F 32 -n DOS /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>mke2fs</code></td>
+<td>make ext filesystem</td>
+<td>创建 ext2&#x2F;ext3&#x2F;ext4 文件系统</td>
+<td><code>-t&lt;br&gt;-j&lt;br&gt;-m&lt;br&gt;-L</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>格式化 ext 文件系统</td>
+<td><code>mke2fs -t ext4 -L data /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>mkfs.ext2</code></td>
+<td>make ext2 filesystem</td>
+<td>创建 ext2 文件系统</td>
+<td><code>-F&lt;br&gt;-L&lt;br&gt;-b</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建 ext2 文件系统</td>
+<td><code>mkfs.ext2 -L rootfs /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>mkfs.msdos</code></td>
+<td>make MS-DOS filesystem</td>
+<td>创建 MS-DOS 文件系统</td>
+<td><code>-F&lt;br&gt;-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建 FAT&#x2F;MS-DOS 文件系统</td>
+<td><code>mkfs.msdos -F 32 -n BOOT /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>mkinitrd</code></td>
+<td>make initrd image</td>
+<td>生成 initrd 镜像</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>为当前内核生成 initrd（具体参数依发行版）</td>
+<td><code>mkinitrd -h</code></td>
+</tr>
+<tr>
+<td><code>mkisofs</code></td>
+<td>make ISO 9660</td>
+<td>制作 ISO 镜像文件</td>
+<td><code>-o&lt;br&gt;-V&lt;br&gt;-R</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从目录生成 ISO9660 镜像</td>
+<td><code>mkisofs -o out.iso -V LABEL -R /path/to/dir</code></td>
+</tr>
+<tr>
+<td><code>mkswap</code></td>
+<td>make swap space</td>
+<td>创建交换分区&#x2F;交换文件</td>
+<td><code>-L</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>初始化 swap（并可设置 label）</td>
+<td><code>mkswap -L swap0 /swapfile</code></td>
+</tr>
+<tr>
+<td><code>mpartition</code></td>
+<td>mtools partition</td>
+<td>分区 MS-DOS 磁盘</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>mtools 用于 MS-DOS 分区相关操作（依实现）</td>
+<td><code>mpartition --help</code></td>
+</tr>
+<tr>
+<td><code>swapon</code></td>
+<td>enable swap</td>
+<td>启用交换分区</td>
+<td><code>-a&lt;br&gt;-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>打开 swap（可自动&#x2F;设置优先级）</td>
+<td><code>swapon -a</code></td>
+</tr>
+<tr>
+<td><code>symlinks</code></td>
+<td>manage symlinks</td>
+<td>管理符号链接</td>
+<td><code>-r&lt;br&gt;-d</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查找断链符号链接并进行修复&#x2F;展示</td>
+<td><code>symlinks -r .</code></td>
+</tr>
+<tr>
+<td><code>sync</code></td>
+<td>sync data</td>
+<td>同步数据到磁盘</td>
+<td>无</td>
+<td><code>--help</code></td>
+<td>刷新缓存到磁盘</td>
+<td><code>sync</code></td>
+</tr>
+<tr>
+<td><code>mbadblocks</code></td>
+<td>mtools bad blocks</td>
+<td>检测&#x2F;标记 MS-DOS 坏块</td>
+<td>无</td>
+<td><code>--help</code></td>
+<td>mtools 体系下处理坏块（依实现）</td>
+<td><code>mbadblocks --help</code></td>
+</tr>
+<tr>
+<td><code>mkfs.minix</code></td>
+<td>make minix filesystem</td>
+<td>创建 minix 文件系统</td>
+<td><code>-n&lt;br&gt;-b</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>在设备上创建 minix 文件系统</td>
+<td><code>mkfs.minix /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>fsck.ext2</code></td>
+<td>fsck for ext2</td>
+<td>检查修复 ext2 文件系统</td>
+<td><code>-f&lt;br&gt;-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>ext2 专用 fsck（近似 e2fsck 行为）</td>
+<td><code>fsck.ext2 -f /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>fdisk</code></td>
+<td>disk partition table</td>
+<td>磁盘分区表操作</td>
+<td><code>-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看&#x2F;编辑磁盘分区表（交互式）</td>
+<td><code>fdisk -l /dev/sdb</code></td>
+</tr>
+<tr>
+<td><code>losetup</code></td>
+<td>setup loop device</td>
+<td>设置回环设备</td>
+<td><code>-f&lt;br&gt;-d&lt;br&gt;-e</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>将文件映射为 loop 设备以挂载镜像</td>
+<td><code>losetup -fP image.iso</code></td>
+</tr>
+<tr>
+<td><code>mkfs</code></td>
+<td>make filesystem</td>
+<td>创建 Linux 文件系统（通用入口）</td>
+<td><code>-t</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>依据文件系统类型参数调用具体 mkfs 子工具</td>
+<td><code>mkfs -t ext4 /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>sfdisk</code></td>
+<td>script fdisk</td>
+<td>高级分区工具（脚本化）</td>
+<td>无</td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>以脚本方式管理分区表</td>
+<td><code>sfdisk -d /dev/sdb &gt; sfdisk.dump</code></td>
+</tr>
+<tr>
+<td><code>swapoff</code></td>
+<td>disable swap</td>
+<td>关闭交换分区</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>禁用 swap</td>
+<td><code>swapoff -a</code></td>
+</tr>
+<tr>
+<td><code>partprobe</code></td>
+<td>re-read partition table</td>
+<td>重新加载分区表</td>
+<td>无</td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>让内核重新读取分区表（不必重启）</td>
+<td><code>partprobe /dev/sdb</code></td>
+</tr>
+<tr>
+<td><code>resize2fs</code></td>
+<td>resize ext2&#x2F;3&#x2F;4</td>
+<td>调整 ext2&#x2F;3&#x2F;4 文件系统大小</td>
+<td><code>-p&lt;br&gt;-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>扩容&#x2F;缩容 ext 文件系统</td>
+<td><code>resize2fs /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>btrfs</code></td>
+<td>btrfs filesystem</td>
+<td>Btrfs 文件系统管理工具（子命令）</td>
+<td>无</td>
+<td><code>--help</code></td>
+<td>btrfs 需要配合子命令，如 subvolume&#x2F;scrub&#x2F;balance</td>
+<td><code>btrfs subvolume list /</code></td>
+</tr>
+</tbody></table>
+<h2 id="网络通讯（统一表格）"><a href="#网络通讯（统一表格）" class="headerlink" title="网络通讯（统一表格）"></a>网络通讯（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>apachectl</code></td>
+<td>Apache service control</td>
+<td>Apache 服务控制</td>
+<td><code>start&lt;br&gt;stop&lt;br&gt;restart&lt;br&gt;status</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>控制 Apache HTTPD 的启动、停止、重载与状态查询</td>
+<td><code>apachectl status</code></td>
+</tr>
+<tr>
+<td><code>arpwatch</code></td>
+<td>ARP watch</td>
+<td>监控以太网地址变化</td>
+<td><code>-n</code></td>
+<td><code>--help</code></td>
+<td>监控 ARP 变化（常用于检测网关&#x2F;局域网地址变更）</td>
+<td><code>arpwatch -n</code></td>
+</tr>
+<tr>
+<td><code>dip</code></td>
+<td>dial-up IP</td>
+<td>拨号 IP 连接工具</td>
+<td><code>-d</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>dip 用于 PPP&#x2F;拨号类网络连接（不同发行版实现略有差异）</td>
+<td><code>dip -d myisp</code></td>
+</tr>
+<tr>
+<td><code>getty</code></td>
+<td>tty getty</td>
+<td>终端登录管理</td>
+<td><code>-L&lt;br&gt;-8</code></td>
+<td><code>--help</code></td>
+<td>在 tty 上启动登录会话（与串口控制相关）</td>
+<td><code>getty ttyS0</code></td>
+</tr>
+<tr>
+<td><code>mingetty</code></td>
+<td>lightweight getty</td>
+<td>轻量级 getty</td>
+<td><code>-h&lt;br&gt;-s</code></td>
+<td><code>--help</code></td>
+<td>专注于管理控制台登录的轻量 getty（如 tty1&#x2F;tty2）</td>
+<td><code>mingetty tty1</code></td>
+</tr>
+<tr>
+<td><code>uux</code></td>
+<td>UUCP execute</td>
+<td>远程命令执行</td>
+<td><code>-a&lt;br&gt;-c</code></td>
+<td><code>--help</code></td>
+<td>UUCP 体系下的远程执行（不同实现参数可能不同）</td>
+<td><code>uux -C remote!cmd</code></td>
+</tr>
+<tr>
+<td><code>telnet</code></td>
+<td>telnet client</td>
+<td>远程终端连接</td>
+<td><code>-l</code></td>
+<td><code>--help</code></td>
+<td>Telnet 明文远程会话（建议生产用 ssh）</td>
+<td><code>telnet host 23</code></td>
+</tr>
+<tr>
+<td><code>uulog</code></td>
+<td>UUCP log viewer</td>
+<td>UUCP 日志查看</td>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>查看 UUCP 传输&#x2F;作业日志（依发行版实现）</td>
+<td><code>uulog</code></td>
+</tr>
+<tr>
+<td><code>uustat</code></td>
+<td>UUCP status</td>
+<td>UUCP 状态显示</td>
+<td><code>-q</code></td>
+<td><code>--help</code></td>
+<td>查看 UUCP 队列&#x2F;状态信息</td>
+<td><code>uustat</code></td>
+</tr>
+<tr>
+<td><code>ppp-off</code></td>
+<td>PPP disconnect</td>
+<td>断开 PPP 连接</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>停止&#x2F;断开 PPP 连接（具体取决于发行版脚本实现）</td>
+<td><code>ppp-off</code></td>
+</tr>
+<tr>
+<td><code>netconfig</code></td>
+<td>network config</td>
+<td>网络配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>交互式&#x2F;脚本式网络配置（依发行版）</td>
+<td><code>netconfig</code></td>
+</tr>
+<tr>
+<td><code>nc</code></td>
+<td>netcat</td>
+<td>网络工具（netcat）</td>
+<td><code>-l&lt;br&gt;-u&lt;br&gt;-p&lt;br&gt;-z</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>端口探测&#x2F;转发&#x2F;简单的 TCP&#x2F;UDP 调试工具</td>
+<td><code>nc -vz host 443</code></td>
+</tr>
+<tr>
+<td><code>httpd</code></td>
+<td>Apache HTTPD</td>
+<td>HTTP 服务器</td>
+<td><code>-k</code></td>
+<td><code>--help</code></td>
+<td>Apache HTTP Server 主程序（通常搭配 apachectl）</td>
+<td><code>httpd -k status</code></td>
+</tr>
+<tr>
+<td><code>ifconfig</code></td>
+<td>network interface config</td>
+<td>配置网络接口</td>
+<td><code>-a&lt;br&gt;up&lt;br&gt;down</code></td>
+<td><code>--help</code></td>
+<td>旧的网络接口配置工具（新系统倾向用 ip 命令）</td>
+<td><code>ifconfig eth0</code></td>
+</tr>
+<tr>
+<td><code>minicom</code></td>
+<td>serial communication</td>
+<td>串口通信工具</td>
+<td><code>-s</code></td>
+<td><code>--help</code></td>
+<td>串口终端&#x2F;会话，常用于设备控制台</td>
+<td><code>minicom -s</code></td>
+</tr>
+<tr>
+<td><code>mesg</code></td>
+<td>message permissions</td>
+<td>消息权限设置</td>
+<td><code>y&lt;br&gt;n</code></td>
+<td><code>--help</code></td>
+<td>控制是否允许写入终端的消息（write&#x2F;mesg）</td>
+<td><code>mesg n</code></td>
+</tr>
+<tr>
+<td><code>dnsconf</code></td>
+<td>DNS configuration</td>
+<td>DNS 配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>DNS 配置&#x2F;管理工具（依发行版&#x2F;套件）</td>
+<td><code>dnsconf</code></td>
+</tr>
+<tr>
+<td><code>wall</code></td>
+<td>write to all</td>
+<td>向所有用户发送消息</td>
+<td><code>-n</code></td>
+<td><code>--help</code></td>
+<td>向所有在线终端广播消息</td>
+<td><code>wall &quot;maintenance starting&quot;</code></td>
+</tr>
+<tr>
+<td><code>netstat</code></td>
+<td>network statistics</td>
+<td>网络状态查看</td>
+<td><code>-t&lt;br&gt;-u&lt;br&gt;-l&lt;br&gt;-p</code></td>
+<td><code>--help</code></td>
+<td>查看连接、监听端口、路由与统计信息</td>
+<td><code>netstat -tulpn</code></td>
+</tr>
+<tr>
+<td><code>ping</code></td>
+<td>ping</td>
+<td>测试网络连通性</td>
+<td><code>-c&lt;br&gt;-i&lt;br&gt;-s</code></td>
+<td><code>--help</code></td>
+<td>ICMP 连通性测试；可看延迟与丢包</td>
+<td><code>ping -c 4 8.8.8.8</code></td>
+</tr>
+<tr>
+<td><code>pppstats</code></td>
+<td>PPP statistics</td>
+<td>PPP 连接统计</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>查看 PPP 连接统计信息（依实现）</td>
+<td><code>pppstats</code></td>
+</tr>
+<tr>
+<td><code>samba</code></td>
+<td>Samba suite</td>
+<td>Samba 套件（入口）</td>
+<td><code>-D</code></td>
+<td><code>--help</code></td>
+<td>Samba&#x2F;SMB 相关管理入口（依具体用法）</td>
+<td><code>samba -h</code></td>
+</tr>
+<tr>
+<td><code>setserial</code></td>
+<td>set serial line</td>
+<td>串口参数设置</td>
+<td><code>-g&lt;br&gt;-a</code></td>
+<td><code>--help</code></td>
+<td>设置串口硬件相关参数</td>
+<td><code>setserial /dev/ttyS0</code></td>
+</tr>
+<tr>
+<td><code>talk</code></td>
+<td>talk</td>
+<td>终端聊天工具</td>
+<td><code>user</code></td>
+<td><code>--help</code></td>
+<td>通过 talkd 进行用户间聊天（传统工具）</td>
+<td><code>talk user@host</code></td>
+</tr>
+<tr>
+<td><code>traceroute</code></td>
+<td>trace route</td>
+<td>路由跟踪工具</td>
+<td><code>-n&lt;br&gt;-I&lt;br&gt;-T</code></td>
+<td><code>--help</code></td>
+<td>追踪到目标的路径&#x2F;跳数（UDP&#x2F;ICMP&#x2F;TC P 模式依实现）</td>
+<td><code>traceroute -n example.com</code></td>
+</tr>
+<tr>
+<td><code>tty</code></td>
+<td>terminal name</td>
+<td>显示终端名称</td>
+<td><code>-s</code></td>
+<td><code>--help</code></td>
+<td>输出当前终端设备名</td>
+<td><code>tty</code></td>
+</tr>
+<tr>
+<td><code>newaliases</code></td>
+<td>new mail aliases</td>
+<td>重建邮件别名数据库</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>重建 sendmail&#x2F;邮件别名映射</td>
+<td><code>newaliases</code></td>
+</tr>
+<tr>
+<td><code>uuname</code></td>
+<td>UUCP hostname</td>
+<td>显示 UUCP 主机名</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>输出 UUCP 相关主机标识</td>
+<td><code>uuname</code></td>
+</tr>
+<tr>
+<td><code>netconf</code></td>
+<td>network config</td>
+<td>网络配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>网络配置（依发行版实现）</td>
+<td><code>netconf</code></td>
+</tr>
+<tr>
+<td><code>write</code></td>
+<td>write to terminal</td>
+<td>向用户终端写消息</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>给指定用户的终端发送消息</td>
+<td><code>write alice pts/0</code></td>
+</tr>
+<tr>
+<td><code>statserial</code></td>
+<td>serial status</td>
+<td>串口信号状态</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>显示串口相关信号状态（依实现）</td>
+<td><code>statserial /dev/ttyS0</code></td>
+</tr>
+<tr>
+<td><code>efax</code></td>
+<td>fax send&#x2F;receive</td>
+<td>传真发送接收</td>
+<td><code>-r&lt;br&gt;-s</code></td>
+<td><code>--help</code></td>
+<td>传真服务（依配置接收&#x2F;发送）</td>
+<td><code>efax -d /dev/ttyS0 file.tif</code></td>
+</tr>
+<tr>
+<td><code>pppsetup</code></td>
+<td>PPP setup</td>
+<td>PPP 拨号配置</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>设置 PPP 拨号参数（依实现）</td>
+<td><code>pppsetup</code></td>
+</tr>
+<tr>
+<td><code>tcpdump</code></td>
+<td>tcpdump packet capture</td>
+<td>网络数据包抓取</td>
+<td><code>-i&lt;br&gt;-n&lt;br&gt;-A&lt;br&gt;-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>抓包分析：按接口、过滤条件抓取流量</td>
+<td><code>tcpdump -i any -n host 1.1.1.1</code></td>
+</tr>
+<tr>
+<td><code>ytalk</code></td>
+<td>multi-user talk</td>
+<td>多用户聊天工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>多用户终端聊天（依 talk 工具实现）</td>
+<td><code>ytalk</code></td>
+</tr>
+<tr>
+<td><code>cu</code></td>
+<td>call up</td>
+<td>串口终端连接</td>
+<td><code>-s&lt;br&gt;-d</code></td>
+<td><code>--help</code></td>
+<td>通过 cu 连接串口终端</td>
+<td><code>cu -s 9600 -l /dev/ttyS0</code></td>
+</tr>
+<tr>
+<td><code>smbd</code></td>
+<td>Samba SMB daemon</td>
+<td>Samba 服务守护进程</td>
+<td><code>-D</code></td>
+<td><code>--help</code></td>
+<td>Samba SMB 服务后台进程</td>
+<td><code>smbd -D</code></td>
+</tr>
+<tr>
+<td><code>testparm</code></td>
+<td>test Samba configuration</td>
+<td>Samba 配置检测</td>
+<td><code>-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>检测 samba 配置文件是否有效</td>
+<td><code>testparm</code></td>
+</tr>
+<tr>
+<td><code>smbclient</code></td>
+<td>Samba client</td>
+<td>Samba 客户端工具</td>
+<td><code>-L&lt;br&gt;-U</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>连接并操作 SMB 共享（列目录、上传下载等）</td>
+<td><code>smbclient -L //server</code></td>
+</tr>
+<tr>
+<td><code>shapecfg</code></td>
+<td>traffic shaping config</td>
+<td>流量整形配置</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>流量整形&#x2F;带宽控制（依系统工具实现）</td>
+<td><code>shapecfg --help</code></td>
+</tr>
+<tr>
+<td><code>nslookup</code></td>
+<td>DNS lookup (deprecated)</td>
+<td>查询 DNS 记录</td>
+<td><code>-type</code></td>
+<td><code>--help</code></td>
+<td>DNS 查询工具（部分发行版已建议使用 dig）</td>
+<td><code>nslookup example.com</code></td>
+</tr>
+<tr>
+<td><code>dig</code></td>
+<td>DNS lookup</td>
+<td>DNS 查询工具</td>
+<td><code>+short&lt;br&gt;+trace</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查询 DNS 记录，支持 A&#x2F;AAAA&#x2F;CNAME&#x2F;MX&#x2F;TXT&#x2F;trace 等</td>
+<td><code>dig A example.com +short</code></td>
+</tr>
+<tr>
+<td><code>nmap</code></td>
+<td>network mapper</td>
+<td>网络扫描与安全审计</td>
+<td><code>-sS&lt;br&gt;-sV&lt;br&gt;-p</code></td>
+<td><code>--help</code></td>
+<td>端口扫描、服务识别与安全探测</td>
+<td><code>nmap -sS -sV -p 22,80,443 target</code></td>
+</tr>
+<tr>
+<td><code>mtr</code></td>
+<td>my traceroute</td>
+<td>网络诊断（ping+traceroute）</td>
+<td><code>-rwz</code></td>
+<td><code>--help</code></td>
+<td>结合 ping 与 traceroute 的诊断工具（统计丢包&#x2F;延迟）</td>
+<td><code>mtr -rw example.com</code></td>
+</tr>
+<tr>
+<td><code>iperf</code></td>
+<td>bandwidth measurement</td>
+<td>网络带宽测试</td>
+<td><code>-c&lt;br&gt;-s&lt;br&gt;-t</code></td>
+<td><code>--help</code></td>
+<td>TCP&#x2F;UDP 带宽与延迟测试</td>
+<td><code>iperf -s</code></td>
+</tr>
+</tbody></table>
+<p>（以上命令的参数可能因发行版&#x2F;实现不同而略有差异；你后续如果给“你的发行版&#x2F;版本”，我可以把每条命令的参数精确对齐到你的环境。）</p>
+<h2 id="系统管理（统一表格）"><a href="#系统管理（统一表格）" class="headerlink" title="系统管理（统一表格）"></a>系统管理（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>adduser</code></td>
+<td>add user</td>
+<td>添加新用户</td>
+<td><code>-m&lt;br&gt;-s&lt;br&gt;-G</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建新用户（依发行版实现可能对应 adduser&#x2F;useradd）</td>
+<td><code>adduser -m -s /bin/bash alice</code></td>
+</tr>
+<tr>
+<td><code>chfn</code></td>
+<td>change finger info</td>
+<td>更改用户信息</td>
+<td><code>-f&lt;br&gt;-o&lt;br&gt;-h</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>修改 finger&#x2F;用户资料类字段（依实现）</td>
+<td><code>chfn -f &quot;Alice&quot; alice</code></td>
+</tr>
+<tr>
+<td><code>useradd</code></td>
+<td>create user</td>
+<td>创建新用户账户</td>
+<td><code>-m&lt;br&gt;-s&lt;br&gt;-G&lt;br&gt;-u</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建 Linux 用户账号</td>
+<td><code>useradd -m -s /bin/bash -G sudo bob</code></td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>show&#x2F;set date</td>
+<td>显示或设置系统日期</td>
+<td><code>-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看&#x2F;设置系统时间（需权限）</td>
+<td><code>date</code>、<code>date -s &quot;2026-02-25 12:00:00&quot;</code></td>
+</tr>
+<tr>
+<td><code>exit</code></td>
+<td>exit shell</td>
+<td>退出终端会话</td>
+<td><code>N/A</code></td>
+<td><code>N/A</code></td>
+<td>退出当前 shell&#x2F;脚本</td>
+<td><code>exit 0</code></td>
+</tr>
+<tr>
+<td><code>finger</code></td>
+<td>finger</td>
+<td>查询用户信息</td>
+<td><code>-l&lt;br&gt;-m</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查询用户“指纹&#x2F;资料”（依发行版支持）</td>
+<td><code>finger root</code></td>
+</tr>
+<tr>
+<td><code>fwhios</code></td>
+<td>unknown</td>
+<td>未知命令，需查阅</td>
+<td><code>待补全</code></td>
+<td><code>待补全</code></td>
+<td>该命令可能为笔误或未安装，建议先用 <code>which/apt-file</code> 或 <code>--help</code> 查证</td>
+<td><code>fwhios --help</code></td>
+</tr>
+<tr>
+<td><code>sleep</code></td>
+<td>delay</td>
+<td>延迟指定时间</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按秒&#x2F;分钟暂停执行</td>
+<td><code>sleep 10</code></td>
+</tr>
+<tr>
+<td><code>suspend</code></td>
+<td>suspend shell</td>
+<td>挂起当前 shell</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>将当前会话挂起（依终端&#x2F;脚本实现）</td>
+<td><code>suspend</code></td>
+</tr>
+<tr>
+<td><code>groupdel</code></td>
+<td>delete group</td>
+<td>删除用户组</td>
+<td><code>-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>删除组账号</td>
+<td><code>groupdel staff</code></td>
+</tr>
+<tr>
+<td><code>groupmod</code></td>
+<td>modify group</td>
+<td>修改用户组信息</td>
+<td><code>-n&lt;br&gt;-g</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>修改组名&#x2F;组号&#x2F;成员策略</td>
+<td><code>groupmod -n newgroup oldgroup</code></td>
+</tr>
+<tr>
+<td><code>halt</code></td>
+<td>halt system</td>
+<td>关闭系统电源</td>
+<td><code>-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>立即停止系统（可能等价 poweroff）</td>
+<td><code>halt -p</code></td>
+</tr>
+<tr>
+<td><code>kill</code></td>
+<td>send signal</td>
+<td>发送信号终止进程</td>
+<td><code>-9</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按 PID 给进程发信号（TERM&#x2F;KILL&#x2F;HUP 等）</td>
+<td><code>kill -9 1234</code></td>
+</tr>
+<tr>
+<td><code>last</code></td>
+<td>show last logins</td>
+<td>显示最近登录用户</td>
+<td><code>-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看用户历史登录记录（&#x2F;var&#x2F;log&#x2F;wtmp）</td>
+<td><code>last -n 20</code></td>
+</tr>
+<tr>
+<td><code>lastb</code></td>
+<td>show last bad logins</td>
+<td>显示失败登录记录</td>
+<td><code>-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看失败登录（依对应日志文件）</td>
+<td><code>lastb -n 20</code></td>
+</tr>
+<tr>
+<td><code>login</code></td>
+<td>login to system</td>
+<td>登录系统</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>认证并进入用户会话</td>
+<td><code>login username</code></td>
+</tr>
+<tr>
+<td><code>logname</code></td>
+<td>print login name</td>
+<td>显示当前登录名</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>输出当前会话的登录名称</td>
+<td><code>logname</code></td>
+</tr>
+<tr>
+<td><code>logout</code></td>
+<td>logout shell</td>
+<td>注销当前用户</td>
+<td><code>N/A</code></td>
+<td><code>N/A</code></td>
+<td>退出当前用户会话</td>
+<td><code>logout</code></td>
+</tr>
+<tr>
+<td><code>ps</code></td>
+<td>process status</td>
+<td>显示进程状态</td>
+<td><code>-ef&lt;br&gt;-aux</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看进程快照</td>
+<td>&#96;ps -ef</td>
+</tr>
+<tr>
+<td><code>nice</code></td>
+<td>set priority</td>
+<td>设置进程优先级</td>
+<td><code>-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>以较低优先级运行命令</td>
+<td><code>nice -n 10 command</code></td>
+</tr>
+<tr>
+<td><code>procinfo</code></td>
+<td>kernel&#x2F;process info</td>
+<td>显示内核&#x2F;进程信息</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>展示内核&#x2F;进程相关信息（依发行版提供）</td>
+<td><code>procinfo</code></td>
+</tr>
+<tr>
+<td><code>top</code></td>
+<td>top processes</td>
+<td>实时显示进程信息</td>
+<td><code>-b&lt;br&gt;-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>实时监控 CPU&#x2F;内存与进程</td>
+<td><code>top</code>、<code>top -b -n 1</code></td>
+</tr>
+<tr>
+<td><code>pstree</code></td>
+<td>process tree</td>
+<td>树状显示进程</td>
+<td><code>-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>展示进程父子关系</td>
+<td><code>pstree -p</code></td>
+</tr>
+<tr>
+<td><code>reboot</code></td>
+<td>reboot system</td>
+<td>重启系统</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>重启机器</td>
+<td><code>reboot</code></td>
+</tr>
+<tr>
+<td><code>rlogin</code></td>
+<td>remote login</td>
+<td>远程登录主机</td>
+<td><code>-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>远程登录（传统 rlogin，生产建议用 ssh）</td>
+<td><code>rlogin host</code></td>
+</tr>
+<tr>
+<td><code>rsh</code></td>
+<td>remote shell</td>
+<td>远程 shell 命令</td>
+<td><code>-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>远程执行 shell（传统 rsh，生产建议用 ssh）</td>
+<td><code>rsh host &quot;whoami&quot;</code></td>
+</tr>
+<tr>
+<td><code>sliplogin</code></td>
+<td>SLIP login</td>
+<td>SLIP 登录管理</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>SLIP&#x2F;串口线路相关登录管理（依实现）</td>
+<td><code>sliplogin</code></td>
+</tr>
+<tr>
+<td><code>screen</code></td>
+<td>terminal multiplexer</td>
+<td>终端多路复用器</td>
+<td><code>-S</code></td>
+<td><code>--help</code></td>
+<td>开启可分离&#x2F;恢复的终端会话</td>
+<td><code>screen -S work</code></td>
+</tr>
+<tr>
+<td><code>shutdown</code></td>
+<td>shutdown system</td>
+<td>关闭或重启系统</td>
+<td><code>-r&lt;br&gt;-h</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按时间&#x2F;信号关闭或重启</td>
+<td><code>shutdown -r now</code></td>
+</tr>
+<tr>
+<td><code>rwho</code></td>
+<td>remote who</td>
+<td>显示网络用户信息</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查询远程主机的登录用户信息（传统工具）</td>
+<td><code>rwho -a</code></td>
+</tr>
+<tr>
+<td><code>sudo</code></td>
+<td>run command as another user</td>
+<td>以其他用户身份执行</td>
+<td><code>-u</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>提权执行命令（受 &#x2F;etc&#x2F;sudoers 控制）</td>
+<td><code>sudo -u root whoami</code></td>
+</tr>
+<tr>
+<td><code>gitps</code></td>
+<td>unknown</td>
+<td>未知命令，需查阅</td>
+<td><code>待补全</code></td>
+<td><code>待补全</code></td>
+<td>命令可能未安装或为笔误；建议用 <code>which gitps</code>&#x2F;<code>--help</code> 查证</td>
+<td><code>gitps --help</code></td>
+</tr>
+<tr>
+<td><code>swatch</code></td>
+<td>log monitor</td>
+<td>日志监控工具</td>
+<td><code>-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>读取 swatch 配置进行告警</td>
+<td><code>swatch -c swatch.conf</code></td>
+</tr>
+<tr>
+<td><code>tload</code></td>
+<td>load meter</td>
+<td>图形显示负载</td>
+<td><code>-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>终端图形化显示负载（依实现）</td>
+<td><code>tload</code></td>
+</tr>
+<tr>
+<td><code>logrotate</code></td>
+<td>rotate logs</td>
+<td>日志文件轮转</td>
+<td><code>-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>轮转&#x2F;压缩&#x2F;新建日志</td>
+<td><code>logrotate -f /etc/logrotate.conf</code></td>
+</tr>
+<tr>
+<td><code>uname</code></td>
+<td>system info</td>
+<td>显示系统信息</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>输出内核&#x2F;系统信息</td>
+<td><code>uname -a</code></td>
+</tr>
+<tr>
+<td><code>chsh</code></td>
+<td>change shell</td>
+<td>更改登录 shell</td>
+<td><code>-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>修改用户登录 shell</td>
+<td><code>chsh -s /bin/zsh alice</code></td>
+</tr>
+<tr>
+<td><code>userconf</code></td>
+<td>user config</td>
+<td>用户配置工具</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>依发行版提供的用户配置工具（不一定通用）</td>
+<td><code>userconf</code></td>
+</tr>
+<tr>
+<td><code>userdel</code></td>
+<td>delete user</td>
+<td>删除用户账户</td>
+<td><code>-r</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>删除用户（可选删除家目录）</td>
+<td><code>userdel -r bob</code></td>
+</tr>
+<tr>
+<td><code>usermod</code></td>
+<td>modify user</td>
+<td>修改用户账户</td>
+<td><code>-a&lt;br&gt;-G&lt;br&gt;-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>修改用户属性（组&#x2F;壳等）</td>
+<td><code>usermod -aG sudo bob</code></td>
+</tr>
+<tr>
+<td><code>vlock</code></td>
+<td>lock terminal</td>
+<td>锁定终端</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>锁定终端会话</td>
+<td><code>vlock</code></td>
+</tr>
+<tr>
+<td><code>who</code></td>
+<td>who is on</td>
+<td>显示登录用户</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>当前登录&#x2F;会话概览</td>
+<td><code>who</code></td>
+</tr>
+<tr>
+<td><code>whoami</code></td>
+<td>who am i</td>
+<td>显示当前用户名</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>输出当前有效用户</td>
+<td><code>whoami</code></td>
+</tr>
+<tr>
+<td><code>whois</code></td>
+<td>whois query</td>
+<td>域名注册信息查询</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>WHOIS 查询（视网络与服务可用性）</td>
+<td><code>whois example.com</code></td>
+</tr>
+<tr>
+<td><code>newgrp</code></td>
+<td>new group</td>
+<td>切换当前用户组</td>
+<td><code>N/A</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>切换会话所属组</td>
+<td><code>newgrp developers</code></td>
+</tr>
+<tr>
+<td><code>renice</code></td>
+<td>renice priority</td>
+<td>重新设置进程优先级</td>
+<td><code>-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>动态调整进程优先级</td>
+<td><code>renice -n -5 -p 1234</code></td>
+</tr>
+<tr>
+<td><code>su</code></td>
+<td>switch user</td>
+<td>切换用户身份</td>
+<td><code>-</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>切换到目标用户</td>
+<td><code>su - alice</code></td>
+</tr>
+<tr>
+<td><code>skill</code></td>
+<td>signal by name</td>
+<td>按条件终止进程</td>
+<td><code>-TERM</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按进程名&#x2F;条件发送信号（具体选项依实现）</td>
+<td><code>skill -TERM java</code></td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>who and what</td>
+<td>显示登录用户信息</td>
+<td><code>-h</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看谁在线以及做了什么</td>
+<td><code>w -h</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>identity</td>
+<td>显示用户和组 ID</td>
+<td><code>-u&lt;br&gt;-g&lt;br&gt;-G</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>输出 uid&#x2F;gid&#x2F;组列表</td>
+<td><code>id</code>、<code>id -u</code></td>
+</tr>
+<tr>
+<td><code>groupadd</code></td>
+<td>add group</td>
+<td>创建新用户组</td>
+<td><code>-g</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建新组</td>
+<td><code>groupadd -g 2000 dev</code></td>
+</tr>
+<tr>
+<td><code>free</code></td>
+<td>memory info</td>
+<td>显示内存使用情况</td>
+<td><code>-h</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看内存&#x2F;交换使用</td>
+<td><code>free -h</code></td>
+</tr>
+<tr>
+<td><code>iotop</code></td>
+<td>I&#x2F;O top</td>
+<td>监控磁盘 I&#x2F;O 使用情况</td>
+<td><code>-o</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>I&#x2F;O 负载监控</td>
+<td><code>iotop -o</code></td>
+</tr>
+<tr>
+<td><code>nethogs</code></td>
+<td>network top</td>
+<td>按进程显示网络带宽占用</td>
+<td><code>-t</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按进程统计网络吞吐</td>
+<td><code>nethogs</code></td>
+</tr>
+<tr>
+<td><code>glances</code></td>
+<td>system monitor</td>
+<td>综合系统监控工具</td>
+<td><code>-b</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>多维度监控工具</td>
+<td><code>glances</code></td>
+</tr>
+<tr>
+<td><code>dstat</code></td>
+<td>dynamic stats</td>
+<td>实时系统资源统计</td>
+<td><code>-c&lt;br&gt;-d</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>多指标动态统计</td>
+<td><code>dstat -c -d -n</code></td>
+</tr>
+<tr>
+<td><code>bpftrace</code></td>
+<td>BPF trace</td>
+<td>动态内核追踪工具</td>
+<td><code>-e</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>基于 eBPF 的动态追踪</td>
+<td><code>bpftrace -e &#39;tracepoint:syscalls:sys_enter_execve { printf(&quot;%s\\n&quot;, str(args-&gt;filename)); }&#39;</code></td>
+</tr>
+<tr>
+<td><code>pgrep</code></td>
+<td>process grep</td>
+<td>根据名称查找进程 ID</td>
+<td><code>-f&lt;br&gt;-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>按条件查找 PID</td>
+<td><code>pgrep -fl nginx</code></td>
+</tr>
+<tr>
+<td><code>lsof</code></td>
+<td>list open files</td>
+<td>列出被打开的文件和进程</td>
+<td><code>-p&lt;br&gt;-i</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看进程&#x2F;端口的文件句柄</td>
+<td><code>lsof -i:443</code></td>
+</tr>
+<tr>
+<td><code>ltrace</code></td>
+<td>trace libraries</td>
+<td>跟踪库调用</td>
+<td><code>-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>追踪动态库调用</td>
+<td><code>ltrace -p 1234</code></td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>run with time limit</td>
+<td>限制命令运行时间</td>
+<td><code>-k</code></td>
+<td><code>--signal&lt;br&gt;--kill-after&lt;br&gt;--help</code></td>
+<td>超时后发送信号并强制终止</td>
+<td><code>timeout 10s curl https://example.com</code></td>
+</tr>
+</tbody></table>
+<h2 id="系统设置（统一表格）"><a href="#系统设置（统一表格）" class="headerlink" title="系统设置（统一表格）"></a>系统设置（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>reset</code></td>
+<td>reset terminal</td>
+<td>重置终端设置</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>将终端恢复到默认控制序列&#x2F;屏幕状态</td>
+<td><code>reset</code></td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td>clear screen</td>
+<td>清屏命令</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>清空终端屏幕并把光标移至左上角</td>
+<td><code>clear</code></td>
+</tr>
+<tr>
+<td><code>alias</code></td>
+<td>alias</td>
+<td>设置命令别名</td>
+<td><code>p</code></td>
+<td><code>--help</code></td>
+<td>查看&#x2F;定义 shell 别名</td>
+<td><code>alias ll=&#39;ls -al&#39;</code></td>
+</tr>
+<tr>
+<td><code>dircolors</code></td>
+<td>color LS setup</td>
+<td>设置 ls 颜色</td>
+<td><code>-p</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>生成&#x2F;修改 dircolors 数据，用于 ls –color</td>
+<td><code>dircolors -p &gt; ~/.dircolors</code></td>
+</tr>
+<tr>
+<td><code>aumix</code></td>
+<td>audio mix</td>
+<td>音量控制工具</td>
+<td><code>-q</code></td>
+<td><code>--help</code></td>
+<td>交互或命令行控制声卡混音&#x2F;音量（依发行版）</td>
+<td><code>aumix -q</code></td>
+</tr>
+<tr>
+<td><code>bind</code></td>
+<td>bind keys</td>
+<td>绑定按键功能</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>shell&#x2F;终端中绑定按键映射（依实现可能是 readline&#x2F;termcap）</td>
+<td><code>bind &#39;&quot;\C-l&quot;: &quot;clear&quot;&#39;</code></td>
+</tr>
+<tr>
+<td><code>chroot</code></td>
+<td>change root directory</td>
+<td>更改根目录</td>
+<td><code>--groups</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>在指定目录中切换到“新根”，用于救援&#x2F;隔离环境</td>
+<td><code>chroot /mnt/sysroot /bin/bash</code></td>
+</tr>
+<tr>
+<td><code>clock</code></td>
+<td>hardware clock</td>
+<td>硬件时钟管理（依实现）</td>
+<td><code>-w</code></td>
+<td><code>--help</code></td>
+<td>显示&#x2F;设置硬件时钟（不同系统 clock 实现差异较大）</td>
+<td><code>clock -w</code></td>
+</tr>
+<tr>
+<td><code>crontab</code></td>
+<td>cron table</td>
+<td>定时任务管理</td>
+<td><code>-e&lt;br&gt;-l&lt;br&gt;-r</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>编辑&#x2F;查看&#x2F;删除用户 crontab</td>
+<td><code>crontab -e</code></td>
+</tr>
+<tr>
+<td><code>declare</code></td>
+<td>declare variables</td>
+<td>声明变量属性（Shell builtin）</td>
+<td><code>-p</code></td>
+<td><code>--help</code></td>
+<td>给变量声明类型&#x2F;属性（bash 等）</td>
+<td><code>declare -i n=1</code></td>
+</tr>
+<tr>
+<td><code>depmod</code></td>
+<td>dependency map</td>
+<td>生成模块依赖</td>
+<td><code>-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>根据模块目录生成 modules.dep 等依赖映射</td>
+<td><code>depmod -a</code></td>
+</tr>
+<tr>
+<td><code>dmesg</code></td>
+<td>boot messages</td>
+<td>显示内核消息</td>
+<td><code>-T&lt;br&gt;-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>读取内核环缓冲区日志</td>
+<td>&#96;dmesg -T</td>
+</tr>
+<tr>
+<td><code>enable</code></td>
+<td>enable builtin</td>
+<td>启用 shell 内建命令</td>
+<td><code>-n</code></td>
+<td><code>--help</code></td>
+<td>启用 shell 的内建命令（bash builtin enable）</td>
+<td><code>enable -n enable</code></td>
+</tr>
+<tr>
+<td><code>eval</code></td>
+<td>evaluate commands</td>
+<td>执行参数为命令</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>把参数当作命令再求值执行（shell builtin）</td>
+<td><code>eval echo $var</code></td>
+</tr>
+<tr>
+<td><code>export</code></td>
+<td>set environment</td>
+<td>设置环境变量</td>
+<td><code>-f</code></td>
+<td><code>--help</code></td>
+<td>导出变量为环境变量（Shell builtin）</td>
+<td><code>export PATH=$PATH:/opt/bin</code></td>
+</tr>
+<tr>
+<td><code>pwunconv</code></td>
+<td>shadow to passwd</td>
+<td>合并密码文件（反向）</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>将 shadow 密码转换回 passwd（依系统）</td>
+<td><code>pwunconv</code></td>
+</tr>
+<tr>
+<td><code>grpconv</code></td>
+<td>group convert</td>
+<td>合并组文件（转换）</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>把组文件格式在不同体系之间转换（依实现）</td>
+<td><code>grpconv</code></td>
+</tr>
+<tr>
+<td><code>rpm</code></td>
+<td>RPM package manager</td>
+<td>RPM 包管理工具</td>
+<td><code>-i&lt;br&gt;-U&lt;br&gt;-e&lt;br&gt;-q</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>安装&#x2F;升级&#x2F;卸载&#x2F;查询 RPM 包</td>
+<td><code>rpm -Uvh package.rpm</code></td>
+</tr>
+<tr>
+<td><code>insmod</code></td>
+<td>insert module</td>
+<td>加载内核模块</td>
+<td><code>無</code></td>
+<td><code>--help</code></td>
+<td>手工插入加载模块（更常用 modprobe 管理依赖）</td>
+<td><code>insmod ./driver.ko</code></td>
+</tr>
+<tr>
+<td><code>kbdconfig</code></td>
+<td>keyboard config</td>
+<td>键盘配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>配置键盘映射&#x2F;布局（依发行版）</td>
+<td><code>kbdconfig</code></td>
+</tr>
+<tr>
+<td><code>lilo</code></td>
+<td>LILO installer</td>
+<td>引导加载器安装（LILO）</td>
+<td><code>-v</code></td>
+<td><code>--help</code></td>
+<td>安装&#x2F;写入 LILO 引导加载器（传统方案）</td>
+<td><code>lilo -v</code></td>
+</tr>
+<tr>
+<td><code>liloconfig</code></td>
+<td>LILO config</td>
+<td>LILO 配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>生成&#x2F;修改 LILO 配置（依实现）</td>
+<td><code>liloconfig</code></td>
+</tr>
+<tr>
+<td><code>lsmod</code></td>
+<td>list modules</td>
+<td>显示已加载模块</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>列出当前内核模块</td>
+<td>&#96;lsmod</td>
+</tr>
+<tr>
+<td><code>minfo</code></td>
+<td>media info</td>
+<td>显示介质信息</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>显示介质（如软盘&#x2F;磁带）信息（依实现）</td>
+<td><code>minfo</code></td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td>set shell options</td>
+<td>设置 shell 参数</td>
+<td><code>-o</code></td>
+<td><code>--help</code></td>
+<td>设置位置参数&#x2F;选项（Shell builtin）</td>
+<td><code>set -o pipefail</code></td>
+</tr>
+<tr>
+<td><code>modprobe</code></td>
+<td>module probe</td>
+<td>自动加载模块</td>
+<td><code>-r&lt;br&gt;-i&lt;br&gt;-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>自动处理模块依赖并加载&#x2F;卸载</td>
+<td><code>modprobe -r module</code></td>
+</tr>
+<tr>
+<td><code>ntsysv</code></td>
+<td>service setup</td>
+<td>服务管理工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>交互式管理开机启动服务（依发行版）</td>
+<td><code>ntsysv</code></td>
+</tr>
+<tr>
+<td><code>mouseconfig</code></td>
+<td>mouse config</td>
+<td>鼠标配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>配置鼠标参数&#x2F;设备（依发行版）</td>
+<td><code>mouseconfig</code></td>
+</tr>
+<tr>
+<td><code>passwd</code></td>
+<td>change password</td>
+<td>修改用户密码</td>
+<td><code>-l&lt;br&gt;-u</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>修改用户口令</td>
+<td><code>passwd alice</code></td>
+</tr>
+<tr>
+<td><code>pwconv</code></td>
+<td>passwd to shadow</td>
+<td>合并影子密码文件</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>将明文密码转换为 shadow（依实现）</td>
+<td><code>pwconv</code></td>
+</tr>
+<tr>
+<td><code>rdate</code></td>
+<td>set date from remote</td>
+<td>远程设置日期</td>
+<td><code>-p</code></td>
+<td><code>--help</code></td>
+<td>从远程服务器同步系统时间（rdate 传统工具）</td>
+<td><code>rdate time.server</code></td>
+</tr>
+<tr>
+<td><code>resize</code></td>
+<td>terminal resize</td>
+<td>调整终端大小</td>
+<td><code>-s</code></td>
+<td><code>--help</code></td>
+<td>调整终端窗口大小（依实现）</td>
+<td><code>resize 80 24</code></td>
+</tr>
+<tr>
+<td><code>rmmod</code></td>
+<td>remove module</td>
+<td>卸载内核模块</td>
+<td><code>-f&lt;br&gt;-w</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从内核卸载模块</td>
+<td><code>rmmod module</code></td>
+</tr>
+<tr>
+<td><code>grpunconv</code></td>
+<td>shadow to group</td>
+<td>合并影子组文件（反向）</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>影子组与组文件转换（依系统）</td>
+<td><code>grpunconv</code></td>
+</tr>
+<tr>
+<td><code>modinfo</code></td>
+<td>module info</td>
+<td>显示模块信息</td>
+<td><code>-F</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>显示模块的描述&#x2F;参数&#x2F;版本等</td>
+<td><code>modinfo e1000e</code></td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>run with timing</td>
+<td>统计命令运行时间</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>测量命令执行耗时（Shell builtin）</td>
+<td><code>time make -j</code></td>
+</tr>
+<tr>
+<td><code>setup</code></td>
+<td>system setup</td>
+<td>系统设置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>交互式系统设置入口（依发行版）</td>
+<td><code>setup</code></td>
+</tr>
+<tr>
+<td><code>sndconfig</code></td>
+<td>sound config</td>
+<td>声卡配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>配置声卡（依发行版）</td>
+<td><code>sndconfig</code></td>
+</tr>
+<tr>
+<td><code>setenv</code></td>
+<td>set environment</td>
+<td>设置环境变量</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>设置环境变量（某些系统工具&#x2F;脚本）</td>
+<td><code>setenv VAR value</code></td>
+</tr>
+<tr>
+<td><code>setconsole</code></td>
+<td>set console</td>
+<td>设置控制台类型</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>控制台配置（依实现）</td>
+<td><code>setconsole</code></td>
+</tr>
+<tr>
+<td><code>timeconfig</code></td>
+<td>time config</td>
+<td>时间配置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>配置时间相关参数（依实现）</td>
+<td><code>timeconfig</code></td>
+</tr>
+<tr>
+<td><code>ulimit</code></td>
+<td>user limits</td>
+<td>设置资源限制</td>
+<td><code>-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>设置 shell 的资源限制（文件描述符等）</td>
+<td><code>ulimit -n 65535</code></td>
+</tr>
+<tr>
+<td><code>unset</code></td>
+<td>unset</td>
+<td>删除变量或函数（Shell builtin）</td>
+<td><code>-v</code></td>
+<td><code>--help</code></td>
+<td>删除环境变量&#x2F;变量&#x2F;函数</td>
+<td><code>unset HTTP_PROXY</code></td>
+</tr>
+<tr>
+<td><code>chkconfig</code></td>
+<td>service management</td>
+<td>服务开关管理</td>
+<td><code>--list&lt;br&gt;--add</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>传统系统服务管理（开机启用&#x2F;禁用）</td>
+<td><code>chkconfig --list</code></td>
+</tr>
+<tr>
+<td><code>apmd</code></td>
+<td>advanced power management</td>
+<td>高级电源管理（服务）</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>APM 电源管理守护进程（依系统）</td>
+<td><code>systemctl start apmd</code></td>
+</tr>
+<tr>
+<td><code>hwclock</code></td>
+<td>hardware clock</td>
+<td>硬件时钟管理</td>
+<td><code>-w&lt;br&gt;-s&lt;br&gt;-a</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>读取&#x2F;写入硬件时钟并与系统时钟同步</td>
+<td><code>hwclock -w</code></td>
+</tr>
+<tr>
+<td><code>mkkickstart</code></td>
+<td>generate kickstart</td>
+<td>生成 kickstart 文件</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>为安装生成 kickstart 配置（Kickstart 用于自动化装机）</td>
+<td><code>mkkickstart --help</code></td>
+</tr>
+<tr>
+<td><code>fbset</code></td>
+<td>framebuffer set</td>
+<td>帧缓冲设置工具</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>配置帧缓冲参数</td>
+<td><code>fbset -h</code></td>
+</tr>
+<tr>
+<td><code>unalias</code></td>
+<td>remove alias</td>
+<td>取消命令别名</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>移除别名</td>
+<td><code>unalias ll</code></td>
+</tr>
+<tr>
+<td><code>SVGATextMode</code></td>
+<td>VGA text mode</td>
+<td>VGA 文本模式设置</td>
+<td><code>-s</code></td>
+<td><code>--help</code></td>
+<td>设置 VGA 文本模式（传统工具）</td>
+<td><code>SVGATextMode</code></td>
+</tr>
+<tr>
+<td><code>gpasswd</code></td>
+<td>group password</td>
+<td>管理用户组密码</td>
+<td><code>-a&lt;br&gt;-d&lt;br&gt;-M</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>添加&#x2F;删除组成员、设置组管理员、管理组口令</td>
+<td><code>gpasswd -a alice dev</code></td>
+</tr>
+</tbody></table>
+<h2 id="备份压缩（统一表格）"><a href="#备份压缩（统一表格）" class="headerlink" title="备份压缩（统一表格）"></a>备份压缩（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ar</code></td>
+<td>archive</td>
+<td>创建&#x2F;修改&#x2F;提取归档文件</td>
+<td><code>-r&lt;br&gt;-t&lt;br&gt;-x</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>管理静态库等归档文件（.a），可追加&#x2F;列出&#x2F;解包成员</td>
+<td><code>ar rcs libfoo.a foo.o</code></td>
+</tr>
+<tr>
+<td><code>bunzip2</code></td>
+<td>bzip2 bunzip</td>
+<td>解压 bzip2</td>
+<td><code>-k&lt;br&gt;-f&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>解压 <code>.bz2</code> 文件；可保留源文件并输出到 stdout</td>
+<td><code>bunzip2 -k file.bz2</code></td>
+</tr>
+<tr>
+<td><code>bzip2</code></td>
+<td>bzip2 compressor</td>
+<td>高效压缩工具</td>
+<td><code>-d&lt;br&gt;-k&lt;br&gt;-z&lt;br&gt;-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>压缩&#x2F;解压 <code>.bz2</code>；可强制、保留源文件、测试压缩完整性</td>
+<td><code>bzip2 -z -k file</code></td>
+</tr>
+<tr>
+<td><code>bzip2recover</code></td>
+<td>bzip2 recover</td>
+<td>修复损坏的 bzip2 文件</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>尝试从损坏的 bzip2 流中尽可能恢复数据</td>
+<td><code>bzip2recover badfile.bz2</code></td>
+</tr>
+<tr>
+<td><code>gunzip</code></td>
+<td>gzip uncompress</td>
+<td>解压 gzip</td>
+<td><code>-k&lt;br&gt;-f&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>解压 <code>.gz</code> 文件；可保留源&#x2F;输出到 stdout</td>
+<td><code>gunzip -c file.gz &gt; file</code></td>
+</tr>
+<tr>
+<td><code>unarj</code></td>
+<td>ARJ unarchive</td>
+<td>解压 ARJ 归档</td>
+<td><code>-x</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>解包 ARJ 归档（依实现支持情况）</td>
+<td><code>unarj x archive.arj</code></td>
+</tr>
+<tr>
+<td><code>compress</code></td>
+<td>compress (Z)</td>
+<td>压缩生成 .Z</td>
+<td><code>-d&lt;br&gt;-f&lt;br&gt;-c</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建传统 <code>.Z</code> 压缩格式（较旧，现代更多用 gzip&#x2F;bzip2）</td>
+<td><code>compress file</code></td>
+</tr>
+<tr>
+<td><code>cpio</code></td>
+<td>copy in&#x2F;out</td>
+<td>备份与还原文件（归档）</td>
+<td><code>-i&lt;br&gt;-o&lt;br&gt;-p&lt;br&gt;-d</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>以“流”形式归档&#x2F;还原文件（常与 find 配套）</td>
+<td>&#96;find . -print0</td>
+</tr>
+<tr>
+<td><code>dump</code></td>
+<td>filesystem dump</td>
+<td>文件系统备份工具</td>
+<td><code>-0&lt;br&gt;-u&lt;br&gt;-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>对文件系统做备份（传统 dump&#x2F;restore 体系），生成 dump 文件&#x2F;写入设备</td>
+<td><code>dump -0u -f /mnt/backup/home.dump /home</code></td>
+</tr>
+<tr>
+<td><code>uuencode</code></td>
+<td>uuencode</td>
+<td>编码二进制为 ASCII</td>
+<td><code>-m</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>将二进制文件编码为文本（便于通过不可靠传输）</td>
+<td><code>uuencode file.bin file.txt</code></td>
+</tr>
+<tr>
+<td><code>gzexe</code></td>
+<td>gzexe</td>
+<td>压缩可执行文件（自解压）</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>压缩可执行文件并生成可直接运行的压缩程序（依实现）</td>
+<td><code>gzexe program</code></td>
+</tr>
+<tr>
+<td><code>gzip</code></td>
+<td>GNU zip</td>
+<td>文件压缩与解压</td>
+<td><code>-d&lt;br&gt;-k&lt;br&gt;-c&lt;br&gt;-r</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>压缩&#x2F;解压 <code>.gz</code>；支持递归、保留源、输出到 stdout</td>
+<td><code>gzip -9 -k file</code></td>
+</tr>
+<tr>
+<td><code>lha</code></td>
+<td>LHA archiver</td>
+<td>LHA 归档工具</td>
+<td><code>a&lt;br&gt;x</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建&#x2F;解压 LHA 归档（依实现参数略有差异）</td>
+<td><code>lha a archive.lha file1 file2</code></td>
+</tr>
+<tr>
+<td><code>restore</code></td>
+<td>restore dump backup</td>
+<td>还原 dump 备份</td>
+<td><code>-i&lt;br&gt;-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>从 dump 生成的备份中恢复文件（dump&#x2F;restore 体系）</td>
+<td><code>restore -if /mnt/backup/home.dump</code></td>
+</tr>
+<tr>
+<td><code>uudecode</code></td>
+<td>uudecode</td>
+<td>解码 uuencode 文本</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>将 uuencode 生成的文本解码还原二进制</td>
+<td><code>uudecode file.txt</code></td>
+</tr>
+<tr>
+<td><code>unzip</code></td>
+<td>unzip</td>
+<td>解压 zip 包</td>
+<td><code>-l&lt;br&gt;-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>解压 zip 归档并列出内容</td>
+<td><code>unzip -l archive.zip</code></td>
+</tr>
+<tr>
+<td><code>zip</code></td>
+<td>zip archive</td>
+<td>创建 zip 压缩包</td>
+<td><code>-r&lt;br&gt;-q</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>创建&#x2F;更新 zip 压缩包（递归加入目录）</td>
+<td><code>zip -r archive.zip ./dir</code></td>
+</tr>
+<tr>
+<td><code>7z</code></td>
+<td>7-zip</td>
+<td>高效多格式压缩&#x2F;解压</td>
+<td><code>a&lt;br&gt;x</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>7-zip 命令行：压缩&#x2F;解压多种格式</td>
+<td><code>7z a archive.7z ./dir</code></td>
+</tr>
+<tr>
+<td><code>zipinfo</code></td>
+<td>zip info</td>
+<td>查看 zip 包信息</td>
+<td><code>-1&lt;br&gt;-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>查看 zip 内文件列表、压缩方法、权限等信息</td>
+<td><code>zipinfo -1 archive.zip</code></td>
+</tr>
+</tbody></table>
+<h2 id="设备管理（统一表格）"><a href="#设备管理（统一表格）" class="headerlink" title="设备管理（统一表格）"></a>设备管理（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>setleds</code></td>
+<td>set keyboard LEDs</td>
+<td>设置键盘 LED 灯</td>
+<td><code>无</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>设置键盘 LED 指示灯（依控制台&#x2F;驱动实现）</td>
+<td><code>setleds +num</code></td>
+</tr>
+<tr>
+<td><code>loadkeys</code></td>
+<td>load keyboard mapping</td>
+<td>加载键盘映射表</td>
+<td><code>-q&lt;br&gt;-s</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>将键盘映射&#x2F;按键布局加载到内核控制台（tty）</td>
+<td><code>loadkeys de-latin1.map.gz</code></td>
+</tr>
+<tr>
+<td><code>rdev</code></td>
+<td>root device</td>
+<td>显示或设置根设备</td>
+<td><code>-R</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>读取&#x2F;修改引导时的根设备设置（传统工具，高风险）</td>
+<td><code>rdev</code></td>
+</tr>
+<tr>
+<td><code>dumpkeys</code></td>
+<td>dump keyboard mapping</td>
+<td>导出键盘映射</td>
+<td><code>-c&lt;br&gt;-n</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>导出当前键盘映射内容，便于排查或备份</td>
+<td><code>dumpkeys &gt; keys.txt</code></td>
+</tr>
+<tr>
+<td><code>MAKEDEV</code></td>
+<td>create device nodes</td>
+<td>创建设备文件</td>
+<td><code>无</code></td>
+<td><code>--help</code></td>
+<td>生成&#x2F;创建设备节点（传统设备节点管理脚本）</td>
+<td><code>MAKEDEV ttyS0</code></td>
+</tr>
+<tr>
+<td><code>poweroff</code></td>
+<td>power off</td>
+<td>关闭计算机电源</td>
+<td><code>-f</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>立即关机并触发电源关闭（依系统实现）</td>
+<td><code>poweroff -f</code></td>
+</tr>
+</tbody></table>
+<h2 id="其他命令（统一表格）"><a href="#其他命令（统一表格）" class="headerlink" title="其他命令（统一表格）"></a>其他命令（统一表格）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>完整命令（全称）</th>
+<th>核心作用</th>
+<th>常用短参数</th>
+<th>常用长参数</th>
+<th>详细描述</th>
+<th>使用案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ab</code></td>
+<td>ApacheBench</td>
+<td>Apache 性能测试</td>
+<td><code>-n&lt;br&gt;-c&lt;br&gt;-t&lt;br&gt;-k</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>基于并发请求压测 HTTP 服务</td>
+<td><code>ab -n 1000 -c 50 http://example.com/</code></td>
+</tr>
+<tr>
+<td><code>bc</code></td>
+<td>arbitrary precision calculator</td>
+<td>任意精度计算器</td>
+<td><code>-l</code></td>
+<td><code>--help&lt;br&gt;--version</code></td>
+<td>进行数学表达式计算（语言形式）</td>
+<td>&#96;echo “scale&#x3D;5; 1&#x2F;3”</td>
+</tr>
+<tr>
+<td><code>tail</code></td>
+<td>last lines</td>
+<td>查看文件尾部</td>
+<td><code>-n&lt;br&gt;-f</code></td>
+<td><code>--lines&lt;br&gt;--follow</code></td>
+<td>查看最后 N 行&#x2F;持续跟随追加</td>
+<td><code>tail -n 100 file.log</code></td>
+</tr>
+<tr>
+<td><code>head</code></td>
+<td>first lines</td>
+<td>查看文件开头</td>
+<td><code>-n&lt;br&gt;-c</code></td>
+<td><code>--lines&lt;br&gt;--bytes</code></td>
+<td>查看开头 N 行&#x2F;字节</td>
+<td><code>head -n 50 file.txt</code></td>
+</tr>
+<tr>
+<td><code>xargs</code></td>
+<td>build argument list</td>
+<td>构建并执行参数列表</td>
+<td><code>-n&lt;br&gt;-I&lt;br&gt;-0</code></td>
+<td><code>--max-args&lt;br&gt;--replace</code></td>
+<td>把标准输入拆分成参数再执行命令</td>
+<td>&#96;find . -name “*.log” -print0</td>
+</tr>
+<tr>
+<td><code>ip</code></td>
+<td>iproute2</td>
+<td>网络设备和路由管理</td>
+<td><code>link&lt;br&gt;addr&lt;br&gt;route</code></td>
+<td><code>--help</code></td>
+<td>替代 net-tools 的路由&#x2F;接口配置工具</td>
+<td><code>ip addr show</code></td>
+</tr>
+<tr>
+<td><code>nohup</code></td>
+<td>no hang up</td>
+<td>忽略挂起信号运行</td>
+<td><code>-n</code></td>
+<td><code>--help</code></td>
+<td>即便退出会话仍继续运行</td>
+<td><code>nohup python app.py &amp;</code></td>
+</tr>
+<tr>
+<td><code>killall</code></td>
+<td>kill all by name</td>
+<td>按名称终止进程</td>
+<td><code>-w</code></td>
+<td><code>--help</code></td>
+<td>一次性杀死所有匹配进程名</td>
+<td><code>killall nginx</code></td>
+</tr>
+<tr>
+<td><code>pkill</code></td>
+<td>process kill</td>
+<td>模式匹配终止进程</td>
+<td><code>-f&lt;br&gt;-t</code></td>
+<td><code>--help</code></td>
+<td>按进程名&#x2F;模式发送信号</td>
+<td><code>pkill -f &quot;java.*server&quot;</code></td>
+</tr>
+<tr>
+<td><code>man</code></td>
+<td>manual</td>
+<td>查看命令帮助</td>
+<td><code>-k</code></td>
+<td><code>--help</code></td>
+<td>访问 man 手册</td>
+<td><code>man tar</code></td>
+</tr>
+<tr>
+<td><code>ssh</code></td>
+<td>secure shell</td>
+<td>安全远程登录</td>
+<td><code>-p&lt;br&gt;-i</code></td>
+<td><code>--help</code></td>
+<td>通过 SSH 远程执行命令&#x2F;登录</td>
+<td><code>ssh user@host -p 22</code></td>
+</tr>
+<tr>
+<td><code>xxd</code></td>
+<td>hex dump</td>
+<td>十六进制查看&#x2F;编辑</td>
+<td><code>-g&lt;br&gt;-l</code></td>
+<td><code>--help</code></td>
+<td>十六进制转储与格式化</td>
+<td>&#96;xxd -g 1 file.bin</td>
+</tr>
+<tr>
+<td><code>ss</code></td>
+<td>socket statistics</td>
+<td>套接字信息查看</td>
+<td><code>-t&lt;br&gt;-u&lt;br&gt;-l</code></td>
+<td><code>--help</code></td>
+<td>查看 TCP&#x2F;UDP 监听与连接</td>
+<td><code>ss -tulpn</code></td>
+</tr>
+<tr>
+<td><code>apt</code></td>
+<td>Advanced Package Tool</td>
+<td>高级包管理</td>
+<td><code>update&lt;br&gt;install&lt;br&gt;remove</code></td>
+<td><code>--help</code></td>
+<td>Debian&#x2F;Ubuntu 系列包管理器</td>
+<td><code>apt update &amp;&amp; apt install -y curl</code></td>
+</tr>
+<tr>
+<td><code>apt-get</code></td>
+<td>APT get</td>
+<td>APT 传统命令行包管理器</td>
+<td><code>install&lt;br&gt;update</code></td>
+<td><code>--help</code></td>
+<td>面向脚本&#x2F;自动化的 apt 命令</td>
+<td><code>apt-get install -y curl</code></td>
+</tr>
+<tr>
+<td><code>yum</code></td>
+<td>Yellowdog Updater Modified</td>
+<td>RPM 包管理器</td>
+<td><code>install&lt;br&gt;update</code></td>
+<td><code>--help</code></td>
+<td>RHEL&#x2F;CentOS 系包管理</td>
+<td><code>yum install -y nginx</code></td>
+</tr>
+<tr>
+<td><code>echo</code></td>
+<td>echo</td>
+<td>输出字符串</td>
+<td><code>-n&lt;br&gt;-e</code></td>
+<td><code>--help</code></td>
+<td>输出到终端或重定向</td>
+<td><code>echo &quot;hello&quot; &gt; /tmp/a.txt</code></td>
+</tr>
+<tr>
+<td><code>jobs</code></td>
+<td>job control</td>
+<td>显示作业列表</td>
+<td><code>-l</code></td>
+<td><code>--help</code></td>
+<td>显示 shell 后台作业</td>
+<td><code>jobs -l</code></td>
+</tr>
+<tr>
+<td><code>bg</code></td>
+<td>background</td>
+<td>将作业放到后台</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>shell 作业控制：后台运行</td>
+<td><code>bg %1</code></td>
+</tr>
+<tr>
+<td><code>fg</code></td>
+<td>foreground</td>
+<td>将作业调回前台</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>shell 作业控制：前台运行</td>
+<td><code>fg %1</code></td>
+</tr>
+<tr>
+<td><code>history</code></td>
+<td>shell history</td>
+<td>显示命令历史</td>
+<td><code>-c</code></td>
+<td><code>--help</code></td>
+<td>查看&#x2F;清理 bash 历史</td>
+<td>&#96;history</td>
+</tr>
+<tr>
+<td><code>env</code></td>
+<td>environment</td>
+<td>显示环境变量</td>
+<td><code>-i</code></td>
+<td><code>--help</code></td>
+<td>输出&#x2F;运行环境变量相关</td>
+<td>&#96;env</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>run commands from a file</td>
+<td>在当前 shell 执行脚本</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>读取并执行脚本（bash&#x2F;zsh builtin）</td>
+<td><code>source /etc/profile</code></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>type information</td>
+<td>显示命令类型</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>显示命令是 builtin&#x2F;alias&#x2F;文件</td>
+<td><code>type ls</code></td>
+</tr>
+<tr>
+<td><code>printf</code></td>
+<td>print formatted</td>
+<td>格式化输出</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>类 C 的格式化输出（shell builtin）</td>
+<td><code>printf &quot;%s\n&quot; &quot;a&quot;</code></td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>test condition</td>
+<td>条件判断</td>
+<td><code>-e&lt;br&gt;-f</code></td>
+<td><code>--help</code></td>
+<td>判断文件&#x2F;数值等条件</td>
+<td><code>test -f /etc/passwd</code></td>
+</tr>
+<tr>
+<td><code>true</code></td>
+<td>true</td>
+<td>返回真</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>始终成功退出状态</td>
+<td><code>true &amp;&amp; echo ok</code></td>
+</tr>
+<tr>
+<td><code>false</code></td>
+<td>false</td>
+<td>返回假</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>始终失败退出状态</td>
+<td>&#96;false</td>
+</tr>
+<tr>
+<td><code>cal</code></td>
+<td>calendar</td>
+<td>显示日历</td>
+<td><code>-y&lt;br&gt;-m</code></td>
+<td><code>--help</code></td>
+<td>显示月&#x2F;年日历</td>
+<td><code>cal -y</code></td>
+</tr>
+<tr>
+<td><code>diff3</code></td>
+<td>3-way diff</td>
+<td>三方文件比较</td>
+<td><code>-m</code></td>
+<td><code>--help</code></td>
+<td>比较三份文件差异</td>
+<td><code>diff3 a b c</code></td>
+</tr>
+<tr>
+<td><code>nl</code></td>
+<td>number lines</td>
+<td>为文件添加行号</td>
+<td><code>-b&lt;br&gt;-w</code></td>
+<td><code>--help</code></td>
+<td>给行添加行号输出</td>
+<td><code>nl -ba file</code></td>
+</tr>
+<tr>
+<td><code>rev</code></td>
+<td>reverse</td>
+<td>反转文件各行</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>反转字符顺序</td>
+<td>&#96;echo abc</td>
+</tr>
+<tr>
+<td><code>tac</code></td>
+<td>reverse concatenate</td>
+<td>反向显示文件</td>
+<td><code>-s</code></td>
+<td><code>--help</code></td>
+<td>从末尾到开头逐行输出</td>
+<td>&#96;tac file.txt</td>
+</tr>
+<tr>
+<td><code>basename</code></td>
+<td>base name</td>
+<td>去除路径显示文件名</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>获取文件名（不含目录）</td>
+<td><code>basename /etc/passwd</code></td>
+</tr>
+<tr>
+<td><code>dirname</code></td>
+<td>dir name</td>
+<td>显示路径部分</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>获取目录名（不含文件名）</td>
+<td><code>dirname /etc/passwd</code></td>
+</tr>
+<tr>
+<td><code>lsblk</code></td>
+<td>list block devices</td>
+<td>列出块设备</td>
+<td><code>-f&lt;br&gt;-o</code></td>
+<td><code>--help</code></td>
+<td>查看磁盘&#x2F;分区设备信息</td>
+<td><code>lsblk -f</code></td>
+</tr>
+<tr>
+<td><code>blkid</code></td>
+<td>block id</td>
+<td>显示块设备信息</td>
+<td><code>-o</code></td>
+<td><code>--help</code></td>
+<td>显示 UUID&#x2F;LABEL 等</td>
+<td><code>blkid /dev/sdb1</code></td>
+</tr>
+<tr>
+<td><code>parted</code></td>
+<td>partition table editor</td>
+<td>磁盘分区工具</td>
+<td><code>-s</code></td>
+<td><code>--help</code></td>
+<td>交互&#x2F;脚本化分区管理</td>
+<td><code>parted -s /dev/sdb print</code></td>
+</tr>
+<tr>
+<td><code>lsusb</code></td>
+<td>list USB</td>
+<td>显示 USB 设备信息</td>
+<td><code>-v</code></td>
+<td><code>--help</code></td>
+<td>USB 设备枚举</td>
+<td><code>lsusb</code></td>
+</tr>
+<tr>
+<td><code>lspci</code></td>
+<td>list PCI</td>
+<td>显示 PCI 设备信息</td>
+<td><code>-nn</code></td>
+<td><code>--help</code></td>
+<td>PCI 设备信息枚举</td>
+<td><code>lspci -nn</code></td>
+</tr>
+<tr>
+<td><code>journalctl</code></td>
+<td>journal control</td>
+<td>systemd 日志查看</td>
+<td><code>-u&lt;br&gt;-f</code></td>
+<td><code>--help</code></td>
+<td>查看 systemd journal 日志</td>
+<td><code>journalctl -u kubelet -n 200</code></td>
+</tr>
+<tr>
+<td><code>uptime</code></td>
+<td>uptime</td>
+<td>显示系统运行时间</td>
+<td><code>-p</code></td>
+<td><code>--help</code></td>
+<td>显示运行时长&#x2F;负载</td>
+<td><code>uptime -p</code></td>
+</tr>
+<tr>
+<td><code>vmstat</code></td>
+<td>virtual memory stat</td>
+<td>虚拟内存统计</td>
+<td><code>-n&lt;br&gt;-s</code></td>
+<td><code>--help</code></td>
+<td>查看进程&#x2F;内存&#x2F;IO 等统计</td>
+<td><code>vmstat 1</code></td>
+</tr>
+<tr>
+<td><code>iostat</code></td>
+<td>i&#x2F;o statistics</td>
+<td>CPU 和 I&#x2F;O 统计</td>
+<td><code>-x&lt;br&gt;-d</code></td>
+<td><code>--help</code></td>
+<td>查看磁盘 IO 与设备统计</td>
+<td><code>iostat -x 1</code></td>
+</tr>
+<tr>
+<td><code>mpstat</code></td>
+<td>multi processor stat</td>
+<td>多核 CPU 统计</td>
+<td><code>-P</code></td>
+<td><code>--help</code></td>
+<td>查看每核 CPU 统计</td>
+<td><code>mpstat -P ALL 1</code></td>
+</tr>
+<tr>
+<td><code>sar</code></td>
+<td>system activity report</td>
+<td>系统活动报告</td>
+<td><code>-u&lt;br&gt;-n</code></td>
+<td><code>--help</code></td>
+<td>从 sysstat 数据中生成报告</td>
+<td><code>sar -u 1 3</code></td>
+</tr>
+<tr>
+<td><code>lsb_release</code></td>
+<td>LSB release</td>
+<td>显示发行版信息</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>查询发行版&#x2F;版本</td>
+<td><code>lsb_release -a</code></td>
+</tr>
+<tr>
+<td><code>nmcli</code></td>
+<td>network manager cli</td>
+<td>NetworkManager CLI</td>
+<td><code>con&lt;br&gt;dev</code></td>
+<td><code>--help</code></td>
+<td>管理网络连接与设备</td>
+<td><code>nmcli dev status</code></td>
+</tr>
+<tr>
+<td><code>systemctl</code></td>
+<td>system control</td>
+<td>systemd 服务管理</td>
+<td><code>start&lt;br&gt;stop&lt;br&gt;status</code></td>
+<td><code>--help</code></td>
+<td>管理&#x2F;查看 systemd unit</td>
+<td><code>systemctl status sshd</code></td>
+</tr>
+<tr>
+<td><code>service</code></td>
+<td>service command</td>
+<td>服务管理工具</td>
+<td><code>start&lt;br&gt;stop</code></td>
+<td><code>--help</code></td>
+<td>传统 sysvinit 兼容命令</td>
+<td><code>service nginx status</code></td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td>init system</td>
+<td>初始化系统（PID1）</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>系统初始化（通常不可直接按业务）</td>
+<td><code>init --help</code></td>
+</tr>
+<tr>
+<td><code>htop</code></td>
+<td>htop interactive</td>
+<td>交互式进程查看器</td>
+<td><code>F10</code></td>
+<td><code>--help</code></td>
+<td>类 top 的交互工具</td>
+<td><code>htop</code></td>
+</tr>
+<tr>
+<td><code>rsync</code></td>
+<td>remote sync</td>
+<td>远程同步工具</td>
+<td><code>-av&lt;br&gt;-z</code></td>
+<td><code>--help</code></td>
+<td>增量同步&#x2F;备份</td>
+<td><code>rsync -avz /src/ user@host:/dst/</code></td>
+</tr>
+<tr>
+<td><code>curl</code></td>
+<td>client url</td>
+<td>命令行网络工具</td>
+<td><code>-L&lt;br&gt;-k&lt;br&gt;-s</code></td>
+<td><code>--help</code></td>
+<td>HTTP 请求&#x2F;下载</td>
+<td><code>curl -v https://example.com</code></td>
+</tr>
+<tr>
+<td><code>sftp</code></td>
+<td>secure ftp</td>
+<td>安全文件传输</td>
+<td><code>-b</code></td>
+<td><code>--help</code></td>
+<td>交互式 SFTP 客户端</td>
+<td><code>sftp user@host</code></td>
+</tr>
+<tr>
+<td><code>route</code></td>
+<td>routing table</td>
+<td>显示&#x2F;操作路由表</td>
+<td><code>-n</code></td>
+<td><code>--help</code></td>
+<td>传统 route 工具（新系统倾向 ip）</td>
+<td><code>route -n</code></td>
+</tr>
+<tr>
+<td><code>hostname</code></td>
+<td>hostname</td>
+<td>显示&#x2F;设置主机名</td>
+<td><code>-I</code></td>
+<td><code>--help</code></td>
+<td>显示主机名或 IP</td>
+<td><code>hostname -I</code></td>
+</tr>
+<tr>
+<td><code>ifup</code></td>
+<td>interface up</td>
+<td>启用网络接口</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>启用接口（依 &#x2F;etc&#x2F;network&#x2F;interfaces 等）</td>
+<td><code>ifup eth0</code></td>
+</tr>
+<tr>
+<td><code>ifdown</code></td>
+<td>interface down</td>
+<td>禁用网络接口</td>
+<td><code>-a</code></td>
+<td><code>--help</code></td>
+<td>禁用接口</td>
+<td><code>ifdown eth0</code></td>
+</tr>
+<tr>
+<td><code>wget</code></td>
+<td>web get</td>
+<td>命令行下载工具</td>
+<td><code>-O&lt;br&gt;-q</code></td>
+<td><code>--help</code></td>
+<td>下载文件（HTTP&#x2F;HTTPS&#x2F;FTP）</td>
+<td><code>wget -O file.zip https://...</code></td>
+</tr>
+<tr>
+<td><code>info</code></td>
+<td>info documentation</td>
+<td>查看 GNU info</td>
+<td><code>-k</code></td>
+<td><code>--help</code></td>
+<td>查阅 info 格式文档</td>
+<td><code>info ls</code></td>
+</tr>
+<tr>
+<td><code>watch</code></td>
+<td>watch command</td>
+<td>定时执行监视输出</td>
+<td><code>-n</code></td>
+<td><code>--help</code></td>
+<td>周期运行命令并刷新输出</td>
+<td><code>watch -n 1 &#39;ss -tulpn&#39;</code></td>
+</tr>
+<tr>
+<td><code>strace</code></td>
+<td>system call trace</td>
+<td>跟踪系统调用</td>
+<td><code>-p&lt;br&gt;-c</code></td>
+<td><code>--help</code></td>
+<td>跟踪进程系统调用&#x2F;信号</td>
+<td><code>strace -p 1234</code></td>
+</tr>
+<tr>
+<td><code>dnf</code></td>
+<td>dnf</td>
+<td>新一代包管理器</td>
+<td><code>install&lt;br&gt;remove</code></td>
+<td><code>--help</code></td>
+<td>Fedora&#x2F;RHEL8+ 包管理</td>
+<td><code>dnf install -y vim</code></td>
+</tr>
+<tr>
+<td><code>pacman</code></td>
+<td>pacman</td>
+<td>Arch 包管理</td>
+<td><code>-S&lt;br&gt;-R</code></td>
+<td><code>--help</code></td>
+<td>Arch Linux 软件包管理</td>
+<td><code>pacman -Syu</code></td>
+</tr>
+<tr>
+<td><code>snap</code></td>
+<td>snapd</td>
+<td>通用软件包分发</td>
+<td><code>install&lt;br&gt;remove</code></td>
+<td><code>--help</code></td>
+<td>snap 包安装&#x2F;管理</td>
+<td><code>snap install hello-world</code></td>
+</tr>
+<tr>
+<td><code>zypper</code></td>
+<td>zypper</td>
+<td>openSUSE 包管理</td>
+<td><code>in&lt;br&gt;rm</code></td>
+<td><code>--help</code></td>
+<td>Zypper 包管理</td>
+<td><code>zypper in nginx</code></td>
+</tr>
+<tr>
+<td><code>flatpak</code></td>
+<td>flatpak</td>
+<td>桌面应用分发与沙箱</td>
+<td><code>install</code></td>
+<td><code>--help</code></td>
+<td>Flatpak 应用管理</td>
+<td><code>flatpak install flathub com.example.App</code></td>
+</tr>
+<tr>
+<td><code>gdb</code></td>
+<td>GNU Debugger</td>
+<td>GNU 调试器</td>
+<td><code>-q</code></td>
+<td><code>--help</code></td>
+<td>调试程序&#x2F;查看堆栈</td>
+<td><code>gdb -q ./app</code></td>
+</tr>
+<tr>
+<td><code>objdump</code></td>
+<td>object dump</td>
+<td>二进制信息查看</td>
+<td><code>-d&lt;br&gt;-S</code></td>
+<td><code>--help</code></td>
+<td>反汇编&#x2F;查看段信息</td>
+<td>&#96;objdump -d a.out</td>
+</tr>
+<tr>
+<td><code>ldd</code></td>
+<td>list dynamic dependencies</td>
+<td>查看依赖库</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>查看程序运行时动态库依赖</td>
+<td><code>ldd /bin/ls</code></td>
+</tr>
+<tr>
+<td><code>nm</code></td>
+<td>symbol table</td>
+<td>显示符号表</td>
+<td><code>-C&lt;br&gt;-n</code></td>
+<td><code>--help</code></td>
+<td>查看二进制符号</td>
+<td>&#96;nm -n a.out</td>
+</tr>
+<tr>
+<td><code>perf</code></td>
+<td>performance</td>
+<td>性能分析工具</td>
+<td><code>record&lt;br&gt;stat</code></td>
+<td><code>--help</code></td>
+<td>CPU&#x2F;硬件性能采样与分析</td>
+<td><code>perf stat ls</code></td>
+</tr>
+<tr>
+<td><code>docker</code></td>
+<td>Docker Engine</td>
+<td>容器管理工具</td>
+<td><code>run&lt;br&gt;ps</code></td>
+<td><code>--help</code></td>
+<td>容器运行&#x2F;管理</td>
+<td><code>docker ps</code></td>
+</tr>
+<tr>
+<td><code>podman</code></td>
+<td>Podman</td>
+<td>容器工具（无守护）</td>
+<td><code>run&lt;br&gt;ps</code></td>
+<td><code>--help</code></td>
+<td>与 docker 类似的容器管理</td>
+<td><code>podman ps</code></td>
+</tr>
+<tr>
+<td><code>kubectl</code></td>
+<td>Kubernetes CLI</td>
+<td>Kubernetes 命令行</td>
+<td><code>get&lt;br&gt;apply</code></td>
+<td><code>--help</code></td>
+<td>K8s 资源操作</td>
+<td><code>kubectl get pods -A</code></td>
+</tr>
+<tr>
+<td><code>virsh</code></td>
+<td>libvirt shell</td>
+<td>KVM 虚拟机管理</td>
+<td><code>list&lt;br&gt;start</code></td>
+<td><code>--help</code></td>
+<td>libvirt 虚机管理</td>
+<td><code>virsh list --all</code></td>
+</tr>
+<tr>
+<td><code>lxc</code></td>
+<td>LXC containers</td>
+<td>LXC 容器管理</td>
+<td><code>list&lt;br&gt;launch</code></td>
+<td><code>--help</code></td>
+<td>系统容器&#x2F;用户空间容器管理</td>
+<td><code>lxc list</code></td>
+</tr>
+<tr>
+<td><code>openssl</code></td>
+<td>OpenSSL</td>
+<td>加密&#x2F;解密</td>
+<td><code>s_client&lt;br&gt;dgst</code></td>
+<td><code>--help</code></td>
+<td>TLS&#x2F;证书&#x2F;加解密工具</td>
+<td><code>openssl s_client -connect host:443 -servername host</code></td>
+</tr>
+<tr>
+<td><code>gpg</code></td>
+<td>GNU Privacy Guard</td>
+<td>私钥&#x2F;签名管理</td>
+<td><code>--list-keys</code></td>
+<td><code>--help</code></td>
+<td>加密&#x2F;签名&#x2F;密钥管理</td>
+<td><code>gpg --list-keys</code></td>
+</tr>
+<tr>
+<td><code>auditd</code></td>
+<td>audit daemon</td>
+<td>审计守护进程</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>Linux 审计服务（audit）</td>
+<td><code>systemctl status auditd</code></td>
+</tr>
+<tr>
+<td><code>sestatus</code></td>
+<td>SELinux status</td>
+<td>查看 SELinux 状态</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>SELinux 当前模式&#x2F;策略</td>
+<td><code>sestatus</code></td>
+</tr>
+<tr>
+<td><code>setenforce</code></td>
+<td>set enforce</td>
+<td>设置 SELinux 模式</td>
+<td><code>0&lt;br&gt;1</code></td>
+<td><code>--help</code></td>
+<td>设置 Enforcing&#x2F;Permissive</td>
+<td><code>setenforce 0</code></td>
+</tr>
+<tr>
+<td><code>fail2ban</code></td>
+<td>fail2ban</td>
+<td>防暴力破解（依发行版）</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>基于日志自动封禁（实际客户端常为 fail2ban-client）</td>
+<td><code>fail2ban-client status</code></td>
+</tr>
+<tr>
+<td><code>tmux</code></td>
+<td>terminal multiplexer</td>
+<td>终端多路复用器</td>
+<td><code>new&lt;br&gt;attach</code></td>
+<td><code>--help</code></td>
+<td>会话管理与持久化终端</td>
+<td><code>tmux new -s work</code></td>
+</tr>
+<tr>
+<td><code>at</code></td>
+<td>at jobs</td>
+<td>一次性定时任务</td>
+<td><code>-f</code></td>
+<td><code>--help</code></td>
+<td>在指定时间执行一次命令</td>
+<td>&#96;echo ‘date’</td>
+</tr>
+<tr>
+<td><code>batch</code></td>
+<td>batch jobs</td>
+<td>低负载下执行一次任务</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>在系统较闲时执行</td>
+<td><code>batch</code></td>
+</tr>
+<tr>
+<td><code>logger</code></td>
+<td>log message</td>
+<td>写系统日志</td>
+<td><code>-p</code></td>
+<td><code>--help</code></td>
+<td>向 syslog&#x2F;journald 写入消息</td>
+<td><code>logger -t myapp &quot;hello&quot;</code></td>
+</tr>
+<tr>
+<td><code>units</code></td>
+<td>unit conversion</td>
+<td>单位换算</td>
+<td><code>N/A</code></td>
+<td><code>--help</code></td>
+<td>进行单位换算（长度&#x2F;温度等）</td>
+<td><code>units &quot;10 km to miles&quot;</code></td>
+</tr>
+<tr>
+<td><code>hg</code></td>
+<td>Mercurial</td>
+<td>分布式版本控制</td>
+<td><code>clone&lt;br&gt;commit</code></td>
+<td><code>--help</code></td>
+<td>Mercurial 代码版本管理</td>
+<td><code>hg clone ...</code></td>
+</tr>
+<tr>
+<td><code>svn</code></td>
+<td>Subversion</td>
+<td>集中式版本控制</td>
+<td><code>checkout&lt;br&gt;commit</code></td>
+<td><code>--help</code></td>
+<td>Subversion 代码仓库管理</td>
+<td><code>svn checkout ...</code></td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/" rel="tag"># 命令大全</a>
+              <a href="/tags/%E5%86%99%E4%BD%9C%E8%A7%84%E8%8C%83/" rel="tag"># 写作规范</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/25/%E6%B7%B1%E5%BA%A6%E5%A4%8D%E7%9B%98-%E4%B8%BA%E4%BB%80%E4%B9%88Ping%E5%9F%9F%E5%90%8D%E8%83%BD%E9%80%9A%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8D%B4%E6%89%93%E4%B8%8D%E5%BC%80%E7%BD%91%E9%A1%B5/" rel="prev" title="深度复盘：为什么 Ping 域名能通，浏览器却打不开网页？">
+                  <i class="fa fa-angle-left"></i> 深度复盘：为什么 Ping 域名能通，浏览器却打不开网页？
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
