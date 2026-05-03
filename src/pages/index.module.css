@@ -1,23 +1,212 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
+/* 首页：与文档站统一的克制风格，深浅色自适应 */
 
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
+.hero {
   position: relative;
+  padding: clamp(3rem, 10vw, 5rem) 1.5rem 4rem;
   overflow: hidden;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: linear-gradient(
+    165deg,
+    var(--ifm-background-color) 0%,
+    color-mix(in srgb, var(--ifm-color-primary-lightest) 22%, var(--ifm-background-color)) 45%,
+    var(--ifm-background-color) 100%
+  );
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+[data-theme='dark'] .hero {
+  background: linear-gradient(
+    165deg,
+    var(--ifm-background-color) 0%,
+    color-mix(in srgb, var(--ifm-color-primary-darker) 35%, var(--ifm-background-color)) 50%,
+    var(--ifm-background-color) 100%
+  );
+  border-bottom-color: var(--ifm-color-emphasis-300);
 }
 
-.buttons {
+.heroGlow {
+  pointer-events: none;
+  position: absolute;
+  inset: -40% -20% auto;
+  height: 70%;
+  max-height: 420px;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    color-mix(in srgb, var(--ifm-color-primary) 25%, transparent),
+    transparent 70%
+  );
+  opacity: 0.5;
+}
+
+.heroInner {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.heroEyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.heroTitle {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ifm-font-color-base);
+}
+
+.heroSubtitle {
+  margin: 0 0 2rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.heroActions {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.btnPrimary {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0.65rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ifm-button-color);
+  background: var(--ifm-color-primary);
+  border: none;
+  text-decoration: none !important;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.btnPrimary:hover {
+  color: var(--ifm-button-color);
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ifm-font-color-base);
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  text-decoration: none !important;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.btnGhost:hover {
+  border-color: var(--ifm-color-primary);
+  background: color-mix(in srgb, var(--ifm-color-primary) 8%, transparent);
+  color: var(--ifm-font-color-base);
+}
+
+.main {
+  padding: 3rem 1.25rem 4rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.section {
+  margin: 0;
+}
+
+.sectionHead {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 2.5rem;
+}
+
+.sectionTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.sectionLead {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.cardGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.25rem 1.35rem;
+  border-radius: 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+  color: inherit;
+  text-decoration: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.cardDesc {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ifm-color-emphasis-700);
+  flex: 1;
+}
+
+.cardArrow {
+  align-self: flex-end;
+  margin-top: 0.25rem;
+  font-size: 1.1rem;
+  color: var(--ifm-color-primary);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover .cardArrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 996px) {
+  .hero {
+    padding-top: 2.5rem;
+  }
 }

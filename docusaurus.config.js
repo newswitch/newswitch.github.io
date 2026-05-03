@@ -94,7 +94,11 @@ const config = {
             title: '文档',
             items: [
               {
-                label: '首页',
+                label: '站点首页',
+                to: '/',
+              },
+              {
+                label: '文档导读',
                 to: '/docs/intro',
               },
             ],
