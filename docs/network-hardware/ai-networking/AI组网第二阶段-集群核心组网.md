@@ -131,4 +131,4 @@ tags: [学习计划, AI组网, RDMA, RoCE, VXLAN, K8s]
 
 ---
 
-[← AI 组网第一阶段：底层基础](/docs/ai-networking/AI组网第一阶段-底层基础) | [AI 组网第三阶段：自动化与架构进阶 →](/docs/ai-networking/AI组网第三阶段-自动化与架构进阶)
+[← AI 组网第一阶段：底层基础](/docs/network-hardware/ai-networking/AI组网第一阶段-底层基础) | [AI 组网第三阶段：自动化与架构进阶 →](/docs/network-hardware/ai-networking/AI组网第三阶段-自动化与架构进阶)

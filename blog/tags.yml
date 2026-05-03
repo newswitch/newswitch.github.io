@@ -1,19 +1,5 @@
-facebook:
-  label: Facebook
-  permalink: /facebook
-  description: Facebook tag description
-
-hello:
-  label: Hello
-  permalink: /hello
-  description: Hello tag description
-
-docusaurus:
-  label: Docusaurus
-  permalink: /docusaurus
-  description: Docusaurus tag description
-
-hola:
-  label: Hola
-  permalink: /hola
-  description: Hola tag description
+# 按需取消注释并补充描述；或在各篇博文 front matter 直接使用 tags
+misc:
+  label: 未分类
+  permalink: /misc
+  description: 占位标签

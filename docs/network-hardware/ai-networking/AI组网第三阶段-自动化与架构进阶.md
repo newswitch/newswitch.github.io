@@ -100,4 +100,4 @@ tags: [学习计划, AI组网, 自动化, NCCL, QoS, 灾备]
 
 ---
 
-[← AI 组网第二阶段：集群核心组网](/docs/ai-networking/AI组网第二阶段-集群核心组网)
+[← AI 组网第二阶段：集群核心组网](/docs/network-hardware/ai-networking/AI组网第二阶段-集群核心组网)
