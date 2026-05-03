@@ -736,7 +736,7 @@ StatefulSet 规约：定义具体应用的配置
 DNS 命名规则
 StatefulSet 中每个 Pod 的 DNS 格式如下，便于集群内服务发现和通信：
 
-`<statefulSetName>-<ordinal>.<serviceName>.<namespace>.svc.cluster.local`
+`&lt;statefulSetName&gt;-&lt;ordinal&gt;.&lt;serviceName&gt;.&lt;namespace&gt;.svc.cluster.local`
 
 其中：
 
@@ -826,7 +826,7 @@ StatefulSet 通过序数和 DNS 规则为每个 Pod 提供唯一身份，便于�
 DNS 解析示例：
 
 集群域	Service	StatefulSet	Pod DNS	Pod 主机名
-cluster.local	default/nginx	default/web	web-{0..N-1}.nginx.default.svc.cluster.local	web-{0..N-1}
+cluster.local	default/nginx	default/web	web-\{0..N-1\}.nginx.default.svc.cluster.local	web-\{0..N-1\}
 表 1: StatefulSet Pod DNS 解析示例
 稳定存储
 Kubernetes 会为每个 VolumeClaimTemplate 创建 PersistentVolume。Pod 重新调度时，volumeMounts 会挂载对应的 PersistentVolume。需要注意的是，删除 Pod 或 StatefulSet 时，PersistentVolume 不会被自动删除。
@@ -834,8 +834,8 @@ Kubernetes 会为每个 VolumeClaimTemplate 创建 PersistentVolume。Pod 重新
 部署和扩缩容保证
 StatefulSet 在部署和扩缩容过程中，严格保证 Pod 的有序性和依赖关系。
 
-有序创建：Pod 按 `{0..N-1}` 顺序创建和部署
-有序删除：Pod 按 `{N-1..0}` 逆序终止
+有序创建：Pod 按 \{0..N-1\} 顺序创建和部署
+有序删除：Pod 按 \{N-1..0\} 逆序终止
 扩容前提：执行扩容前，所有前序 Pod 必须处于 Running 和 Ready 状态
 缩容前提：终止 Pod 前，所有后续 Pod 必须完全关闭
 Pod 管理策略
@@ -2011,7 +2011,7 @@ HPA 不生效
 
 ```bash
 # 查看 HPA 状态
-kubectl describe hpa `<hpa-name>`
+kubectl describe hpa <hpa-name>
 
 # 查看 HPA 事件
 kubectl get events --field-selector involvedObject.kind=HorizontalPodAutoscaler
