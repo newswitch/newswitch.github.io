@@ -21,11 +21,6 @@ const SECTIONS = [
     to: '/docs/infrastructure/pcie/PCIe总线学习（一）基本架构',
   },
   {
-    title: '游戏与客户端',
-    desc: 'UE5 输入、导航、UMG 等客户端侧学习记录。',
-    to: '/docs/game-client/ue5/UE5学习（一）输入系统',
-  },
-  {
     title: '工程笔记与排障',
     desc: '排障复盘、Prompt 与命令参考等短文。',
     to: '/docs/engineering/notes/Prompt-从输入到输出',
