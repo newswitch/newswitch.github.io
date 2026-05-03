@@ -119,8 +119,10 @@
 
 .main {
   padding: 3rem 1.25rem 4rem;
-  max-width: 1080px;
+  max-width: min(1280px, 100% - 2rem);
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .section {
@@ -152,17 +154,29 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  /* 宽屏横排多列；窄了自动换行成多行 */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 220px), 1fr)
+  );
   gap: 1rem;
+  align-items: stretch;
+}
+
+.cardGrid > li {
+  min-width: 0;
+  display: flex;
 }
 
 .card {
   position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.5rem;
-  height: 100%;
+  width: 100%;
+  min-height: 100%;
   padding: 1.25rem 1.35rem;
   border-radius: 12px;
   border: 1px solid var(--ifm-color-emphasis-200);
