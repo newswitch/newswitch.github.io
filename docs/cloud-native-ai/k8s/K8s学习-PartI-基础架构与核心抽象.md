@@ -23,7 +23,7 @@ tags: [Kubernetes, 学习路线, 架构, 核心抽象, etcd]
 | --- | --- |
 | **开放接口** | CRI / CNI / CSI 概述 |
 | **Pod** | 解析、Init / Pause / Sidecar、生命周期、探针；专文见《K8s 学习 · Part I：基础架构与核心抽象 之 Pod》 |
-| **集群资源管理** | Node、Namespace、Label、污点容忍、GC、调度、QoS；专文见 [集群资源管理 · 概述](./K8s学习-PartI-集群资源管理/01-概述) |
+| **集群资源管理** | Node、Namespace、Label、污点容忍、GC、调度、QoS；专文见 [集群资源管理 · 概述](./K8s学习-PartI-集群资源管理/概述) |
 | **控制器** | Deployment、StatefulSet、DaemonSet、Job、Ingress、HPA 等；专文见《K8s 学习 · Part I：基础架构与核心抽象 之 控制器》 |
 | **服务发现与路由** | Service、Ingress、Gateway API |
 | **身份与权限** | ServiceAccount、RBAC、SPIFFE / SPIRE（了解） |
