@@ -69,6 +69,12 @@ const config = {
       colorMode: {
         respectPrefersColorScheme: true,
       },
+      docs: {
+        sidebar: {
+          // 展开某一分类时自动收起同级其它分类，避免侧栏一次铺开全部文章
+          autoCollapseCategories: true,
+        },
+      },
       navbar: {
         title: 'newswitch',
         logo: {

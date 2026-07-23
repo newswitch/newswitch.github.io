@@ -1,6 +1,6 @@
 {
   "label": "K8s GPU 集群",
   "position": 2,
-  "collapsed": false,
+  "collapsed": true,
   "link": null
 }
