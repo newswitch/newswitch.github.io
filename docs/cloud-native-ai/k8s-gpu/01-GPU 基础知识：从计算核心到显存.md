@@ -281,7 +281,21 @@ INT4：P × 0.5 Byte
 nvidia-smi
 ```
 
-关注：型号、驱动版本、CUDA 兼容版本、温度、功耗、显存、GPU Util、进程。
+示例输出（单卡示意，请以本机为准）：
+
+```text
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.90.07              Driver Version: 550.90.07      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   42C    P0             68W /  400W |   14200MiB /  81920MiB |      0%      Default |
++-----------------------------------------+------------------------+----------------------+
+```
+
+关注：型号、驱动版本、CUDA 兼容版本、温度、功耗、显存、GPU Util、进程。更完整示例见：[nvidia-smi 常用命令与指标说明](./03-nvidia-smi%20常用命令与指标说明.md)。
 
 ### 10.2 查询指定指标
 
@@ -289,6 +303,13 @@ nvidia-smi
 nvidia-smi \
   --query-gpu=name,uuid,memory.total,memory.used,memory.free,utilization.gpu,utilization.memory,temperature.gpu,power.draw \
   --format=csv
+```
+
+示例：
+
+```text
+name, uuid, memory.total [MiB], memory.used [MiB], memory.free [MiB], utilization.gpu [%], utilization.memory [%], temperature.gpu, power.draw [W]
+NVIDIA A100-SXM4-80GB, GPU-xxxx, 81920 MiB, 14200 MiB, 67484 MiB, 0 %, 0 %, 42, 68.12 W
 ```
 
 ### 10.3 详细查询

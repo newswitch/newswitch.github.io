@@ -30,9 +30,46 @@ tags: ["GPU", "nvidia-smi", "运维", "学习路线"]
 nvidia-smi
 ```
 
-常见字段：Driver Version、CUDA Version、GPU Name、Persistence-M、Bus-Id、Disp.A、Temperature、Performance State、Power、Memory Usage、GPU-Util、Compute Mode、Processes。
+示例输出（双卡 A100，数值随机器变化，仅作对照）：
 
-顶部的 **CUDA Version** 主要表示当前驱动支持的 CUDA 用户态版本上限，不等于已安装同版本 CUDA Toolkit。实际 Toolkit：
+```text
+Thu Jul 23 10:00:00 2026
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.90.07              Driver Version: 550.90.07      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:07:00.0 Off |                    0 |
+| N/A   42C    P0             68W /  400W |   61234MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:0A:00.0 Off |                    0 |
+| N/A   41C    P0             65W /  400W |     512MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A    123456      C   python                                        61200MiB |
+|    1   N/A  N/A         -      -   -                                                   - |
++-----------------------------------------------------------------------------------------+
+```
+
+如何读这张表：
+
+- 顶部 **Driver Version** / **CUDA Version**：驱动版本；CUDA 行为该驱动支持的用户态上限，≠ 已装 Toolkit 版本  
+- **Memory-Usage**：显存容量占用（例：GPU0 约 61GiB / 80GiB）  
+- **GPU-Util**：采样期内是否有 Kernel 在跑（例中 0% 表示当前几乎空闲）  
+- **Processes**：占用显存的计算进程；无进程时可能为空或显示 `-`  
+
+常见字段还包括：Persistence-M、Bus-Id、Disp.A、Temperature、Performance State、Power、Compute Mode。
+
+实际 Toolkit 版本：
 
 ```bash
 nvcc --version
@@ -49,7 +86,12 @@ ls -l /usr/local/cuda
 nvidia-smi -L
 ```
 
-示例：`GPU 0: NVIDIA A100-SXM4-80GB (UUID: GPU-xxxx)`。
+示例输出：
+
+```text
+GPU 0: NVIDIA A100-SXM4-80GB (UUID: GPU-a1b2c3d4-e5f6-7890-abcd-ef1234567890)
+GPU 1: NVIDIA A100-SXM4-80GB (UUID: GPU-b2c3d4e5-f6a7-8901-bcde-f12345678901)
+```
 
 **UUID**（或 PCI Bus ID）比 Index 更适合长期标识；重启后 Index 顺序不保证不变。
 
@@ -81,11 +123,28 @@ nvidia-smi \
 nvidia-smi \
   --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu,utilization.memory,temperature.gpu,power.draw \
   --format=csv
+```
 
+示例输出：
+
+```text
+index, name, memory.total [MiB], memory.used [MiB], memory.free [MiB], utilization.gpu [%], utilization.memory [%], temperature.gpu, power.draw [W]
+0, NVIDIA A100-SXM4-80GB, 81920 MiB, 61234 MiB, 20450 MiB, 0 %, 0 %, 42, 68.12 W
+1, NVIDIA A100-SXM4-80GB, 81920 MiB, 512 MiB, 81172 MiB, 0 %, 0 %, 41, 65.03 W
+```
+
+```bash
 # 无表头、无单位，便于脚本
 nvidia-smi \
   --query-gpu=index,memory.used,utilization.gpu \
   --format=csv,noheader,nounits
+```
+
+示例：
+
+```text
+0, 61234, 0
+1, 512, 0
 ```
 
 `--format` 须指定 CSV，可附加 `noheader`、`nounits`。
@@ -115,6 +174,15 @@ nvidia-smi dmon
 nvidia-smi dmon -s pucmet
 ```
 
+`dmon` 示例（每秒一行，Ctrl+C 退出）：
+
+```text
+# gpu   pwr  gtemp  mtemp     sm    mem    enc    dec    mclk  pclk
+# Idx     W     C     C      %      %      %      %      MHz   MHz
+    0    68     42     -      0      0      0      0   1593   1410
+    1    65     41     -      0      0      0      0   1593   1410
+```
+
 `dmon` 分组示例：
 
 | 参数 | 内容 |
@@ -138,7 +206,16 @@ nvidia-smi
 nvidia-smi \
   --query-compute-apps=gpu_uuid,pid,process_name,used_memory \
   --format=csv
+```
 
+示例输出：
+
+```text
+gpu_uuid, pid, process_name, used_gpu_memory [MiB]
+GPU-a1b2c3d4-e5f6-7890-abcd-ef1234567890, 123456, python, 61200 MiB
+```
+
+```bash
 nvidia-smi pmon
 nvidia-smi pmon -s um
 ```
@@ -161,6 +238,14 @@ nvidia-smi nvlink -s
 nvidia-smi topo -p2p r
 nvidia-smi topo -p2p w
 nvidia-smi topo -p2p n
+```
+
+`topo -m` 示例片段（`NV#` = NVLink，`SYS` = 跨 NUMA）：
+
+```text
+        GPU0    GPU1    CPU Affinity    NUMA Affinity
+GPU0     X      NV4      0-31              0
+GPU1    NV4      X       0-31              0
 ```
 
 解读见：[GPU 服务器硬件拓扑与 NUMA](./02-GPU%20服务器硬件拓扑与%20NUMA.md)。
