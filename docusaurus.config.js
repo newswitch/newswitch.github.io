@@ -4,7 +4,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'newswitch',
+  title: 'XYF',
   tagline: '技术文档与笔记',
   favicon: 'img/favicon.ico',
 
@@ -76,9 +76,9 @@ const config = {
         },
       },
       navbar: {
-        title: 'newswitch',
+        title: 'XYF',
         logo: {
-          alt: 'newswitch',
+          alt: 'XYF',
           src: 'img/logo.svg',
         },
         items: [
@@ -126,7 +126,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} newswitch. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} XYF. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,
