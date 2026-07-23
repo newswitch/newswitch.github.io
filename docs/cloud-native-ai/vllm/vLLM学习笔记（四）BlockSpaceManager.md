@@ -1,5 +1,6 @@
 ---
 title: vLLM 学习笔记（四）：BlockSpaceManager
+sidebar_position: 4
 date: 2026-02-17 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]

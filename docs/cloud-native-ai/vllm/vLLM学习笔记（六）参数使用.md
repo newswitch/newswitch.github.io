@@ -1,5 +1,6 @@
 ---
 title: vLLM 学习笔记（六）：参数使用
+sidebar_position: 6
 date: 2026-02-19 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]

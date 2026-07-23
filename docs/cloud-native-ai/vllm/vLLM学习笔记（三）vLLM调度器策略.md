@@ -1,5 +1,6 @@
 ---
 title: vLLM 学习笔记（三）：vLLM 调度器策略
+sidebar_position: 3
 date: 2026-02-16 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]

@@ -1,5 +1,6 @@
 ---
 title: vLLM 学习笔记（一）：整体代码架构
+sidebar_position: 1
 date: 2026-02-13 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]

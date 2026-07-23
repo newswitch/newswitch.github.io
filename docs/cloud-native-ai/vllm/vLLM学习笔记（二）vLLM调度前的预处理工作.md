@@ -1,5 +1,6 @@
 ---
 title: vLLM 学习笔记（二）：vLLM 调度前的预处理工作
+sidebar_position: 2
 date: 2026-02-14 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]

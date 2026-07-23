@@ -1,5 +1,6 @@
 ---
 title: vLLM 学习笔记（五）：PrefixCachingBlockAllocator
+sidebar_position: 5
 date: 2026-02-18 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]
