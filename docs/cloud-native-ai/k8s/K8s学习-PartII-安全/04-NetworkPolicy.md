@@ -258,5 +258,5 @@ Kubernetes NetworkPolicy 通过声明式策略实现了微服务间的最小权�
 - [Network Policies - Kubernetes 官方文档](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 - [Declare Network Policy - Kubernetes 官方教程](https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/)
 - [Network Policy Editor - editor.networkpolicy.io](https://editor.networkpolicy.io/)
-- [Calico Network Policies - docs.tigera.io](https://docs.tigera.io/calico/latest/network-policy/)
+- [Calico Network Policies - docs.tigera.io](/docs/cloud-native-ai/k8s/K8s学习-PartII-安全/NetworkPolicy)
 - [Cilium Network Policies - docs.cilium.io](https://docs.cilium.io/en/stable/security/policy/)

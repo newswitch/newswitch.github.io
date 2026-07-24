@@ -9,7 +9,7 @@ description: "本文详细介绍 SPIRE 的架构、核心组件、证明机制�
 
 > SPIRE 是 SPIFFE 标准的生产级实现，为云原生环境下的工作负载提供自动化、可扩展的身份分发和证明机制，是实现零信任安全架构的关键基础设施。
 
-SPIRE（SPIFFE Runtime Environment）是 [SPIFFE API](../spiffe) 的生产就绪实现，它执行节点和工作负载认证，根据预定义条件安全地向工作负载发布 SVID（SPIFFE Verifiable Identity Document），并验证其他工作负载的 SVID。
+SPIRE（SPIFFE Runtime Environment）是 [SPIFFE API](/docs/cloud-native-ai/k8s/K8s学习-PartI-身份与权限认证/SPIFFE) 的生产就绪实现，它执行节点和工作负载认证，根据预定义条件安全地向工作负载发布 SVID（SPIFFE Verifiable Identity Document），并验证其他工作负载的 SVID。
 
 ## 核心架构
 

@@ -24,7 +24,7 @@ kubeconfig 文件是 Kubernetes 客户端（如 kubectl）与集群安全通信�
 
 ### kubeconfig 文件生成
 
-关于如何生成 kubeconfig 文件，请参考 [创建用户认证授权的 kubeconfig 文件](../../security/kubectl-user-authentication-authorization)。
+关于如何生成 kubeconfig 文件，请参考 [创建用户认证授权的 kubeconfig 文件](/docs/cloud-native-ai/k8s/K8s学习-PartII-安全/Kubeconfig用户认证授权)。
 
 ### Dashboard 认证的特殊要求
 
@@ -150,7 +150,7 @@ Kubernetes Secret 中存储的 token 是 base64 编码，**必须解码**后才�
 
 - `cluster-admin`：集群最高权限
 - `admin`：命名空间管理权限
-- 更细粒度权限请参考 [RBAC——基于角色的访问控制](../../auth/rbac)
+- 更细粒度权限请参考 [RBAC——基于角色的访问控制](/docs/cloud-native-ai/k8s/K8s学习-PartI-身份与权限认证/RBAC)
 
 ### 安全最佳实践
 

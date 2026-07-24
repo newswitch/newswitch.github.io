@@ -213,7 +213,7 @@ flowchart LR
 
 - [Kubernetes 官方文档：Dynamic Admission Control - kubernetes.io](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
 - [Istio Sidecar Injection Mechanism - istio.io](https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/)
-- [Admission Webhook Example (官方示例) - github.com](https://github.com/kubernetes/examples/tree/master/staging/admission-webhook)
+- [Admission Webhook Example (官方示例) - github.com](/docs/cloud-native-ai/k8s/K8s学习-PartII-扩展Kubernetes/Admission-Webhook扩展)
 - [JSON Patch Specification (RFC 6902) - ietf.org](https://datatracker.ietf.org/doc/html/rfc6902)
 
 ## 总结

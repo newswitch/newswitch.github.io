@@ -9,7 +9,7 @@ description: "深入了解 Kubernetes Ingress 控制器的作用、官方支持�
 
 > Ingress 控制器是 Kubernetes 网络流量管理的关键组件，决定了外部请求如何安全、高效地路由到集群内部服务，是实现弹性和可扩展网络架构的基础。
 
-在 Kubernetes 集群中，若希望 [Ingress](../../service-discovery/ingress) 资源能够正常工作，必须部署至少一个 Ingress 控制器。与作为 `kube-controller-manager` 组件自动启动的其他控制器不同，Ingress 控制器需要用户根据实际需求单独部署和管理。选择合适的 Ingress 控制器对于集群的网络能力和安全性至关重要。
+在 Kubernetes 集群中，若希望 [Ingress](/docs/cloud-native-ai/k8s/K8s学习-PartI-服务发现与路由/Ingress) 资源能够正常工作，必须部署至少一个 Ingress 控制器。与作为 `kube-controller-manager` 组件自动启动的其他控制器不同，Ingress 控制器需要用户根据实际需求单独部署和管理。选择合适的 Ingress 控制器对于集群的网络能力和安全性至关重要。
 
 ## 官方支持的控制器
 

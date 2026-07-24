@@ -9,7 +9,7 @@ description: "CronJob 是 Kubernetes 中用于管理基于时间调度的 Job �
 
 > CronJob 机制让 Kubernetes 能够原生支持定时任务编排，实现自动化运维、数据备份等周期性作业的高效管理。
 
-CronJob 管理基于时间的 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)，即可以在给定时间点只运行一次，也可以周期性地在给定时间点运行。一个 CronJob 对象类似于 *crontab*（cron table）文件中的一行。它根据指定的预定计划周期性地运行一个 Job，格式可以参考 [Cron](https://en.wikipedia.org/wiki/Cron)。
+CronJob 管理基于时间的 [Job](/docs/cloud-native-ai/k8s/K8s学习-PartI-控制器/Job)，即可以在给定时间点只运行一次，也可以周期性地在给定时间点运行。一个 CronJob 对象类似于 *crontab*（cron table）文件中的一行。它根据指定的预定计划周期性地运行一个 Job，格式可以参考 [Cron](https://en.wikipedia.org/wiki/Cron)。
 
 ## 前提条件
 
@@ -29,7 +29,7 @@ CronJob 资源定义包含必需字段和可选字段，合理配置可满足不
 ### 必需字段
 
 - **`.spec.schedule`**：调度配置，指定任务运行周期，格式遵循 [Cron](https://en.wikipedia.org/wiki/Cron) 语法
-- **`.spec.jobTemplate`**：Job 模板，指定需要运行的任务，格式同 [Job](../job)
+- **`.spec.jobTemplate`**：Job 模板，指定需要运行的任务，格式同 [Job](/docs/cloud-native-ai/k8s/K8s学习-PartI-控制器/Job)
 
 ### 可选字段
 

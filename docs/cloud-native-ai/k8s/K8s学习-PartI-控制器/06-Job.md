@@ -145,5 +145,5 @@ Job 控制器为 Kubernetes 提供了强大的批处理能力，支持任务的�
 
 ## 参考文献
 
-- [Job 官方文档 - kubernetes.io](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
-- [Kubernetes Patterns: Job - kubernetes.io](https://kubernetes.io/docs/concepts/workloads/controllers/job/#job-patterns)
+- [Job 官方文档 - kubernetes.io](/docs/cloud-native-ai/k8s/K8s学习-PartI-控制器/Job)
+- [Kubernetes Patterns: Job - kubernetes.io](/docs/cloud-native-ai/k8s/K8s学习-PartI-控制器/Job#job-patterns)

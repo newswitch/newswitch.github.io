@@ -283,9 +283,9 @@ kubectl get events --watch --field-selector involvedObject.name=my-pod
 | -o json | JSON 格式输出 |
 | -o wide | 额外列信息 |
 | -o name | 仅显示名称 |
-| -o jsonpath=<expr> | JSONPath 表达式 |
-| -o custom-columns=<spec> | 自定义列 |
-| -o go-template=<template> | Go 模板 |
+| `-o jsonpath=<expr>` | JSONPath 表达式 |
+| `-o custom-columns=<spec>` | 自定义列 |
+| `-o go-template=<template>` | Go 模板 |
 
 ## 调试和详细输出
 

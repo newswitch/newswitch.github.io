@@ -151,4 +151,4 @@ ReplicationController 和 ReplicaSet 是 Kubernetes 保证 Pod 副本高可用�
 ## 参考文献
 
 - [ReplicaSet 官方文档 - kubernetes.io](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
-- [Deployment 官方文档 - kubernetes.io](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Deployment 官方文档 - kubernetes.io](/docs/cloud-native-ai/k8s/K8s学习-PartI-控制器/Deployment)

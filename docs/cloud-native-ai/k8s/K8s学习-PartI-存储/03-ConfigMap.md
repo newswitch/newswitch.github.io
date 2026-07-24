@@ -321,13 +321,13 @@ spec:
 <table>
   <thead>
     <tr>
-      <th style="vertical-align: middle;">最佳实践类别</th>
-      <th style="vertical-align: middle;">建议</th>
+      <th>最佳实践类别</th>
+      <th>建议</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="vertical-align: middle;"><strong>命名规范</strong></td>
+      <td><strong>命名规范</strong></td>
       <td>
         <ul>
           <li>使用描述性的名称</li>
@@ -337,7 +337,7 @@ spec:
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: middle;"><strong>数据组织</strong></td>
+      <td><strong>数据组织</strong></td>
       <td>
         <ul>
           <li>按功能或服务分组配置</li>
@@ -347,7 +347,7 @@ spec:
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: middle;"><strong>版本管理</strong></td>
+      <td><strong>版本管理</strong></td>
       <td>
         <ul>
           <li>通过标签管理不同版本的配置</li>
@@ -357,7 +357,7 @@ spec:
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: middle;"><strong>安全考虑</strong></td>
+      <td><strong>安全考虑</strong></td>
       <td>
         <ul>
           <li>不要在 ConfigMap 中存储敏感信息</li>
@@ -367,7 +367,7 @@ spec:
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: middle;"><strong>更新策略</strong></td>
+      <td><strong>更新策略</strong></td>
       <td>
         <ul>
           <li>ConfigMap 更新后，Pod 需要重启才能生效（除非使用 subPath）</li>

@@ -135,7 +135,7 @@ DNS 解析示例：
 
 | 集群域 | Service | StatefulSet | Pod DNS | Pod 主机名 |
 |--------|---------|-------------|---------|-----------|
-| cluster.local | default/nginx | default/web | web-{0..N-1}.nginx.default.svc.cluster.local | web-{0..N-1} |
+| cluster.local | default/nginx | default/web | `web-{0..N-1}.nginx.default.svc.cluster.local` | `web-{0..N-1}` |
 
 ### 稳定存储
 
@@ -145,8 +145,8 @@ Kubernetes 会为每个 VolumeClaimTemplate 创建 PersistentVolume。Pod 重新
 
 StatefulSet 在部署和扩缩容过程中，严格保证 Pod 的有序性和依赖关系。
 
-- **有序创建**：Pod 按 {0..N-1} 顺序创建和部署
-- **有序删除**：Pod 按 {N-1..0} 逆序终止
+- **有序创建**：Pod 按 `{0..N-1}` 顺序创建和部署
+- **有序删除**：Pod 按 `{N-1..0}` 逆序终止
 - **扩容前提**：执行扩容前，所有前序 Pod 必须处于 Running 和 Ready 状态
 - **缩容前提**：终止 Pod 前，所有后续 Pod 必须完全关闭
 
@@ -417,5 +417,5 @@ StatefulSet 是 Kubernetes 管理有状态应用的核心控制器，提供稳�
 
 ## 参考文献
 
-- [Kubernetes 官方文档 - StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
+- [Kubernetes 官方文档 - StatefulSet](/docs/cloud-native-ai/k8s/K8s学习-PartI-控制器/StatefulSet)
 - [有状态应用部署教程 - kubernetes.io](https://kubernetes.io/docs/tutorials/stateful-application/)

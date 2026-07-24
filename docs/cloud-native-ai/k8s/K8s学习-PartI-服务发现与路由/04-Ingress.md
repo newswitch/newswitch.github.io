@@ -13,7 +13,7 @@ description: "Ingress 是 Kubernetes 中管理集群外部访问服务的资源�
 
 Ingress 是 Kubernetes 的资源对象，用于管理集群外部到集群内服务的 HTTP 和 HTTPS 访问。它充当智能路由器，根据定义的规则将外部流量路由到集群内的不同服务。
 
-Ingress 在 Kubernetes 1.9 正式发布，目前仍被广泛使用。但对于新项目，建议考虑使用更现代的 [Gateway API](../gateway/) 作为替代方案，它提供更强大和灵活的流量管理能力。
+Ingress 在 Kubernetes 1.9 正式发布，目前仍被广泛使用。但对于新项目，建议考虑使用更现代的 [Gateway API](/docs/cloud-native-ai/k8s/K8s学习-PartI-服务发现与路由/Gateway-API) 作为替代方案，它提供更强大和灵活的流量管理能力。
 
 ## Ingress 架构与核心功能
 
@@ -48,7 +48,7 @@ Ingress 提供以下核心功能：
 - 配置 IngressClass，指定使用的控制器
 - 准备好后端 Service 和 Pod
 
-仅创建 Ingress 资源本身不会产生任何效果，必须配合 [Ingress 控制器](../../controllers/ingress-controller) 一起使用。
+仅创建 Ingress 资源本身不会产生任何效果，必须配合 [Ingress 控制器](/docs/cloud-native-ai/k8s/K8s学习-PartI-控制器/Ingress控制器) 一起使用。
 
 ## 基本配置与路径类型
 

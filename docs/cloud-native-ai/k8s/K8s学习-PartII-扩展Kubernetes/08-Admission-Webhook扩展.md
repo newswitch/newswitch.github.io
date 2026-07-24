@@ -262,7 +262,7 @@ Admission Webhook 是 Kubernetes 最灵活的 API 扩展机制之一。它允许
 ## 参考文献
 
 1. [Admission Webhooks 官方文档 - kubernetes.io](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
-2. [ValidatingAdmissionWebhook 示例 - github.com](https://github.com/kubernetes/kubernetes/tree/master/test/images/validating-webhook)
+2. [ValidatingAdmissionWebhook 示例 - github.com](/docs/cloud-native-ai/k8s/K8s学习-PartII-扩展Kubernetes/Validating-Webhook扩展)
 3. [cert-manager 官方文档 - cert-manager.io](https://cert-manager.io/)
 4. [Kyverno - kyverno.io](https://kyverno.io/)
 5. [OPA Gatekeeper - open-policy-agent.github.io](https://open-policy-agent.github.io/gatekeeper/)

@@ -672,7 +672,7 @@ Kubebuilder 提供了完整的 Kubernetes Operator 开发体验，从项目初�
 ## 参考资料
 
 1. [Kubebuilder 官方文档 - book.kubebuilder.io](https://book.kubebuilder.io/)
-2. [Kubernetes API 扩展 - kubernetes.io](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/)
+2. [Kubernetes API 扩展 - kubernetes.io](/docs/cloud-native-ai/k8s/K8s学习-PartII-扩展Kubernetes/API扩展机制)
 3. [Controller Runtime - github.com](https://github.com/kubernetes-sigs/controller-runtime)
 4. [Operator Pattern - kubernetes.io](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 5. [Kind 快速开始 - kind.sigs.k8s.io](https://kind.sigs.k8s.io/docs/user/quick-start/)

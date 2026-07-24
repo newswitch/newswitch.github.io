@@ -11,7 +11,7 @@ description: "介绍 Operator SDK 的核心概念、架构设计、安装配置�
 
 ## 什么是 Operator SDK
 
-[Operator SDK](https://github.com/operator-framework/operator-sdk) 是由 Red Hat 开源的用于构建 Kubernetes Operator 的开发框架。它提供了工具、库和标准化模式，帮助开发者高效、一致地创建、测试和打包能够自动化管理 Kubernetes 上复杂应用程序的 Operator。
+[Operator SDK](/docs/cloud-native-ai/k8s/K8s学习-PartII-扩展Kubernetes/Operator-SDK) 是由 Red Hat 开源的用于构建 Kubernetes Operator 的开发框架。它提供了工具、库和标准化模式，帮助开发者高效、一致地创建、测试和打包能够自动化管理 Kubernetes 上复杂应用程序的 Operator。
 
 Operator SDK 基于 Kubernetes controller-runtime 库构建，并通过与 Operator Lifecycle Manager (OLM) 的无缝集成，为 Operator 特定的工具和抽象提供了扩展支持。
 
