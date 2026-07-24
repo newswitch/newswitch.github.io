@@ -1,13 +1,9 @@
 ---
 title: "Sidecar 容器"
 sidebar_position: 5
-tags: [Kubernetes, Pod, 学习路线, 转载]
+tags: [Kubernetes, Pod, 学习路线]
 description: "介绍 Kubernetes 中 Sidecar 容器模式的概念、使用场景和最佳实践"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Sidecar 容器](https://jimmysong.io/zh/book/kubernetes-handbook/pod/sidecar-container/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Sidecar 容器
 
@@ -32,7 +28,7 @@ graph LR
     Main -- 共享卷/网络 --> Sidecar
 ```
 
-![Sidecar 容器与主容器协作关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/pod/sidecar-container/e1a1499cc6ad7bd492d158a4db5dd8b0.svg)
+![Sidecar 容器与主容器协作关系](/images/k8s/pod/sidecar-container/e1a1499cc6ad7bd492d158a4db5dd8b0.svg)
 
 ## 常见使用场景
 

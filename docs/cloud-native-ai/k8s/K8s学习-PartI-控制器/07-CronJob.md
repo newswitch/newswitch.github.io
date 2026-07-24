@@ -1,13 +1,9 @@
 ---
 title: "CronJob"
 sidebar_position: 7
-tags: [Kubernetes, 控制器, 学习路线, 转载]
+tags: [Kubernetes, 控制器, 学习路线]
 description: "CronJob 是 Kubernetes 中用于管理基于时间调度的 Job 资源，支持一次性和周期性任务执行，类似于 Linux 系统中的 crontab 功能。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[CronJob](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/cronjob/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # CronJob
 

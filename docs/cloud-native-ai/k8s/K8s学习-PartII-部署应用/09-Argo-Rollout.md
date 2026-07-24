@@ -1,13 +1,9 @@
 ---
 title: "Argo Rollout：Kubernetes 的渐进式交付控制器"
 sidebar_position: 9
-tags: [Kubernetes, 部署应用, PartII, 学习路线, 转载]
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Argo Rollout 是 Kubernetes 的渐进式交付控制器，提供蓝绿部署和金丝雀部署等高级部署策略，支持细粒度流量控制和自动化分析，提升应用交付的安全性和可靠性。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Argo Rollout：Kubernetes 的渐进式交付控制器](https://jimmysong.io/zh/book/kubernetes-handbook/devops/argo-rollout/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Argo Rollout：Kubernetes 的渐进式交付控制器
 
@@ -68,7 +64,7 @@ graph TD
     MP -->|"provider"| MP7["Job"]
 ```
 
-![Argo Rollout 核心架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argo-rollout/db0685afabedb791f1a59b4cfc497c5b.svg)
+![Argo Rollout 核心架构](/images/k8s/devops/argo-rollout/db0685afabedb791f1a59b4cfc497c5b.svg)
 
 Argo Rollout 的核心组成部分包括自定义资源定义（CRDs）、控制器、流量管理和分析系统，各组件协同实现渐进式交付。
 
@@ -100,7 +96,7 @@ graph TD
     RC -->|"creates"| Experiments
 ```
 
-![控制器实现结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argo-rollout/b89862b0fc1f9f8f90042300d03c6d46.svg)
+![控制器实现结构](/images/k8s/devops/argo-rollout/b89862b0fc1f9f8f90042300d03c6d46.svg)
 
 控制器负责监控 Rollout 资源变化、管理 ReplicaSets、更新 Services、创建分析与实验对象，并与流量路由机制集成，实现渐进式流量转移。
 
@@ -129,7 +125,7 @@ graph TD
     Steps -->|"type"| SetHeaderRoute["setHeaderRoute"]
 ```
 
-![部署策略结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argo-rollout/6a2ba63c7b63d413003fbe16a33431f7.svg)
+![部署策略结构](/images/k8s/devops/argo-rollout/6a2ba63c7b63d413003fbe16a33431f7.svg)
 
 ### BlueGreen 部署
 
@@ -162,7 +158,7 @@ graph TD
     Providers -->|"type"| P7["Job"]
 ```
 
-![分析系统结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argo-rollout/141ab50af2cb81e63768fd6bdc8a471e.svg)
+![分析系统结构](/images/k8s/devops/argo-rollout/141ab50af2cb81e63768fd6bdc8a471e.svg)
 
 分析系统通过定义指标、查询外部数据、评估成功条件，实现自动提升或回滚。支持 Prometheus、Datadog 等主流监控平台。
 

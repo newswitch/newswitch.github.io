@@ -1,13 +1,9 @@
 ---
 title: "使用 Operator SDK 构建 Operator"
 sidebar_position: 7
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Operator SDK 的核心概念、架构设计、安装配置、CLI 插件系统及开发工作流，帮助读者掌握使用 Operator SDK 构建 Kubernetes Operator 的方法与最佳实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[使用 Operator SDK 构建 Operator](https://jimmysong.io/zh/book/kubernetes-handbook/extend/operator-sdk/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 使用 Operator SDK 构建 Operator
 
@@ -68,7 +64,7 @@ graph TD
     Scorecard --> OLM
 ```
 
-![Operator SDK 总体架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/operator-sdk/6f6a352096e2df667037a13b42057738.svg)
+![Operator SDK 总体架构](/images/k8s/extend/operator-sdk/6f6a352096e2df667037a13b42057738.svg)
 
 ## 安装 Operator SDK
 
@@ -155,7 +151,7 @@ graph TD
     Commands --> PkgManToBundle["pkgmantobundle"]
 ```
 
-![Operator SDK CLI 插件系统](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/operator-sdk/9bbecdfe7a954d6606af1da1b3045a7e.svg)
+![Operator SDK CLI 插件系统](/images/k8s/extend/operator-sdk/9bbecdfe7a954d6606af1da1b3045a7e.svg)
 
 每个插件包负责为特定的 Operator 实现类型（Go、Ansible 或 Helm）提供功能。核心命令与所有 Operator 类型配合，提供一致的功能体验。
 
@@ -265,7 +261,7 @@ graph LR
     end
 ```
 
-![Operator SDK 与 OLM 集成流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/operator-sdk/302346304b6e530e531145aba14b41f4.svg)
+![Operator SDK 与 OLM 集成流程](/images/k8s/extend/operator-sdk/302346304b6e530e531145aba14b41f4.svg)
 
 ## 开发工作流
 
@@ -281,7 +277,7 @@ graph LR
     Deploy --> Validate["operator-sdk scorecard"]
 ```
 
-![Operator SDK 开发工作流](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/operator-sdk/87b070d7afe5b98fa4f8cb064a70174a.svg)
+![Operator SDK 开发工作流](/images/k8s/extend/operator-sdk/87b070d7afe5b98fa4f8cb064a70174a.svg)
 
 ## 开发 Operator
 
@@ -446,7 +442,7 @@ graph TD
     E2E --> CHAOS
 ```
 
-![Operator SDK 测试策略](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/operator-sdk/6c6e4711ac2ac41e4feea1b3f1e73159.svg)
+![Operator SDK 测试策略](/images/k8s/extend/operator-sdk/6c6e4711ac2ac41e4feea1b3f1e73159.svg)
 
 ### 打包和分发
 

@@ -1,13 +1,9 @@
 ---
 title: "容器运行时接口（CRI）"
 sidebar_position: 2
-tags: [Kubernetes, 开放接口, 学习路线, 转载]
+tags: [Kubernetes, 开放接口, 学习路线]
 description: "容器运行时接口（CRI）是 Kubernetes 中定义容器和镜像服务的核心接口，基于 gRPC 协议，支持多种容器运行时后端如 containerd、CRI-O 等，为 Kubernetes 提供了灵活的容器运行时选择。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[容器运行时接口（CRI）](https://jimmysong.io/zh/book/kubernetes-handbook/interfaces/cri/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 容器运行时接口（CRI）
 
@@ -53,7 +49,7 @@ graph TB
     end
 ```
 
-![CRI 作为抽象层](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/cri/3f506382e51979972aa6a2c79d45c9d0.svg)
+![CRI 作为抽象层](/images/k8s/interfaces/cri/3f506382e51979972aa6a2c79d45c9d0.svg)
 
 抽象层允许运行时实现独立演进，同时为 kubelet 保持稳定接口。
 
@@ -99,7 +95,7 @@ graph TB
     PS -.->|"容器运行于其中"| CT
 ```
 
-![CRI 的两大服务及其操作](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/cri/b9f14183ba0ee7115706e4b5a0d623ba.svg)
+![CRI 的两大服务及其操作](/images/k8s/interfaces/cri/b9f14183ba0ee7115706e4b5a0d623ba.svg)
 
 RuntimeService 与 ImageService 的分离为运行时管理镜像和容器提供了灵活性。
 
@@ -140,7 +136,7 @@ graph BT
     GRPC_DEF -->|"由实现"| OTHER
 ```
 
-![gRPC 与 Protocol Buffers 在 CRI 中的作用](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/cri/a9ffe9bc753405c70dcc0584acc64bc7.svg)
+![gRPC 与 Protocol Buffers 在 CRI 中的作用](/images/k8s/interfaces/cri/a9ffe9bc753405c70dcc0584acc64bc7.svg)
 
 ## 关键概念
 

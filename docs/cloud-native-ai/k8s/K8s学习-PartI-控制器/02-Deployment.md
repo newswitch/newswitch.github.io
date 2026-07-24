@@ -1,13 +1,9 @@
 ---
 title: "Deployment"
 sidebar_position: 2
-tags: [Kubernetes, 控制器, 学习路线, 转载]
+tags: [Kubernetes, 控制器, 学习路线]
 description: "Deployment 为 Pod 和 ReplicaSet 提供了声明式的部署方案，支持滚动更新、扩缩容、暂停恢复等操作，是 Kubernetes 中管理无状态应用的核心控制器。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Deployment](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/deployment/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Deployment
 
@@ -74,7 +70,7 @@ kubectl rollout undo deployment/nginx-deployment
 
 下图展示了 Deployment 控制器的核心架构与资源关系。
 
-![Kubernetes Deployment Cheatsheet](https://assets.jimmysong.io/images/book/kubernetes-handbook/controllers/deployment/deployment-cheatsheet.webp)
+![Kubernetes Deployment Cheatsheet](/images/k8s/controllers/deployment/deployment-cheatsheet.webp)
 
 ## 核心概念
 

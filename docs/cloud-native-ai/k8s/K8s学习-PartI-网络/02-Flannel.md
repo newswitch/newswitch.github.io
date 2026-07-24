@@ -1,13 +1,9 @@
 ---
 title: "扁平网络 Flannel"
 sidebar_position: 2
-tags: [Kubernetes, 网络, 学习路线, 转载]
+tags: [Kubernetes, 网络, 学习路线]
 description: "深入介绍 Kubernetes 网络插件 Flannel 的工作原理，包括网络架构、配置方式、与 Docker 的集成以及路由机制，帮助理解容器网络的底层实现。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[扁平网络 Flannel](https://jimmysong.io/zh/book/kubernetes-handbook/networking/flannel/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 扁平网络 Flannel
 
@@ -60,7 +56,7 @@ Flannel 作为二进制程序部署在每个节点上，主要实现以下功能
 
 下图展示了使用 `host-gw` 后端的 Flannel 网络架构：
 
-![flannel 网络架构（图片来自 openshift）](https://assets.jimmysong.io/images/book/kubernetes-handbook/networking/flannel/flannel-networking.webp)
+![flannel 网络架构（图片来自 openshift）](/images/k8s/networking/flannel/flannel-networking.webp)
 
 ### etcd 中的网络配置
 

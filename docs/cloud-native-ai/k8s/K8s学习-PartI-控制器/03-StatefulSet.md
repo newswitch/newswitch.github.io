@@ -1,13 +1,9 @@
 ---
 title: "StatefulSet"
 sidebar_position: 3
-tags: [Kubernetes, 控制器, 学习路线, 转载]
+tags: [Kubernetes, 控制器, 学习路线]
 description: "StatefulSet 是 Kubernetes 中用于管理有状态应用的控制器，提供稳定的网络标识、持久化存储和有序部署等特性，适用于数据库、消息队列等需要状态保持的应用场景。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[StatefulSet](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/statefulset/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # StatefulSet
 

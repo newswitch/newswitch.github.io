@@ -1,13 +1,9 @@
 ---
 title: "HAMi：Kubernetes 上的异构算力虚拟化中间件"
 sidebar_position: 11
-tags: [Kubernetes, AI原生, PartIII, 学习路线, 转载]
+tags: [Kubernetes, AI原生, PartIII, 学习路线]
 description: "探索 HAMi：Kubernetes 上的异构算力虚拟化中间件，提升 AI 加速器管理与调度效率，助力资源优化与灵活性。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[HAMi：Kubernetes 上的异构算力虚拟化中间件](https://jimmysong.io/zh/book/kubernetes-handbook/ai-native/hami/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # HAMi：Kubernetes 上的异构算力虚拟化中间件
 
@@ -66,7 +62,7 @@ graph TB
     Metrics --> Dashboard
 ```
 
-![HAMi 系统架构组件](https://assets.jimmysong.io/images/book/kubernetes-handbook/ai-native/hami/d9f1434b86dc245eb8545cbcb5b0585c.svg)
+![HAMi 系统架构组件](/images/k8s/ai-native/hami/d9f1434b86dc245eb8545cbcb5b0585c.svg)
 
 ## 设备虚拟化与共享机制
 
@@ -209,7 +205,7 @@ graph TB
     style DevicePlugin fill:#f9f9f9
 ```
 
-![HAMi 架构图](https://assets.jimmysong.io/images/book/kubernetes-handbook/ai-native/hami/2b4151911c44acd2719c54a72a02111b.svg)
+![HAMi 架构图](/images/k8s/ai-native/hami/2b4151911c44acd2719c54a72a02111b.svg)
 
 ### 关键组件
 

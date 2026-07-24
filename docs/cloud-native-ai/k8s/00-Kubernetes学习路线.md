@@ -4,12 +4,12 @@ sidebar_position: 0
 date: 2026-07-24
 categories: 云原生
 tags: [Kubernetes, 学习路线]
-description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 Jimmy Song《Kubernetes 教程》，已迁入章节保留转载说明。
+description: 按 Part I～III 组织的 Kubernetes 学习路线。
 ---
 
 # K8s 学习路线
 
-本专栏按 **Part I · 基础架构与核心抽象 → Part II · 平台能力与生产实践 → Part III · 扩展机制与新范式** 组织，目录对齐 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/)。已迁入章节正文转载自该手册（[CC BY‑NC‑SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)），文首标明出处，仅供个人非商业学习。
+本专栏按 **Part I · 基础架构与核心抽象 → Part II · 平台能力与生产实践 → Part III · 扩展机制与新范式** 组织。
 
 与 [Kubernetes GPU 集群专栏](../k8s-gpu/00-Kubernetes-GPU集群学习路线) 可并行：本专栏打 K8s 底座，GPU 专栏侧重算力与推理。
 
@@ -19,40 +19,38 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 
 | 部分 | 状态 | 说明 |
 | --- | --- | --- |
-| Part I · Kubernetes 架构 | **已迁入手册全文** | [架构 · 本章导读](./K8s学习-PartI-Kubernetes架构/00-本章导读) |
-| Part I · 开放接口 | **已迁入手册全文** | [开放接口 · 本章导读](./K8s学习-PartI-开放接口/00-本章导读) |
-| Part I · Pod | **已迁入手册全文** | [Pod · 本章导读](./K8s学习-PartI-Pod/00-本章导读) |
-| Part I · 集群资源管理 | **已迁入手册全文** | [集群资源管理 · 本章导读](./K8s学习-PartI-集群资源管理/00-本章导读) |
-| Part I · 控制器 | **已迁入手册全文** | [控制器 · 本章导读](./K8s学习-PartI-控制器/00-本章导读) |
-| Part I · 服务发现与路由 | **已迁入手册全文** | [服务发现 · 本章导读](./K8s学习-PartI-服务发现与路由/00-本章导读) |
-| Part I · 身份与权限认证 | **已迁入手册全文** | [身份认证 · 本章导读](./K8s学习-PartI-身份与权限认证/00-本章导读) |
-| Part I · 网络 | **已迁入手册全文** | [网络 · 本章导读](./K8s学习-PartI-网络/00-本章导读) |
-| Part I · 存储 | **已迁入手册全文** | [存储 · 本章导读](./K8s学习-PartI-存储/00-本章导读) |
-| Part I | **已全部迁完** | 见下方各章目录 |
-| Part II · 安全 | **已迁入手册全文** | [安全 · 本章导读](./K8s学习-PartII-安全/00-本章导读) |
-| Part II · 访问集群 | **已迁入手册全文** | [访问集群 · 本章导读](./K8s学习-PartII-访问集群/00-本章导读) |
-| Part II · 扩展 Kubernetes | **已迁入手册全文** | [扩展 · 本章导读](./K8s学习-PartII-扩展Kubernetes/00-本章导读) |
-| Part II · 多集群管理 | **已迁入手册全文** | [多集群 · 本章导读](./K8s学习-PartII-多集群管理/00-本章导读) |
-| Part II · 命令与调试 | **已迁入手册全文** | [命令与调试 · 本章导读](./K8s学习-PartII-命令与调试/00-本章导读) |
-| Part II · 集群运维 | **已迁入手册全文** | [集群运维 · 本章导读](./K8s学习-PartII-集群运维/00-本章导读) |
-| Part II · 部署应用 | **已迁入手册全文** | [部署应用 · 本章导读](./K8s学习-PartII-部署应用/00-本章导读) |
-| Part II · 可观测性 | **已迁入手册全文** | [可观测性 · 本章导读](./K8s学习-PartII-可观测性/00-本章导读) |
-| Part II · 开发指南 | **已迁入手册全文** | [开发指南 · 本章导读](./K8s学习-PartII-开发指南/00-本章导读) |
-| Part II · 服务网格 | **已迁入手册全文** | [服务网格 · 本章导读](./K8s学习-PartII-服务网格/00-本章导读) |
-| Part II | **已全部迁完** | 见下方各章目录 |
-| Part III · Serverless | **已迁入手册全文** | [Serverless · 本章导读](./K8s学习-PartIII-Serverless/00-本章导读) |
-| Part III · 边缘计算 | **已迁入手册全文** | [边缘计算 · 本章导读](./K8s学习-PartIII-边缘计算/00-本章导读) |
-| Part III · 云原生 | **已迁入手册全文** | [云原生 · 本章导读](./K8s学习-PartIII-云原生/00-本章导读) |
-| Part III · AI 原生 | **已迁入手册全文** | [AI 原生 · 本章导读](./K8s学习-PartIII-AI原生/00-本章导读) |
-| Part III | **已全部迁完** | 见下方各章目录与 [Part III 总览](./K8s学习-PartIII-扩展机制与新范式) |
+| Part I · Kubernetes 架构 | **已完成** | [架构 · 本章导读](./K8s学习-PartI-Kubernetes架构/00-本章导读) |
+| Part I · 开放接口 | **已完成** | [开放接口 · 本章导读](./K8s学习-PartI-开放接口/00-本章导读) |
+| Part I · Pod | **已完成** | [Pod · 本章导读](./K8s学习-PartI-Pod/00-本章导读) |
+| Part I · 集群资源管理 | **已完成** | [集群资源管理 · 本章导读](./K8s学习-PartI-集群资源管理/00-本章导读) |
+| Part I · 控制器 | **已完成** | [控制器 · 本章导读](./K8s学习-PartI-控制器/00-本章导读) |
+| Part I · 服务发现与路由 | **已完成** | [服务发现 · 本章导读](./K8s学习-PartI-服务发现与路由/00-本章导读) |
+| Part I · 身份与权限认证 | **已完成** | [身份认证 · 本章导读](./K8s学习-PartI-身份与权限认证/00-本章导读) |
+| Part I · 网络 | **已完成** | [网络 · 本章导读](./K8s学习-PartI-网络/00-本章导读) |
+| Part I · 存储 | **已完成** | [存储 · 本章导读](./K8s学习-PartI-存储/00-本章导读) |
+| Part I | **已全部完成** | 见下方各章目录 |
+| Part II · 安全 | **已完成** | [安全 · 本章导读](./K8s学习-PartII-安全/00-本章导读) |
+| Part II · 访问集群 | **已完成** | [访问集群 · 本章导读](./K8s学习-PartII-访问集群/00-本章导读) |
+| Part II · 扩展 Kubernetes | **已完成** | [扩展 · 本章导读](./K8s学习-PartII-扩展Kubernetes/00-本章导读) |
+| Part II · 多集群管理 | **已完成** | [多集群 · 本章导读](./K8s学习-PartII-多集群管理/00-本章导读) |
+| Part II · 命令与调试 | **已完成** | [命令与调试 · 本章导读](./K8s学习-PartII-命令与调试/00-本章导读) |
+| Part II · 集群运维 | **已完成** | [集群运维 · 本章导读](./K8s学习-PartII-集群运维/00-本章导读) |
+| Part II · 部署应用 | **已完成** | [部署应用 · 本章导读](./K8s学习-PartII-部署应用/00-本章导读) |
+| Part II · 可观测性 | **已完成** | [可观测性 · 本章导读](./K8s学习-PartII-可观测性/00-本章导读) |
+| Part II · 开发指南 | **已完成** | [开发指南 · 本章导读](./K8s学习-PartII-开发指南/00-本章导读) |
+| Part II · 服务网格 | **已完成** | [服务网格 · 本章导读](./K8s学习-PartII-服务网格/00-本章导读) |
+| Part II | **已全部完成** | 见下方各章目录 |
+| Part III · Serverless | **已完成** | [Serverless · 本章导读](./K8s学习-PartIII-Serverless/00-本章导读) |
+| Part III · 边缘计算 | **已完成** | [边缘计算 · 本章导读](./K8s学习-PartIII-边缘计算/00-本章导读) |
+| Part III · 云原生 | **已完成** | [云原生 · 本章导读](./K8s学习-PartIII-云原生/00-本章导读) |
+| Part III · AI 原生 | **已完成** | [AI 原生 · 本章导读](./K8s学习-PartIII-AI原生/00-本章导读) |
+| Part III | **已全部完成** | 见下方各章目录 |
 
 ---
 
 ## Part I · 基础架构与核心抽象
 
-对照手册：[Kubernetes 教程 · Part I](https://jimmysong.io/zh/book/kubernetes-handbook/)
-
-### Kubernetes 架构（已迁入手册全文）
+### Kubernetes 架构（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -62,9 +60,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Etcd 解析](./K8s学习-PartI-Kubernetes架构/03-Etcd解析) | 存储与一致性 |
 | [资源对象](./K8s学习-PartI-Kubernetes架构/04-资源对象) | 对象模型 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· Kubernetes 架构](https://jimmysong.io/zh/book/kubernetes-handbook/architecture/)，CC BY‑NC‑SA 4.0。
-
-### 开放接口（已迁入手册全文）
+### 开放接口（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -74,9 +70,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [CNI](./K8s学习-PartI-开放接口/03-容器网络接口-CNI) | 容器网络接口 |
 | [CSI](./K8s学习-PartI-开放接口/04-容器存储接口-CSI) | 容器存储接口 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 开放接口](https://jimmysong.io/zh/book/kubernetes-handbook/interfaces/)，CC BY‑NC‑SA 4.0。
-
-### Pod（已迁入手册全文）
+### Pod（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -91,9 +85,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [中断预算](./K8s学习-PartI-Pod/08-Pod中断预算) | PDB 与自愿中断 |
 | [探针](./K8s学习-PartI-Pod/09-存活与就绪探针) | Liveness / Readiness / Startup |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· Pod](https://jimmysong.io/zh/book/kubernetes-handbook/pod/)，CC BY‑NC‑SA 4.0。
-
-### 集群资源管理（已迁入手册全文）
+### 集群资源管理（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -108,9 +100,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [资源调度](./K8s学习-PartI-集群资源管理/08-资源调度) | 调度 |
 | [服务质量等级](./K8s学习-PartI-集群资源管理/09-服务质量等级) | QoS |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 集群资源管理](https://jimmysong.io/zh/book/kubernetes-handbook/cluster/)，CC BY‑NC‑SA 4.0。
-
-### 控制器（已迁入手册全文）
+### 控制器（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -126,9 +116,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [HPA](./K8s学习-PartI-控制器/09-HPA) | 水平扩缩 |
 | [准入控制器](./K8s学习-PartI-控制器/10-准入控制器) | Admission |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 控制器](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/)，CC BY‑NC‑SA 4.0。
-
-### 服务发现与路由（已迁入手册全文）
+### 服务发现与路由（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -141,9 +129,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Gateway API 推理扩展](./K8s学习-PartI-服务发现与路由/06-Gateway-API推理扩展) | 推理扩展 |
 | [迁移到 Gateway API](./K8s学习-PartI-服务发现与路由/07-迁移到Gateway-API) | 从 Ingress 迁移 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 服务发现与路由](https://jimmysong.io/zh/book/kubernetes-handbook/service-discovery/)，CC BY‑NC‑SA 4.0。
-
-### 身份与权限认证（已迁入手册全文）
+### 身份与权限认证（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -154,9 +140,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [SPIFFE](./K8s学习-PartI-身份与权限认证/04-SPIFFE) | 工作负载身份 |
 | [SPIRE](./K8s学习-PartI-身份与权限认证/05-SPIRE) | SPIFFE 运行时 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 身份与权限认证](https://jimmysong.io/zh/book/kubernetes-handbook/auth/)，CC BY‑NC‑SA 4.0。
-
-### 网络（已迁入手册全文）
+### 网络（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -166,9 +150,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Calico](./K8s学习-PartI-网络/03-Calico) | 策略 / 非 Overlay |
 | [Cilium](./K8s学习-PartI-网络/04-Cilium) | eBPF 网络 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 网络](https://jimmysong.io/zh/book/kubernetes-handbook/networking/)，CC BY‑NC‑SA 4.0。
-
-### 存储（已迁入手册全文）
+### 存储（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -183,17 +165,13 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Storage Class](./K8s学习-PartI-存储/08-StorageClass) | 动态供给 |
 | [本地持久化存储](./K8s学习-PartI-存储/09-本地持久化存储) | Local PV |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 存储](https://jimmysong.io/zh/book/kubernetes-handbook/storage/)，CC BY‑NC‑SA 4.0。
-
-> **Part I 已全部迁完。**
+> **Part I 已全部完成。**
 
 ---
 
 ## Part II · 平台能力与生产实践
 
-对照手册：[Kubernetes 教程 · Part II](https://jimmysong.io/zh/book/kubernetes-handbook/)；总览仍见 [平台能力与生产实践](./K8s学习-PartII-平台能力与生产实践)。
-
-### 安全（已迁入手册全文）
+### 安全（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -211,9 +189,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [用户与身份认证](./K8s学习-PartII-安全/11-用户与身份认证) | 用户身份 |
 | [安全最佳实践](./K8s学习-PartII-安全/12-Kubernetes安全最佳实践) | 最佳实践 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 安全](https://jimmysong.io/zh/book/kubernetes-handbook/security/)，CC BY‑NC‑SA 4.0。
-
-### 访问集群（已迁入手册全文）
+### 访问集群（已完成）
 
 | 篇 | 内容 |
 | --- | --- |
@@ -229,9 +205,9 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Devtron](./K8s学习-PartII-访问集群/09-Devtron) | 应用平台 |
 | [Dashboard](./K8s学习-PartII-访问集群/10-Kubernetes-Dashboard) | Web UI |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 访问集群](https://jimmysong.io/zh/book/kubernetes-handbook/access/)，CC BY‑NC‑SA 4.0。
+### 扩展 Kubernetes（已完成）
 
-### 扩展 Kubernetes（已迁入手册全文）
+可与 [k8s-gpu 专栏](../k8s-gpu/00-Kubernetes-GPU集群学习路线) 对照阅读 DRA / GPU 调度篇。
 
 | 篇 | 说明 |
 | --- | --- |
@@ -251,9 +227,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [DRA](./K8s学习-PartII-扩展Kubernetes/13-动态资源分配-DRA) | 动态资源分配 |
 | [GPU 与 AI 调度](./K8s学习-PartII-扩展Kubernetes/14-GPU与AI调度) | GPU / AI |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 扩展](https://jimmysong.io/zh/book/kubernetes-handbook/extend/)，CC BY‑NC‑SA 4.0。可与 [k8s-gpu 专栏](../k8s-gpu/00-Kubernetes-GPU集群学习路线) 对照阅读 DRA / GPU 调度篇。
-
-### 多集群管理（已迁入手册全文）
+### 多集群管理（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -263,9 +237,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Karmada](./K8s学习-PartII-多集群管理/03-Karmada) | 多集群编排 |
 | [k0rdent](./K8s学习-PartII-多集群管理/04-k0rdent) | 多集群控制平面 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 多集群](https://jimmysong.io/zh/book/kubernetes-handbook/multi-cluster/)，CC BY‑NC‑SA 4.0。
-
-### 命令与调试（已迁入手册全文）
+### 命令与调试（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -274,9 +246,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [kubectl 速查表](./K8s学习-PartII-命令与调试/02-kubectl速查表) | 常用命令速查 |
 | [调试 Kubernetes](./K8s学习-PartII-命令与调试/03-调试Kubernetes) | 排障流程 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 命令与调试](https://jimmysong.io/zh/book/kubernetes-handbook/cli/)，CC BY‑NC‑SA 4.0。
-
-### 集群运维（已迁入手册全文）
+### 集群运维（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -286,9 +256,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [集群生命周期管理](./K8s学习-PartII-集群运维/03-集群生命周期管理) | kubeadm 创建 / 升级 / 维护 |
 | [版本发布管理](./K8s学习-PartII-集群运维/04-版本发布管理) | 版本与发布 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 集群运维](https://jimmysong.io/zh/book/kubernetes-handbook/operation/)，CC BY‑NC‑SA 4.0。升级相关另见提纲页 [集群升级](./K8s学习-PartII-集群升级)。
-
-### 部署应用（已迁入手册全文）
+### 部署应用（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -304,9 +272,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Argo Rollout](./K8s学习-PartII-部署应用/09-Argo-Rollout) | 渐进式交付 |
 | [Volcano](./K8s学习-PartII-部署应用/10-Volcano) | 批处理调度 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 部署应用](https://jimmysong.io/zh/book/kubernetes-handbook/devops/)，CC BY‑NC‑SA 4.0。
-
-### 可观测性（已迁入手册全文）
+### 可观测性（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -320,9 +286,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [告警系统](./K8s学习-PartII-可观测性/07-告警系统) | Alerting |
 | [OpenTelemetry](./K8s学习-PartII-可观测性/08-OpenTelemetry) | 可观测性标准 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 可观测性](https://jimmysong.io/zh/book/kubernetes-handbook/observability/)，CC BY‑NC‑SA 4.0。
-
-### 开发指南（已迁入手册全文）
+### 开发指南（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -338,9 +302,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [社区贡献](./K8s学习-PartII-开发指南/09-社区贡献) | 参与贡献 |
 | [Minikube](./K8s学习-PartII-开发指南/10-Minikube) | 本地集群 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 开发指南](https://jimmysong.io/zh/book/kubernetes-handbook/develop/)，CC BY‑NC‑SA 4.0。
-
-### 服务网格（已迁入手册全文）
+### 服务网格（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -353,17 +315,13 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Envoy 构建模块](./K8s学习-PartII-服务网格/06-Envoy构建模块) | Envoy 组件 |
 | [HTTP 连接管理器](./K8s学习-PartII-服务网格/07-HTTP连接管理器) | HCM |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 服务网格](https://jimmysong.io/zh/book/kubernetes-handbook/service-mesh/)，CC BY‑NC‑SA 4.0。
-
 ---
 
 ## Part III · 扩展机制与新范式
 
-对照手册：[Kubernetes 教程 · Part III](https://jimmysong.io/zh/book/kubernetes-handbook/)；总览见 [扩展机制与新范式](./K8s学习-PartIII-扩展机制与新范式)。
-
 与 GPU / AI 相关内容可与 [k8s-gpu 专栏](../k8s-gpu/00-Kubernetes-GPU集群学习路线) 对照阅读。
 
-### Serverless（已迁入手册全文）
+### Serverless（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -375,9 +333,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [Kubernetes 原生模式](./K8s学习-PartIII-Serverless/05-Kubernetes原生Serverless模式) | 原生模式 |
 | [OpenFaaS](./K8s学习-PartIII-Serverless/06-OpenFaaS) | OpenFaaS |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· Serverless](https://jimmysong.io/zh/book/kubernetes-handbook/serverless/)，CC BY‑NC‑SA 4.0。
-
-### 边缘计算（已迁入手册全文）
+### 边缘计算（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -388,9 +344,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [OpenYurt](./K8s学习-PartIII-边缘计算/04-OpenYurt) | 零侵入边缘平台 |
 | [SuperEdge](./K8s学习-PartIII-边缘计算/05-SuperEdge) | 单集群多区域 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 边缘计算](https://jimmysong.io/zh/book/kubernetes-handbook/edge-computing/)，CC BY‑NC‑SA 4.0。
-
-### 云原生（已迁入手册全文）
+### 云原生（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -405,9 +359,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [角色与分工](./K8s学习-PartIII-云原生/08-角色与分工) | 角色 |
 | [规范模型](./K8s学习-PartIII-云原生/09-云原生应用规范模型) | 规范 |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· 云原生](https://jimmysong.io/zh/book/kubernetes-handbook/cloud-native/)，CC BY‑NC‑SA 4.0。
-
-### AI 原生（已迁入手册全文）
+### AI 原生（已完成）
 
 | 篇 | 说明 |
 | --- | --- |
@@ -426,19 +378,8 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线；目录对齐 J
 | [设备插件](./K8s学习-PartIII-AI原生/12-设备插件) | Device Plugin |
 | [AI 工作组](./K8s学习-PartIII-AI原生/13-AI相关工作组) | 社区 WG |
 
-正文转载自 [Jimmy Song《Kubernetes 教程》· AI 原生](https://jimmysong.io/zh/book/kubernetes-handbook/ai-native/)，CC BY‑NC‑SA 4.0。
-
 ---
 
-## 迁入原则
+## 参考
 
-1. **目录对齐手册**，按章分文件，一篇一事。  
-2. **正文转载手册**（CC BY‑NC‑SA 4.0），文首标明出处与原链接。  
-3. **仅供个人非商业学习**；勘误以上游为准。  
-
----
-
-## 参考与致谢
-
-- [Jimmy Song · Kubernetes 教程](https://jimmysong.io/zh/book/kubernetes-handbook/)（CC BY‑NC‑SA 4.0）  
 - [Kubernetes 官方文档](https://kubernetes.io/zh-cn/docs/home/)

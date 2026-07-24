@@ -1,13 +1,9 @@
 ---
 title: "Gateway API 推理扩展"
 sidebar_position: 6
-tags: [Kubernetes, 服务发现, 学习路线, 转载]
+tags: [Kubernetes, 服务发现, 学习路线]
 description: "Gateway API 推理扩展"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Gateway API 推理扩展](https://jimmysong.io/zh/book/kubernetes-handbook/service-discovery/gateway-api-inference/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Gateway API 推理扩展
 
@@ -74,7 +70,7 @@ graph TB
     MS1 -->|"inference response"| CLIENT
 ```
 
-![系统架构总览](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway-api-inference/abaa6a57579f530656c7b442710119d1.svg)
+![系统架构总览](/images/k8s/service-discovery/gateway-api-inference/abaa6a57579f530656c7b442710119d1.svg)
 
 ### 组件说明
 
@@ -146,7 +142,7 @@ graph LR
     GW -->|"parent of"| HR
 ```
 
-![Kubernetes 资源关系图](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway-api-inference/3bcf808bd36880367d58e3734d7ffd75.svg)
+![Kubernetes 资源关系图](/images/k8s/service-discovery/gateway-api-inference/3bcf808bd36880367d58e3734d7ffd75.svg)
 
 ## 请求处理流程
 
@@ -198,7 +194,7 @@ sequenceDiagram
     end
 ```
 
-![推理请求处理时序图](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway-api-inference/46cae61c36ec843180be107955f06afb.svg)
+![推理请求处理时序图](/images/k8s/service-discovery/gateway-api-inference/46cae61c36ec843180be107955f06afb.svg)
 
 **关键阶段说明：**
 
@@ -274,7 +270,7 @@ graph TB
     POD_CTL --> DS
 ```
 
-![EPP 内部组件结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway-api-inference/3f9c01b2eb0fe5995400c99e2f1d0088.svg)
+![EPP 内部组件结构](/images/k8s/service-discovery/gateway-api-inference/3f9c01b2eb0fe5995400c99e2f1d0088.svg)
 
 **主要职责：**
 
@@ -320,7 +316,7 @@ graph LR
     P1 --> RESULT
 ```
 
-![三阶段调度算法流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway-api-inference/11fa63dd41fd3cb38c6667ea0f165881.svg)
+![三阶段调度算法流程](/images/k8s/service-discovery/gateway-api-inference/11fa63dd41fd3cb38c6667ea0f165881.svg)
 
 **评分权重说明：**
 

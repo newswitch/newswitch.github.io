@@ -1,13 +1,9 @@
 ---
 title: "持续集成与交付（CI/CD）"
 sidebar_position: 6
-tags: [Kubernetes, 部署应用, PartII, 学习路线, 转载]
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "深入介绍持续集成与交付（CI/CD）的概念、优势和实践，重点讲解 ArgoCD 和 Argo Rollouts 等 GitOps 工具在现代软件开发中的应用。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[持续集成与交付（CI/CD）](https://jimmysong.io/zh/book/kubernetes-handbook/devops/ci-cd/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 持续集成与交付（CI/CD）
 
@@ -64,13 +60,13 @@ description: "深入介绍持续集成与交付（CI/CD）的概念、优势和�
 2. **AWS CodePipeline**：AWS 的全托管持续交付服务
 3. **Azure DevOps**：Microsoft 的综合 DevOps 平台
 
-更多工具详情请参考 [Awesome Cloud Native](https://awesome.jimmysong.io/#application-delivery)。
+更多工具可参考 CNCF Landscape 与各项目官方文档。
 
 ## ArgoCD 深度解析
 
 [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) 是当前最受欢迎的 GitOps 工具之一，由 CNCF（Cloud Native Computing Foundation）托管。它将 Git 仓库作为真实来源，通过声明式配置实现应用程序的自动化部署和管理。
 
-![ArgoCD 用户界面](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/ci-cd/argocd-ui.webp)
+![ArgoCD 用户界面](/images/k8s/devops/ci-cd/argocd-ui.webp)
 
 ### 核心特性
 

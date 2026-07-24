@@ -1,13 +1,9 @@
 ---
 title: "扩展 Kubernetes 以支持 GPU 与 AI 调度"
 sidebar_position: 14
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "深入理解 Kubernetes 在 GPU 与 AI 原生场景下的调度机制，涵盖 GPU 设备插件、MIG、多任务共享、AI 作业编排（KubeRay、Volcano、Kueue）及自定义调度插件实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[扩展 Kubernetes 以支持 GPU 与 AI 调度](https://jimmysong.io/zh/book/kubernetes-handbook/extend/gpu-scheduling/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 扩展 Kubernetes 以支持 GPU 与 AI 调度
 
@@ -35,7 +31,7 @@ flowchart LR
     E --> F["GPU Node Binding"]
 ```
 
-![GPU 调度核心组件流程图](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/gpu-scheduling/41f686d7f40b258ea1ee4f70f56e9bad.svg)
+![GPU 调度核心组件流程图](/images/k8s/extend/gpu-scheduling/41f686d7f40b258ea1ee4f70f56e9bad.svg)
 
 - **Device Plugin**：向 kubelet 报告 GPU 资源
 - **Scheduler Framework**：执行 GPU 感知的过滤与打分
@@ -144,7 +140,7 @@ graph LR
     B & C & D --> E["Kubernetes Node Resources"]
 ```
 
-![MIG 分区资源暴露流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/gpu-scheduling/ce2dcf163d00d4cc10c0f23fd3e2a1bd.svg)
+![MIG 分区资源暴露流程](/images/k8s/extend/gpu-scheduling/ce2dcf163d00d4cc10c0f23fd3e2a1bd.svg)
 
 MIG 模式下，每个 GPU 分区在 Kubernetes 中暴露为独立资源：
 
@@ -177,7 +173,7 @@ sequenceDiagram
     Scheduler->>API: 执行 Bind()
 ```
 
-![AI 训练作业同步调度流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/gpu-scheduling/67713493d24030c80ab587057dd33f8f.svg)
+![AI 训练作业同步调度流程](/images/k8s/extend/gpu-scheduling/67713493d24030c80ab587057dd33f8f.svg)
 
 示例插件逻辑如下：
 
@@ -262,7 +258,7 @@ mindmap
     LLM Graph Scheduling
 ```
 
-![AI-Native Scheduler 未来趋势](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/gpu-scheduling/8dc0c5fe603043a1165c46e525125060.svg)
+![AI-Native Scheduler 未来趋势](/images/k8s/extend/gpu-scheduling/8dc0c5fe603043a1165c46e525125060.svg)
 
 ## 总结
 

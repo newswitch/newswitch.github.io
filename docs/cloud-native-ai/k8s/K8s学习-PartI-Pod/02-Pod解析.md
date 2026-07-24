@@ -1,13 +1,9 @@
 ---
 title: "Pod 解析"
 sidebar_position: 2
-tags: [Kubernetes, Pod, 学习路线, 转载]
+tags: [Kubernetes, Pod, 学习路线]
 description: "深入了解 Kubernetes Pod 架构、设计理念、生命周期管理和最佳实践，包括 Pod 的创建、调度、终止和故障处理机制。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Pod 解析](https://jimmysong.io/zh/book/kubernetes-handbook/pod/pod-architecture/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Pod 解析
 
@@ -17,7 +13,7 @@ description: "深入了解 Kubernetes Pod 架构、设计理念、生命周期�
 
 下图展示了 Pod 的核心数据结构，便于理解其组成和属性：
 
-![Pod Cheatsheet 数据结构图](https://assets.jimmysong.io/images/book/kubernetes-handbook/objects/pod/kubernetes-pod-cheatsheet.webp)
+![Pod Cheatsheet 数据结构图](/images/k8s/objects/pod/kubernetes-pod-cheatsheet.webp)
 
 ## 什么是 Pod？
 
@@ -48,7 +44,7 @@ Pod 中的容器共享以下环境：
 
 下图展示了多容器 Pod 的典型架构，便于理解容器间的协作关系：
 
-![多容器 Pod 架构示意图](https://assets.jimmysong.io/images/book/kubernetes-handbook/pod/overview/pod-overview-1.webp)
+![多容器 Pod 架构示意图](/images/k8s/pod/overview/pod-overview-1.webp)
 
 ## Pod 的设计理念
 
@@ -133,7 +129,7 @@ stateDiagram-v2
   Succeed --> [*]
 ```
 
-![Pod 生命周期流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/pod/pod-architecture/579744754244b76400d417e5b8ebb129.svg)
+![Pod 生命周期流程](/images/k8s/pod/pod-architecture/579744754244b76400d417e5b8ebb129.svg)
 
 ## Pod 网络和存储
 

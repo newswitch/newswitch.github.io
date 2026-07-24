@@ -1,13 +1,9 @@
 ---
 title: "Gateway API"
 sidebar_position: 5
-tags: [Kubernetes, 服务发现, 学习路线, 转载]
+tags: [Kubernetes, 服务发现, 学习路线]
 description: "深入介绍 Kubernetes Gateway API 的核心概念、资源模型和最佳实践。作为 Ingress 的现代化替代方案，Gateway API 提供更强大的流量管理能力，支持多协议路由、角色分离和灵活的策略配置，已于 2023 年达到 GA 状态。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Gateway API](https://jimmysong.io/zh/book/kubernetes-handbook/service-discovery/gateway/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Gateway API
 
@@ -29,7 +25,7 @@ Gateway API 通过分层架构和面向角色的接口设计，提升了网络�
 
 Gateway API 将网络配置分解为不同关注点，实现配置解耦和角色分离。
 
-![Gateway API 的分层架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway/gateway-api.svg)
+![Gateway API 的分层架构](/images/k8s/service-discovery/gateway/gateway-api.svg)
 
 ### 面向角色的设计
 
@@ -40,7 +36,7 @@ Gateway API 将网络配置分解为不同关注点，实现配置解耦和角�
 - 应用开发者：定义路由需求
 - 应用管理员：配置应用级策略
 
-![Gateway API 管理时的角色划分](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway/gateway-roles.webp)
+![Gateway API 管理时的角色划分](/images/k8s/service-discovery/gateway/gateway-roles.webp)
 
 ## 相比 Ingress 的优势
 
@@ -148,7 +144,7 @@ spec:
       port: 8080
 ```
 
-![流量经过网关和 HTTPRoute 发送到服务中的过程](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/gateway/httproute-basic-example.svg)
+![流量经过网关和 HTTPRoute 发送到服务中的过程](/images/k8s/service-discovery/gateway/httproute-basic-example.svg)
 
 #### 其他路由类型
 

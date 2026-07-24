@@ -1,13 +1,9 @@
 ---
 title: "Devtron - 云原生应用管理平台"
 sidebar_position: 9
-tags: [Kubernetes, 访问集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "Devtron 是一款开源的云原生应用管理平台，提供完整的应用生命周期管理，包括 CI/CD、GitOps、安全扫描、监控告警等功能，帮助团队高效管理 Kubernetes 应用。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Devtron - 云原生应用管理平台](https://jimmysong.io/zh/book/kubernetes-handbook/access/devtron/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Devtron - 云原生应用管理平台
 
@@ -147,7 +143,7 @@ graph TD
     WorkflowService --> BlobStorage
 ```
 
-![Devtron 系统架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/devtron/7504291c03888b6ce80362434935d4a4.svg)
+![Devtron 系统架构](/images/k8s/access/devtron/7504291c03888b6ce80362434935d4a4.svg)
 
 ### 核心组件说明
 
@@ -201,7 +197,7 @@ graph TD
     end
 ```
 
-![Devtron CI/CD 流水线流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/devtron/341e02d835d8fc833aa9ca9ec17c678d.svg)
+![Devtron CI/CD 流水线流程](/images/k8s/access/devtron/341e02d835d8fc833aa9ca9ec17c678d.svg)
 
 ## 部署配置与模板
 
@@ -247,7 +243,7 @@ graph TD
     Environment --> CDPipeline
 ```
 
-![Devtron 部署配置流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/devtron/29673125d086ac519fef4d4ebbbce980.svg)
+![Devtron 部署配置流程](/images/k8s/access/devtron/29673125d086ac519fef4d4ebbbce980.svg)
 
 ### 部署模板类型
 

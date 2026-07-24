@@ -1,13 +1,9 @@
 ---
 title: "Init 容器"
 sidebar_position: 3
-tags: [Kubernetes, Pod, 学习路线, 转载]
+tags: [Kubernetes, Pod, 学习路线]
 description: "Init 容器是一种专用的容器，在应用程序容器启动之前运行，用来包含一些应用镜像中不存在的实用工具或安装脚本。本文详细介绍 Init 容器的概念、用法和最佳实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Init 容器](https://jimmysong.io/zh/book/kubernetes-handbook/pod/init-containers/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Init 容器
 
@@ -55,7 +51,7 @@ graph TD
     E --> F[应用容器启动]
 ```
 
-![Init 容器执行流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/pod/init-containers/96277efc8363e49a5e8c906089ee4622.svg)
+![Init 容器执行流程](/images/k8s/pod/init-containers/96277efc8363e49a5e8c906089ee4622.svg)
 
 ## 使用示例
 

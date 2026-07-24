@@ -1,13 +1,9 @@
 ---
 title: "控制器与 Operator 模式（Controller & Operator Pattern）"
 sidebar_position: 5
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "控制器是 Kubernetes 自动化的核心。Operator 模式将领域知识封装为控制循环，使系统能够自动维护期望状态。本文深入讲解控制循环原理、设计模式及其在云原生和 AI 场景中的实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[控制器与 Operator 模式（Controller & Operator Pattern）](https://jimmysong.io/zh/book/kubernetes-handbook/extend/controller-extension/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 控制器与 Operator 模式（Controller & Operator Pattern）
 
@@ -39,7 +35,7 @@ sequenceDiagram
     APIServer-->>User: 状态更新完成
 ```
 
-![控制循环机制](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/controller-extension/fcef017757c65304f2145f3075e726f4.svg)
+![控制循环机制](/images/k8s/extend/controller-extension/fcef017757c65304f2145f3075e726f4.svg)
 
 控制器持续监听资源对象的变更事件，通过不断地 **Reconcile（调谐）** 操作，使系统最终达到期望状态。
 
@@ -64,7 +60,7 @@ flowchart LR
     E -->|Update Status| A
 ```
 
-![Informer 与工作队列](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/controller-extension/33fbb01412953624d57885ba6a0f016b.svg)
+![Informer 与工作队列](/images/k8s/extend/controller-extension/33fbb01412953624d57885ba6a0f016b.svg)
 
 这种设计使控制器具有高性能与可伸缩性，同时避免了频繁访问 API Server。
 
@@ -129,7 +125,7 @@ flowchart TD
   B --> MySQL[实际数据库实例]
 ```
 
-![Operator 模式架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/controller-extension/454cb90e9cdd0da246abfd5886ec93b7.svg)
+![Operator 模式架构](/images/k8s/extend/controller-extension/454cb90e9cdd0da246abfd5886ec93b7.svg)
 
 示例：`Database Operator` 通过 CRD 管理 MySQL 集群的创建、备份、恢复和伸缩。
 

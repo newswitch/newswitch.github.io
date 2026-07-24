@@ -1,13 +1,9 @@
 ---
 title: "DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型"
 sidebar_position: 13
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "DRA（Dynamic Resource Allocation）将“设备类资源”的分配从静态整数配额升级为可协商、可选择、可共享、可晚绑定的声明式流程，是 Kubernetes 面向 GPU/FPGA/SmartNIC 等异构硬件的核心演进方向。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型](https://jimmysong.io/zh/book/kubernetes-handbook/extend/dynamic-resource-allocation/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型
 
@@ -83,7 +79,7 @@ sequenceDiagram
   D->>A: 释放分配（Claim 状态更新 / 清理）
 ```
 
-![DRA 工作流](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/dynamic-resource-allocation/a88232f50b5d12a951e81d5ab4b411e0.svg)
+![DRA 工作流](/images/k8s/extend/dynamic-resource-allocation/a88232f50b5d12a951e81d5ab4b411e0.svg)
 
 流程要点包括：
 

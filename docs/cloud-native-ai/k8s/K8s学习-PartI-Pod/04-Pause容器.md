@@ -1,13 +1,9 @@
 ---
 title: "Pause 容器"
 sidebar_position: 4
-tags: [Kubernetes, Pod, 学习路线, 转载]
+tags: [Kubernetes, Pod, 学习路线]
 description: "深入探究 Kubernetes 中 Pause 容器（Infra 容器）的作用与原理，了解它如何实现 Pod 内容器间的网络命名空间共享，以及在 Pod 生命周期管理中的关键作用。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Pause 容器](https://jimmysong.io/zh/book/kubernetes-handbook/pod/pause-container/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Pause 容器
 
@@ -57,7 +53,7 @@ graph TD
     D --> E[实现资源共享]
 ```
 
-![Pause 容器网络共享机制](https://assets.jimmysong.io/images/book/kubernetes-handbook/pod/pause-container/4f3bc5b609243a71ffcd051b14e0b965.svg)
+![Pause 容器网络共享机制](/images/k8s/pod/pause-container/4f3bc5b609243a71ffcd051b14e0b965.svg)
 
 ### 网络共享机制
 
@@ -99,7 +95,7 @@ crictl ps | grep pause
 
 下图展示了 Pause 容器在 Pod 内部的资源共享机制：
 
-![Pause 容器示意图](https://assets.jimmysong.io/images/book/kubernetes-handbook/objects/pause-container/pause-container.webp)
+![Pause 容器示意图](/images/k8s/objects/pause-container/pause-container.webp)
 
 ### 步骤一：启动 Pause 容器
 

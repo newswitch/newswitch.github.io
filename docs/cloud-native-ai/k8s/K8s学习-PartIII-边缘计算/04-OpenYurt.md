@@ -1,13 +1,9 @@
 ---
 title: "OpenYurt：零侵入式云原生边缘平台"
 sidebar_position: 4
-tags: [Kubernetes, 边缘计算, PartIII, 学习路线, 转载]
+tags: [Kubernetes, 边缘计算, PartIII, 学习路线]
 description: "OpenYurt 是阿里巴巴开源的零侵入式云原生边缘平台，支持 Kubernetes 集群一键扩展到边缘，具备边缘自治、节点池、流量闭环等特性。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[OpenYurt：零侵入式云原生边缘平台](https://jimmysong.io/zh/book/kubernetes-handbook/edge-computing/openyurt/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # OpenYurt：零侵入式云原生边缘平台
 
@@ -75,7 +71,7 @@ graph TB
     YH2 -.->|池内数据| YC1
 ```
 
-![OpenYurt 高层系统架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/openyurt/06ce6af1c4e546b0aff8a89bea7be70f.svg)
+![OpenYurt 高层系统架构](/images/k8s/edge-computing/openyurt/06ce6af1c4e546b0aff8a89bea7be70f.svg)
 
 如图所示，OpenYurt 采用典型的云 - 边架构，云端 Kubernetes 控制面统一管理多个物理分布的边缘节点池。每个边缘节点运行 `yurthub` 作为本地 API 代理与缓存，保障网络分区时的自治能力。
 
@@ -122,7 +118,7 @@ graph LR
     YH <--> YC
 ```
 
-![OpenYurt 组件关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/openyurt/ecac60dad959b620960473fc87a386d6.svg)
+![OpenYurt 组件关系](/images/k8s/edge-computing/openyurt/ecac60dad959b620960473fc87a386d6.svg)
 
 ## 组件部署架构
 
@@ -162,7 +158,7 @@ graph TB
     YH2_POD -.->|查询池数据| YC1_POD
 ```
 
-![OpenYurt 组件部署架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/openyurt/386e3c021b0fc71f19d83263c08be46b.svg)
+![OpenYurt 组件部署架构](/images/k8s/edge-computing/openyurt/386e3c021b0fc71f19d83263c08be46b.svg)
 
 ## 主要组件功能表
 

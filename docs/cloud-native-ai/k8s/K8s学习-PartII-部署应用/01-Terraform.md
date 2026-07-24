@@ -1,13 +1,9 @@
 ---
 title: "使用 Terraform 管理 Kubernetes：从集群到应用的 IaC 实践"
 sidebar_position: 1
-tags: [Kubernetes, 部署应用, PartII, 学习路线, 转载]
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "介绍 Terraform 在 Kubernetes 集群管理和资源编排中的最佳实践与应用场景。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[使用 Terraform 管理 Kubernetes：从集群到应用的 IaC 实践](https://jimmysong.io/zh/book/kubernetes-handbook/devops/terraform/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 使用 Terraform 管理 Kubernetes：从集群到应用的 IaC 实践
 
@@ -54,7 +50,7 @@ graph TB
   W --> PR3
 ```
 
-![Terraform 用户主流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/terraform/44bce2a0459da2ff6f36d38c6d178cae.svg)
+![Terraform 用户主流程](/images/k8s/devops/terraform/44bce2a0459da2ff6f36d38c6d178cae.svg)
 
 CLI 工作流包括 `init → plan → apply → destroy`，核心引擎将 HCL 配置解析为依赖图并有序执行，所有资源状态存储于 State，Provider 负责与各平台 API 交互。
 
@@ -100,7 +96,7 @@ graph TB
   EvalContext --> Providers --> Proto
 ```
 
-![Terraform 内部架构（进阶）](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/terraform/11786bd1aa0d4c26b0c939bbf5a10d4a.svg)
+![Terraform 内部架构（进阶）](/images/k8s/devops/terraform/11786bd1aa0d4c26b0c939bbf5a10d4a.svg)
 
 ## Kubernetes 场景下的两大应用路径
 
@@ -277,7 +273,7 @@ graph LR
   K8S --> RUNTIME["Pods/Services/Ingress/CRDs"]
 ```
 
-![IaC 工作流](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/terraform/3a73335776a3c3975b219714510ff7eb.svg)
+![IaC 工作流](/images/k8s/devops/terraform/3a73335776a3c3975b219714510ff7eb.svg)
 
 Terraform 的核心机制包括配置加载、依赖图构建、状态管理与 Provider 调用。
 
@@ -291,7 +287,7 @@ graph TD
   Walk --> Providers["Providers: Cloud/K8s/Helm"]
 ```
 
-![Terraform Core 简图](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/terraform/adce39f7883671b5a39942de39ad32f1.svg)
+![Terraform Core 简图](/images/k8s/devops/terraform/adce39f7883671b5a39942de39ad32f1.svg)
 
 ## Kubernetes 场景最佳实践
 
@@ -374,7 +370,7 @@ graph TB
   Eval --> Prov --> Iface --> RPC
 ```
 
-![Terraform Core 系统视图](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/terraform/ac40d884ecbf99ba8fa437f7392a6a29.svg)
+![Terraform Core 系统视图](/images/k8s/devops/terraform/ac40d884ecbf99ba8fa437f7392a6a29.svg)
 
 ## 总结
 

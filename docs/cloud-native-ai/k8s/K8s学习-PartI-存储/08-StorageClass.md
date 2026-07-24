@@ -1,13 +1,9 @@
 ---
 title: "Storage Class"
 sidebar_position: 8
-tags: [Kubernetes, 存储, 学习路线, 转载]
+tags: [Kubernetes, 存储, 学习路线]
 description: "介绍 Kubernetes 中 StorageClass 的概念、资源定义、分配器类型、参数配置和使用方法，帮助管理员更好地管理集群存储资源。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Storage Class](https://jimmysong.io/zh/book/kubernetes-handbook/storage/storageclass/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Storage Class
 

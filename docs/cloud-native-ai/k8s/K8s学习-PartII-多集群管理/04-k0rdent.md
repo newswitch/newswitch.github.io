@@ -1,13 +1,9 @@
 ---
 title: "k0rdent：超级控制平面与平台工程"
 sidebar_position: 4
-tags: [Kubernetes, 多集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "k0rdent 是 Mirantis 推出的多集群 Kubernetes 超级控制平面（Super Control Plane），助力平台工程与跨云治理，支持声明式多集群管理、策略模板和集中观测。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[k0rdent：超级控制平面与平台工程](https://jimmysong.io/zh/book/kubernetes-handbook/multi-cluster/k0rdent/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # k0rdent：超级控制平面与平台工程
 
@@ -73,7 +69,7 @@ flowchart TB
     A3 -.-> W3
 ```
 
-![k0rdent 多集群架构关系图](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/k0rdent/b4e2baa0eff60475a15f6ce31b60de7e.svg)
+![k0rdent 多集群架构关系图](/images/k8s/multi-cluster/k0rdent/b4e2baa0eff60475a15f6ce31b60de7e.svg)
 
 实现视角：管理集群（Management Cluster）是控制平面的核心，运行 KCM、KSM、KOF 等控制器。用户通过 GitOps（如 ArgoCD）或 kubectl 将声明式模板应用到管理集群，随后 KCM 与 Cluster API 协同调用云/基础设施 API 完成子集群的创建与配置。
 
@@ -116,7 +112,7 @@ sequenceDiagram
     end
 ```
 
-![k0rdent 自动化流程图](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/k0rdent/ed02d31ca6c57388c7c40141dfe240ca.svg)
+![k0rdent 自动化流程图](/images/k8s/multi-cluster/k0rdent/ed02d31ca6c57388c7c40141dfe240ca.svg)
 
 该流程体现了 k0rdent 的声明式、自动化和闭环治理特性。
 

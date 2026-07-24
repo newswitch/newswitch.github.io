@@ -1,13 +1,9 @@
 ---
 title: "什么是 Envoy？"
 sidebar_position: 4
-tags: [Kubernetes, 服务网格, PartII, 学习路线, 转载]
+tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "Envoy 是一个高性能的代理服务器，专为现代微服务架构设计。它提供进程外架构、多层过滤器、动态配置、负载均衡等功能，可作为 Sidecar 或边缘代理部署，帮助解决服务间通信的复杂性。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[什么是 Envoy？](https://jimmysong.io/zh/book/kubernetes-handbook/service-mesh/what-is-envoy/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 什么是 Envoy？
 

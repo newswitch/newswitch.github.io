@@ -1,13 +1,9 @@
 ---
 title: "ServiceAccount"
 sidebar_position: 2
-tags: [Kubernetes, 身份认证, 学习路线, 转载]
+tags: [Kubernetes, 身份认证, 学习路线]
 description: "详细介绍 Kubernetes 中的 ServiceAccount 概念，包括其作用、配置方法和最佳实践，帮助理解 Pod 身份认证机制。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[ServiceAccount](https://jimmysong.io/zh/book/kubernetes-handbook/auth/serviceaccount/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # ServiceAccount
 
@@ -27,7 +23,7 @@ flowchart LR
     C & D --> E[API Server 认证]
 ```
 
-![ServiceAccount 与 Pod 认证关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/auth/serviceaccount/ced0e8782a79e5e1d4702c2256adf4a4.svg)
+![ServiceAccount 与 Pod 认证关系](/images/k8s/auth/serviceaccount/ced0e8782a79e5e1d4702c2256adf4a4.svg)
 
 ## 使用默认的 ServiceAccount
 
@@ -139,7 +135,7 @@ sequenceDiagram
     Note over Pod: Token 定期自动轮换
 ```
 
-![ServiceAccount Token 生命周期](https://assets.jimmysong.io/images/book/kubernetes-handbook/auth/serviceaccount/c79bc490468256e4baa278d98e26dcdc.svg)
+![ServiceAccount Token 生命周期](/images/k8s/auth/serviceaccount/c79bc490468256e4baa278d98e26dcdc.svg)
 
 > **注意**  
 >

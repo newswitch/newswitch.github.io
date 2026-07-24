@@ -1,13 +1,9 @@
 ---
 title: "Secret"
 sidebar_position: 4
-tags: [Kubernetes, 存储, 学习路线, 转载]
+tags: [Kubernetes, 存储, 学习路线]
 description: "Secret 是 Kubernetes 中用于存储敏感数据的对象，包括密码、token、密钥等，支持以 Volume 或环境变量方式使用，主要类型有 Opaque、Service Account 和 dockerconfigjson。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Secret](https://jimmysong.io/zh/book/kubernetes-handbook/storage/secret/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Secret
 
@@ -26,7 +22,7 @@ flowchart TD
     C & D & E --> F[Pod 运行时访问 Secret]
 ```
 
-![Secret 生命周期与使用流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/storage/secret/a29e9fd7d57a961ab64c0c6828220d91.svg)
+![Secret 生命周期与使用流程](/images/k8s/storage/secret/a29e9fd7d57a961ab64c0c6828220d91.svg)
 
 Secret 可通过以下方式被 Pod 使用：
 
@@ -275,7 +271,7 @@ flowchart LR
     C --> D[Pod 删除后 Secret 文件消失]
 ```
 
-![Secret 生命周期与节点分发](https://assets.jimmysong.io/images/book/kubernetes-handbook/storage/secret/221b2d457f6955a65ce0a0c9b72563d2.svg)
+![Secret 生命周期与节点分发](/images/k8s/storage/secret/221b2d457f6955a65ce0a0c9b72563d2.svg)
 
 - Secret 仅在被 Pod 消费时分发到节点
 - Secret 文件存储于 tmpfs，不落盘

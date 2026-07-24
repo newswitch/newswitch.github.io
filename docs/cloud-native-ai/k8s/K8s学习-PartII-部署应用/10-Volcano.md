@@ -1,13 +1,9 @@
 ---
 title: "Volcano：Kubernetes 上的批处理和高性能计算调度器"
 sidebar_position: 10
-tags: [Kubernetes, 部署应用, PartII, 学习路线, 转载]
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Volcano 是一个专为高性能计算（HPC）和大规模批处理任务设计的 Kubernetes 调度器扩展，提供先进的调度策略和资源管理功能。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Volcano：Kubernetes 上的批处理和高性能计算调度器](https://jimmysong.io/zh/book/kubernetes-handbook/devops/volcano/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Volcano：Kubernetes 上的批处理和高性能计算调度器
 
@@ -82,7 +78,7 @@ graph TB
     CLI --> KAPI
 ```
 
-![Volcano 架构总览](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/volcano/e50d13c14269ef18427c0e5654b4688d.svg)
+![Volcano 架构总览](/images/k8s/devops/volcano/e50d13c14269ef18427c0e5654b4688d.svg)
 
 | 组件                  | 作用                                  |
 |-----------------------|---------------------------------------|
@@ -116,7 +112,7 @@ graph TB
     JOBS --> JOBFLOWS
 ```
 
-![Volcano CRD 模型](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/volcano/1c1276cf6df0e487ce4c16fef59c1d09.svg)
+![Volcano CRD 模型](/images/k8s/devops/volcano/1c1276cf6df0e487ce4c16fef59c1d09.svg)
 
 | 资源类型    | 功能说明                             |
 |-------------|--------------------------------------|
@@ -169,7 +165,7 @@ graph LR
     ALLOCATE --> BOUND --> RUNNING
 ```
 
-![Volcano 调度流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/volcano/f79912c5373326c074f7e3a189fa8376.svg)
+![Volcano 调度流程](/images/k8s/devops/volcano/f79912c5373326c074f7e3a189fa8376.svg)
 
 调度循环（Scheduling Cycle）包括：
 
@@ -222,7 +218,7 @@ graph TB
     ENGINE --> GANG
 ```
 
-![Volcano 插件体系](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/volcano/c702ec2359e8ed558e42b311103b9c9b.svg)
+![Volcano 插件体系](/images/k8s/devops/volcano/c702ec2359e8ed558e42b311103b9c9b.svg)
 
 | 插件         | 功能说明             |
 |--------------|----------------------|

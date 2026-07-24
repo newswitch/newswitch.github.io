@@ -1,13 +1,9 @@
 ---
 title: "Etcd 解析"
 sidebar_position: 3
-tags: [Kubernetes, 架构, 学习路线, 转载]
+tags: [Kubernetes, 架构, 学习路线]
 description: "深入解析 etcd 在 Kubernetes 中的核心作用，包括分布式存储原理、Raft 共识算法、数据备份恢复、性能优化和安全配置等实践指南。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Etcd 解析](https://jimmysong.io/zh/book/kubernetes-handbook/architecture/etcd/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Etcd 解析
 
@@ -81,7 +77,7 @@ flowchart TD
     WAL --> Backend
 ```
 
-![Etcd 系统架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/architecture/etcd/4a8ade6ab26cf25e1b85eb9d40bce092.svg)
+![Etcd 系统架构](/images/k8s/architecture/etcd/4a8ade6ab26cf25e1b85eb9d40bce092.svg)
 
 Etcd 架构由以下关键组件组成：
 
@@ -146,7 +142,7 @@ sequenceDiagram
     ClientLib-->>Client: Operation Result
 ```
 
-![Etcd 请求处理流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/architecture/etcd/b335d238adb88c4613d3b6083185becf.svg)
+![Etcd 请求处理流程](/images/k8s/architecture/etcd/b335d238adb88c4613d3b6083185becf.svg)
 
 读取操作可分为可序列化（可能过时）和线性化（保证最新）；写入操作始终通过 Raft 共识过程以确保跨集群一致性。
 
@@ -216,7 +212,7 @@ flowchart TD
     RaftHTTP -->|"Delivers messages to"| Node
 ```
 
-![Raft 节点与 EtcdServer 交互](https://assets.jimmysong.io/images/book/kubernetes-handbook/architecture/etcd/f54519a3c8f26c3c57c1dcb1192d05db.svg)
+![Raft 节点与 EtcdServer 交互](/images/k8s/architecture/etcd/f54519a3c8f26c3c57c1dcb1192d05db.svg)
 
 Raft 实现的关键方面：
 
@@ -258,7 +254,7 @@ flowchart TD
     Snapshot -->|"Compact"| WAL
 ```
 
-![Etcd 存储层次结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/architecture/etcd/250b7a2ab6232c056a940cf82df082cf.svg)
+![Etcd 存储层次结构](/images/k8s/architecture/etcd/250b7a2ab6232c056a940cf82df082cf.svg)
 
 各层功能说明：
 
@@ -296,7 +292,7 @@ flowchart TD
     CheckPermission -->|"4. Allow/Deny"| Response
 ```
 
-![Etcd 认证与授权流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/architecture/etcd/1baa2d031389f0054a927fab6efc5542.svg)
+![Etcd 认证与授权流程](/images/k8s/architecture/etcd/1baa2d031389f0054a927fab6efc5542.svg)
 
 关键安全特性：
 
@@ -583,7 +579,7 @@ flowchart TD
     RemoveMember -->|"Can remove"| Follower2
 ```
 
-![Etcd 集群形成与成员管理](https://assets.jimmysong.io/images/book/kubernetes-handbook/architecture/etcd/4f08964b29b33fc833c5e7ad61c19786.svg)
+![Etcd 集群形成与成员管理](/images/k8s/architecture/etcd/4f08964b29b33fc833c5e7ad61c19786.svg)
 
 ### Leader 选举与日志复制
 
@@ -644,7 +640,7 @@ flowchart LR
     gRPCConn -->|"Connects to"| Endpoints["etcd Endpoints"]
 ```
 
-![Etcd 客户端库结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/architecture/etcd/312df6afc0c917b2391f03dc6ae39a68.svg)
+![Etcd 客户端库结构](/images/k8s/architecture/etcd/312df6afc0c917b2391f03dc6ae39a68.svg)
 
 ### etcdctl 命令行界面
 

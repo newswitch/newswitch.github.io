@@ -1,13 +1,9 @@
 ---
 title: "Service"
 sidebar_position: 2
-tags: [Kubernetes, 服务发现, 学习路线, 转载]
+tags: [Kubernetes, 服务发现, 学习路线]
 description: "Kubernetes Service 为 Pod 提供稳定的网络访问抽象，通过标签选择器将流量路由到后端 Pod，支持多种服务发现方式和代理模式，是微服务架构中的核心组件。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Service](https://jimmysong.io/zh/book/kubernetes-handbook/service-discovery/service/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Service
 
@@ -146,7 +142,7 @@ spec:
 
 kube-proxy 监控 Service/Endpoints 变化，自动生成 iptables 规则，将流量重定向到后端 Pod。支持基于客户端 IP 的会话亲和性（`service.spec.sessionAffinity: ClientIP`）。
 
-![iptables 代理模式下 Service 概览图](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/service/services-iptables-overview.webp)
+![iptables 代理模式下 Service 概览图](/images/k8s/service-discovery/service/services-iptables-overview.webp)
 
 ### IPVS 代理模式
 

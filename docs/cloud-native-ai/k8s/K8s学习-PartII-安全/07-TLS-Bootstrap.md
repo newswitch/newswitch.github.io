@@ -1,13 +1,9 @@
 ---
 title: "TLS Bootstrap"
 sidebar_position: 7
-tags: [Kubernetes, 安全, PartII, 学习路线, 转载]
+tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "介绍如何为 Kubernetes kubelet 配置 TLS 客户端证书自动引导，包括 kube-apiserver、kube-controller-manager 和 kubelet 的详细配置步骤。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[TLS Bootstrap](https://jimmysong.io/zh/book/kubernetes-handbook/security/tls-bootstrapping/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # TLS Bootstrap
 

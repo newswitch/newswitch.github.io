@@ -1,13 +1,9 @@
 ---
 title: "使用 Helm 管理 Kubernetes 应用"
 sidebar_position: 2
-tags: [Kubernetes, 部署应用, PartII, 学习路线, 转载]
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Helm 是 Kubernetes 的包管理工具，简化了应用的部署和管理过程。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[使用 Helm 管理 Kubernetes 应用](https://jimmysong.io/zh/book/kubernetes-handbook/devops/helm/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 使用 Helm 管理 Kubernetes 应用
 
@@ -47,7 +43,7 @@ flowchart LR
     A -->|helm install / upgrade / rollback| D
 ```
 
-![Helm 工作流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/helm/5ad0d144f9af089fd14a99c2442dffce.svg)
+![Helm 工作流程](/images/k8s/devops/helm/5ad0d144f9af089fd14a99c2442dffce.svg)
 
 当执行 `helm install` 时，CLI 会从仓库下载 Chart，使用 values.yaml 参数进行模板渲染，并通过 Kubernetes API 创建资源对象。
 
@@ -173,7 +169,7 @@ flowchart TD
     D -->|状态反馈| B
 ```
 
-![Helm 与 GitOps 集成流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/helm/f7f07d9b972af229101c9aa443d67fb3.svg)
+![Helm 与 GitOps 集成流程](/images/k8s/devops/helm/f7f07d9b972af229101c9aa443d67fb3.svg)
 
 在该模式下，Helm 负责打包与模板化，GitOps 控制器负责同步与回滚，发布过程完全可追溯。
 

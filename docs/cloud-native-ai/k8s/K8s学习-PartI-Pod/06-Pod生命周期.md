@@ -1,13 +1,9 @@
 ---
 title: "Pod 的生命周期"
 sidebar_position: 6
-tags: [Kubernetes, Pod, 学习路线, 转载]
+tags: [Kubernetes, Pod, 学习路线]
 description: "详细介绍 Kubernetes Pod 的生命周期管理，包括 Pod 状态阶段、容器探针配置、重启策略以及生命周期的各种实际应用场景。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Pod 的生命周期](https://jimmysong.io/zh/book/kubernetes-handbook/pod/pod-lifecycle/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Pod 的生命周期
 
@@ -41,7 +37,7 @@ stateDiagram-v2
   Succeed --> [*]
 ```
 
-![Pod 生命周期状态变化流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/pod/pod-lifecycle/e3452d9dcb65811ce4d215330d99f6b7.svg)
+![Pod 生命周期状态变化流程](/images/k8s/pod/pod-lifecycle/e3452d9dcb65811ce4d215330d99f6b7.svg)
 
 ## Pod 状态（Status）
 

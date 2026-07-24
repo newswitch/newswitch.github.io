@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes API 访问与 kubectl 实践"
 sidebar_position: 2
-tags: [Kubernetes, 访问集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "详解如何通过 kubectl 命令行工具与 Kubernetes API 交互，涵盖认证机制、请求模式、资源管理与自动化实践，助力高效管理集群资源。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes API 访问与 kubectl 实践](https://jimmysong.io/zh/book/kubernetes-handbook/access/kubectl/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes API 访问与 kubectl 实践
 
@@ -36,7 +32,7 @@ flowchart LR
     end
 ```
 
-![kubectl 到 API Server 交互流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubectl/90d8522b1c4d173fce941c1923b4c05d.svg)
+![kubectl 到 API Server 交互流程](/images/k8s/access/kubectl/90d8522b1c4d173fce941c1923b4c05d.svg)
 
 ## Kubernetes API 基础
 
@@ -67,7 +63,7 @@ flowchart LR
     end
 ```
 
-![Kubernetes API 结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubectl/1c99b2cb068f66b9340dd93e3521e8ec.svg)
+![Kubernetes API 结构](/images/k8s/access/kubectl/1c99b2cb068f66b9340dd93e3521e8ec.svg)
 
 常见 API 路径模式：
 
@@ -97,7 +93,7 @@ sequenceDiagram
     API服务器->>用户: 返回签名证书
 ```
 
-![kubectl 证书签发流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubectl/eb4487a0e2cbaae9404782167d217556.svg)
+![kubectl 证书签发流程](/images/k8s/access/kubectl/eb4487a0e2cbaae9404782167d217556.svg)
 
 ## kubectl 认证机制
 
@@ -141,7 +137,7 @@ flowchart TB
     APISERVER["Kubernetes API 服务器"]
 ```
 
-![kubectl 认证流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubectl/49abe7da4d4cfc4ab63048cede84ea6d.svg)
+![kubectl 认证流程](/images/k8s/access/kubectl/49abe7da4d4cfc4ab63048cede84ea6d.svg)
 
 ## kubectl 基本用法
 
@@ -239,7 +235,7 @@ flowchart TB
     STORE --> ETCD["etcd 存储"]
 ```
 
-![Server-Side Apply 工作原理](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubectl/98f8a4fbb3eec5842ee4706d7bc37e03.svg)
+![Server-Side Apply 工作原理](/images/k8s/access/kubectl/98f8a4fbb3eec5842ee4706d7bc37e03.svg)
 
 关键点：
 

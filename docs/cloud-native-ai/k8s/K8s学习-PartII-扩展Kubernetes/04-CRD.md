@@ -1,13 +1,9 @@
 ---
 title: "自定义资源定义（CustomResourceDefinition, CRD）"
 sidebar_position: 4
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "CRD 是 Kubernetes 最常用的扩展机制。通过定义自定义资源类型（Custom Resource），用户无需修改核心代码即可扩展 Kubernetes 的 API，实现领域特定的控制逻辑。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[自定义资源定义（CustomResourceDefinition, CRD）](https://jimmysong.io/zh/book/kubernetes-handbook/extend/crd/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 自定义资源定义（CustomResourceDefinition, CRD）
 
@@ -44,7 +40,7 @@ flowchart LR
   APIServer --> etcd[(etcd Storage)]
 ```
 
-![CRD 工作原理](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/crd/09b8d8acc744b3243b08beb32f77a4e3.svg)
+![CRD 工作原理](/images/k8s/extend/crd/09b8d8acc744b3243b08beb32f77a4e3.svg)
 
 ## CRD 的定义结构
 
@@ -146,7 +142,7 @@ sequenceDiagram
   Controller-->>KubeAPIServer: 更新 status 状态
 ```
 
-![CRD 与控制器协作流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/crd/ec92ff96f7af235d32d33a39616f68d7.svg)
+![CRD 与控制器协作流程](/images/k8s/extend/crd/ec92ff96f7af235d32d33a39616f68d7.svg)
 
 这种模式被称为 **Operator 模式**，是构建云原生自动化系统的标准做法。
 

@@ -1,13 +1,9 @@
 ---
 title: "Namespace"
 sidebar_position: 3
-tags: [Kubernetes, 集群资源管理, 学习路线, 转载]
+tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "详细介绍 Kubernetes 中 Namespace 的概念、使用场景和管理方法，包括如何创建和管理命名空间以实现资源隔离和环境划分。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Namespace](https://jimmysong.io/zh/book/kubernetes-handbook/cluster/namespace/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Namespace
 
@@ -27,7 +23,7 @@ flowchart TD
     B3 --> C3[Pod/Service/Deployment...]
 ```
 
-![Namespace 资源隔离与作用域](https://assets.jimmysong.io/images/book/kubernetes-handbook/cluster/namespace/fae0b147237ef7f231660d68ee11594a.svg)
+![Namespace 资源隔离与作用域](/images/k8s/cluster/namespace/fae0b147237ef7f231660d68ee11594a.svg)
 
 ## 使用场景
 
@@ -122,7 +118,7 @@ sequenceDiagram
     APIServer->>Namespace: 级联删除所有资源
 ```
 
-![Namespace 生命周期与资源隔离](https://assets.jimmysong.io/images/book/kubernetes-handbook/cluster/namespace/89f4d985760f72b525c4d332ef3aa29c.svg)
+![Namespace 生命周期与资源隔离](/images/k8s/cluster/namespace/89f4d985760f72b525c4d332ef3aa29c.svg)
 
 ## 资源配额与限制
 
@@ -139,7 +135,7 @@ flowchart TD
     C --> E[单 Pod/容器资源限制]
 ```
 
-![Namespace 资源配额与限制](https://assets.jimmysong.io/images/book/kubernetes-handbook/cluster/namespace/384e5f0d14f55991f335ec894416057e.svg)
+![Namespace 资源配额与限制](/images/k8s/cluster/namespace/384e5f0d14f55991f335ec894416057e.svg)
 
 ### ResourceQuota 示例
 

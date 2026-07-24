@@ -1,13 +1,9 @@
 ---
 title: "调试集群中的 Pod"
 sidebar_position: 3
-tags: [Kubernetes, 命令与调试, PartII, 学习路线, 转载]
+tags: [Kubernetes, 命令与调试, PartII, 学习路线]
 description: "详细介绍如何系统性地调试 Kubernetes 集群中的 Pod 问题，包括状态检查、节点诊断、资源配额验证和网络排障等完整流程。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[调试集群中的 Pod](https://jimmysong.io/zh/book/kubernetes-handbook/cli/debugging-kubernetes/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 调试集群中的 Pod
 
@@ -53,7 +49,7 @@ flowchart TD
     classDef no fill:#f7a3a3,stroke:#333,stroke-width:2px;
 ```
 
-![调试 Kubernetes 中 Pod 的流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/cli/debugging-kubernetes/95cc1f791d969745899a4acfe56ce2c8.svg)
+![调试 Kubernetes 中 Pod 的流程](/images/k8s/cli/debugging-kubernetes/95cc1f791d969745899a4acfe56ce2c8.svg)
 
 ## 基础状态检查
 

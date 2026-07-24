@@ -1,13 +1,9 @@
 ---
 title: "Pod Hook"
 sidebar_position: 7
-tags: [Kubernetes, Pod, 学习路线, 转载]
+tags: [Kubernetes, Pod, 学习路线]
 description: "详细介绍 Kubernetes Pod Hook（钩子）的工作原理、类型配置和调试方法，包括 postStart 和 preStop 生命周期事件的使用场景和最佳实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Pod Hook](https://jimmysong.io/zh/book/kubernetes-handbook/pod/pod-hook/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Pod Hook
 

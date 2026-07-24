@@ -1,13 +1,9 @@
 ---
 title: "容器存储接口（CSI）"
 sidebar_position: 4
-tags: [Kubernetes, 开放接口, 学习路线, 转载]
+tags: [Kubernetes, 开放接口, 学习路线]
 description: "介绍 Kubernetes 容器存储接口（CSI）的概念、架构、使用方法和最佳实践，包括动态配置、预配置卷和 CSI 驱动程序的开发部署。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[容器存储接口（CSI）](https://jimmysong.io/zh/book/kubernetes-handbook/interfaces/csi/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 容器存储接口（CSI）
 
@@ -58,7 +54,7 @@ graph LR
     NODE -->|Node-driver-registrar| Kubelet
 ```
 
-![Kubernetes CSI 架构组件关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/csi/6d7bb10a7950ffc0a3c91bc6fa4fd15b.svg)
+![Kubernetes CSI 架构组件关系](/images/k8s/interfaces/csi/6d7bb10a7950ffc0a3c91bc6fa4fd15b.svg)
 
 ## CSI 持久化卷字段
 

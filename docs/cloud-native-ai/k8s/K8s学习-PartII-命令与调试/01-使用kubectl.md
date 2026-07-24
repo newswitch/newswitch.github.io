@@ -1,13 +1,9 @@
 ---
 title: "Kubectl 命令概览"
 sidebar_position: 1
-tags: [Kubernetes, 命令与调试, PartII, 学习路线, 转载]
+tags: [Kubernetes, 命令与调试, PartII, 学习路线]
 description: "详细介绍 Kubernetes kubectl 命令的使用方法，包括命令分类、命令行增强工具、身份认证机制和自动补全配置等实用技巧。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubectl 命令概览](https://jimmysong.io/zh/book/kubernetes-handbook/cli/using-kubectl/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubectl 命令概览
 
@@ -32,7 +28,7 @@ kubectl 的子命令按功能主要分为以下几个类别：
 
 为提升 kubectl 的调试与管理效率，推荐结合多种开源增强工具。
 
-![kubectl 增强工具推荐](https://assets.jimmysong.io/images/book/kubernetes-handbook/cli/using-kubectl/tools-to-supercharge-kubectl.webp)
+![kubectl 增强工具推荐](/images/k8s/cli/using-kubectl/tools-to-supercharge-kubectl.webp)
 
 ### 推荐工具清单
 
@@ -46,7 +42,7 @@ kubectl 的子命令按功能主要分为以下几个类别：
 
 [kube-shell](https://github.com/cloudnativelabs/kube-shell) 为 kubectl 提供交互式命令行体验，适合复杂调试和命令探索。
 
-![kube-shell 交互终端界面](https://assets.jimmysong.io/images/book/kubernetes-handbook/cli/using-kubectl/kube-shell.webp)
+![kube-shell 交互终端界面](/images/k8s/cli/using-kubectl/kube-shell.webp)
 
 **主要特性**：
 

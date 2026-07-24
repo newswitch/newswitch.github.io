@@ -1,13 +1,9 @@
 ---
 title: "Kubectl 命令技巧大全"
 sidebar_position: 2
-tags: [Kubernetes, 命令与调试, PartII, 学习路线, 转载]
+tags: [Kubernetes, 命令与调试, PartII, 学习路线]
 description: "kubectl 是操作 Kubernetes 集群最直接高效的命令行工具。本文涵盖了 kubectl 的核心功能和实用技巧，包括自动补全、上下文配置、资源管理、调试技巧等，帮助您快速掌握 Kubernetes 集群操作。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubectl 命令技巧大全](https://jimmysong.io/zh/book/kubernetes-handbook/cli/kubectl-cheatsheet/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubectl 命令技巧大全
 

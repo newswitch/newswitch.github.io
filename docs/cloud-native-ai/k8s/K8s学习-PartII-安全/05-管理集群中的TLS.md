@@ -1,13 +1,9 @@
 ---
 title: "管理集群中的 TLS"
 sidebar_position: 5
-tags: [Kubernetes, 安全, PartII, 学习路线, 转载]
+tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "详细介绍 Kubernetes 集群中 TLS 证书的管理机制，包括集群根证书颁发机构（CA）的工作原理、证书签名请求（CSR）的创建和批准流程，以及如何在 Pod 中建立 TLS 信任关系。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[管理集群中的 TLS](https://jimmysong.io/zh/book/kubernetes-handbook/security/managing-tls-in-a-cluster/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 管理集群中的 TLS
 

@@ -1,13 +1,9 @@
 ---
 title: "Ingress 控制器"
 sidebar_position: 8
-tags: [Kubernetes, 控制器, 学习路线, 转载]
+tags: [Kubernetes, 控制器, 学习路线]
 description: "深入了解 Kubernetes Ingress 控制器的作用、官方支持的控制器类型、第三方控制器选择，以及如何在集群中部署和管理多个 Ingress 控制器。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Ingress 控制器](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/ingress-controller/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Ingress 控制器
 
@@ -215,5 +211,4 @@ Ingress 控制器是 Kubernetes 网络流量管理的核心，直接影响集群
 
 ## 参考文献
 
-- [Awesome Cloud Native - jimmysong.io](https://awesome.jimmysong.io/#api-gateway)
 - [Ingress Controllers - kubernetes.io](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)

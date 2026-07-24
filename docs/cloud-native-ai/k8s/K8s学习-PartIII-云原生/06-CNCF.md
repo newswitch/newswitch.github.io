@@ -1,13 +1,9 @@
 ---
 title: "云原生计算基金会（CNCF）"
 sidebar_position: 6
-tags: [Kubernetes, 云原生, PartIII, 学习路线, 转载]
+tags: [Kubernetes, 云原生, PartIII, 学习路线]
 description: "深入了解云原生计算基金会（CNCF）的使命、组织架构、项目成熟度分级体系，以及如何成为 CNCF Ambassador。探索 CNCF 如何推动云原生技术生态系统的发展。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[云原生计算基金会（CNCF）](https://jimmysong.io/zh/book/kubernetes-handbook/cloud-native/cncf/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 云原生计算基金会（CNCF）
 

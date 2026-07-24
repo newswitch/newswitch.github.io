@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes 次世代的云原生应用"
 sidebar_position: 3
-tags: [Kubernetes, 云原生, PartIII, 学习路线, 转载]
+tags: [Kubernetes, 云原生, PartIII, 学习路线]
 description: "探讨 Kubernetes 生态发展历程，分析云原生应用碎片化问题，介绍 OAM（开放应用模型）等解决方案，展望以应用为中心的云原生未来。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes 次世代的云原生应用](https://jimmysong.io/zh/book/kubernetes-handbook/cloud-native/post-kubernetes-era/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes 次世代的云原生应用
 
@@ -25,7 +21,7 @@ description: "探讨 Kubernetes 生态发展历程，分析云原生应用碎片
 
 Kubernetes 自 2014 年开源以来已走过近十年历程，开启了云原生时代。云原生的发展可分为以下几个阶段：
 
-![云原生的发展阶段](https://assets.jimmysong.io/images/book/kubernetes-handbook/cloud-native/post-kubernetes-era/cloud-native-stages.svg)
+![云原生的发展阶段](/images/k8s/cloud-native/post-kubernetes-era/cloud-native-stages.svg)
 
 ### 孵化期（2014 年）
 
@@ -60,7 +56,7 @@ Kubernetes 继承了 Google Borg 系统经验，统一了 PaaS 平台基础设�
 
 基于 Kubernetes 原语的云原生应用包含多个层次：
 
-![Kubernetes 原生应用](https://assets.jimmysong.io/images/book/kubernetes-handbook/cloud-native/post-kubernetes-era/kubernetes-native-application-motion.gif)
+![Kubernetes 原生应用](/images/k8s/cloud-native/post-kubernetes-era/kubernetes-native-application-motion.gif)
 
 **分层架构：**
 
@@ -75,7 +71,7 @@ Kubernetes 继承了 Google Borg 系统经验，统一了 PaaS 平台基础设�
 
 随着 Operator 生态繁荣，云原生应用出现碎片化趋势：
 
-![资源交集动画](https://assets.jimmysong.io/images/book/kubernetes-handbook/cloud-native/post-kubernetes-era/resources-motion.gif)
+![资源交集动画](/images/k8s/cloud-native/post-kubernetes-era/resources-motion.gif)
 
 ### 碎片化表现
 
@@ -101,7 +97,7 @@ Operator 基于调节器模式，遵循四个原则：
 
 Helm 通过 Chart 模板提供应用打包和版本管理能力：
 
-![Helm3 架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/cloud-native/post-kubernetes-era/helm-chart.svg)
+![Helm3 架构](/images/k8s/cloud-native/post-kubernetes-era/helm-chart.svg)
 
 **核心能力：**
 
@@ -115,7 +111,7 @@ Helm 主要关注 12 因素应用中的"发布"环节，但仍有局限性。
 
 ### 应用分层模型
 
-![云原生应用的分层模型](https://assets.jimmysong.io/images/book/kubernetes-handbook/cloud-native/post-kubernetes-era/cloud-native-app.svg)
+![云原生应用的分层模型](/images/k8s/cloud-native/post-kubernetes-era/cloud-native-app.svg)
 
 **分层说明：**
 

@@ -1,13 +1,9 @@
 ---
 title: "Admission Webhook 扩展：可拔插策略控制"
 sidebar_position: 8
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "通过准入 Webhook 扩展 Kubernetes API 的请求处理逻辑，实现策略验证、默认值注入与动态审计。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Admission Webhook 扩展：可拔插策略控制](https://jimmysong.io/zh/book/kubernetes-handbook/extend/admission-webhook/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Admission Webhook 扩展：可拔插策略控制
 
@@ -45,7 +41,7 @@ sequenceDiagram
   API_Server-->>Client: 返回响应结果
 ```
 
-![Kubernetes API 请求生命周期](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/admission-webhook/87015c8235c352f655fd74d7d3d53442.svg)
+![Kubernetes API 请求生命周期](/images/k8s/extend/admission-webhook/87015c8235c352f655fd74d7d3d53442.svg)
 
 > Mutating Webhook 在验证之前执行，可用于注入默认字段或修改配置；Validating Webhook 仅用于验证，不能修改对象。
 
@@ -257,7 +253,7 @@ flowchart LR
   C -->|拒绝或放行| A
 ```
 
-![Admission Webhook 架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/admission-webhook/f11b27b6bb4a377fa203905a76aedf1f.svg)
+![Admission Webhook 架构](/images/k8s/extend/admission-webhook/f11b27b6bb4a377fa203905a76aedf1f.svg)
 
 ## 总结
 

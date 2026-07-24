@@ -1,13 +1,9 @@
 ---
 title: "client-go 示例"
 sidebar_position: 4
-tags: [Kubernetes, 开发指南, PartII, 学习路线, 转载]
+tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "通过一个实战示例，介绍如何使用 client-go 库实现对 Kubernetes 集群中 Deployment 资源的镜像更新操作，涵盖代码实现、编译使用及监控排查等内容。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[client-go 示例](https://jimmysong.io/zh/book/kubernetes-handbook/develop/client-go-sample/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # client-go 示例
 
@@ -249,7 +245,7 @@ kubectl get pods -l app=nginx-app -w
 
 通过 Dashboard 可直观查看 Deployment 状态、Pod 状态、事件日志和滚动更新历史。
 
-![Kubernetes Dashboard 监控界面](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/client-go-sample/kubernetes-client-go-sample-update.webp)
+![Kubernetes Dashboard 监控界面](/images/k8s/develop/client-go-sample/kubernetes-client-go-sample-update.webp)
 
 ## 最佳实践
 

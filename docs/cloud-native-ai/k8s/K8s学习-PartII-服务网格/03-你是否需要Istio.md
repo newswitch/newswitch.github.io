@@ -1,13 +1,9 @@
 ---
 title: "你是否需要 Istio？"
 sidebar_position: 3
-tags: [Kubernetes, 服务网格, PartII, 学习路线, 转载]
+tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "在决定是否在生产环境中采用 Istio 之前，需要全面评估团队能力、技术架构、业务需求等多个维度的因素。本文分析了 Istio 在实际应用中可能遇到的挑战和限制，帮助你做出明智的技术选择。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[你是否需要 Istio？](https://jimmysong.io/zh/book/kubernetes-handbook/service-mesh/do-you-need-a-service-mesh/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 你是否需要 Istio？
 
@@ -135,4 +131,3 @@ Istio 目前主要解决的是分布式系统之间服务调用的问题，但�
 
 ## 参考
 
-- [在生产环境使用 Istio 前的若干考虑要素 - cloudnative.jimmysong.io](https://cloudnative.jimmysong.io/blog/the-facts-of-using-istio/)

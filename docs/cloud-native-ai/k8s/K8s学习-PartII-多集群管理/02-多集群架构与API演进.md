@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes 中的多集群管理架构与 API 的演进"
 sidebar_position: 2
-tags: [Kubernetes, 多集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "本文回顾 Kubernetes 多集群架构与 API 从 Federation 到 MCS API，再到 Multi-Cluster Gateway API 的演进历程，探讨当前业界主流的多集群治理模式与架构趋势。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes 中的多集群管理架构与 API 的演进](https://jimmysong.io/zh/book/kubernetes-handbook/multi-cluster/multi-cluster-services-api/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes 中的多集群管理架构与 API 的演进
 
@@ -32,7 +28,7 @@ timeline
       2024-2025: Multi-Cluster Gateway API 成为官方推荐方向
 ```
 
-![Kubernetes 多集群管理的演进](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/multi-cluster-services-api/49081f0266eb1df8040742a628b912c3.svg)
+![Kubernetes 多集群管理的演进](/images/k8s/multi-cluster/multi-cluster-services-api/49081f0266eb1df8040742a628b912c3.svg)
 
 ## Federation 与 KubeFed：早期的联邦控制平面
 
@@ -82,7 +78,7 @@ D[Open Cluster Management] --> E[PolicyHub]
 F[Rancher Fleet] -->|GitOps 声明式同步| G[多集群环境]
 ```
 
-![控制平面联邦化](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/multi-cluster-services-api/b4460932953ab08bd268a180ffe79806.svg)
+![控制平面联邦化](/images/k8s/multi-cluster/multi-cluster-services-api/b4460932953ab08bd268a180ffe79806.svg)
 
 这些项目普遍采用以下核心理念：
 
@@ -141,7 +137,7 @@ A --> E["GitOps 联邦 (Argo CD / Flux)"]
 A --> F["AI-Native 多集群 (KubeEdge / HAMi)"]
 ```
 
-![多集群治理方向](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/multi-cluster-services-api/7496d5bb8f459f3a5b343d8bf203b6fc.svg)
+![多集群治理方向](/images/k8s/multi-cluster/multi-cluster-services-api/7496d5bb8f459f3a5b343d8bf203b6fc.svg)
 
 这些模式正在融合形成新的趋势：
 

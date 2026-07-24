@@ -1,13 +1,9 @@
 ---
 title: "API 聚合层（APIService）"
 sidebar_position: 3
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "APIService 是 Kubernetes 的 API 聚合层机制，允许外部 API Server 注册到主 API Server 下，实现统一的 API 接口暴露。本文介绍其架构原理、注册方式与典型应用。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[API 聚合层（APIService）](https://jimmysong.io/zh/book/kubernetes-handbook/extend/apiservice/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # API 聚合层（APIService）
 
@@ -47,7 +43,7 @@ flowchart LR
     AggregatedServer --> ResourceDB["Custom Data Source"]
 ```
 
-![API 聚合层架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/apiservice/a0b7be7f710488c91a7be4c26c7cf752.svg)
+![API 聚合层架构](/images/k8s/extend/apiservice/a0b7be7f710488c91a7be4c26c7cf752.svg)
 
 ## 注册机制
 
@@ -109,7 +105,7 @@ sequenceDiagram
     kube-apiserver-->>Client: Aggregated API Response
 ```
 
-![APIService 证书与安全通信流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/apiservice/d406fe1a2be7373762413c2de408722f.svg)
+![APIService 证书与安全通信流程](/images/k8s/extend/apiservice/d406fe1a2be7373762413c2de408722f.svg)
 
 ## 开发与部署流程
 

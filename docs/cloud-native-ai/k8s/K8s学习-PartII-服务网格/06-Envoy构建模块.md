@@ -1,13 +1,9 @@
 ---
 title: "Envoy 的构建模块"
 sidebar_position: 6
-tags: [Kubernetes, 服务网格, PartII, 学习路线, 转载]
+tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "详细介绍 Envoy 代理的核心构建模块，包括监听器、过滤器链、路由配置和集群等概念，以及它们如何协同工作来处理网络流量。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Envoy 的构建模块](https://jimmysong.io/zh/book/kubernetes-handbook/service-mesh/envoy-building-blocks/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Envoy 的构建模块
 
@@ -25,7 +21,7 @@ Envoy 配置的根节点称为**引导配置**（Bootstrap Configuration）。�
 
 下图展示了请求在 Envoy 各个构建模块中的流转过程：
 
-![Envoy 构建块](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-mesh/envoy-building-blocks/envoy-block.webp)
+![Envoy 构建块](/images/k8s/service-mesh/envoy-building-blocks/envoy-block.webp)
 
 ## 监听器（Listener）
 
@@ -64,7 +60,7 @@ Envoy 定义了三类过滤器：
 
 每个通过监听器的请求可以流经多个过滤器。我们还可以根据传入请求或连接属性选择不同的过滤器链。
 
-![过滤器链](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-mesh/envoy-building-blocks/filter-chain.webp)
+![过滤器链](/images/k8s/service-mesh/envoy-building-blocks/filter-chain.webp)
 
 ### HTTP 连接管理器
 
@@ -78,7 +74,7 @@ Envoy 定义了三类过滤器：
 
 就像我们可以为每个监听器定义多个网络过滤器一样，Envoy 也支持在 HCM 过滤器中定义多个 HTTP 级过滤器。这些 HTTP 过滤器在 `http_filters` 字段下定义。
 
-![HCM 过滤器](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-mesh/envoy-building-blocks/hcm-filter.webp)
+![HCM 过滤器](/images/k8s/service-mesh/envoy-building-blocks/hcm-filter.webp)
 
 **重要提示**：HTTP 过滤器链中的最后一个过滤器必须是路由器过滤器（`envoy.filters.http.router`），它负责执行实际的路由任务。
 

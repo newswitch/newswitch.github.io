@@ -1,13 +1,9 @@
 ---
 title: "Horizontal Pod Autoscaling"
 sidebar_position: 9
-tags: [Kubernetes, 控制器, 学习路线, 转载]
+tags: [Kubernetes, 控制器, 学习路线]
 description: "深入了解 Kubernetes HPA（Horizontal Pod Autoscaling）的工作原理、配置方法和自定义指标支持，包括基于 CPU、内存和自定义指标的自动扩缩容实现。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Horizontal Pod Autoscaling](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/hpa/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Horizontal Pod Autoscaling
 
@@ -39,7 +35,7 @@ Horizontal Pod Autoscaling 仅适用于 Deployment 和 ReplicaSet，由 API serv
 
 下图展示了 HPA 的整体架构：
 
-![HPA 示意图](https://assets.jimmysong.io/images/book/kubernetes-handbook/controllers/hpa/horizontal-pod-autoscaler.webp)
+![HPA 示意图](/images/k8s/controllers/hpa/horizontal-pod-autoscaler.webp)
 
 ### 工作机制
 

@@ -1,13 +1,9 @@
 ---
 title: "创建用户认证授权的 kubeconfig 文件"
 sidebar_position: 9
-tags: [Kubernetes, 安全, PartII, 学习路线, 转载]
+tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "详细介绍如何为 Kubernetes 集群创建用户认证授权的 kubeconfig 文件，包括 CA 证书生成、kubeconfig 配置和 RBAC 权限绑定的完整流程。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[创建用户认证授权的 kubeconfig 文件](https://jimmysong.io/zh/book/kubernetes-handbook/security/kubectl-user-authentication-authorization/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 创建用户认证授权的 kubeconfig 文件
 

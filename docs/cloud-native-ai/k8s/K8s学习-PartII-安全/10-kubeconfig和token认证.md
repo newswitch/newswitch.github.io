@@ -1,13 +1,9 @@
 ---
 title: "使用 kubeconfig 或 token 进行用户身份认证"
 sidebar_position: 10
-tags: [Kubernetes, 安全, PartII, 学习路线, 转载]
+tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "详细介绍在 Kubernetes 集群中使用 kubeconfig 文件和 Service Account token 两种方式进行用户身份认证的方法，包括证书配置、token 生成和权限管理。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[使用 kubeconfig 或 token 进行用户身份认证](https://jimmysong.io/zh/book/kubernetes-handbook/security/auth-with-kubeconfig-or-token/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 使用 kubeconfig 或 token 进行用户身份认证
 
@@ -34,7 +30,7 @@ kubeconfig 文件是 Kubernetes 客户端（如 kubectl）与集群安全通信�
 
 在 Kubernetes Dashboard 登录场景下，kubeconfig 文件需要特殊处理。以 brand 命名空间下的 brand 用户为例，生成的 `brand.kubeconfig` 文件需手动添加 `token` 字段。
 
-![kubeconfig 文件结构示例](https://assets.jimmysong.io/images/book/kubernetes-handbook/security/auth-with-kubeconfig-or-token/brand-kubeconfig-yaml.webp)
+![kubeconfig 文件结构示例](/images/k8s/security/auth-with-kubeconfig-or-token/brand-kubeconfig-yaml.webp)
 
 **注意事项**：
 

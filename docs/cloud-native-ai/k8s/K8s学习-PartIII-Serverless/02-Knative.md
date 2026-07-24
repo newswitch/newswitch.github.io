@@ -1,13 +1,9 @@
 ---
 title: "Knative"
 sidebar_position: 2
-tags: [Kubernetes, Serverless, PartIII, 学习路线, 转载]
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative 是一个基于 Kubernetes 的开源 Serverless 平台，提供 Serving 和 Eventing 两大核心组件。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Knative](https://jimmysong.io/zh/book/kubernetes-handbook/serverless/knative/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Knative
 
@@ -88,7 +84,7 @@ graph TD
     SERVING --> CERT_MANAGER
 ```
 
-![Knative 架构图](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/knative/f066f72889e920855d549d6509fd0ef4.svg)
+![Knative 架构图](/images/k8s/serverless/knative/f066f72889e920855d549d6509fd0ef4.svg)
 
 ## Knative Serving
 
@@ -288,7 +284,7 @@ graph TD
     DELIVERY --> RETRY
 ```
 
-![Knative Eventing 事件流](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/knative/088d9a5b069ba7a0dccbf6ae09550835.svg)
+![Knative Eventing 事件流](/images/k8s/serverless/knative/088d9a5b069ba7a0dccbf6ae09550835.svg)
 
 ### 核心组件
 

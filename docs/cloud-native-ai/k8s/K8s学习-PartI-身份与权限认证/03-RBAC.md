@@ -1,13 +1,9 @@
 ---
 title: "基于角色的访问控制（RBAC）"
 sidebar_position: 3
-tags: [Kubernetes, 身份认证, 学习路线, 转载]
+tags: [Kubernetes, 身份认证, 学习路线]
 description: "深入了解 Kubernetes RBAC（基于角色的访问控制）授权机制，包括 Role、ClusterRole、RoleBinding 和 ClusterRoleBinding 的概念与使用，以及默认角色、权限管理和最佳实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[基于角色的访问控制（RBAC）](https://jimmysong.io/zh/book/kubernetes-handbook/auth/rbac/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 基于角色的访问控制（RBAC）
 

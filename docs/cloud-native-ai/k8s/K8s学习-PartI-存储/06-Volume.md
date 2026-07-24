@@ -1,13 +1,9 @@
 ---
 title: "Volume"
 sidebar_position: 6
-tags: [Kubernetes, 存储, 学习路线, 转载]
+tags: [Kubernetes, 存储, 学习路线]
 description: "本文详细介绍 Kubernetes Volume 的概念、类型和使用方法，包括各种存储卷类型的配置示例、挂载传播、subPath 等高级特性，以及最佳实践和使用场景。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Volume](https://jimmysong.io/zh/book/kubernetes-handbook/storage/volume/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Volume
 

@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes API 扩展机制（API Extension）"
 sidebar_position: 2
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "Kubernetes 提供了 API 聚合层（APIService）和自定义资源定义（CRD）两种扩展机制，用于添加新的资源类型或集成外部 API 服务，是整个生态系统可扩展性的基础。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes API 扩展机制（API Extension）](https://jimmysong.io/zh/book/kubernetes-handbook/extend/api-extension/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes API 扩展机制（API Extension）
 
@@ -46,7 +42,7 @@ flowchart LR
     APIService --> Data[Custom Resource Backend]
 ```
 
-![API 聚合层原理](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/api-extension/17aba0a521b6c8382da8b61dab8ad781.svg)
+![API 聚合层原理](/images/k8s/extend/api-extension/17aba0a521b6c8382da8b61dab8ad781.svg)
 
 当用户访问 `/apis/metrics.k8s.io/v1beta1` 时，主 API Server 会将请求**代理转发**给 `metrics-server` 服务。
 

@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes 原生 Serverless 模式"
 sidebar_position: 5
-tags: [Kubernetes, Serverless, PartIII, 学习路线, 转载]
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "使用 Kubernetes 原生功能实现 Serverless 模式，包括 HPA、KEDA 和 Job 模式"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes 原生 Serverless 模式](https://jimmysong.io/zh/book/kubernetes-handbook/serverless/kubernetes-patterns/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes 原生 Serverless 模式
 
@@ -53,7 +49,7 @@ graph TD
     HPA_CONTROLLER -.-> TARGET
 ```
 
-![HPA 工作原理](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/kubernetes-patterns/97e84e350760c562672ca58d6587826f.svg)
+![HPA 工作原理](/images/k8s/serverless/kubernetes-patterns/97e84e350760c562672ca58d6587826f.svg)
 
 ### 基于 CPU 的扩缩容
 
@@ -204,7 +200,7 @@ graph TD
     DEPLOYMENT --> PODS
 ```
 
-![KEDA 事件驱动扩缩容架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/kubernetes-patterns/85924c427b422d4d66e2a4e042540680.svg)
+![KEDA 事件驱动扩缩容架构](/images/k8s/serverless/kubernetes-patterns/85924c427b422d4d66e2a4e042540680.svg)
 
 ### KEDA 安装与配置
 

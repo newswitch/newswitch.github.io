@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes Dashboard - 官方 Web UI"
 sidebar_position: 10
-tags: [Kubernetes, 访问集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "Kubernetes Dashboard 是 Kubernetes 官方提供的基于 Web 的用户界面，用于管理 Kubernetes 集群中的应用和资源，支持资源查看、部署管理、故障排查等功能。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes Dashboard - 官方 Web UI](https://jimmysong.io/zh/book/kubernetes-handbook/access/kubernetes-dashboard/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes Dashboard - 官方 Web UI
 
@@ -41,7 +37,7 @@ graph TB
     end
 ```
 
-![Mermaid Diagram](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubernetes-dashboard/8dfcc1889aac282ff3e95cce8632b88e.svg)
+![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/8dfcc1889aac282ff3e95cce8632b88e.svg)
 
 ## 系统架构
 
@@ -65,7 +61,7 @@ graph TD
     Auth -->|"Validates"| K8sAPI
 ```
 
-![Mermaid Diagram](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubernetes-dashboard/7cd6b845ebe426e61f65317978584b97.svg)
+![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/7cd6b845ebe426e61f65317978584b97.svg)
 
 ## 核心组件
 
@@ -131,7 +127,7 @@ sequenceDiagram
     end
 ```
 
-![Mermaid Diagram](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubernetes-dashboard/5008e455656948e80527644087c6db50.svg)
+![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/5008e455656948e80527644087c6db50.svg)
 
 ### Metrics Scraper
 
@@ -181,7 +177,7 @@ graph TD
     metricsDeploy -->|"Queries"| metricsServer
 ```
 
-![Mermaid Diagram](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubernetes-dashboard/7165e713019d160b86c1c19463657c05.svg)
+![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/7165e713019d160b86c1c19463657c05.svg)
 
 ## 开发和构建系统
 
@@ -203,7 +199,7 @@ graph LR
     helm -->|"helm install"| deploy
 ```
 
-![Mermaid Diagram](https://assets.jimmysong.io/images/book/kubernetes-handbook/access/kubernetes-dashboard/ae166e6072a56ca2ee27555fd891c61c.svg)
+![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/ae166e6072a56ca2ee27555fd891c61c.svg)
 
 ## 主要特性
 

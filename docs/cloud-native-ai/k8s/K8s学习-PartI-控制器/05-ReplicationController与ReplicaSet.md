@@ -1,13 +1,9 @@
 ---
 title: "ReplicationController 和 ReplicaSet"
 sidebar_position: 5
-tags: [Kubernetes, 控制器, 学习路线, 转载]
+tags: [Kubernetes, 控制器, 学习路线]
 description: "介绍 Kubernetes 中 ReplicationController 和 ReplicaSet 的概念、区别和使用方法，包括配置示例和最佳实践建议。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[ReplicationController 和 ReplicaSet](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/replicaset/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # ReplicationController 和 ReplicaSet
 

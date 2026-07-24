@@ -1,13 +1,9 @@
 ---
 title: "容器网络接口（CNI）"
 sidebar_position: 3
-tags: [Kubernetes, 开放接口, 学习路线, 转载]
+tags: [Kubernetes, 开放接口, 学习路线]
 description: "深入了解容器网络接口（CNI）的设计原理、接口定义、插件实现和使用方式，掌握 Kubernetes 网络管理的核心机制。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[容器网络接口（CNI）](https://jimmysong.io/zh/book/kubernetes-handbook/interfaces/cni/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 容器网络接口（CNI）
 
@@ -60,7 +56,7 @@ graph TD
     end
 ```
 
-![CNI 高层架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/cni/c522baa04fb7bb750fd7ead0db44b40d.svg)
+![CNI 高层架构](/images/k8s/interfaces/cni/c522baa04fb7bb750fd7ead0db44b40d.svg)
 
 CNI 仓库同时提供规范和辅助代码，方便运行时和插件开发者实现。
 
@@ -91,7 +87,7 @@ graph TD
     end
 ```
 
-![CNI 组件关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/cni/a3de223c2ba33a5179be7feccba7f46b.svg)
+![CNI 组件关系](/images/k8s/interfaces/cni/a3de223c2ba33a5179be7feccba7f46b.svg)
 
 ## 关键概念
 
@@ -163,7 +159,7 @@ sequenceDiagram
     CNI-->>Runtime: 确认
 ```
 
-![CNI 插件执行流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/cni/eec825a4aef190e7437aba5f58db64ea.svg)
+![CNI 插件执行流程](/images/k8s/interfaces/cni/eec825a4aef190e7437aba5f58db64ea.svg)
 
 ### 插件类型
 
@@ -245,7 +241,7 @@ classDiagram
     NetConfList --> PluginConf : contains
 ```
 
-![CNI 结果类型关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/interfaces/cni/8ea6e7fe2d908ca5f66eada3bf13209c.svg)
+![CNI 结果类型关系](/images/k8s/interfaces/cni/8ea6e7fe2d908ca5f66eada3bf13209c.svg)
 
 ## 生态系统与应用
 

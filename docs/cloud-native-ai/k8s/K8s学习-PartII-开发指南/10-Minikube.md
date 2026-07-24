@@ -1,13 +1,9 @@
 ---
 title: "Minikube"
 sidebar_position: 10
-tags: [Kubernetes, 开发指南, PartII, 学习路线, 转载]
+tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "介绍如何安装配置 Minikube，以及常用的操作命令。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Minikube](https://jimmysong.io/zh/book/kubernetes-handbook/develop/minikube/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Minikube
 
@@ -71,7 +67,7 @@ graph TD
     K8sCore --> Services
 ```
 
-![Minikube 高级架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/minikube/9477a007a5f0ffcfbb59ff705ef9ac0a.svg)
+![Minikube 高级架构](/images/k8s/develop/minikube/9477a007a5f0ffcfbb59ff705ef9ac0a.svg)
 
 ### 驱动系统
 
@@ -114,7 +110,7 @@ graph TD
     DriverAPI --> SSH
 ```
 
-![Minikube 驱动系统](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/minikube/f68120fd421372d4fb101b6cbde6ba9a.svg)
+![Minikube 驱动系统](/images/k8s/develop/minikube/f68120fd421372d4fb101b6cbde6ba9a.svg)
 
 KIC（Kubernetes in Container）通过专用基础镜像在容器中运行 Kubernetes。
 
@@ -141,7 +137,7 @@ graph TD
     RuntimeAPI --> CRIO
 ```
 
-![Minikube 容器运行时支持](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/minikube/8f5625b03b6231780d83398731d3bc3b.svg)
+![Minikube 容器运行时支持](/images/k8s/develop/minikube/8f5625b03b6231780d83398731d3bc3b.svg)
 
 ### 插件系统
 
@@ -168,7 +164,7 @@ graph TD
     Manifests --> RBAC
 ```
 
-![Minikube 插件系统](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/minikube/af6877deb062d5f8232a1abb37a60595.svg)
+![Minikube 插件系统](/images/k8s/develop/minikube/af6877deb062d5f8232a1abb37a60595.svg)
 
 插件可包含 RBAC 资源，保障集群安全。
 
@@ -217,7 +213,7 @@ graph TD
     BaseImage --> CNIPlugins
 ```
 
-![KIC 基础镜像与依赖](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/minikube/4209db37bf8d13c253d076e6f295ed7d.svg)
+![KIC 基础镜像与依赖](/images/k8s/develop/minikube/4209db37bf8d13c253d076e6f295ed7d.svg)
 
 ## 安装与配置
 

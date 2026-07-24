@@ -1,13 +1,9 @@
 ---
 title: "使用 Kubebuilder 构建控制器"
 sidebar_position: 6
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Kubebuilder 的核心概念、设计原则、工作流程及最佳实践，帮助开发者快速上手使用 Kubebuilder 构建 Kubernetes 扩展。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[使用 Kubebuilder 构建控制器](https://jimmysong.io/zh/book/kubernetes-handbook/extend/kubebuilder/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 使用 Kubebuilder 构建控制器
 
@@ -59,7 +55,7 @@ graph TD
     Binaries -->|部署到| K8s["Kubernetes 集群"]
 ```
 
-![Kubebuilder 系统架构核心组件](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/kubebuilder/f54da153157aca0ef26f26bcd9843b1e.svg)
+![Kubebuilder 系统架构核心组件](/images/k8s/extend/kubebuilder/f54da153157aca0ef26f26bcd9843b1e.svg)
 
 ### 插件系统机制
 
@@ -92,7 +88,7 @@ graph LR
     end
 ```
 
-![Kubebuilder 插件系统接口关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/kubebuilder/0f8c4d7195243e71b8b1d62170b59fef.svg)
+![Kubebuilder 插件系统接口关系](/images/k8s/extend/kubebuilder/0f8c4d7195243e71b8b1d62170b59fef.svg)
 
 Go v4 插件实现了完整的 `plugin.Full` 接口，支持项目初始化、新建 API 资源、新建 Webhook 及编辑资源。可选插件则针对镜像部署、Helm Chart 管理等场景扩展功能。
 
@@ -122,7 +118,7 @@ flowchart LR
     end
 ```
 
-![Kubebuilder 开发与部署流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/kubebuilder/8ef0ca0ac70a10bc71075954614a6aeb.svg)
+![Kubebuilder 开发与部署流程](/images/k8s/extend/kubebuilder/8ef0ca0ac70a10bc71075954614a6aeb.svg)
 
 典型流程包括：
 
@@ -199,7 +195,7 @@ classDiagram
     Scaffold --> Template : 使用
 ```
 
-![Kubebuilder 核心对象模型](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/kubebuilder/f3877192b99d52bfd4a75cf54c07fde4.svg)
+![Kubebuilder 核心对象模型](/images/k8s/extend/kubebuilder/f3877192b99d52bfd4a75cf54c07fde4.svg)
 
 ### 控制器运行时机制
 
@@ -224,7 +220,7 @@ graph TD
     end
 ```
 
-![controller-runtime 运行时组件](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/kubebuilder/dea9df04335e19584942860ccfc32e1a.svg)
+![controller-runtime 运行时组件](/images/k8s/extend/kubebuilder/dea9df04335e19584942860ccfc32e1a.svg)
 
 Manager 是核心，负责：
 
@@ -275,7 +271,7 @@ graph TD
     end
 ```
 
-![Kubebuilder 测试体系](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/kubebuilder/8dbff215afe8b91dc751f8dd277ebf1d.svg)
+![Kubebuilder 测试体系](/images/k8s/extend/kubebuilder/8dbff215afe8b91dc751f8dd277ebf1d.svg)
 
 - 单元测试：针对函数逻辑
 - 集成测试：使用 envtest 启动 API Server
@@ -305,7 +301,7 @@ flowchart TD
     B --> B6["--skip-go-version-check<br/>跳过Go版本检查"]
 ```
 
-![Kubebuilder 项目初始化流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/kubebuilder/eb7e91c1d51e8906d93eecc26c39ae2c.svg)
+![Kubebuilder 项目初始化流程](/images/k8s/extend/kubebuilder/eb7e91c1d51e8906d93eecc26c39ae2c.svg)
 
 创建项目：
 

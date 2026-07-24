@@ -1,13 +1,9 @@
 ---
 title: "client-go 中的 informer 源码分析"
 sidebar_position: 5
-tags: [Kubernetes, 开发指南, PartII, 学习路线, 转载]
+tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "本文将以图文并茂的方式对 client-go 中的 informer 的源码进行深入分析，揭示其核心实现机制。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[client-go 中的 informer 源码分析](https://jimmysong.io/zh/book/kubernetes-handbook/develop/client-go-informer-sourcecode-analyse/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # client-go 中的 informer 源码分析
 
@@ -15,7 +11,7 @@ description: "本文将以图文并茂的方式对 client-go 中的 informer 的
 
 本文将深入分析 client-go 中 informer 机制的源码实现，帮助读者理解 Kubernetes 控制器模式的核心原理。
 
-![client-go informer](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/client-go-informer-sourcecode-analyse/client-go-informer.webp)
+![client-go informer](/images/k8s/develop/client-go-informer-sourcecode-analyse/client-go-informer.webp)
 
 ## 前言
 

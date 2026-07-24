@@ -1,13 +1,9 @@
 ---
 title: "Karmada"
 sidebar_position: 3
-tags: [Kubernetes, 多集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "Karmada 是一个开源的 Kubernetes 多集群管理系统，通过原生 API 和先进调度功能实现跨多个集群和云的应用统一管理，无需修改应用程序即可实现真正的开放式多云 Kubernetes 部署。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Karmada](https://jimmysong.io/zh/book/kubernetes-handbook/multi-cluster/karmada/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Karmada
 
@@ -58,7 +54,7 @@ graph TD
     MC1 & MC2 & MCN -->|状态上报| KA
 ```
 
-![Karmada 架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/karmada/2d5baab9b8b3c209a81fee58fbb70323.svg)
+![Karmada 架构](/images/k8s/multi-cluster/karmada/2d5baab9b8b3c209a81fee58fbb70323.svg)
 
 ## 主要特性
 
@@ -116,7 +112,7 @@ flowchart TD
     RB -->|被监听| DD
 ```
 
-![Karmada 资源传播流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/karmada/c8aba1c762f991901677c980c8d0d227.svg)
+![Karmada 资源传播流程](/images/k8s/multi-cluster/karmada/c8aba1c762f991901677c980c8d0d227.svg)
 
 简要步骤说明：
 
@@ -180,7 +176,7 @@ classDiagram
     ClusterResourceBinding --> "1..*" Work: creates
 ```
 
-![Karmada 资源关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/karmada/7590885cc55d370d4fc06920ca00cdc5.svg)
+![Karmada 资源关系](/images/k8s/multi-cluster/karmada/7590885cc55d370d4fc06920ca00cdc5.svg)
 
 ## 同步模式
 
@@ -246,7 +242,7 @@ flowchart TD
     G --> H[状态回传到 Work 与 ResourceBinding]
 ```
 
-![Work 对象在调度流程中的位置](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/karmada/8c8f0103498051ae34629668dffd470d.svg)
+![Work 对象在调度流程中的位置](/images/k8s/multi-cluster/karmada/8c8f0103498051ae34629668dffd470d.svg)
 `
 
 > 由此可见，**Work 并非业务资源本身，而是分发“任务描述”**。
@@ -365,7 +361,7 @@ flowchart TD
     KSE["karmada-scheduler-estimator"] -->|提供资源信息| GS
 ```
 
-![Karmada 调度系统](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/karmada/16a7f6c31fc87ed049d89b40eb235349.svg)
+![Karmada 调度系统](/images/k8s/multi-cluster/karmada/16a7f6c31fc87ed049d89b40eb235349.svg)
 
 调度流程：
 
@@ -417,7 +413,7 @@ sequenceDiagram
     Controller-->>User: 聚合显示全局状态（Running）
 ```
 
-![多集群部署流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/karmada/5d439aa063fefae7861db115657b2982.svg)
+![多集群部署流程](/images/k8s/multi-cluster/karmada/5d439aa063fefae7861db115657b2982.svg)
 
 > 该流程清晰地展示了「模板 → 策略 → 调度 → 传播 → 状态汇聚」的完整生命周期。
 
@@ -527,7 +523,7 @@ flowchart TD
     F --> G[状态上报与聚合显示]
 ```
 
-![Karmada 多集群调度与传播 Pipeline](https://assets.jimmysong.io/images/book/kubernetes-handbook/multi-cluster/karmada/29581faa8dd70d8e88d686cf26af40e7.svg)
+![Karmada 多集群调度与传播 Pipeline](/images/k8s/multi-cluster/karmada/29581faa8dd70d8e88d686cf26af40e7.svg)
 
 > ✅ 这就是 Karmada 的核心能力：**声明式多集群资源传播与调度闭环。**
 

@@ -1,13 +1,9 @@
 ---
 title: "从外部访问 Kubernetes 中的 Pod"
 sidebar_position: 7
-tags: [Kubernetes, 访问集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "本文详细介绍了从外部访问 Kubernetes 集群中 Pod 和 Service 的多种方式，包括 hostNetwork、hostPort、NodePort、LoadBalancer 和 Ingress 等方法，并分析了各种方式的优缺点和适用场景。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[从外部访问 Kubernetes 中的 Pod](https://jimmysong.io/zh/book/kubernetes-handbook/access/accessing-kubernetes-pods-from-outside-of-the-cluster/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 从外部访问 Kubernetes 中的 Pod
 

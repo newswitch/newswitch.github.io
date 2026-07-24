@@ -1,13 +1,9 @@
 ---
 title: "HTTP 连接管理器介绍"
 sidebar_position: 7
-tags: [Kubernetes, 服务网格, PartII, 学习路线, 转载]
+tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "详细介绍 Envoy 的 HTTP 连接管理器（HCM）工作原理，包括 HTTP 过滤器机制、数据共享方式、过滤器执行顺序以及内置过滤器功能。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[HTTP 连接管理器介绍](https://jimmysong.io/zh/book/kubernetes-handbook/service-mesh/http-conneciton-manager/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # HTTP 连接管理器介绍
 
@@ -42,7 +38,7 @@ HTTP 过滤器按照执行时机分为三种类型：
 
 下图展示了 Envoy 在请求和响应路径上调用不同过滤器类型的执行流程：
 
-![请求响应路径及 HTTP 过滤器](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-mesh/http-conneciton-manager/request-response.webp)
+![请求响应路径及 HTTP 过滤器](/images/k8s/service-mesh/http-conneciton-manager/request-response.webp)
 
 与网络过滤器类似，HTTP 过滤器可以控制后续过滤器的执行流程，并在单个请求流的生命周期内共享状态信息。
 

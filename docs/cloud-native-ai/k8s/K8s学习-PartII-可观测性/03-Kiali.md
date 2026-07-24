@@ -1,13 +1,9 @@
 ---
 title: "Kiali 服务网格观测面板"
 sidebar_position: 3
-tags: [Kubernetes, 可观测性, PartII, 学习路线, 转载]
+tags: [Kubernetes, 可观测性, PartII, 学习路线]
 description: "Kiali 的安装、配置和使用方法，专注于 Istio 服务网格的可观测性。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kiali 服务网格观测面板](https://jimmysong.io/zh/book/kubernetes-handbook/observability/kiali/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kiali 服务网格观测面板
 
@@ -72,7 +68,7 @@ graph TD
     BUSINESS_LOGIC --> CONFIG_CACHE
 ```
 
-![Kiali 架构总览](https://assets.jimmysong.io/images/book/kubernetes-handbook/observability/kiali/9294a20b6ded2a0d40dd6638c437f8ec.svg)
+![Kiali 架构总览](/images/k8s/observability/kiali/9294a20b6ded2a0d40dd6638c437f8ec.svg)
 
 ### 组件说明
 
@@ -309,7 +305,7 @@ graph TD
     style CACHE fill:#fff3e0
 ```
 
-![服务网格拓扑图示例](https://assets.jimmysong.io/images/book/kubernetes-handbook/observability/kiali/d9bd19626c6497cd825605b4be832267.svg)
+![服务网格拓扑图示例](/images/k8s/observability/kiali/d9bd19626c6497cd825605b4be832267.svg)
 
 拓扑图展示：
 

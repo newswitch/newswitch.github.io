@@ -1,13 +1,9 @@
 ---
 title: "什么是 Istio?"
 sidebar_position: 2
-tags: [Kubernetes, 服务网格, PartII, 学习路线, 转载]
+tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "Istio 是一个开源的服务网格平台，提供流量管理、安全性和可观测性功能。本文介绍 Istio 的核心特性、架构组件以及数据平面和控制平面的工作原理。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[什么是 Istio?](https://jimmysong.io/zh/book/kubernetes-handbook/service-mesh/what-is-istio/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 什么是 Istio?
 
@@ -44,7 +40,7 @@ Istio 是一个开源的服务网格平台，旨在简化微服务架构中的�
 
 Istio 服务网格采用经典的数据平面和控制平面分离架构。数据平面负责处理实际的网络流量，而控制平面负责管理和配置数据平面组件。
 
-![Istio 架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-mesh/what-is-istio/istio-arch.webp)
+![Istio 架构](/images/k8s/service-mesh/what-is-istio/istio-arch.webp)
 
 ### 数据平面：Envoy 代理
 

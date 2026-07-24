@@ -1,13 +1,9 @@
 ---
 title: "Node"
 sidebar_position: 2
-tags: [Kubernetes, 集群资源管理, 学习路线, 转载]
+tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "Kubernetes 集群中的工作节点管理，包括节点状态监控、资源管理和维护操作等核心概念和实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Node](https://jimmysong.io/zh/book/kubernetes-handbook/cluster/node/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Node
 

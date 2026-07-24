@@ -1,13 +1,9 @@
 ---
 title: "Label"
 sidebar_position: 4
-tags: [Kubernetes, 集群资源管理, 学习路线, 转载]
+tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "Kubernetes Label 是附着到对象上的键值对，用于标识和选择对象。本文详细介绍了 Label 的语法规则、选择器类型，以及在不同场景下的使用方法。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Label](https://jimmysong.io/zh/book/kubernetes-handbook/cluster/label/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Label
 
@@ -121,7 +117,7 @@ graph TD
     E --> F[非开发环境 Pod]
 ```
 
-![Label Selector 选择关系](https://assets.jimmysong.io/images/book/kubernetes-handbook/cluster/label/313cee2b9c0595b91ee279c412b12d8a.svg)
+![Label Selector 选择关系](/images/k8s/cluster/label/313cee2b9c0595b91ee279c412b12d8a.svg)
 
 ## Label 在 API 对象中的用法
 
@@ -213,7 +209,7 @@ graph LR
     P -- labels --> L[Labels]
 ```
 
-![Kubernetes 资源与 Label 关联](https://assets.jimmysong.io/images/book/kubernetes-handbook/cluster/label/a796f81e5ca12e4ac213cf6a77dadefc.svg)
+![Kubernetes 资源与 Label 关联](/images/k8s/cluster/label/a796f81e5ca12e4ac213cf6a77dadefc.svg)
 
 ## 实际应用示例
 
@@ -221,7 +217,7 @@ graph LR
 
 下图展示了 Label 在服务发现中的作用：
 
-![Label 示意图](https://assets.jimmysong.io/images/book/kubernetes-handbook/cluster/label/labels-1.webp)
+![Label 示意图](/images/k8s/cluster/label/labels-1.webp)
 
 ## 注意事项
 
@@ -239,4 +235,3 @@ Label 是 Kubernetes 资源管理和自动化运维的基石。通过合理设�
 ## 参考文献
 
 1. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/zh/docs/concepts/overview/working-with-objects/labels/)
-2. [Kubernetes Label 和 Annotation 设计规范 - 云原生社区](https://cloudnative.jimmysong.io/blog/kubernetes-label-annotation-best-practice/)

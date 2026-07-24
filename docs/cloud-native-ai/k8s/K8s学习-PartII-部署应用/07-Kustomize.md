@@ -1,13 +1,9 @@
 ---
 title: "使用 Kustomize 配置 Kubernetes 应用"
 sidebar_position: 7
-tags: [Kubernetes, 部署应用, PartII, 学习路线, 转载]
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Kustomize 是一个强大的 Kubernetes 配置管理工具，支持声明式配置定制、多环境管理和配置复用。本文介绍 Kustomize 的核心功能、最佳实践以及与 kubectl 的集成使用方法。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[使用 Kustomize 配置 Kubernetes 应用](https://jimmysong.io/zh/book/kubernetes-handbook/devops/kustomize/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 使用 Kustomize 配置 Kubernetes 应用
 
@@ -36,7 +32,7 @@ graph TD
     cmd_config --> kustomize
 ```
 
-![Kustomize 核心模块结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/kustomize/e3e42fdeaf54b37eb85d125cbc52d825.svg)
+![Kustomize 核心模块结构](/images/k8s/devops/kustomize/e3e42fdeaf54b37eb85d125cbc52d825.svg)
 
 - **kyaml**：低级 YAML 处理库，提供解析、操作和输出 YAML 文档的基础能力
 - **api**：核心业务逻辑，负责资源转换与生成
@@ -219,7 +215,7 @@ flowchart TD
     resolve_vars --> final_yaml
 ```
 
-![Kustomize 构建流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/kustomize/910d311ad4c31c93eb1836a7adae8016.svg)
+![Kustomize 构建流程](/images/k8s/devops/kustomize/910d311ad4c31c93eb1836a7adae8016.svg)
 
 ### 核心概念说明
 
@@ -284,7 +280,7 @@ graph TD
     pipeline --> writers
 ```
 
-![Kustomize 资源处理架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/kustomize/03bfc18f47067061fa4fe060f1a3da14.svg)
+![Kustomize 资源处理架构](/images/k8s/devops/kustomize/03bfc18f47067061fa4fe060f1a3da14.svg)
 
 主要组件说明：
 
@@ -349,7 +345,7 @@ graph TD
     plugin_loader --> execution
 ```
 
-![Kustomize 插件系统](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/kustomize/ae1ab1d4082d6c9a3f4b885c38a6a589.svg)
+![Kustomize 插件系统](/images/k8s/devops/kustomize/ae1ab1d4082d6c9a3f4b885c38a6a589.svg)
 
 插件类型包括：
 

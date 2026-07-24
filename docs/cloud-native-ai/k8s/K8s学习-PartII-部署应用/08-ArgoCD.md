@@ -1,13 +1,9 @@
 ---
 title: "ArgoCD：Kubernetes 的 GitOps 持续交付工具"
 sidebar_position: 8
-tags: [Kubernetes, 部署应用, PartII, 学习路线, 转载]
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Argo CD 是 Kubernetes 生态中最重要的 GitOps 工具之一，通过声明式配置和自动化同步，实现了高效、可审计的持续交付流程，适用于多集群和多租户场景。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[ArgoCD：Kubernetes 的 GitOps 持续交付工具](https://jimmysong.io/zh/book/kubernetes-handbook/devops/argocd/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # ArgoCD：Kubernetes 的 GitOps 持续交付工具
 
@@ -57,7 +53,7 @@ graph TD
     Applications -->|"deployed to"| K8sClusters
 ```
 
-![Argo CD 核心架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/c7e3a1ff689f6911063a54ce62733fad.svg)
+![Argo CD 核心架构](/images/k8s/devops/argocd/c7e3a1ff689f6911063a54ce62733fad.svg)
 
 ## 核心组件
 
@@ -90,7 +86,7 @@ graph TD
     end
 ```
 
-![API Server 组件结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/b36d2b71b2a0efe3e510239dde0e62e4.svg)
+![API Server 组件结构](/images/k8s/devops/argocd/b36d2b71b2a0efe3e510239dde0e62e4.svg)
 
 ### Application Controller (argocd-application-controller)
 
@@ -120,7 +116,7 @@ graph TD
     end
 ```
 
-![Application Controller 组件结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/e2ea333fad6eb19f798703c3cd270daa.svg)
+![Application Controller 组件结构](/images/k8s/devops/argocd/e2ea333fad6eb19f798703c3cd270daa.svg)
 
 ### Repository Server (argocd-repo-server)
 
@@ -149,7 +145,7 @@ graph TD
     end
 ```
 
-![Repository Server 组件结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/f4229a46dd4a467714703828106407b1.svg)
+![Repository Server 组件结构](/images/k8s/devops/argocd/f4229a46dd4a467714703828106407b1.svg)
 
 ### Redis
 
@@ -177,7 +173,7 @@ graph TD
     end
 ```
 
-![Dex Server 认证流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/2a1fc7ca0788159c14ed4ff5de3521a2.svg)
+![Dex Server 认证流程](/images/k8s/devops/argocd/2a1fc7ca0788159c14ed4ff5de3521a2.svg)
 
 ## 附加组件
 
@@ -205,7 +201,7 @@ graph TD
     end
 ```
 
-![ApplicationSet Controller 结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/afed8c6c6b05cf3ea88c7c6e1ea07482.svg)
+![ApplicationSet Controller 结构](/images/k8s/devops/argocd/afed8c6c6b05cf3ea88c7c6e1ea07482.svg)
 
 ### Notifications Controller
 
@@ -250,7 +246,7 @@ classDiagram
     ApplicationSpec --> ApplicationSource
 ```
 
-![Application 资源结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/a74963d8093832659dcf87d55be2217c.svg)
+![Application 资源结构](/images/k8s/devops/argocd/a74963d8093832659dcf87d55be2217c.svg)
 
 ### AppProject 资源
 
@@ -286,7 +282,7 @@ classDiagram
     ApplicationSet --> ApplicationSetSpec
 ```
 
-![ApplicationSet 资源结构](https://assets.jimmysong.io/images/book/kubernetes-handbook/devops/argocd/6f11125e72cb6db2d147db6908734f48.svg)
+![ApplicationSet 资源结构](/images/k8s/devops/argocd/6f11125e72cb6db2d147db6908734f48.svg)
 
 ## GitOps 工作流
 

@@ -1,13 +1,9 @@
 ---
 title: "Knative Eventing"
 sidebar_position: 4
-tags: [Kubernetes, Serverless, PartIII, 学习路线, 转载]
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative Eventing 的事件驱动架构和使用方法。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Knative Eventing](https://jimmysong.io/zh/book/kubernetes-handbook/serverless/eventing/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Knative Eventing
 
@@ -70,7 +66,7 @@ graph TD
     DELIVERY --> EXTERNAL
 ```
 
-![事件驱动架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/eventing/45add0ddb9c2bb092cc7af8865c1907a.svg)
+![事件驱动架构](/images/k8s/serverless/eventing/45add0ddb9c2bb092cc7af8865c1907a.svg)
 
 ### CloudEvents 标准
 
@@ -273,7 +269,7 @@ graph TD
     ANALYTICS -.->|"Trigger 4"| BROKER
 ```
 
-![发布-订阅模式](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/eventing/e1bb93fe2d680147a9b8bbaa99548728.svg)
+![发布-订阅模式](/images/k8s/serverless/eventing/e1bb93fe2d680147a9b8bbaa99548728.svg)
 
 ### 序列处理
 

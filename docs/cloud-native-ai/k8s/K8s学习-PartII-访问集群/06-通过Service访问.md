@@ -1,13 +1,9 @@
 ---
 title: "使用 Service 访问集群中的应用程序"
 sidebar_position: 6
-tags: [Kubernetes, 访问集群, PartII, 学习路线, 转载]
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "学习如何创建 Kubernetes Service 对象来访问集群中运行的应用程序，包括创建 Deployment、配置 NodePort 服务以及实现负载均衡的完整流程。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[使用 Service 访问集群中的应用程序](https://jimmysong.io/zh/book/kubernetes-handbook/access/service-access-application-cluster/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 使用 Service 访问集群中的应用程序
 

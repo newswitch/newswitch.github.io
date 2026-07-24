@@ -1,13 +1,9 @@
 ---
 title: "SPIRE"
 sidebar_position: 5
-tags: [Kubernetes, 身份认证, 学习路线, 转载]
+tags: [Kubernetes, 身份认证, 学习路线]
 description: "本文详细介绍 SPIRE 的架构、核心组件、证明机制和工作原理。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[SPIRE](https://jimmysong.io/zh/book/kubernetes-handbook/auth/spire/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # SPIRE
 
@@ -21,7 +17,7 @@ SPIRE 的部署架构由 SPIRE 服务器和一个或多个 SPIRE 代理组成。
 
 下图展示了 SPIRE 的整体架构：
 
-![SPIRE 架构图](https://assets.jimmysong.io/images/book/kubernetes-handbook/auth/spire/spire-arch.svg)
+![SPIRE 架构图](/images/k8s/auth/spire/spire-arch.svg)
 
 ## SPIRE 服务器
 
@@ -32,7 +28,7 @@ SPIRE 服务器负责管理和发布其信任域内的所有身份，核心职�
 - 自动验证代理身份（节点证明）
 - 为已验证代理请求的工作负载创建 SVID
 
-![SPIRE 服务器](https://assets.jimmysong.io/images/book/kubernetes-handbook/auth/spire/spire-server.svg)
+![SPIRE 服务器](/images/k8s/auth/spire/spire-server.svg)
 
 ### 服务器插件体系
 
@@ -55,7 +51,7 @@ SPIRE 代理需在每个节点上运行，主要功能包括：
 - 证明调用 API 的工作负载身份
 - 为已识别的工作负载分发 SVID
 
-![SPIRE 代理](https://assets.jimmysong.io/images/book/kubernetes-handbook/auth/spire/spire-agent.svg)
+![SPIRE 代理](/images/k8s/auth/spire/spire-agent.svg)
 
 ### 代理核心组件
 
@@ -105,7 +101,7 @@ SPIRE 的证明（attestation）分为两阶段：
 
 下图展示了 AWS 节点证明流程：
 
-![SPIRE 节点证明步骤](https://assets.jimmysong.io/images/book/kubernetes-handbook/auth/spire/spire-node-attestor.svg)
+![SPIRE 节点证明步骤](/images/k8s/auth/spire/spire-node-attestor.svg)
 
 节点证明流程：
 
@@ -127,7 +123,7 @@ SPIRE 支持多种节点证明器，详见官方文档。
 - 操作系统调度信息（uid、gid、路径等）
 - 编排系统信息（Kubernetes 服务账户、命名空间等）
 
-![工作负载证明](https://assets.jimmysong.io/images/book/kubernetes-handbook/auth/spire/workload-attestation.svg)
+![工作负载证明](/images/k8s/auth/spire/workload-attestation.svg)
 
 工作负载证明流程：
 

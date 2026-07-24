@@ -1,13 +1,9 @@
 ---
 title: "Knative Serving"
 sidebar_position: 3
-tags: [Kubernetes, Serverless, PartIII, 学习路线, 转载]
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative Serving 的核心概念、配置和使用方法。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Knative Serving](https://jimmysong.io/zh/book/kubernetes-handbook/serverless/serving/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Knative Serving
 
@@ -64,7 +60,7 @@ graph TD
     REVISION --> DEPLOYMENT
 ```
 
-![Knative Serving 核心架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/serving/062bf86fcea8c9094ac88933553daf35.svg)
+![Knative Serving 核心架构](/images/k8s/serverless/serving/062bf86fcea8c9094ac88933553daf35.svg)
 
 ## 核心资源
 
@@ -348,7 +344,7 @@ sequenceDiagram
     Ingress-->>Client: 返回响应
 ```
 
-![请求处理流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/serving/f549b1b49c9f511178e6e6f5ca6cf746.svg)
+![请求处理流程](/images/k8s/serverless/serving/f549b1b49c9f511178e6e6f5ca6cf746.svg)
 
 ### 冷启动优化
 

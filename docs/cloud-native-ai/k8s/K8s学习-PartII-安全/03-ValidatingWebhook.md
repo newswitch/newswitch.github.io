@@ -1,13 +1,9 @@
 ---
 title: "验证（Validating）Webhook"
 sidebar_position: 3
-tags: [Kubernetes, 安全, PartII, 学习路线, 转载]
+tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "验证（Validating）Webhook 扩展用于在资源创建、更新、删除等操作发生前对请求进行验证，以动态地实现策略控制、安全防护和合规审计。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[验证（Validating）Webhook](https://jimmysong.io/zh/book/kubernetes-handbook/security/validating-webhook/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 验证（Validating）Webhook
 
@@ -40,7 +36,7 @@ sequenceDiagram
     APIServer-->>User: 拒绝创建 Pod
 ```
 
-![ValidatingWebhook 工作机制](https://assets.jimmysong.io/images/book/kubernetes-handbook/security/validating-webhook/7052ab1c70c970da081974eb94b006cc.svg)
+![ValidatingWebhook 工作机制](/images/k8s/security/validating-webhook/7052ab1c70c970da081974eb94b006cc.svg)
 
 ValidatingWebhook 作为最终的校验层，在 MutatingWebhook 之后执行。一旦 Webhook 返回拒绝响应，API Server 将直接中止该请求并向用户返回错误信息。
 

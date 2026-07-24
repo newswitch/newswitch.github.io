@@ -1,13 +1,9 @@
 ---
 title: "KubeEdge：云原生边缘计算框架"
 sidebar_position: 2
-tags: [Kubernetes, 边缘计算, PartIII, 学习路线, 转载]
+tags: [Kubernetes, 边缘计算, PartIII, 学习路线]
 description: "KubeEdge 是 CNCF 托管的云原生边缘计算框架，扩展 Kubernetes 能力至边缘和物联网场景，实现云边端一体化管理。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[KubeEdge：云原生边缘计算框架](https://jimmysong.io/zh/book/kubernetes-handbook/edge-computing/kubeedge/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # KubeEdge：云原生边缘计算框架
 
@@ -67,7 +63,7 @@ graph TB
     CS <-.-> EdgeCore
 ```
 
-![KubeEdge 架构示意图](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/kubeedge/b08b32603b3ff6eb5f518f796a8a93ba.svg)
+![KubeEdge 架构示意图](/images/k8s/edge-computing/kubeedge/b08b32603b3ff6eb5f518f796a8a93ba.svg)
 
 ## 主要优势
 
@@ -106,7 +102,7 @@ graph TD
     CloudCore --> DynamicController
 ```
 
-![CloudCore 架构示意图](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/kubeedge/e189132bdca84cee62bf22ea0d10e4b8.svg)
+![CloudCore 架构示意图](/images/k8s/edge-computing/kubeedge/e189132bdca84cee62bf22ea0d10e4b8.svg)
 
 - **CloudHub**：WebSocket 服务器，负责云边消息转发、连接管理和消息缓存。
 - **EdgeController**：扩展控制器，管理边缘节点和 Pod 元数据，同步资源到边缘，处理状态上报。
@@ -137,7 +133,7 @@ graph TD
     EdgeCore --> SB
 ```
 
-![EdgeCore 架构示意图](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/kubeedge/7c30bad0e052e2d47de252e1312dafea.svg)
+![EdgeCore 架构示意图](/images/k8s/edge-computing/kubeedge/7c30bad0e052e2d47de252e1312dafea.svg)
 
 - **EdgeHub**：WebSocket 客户端，负责与 CloudHub 通信，同步云端资源变更、上报边缘状态。
 - **Edged**：轻量级 kubelet，管理本地容器应用，适配边缘环境。
@@ -183,7 +179,7 @@ flowchart LR
     Edged --> Beehive
 ```
 
-![KubeEdge 消息框架](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/kubeedge/72c4c6c8b48196bf2ce067d4012e012e.svg)
+![KubeEdge 消息框架](/images/k8s/edge-computing/kubeedge/72c4c6c8b48196bf2ce067d4012e012e.svg)
 
 KubeEdge 支持 ACK/NO-ACK 两种消息确认模式，保障消息可靠送达。消息包含头部（ID、时间戳、版本）、路由（源、目标、操作、资源）和内容体。
 
@@ -216,7 +212,7 @@ sequenceDiagram
     EC->>K8s: 更新 API Server 状态
 ```
 
-![资源同步流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/kubeedge/e09a42fa09619512eb5e2208f4b0d1ff.svg)
+![资源同步流程](/images/k8s/edge-computing/kubeedge/e09a42fa09619512eb5e2208f4b0d1ff.svg)
 
 ## 设备管理框架
 
@@ -259,7 +255,7 @@ graph TD
     EB <--> Mappers
 ```
 
-![设备管理框架](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/kubeedge/33d41cdd1bc18f9d07a088f7b3cfcbb6.svg)
+![设备管理框架](/images/k8s/edge-computing/kubeedge/33d41cdd1bc18f9d07a088f7b3cfcbb6.svg)
 
 - 云端通过 Device CRD/DeviceModel CRD 定义设备
 - 边缘 DeviceTwin 维护设备状态，EventBus 通过 MQTT 与设备通信
@@ -283,7 +279,7 @@ graph TD
     Debug --> Collect["collect<br/>(日志收集)"]
 ```
 
-![管理工具 keadm](https://assets.jimmysong.io/images/book/kubernetes-handbook/edge-computing/kubeedge/dd34b56941f6cf8002df4840274b8ab2.svg)
+![管理工具 keadm](/images/k8s/edge-computing/kubeedge/dd34b56941f6cf8002df4840274b8ab2.svg)
 
 ## 兼容性与安全
 

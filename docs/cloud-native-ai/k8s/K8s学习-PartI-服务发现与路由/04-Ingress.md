@@ -1,13 +1,9 @@
 ---
 title: "Ingress"
 sidebar_position: 4
-tags: [Kubernetes, 服务发现, 学习路线, 转载]
+tags: [Kubernetes, 服务发现, 学习路线]
 description: "Ingress 是 Kubernetes 中管理集群外部访问服务的资源对象，提供 HTTP 和 HTTPS 路由功能。本文介绍 Ingress 的工作原理、配置方法、IngressClass 概念以及各种使用场景。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Ingress](https://jimmysong.io/zh/book/kubernetes-handbook/service-discovery/ingress/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Ingress
 
@@ -34,7 +30,7 @@ graph LR;
   end
 ```
 
-![Ingress 运作的架构图](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/ingress/e0a8252231167704c4f15deeea858784.svg)
+![Ingress 运作的架构图](/images/k8s/service-discovery/ingress/e0a8252231167704c4f15deeea858784.svg)
 
 Ingress 提供以下核心功能：
 

@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes AI 基础设施架构"
 sidebar_position: 3
-tags: [Kubernetes, AI原生, PartIII, 学习路线, 转载]
+tags: [Kubernetes, AI原生, PartIII, 学习路线]
 description: "Kubernetes AI 基础设施的设计原则、硬件加速、网络与存储优化及运维实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes AI 基础设施架构](https://jimmysong.io/zh/book/kubernetes-handbook/ai-native/infrastructure/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes AI 基础设施架构
 
@@ -38,7 +34,7 @@ graph TD
   B --> C
 ```
 
-![Kubernetes AI 技术栈总体架构](https://assets.jimmysong.io/images/book/kubernetes-handbook/ai-native/infrastructure/1a10d07c367c1beb5031e11694c5a13b.svg)
+![Kubernetes AI 技术栈总体架构](/images/k8s/ai-native/infrastructure/1a10d07c367c1beb5031e11694c5a13b.svg)
 
 这一架构分为以下层级：
 

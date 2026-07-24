@@ -1,13 +1,9 @@
 ---
 title: "OpenFaaS"
 sidebar_position: 6
-tags: [Kubernetes, Serverless, PartIII, 学习路线, 转载]
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "OpenFaaS 的架构、安装和使用方法。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[OpenFaaS](https://jimmysong.io/zh/book/kubernetes-handbook/serverless/openfaas/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # OpenFaaS
 
@@ -73,7 +69,7 @@ graph TD
     GATEWAY --> PROMETHEUS
 ```
 
-![OpenFaaS 架构图](https://assets.jimmysong.io/images/book/kubernetes-handbook/serverless/openfaas/7f4e69e130e13423a66bda0e2f5d2e63.svg)
+![OpenFaaS 架构图](/images/k8s/serverless/openfaas/7f4e69e130e13423a66bda0e2f5d2e63.svg)
 
 ### 组件说明
 

@@ -1,13 +1,9 @@
 ---
 title: "Pod 中断与 PDB（Pod 中断预算）"
 sidebar_position: 8
-tags: [Kubernetes, Pod, 学习路线, 转载]
+tags: [Kubernetes, Pod, 学习路线]
 description: "了解 Kubernetes 中 Pod 的自愿和非自愿中断类型，以及如何使用 Pod 中断预算（PDB）来保护关键应用程序的可用性，确保在集群维护和扩缩容等操作中维持服务稳定性。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Pod 中断与 PDB（Pod 中断预算）](https://jimmysong.io/zh/book/kubernetes-handbook/pod/pod-disruption-budget/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Pod 中断与 PDB（Pod 中断预算）
 

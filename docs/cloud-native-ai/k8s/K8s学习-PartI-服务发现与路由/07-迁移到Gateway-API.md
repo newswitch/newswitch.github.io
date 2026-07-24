@@ -1,13 +1,9 @@
 ---
 title: "从 Ingress 迁移到 Gateway API"
 sidebar_position: 7
-tags: [Kubernetes, 服务发现, 学习路线, 转载]
+tags: [Kubernetes, 服务发现, 学习路线]
 description: "详细介绍如何从 Kubernetes Ingress API 迁移到新一代的 Gateway API，包括两者的主要区别、功能映射、迁移步骤和最佳实践，帮助用户顺利完成从传统 Ingress 到 Gateway API 的平滑过渡。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[从 Ingress 迁移到 Gateway API](https://jimmysong.io/zh/book/kubernetes-handbook/service-discovery/migrating-from-ingress-to-gateway-api/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 从 Ingress 迁移到 Gateway API
 
@@ -168,7 +164,7 @@ flowchart TD
         F --> F3[流量分割]
 ```
 
-![从 Ingress 迁移到 Gateway API 的完整流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-discovery/migrating-from-ingress-to-gateway-api/43c6548dd2251b476f12cce86fd239db.svg)
+![从 Ingress 迁移到 Gateway API 的完整流程](/images/k8s/service-discovery/migrating-from-ingress-to-gateway-api/43c6548dd2251b476f12cce86fd239db.svg)
 
 ### 详细迁移步骤
 

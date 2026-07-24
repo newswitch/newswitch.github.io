@@ -1,13 +1,9 @@
 ---
 title: "非 Overlay 扁平网络 Calico"
 sidebar_position: 3
-tags: [Kubernetes, 网络, 学习路线, 转载]
+tags: [Kubernetes, 网络, 学习路线]
 description: "Calico 是一个基于 eBPF 和 iptables 的云原生网络和安全解决方案，提供扁平三层网络架构，支持灵活的网络策略和高性能容器网络互联。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[非 Overlay 扁平网络 Calico](https://jimmysong.io/zh/book/kubernetes-handbook/networking/calico/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # 非 Overlay 扁平网络 Calico
 
@@ -31,7 +27,7 @@ Calico 创建和管理一个扁平的三层网络（无需 overlay），每个�
 
 Calico 采用分布式架构，由多个组件协同工作，部分组件为可选。
 
-![Calico 架构图](https://assets.jimmysong.io/images/book/kubernetes-handbook/networking/calico/calico-architecture.webp)
+![Calico 架构图](/images/k8s/networking/calico/calico-architecture.webp)
 
 ### 核心组件
 

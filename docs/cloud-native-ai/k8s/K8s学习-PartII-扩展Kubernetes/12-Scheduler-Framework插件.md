@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes Scheduler Framework 插件机制"
 sidebar_position: 12
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "深入理解并实践 Kubernetes Scheduler Framework 插件开发，掌握自定义调度逻辑的编写、注册、调试与应用，为 AI 原生与 GPU 调度扩展打下基础。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes Scheduler Framework 插件机制](https://jimmysong.io/zh/book/kubernetes-handbook/extend/scheduler-framework/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes Scheduler Framework 插件机制
 
@@ -34,7 +30,7 @@ flowchart LR
     E --> F["运行并调试插件"]
 ```
 
-![Scheduler 插件开发流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/scheduler-framework/c64589c9a922bfe805c539e1a11faaf8.svg)
+![Scheduler 插件开发流程](/images/k8s/extend/scheduler-framework/c64589c9a922bfe805c539e1a11faaf8.svg)
 
 每一步都对应具体的开发和集成环节。
 
@@ -258,7 +254,7 @@ flowchart TD
     A --> B --> C --> D --> E
 ```
 
-![AI 原生调度插件组合流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/scheduler-framework/c54911840fc3e46d0a051977d595c898.svg)
+![AI 原生调度插件组合流程](/images/k8s/extend/scheduler-framework/c54911840fc3e46d0a051977d595c898.svg)
 
 这种组合方式常用于 AI 平台如 KubeRay、Volcano、Kueue 的多作业同步调度，实现任务对齐、GPU 优先级等智能逻辑。
 

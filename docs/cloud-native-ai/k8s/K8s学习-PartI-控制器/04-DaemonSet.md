@@ -1,13 +1,9 @@
 ---
 title: "DaemonSet"
 sidebar_position: 4
-tags: [Kubernetes, 控制器, 学习路线, 转载]
+tags: [Kubernetes, 控制器, 学习路线]
 description: "DaemonSet 是 Kubernetes 中的一种控制器，确保在集群中的每个（或特定）节点上运行一个 Pod 副本。本文详细介绍 DaemonSet 的概念、使用场景、配置方法以及管理策略。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[DaemonSet](https://jimmysong.io/zh/book/kubernetes-handbook/controllers/daemonset/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # DaemonSet
 

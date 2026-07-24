@@ -1,13 +1,9 @@
 ---
 title: "Kubernetes Operator"
 sidebar_position: 7
-tags: [Kubernetes, 开发指南, PartII, 学习路线, 转载]
+tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "深入了解 Kubernetes Operator 的原理、架构、应用场景和 2025 年最佳实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Kubernetes Operator](https://jimmysong.io/zh/book/kubernetes-handbook/develop/operator/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Kubernetes Operator
 
@@ -69,7 +65,7 @@ graph TB
     style APP fill:#e8f5e8
 ```
 
-![Operator 架构总览](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/3e1efd2de8d05cae1f292191fc9fc0e2.svg)
+![Operator 架构总览](/images/k8s/develop/operator/3e1efd2de8d05cae1f292191fc9fc0e2.svg)
 
 ### 控制器模式详解
 
@@ -103,7 +99,7 @@ sequenceDiagram
     end
 ```
 
-![Operator 控制循环时序图](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/633c7efeaf30e9d09f7dcebaf78da546.svg)
+![Operator 控制循环时序图](/images/k8s/develop/operator/633c7efeaf30e9d09f7dcebaf78da546.svg)
 
 ### 工作流程
 
@@ -149,7 +145,7 @@ graph TD
     OBSERVE --> METRICS
 ```
 
-![Operator 应用场景与能力映射](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/47ebaf8d0d03ff003113a604f2085d79.svg)
+![Operator 应用场景与能力映射](/images/k8s/develop/operator/47ebaf8d0d03ff003113a604f2085d79.svg)
 
 - 自动化部署：一键部署复杂的分布式应用栈
 - 数据备份恢复：自动化数据库备份、灾难恢复和跨区域复制
@@ -241,7 +237,7 @@ stateDiagram-v2
     note right of 清理阶段 : 安全资源清理
 ```
 
-![PostgreSQL Operator 生命周期流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/40fba5ba728a5c718e0dc401057a164d.svg)
+![PostgreSQL Operator 生命周期流程](/images/k8s/develop/operator/40fba5ba728a5c718e0dc401057a164d.svg)
 
 ## 开发最佳实践
 
@@ -324,7 +320,7 @@ graph TB
     style idSingle stroke-dasharray: 2 2
 ```
 
-![Operator 设计原则思维导图](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/3f5407dd8b2462b67c363f9113686b6e.svg)
+![Operator 设计原则思维导图](/images/k8s/develop/operator/3f5407dd8b2462b67c363f9113686b6e.svg)
 
 - 单一职责：每个 Operator 专注于特定应用的生命周期管理
 - 向后兼容：确保新版本能处理旧版本创建的资源，支持渐进式迁移
@@ -370,7 +366,7 @@ graph TD
     CROSSPLANE --> CAPSULE
 ```
 
-![Operator 技术栈生态图](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/6f351f7ce855d7bd67f149590a1be611.svg)
+![Operator 技术栈生态图](/images/k8s/develop/operator/6f351f7ce855d7bd67f149590a1be611.svg)
 
 | 工具 | 语言 | 特点 | 适用场景 |
 |------|------|------|----------|
@@ -405,7 +401,7 @@ flowchart TD
     H --> H1["推送到OperatorHub<br/>版本管理"]
 ```
 
-![Operator SDK 开发流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/d7107c8a657ce9088356cc35cd3ce080.svg)
+![Operator SDK 开发流程](/images/k8s/develop/operator/d7107c8a657ce9088356cc35cd3ce080.svg)
 
 以下为主要命令及操作说明：
 
@@ -484,7 +480,7 @@ graph TD
     E2E --> CHAOS
 ```
 
-![Operator 测试金字塔与工具](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/16fb88979e39105057301c03bc60dab1.svg)
+![Operator 测试金字塔与工具](/images/k8s/develop/operator/16fb88979e39105057301c03bc60dab1.svg)
 
 - 单元测试：使用 `envtest` 模拟 Kubernetes API，测试控制器逻辑
 - 集成测试：使用 `kind` 创建临时集群，验证组件间交互
@@ -544,7 +540,7 @@ graph TD
     end
 ```
 
-![主流 Operator 生态分布](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/69a80df05a244b0aa15a946a95aeb6a8.svg)
+![主流 Operator 生态分布](/images/k8s/develop/operator/69a80df05a244b0aa15a946a95aeb6a8.svg)
 
 **数据库系统**
 
@@ -610,7 +606,7 @@ graph TD
     AWESOME --> KUBERNETES
 ```
 
-![资源获取与社区生态](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/41cb3a0f874edeffda1829702c6814be.svg)
+![资源获取与社区生态](/images/k8s/develop/operator/41cb3a0f874edeffda1829702c6814be.svg)
 
 - **[OperatorHub.io](https://operatorhub.io/)** - Red Hat 官方认证 Operator 市场
 - **[Artifact Hub](https://artifacthub.io/)** - CNCF 项目聚合的云原生应用市场
@@ -658,7 +654,7 @@ graph TD
     METRICS_OP --> LENS
 ```
 
-![Operator 可观测性与调试工具](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/b2e16e6a94717ebf130a78181149e0b7.svg)
+![Operator 可观测性与调试工具](/images/k8s/develop/operator/b2e16e6a94717ebf130a78181149e0b7.svg)
 
 #### 监控和诊断命令
 
@@ -716,7 +712,7 @@ security[安全性配置]
     AUDIT_LOG --> security
 ```
 
-![Operator 安全配置体系](https://assets.jimmysong.io/images/book/kubernetes-handbook/develop/operator/0f4a22335e1d6ee2000e3d844a6773bb.svg)
+![Operator 安全配置体系](/images/k8s/develop/operator/0f4a22335e1d6ee2000e3d844a6773bb.svg)
 
 - 最小权限原则：使用精确的 RBAC 规则，只授予必要权限
 - 网络隔离：实施 NetworkPolicy 限制 Operator 与其他服务的通信

@@ -1,13 +1,9 @@
 ---
 title: "Mutating Webhook 扩展：自动注入与资源修改控制"
 sidebar_position: 10
-tags: [Kubernetes, 扩展, PartII, 学习路线, 转载]
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Kubernetes MutatingAdmissionWebhook 的工作机制与应用实践，包括自动注入 Sidecar、动态默认值填充、资源标签修改等场景，帮助你掌握集群级动态变更的最佳实践。"
 ---
-
-:::info 转载说明
-本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[Mutating Webhook 扩展：自动注入与资源修改控制](https://jimmysong.io/zh/book/kubernetes-handbook/extend/mutating-webhook/)。仅供个人非商业学习；若有勘误请以上游为准。
-:::
 
 # Mutating Webhook 扩展：自动注入与资源修改控制
 
@@ -46,7 +42,7 @@ sequenceDiagram
 
 下图为流程示意图：
 
-![Mutating Webhook 执行流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/mutating-webhook/d053b174e7bc10218063d103e8f186ba.svg)
+![Mutating Webhook 执行流程](/images/k8s/extend/mutating-webhook/d053b174e7bc10218063d103e8f186ba.svg)
 
 流程说明：
 
@@ -179,7 +175,7 @@ flowchart LR
 
 下图为流程示意图：
 
-![Istio Sidecar 自动注入流程](https://assets.jimmysong.io/images/book/kubernetes-handbook/extend/mutating-webhook/89f1cd0db0708338739eef896d9ee335.svg)
+![Istio Sidecar 自动注入流程](/images/k8s/extend/mutating-webhook/89f1cd0db0708338739eef896d9ee335.svg)
 
 这种自动注入机制极大简化了服务网格的部署和运维。
 
