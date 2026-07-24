@@ -1,0 +1,128 @@
+---
+title: "SPIFFE"
+sidebar_position: 4
+tags: [Kubernetes, 身份认证, 学习路线, 转载]
+description: "本文介绍了 SPIFFE 的核心概念，包括工作负载、SPIFFE ID、信任域、SVID 和工作负载 API 等，以及它们在云原生应用中的应用。"
+---
+
+:::info 转载说明
+本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[SPIFFE](https://jimmysong.io/zh/book/kubernetes-handbook/auth/spiffe/)。仅供个人非商业学习；若有勘误请以上游为准。
+:::
+
+# SPIFFE
+
+> SPIFFE 为云原生和多云环境中的工作负载提供了统一、可验证的身份标准，是实现零信任安全架构的基础能力。
+
+SPIFFE（Secure Production Identity Framework for Everyone）是一套开源标准，旨在为动态和异构环境中的工作负载提供安全的身份识别机制。通过 SPIFFE，系统中的各个组件无论在何处运行，都能够安全可靠地相互认证。
+
+SPIFFE 规范的核心是通过简单的 API 定义短期加密身份文件 SVID（SPIFFE Verifiable Identity Document）。工作负载可以使用该身份文件进行认证，例如建立 TLS 连接或签署和验证 JWT 令牌。
+
+目前，SPIFFE 已在云原生生态系统中得到广泛应用，特别是在服务网格解决方案如 Istio 和 Envoy 中发挥重要作用。
+
+## 核心概念
+
+SPIFFE 的设计围绕工作负载身份、信任域和可验证身份文件展开，以下是主要概念说明。
+
+### 工作负载（Workload）
+
+工作负载（Workload）指为特定目的而部署的单一软件系统，可能包含多个执行相同任务的运行实例。其定义范围包括：
+
+- 运行在虚拟机集群上的 Web 应用程序（如 Python Web 应用）
+- 数据库实例（如 MySQL）
+- 后台处理程序（如队列处理器）
+- 协同工作的系统集合（如 Web 应用程序和数据库服务）
+
+在 SPIFFE 体系中，工作负载的粒度通常比物理或虚拟节点更细，往往细化到节点上的单个进程。这对于容器化环境尤为重要，因为同一节点上可能运行多个彼此隔离的工作负载。
+
+需要注意，SPIFFE 假设工作负载之间具有足够的隔离性，以防止恶意工作负载窃取其他工作负载的凭证。
+
+### SPIFFE ID
+
+SPIFFE ID 是唯一标识工作负载的字符串标识符，也可以分配给工作负载运行的中间系统。它采用 [URI](https://tools.ietf.org/html/rfc3986) 格式：
+
+```text
+spiffe://信任域/工作负载标识符
+```
+
+例如：`spiffe://acme.com/billing/payments`
+
+其中：
+
+- **信任域**：定义了系统的信任边界
+- **工作负载标识符**：在信任域内唯一标识特定工作负载
+
+### 信任域（Trust Domain）
+
+信任域（Trust Domain）代表系统的信任根，可以对应个人、组织、环境或部门。每个信任域运行独立的 SPIFFE 基础设施，域内的所有工作负载都会获得基于该域根密钥的身份文件。
+
+推荐将以下场景的工作负载放在不同的信任域中：
+
+- 不同物理位置（如不同数据中心或云区域）
+- 不同安全级别的环境（如生产环境与测试环境）
+
+### SPIFFE 可验证身份文件（SVID）
+
+SVID（SPIFFE Verifiable Identity Document）是工作负载向其他系统证明身份的文件。只有当 SVID 由相应信任域内的权威机构签发时，才被认为是有效的。
+
+SVID 包含 SPIFFE ID 并将其编码在可加密验证的文件中，目前支持两种格式：
+
+- **X.509 证书格式**：推荐使用，抗重放攻击能力强，适用于大多数认证场景
+- **JWT 令牌格式**：适用于存在 L7 代理或负载均衡器等场景，相对容易受到重放攻击
+
+## 工作负载 API
+
+SPIFFE 通过工作负载 API（Workload API）为不同格式的身份文件提供服务，便于工作负载自动获取和轮换身份凭证。
+
+### X.509 格式身份文件
+
+API 提供以下内容：
+
+- SPIFFE ID 形式的身份标识
+- 绑定到该 ID 的私钥，用于数据签名
+- 短期 X.509 证书（X.509-SVID），用于 TLS 连接和身份认证
+- 信任包，用于验证其他工作负载的 X.509-SVID
+
+### JWT 格式身份文件
+
+API 提供以下内容：
+
+- SPIFFE ID 形式的身份标识
+- JWT 令牌
+- 信任包，用于验证其他工作负载的身份
+
+### API 特性
+
+工作负载 API 具有以下重要特性：
+
+1. **零配置认证**：类似于 AWS EC2 和 Google GCE 的元数据 API，调用时无需预先配置认证令牌
+2. **平台无关**：可在各种环境中使用，不依赖特定平台
+3. **细粒度识别**：支持进程级和内核级的服务识别
+4. **自动轮换**：所有私钥和证书都是短期的，系统会自动轮换以降低泄露风险
+
+## 信任包（Trust Bundle）
+
+信任包（Trust Bundle）是一组证书颁发机构（CA）根证书的集合，工作负载使用它来验证其他工作负载的身份。信任包包含用于验证 X.509 和 JWT SVID 的公钥材料：
+
+- **X.509 SVID 验证**：使用证书集合
+- **JWT SVID 验证**：使用原始公钥
+
+信任包内容会定期轮换，工作负载通过调用工作负载 API 获取最新的信任包。
+
+## 应用场景
+
+SPIFFE 在现代云原生架构中发挥着重要作用，以下是常见应用场景说明。
+
+- **服务网格**：在 Istio、Linkerd 等服务网格中提供服务间的安全通信
+- **微服务架构**：为微服务提供零信任安全模型
+- **容器化环境**：在 Kubernetes 等容器编排平台中实现细粒度身份管理
+- **混合云环境**：跨云平台和本地环境的统一身份认证
+
+## 总结
+
+SPIFFE 作为云原生安全的基础标准，为动态、异构和多云环境下的工作负载提供了统一、可验证的身份体系。通过 SPIFFE ID、SVID、信任域和工作负载 API，开发者能够实现零信任架构下的自动化身份管理和安全通信。建议在服务网格、微服务和多云场景中优先采用 SPIFFE 标准，提升系统的安全性和可扩展性。
+
+## 参考文献
+
+- [SPIFFE 官方网站 - spiffe.io](https://spiffe.io)
+- [SPIFFE 规范文档 - github.com](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE.md)
+- [SVID 规范文档 - github.com](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md)

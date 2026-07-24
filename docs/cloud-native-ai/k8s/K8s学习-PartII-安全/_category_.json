@@ -1,0 +1,9 @@
+{
+  "label": "安全",
+  "position": 20,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native-ai/k8s/K8s学习-PartII-安全/00-本章导读"
+  }
+}

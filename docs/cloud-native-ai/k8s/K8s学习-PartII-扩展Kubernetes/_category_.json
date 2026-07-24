@@ -1,0 +1,9 @@
+{
+  "label": "扩展 Kubernetes",
+  "position": 22,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native-ai/k8s/K8s学习-PartII-扩展Kubernetes/00-本章导读"
+  }
+}

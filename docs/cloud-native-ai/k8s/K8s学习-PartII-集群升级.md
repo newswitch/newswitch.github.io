@@ -1,7 +1,7 @@
 ---
 title: "K8s 学习 · Part II：集群升级"
 description: Kubernetes 集群升级概述：版本策略、控制面与节点升级、验证与回滚等生产实践。
-sidebar_position: 2
+sidebar_position: 11
 tags: [Kubernetes, 集群升级, 生产实践, 运维]
 ---
 

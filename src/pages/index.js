@@ -8,7 +8,7 @@ const SECTIONS = [
   {
     title: '云原生与 AI 算力',
     desc: 'Kubernetes、vLLM、Gateway API 与集群扩展等学习与笔记。',
-    to: '/docs/cloud-native-ai/k8s/K8s学习-PartI-基础架构与核心抽象',
+    to: '/docs/cloud-native-ai/k8s/00-Kubernetes学习路线',
   },
   {
     title: '网络与硬件',

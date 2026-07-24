@@ -1,0 +1,9 @@
+{
+  "label": "集群运维",
+  "position": 25,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native-ai/k8s/K8s学习-PartII-集群运维/00-本章导读"
+  }
+}

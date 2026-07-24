@@ -1,0 +1,101 @@
+---
+title: "HTTP 连接管理器介绍"
+sidebar_position: 7
+tags: [Kubernetes, 服务网格, PartII, 学习路线, 转载]
+description: "详细介绍 Envoy 的 HTTP 连接管理器（HCM）工作原理，包括 HTTP 过滤器机制、数据共享方式、过滤器执行顺序以及内置过滤器功能。"
+---
+
+:::info 转载说明
+本文整理自 [Jimmy Song《Kubernetes 教程》](https://jimmysong.io/zh/book/kubernetes-handbook/) 对应章节，原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 协议。原作者：Jimmy Song；原页：[HTTP 连接管理器介绍](https://jimmysong.io/zh/book/kubernetes-handbook/service-mesh/http-conneciton-manager/)。仅供个人非商业学习；若有勘误请以上游为准。
+:::
+
+# HTTP 连接管理器介绍
+
+> HCM 的灵活性和可扩展性，使 Envoy 成为现代服务网格和云原生架构中不可或缺的核心组件。
+
+HTTP 连接管理器（HCM）是 Envoy 代理的核心组件之一，作为网络级过滤器，它负责将原始字节流转换为 HTTP 级别的消息和事件，如接收到的请求头、消息体数据等。
+
+HCM 不仅处理协议转换，还提供了丰富的 HTTP 功能支持，包括访问日志记录、请求 ID 生成和分布式追踪、请求头操作、路由表管理以及统计信息收集等。
+
+从协议支持角度来看，HCM 原生支持 HTTP/1.1、WebSockets、HTTP/2 和 HTTP/3 协议。值得注意的是，Envoy 代理在设计时以 HTTP/2 多路复用代理为核心理念，这一点在 Envoy 组件的术语体系中得到了充分体现。
+
+## HTTP/2 术语解析
+
+在 HTTP/2 协议中，核心概念包括：
+
+- **流（Stream）**：在已建立连接中进行双向数据传输的通道
+- **消息（Message）**：由完整的帧序列组成，对应一个完整的 HTTP 请求或响应
+- **帧（Frame）**：HTTP/2 协议中的最小通信单元，每个帧都包含帧头用于标识所属流
+- **帧头（Frame Header）**：包含帧的元信息，如流标识符、帧类型等
+
+无论数据流来源于何种连接类型（HTTP/1.1、HTTP/2 或 HTTP/3），Envoy 都采用统一的**编解码 API（Codec API）**将不同的传输协议转换为协议无关的流、请求、响应模型。这种设计使得 Envoy 的大部分代码无需关心具体的协议实现细节。
+
+## HTTP 过滤器机制
+
+HCM 支持丰富的 HTTP 过滤器生态系统。与监听器级别的过滤器不同，HTTP 过滤器专门处理 HTTP 层面的消息，而无需了解底层传输协议或多路复用能力。
+
+HTTP 过滤器按照执行时机分为三种类型：
+
+- **解码器（Decoder）**：在 HCM 解码请求流时被调用
+- **编码器（Encoder）**：在 HCM 编码响应流时被调用
+- **解码器/编码器（Decoder/Encoder）**：在请求和响应两个路径上都会被调用
+
+下图展示了 Envoy 在请求和响应路径上调用不同过滤器类型的执行流程：
+
+![请求响应路径及 HTTP 过滤器](https://assets.jimmysong.io/images/book/kubernetes-handbook/service-mesh/http-conneciton-manager/request-response.webp)
+
+与网络过滤器类似，HTTP 过滤器可以控制后续过滤器的执行流程，并在单个请求流的生命周期内共享状态信息。
+
+## 数据共享机制
+
+过滤器间的数据共享可以分为**静态数据**和**动态数据**两大类。
+
+### 静态数据共享
+
+静态数据在 Envoy 加载配置时确定，包含以下三种形式：
+
+**元数据（Metadata）**
+
+Envoy 的各种配置组件（监听器、路由、集群等）都包含 `metadata` 字段，用于存储键值对信息。元数据为过滤器提供了存储特定配置的能力，这些值在运行时保持不变，并在所有请求和连接中共享。
+
+**类型化元数据（Typed Metadata）**
+
+类型化元数据允许过滤器为特定键注册一次性的类型转换逻辑，避免了每次请求都需要进行元数据类型转换的开销。来自 xDS 的元数据在配置加载时就被转换为类型化对象，过滤器可以直接请求类型化版本。
+
+**HTTP 路由级过滤器配置**
+
+除了全局配置外，还可以为特定的虚拟主机或路由指定专门的配置。这些配置嵌入在路由表中，通过 `typed_per_filter_config` 字段进行指定。
+
+### 动态数据共享
+
+动态数据在每个连接或 HTTP 流中产生，可以被创建它的过滤器修改。`StreamInfo` 对象提供了在映射表中存储和检索类型化对象的方法。
+
+## 过滤器执行顺序
+
+HTTP 过滤器的执行顺序对于正确的请求处理至关重要。考虑以下过滤器链配置：
+
+```yaml
+http_filters:
+  - filter_1
+  - filter_2
+  - filter_3
+```
+
+通常情况下，过滤器链的最后一个过滤器是路由器过滤器。假设所有过滤器都是解码器/编码器类型：
+
+- **请求路径**：按配置顺序执行，即 `filter_1` → `filter_2` → `filter_3`
+- **响应路径**：仅调用编码器过滤器，且执行顺序相反，即 `filter_3` → `filter_2` → `filter_1`
+
+## 内置 HTTP 过滤器
+
+Envoy 提供了丰富的内置 HTTP 过滤器，涵盖了常见的 Web 应用需求：
+
+- **安全相关**：CORS、CSRF 防护、JWT 认证、RBAC 授权
+- **可观测性**：访问日志、指标收集、分布式追踪
+- **流量管理**：限流、重试、超时控制
+- **协议支持**：gRPC 转换、WebSocket 代理
+- **运维功能**：健康检查、故障注入
+
+完整的内置过滤器列表可以在 [Envoy 官方文档](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/http_filters) 中查看。
+
+通过灵活组合这些过滤器，可以构建出功能强大且高度定制化的 HTTP 代理服务。
