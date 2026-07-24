@@ -17,7 +17,7 @@ Kubernetes 作为云原生调度平台，通过 **标准化开放接口** 将**�
 
 ### 1.1 核心接口协作关系
 
-![Kubernetes 核心接口（CRI / CNI / CSI）协作关系](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes 核心接口协作关系.png)
+![Kubernetes 核心接口（CRI / CNI / CSI）协作关系](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes%20核心接口协作关系.png)
 
 *图：Kubernetes 核心接口（CRI / CNI / CSI）协作关系*
 
@@ -57,7 +57,7 @@ CRI / CNI / CSI 分别覆盖**计算、网络、存储**，是 Kubernetes **可�
 
 CRI 将 **编排（kubelet）** 与 **容器生命周期（运行时实现）** 分离。
 
-![CRI 作为 kubelet 与容器运行时之间的抽象层](/images/K8s学习-PartI-基础架构与核心抽象/CRI 作为抽象层.png)
+![CRI 作为 kubelet 与容器运行时之间的抽象层](/images/K8s学习-PartI-基础架构与核心抽象/CRI%20作为抽象层.png)
 
 *图：CRI 作为 kubelet 与容器运行时之间的抽象层*
 
@@ -69,14 +69,14 @@ CRI 将 **编排（kubelet）** 与 **容器生命周期（运行时实现）** 
 | **RuntimeService** | Pod **沙箱**与**容器**的创建、启停、删除；与 Pod 级环境（网络命名空间等）衔接 |
 | **ImageService** | **镜像**拉取、查看、删除等，可与运行时分层存储策略配合 |
 
-![CRI 的两大 gRPC 服务及其主要操作](/images/K8s学习-PartI-基础架构与核心抽象/CRI 的两大服务及其操作.png)
+![CRI 的两大 gRPC 服务及其主要操作](/images/K8s学习-PartI-基础架构与核心抽象/CRI%20的两大服务及其操作.png)
 
 *图：CRI 的两大 gRPC 服务及其主要操作*
 
 
 ### 2.3 技术基础：gRPC 与 Protocol Buffers
 
-![gRPC 与 Protocol Buffers 在 CRI 中的作用](/images/K8s学习-PartI-基础架构与核心抽象/gRPC 与 Protocol Buffers 在 CRI 中的作用.png)
+![gRPC 与 Protocol Buffers 在 CRI 中的作用](/images/K8s学习-PartI-基础架构与核心抽象/gRPC%20与%20Protocol%20Buffers%20在%20CRI%20中的作用.png)
 
 *图：gRPC 与 Protocol Buffers 在 CRI 中的作用*
 
@@ -170,14 +170,14 @@ crictl exec -it <container-id> /bin/bash
 
 ### 3.2 高层架构
 
-![CNI 高层架构](/images/K8s学习-PartI-基础架构与核心抽象/CNI 高层架构.png)
+![CNI 高层架构](/images/K8s学习-PartI-基础架构与核心抽象/CNI%20高层架构.png)
 
 *图：CNI 高层架构*
 
 
 ### 3.3 关键组件关系
 
-![CNI 关键组件关系](/images/K8s学习-PartI-基础架构与核心抽象/CNI 组件关系.png)
+![CNI 关键组件关系](/images/K8s学习-PartI-基础架构与核心抽象/CNI%20组件关系.png)
 
 *图：CNI 关键组件关系*
 
@@ -213,7 +213,7 @@ crictl exec -it <container-id> /bin/bash
 
 ### 3.6 插件执行流程
 
-![CNI 插件执行流程（含 IPAM 委托）](/images/K8s学习-PartI-基础架构与核心抽象/CNI 插件执行流程.png)
+![CNI 插件执行流程（含 IPAM 委托）](/images/K8s学习-PartI-基础架构与核心抽象/CNI%20插件执行流程.png)
 
 *图：CNI 插件执行流程（含 IPAM 委托）*
 
@@ -238,7 +238,7 @@ type CNI interface {
 
 ### 3.8 结果类型关系
 
-![CNI 结果类型关系](/images/K8s学习-PartI-基础架构与核心抽象/CNI 结果类型关系.png)
+![CNI 结果类型关系](/images/K8s学习-PartI-基础架构与核心抽象/CNI%20结果类型关系.png)
 
 *图：CNI 结果类型关系*
 

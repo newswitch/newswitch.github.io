@@ -103,7 +103,7 @@ kubectl get pods -l '!environment'
 
 下图展示了 Label Selector 如何通过不同的选择器筛选出目标对象：
 
-![Label Selector 选择关系](/images/K8s学习-PartI-集群资源管理/Label Selector 选择关系.svg)
+![Label Selector 选择关系](/images/K8s学习-PartI-集群资源管理/Label%20Selector%20选择关系.svg)
 
 *图 1: Label Selector 选择关系*
 
@@ -188,7 +188,7 @@ spec:
 
 下图展示了 Service、Pod、Deployment 等对象之间通过 Label 进行关联和选择的关系：
 
-![Kubernetes 资源与 Label 关联](/images/K8s学习-PartI-集群资源管理/Kubernetes 资源与 Label 关联.svg)
+![Kubernetes 资源与 Label 关联](/images/K8s学习-PartI-集群资源管理/Kubernetes%20资源与%20Label%20关联.svg)
 
 *图 2: Kubernetes 资源与 Label 关联*
 
@@ -198,7 +198,7 @@ spec:
 
 下图展示了 Label 在服务发现中的作用：
 
-![Kubernetes 资源与 Label 关联](/images/K8s学习-PartI-集群资源管理/Kubernetes 资源与 Label 关联.svg)
+![Kubernetes 资源与 Label 关联](/images/K8s学习-PartI-集群资源管理/Kubernetes%20资源与%20Label%20关联.svg)
 
 *图 3: Label 示意图*
 

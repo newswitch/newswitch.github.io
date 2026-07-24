@@ -39,7 +39,7 @@ tags: [Kubernetes, 学习路线, 架构, 核心抽象, etcd]
 
 Kubernetes 采用**分布式架构**：**控制面**与**工作节点**分离，实现决策集中与任务分布的高可用设计。
 
-![Kubernetes 架构总览](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes 架构总览.png)
+![Kubernetes 架构总览](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes%20架构总览.png)
 
 ### 控制面组件
 
@@ -56,7 +56,7 @@ Kubernetes 采用**分布式架构**：**控制面**与**工作节点**分离，
 
 每个节点运行以下组件，负责 Pod 的实际运行与网络管理。
 
-![节点组件与 Pod 关系](/images/K8s学习-PartI-基础架构与核心抽象/节点组件与 Pod 关系.png)
+![节点组件与 Pod 关系](/images/K8s学习-PartI-基础架构与核心抽象/节点组件与%20Pod%20关系.png)
 
 | 组件 | 描述 | 主要职责 |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ Kubernetes API 定义了一组资源类型（对象），所有操作均通过 *
 
 #### API 概念
 
-![Kubernetes API 请求流程](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes API 请求流程)
+![Kubernetes API 请求流程](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes%20API%20请求流程)
 
 Kubernetes API 遵循 RESTful 设计：
 
@@ -237,7 +237,7 @@ API Server 是控制面的核心，负责各组件间通信与 API 暴露。
 
 #### 请求处理流程
 
-![API Server 请求处理流程](/images/K8s学习-PartI-基础架构与核心抽象/API Server 请求处理流程.png)
+![API Server 请求处理流程](/images/K8s学习-PartI-基础架构与核心抽象/API%20Server%20请求处理流程.png)
 
 典型顺序：
 
@@ -251,7 +251,7 @@ API Server 是控制面的核心，负责各组件间通信与 API 暴露。
 
 支持多客户端协作管理资源字段，自动冲突检测与合并。
 
-![Server-Side Apply 工作原理](/images/K8s学习-PartI-基础架构与核心抽象/Server-Side Apply 工作原理.png)
+![Server-Side Apply 工作原理](/images/K8s学习-PartI-基础架构与核心抽象/Server-Side%20Apply%20工作原理.png)
 
 主要特性：
 
@@ -263,7 +263,7 @@ API Server 是控制面的核心，负责各组件间通信与 API 暴露。
 
 Kubernetes 支持多种扩展方式，无需修改核心代码即可适配不同场景。
 
-![Kubernetes 扩展点](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes 扩展点.png)
+![Kubernetes 扩展点](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes%20扩展点.png)
 
 | 扩展类型 | 作用 | 示例 |
 | --- | --- | --- |
@@ -292,7 +292,7 @@ Kubernetes 提供多种日志与监控能力，便于集群与应用运维。
 
 Kubernetes 组件通过 **`/metrics`** 端点暴露 Prometheus 格式指标。
 
-![Kubernetes 指标采集流程](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes 指标采集流程.png)
+![Kubernetes 指标采集流程](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes%20指标采集流程.png)
 
 这些指标有助于集群健康与性能监控。
 
@@ -300,7 +300,7 @@ Kubernetes 组件通过 **`/metrics`** 端点暴露 Prometheus 格式指标。
 
 Kubernetes 支持分布式追踪，便于跨组件监控与故障排查。
 
-![Kubernetes 分布式追踪流程](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes 分布式追踪流程.png)
+![Kubernetes 分布式追踪流程](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes%20分布式追踪流程.png)
 
 系统组件可通过 **OpenTelemetry** 等协议记录操作延迟与依赖关系。
 
@@ -318,7 +318,7 @@ Kubernetes 支持分布式追踪，便于跨组件监控与故障排查。
 
 Kubernetes 采用**分层架构**，从底层基础设施到上层应用形成完整技术栈。
 
-![Kubernetes 分层架构](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes 分层架构.png)
+![Kubernetes 分层架构](/images/K8s学习-PartI-基础架构与核心抽象/Kubernetes%20分层架构.png)
 
 | 层次 | 说明 |
 | --- | --- |
@@ -484,7 +484,7 @@ etcd 为 **Client / Server** 多副本集群；客户端通过 **clientv3** 或 
 
 下图展示主要组件及交互关系。
 
-![Etcd 系统架构](/images/K8s学习-PartI-基础架构与核心抽象/Etcd 系统架构.png)
+![Etcd 系统架构](/images/K8s学习-PartI-基础架构与核心抽象/Etcd%20系统架构.png)
 
 | 组件 | 作用 |
 | --- | --- |
@@ -500,7 +500,7 @@ etcd 为 **Client / Server** 多副本集群；客户端通过 **clientv3** 或 
 
 读可分为**串行化读**（可能略旧）与**线性化读**（更贴近最新已提交数据）；写经 **Raft** 复制后再应用到状态机。
 
-![Etcd 请求处理流程](/images/K8s学习-PartI-基础架构与核心抽象/Etcd 请求处理流程.png)
+![Etcd 请求处理流程](/images/K8s学习-PartI-基础架构与核心抽象/Etcd%20请求处理流程.png)
 
 ---
 
@@ -510,13 +510,13 @@ etcd 为 **Client / Server** 多副本集群；客户端通过 **clientv3** 或 
 
 **EtcdServer** 是中央协调单元（实现可参考上游 `server/etcdserver/server.go`）：应用请求、成员变更、租约与 **Watch**、快照与压缩等。**raftNode**（如 `raft.go`）封装 Raft 与 EtcdServer 的衔接。
 
-![Raft 节点与 EtcdServer 交互](/images/K8s学习-PartI-基础架构与核心抽象/Raft 节点与 EtcdServer 交互.png)
+![Raft 节点与 EtcdServer 交互](/images/K8s学习-PartI-基础架构与核心抽象/Raft%20节点与%20EtcdServer%20交互.png)
 
 **Raft 侧要点**：选主、日志复制、成员变更、安全规则避免脑裂。
 
 #### 存储层次
 
-![Etcd 存储层次结构](/images/K8s学习-PartI-基础架构与核心抽象/Etcd 存储层次结构.png)
+![Etcd 存储层次结构](/images/K8s学习-PartI-基础架构与核心抽象/Etcd%20存储层次结构.png)
 
 | 层次 | 说明 |
 | --- | --- |
@@ -527,7 +527,7 @@ etcd 为 **Client / Server** 多副本集群；客户端通过 **clientv3** 或 
 
 #### 认证与授权
 
-![Etcd 认证与授权流程](/images/K8s学习-PartI-基础架构与核心抽象/Etcd 认证与授权流程.png)
+![Etcd 认证与授权流程](/images/K8s学习-PartI-基础架构与核心抽象/Etcd%20认证与授权流程.png)
 
 - 用户认证（如证书、密码、JWT 等，以实际配置为准）  
 - **RBAC**（角色、权限）  
@@ -684,13 +684,13 @@ done | sort
 
 etcd 通过 **Raft** 容忍节点故障；集群可通过静态配置、发现服务或 DNS 等方式组建；支持动态 **member add/remove**，以及 **learner** 等模式（以版本文档为准）。
 
-![Etcd 集群形成与成员管理](/images/K8s学习-PartI-基础架构与核心抽象/Etcd 集群形成与成员管理.png)
+![Etcd 集群形成与成员管理](/images/K8s学习-PartI-基础架构与核心抽象/Etcd%20集群形成与成员管理.png)
 
 **Raft 简要**：同一时刻一个 **Leader**；写请求经 Leader 复制日志；多数派确认后提交并应用到状态机。
 
 客户端以 **gRPC** 为主，并可有 HTTP/JSON 网关。**clientv3**（Go）提供 KV、Watch、Lease、锁与选举等能力。
 
-![Etcd 客户端库结构](/images/K8s学习-PartI-基础架构与核心抽象/Etcd 客户端库结构.png)
+![Etcd 客户端库结构](/images/K8s学习-PartI-基础架构与核心抽象/Etcd%20客户端库结构.png)
 
 **etcdctl** 覆盖 put/get/del、watch、lease、user/role、member、endpoint health 等子命令。
 

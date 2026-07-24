@@ -11,7 +11,7 @@ Namespace 是 Kubernetes 实现资源隔离、环境划分和多租户管理的�
 
 Namespace（命名空间）是 Kubernetes 中的一个抽象概念，用于在同一个物理集群中创建多个虚拟的集群环境。它为资源对象提供作用域，使得不同 Namespace 中的资源可以使用相同的名称而不会冲突，实现逻辑分组和隔离。
 
-![Namespace 资源隔离与作用域](/images/K8s学习-PartI-集群资源管理/Namespace 资源隔离与作用域.svg)
+![Namespace 资源隔离与作用域](/images/K8s学习-PartI-集群资源管理/Namespace%20资源隔离与作用域.svg)
 
 *图 1: Namespace 资源隔离与作用域*
 
@@ -96,7 +96,7 @@ Kubernetes 集群默认包含以下 Namespace：
 
 下图展示了 Namespace 的创建、资源隔离与删除流程：
 
-![Namespace 生命周期与资源隔离](/images/K8s学习-PartI-集群资源管理/Namespace 生命周期与资源隔离.svg)
+![Namespace 生命周期与资源隔离](/images/K8s学习-PartI-集群资源管理/Namespace%20生命周期与资源隔离.svg)
 
 *图 2: Namespace 生命周期与资源隔离*
 
@@ -106,7 +106,7 @@ Kubernetes 集群默认包含以下 Namespace：
 ResourceQuota：限制 Namespace 内所有资源对象的总量（如 Pod 数量、CPU/内存总量、PVC 数量等）。
 LimitRange：为单个 Pod 或容器设置默认和最大/最小的资源 request/limit。
 
-![Namespace 资源配额与限制](/images/K8s学习-PartI-集群资源管理/Namespace 资源配额与限制.svg)
+![Namespace 资源配额与限制](/images/K8s学习-PartI-集群资源管理/Namespace%20资源配额与限制.svg)
 
 *图 3: Namespace 资源配额与限制*
 

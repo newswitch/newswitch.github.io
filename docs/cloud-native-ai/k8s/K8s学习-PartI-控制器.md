@@ -31,7 +31,7 @@ Kubernetes 中内建了多种控制器（Controller），它们是集群中的�
 
 下列图示便于理解 **API 请求路径**与**准入控制链**（Admission），与控制器通过 API Server 观察、修改资源的过程相互呼应。
 
-![Kubernetes API 请求流程](/images/K8s学习-PartI-控制器/Kubernetes API 请求流程.svg)
+![Kubernetes API 请求流程](/images/K8s学习-PartI-控制器/Kubernetes%20API%20请求流程.svg)
 
 *图：Kubernetes API 请求流程*
 
@@ -53,7 +53,7 @@ Kubernetes 工作负载管理的核心是 Pod——Kubernetes 中最小的可部
 
 Pod 是由一个或多个容器组成的组，容器间共享存储和网络资源。Pod 是所有工作负载的基础构建块。
 
-![Pod 结构示意图](/images/K8s学习-PartI-控制器/Pod 结构示意图.svg)
+![Pod 结构示意图](/images/K8s学习-PartI-控制器/Pod%20结构示意图.svg)
 
 *图 1: Pod 结构示意图*
 
@@ -73,7 +73,7 @@ Deployment 提供 Pod 和 ReplicaSet 的声明式更新。用户定义期望状�
 
 Deployment 管理 ReplicaSet，ReplicaSet 再管理 Pod。这种所有权链条支持滚动更新和回滚等高级特性。
 
-![Deployment 控制器结构](/images/K8s学习-PartI-控制器/Deployment 控制器结构.svg)
+![Deployment 控制器结构](/images/K8s学习-PartI-控制器/Deployment%20控制器结构.svg)
 
 *图 3: Deployment 控制器结构*
 
@@ -81,7 +81,7 @@ Deployment 管理 ReplicaSet，ReplicaSet 再管理 Pod。这种所有权链条�
 
 滚动更新时，Deployment 创建新 ReplicaSet 并逐步扩容，同时缩减旧 ReplicaSet，确保应用高可用。
 
-![Deployment 滚动更新流程](/images/K8s学习-PartI-控制器/Deployment 滚动更新流程.svg)
+![Deployment 滚动更新流程](/images/K8s学习-PartI-控制器/Deployment%20滚动更新流程.svg)
 
 *图 4: Deployment 滚动更新流程*
 
@@ -98,7 +98,7 @@ StatefulSet 适用于需要以下特性的应用：
 
 与 Deployment 不同，StatefulSet 为每个 Pod 保持粘性标识，提供稳定主机名和持久卷，Pod 重调度后依然保持数据和身份。
 
-![StatefulSet 结构示意图](/images/K8s学习-PartI-控制器/StatefulSet 结构示意图.svg)
+![StatefulSet 结构示意图](/images/K8s学习-PartI-控制器/StatefulSet%20结构示意图.svg)
 
 *图 5: StatefulSet 结构示意图*
 
@@ -122,7 +122,7 @@ Job 和 CronJob 创建会运行至完成的 Pod，而非长期运行。
 
 Job 可配置为不同模式：
 
-![Job 类型与模式](/images/K8s学习-PartI-控制器/Job 类型与模式.svg)
+![Job 类型与模式](/images/K8s学习-PartI-控制器/Job%20类型与模式.svg)
 
 *图 6: Job 类型与模式*
 
@@ -142,7 +142,7 @@ DaemonSet 常用于：
 节点日志收集守护进程
 节点监控守护进程
 
-![DaemonSet 结构示意图](/images/K8s学习-PartI-控制器/DaemonSet 结构示意图.svg)
+![DaemonSet 结构示意图](/images/K8s学习-PartI-控制器/DaemonSet%20结构示意图.svg)
 
 *图 7: DaemonSet 结构示意图*
 
@@ -152,7 +152,7 @@ ReplicaSet 用于维持指定数量的 Pod 副本，保证应用高可用。通�
 
 #### ReplicaSet 与 Deployment 关系
 
-![Deployment 与 ReplicaSet 关系](/images/K8s学习-PartI-控制器/Deployment 与 ReplicaSet 关系.svg)
+![Deployment 与 ReplicaSet 关系](/images/K8s学习-PartI-控制器/Deployment%20与%20ReplicaSet%20关系.svg)
 
 *图 8: Deployment 与 ReplicaSet 关系*
 
@@ -164,7 +164,7 @@ ReplicaSet 用于维持指定数量的 Pod 副本，保证应用高可用。通�
 
 Pod 遵循明确的生命周期，从创建到终止经历多个阶段。
 
-![Pod 生命周期状态图](/images/K8s学习-PartI-控制器/Pod 生命周期状态图.svg)
+![Pod 生命周期状态图](/images/K8s学习-PartI-控制器/Pod%20生命周期状态图.svg)
 
 *图 9: Pod 生命周期状态图*
 
@@ -184,7 +184,7 @@ Kubernetes 提供多种探针检测容器健康：
 
 Horizontal Pod Autoscaler（HPA）可根据 CPU 或自定义指标自动扩缩 Deployment、ReplicaSet 或 StatefulSet 的 Pod 数量。
 
-![HPA 自动扩缩容流程](/images/K8s学习-PartI-控制器/HPA 自动扩缩容流程.svg)
+![HPA 自动扩缩容流程](/images/K8s学习-PartI-控制器/HPA%20自动扩缩容流程.svg)
 
 *图 10: HPA 自动扩缩容流程*
 
@@ -194,7 +194,7 @@ Horizontal Pod Autoscaler（HPA）可根据 CPU 或自定义指标自动扩缩 D
 
 Init 容器在主容器启动前依次运行并完成。Sidecar 容器与主容器并行运行，提供辅助功能。
 
-![Pod 启动与 Sidecar 容器结构](/images/K8s学习-PartI-控制器/Pod 启动与 Sidecar 容器结构.svg)
+![Pod 启动与 Sidecar 容器结构](/images/K8s学习-PartI-控制器/Pod%20启动与%20Sidecar%20容器结构.svg)
 
 *图 11: Pod 启动与 Sidecar 容器结构*
 
@@ -202,7 +202,7 @@ Init 容器在主容器启动前依次运行并完成。Sidecar 容器与主容�
 
 Pod Disruption Budget（PDB）限制应用可同时中断的 Pod 数，保障高可用。
 
-![Pod Disruption Budget 示意图](/images/K8s学习-PartI-控制器/Pod Disruption Budget 示意图.svg)
+![Pod Disruption Budget 示意图](/images/K8s学习-PartI-控制器/Pod%20Disruption%20Budget%20示意图.svg)
 
 *图 12: Pod Disruption Budget 示意图*
 
@@ -319,7 +319,7 @@ kubectl rollout undo deployment/nginx-deployment
 
 下图展示了 Deployment 控制器的核心架构与资源关系。
 
-![Deployment 控制器结构](/images/K8s学习-PartI-控制器/Deployment 控制器结构.svg)
+![Deployment 控制器结构](/images/K8s学习-PartI-控制器/Deployment%20控制器结构.svg)
 
 *图 1: Kubernetes Deployment Cheatsheet（架构与资源关系）*
 
@@ -1730,7 +1730,7 @@ Horizontal Pod Autoscaling 仅适用于 Deployment 和 ReplicaSet，由 API serv
 
 下图展示了 HPA 的整体架构：
 
-![HPA 自动扩缩容流程](/images/K8s学习-PartI-控制器/HPA 自动扩缩容流程.svg)
+![HPA 自动扩缩容流程](/images/K8s学习-PartI-控制器/HPA%20自动扩缩容流程.svg)
 
 *图 1: HPA 示意图*
 

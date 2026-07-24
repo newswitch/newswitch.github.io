@@ -9,7 +9,7 @@ tags: [Kubernetes, 学习路线, Pod, 工作负载, 探针]
 
 ## Pod
 
-![节点组件与 Pod 关系](/images/K8s学习-PartI-基础架构与核心抽象/节点组件与 Pod 关系.png)
+![节点组件与 Pod 关系](/images/K8s学习-PartI-基础架构与核心抽象/节点组件与%20Pod%20关系.png)
 
 *图：节点组件与 Pod 关系*
 
@@ -66,7 +66,7 @@ Kubernetes 直接管理 Pod，而非容器本身
 下图展示了单容器与多容器 Pod 的结构关系：
 
 
-![Pod 结构模式](/images/K8s学习-PartI-Pod/Pod 结构模式.png)
+![Pod 结构模式](/images/K8s学习-PartI-Pod/Pod%20结构模式.png)
 
 *图 1: Pod 结构模式*
 
@@ -91,7 +91,7 @@ Pod 可定义多个共享卷（Volumes）
 下图展示了典型的多容器 Pod 架构：
 
 
-![多容器 Pod 架构示意图](/images/K8s学习-PartI-Pod/多容器 Pod 架构示意图.png)
+![多容器 Pod 架构示意图](/images/K8s学习-PartI-Pod/多容器%20Pod%20架构示意图.png)
 
 *图 2: 多容器 Pod 架构示意图*
 
@@ -165,7 +165,7 @@ Pod 是 Kubernetes 架构的基石，理解其设计理念和生命周期管理�
 下图展示了 Pod 的核心数据结构，便于理解其组成和属性：
 
 
-![Pod Cheatsheet 数据结构图](/images/K8s学习-PartI-Pod/Pod Cheatsheet 数据结构图.webp)
+![Pod Cheatsheet 数据结构图](/images/K8s学习-PartI-Pod/Pod%20Cheatsheet%20数据结构图.webp)
 
 *图 1: Pod Cheatsheet 数据结构图*
 
@@ -193,7 +193,7 @@ localhost：网络通信
 下图展示了多容器 Pod 的典型架构，便于理解容器间的协作关系：
 
 
-![多容器 Pod 架构示意图](/images/K8s学习-PartI-Pod/多容器 Pod 架构示意图.png)
+![多容器 Pod 架构示意图](/images/K8s学习-PartI-Pod/多容器%20Pod%20架构示意图.png)
 
 *图 2: 多容器 Pod 架构示意图*
 
@@ -256,7 +256,7 @@ Never：从不重启
 下图展示了 Pod 的生命周期主要阶段及状态转换：
 
 
-![Pod 生命周期流程](/images/K8s学习-PartI-Pod/Pod 生命周期流程.svg)
+![Pod 生命周期流程](/images/K8s学习-PartI-Pod/Pod%20生命周期流程.svg)
 
 *图 3: Pod 生命周期流程*
 
@@ -398,7 +398,7 @@ Init 容器适用于多种初始化和依赖准备场景。常见用例如下：
 下图展示了 Init 容器在 Pod 启动流程中的作用：
 
 
-![Init 容器执行流程](/images/K8s学习-PartI-Pod/Init 容器执行流程.svg)
+![Init 容器执行流程](/images/K8s学习-PartI-Pod/Init%20容器执行流程.svg)
 
 *图 1: Init 容器执行流程*
 
@@ -665,7 +665,7 @@ Pod 是 Kubernetes 的基本调度单元，本质为逻辑概念。为实现 Pod
 Pause 容器的核心作用是为 Pod 内所有业务容器提供统一的命名空间基础。下图展示了 Pause 容器实现网络共享的流程：
 
 
-![Pause 容器网络共享机制](/images/K8s学习-PartI-Pod/Pause 容器网络共享机制.svg)
+![Pause 容器网络共享机制](/images/K8s学习-PartI-Pod/Pause%20容器网络共享机制.svg)
 
 *图 1: Pause 容器网络共享机制*
 
@@ -702,7 +702,7 @@ crictl ps | grep pause
 下图展示了 Pause 容器在 Pod 内部的资源共享机制：
 
 
-![Pause 容器示意图](/images/K8s学习-PartI-Pod/Pause 容器示意图.webp)
+![Pause 容器示意图](/images/K8s学习-PartI-Pod/Pause%20容器示意图.webp)
 
 *图 2: Pause 容器示意图*
 
@@ -808,7 +808,7 @@ Sidecar 容器（Sidecar Container）是指与主容器（Main Container）共�
 可重用性：可在多个不同应用中复用。
 下图展示了 Sidecar 容器与主容器的协作关系：
 
-![Sidecar 容器与主容器协作关系](/images/K8s学习-PartI-Pod/Sidecar 容器与主容器协作关系.svg)
+![Sidecar 容器与主容器协作关系](/images/K8s学习-PartI-Pod/Sidecar%20容器与主容器协作关系.svg)
 
 *图 1: Sidecar 容器与主容器协作关系*
 
@@ -992,7 +992,7 @@ Pod 的 status 字段包含一个 PodStatus 对象，其中的 phase 字段表�
 
 下图展示了 Pod 生命周期中状态的变化流程：
 
-![Pod 生命周期状态变化流程](/images/K8s学习-PartI-Pod/Pod 生命周期状态变化流程.svg)
+![Pod 生命周期状态变化流程](/images/K8s学习-PartI-Pod/Pod%20生命周期状态变化流程.svg)
 
 *图 1: Pod 生命周期状态变化流程*
 
@@ -1595,7 +1595,7 @@ Liveness 和 Readiness 探针是 Kubernetes 健康检查的核心机制，合理
 
 Kubernetes 通过探针（Probe）机制动态感知容器的健康和服务可用性，自动实现自愈和流量调度。
 
-![Kubernetes 探针生命周期流程](/images/K8s学习-PartI-Pod/Kubernetes 探针生命周期流程.svg)
+![Kubernetes 探针生命周期流程](/images/K8s学习-PartI-Pod/Kubernetes%20探针生命周期流程.svg)
 
 *图 1: Kubernetes 探针生命周期流程*
 
