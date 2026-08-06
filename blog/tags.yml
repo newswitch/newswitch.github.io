@@ -3,3 +3,13 @@ misc:
   label: 未分类
   permalink: /misc
   description: 占位标签
+
+food:
+  label: 美食
+  permalink: /food
+  description: 吃饭记录
+
+life:
+  label: 生活
+  permalink: /life
+  description: 日常随记
