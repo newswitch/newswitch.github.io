@@ -285,7 +285,7 @@ lspci -tv
 nvidia-smi topo -m
 ```
 
-下一篇：[nvidia-smi 常用命令与指标说明](./03-nvidia-smi%20常用命令与指标说明.md)。
+数据路径补充：[CPU 与 GPU 之间的数据搬运](./02b-CPU与GPU之间的数据搬运.md) → [NVLink 与 NVSwitch 原理](./02c-NVLink与NVSwitch原理.md)；主线下一篇：[nvidia-smi 常用命令与指标说明](./03-nvidia-smi%20常用命令与指标说明.md)。
 
 ---
 

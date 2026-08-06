@@ -173,7 +173,7 @@ PVC → Job 下载并校验 → 完成 → vLLM 只读挂载
 
 优先级：源文件用对象存储；普通多副本用 RWX；高性能用本地 NVMe + Local PV；开发可用 PVC/受控 hostPath；临时用 emptyDir+Init。
 
-下一篇：[大模型冷启动优化](./37-大模型冷启动优化.md)。
+完整存储模块：[AI 工作负载的存储 IO 模型](./36b-AI工作负载的存储IO模型.md) → [本地 NVMe 与 Local PV](./36d-本地NVMe与Local-PV实践.md) → [NFS](./36e-NFS在AI集群中的使用与性能分析.md) → [Ceph 接口选型](./36f-Ceph三种接口在AI集群中的选型.md) → [对象存储与模型仓库](./36g-对象存储与模型仓库设计.md) → [CSI 挂载链路](./36h-Kubernetes-CSI挂载链路与故障排查.md) → [GPUDirect Storage](./36c-GPUDirect-Storage原理与实践.md)；下一篇：[大模型冷启动优化](./37-大模型冷启动优化.md)。
 
 ---
 

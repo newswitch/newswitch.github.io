@@ -17,8 +17,8 @@ const SECTIONS = [
   },
   {
     title: '基础设施与总线',
-    desc: 'PCIe 总线与硬件相关笔记。',
-    to: '/docs/infrastructure/pcie/PCIe总线学习（一）基本架构',
+    desc: 'PCIe、Ceph 存储等基础设施笔记。',
+    to: '/docs/infrastructure/ceph/Ceph学习路线',
   },
   {
     title: '工程笔记与排障',

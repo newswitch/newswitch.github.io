@@ -209,7 +209,7 @@ NCCL WARN Call to ibv_modify_qp failed with error Invalid argument
 | 生产多机训练 | IB 或调好的 RoCE + GDR |
 | K8s | 训练网与业务网分离；DaemonSet 保证 peermem；Queue/Gang 整组调度 |
 
-存储、冷启动见第 36、37 篇骨架；拓扑调度见 [第 35 篇](./35-GPU%20集群拓扑感知调度.md)。
+显存直连网络的完整原理与实验见 [GPUDirect RDMA 原理与实践](./34b-GPUDirect-RDMA原理与实践.md)；存储、冷启动见第 36、37 篇；拓扑调度见 [第 35 篇](./35-GPU%20集群拓扑感知调度.md)。
 
 ---
 

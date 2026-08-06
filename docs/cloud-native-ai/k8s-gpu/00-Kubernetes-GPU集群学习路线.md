@@ -74,6 +74,71 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 7. GPU 集群故障排查与稳定性建设
 8. 集群容量、利用率、成本与多租户治理
 
+### 基础设施桥梁文章（第一批）
+
+原有编号和阶段不变。下面 6 篇用于补齐「算力、显存、机内互联、跨机网络、存储」之间容易断开的基础知识，第一次学习时建议穿插到主线中阅读：
+
+| 补充文章 | 解决的问题 | 建议插入位置 |
+|----------|------------|--------------|
+| [01b HBM 显存原理：容量、带宽与访问效率](./01b-HBM显存原理：容量、带宽与访问效率.md) | 为什么显存够用，计算仍可能被内存访问拖慢 | 01 之后 |
+| [02b CPU 与 GPU 之间的数据搬运](./02b-CPU与GPU之间的数据搬运.md) | 数据怎样经过主存、PCIe 和 DMA 到达 GPU | 02 之后 |
+| [02c NVLink 与 NVSwitch 原理](./02c-NVLink与NVSwitch原理.md) | 多卡之间怎样通信，拓扑为什么影响性能 | 02b 之后 |
+| [34b GPUDirect RDMA 原理与实践](./34b-GPUDirect-RDMA原理与实践.md) | 跨节点通信怎样减少 CPU 和主存中转 | 34 之后 |
+| [36b AI 工作负载的存储 IO 模型](./36b-AI工作负载的存储IO模型.md) | 模型、数据集、Checkpoint 各需要什么存储能力 | 36 之前 |
+| [36c GPUDirect Storage 原理与实践](./36c-GPUDirect-Storage原理与实践.md) | 存储数据怎样更直接地进入 GPU 显存 | 36b 之后 |
+
+这批文章不是按名词孤立讲解，而是共同回答一条数据路径：
+
+```text
+存储中的模型/数据
+  → 文件系统与存储网络
+  → CPU 内存或 GDS 直达路径
+  → PCIe / GPUDirect RDMA
+  → HBM 显存
+  → CUDA Kernel / Tensor Core
+  → NVLink / NVSwitch 或跨机网络上的集合通信
+  → Kubernetes / Volcano 按资源与拓扑完成放置
+```
+
+推荐串联顺序：
+
+```text
+01 → 01b → 02 → 02b → 02c → 33 → 34 → 34b
+→ 36b → 36d → 36e → 36f → 36g → 36h → 36c
+→ 36 → 35 → 43 → 48
+```
+
+### 存储技术栈文章（第二批）
+
+第一批建立 IO 和 GDS 原理，第二批补齐具体存储接口及 Kubernetes 挂载过程：
+
+| 补充文章 | 核心能力 |
+|----------|----------|
+| [36d 本地 NVMe 与 Local PV 实践](./36d-本地NVMe与Local-PV实践.md) | 建立节点高速缓存，并理解数据位置对调度的约束 |
+| [36e NFS 在 AI 集群中的使用与性能分析](./36e-NFS在AI集群中的使用与性能分析.md) | 部署共享目录、识别冷启动风暴与服务端瓶颈 |
+| [36f Ceph 三种接口在 AI 集群中的选型](./36f-Ceph三种接口在AI集群中的选型.md) | 根据块、文件、对象语义选择 RBD、CephFS 或 RGW |
+| [36g 对象存储与模型仓库设计](./36g-对象存储与模型仓库设计.md) | 使用不可变 revision、manifest、校验和节点缓存分发模型 |
+| [36h Kubernetes CSI 挂载链路与故障排查](./36h-Kubernetes-CSI挂载链路与故障排查.md) | 追踪 PVC、供给、调度、Attach、Stage 和 Mount 全过程 |
+
+### 端到端串联文章（第三批）
+
+完成基础模块后，通过下面 5 篇把一次真实 GPU 任务从调度、数据加载一直追踪到机内和跨机通信：
+
+| 串联文章 | 追踪主线 |
+|----------|----------|
+| [57b 一个 GPU Pod 从提交到开始计算经历了什么](./57b-一个GPU-Pod从提交到开始计算经历了什么.md) | API → Scheduler → CSI → Device Plugin → CUDA → Ready |
+| [57c 模型文件从存储加载到 GPU 显存的完整路径](./57c-模型文件从存储加载到GPU显存的完整路径.md) | 存储 → Page Cache/解析 → pinned memory → PCIe H2D → HBM |
+| [57d 单机八卡训练的完整数据与通信路径](./57d-单机八卡训练的完整路径.md) | DataLoader → 8 GPU 计算 → NVLink/NVSwitch → NCCL AllReduce |
+| [57e 多机训练的完整数据与通信路径](./57e-多机训练的完整路径.md) | NVLink → PCIe → RDMA HCA → IB/RoCE → 远端 GPU |
+| [57f GPU、网卡、存储联合拓扑调度](./57f-GPU网卡存储联合拓扑调度.md) | GPU/HBM/NIC/PVC/缓存约束 → Gang → 放置 → 运行反馈 |
+
+完成第三批后，应能从两种方向解释系统：
+
+```text
+控制路径：任务提交 → 调度 → 设备/卷准备 → 进程启动
+数据路径：存储 → 内存/HBM → GPU 计算 → NVLink/RDMA → Checkpoint
+```
+
 ---
 
 ## 三、16 周学习节奏
@@ -91,11 +156,11 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 | 第 9 周 | 分布式训练 | 29～32 + 33（DDP→Volcano→CKPT→NCCL） |
 | 第 10 周 | Ray / Kubeflow / Kueue | 编排选型与实践 |
 | 第 11 周 | GPU 网络 / NCCL / RDMA | 33～35 + 48 Timeout 复盘 |
-| 第 12 周 | 存储与冷启动 | 36～37 存储与冷启动 |
+| 第 12 周 | 存储与冷启动 | 36、36b～36h、37 存储与冷启动 |
 | 第 13 周 | DCGM / Prometheus / Grafana | 38～42 监控告警全套 |
 | 第 14 周 | 六层排障演练 | 43～48 排障系列 |
 | 第 15 周 | 多租户 / Kueue / 成本 | 15、51～54 治理主线 |
-| 第 16 周 | 综合毕业项目 | 57～60 架构、部署、演练、总结 |
+| 第 16 周 | 综合毕业项目 | 57、57b～57f、58～60 架构、全链路、部署、演练、总结 |
 
 每完成一个大阶段，建议做一次阶段复盘：学到什么、做了哪些实验、遇到什么问题、掌握哪些命令、下一阶段学什么。
 
@@ -373,7 +438,7 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 
 ### 第七阶段：GPU 网络与存储（第 11～12 周）
 
-> 网络与 NCCL 以 [NCCL 文档](https://docs.nvidia.com/deeplearning/nccl/index.html) 与 [Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html) 为主。阅读顺序：33 → 34 → 35；值班复盘用 [48](./48-NCCL%20Timeout%20排查流程.md)。存储与冷启动：[36](./36-大模型文件在%20Kubernetes%20中的存储方案.md)、[37](./37-大模型冷启动优化.md)。
+> 网络与 NCCL 以 [NCCL 文档](https://docs.nvidia.com/deeplearning/nccl/index.html) 与 [Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html) 为主。阅读顺序：33 → 34 → 35；值班复盘用 [48](./48-NCCL%20Timeout%20排查流程.md)。存储建议按 36b → 36d → 36e → 36f → 36g → 36h → 36c → 36 → 37 学习。
 
 #### 33.《[NCCL 通信原理与常见问题](./33-NCCL%20通信原理与常见问题.md)》
 
@@ -398,6 +463,24 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 - NFS / CephFS / 对象存储 / 本地 NVMe
 - PVC / HostPath 风险
 - 方案对比
+
+#### 36b.《[AI 工作负载的存储 IO 模型](./36b-AI工作负载的存储IO模型.md)》
+
+- 模型权重、训练数据与 Checkpoint 的访问模式
+- 吞吐、IOPS、延迟、并发与元数据
+
+#### 36c.《[GPUDirect Storage 原理与实践](./36c-GPUDirect-Storage原理与实践.md)》
+
+- 传统 POSIX 路径、Compatibility Mode 与 Direct Path
+- cuFile、O_DIRECT、拓扑验证与基准测试
+
+#### 36d～36h. 存储技术栈补充
+
+- [本地 NVMe 与 Local PV](./36d-本地NVMe与Local-PV实践.md)
+- [NFS 使用与性能分析](./36e-NFS在AI集群中的使用与性能分析.md)
+- [Ceph RBD、CephFS、RGW 选型](./36f-Ceph三种接口在AI集群中的选型.md)
+- [对象存储与模型仓库](./36g-对象存储与模型仓库设计.md)
+- [Kubernetes CSI 挂载链路](./36h-Kubernetes-CSI挂载链路与故障排查.md)
 
 #### 37.《[大模型冷启动优化](./37-大模型冷启动优化.md)》
 
@@ -513,6 +596,14 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 
 - 背景、需求、规模、节点角色
 - 节点池 / 网络 / 存储 / 调度 / 监控 / 安全
+
+#### 57b～57f. 端到端串联
+
+- [一个 GPU Pod 从提交到开始计算经历了什么](./57b-一个GPU-Pod从提交到开始计算经历了什么.md)
+- [模型文件从存储加载到 GPU 显存](./57c-模型文件从存储加载到GPU显存的完整路径.md)
+- [单机八卡训练的完整路径](./57d-单机八卡训练的完整路径.md)
+- [多机训练的完整路径](./57e-多机训练的完整路径.md)
+- [GPU、网卡、存储联合拓扑调度](./57f-GPU网卡存储联合拓扑调度.md)
 
 #### 58.《[GPU 集群完整部署实录](./58-GPU%20集群完整部署实录.md)》（示例实验模板）
 
