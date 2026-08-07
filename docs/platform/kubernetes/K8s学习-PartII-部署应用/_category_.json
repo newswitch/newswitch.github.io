@@ -1,0 +1,9 @@
+{
+  "label": "部署应用",
+  "position": 26,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/kubernetes/K8s学习-PartII-部署应用/本章导读"
+  }
+}

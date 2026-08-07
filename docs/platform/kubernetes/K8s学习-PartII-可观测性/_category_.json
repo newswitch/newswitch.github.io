@@ -1,0 +1,9 @@
+{
+  "label": "可观测性",
+  "position": 27,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/kubernetes/K8s学习-PartII-可观测性/本章导读"
+  }
+}

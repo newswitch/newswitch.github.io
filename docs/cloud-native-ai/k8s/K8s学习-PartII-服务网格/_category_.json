@@ -1,9 +1,0 @@
-{
-  "label": "服务网格",
-  "position": 29,
-  "collapsed": true,
-  "link": {
-    "type": "doc",
-    "id": "cloud-native-ai/k8s/K8s学习-PartII-服务网格/本章导读"
-  }
-}

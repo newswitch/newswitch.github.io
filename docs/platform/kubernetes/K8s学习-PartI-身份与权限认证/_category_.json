@@ -1,0 +1,9 @@
+{
+  "label": "身份与权限认证",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/kubernetes/K8s学习-PartI-身份与权限认证/本章导读"
+  }
+}

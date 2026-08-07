@@ -1,0 +1,9 @@
+{
+  "label": "分布式训练",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/training/分布式训练学习路线"
+  }
+}

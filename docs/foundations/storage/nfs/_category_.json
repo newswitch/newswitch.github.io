@@ -1,0 +1,9 @@
+{
+  "label": "NFS",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "foundations/storage/nfs/NFS学习路线"
+  }
+}

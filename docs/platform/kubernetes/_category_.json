@@ -1,0 +1,9 @@
+{
+  "label": "Kubernetes",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/kubernetes/Kubernetes学习路线"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "label": "服务发现与路由",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/kubernetes/K8s学习-PartI-服务发现与路由/本章导读"
+  }
+}

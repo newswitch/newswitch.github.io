@@ -1,0 +1,9 @@
+{
+  "label": "集群资源管理",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/kubernetes/K8s学习-PartI-集群资源管理/本章导读"
+  }
+}

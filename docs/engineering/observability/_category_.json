@@ -1,0 +1,9 @@
+{
+  "label": "可观测性",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "engineering/observability/可观测性学习路线"
+  }
+}

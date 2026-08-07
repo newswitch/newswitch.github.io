@@ -6,24 +6,34 @@ import styles from './index.module.css';
 
 const SECTIONS = [
   {
-    title: '云原生与 AI 算力',
-    desc: 'Kubernetes、vLLM、Gateway API 与集群扩展等学习与笔记。',
-    to: '/docs/cloud-native-ai/k8s/Kubernetes学习路线',
+    title: '学习导航',
+    desc: '从零认识 AI Infra 全貌，并选择适合自己的模块化学习顺序。',
+    to: '/docs/learning/AI-Infra技术模块学习地图',
   },
   {
-    title: '网络与硬件',
-    desc: '组网、RDMA、高性能网络读书笔记与 Nginx 源码阅读。',
-    to: '/docs/network-hardware/traditional-networking/传统组网第一阶段-筑基与深耕',
+    title: '基础技术',
+    desc: 'GPU、显存、PCIe、NVLink、网络、RDMA、NFS 与 Ceph。',
+    to: '/docs/foundations/基础技术学习地图',
   },
   {
-    title: '基础设施与总线',
-    desc: 'PCIe、Ceph 存储等基础设施笔记。',
-    to: '/docs/infrastructure/ceph/Ceph学习路线',
+    title: '平台工程',
+    desc: 'Kubernetes 底座、GPU 设备管理、调度共享与资源治理。',
+    to: '/docs/platform/平台工程学习地图',
   },
   {
-    title: '工程笔记与排障',
-    desc: '排障复盘、Prompt 与命令参考等短文。',
-    to: '/docs/engineering/notes/Prompt-从输入到输出',
+    title: '大模型系统',
+    desc: '分布式训练、vLLM 推理服务与 MLOps 工程体系。',
+    to: '/docs/ai-systems/大模型系统学习地图',
+  },
+  {
+    title: '工程能力',
+    desc: '可观测性、可靠性、性能分析、自动化与故障复盘。',
+    to: '/docs/engineering/工程能力学习地图',
+  },
+  {
+    title: '综合项目',
+    desc: '用端到端链路、GPU 集群和异构资源池串联全部基础模块。',
+    to: '/docs/projects/综合项目学习地图',
   },
 ];
 
@@ -64,7 +74,7 @@ function SectionNav() {
           内容导航
         </h2>
         <p className={styles.sectionLead}>
-          文档按主题归档在侧栏；以下为各主线入口，便于快速跳转。
+          网站入口与源码目录完全一致；从学习地图进入，也可以直接选择一个技术域。
         </p>
       </div>
       <ul className={styles.cardGrid}>
@@ -89,7 +99,7 @@ export default function Home() {
   return (
     <Layout
       title={siteConfig.title}
-      description={`${siteConfig.title}：${siteConfig.tagline}。含云原生、网络、基础设施与工程笔记等。`}>
+      description={`${siteConfig.title}：${siteConfig.tagline}。系统学习 AI Infra、Kubernetes GPU 集群、大模型系统与 SRE。`}>
       <HomepageHeader />
       <main className={styles.main}>
         <SectionNav />

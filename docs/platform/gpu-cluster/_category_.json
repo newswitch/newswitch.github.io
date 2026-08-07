@@ -1,0 +1,9 @@
+{
+  "label": "Kubernetes GPU 集群",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/gpu-cluster/Kubernetes-GPU集群学习路线"
+  }
+}

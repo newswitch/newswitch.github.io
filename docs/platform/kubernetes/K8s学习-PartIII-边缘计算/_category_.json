@@ -1,0 +1,9 @@
+{
+  "label": "边缘计算",
+  "position": 32,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/kubernetes/K8s学习-PartIII-边缘计算/本章导读"
+  }
+}

@@ -1,41 +1,28 @@
-# Website
+# newswitch.github.io
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+基于 Docusaurus 构建的 AI Infra 与云原生技术知识库。
 
-## Installation
-
-```bash
-yarn
-```
-
-## Local Development
+## 本地开发
 
 ```bash
-yarn start
+npm ci
+npm run start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
+生产构建：
 
 ```bash
-yarn build
+npm run build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+所有长篇技术文档统一维护在 `docs/` 下。目录设计、文章归档规则和新增模块方法见
+[DOCUMENTATION_STRUCTURE.md](./DOCUMENTATION_STRUCTURE.md)。
 
-## Deployment
+## 发布
 
-Using SSH:
+提交并推送到 `main` 后，`.github/workflows/deploy.yml` 会执行生产构建并部署到
+GitHub Pages。文档访问路径统一位于：
 
-```bash
-USE_SSH=true yarn deploy
+```text
+https://newswitch.github.io/docs/...
 ```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
