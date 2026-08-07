@@ -7,7 +7,7 @@ tags: ["NCCL", "Timeout", "排障", "GPU", "Kubernetes", "学习路线"]
 
 # NCCL Timeout 排查流程
 
-训练日志里出现 **NCCL timeout / Watchdog / collective stuck**，或表现为：进程还在、GPU 利用率接近 0、步数不再涨。本文给出可复用的复盘流程，串联官方 [Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)、[Logging](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/logging.html) 与本系列 [33](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)、[34](../../../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)、[35](../scheduling-sharing/12-GPU%20集群拓扑感知调度.md)、[32](../../../ai-systems/training/distributed/04-训练任务%20Checkpoint%20与断点恢复.md)。
+训练日志里出现 **NCCL timeout / Watchdog / collective stuck**，或表现为：进程还在、GPU 利用率接近 0、步数不再涨。本文给出可复用的复盘流程，串联官方 [Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)、[Logging](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/logging.html) 与本系列 [NCCL 原理](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)、[训练网络全链路排障](../../../foundations/networking/ai-cluster/PartIII-云原生与生产运维/07-训练网络全链路故障排查.md)、[拓扑感知调度](../scheduling-sharing/12-GPU%20集群拓扑感知调度.md)、[Checkpoint](../../../ai-systems/training/distributed/04-训练任务%20Checkpoint%20与断点恢复.md)。
 
 ---
 

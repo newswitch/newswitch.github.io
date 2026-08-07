@@ -144,7 +144,7 @@ NCCL 通过 **`/sys`** 发现 GPU 与网卡的 PCI 拓扑。容器中若 `/sys` 
 | K8s 标签 + 整节点/装箱 | 把作业放进高速岛 |
 | NCCL GRAPH 日志 | 确认运行时拓扑认知 |
 
-网络侧基线见 [34](../../../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)；超时复盘见 [48](../troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
+网络侧基线见 [RDMA 与 NCCL 基准测试](../../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/09-RDMA与NCCL基准测试方法.md)；超时复盘见 [NCCL Timeout](../troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
 
 ---
 

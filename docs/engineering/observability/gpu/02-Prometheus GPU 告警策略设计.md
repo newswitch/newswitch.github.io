@@ -79,7 +79,7 @@ groups:
           summary: "PCIe replay 上升，检查槽位/线缆/ACS"
 ```
 
-与 NCCL 跨机问题交叉时，再查 [34](../../../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md) / [48](../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
+与 NCCL 跨机问题交叉时，再查 [训练网络全链路排障](../../../foundations/networking/ai-cluster/PartIII-云原生与生产运维/07-训练网络全链路故障排查.md) / [NCCL Timeout](../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
 
 ---
 

@@ -151,7 +151,7 @@ Xid 专项见第 47 篇；告警规则见 [第 39 篇](./02-Prometheus%20GPU%20�
 | `DCGM_FI_PROF_PCIE_TX_BYTES` / `RX_BYTES` | PCIe 吞吐（profiling） |
 | `DCGM_FI_DEV_NVLINK_BANDWIDTH_TOTAL` | NVLink 带宽相关合计 |
 
-多机训练结合 NCCL 网络篇：[33](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)、[34](../../../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)。
+多机训练结合 NCCL 网络篇：[NCCL 通信原理](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)、[AI 网络可观测性](../../../foundations/networking/ai-cluster/PartIII-云原生与生产运维/05-AI网络可观测性指标体系.md)。
 
 ### 3.6 MIG
 

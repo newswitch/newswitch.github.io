@@ -83,7 +83,7 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 | [01b HBM 显存原理：容量、带宽与访问效率](../../foundations/compute/gpu/02-HBM显存原理：容量、带宽与访问效率.md) | 为什么显存够用，计算仍可能被内存访问拖慢 | 01 之后 |
 | [02b CPU 与 GPU 之间的数据搬运](../../foundations/compute/gpu/04-CPU与GPU之间的数据搬运.md) | 数据怎样经过主存、PCIe 和 DMA 到达 GPU | 02 之后 |
 | [02c NVLink 与 NVSwitch 原理](../../foundations/compute/gpu/05-NVLink与NVSwitch原理.md) | 多卡之间怎样通信，拓扑为什么影响性能 | 02b 之后 |
-| [34b GPUDirect RDMA 原理与实践](../../foundations/networking/ai-cluster/02-GPUDirect-RDMA原理与实践.md) | 跨节点通信怎样减少 CPU 和主存中转 | 34 之后 |
+| [34b GPUDirect RDMA 原理与实践](../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/07-GPUDirect-RDMA原理与实践.md) | 跨节点通信怎样减少 CPU 和主存中转 | 34 之后 |
 | [36b AI 工作负载的存储 IO 模型](../../foundations/storage/ai-workloads/01-AI工作负载的存储IO模型.md) | 模型、数据集、Checkpoint 各需要什么存储能力 | 36 之前 |
 | [36c GPUDirect Storage 原理与实践](../../foundations/storage/ai-workloads/02-GPUDirect-Storage原理与实践.md) | 存储数据怎样更直接地进入 GPU 显存 | 36b 之后 |
 
@@ -446,7 +446,7 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 - `NCCL_DEBUG` / SUBSYS、官方排障地图
 - `nvidia-smi topo` 与关键环境变量
 
-#### 34.《[InfiniBand、RoCE 与 GPU 集群网络](../../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)》
+#### 34.《[AI 集群网络从零到精通](../../foundations/networking/ai-cluster/00-AI集群网络从零到精通学习路线.md)》
 
 - Ethernet / IB / RoCE / RDMA / GPUDirect
 - `NCCL_SOCKET_IFNAME`、IB/RoCE 检查

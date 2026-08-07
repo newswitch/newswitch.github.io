@@ -1,5 +1,6 @@
 ---
 title: InfiniBand、RoCE 与 GPU 集群网络
+sidebar_position: 8
 date: 2026-07-22 18:05:00
 categories: 云原生
 tags: ["InfiniBand", "RoCE", "RDMA", "NCCL", "GPU", "学习路线"]
@@ -7,7 +8,7 @@ tags: ["InfiniBand", "RoCE", "RDMA", "NCCL", "GPU", "学习路线"]
 
 # InfiniBand、RoCE 与 GPU 集群网络
 
-多机 DDP 的梯度同步，最终要么走 **高速 RDMA 网络**，要么退化成普通 TCP Socket——后者往往让 GPU「算得快、等得久」。本文整理自 NCCL 官方 [Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html) 与 [GPU↔NIC](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html) 章节，覆盖：网络类型、网卡选择、IB/RoCE 检查、`all_reduce_perf` 基线。前置：[第 33 篇](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)。
+多机 DDP 的梯度同步，最终要么走 **高速 RDMA 网络**，要么退化成普通 TCP Socket——后者往往让 GPU「算得快、等得久」。本文整理自 NCCL 官方 [Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html) 与 [GPU↔NIC](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html) 章节，覆盖：网络类型、网卡选择、IB/RoCE 检查、`all_reduce_perf` 基线。前置：[NCCL 通信原理与常见问题](../../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)。
 
 ---
 
@@ -209,7 +210,7 @@ NCCL WARN Call to ibv_modify_qp failed with error Invalid argument
 | 生产多机训练 | IB 或调好的 RoCE + GDR |
 | K8s | 训练网与业务网分离；DaemonSet 保证 peermem；Queue/Gang 整组调度 |
 
-显存直连网络的完整原理与实验见 [GPUDirect RDMA 原理与实践](./02-GPUDirect-RDMA原理与实践.md)；存储、冷启动见第 36、37 篇；拓扑调度见 [第 35 篇](../../../platform/gpu-cluster/scheduling-sharing/12-GPU%20集群拓扑感知调度.md)。
+显存直连网络的完整原理与实验见 [GPUDirect RDMA 原理与实践](./07-GPUDirect-RDMA原理与实践.md)；存储、冷启动请进入存储模块；拓扑调度见 [GPU 集群拓扑感知调度](../../../../platform/gpu-cluster/scheduling-sharing/12-GPU%20集群拓扑感知调度.md)。
 
 ---
 
@@ -224,7 +225,7 @@ NCCL WARN Call to ibv_modify_qp failed with error Invalid argument
 | NCCL 基线 | `all_reduce_perf` |
 | 锁页 | `ulimit -l` unlimited |
 
-超时与挂起的完整复盘：[第 48 篇](../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
+超时与挂起的完整复盘：[NCCL Timeout 排查流程](../../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
 
 ---
 

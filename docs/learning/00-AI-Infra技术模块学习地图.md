@@ -88,8 +88,10 @@ Linux 网络基础
 - [传统网络从零到精通学习路线](../foundations/networking/traditional/00-传统网络从零到精通学习路线.md)
 - [Linux 高性能网络详解](../foundations/networking/linux-high-performance/linux高性能网络详解读书笔记（一）.md)
 - [RDMA 技术概述](../foundations/networking/rdma/RDMA技术详解（一）：RDMA概述.md)
-- [InfiniBand、RoCE 与 GPU 集群网络](../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)
-- [GPUDirect RDMA 原理与实践](../foundations/networking/ai-cluster/02-GPUDirect-RDMA原理与实践.md)
+- [AI 集群网络从零到精通学习路线](../foundations/networking/ai-cluster/00-AI集群网络从零到精通学习路线.md)
+- [GPUDirect RDMA 原理与实践](../foundations/networking/ai-cluster/PartI-通信与RDMA基础/07-GPUDirect-RDMA原理与实践.md)
+- [无损 Fabric 分层故障排查](../foundations/networking/ai-cluster/PartII-AI-Fabric与无损网络/09-无损Fabric分层故障排查.md)
+- [Kubernetes AI 多网络架构](../foundations/networking/ai-cluster/PartIII-云原生与生产运维/01-Kubernetes-AI多网络架构.md)
 - [NCCL 通信原理与常见问题](../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)
 - [NCCL Timeout 排查流程](../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)
 

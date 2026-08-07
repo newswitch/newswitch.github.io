@@ -240,7 +240,7 @@ CUDA_VISIBLE_DEVICES=0,1 python3 app.py
 
 而不是 `0,2`。四卡无法避免跨 NUMA 时，还需关注：NCCL 网卡、CPU 是否跨 NUMA、数据加载用哪个 NUMA 内存、GPU 与 RDMA 距离、是否有 NVLink/NVSwitch、跨卡带宽是否达标。
 
-后续：[InfiniBand、RoCE 与 GPU 集群网络](../../networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)、[GPU 集群拓扑感知调度](../../../platform/gpu-cluster/scheduling-sharing/12-GPU%20集群拓扑感知调度.md)。
+后续：[GPU、NIC 与 NUMA 亲和](../../networking/ai-cluster/PartI-通信与RDMA基础/06-GPU-NIC拓扑与NUMA亲和.md)、[GPU 集群拓扑感知调度](../../../platform/gpu-cluster/scheduling-sharing/12-GPU%20集群拓扑感知调度.md)。
 
 ---
 

@@ -1,0 +1,9 @@
+{
+  "label": "第一阶段：通信与 RDMA 基础",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "foundations/networking/ai-cluster/PartI-通信与RDMA基础/第一阶段学习路线"
+  }
+}

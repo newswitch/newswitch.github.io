@@ -9,7 +9,7 @@ tags: ["NCCL", "AllReduce", "Ring", "Tree", "GPU", "排障", "学习路线"]
 
 [NCCL](https://docs.nvidia.com/deeplearning/nccl/index.html)（读作 *Nickel*）是面向多 GPU 的 **拓扑感知集合通信库**，不是完整并行框架。PyTorch DDP / ZeRO 默认走 NCCL 做 AllReduce 等操作。本阶段以官方文档为主：[User Guide](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/index.html)、[Troubleshooting 总览](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)。
 
-本文讲清：NCCL 在干什么、**Ring / Tree**、日志与关键环境变量。网络专篇见 [34](../../../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)，拓扑与调度见 [35](../../../platform/gpu-cluster/scheduling-sharing/12-GPU%20集群拓扑感知调度.md)，超时复盘见 [48](../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
+本文讲清：NCCL 在干什么、**Ring / Tree**、日志与关键环境变量。网络专篇见 [NCCL Collective、算法与协议](../../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/02-NCCL集合通信算法与协议.md)，拓扑与调度见 [35](../../../platform/gpu-cluster/scheduling-sharing/12-GPU%20集群拓扑感知调度.md)，超时复盘见 [48](../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
 
 ---
 
@@ -141,7 +141,7 @@ via SHM/direct                   # 共享内存通路
 | `NCCL_DEBUG` / `NCCL_DEBUG_SUBSYS` / `NCCL_DEBUG_FILE` | 日志 |
 | `TORCH_DISTRIBUTED_DEBUG=DETAIL` | PyTorch 分布式侧补充 |
 
-网卡命名与 IB/RoCE 细节见 [第 34 篇](../../../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)。完整列表见官方 [Environment Variables](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html)。
+网卡命名与 IB/RoCE 细节见 [IB、RoCE 与 GPU 集群检查](../../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/08-IB-RoCE与GPU集群检查.md)。完整列表见官方 [Environment Variables](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html)。
 
 ---
 

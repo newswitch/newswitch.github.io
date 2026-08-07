@@ -25,6 +25,9 @@ docs/
 │   │   ├── linux-high-performance/
 │   │   ├── rdma/
 │   │   ├── ai-cluster/
+│   │   │   ├── PartI-通信与RDMA基础/
+│   │   │   ├── PartII-AI-Fabric与无损网络/
+│   │   │   └── PartIII-云原生与生产运维/
 │   │   └── nginx/
 │   └── storage/
 │       ├── ai-workloads/

@@ -1,5 +1,6 @@
 ---
 title: GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存
+sidebar_position: 7
 date: 2026-08-06 18:30:00
 categories: 云原生
 tags: [GPU, GPUDirect RDMA, RDMA, InfiniBand, RoCE, NCCL]
@@ -16,7 +17,8 @@ RDMA 解决了远端内存访问中的 CPU 和内核协议栈开销，但普通 
 
 这就是 GPUDirect RDMA 要解决的问题。
 
-← [InfiniBand、RoCE 与 GPU 集群网络](./01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)
+← [GPU、PCIe、NIC 与 NUMA 亲和](./06-GPU-NIC拓扑与NUMA亲和.md) |
+[IB、RoCE 与 GPU 集群检查 →](./08-IB-RoCE与GPU集群检查.md)
 
 ## 1. 学习目标
 
@@ -493,7 +495,7 @@ GDR 只是一个可能层次。还要检查：
 
 见：
 
-→ [NCCL Timeout 排查流程](../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)
+→ [NCCL Timeout 排查流程](../../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)
 
 ## 15. 分层排查顺序
 
@@ -570,7 +572,7 @@ GPUDirect RDMA：GPU HBM ↔ NIC
 
 下一步进入存储：模型和数据集从本地 NVMe、NFS、CephFS 或对象存储进入计算节点时，会形成另一条 IO 路径。
 
-→ [大模型文件在 Kubernetes 中的存储方案](../../storage/ai-workloads/06-大模型文件在%20Kubernetes%20中的存储方案.md)
+→ [大模型文件在 Kubernetes 中的存储方案](../../../storage/ai-workloads/06-大模型文件在%20Kubernetes%20中的存储方案.md)
 
 ## 19. 课后练习
 

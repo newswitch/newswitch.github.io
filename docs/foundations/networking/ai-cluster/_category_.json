@@ -2,5 +2,8 @@
   "label": "AI 组网",
   "position": 4,
   "collapsed": true,
-  "link": null
+  "link": {
+    "type": "doc",
+    "id": "foundations/networking/ai-cluster/AI集群网络从零到精通学习路线"
+  }
 }
