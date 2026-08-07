@@ -1,5 +1,6 @@
 ---
 title: GTM 实现跨网访问加速与故障切换
+sidebar_position: 8
 date: 2026-07-06 09:30:00
 categories: 网络
 tags: [GTM, GSLB, DNS, 负载均衡, 故障切换, 跨网, 高可用, 网络]

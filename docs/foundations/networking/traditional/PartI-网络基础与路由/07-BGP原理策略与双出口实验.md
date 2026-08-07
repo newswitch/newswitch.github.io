@@ -1,19 +1,28 @@
 ---
-title: 传统组网第一阶段：筑基与深耕
+title: BGP 原理、策略与双出口实验
+sidebar_position: 7
 date: 2026-02-19 12:00:00
 categories: 网络
-tags: [学习计划, 传统组网, BGP, MPLS, 防火墙, 无线]
+tags: [BGP, eBGP, iBGP, Route Policy, 双出口, FRRouting]
+description: 从 BGP 会话、RIB 与属性开始，学习最佳路径、策略控制、双出口设计和分层故障排查。
 ---
 
-# 传统组网第一阶段：筑基与深耕
+# BGP 原理、策略与双出口实验
 
-**核心目标**：彻底掌控数据包流向，成为「协议大师」。
+本文在完成 IP 路由和 OSPF 基础之后学习。目标不是死记某个厂商的选路表，而是理解：
 
-本阶段除 **BGP** 外，会涉及多类协议与技术：**路由与转发**（BGP、MPLS/LDP、VRF、RD/RT，以及 PE-CE 侧的静态/RIP/OSPF/BGP）、**安全与 VPN**（基于 Zone 的防火墙、NAT、IPsec、GRE over IPSec）、**无线**（802.11ax/ac、802.11r/k/v、AC+FIT AP）等，覆盖广域网、骨干网、安全与无线四块，共同构成「筑基与深耕」的协议栈。
+- BGP 为什么用 TCP 建立会话，却仍需要底层路由可达。
+- Adj-RIB-In、Loc-RIB、Adj-RIB-Out、主 RIB 和 FIB 如何衔接。
+- Local Preference、AS_PATH、MED、Community 等属性分别影响哪个范围。
+- 如何用策略实现双出口，而不是只修改一个“优先级数字”。
 
 ---
 
-## 1. BGP 核心进阶
+## 1. BGP 核心原理
+
+> 本文原有实验使用华为风格 CLI，保留它用于理解策略语义。命令、默认属性和
+> 最佳路径细节会因实现与版本而异；在生产环境必须以目标设备文档和实际
+> `show/display` 输出为准。
 
 ### 一、BGP 的概念
 
@@ -669,102 +678,149 @@ fRcv
 
 ---
 
-## 2. MPLS VPN 骨干技术
+## 2. 用 FRRouting 验证同一套原理
 
-### 核心学习内容
+以双出口为例：
 
-1. MPLS 标签转发原理、LSP 隧道建立与转发机制
-2. VRF 虚拟路由转发实例的配置与隔离逻辑
-3. RD/RT 路由标识与导入导出规则、多租户路由隔离与互通实现
-4. PE-CE 路由协议（静态 / RIP/OSPF/BGP）部署场景
-5. 跨域 MPLS VPN（Option A/B/C）实现原理与适用场景
+```text
+                 ISP-A AS65001
+                /
+Enterprise AS65000
+                \
+                 ISP-B AS65002
+```
 
-### 必做实操项目
+企业边界 FRR 基础配置：
 
-1. 搭建 3PE+2CE 的 MPLS VPN 骨干网，实现 2 个租户的完全隔离与指定租户互通
-2. 完成跨域 MPLS VPN Option B 场景部署，验证跨 AS 的 VPN 路由发布与数据转发
-3. 完成标签转发不通、VRF 路由丢失、跨租户访问异常等典型故障排障
+```text
+router bgp 65000
+ bgp router-id 10.255.0.1
+ neighbor 192.0.2.1 remote-as 65001
+ neighbor 198.51.100.1 remote-as 65002
+ !
+ address-family ipv4 unicast
+  network 203.0.113.0/24
+  neighbor 192.0.2.1 route-map ISP_A_IN in
+  neighbor 198.51.100.1 route-map ISP_B_IN in
+ exit-address-family
+!
+route-map ISP_A_IN permit 10
+ set local-preference 200
+!
+route-map ISP_B_IN permit 10
+ set local-preference 100
+```
 
-### 验收标准
+验证不能只看 Ping：
 
-- 彻底理解运营商 / 大型专网的核心运作机制，能独立完成企业级 MPLS VPN 专网的规划与部署
-- 能精准设计 RD/RT 值实现灵活的路由导入导出，解决多租户隔离与互通需求，定位并解决 MPLS VPN 全链路转发故障
+```text
+show bgp summary
+show bgp neighbors 192.0.2.1
+show bgp ipv4 unicast
+show bgp ipv4 unicast 0.0.0.0/0
+show ip route 0.0.0.0/0
+show ip route
+```
 
-### 配套学习资源 / 工具
+检查策略时回答：
 
-- 工具：EVE-NG/ENSP 模拟器、Wireshark
-- 书籍：《MPLS VPN 架构》《华为 MPLS VPN 学习指南》
-- 文档：华为 / 华三 MPLS VPN 官方产品文档
+1. 前缀是否从对端进入 Adj-RIB-In？
+2. 输入策略是否允许，修改了哪些属性？
+3. 为什么某一条成为 Best？
+4. Best 是否进入主 RIB，下一跳是否可达？
+5. 出方向通告给了谁，是否泄漏了不应发布的前缀？
 
----
+## 3. 双出口策略设计
 
-## 3. 高级网络安全
+### 出站流量
 
-### 核心学习内容
+本 AS 选择出口时常用：
 
-1. 基于 Zone 区域的状态防火墙核心原理、安全策略设计
-2. NAT 高级应用（源 NAT / 目的 NAT / 双向 NAT/NAT Server、NAT 穿越、域内 NAT）
-3. IPSec VPN 核心架构（IKEv1/IKEv2、AH/ESP 协议、隧道 / 传输模式）
-4. GRE over IPSec 等复杂 VPN 场景部署、高可用 VPN 设计
-5. 防火墙会话表、攻击防范、安全策略优化
+- Local Preference：在本 AS 内传播，值大优先。
+- Weight：部分厂商本地私有属性，只影响单台设备。
+- IGP Cost to Next Hop：前面条件相同后可能影响热土豆出口。
 
-### 必做实操项目
+### 入站流量
 
-1. 搭建基于安全区域的防火墙组网，实现多域安全隔离、精细化 ACL 管控、多场景 NAT 部署
-2. 完成 GRE over IPSec VPN 部署，实现分支与总部的跨公网安全私网互通，验证加密隧道的高可用切换
-3. 完成 VPN 隧道不通、NAT 端口冲突、安全策略匹配异常等故障排障
+远端 AS 决定如何进入本 AS，常见影响手段：
 
-### 验收标准
+- 更具体前缀：影响强，但会增加路由规模和故障风险。
+- AS_PATH Prepend：提示远端选择更短路径，不是强制。
+- MED：通常只在特定邻接 AS 场景比较，行为需核对实现。
+- Provider Community：请求运营商设置 Local Preference、地域通告或黑洞。
 
-- 能脱离基础 ACL，完成企业级防火墙的域间安全策略设计与落地，实现业务的安全隔离与访问控制
-- 能独立完成复杂场景的 IPSec VPN 部署，解决跨公网的私网互通需求，精准定位 VPN 全链路的转发与加密故障
+入站与出站是两次独立决策。只修改本地 Local Preference 无法控制互联网如何进入。
 
-### 配套学习资源 / 工具
+## 4. 必须具备的策略护栏
 
-- 工具：EVE-NG/ENSP 模拟器（华为 USG / 山石网科防火墙镜像）、Wireshark
-- 课程：华为 HCIE-Security 防火墙与 VPN 专项
-- 文档：主流防火墙厂商官方配置指南
+生产 eBGP 邻居至少考虑：
 
----
+- 精确的入站和出站 Prefix List。
+- 最大前缀数限制，防止错误全表或泄漏。
+- 只通告本 AS 明确拥有且已验证的数据前缀。
+- Bogon、私有 ASN/前缀和默认路由处理策略。
+- RPKI Origin Validation 或上游等效保护。
+- BGP 会话认证、控制面 ACL、TTL Security（平台支持时）。
+- 策略命名、变更审批、回滚和邻居软刷新边界。
 
-## 4. 企业无线调优
+示意：
 
-### 核心学习内容
+```text
+ip prefix-list OUR_PREFIX seq 10 permit 203.0.113.0/24
+!
+route-map ISP_A_OUT permit 10
+ match ip address prefix-list OUR_PREFIX
+!
+router bgp 65000
+ address-family ipv4 unicast
+  neighbor 192.0.2.1 route-map ISP_A_OUT out
+  neighbor 192.0.2.1 maximum-prefix 100000 warning-only
+```
 
-1. 无线射频原理、802.11ax/ac 协议核心特性
-2. 2.4G/5G 双频信道规划、功率调整、频宽规划
-3. 二层 / 三层漫游优化（快速漫游、802.11r/k/v 协议）、漫游粘滞问题解决
-4. 同频 / 邻频抗干扰技术、无线空口资源优化
-5. 无线 AC+FIT AP 架构、高可用无线组网设计
+阈值必须根据邻居类型和业务规模设计，不能照抄示例。
 
-### 必做实操项目
+## 5. BGP 分层排障
 
-1. 完成企业办公场景的无线 AP 点位规划、信道与功率规划，搭建 AC+AP 组网
-2. 配置 802.11r 快速漫游，实现跨 AP 无缝漫游，测试漫游切换时延 < 50ms
-3. 完成无线干扰排查、漫游粘滞、弱覆盖等典型问题优化，实现无线吞吐量与接入稳定性提升
+| 层级 | 关键问题 | 证据 |
+| --- | --- | --- |
+| TCP | 179 端口能否双向建立 | 路由、ACL、抓包、Socket |
+| 会话 | Open 参数与能力是否兼容 | Neighbor 日志、ASN、AFI/SAFI |
+| 接收 | 对端是否真正发送前缀 | Received Routes、更新计数 |
+| 策略 | 前缀是否被过滤或改写 | Prefix List、Route Map 命中 |
+| 决策 | 为什么不是最佳路径 | BGP 路由明细与属性 |
+| 安装 | 是否进入 RIB/FIB | `show ip route`、下一跳递归 |
+| 通告 | 是否发给目标邻居 | Advertised Routes |
+| 数据面 | 实际流量走哪条路径 | FIB、接口计数、Flow/抓包 |
 
-### 验收标准
+### 常见状态
 
-- 能将无线网络从「能连上」进阶到「高可用、低时延、无卡顿」，独立完成企业级无线组网的规划、部署与调优
-- 能精准定位并解决无线覆盖、漫游、干扰相关的常见问题，保障视频会议、移动办公等业务的稳定运行
+- `Idle/Active`：底层路由、TCP 179、源地址、TTL、ACL、认证。
+- `OpenSent/OpenConfirm`：ASN、Router ID、能力协商、地址族。
+- `Established` 但无路由：地址族未激活、策略过滤、对端未通告。
+- 有 BGP 路由但无系统路由：非 Best、下一跳不可达、管理距离或 FIB 编程失败。
+- 路由正常但业务不通：返回路径、NAT、防火墙、MTU、数据面。
 
-### 配套学习资源 / 工具
+## 6. 故障演练
 
-- 工具：EVE-NG/ENSP 模拟器、WiFi Analyzer、AirMagnet
-- 书籍：《企业无线网络架构与优化》
-- 课程：华为 HCIE-Datacom 无线专项
+1. 配错 Remote AS，记录会话状态和 Notification。
+2. 删除到 Loopback Neighbor 的 IGP 路由，验证 BGP 对底层可达性的依赖。
+3. 用 Prefix List 拒绝默认路由，观察 Adj-RIB-In、Loc-RIB 和主 RIB 差异。
+4. 修改 Local Preference，证明只影响本 AS 的出站决策。
+5. 错误放宽出站策略，在实验中复现路由泄漏，再用最大前缀和精确策略阻断。
+6. 关闭主 ISP，分解 BFD/Keepalive、BGP 撤销、RIB/FIB 和业务恢复时间。
 
----
+## 7. 验收标准
 
-## 阶段总表（阶段 / 主题 / 内容要点）
+- 能解释 eBGP、iBGP、Route Reflector 与全互联的取舍。
+- 能从 RIB 流程解释输入策略、最佳路径和输出策略。
+- 能分别设计出站和入站流量策略。
+- 能证明前缀没有越权通告，并能在错误发生时自动阻断。
+- 能用表项和时间线排查，而不是反复重启 BGP 进程。
 
-| 阶段 | 主题 | 内容要点 |
-|------|------|----------|
-| 第一阶段 | BGP 核心进阶 | 邻居与防环、13 条选路、Route-Map/Community；双出口主备、3 AS 联邦/RR、BGP 故障排障 |
-| | MPLS VPN 骨干 | 标签与 LSP、VRF、RD/RT、PE-CE、跨域 Option A/B/C；3PE+2CE、Option B、标签/VRF 排障 |
-| | 高级网络安全 | Zone 防火墙、高级 NAT、IPSec/GRE over IPSec；多域+NAT、分支总部 VPN 高可用、VPN/NAT 排障 |
-| | 企业无线调优 | 802.11ax/ac、信道功率、802.11r/k/v 漫游、AC+AP；AP 规划与漫游 &lt;50ms、干扰与粘滞优化 |
+## 8. 参考资料
 
----
+- [RFC 4271: Border Gateway Protocol 4](https://www.rfc-editor.org/rfc/rfc4271)
+- [RFC 7454: BGP Operations and Security](https://www.rfc-editor.org/rfc/rfc7454)
+- [FRRouting BGP Documentation](https://docs.frrouting.org/en/latest/bgp.html)
 
-[传统组网第二阶段：数据中心与云 →](./传统组网第二阶段-数据中心与云.md)
+[下一篇：NAT、ACL 与连接跟踪 →](./08-NAT-ACL与连接跟踪.md)

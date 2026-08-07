@@ -85,7 +85,7 @@ Linux 网络基础
 
 ### 已有内容
 
-- [传统组网第一阶段：筑基与深耕](../foundations/networking/traditional/传统组网第一阶段-筑基与深耕.md)
+- [传统网络从零到精通学习路线](../foundations/networking/traditional/00-传统网络从零到精通学习路线.md)
 - [Linux 高性能网络详解](../foundations/networking/linux-high-performance/linux高性能网络详解读书笔记（一）.md)
 - [RDMA 技术概述](../foundations/networking/rdma/RDMA技术详解（一）：RDMA概述.md)
 - [InfiniBand、RoCE 与 GPU 集群网络](../foundations/networking/ai-cluster/01-InfiniBand、RoCE%20与%20GPU%20集群网络.md)

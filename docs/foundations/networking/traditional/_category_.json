@@ -2,5 +2,8 @@
   "label": "传统组网",
   "position": 1,
   "collapsed": true,
-  "link": null
+  "link": {
+    "type": "doc",
+    "id": "foundations/networking/traditional/传统网络从零到精通学习路线"
+  }
 }
