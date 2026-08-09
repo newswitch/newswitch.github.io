@@ -3,7 +3,7 @@ slug: first-100km-ride
 title: 第一次骑行超过 100 公里
 authors: [newswitch]
 tags: [cycling, life]
-date: 2026-08-09
+date: 2026-08-08
 description: 磨磨唧唧骑了一天，终于第一次突破 100 公里。
 ---
 
