@@ -1,13 +1,13 @@
 ---
 slug: first-100km-ride
-title: 第一次骑行超过 100 公里
+title: 100公里！！！！
 authors: [newswitch]
 tags: [cycling, life]
 date: 2026-08-08
-description: 磨磨唧唧骑了一天，终于第一次突破 100 公里。
+description: 磨磨唧唧骑了一天，终于第一次突破 100 公里，燃尽了
 ---
 
-磨磨唧唧骑了一天，终于第一次突破 100 公里。
+磨磨唧唧骑了一天，终于第一次突破 100 公里，燃尽了
 
 {/* truncate */}
 
@@ -22,7 +22,5 @@ description: 磨磨唧唧骑了一天，终于第一次突破 100 公里。
 ![燕郊烧鸽子](./05-yanjiao-dinner.jpg)
 
 ![骑行数据](./06-ride-stats.jpg)
-
-腿空了，人也燃尽了。
 
 咕咕嘎嘎
