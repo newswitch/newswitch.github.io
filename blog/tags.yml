@@ -13,3 +13,8 @@ life:
   label: 生活
   permalink: /life
   description: 日常随记
+
+cycling:
+  label: 骑行
+  permalink: /cycling
+  description: 骑行记录
