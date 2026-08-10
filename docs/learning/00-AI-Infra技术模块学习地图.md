@@ -54,13 +54,13 @@ flowchart LR
 - [NVLink 与 NVSwitch 原理](../foundations/compute/gpu/05-NVLink与NVSwitch原理.md)
 - [PCIe 基本架构](../foundations/compute/pcie/PCIe总线学习（一）基本架构.md)
 
-### 还需补充
+### P1 进阶内容
 
 | 优先级 | 文章 | 验收结果 |
 | --- | --- | --- |
-| P1 | CUDA 执行模型与 Kernel 性能基础 | 能解释 warp、occupancy、memory coalescing |
-| P1 | GPU Roofline 模型 | 能判断算力受限还是显存带宽受限 |
-| P1 | NUMA、PCIe 与中断亲和性实验 | 能完成 GPU/NIC/CPU 拓扑检查 |
+| P1 | [CUDA 执行模型与 Kernel 性能基础](../foundations/compute/gpu/08-CUDA执行模型与Kernel性能基础.md) | 能解释 warp、occupancy、memory coalescing |
+| P1 | [GPU Roofline 性能模型](../foundations/compute/gpu/09-GPU%20Roofline性能模型.md) | 能判断算力受限还是显存带宽受限 |
+| P1 | [NUMA、PCIe 与中断亲和性实验](../foundations/compute/gpu/10-NUMA、PCIe与中断亲和性实验.md) | 能完成 GPU/NIC/CPU/NVMe 拓扑实验 |
 
 ---
 
@@ -95,14 +95,14 @@ Linux 网络基础
 - [NCCL 通信原理与常见问题](../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)
 - [NCCL Timeout 排查流程](../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)
 
-### 还需补充
+### P1 进阶内容
 
-| 优先级 | 文章 | 验收结果 |
+| 优先级 | 文章/系列 | 验收结果 |
 | --- | --- | --- |
-| P1 | Linux 收发包路径与队列 | 能从应用追到 Socket、qdisc、NIC ring |
-| P1 | RoCE 无损网络配置与验证 | 能验证 PFC、ECN、拥塞和丢包 |
-| P1 | NCCL 拓扑文件与算法选择 | 能分析 ring/tree、channel 和跨机路径 |
-| P1 | AI 网络指标、压测与故障注入 | 能使用 iperf3、ib_write_bw、nccl-tests |
+| P1 | [Linux 收发包路径与队列](../foundations/networking/linux-high-performance/04-Linux收发包路径与队列.md) | 能从应用追到 Socket、qdisc、NIC ring |
+| P1 | [RoCE QoS 与队列映射](../foundations/networking/ai-cluster/PartII-AI-Fabric与无损网络/03-RoCE-QoS分类与队列映射.md) → [PFC](../foundations/networking/ai-cluster/PartII-AI-Fabric与无损网络/04-PFC原理缓冲阈值与风险.md) → [ECN/DCQCN](../foundations/networking/ai-cluster/PartII-AI-Fabric与无损网络/05-ECN-CNP与DCQCN拥塞控制.md) | 能验证 PFC、ECN、拥塞和丢包 |
+| P1 | [NCCL 集合通信算法与协议](../foundations/networking/ai-cluster/PartI-通信与RDMA基础/02-NCCL集合通信算法与协议.md) + [NCCL 通信原理与常见问题](../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md) | 能分析 ring/tree、channel、拓扑和跨机路径 |
+| P1 | [RDMA 与 NCCL 基准测试](../foundations/networking/ai-cluster/PartI-通信与RDMA基础/09-RDMA与NCCL基准测试方法.md) + [训练网络全链路故障排查](../foundations/networking/ai-cluster/PartIII-云原生与生产运维/07-训练网络全链路故障排查.md) | 能使用 iperf3、RDMA perftest、nccl-tests 并安全注入故障 |
 
 ---
 
@@ -141,14 +141,15 @@ Linux 网络基础
 - [Kubernetes CSI 挂载链路与故障排查](../foundations/storage/ai-workloads/05-Kubernetes-CSI挂载链路与故障排查.md)
 - [模型文件从存储加载到 GPU 显存的完整路径](../projects/end-to-end/02-模型文件从存储加载到GPU显存的完整路径.md)
 
-### 还需补充
+### P1 进阶内容
 
 | 优先级 | 文章 | 验收结果 |
 | --- | --- | --- |
-| P1 | Linux I/O 栈：VFS、页缓存与块层 | 能解释一次 read 如何到达磁盘 |
-| P1 | NFS 从零部署、HA、监控与故障排查系列 | 能独立部署并分析 stale handle、延迟和吞吐 |
-| P1 | S3 Multipart、Range GET 与模型下载优化 | 能设计并行下载与完整性校验 |
-| P2 | Lustre / BeeGFS / JuiceFS 技术对比 | 能按训练、推理、Checkpoint 场景选型 |
+| P1 | [Linux VFS 与一次 read 的完整路径](../foundations/storage/linux-io/01-Linux%20VFS与一次read的完整路径.md) → [页缓存与 Direct I/O](../foundations/storage/linux-io/02-页缓存预读回写与Direct%20IO.md) → [fio 方法](../foundations/storage/linux-io/03-存储性能指标与fio压测方法.md) | 能解释一次 read、回写和块层压测 |
+| P1 | [NFS 从零到生产学习路线](../foundations/storage/nfs/00-NFS学习路线.md) | 能独立部署并分析 stale handle、延迟、吞吐、HA 和 CSI |
+| P1 | [S3 Multipart、Range 与大模型分发](../foundations/storage/object-storage/01-S3%20Multipart、Range与模型分发.md) | 能设计并行下载、断点续传、完整性和回源保护 |
+| P1 | [NVMe 队列与 Namespace](../foundations/storage/local-storage/01-NVMe队列Namespace与性能模型.md) → [RAID/LVM/文件系统](../foundations/storage/local-storage/02-RAID%20LVM与文件系统选型.md) → [节点模型缓存](../foundations/storage/ai-workloads/08-节点模型缓存与容量水位治理.md) | 能设计可重建的本地高性能缓存层 |
+| P2 | Lustre / BeeGFS / JuiceFS 技术对比（待补） | 能按训练、推理、Checkpoint 场景选型 |
 
 ---
 
@@ -170,13 +171,13 @@ Linux 网络基础
 - [GPU、网卡、存储联合拓扑调度](../projects/end-to-end/05-GPU网卡存储联合拓扑调度.md)
 - [Kubernetes DRA 概念与核心 API](../platform/gpu-cluster/dra/01-Kubernetes%20DRA%20概念与核心%20API（v1.35+）.md)
 
-### 还需补充
+### P1 进阶内容
 
 | 优先级 | 文章 | 验收结果 |
 | --- | --- | --- |
-| P1 | Kueue 队列、配额与准入控制 | 能管理多租户训练和推理任务 |
-| P1 | 队列感知推理自动扩缩容 | 能根据 waiting、TTFT 而非仅 GPU 利用率扩容 |
-| P1 | 多集群算力调度与故障域 | 能解释配额、数据位置和跨集群流量约束 |
+| P1 | [Kueue 队列、GPU 配额与工作负载准入](../platform/gpu-cluster/scheduling-sharing/13-Kueue队列配额与工作负载准入.md) | 能管理多租户训练、批推理和服务准入 |
+| P1 | [队列感知的大模型推理自动扩缩容](../platform/gpu-cluster/scheduling-sharing/14-队列感知的大模型推理自动扩缩容.md) | 能根据 waiting work、TTFT、KV 与冷启动扩缩容 |
+| P1 | [多集群 GPU 算力调度](../platform/gpu-cluster/scheduling-sharing/15-多集群GPU算力调度数据位置与故障域.md) | 能解释配额、数据位置、唯一执行和跨集群故障域 |
 
 ---
 
@@ -300,11 +301,11 @@ Transformer 推理基础
 - [多机训练的完整路径](../projects/end-to-end/04-多机训练的完整路径.md)
 - [GPU、网卡、存储联合拓扑调度](../projects/end-to-end/05-GPU网卡存储联合拓扑调度.md)
 
-后续还需补充三篇综合实战：
+三篇综合实战已经串联完成：
 
-1. **一次 LLM 请求的全链路**：网关 → 调度 → 模型实例 → GPU → 流式返回。
-2. **一次模型冷启动的全链路**：对象存储/Ceph/NFS → 节点缓存 → 页缓存 → HBM。
-3. **一次性能下降的联合排查**：SLO 告警 → Trace → 排队 → GPU/NIC/存储瓶颈。
+1. [一次 LLM 请求从网关到 GPU 再到流式返回](../projects/end-to-end/06-一次LLM请求从网关到GPU再到流式返回.md)：网关 → Service → 模型实例 → GPU → 流式返回。
+2. [模型文件从存储加载到 GPU 显存的完整路径](../projects/end-to-end/02-模型文件从存储加载到GPU显存的完整路径.md)：对象存储/Ceph/NFS → 节点缓存 → 页缓存 → HBM。
+3. [AI 服务性能下降的联合排查](../projects/end-to-end/07-AI服务性能下降的联合排查.md)：SLO 告警 → Trace → 排队 → GPU/NVLink/NIC/存储/调度。
 
 ---
 

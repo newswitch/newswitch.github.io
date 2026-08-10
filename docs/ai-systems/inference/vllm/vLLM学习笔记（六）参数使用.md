@@ -10,6 +10,10 @@ tags: [vLLM, 大模型, 推理, LLM, 深度学习]
 
 本系列基于 vLLM 0.6.3 版本。前五篇侧重源码与内部机制，本文整理 **vLLM 的常用参数与配置**，便于部署与调优时查阅。
 
+> **版本边界**：第 1～11 节用于复现和理解 vLLM 0.6.3；vLLM 当前版本已改用
+> `vllm serve` 作为主要入口，部分参数、默认值和 Offload 机制已经变化。生产部署必须以固定镜像内
+> `vllm serve --help=all` 为准。第 12 节同时给出 0.6.3 复现方式和当前版本迁移方式，不能混用。
+
 ## 概述
 
 vLLM 支持通过命令行参数或配置文件控制模型加载、KV Cache、并发、采样与分布式等行为。下文按功能分组说明常用参数，并与本系列（一）～（五）中的概念对应，便于结合源码理解。
@@ -442,7 +446,272 @@ vLLM 支持在基座模型上挂载 **LoRA 适配器**做轻量微调推理。�
 
 ## 12 常用启动示例
 
-（待补充：单卡、多卡、开启 prefix caching、开启 swap、LoRA 等典型 `python -m vllm.entrypoints.openai.api_server` 命令示例。）
+这一节不提供一个“万能启动命令”，而是展示怎样从最小基线逐步增加并行、缓存、Offload 和 LoRA。
+示例模型、显存比例、上下文和并发都必须替换，并通过压测确定。
+
+### 12.1 先确认版本和实际参数
+
+vLLM 0.6.3：
+
+```bash
+python -c 'import vllm; print(vllm.__version__)'
+python -m vllm.entrypoints.openai.api_server --help
+nvidia-smi
+```
+
+当前版本：
+
+```bash
+vllm --version
+vllm collect-env
+vllm serve --help=all
+vllm serve --help=max-model-len
+vllm serve --help=prefix
+```
+
+必须保存：vLLM、容器镜像 Digest、模型 Revision、GPU、驱动/CUDA、命令和环境变量。只记录
+“最新版”无法复现。
+
+### 12.2 单卡最小基线
+
+0.6.3 复现命令：
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python -m vllm.entrypoints.openai.api_server \
+  --model /models/qwen3-8b \
+  --served-model-name qwen3-8b \
+  --dtype bfloat16 \
+  --max-model-len 8192 \
+  --gpu-memory-utilization 0.85 \
+  --max-num-seqs 32 \
+  --host 0.0.0.0 \
+  --port 8000
+```
+
+当前版本推荐入口：
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+vllm serve /models/qwen3-8b \
+  --served-model-name qwen3-8b \
+  --dtype bfloat16 \
+  --max-model-len 8192 \
+  --gpu-memory-utilization 0.85 \
+  --max-num-seqs 32 \
+  --generation-config vllm \
+  --host 0.0.0.0 \
+  --port 8000
+```
+
+`--generation-config vllm` 表示不让模型仓库中的 `generation_config.json` 静默覆盖采样默认值；如果
+确实要采用模型作者配置，应显式记录这个决定。
+
+先验收模型和接口：
+
+```bash
+curl -fsS http://127.0.0.1:8000/health
+curl -fsS http://127.0.0.1:8000/v1/models | jq
+curl -fsS http://127.0.0.1:8000/metrics | head
+
+curl -sS http://127.0.0.1:8000/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "qwen3-8b",
+    "messages": [{"role": "user", "content": "用一句话解释KV Cache"}],
+    "temperature": 0,
+    "max_tokens": 64
+  }' | jq
+```
+
+没有 Chat Template 的 Base Model 不能直接照搬 Chat Completion 示例。
+
+### 12.3 单机四卡 Tensor Parallel
+
+```bash
+CUDA_VISIBLE_DEVICES=0,1,2,3 \
+vllm serve /models/qwen3-32b \
+  --served-model-name qwen3-32b \
+  --tensor-parallel-size 4 \
+  --distributed-executor-backend mp \
+  --dtype bfloat16 \
+  --max-model-len 16384 \
+  --gpu-memory-utilization 0.88 \
+  --generation-config vllm
+```
+
+启动前检查：
+
+```bash
+nvidia-smi -L
+nvidia-smi topo -m
+```
+
+启动后检查每张卡显存、NCCL 日志和吞吐。TP 能让模型跨卡，但每层通常需要集合通信；模型单卡
+能放下时，TP 不一定比多个单卡副本吞吐更高。
+
+### 12.4 多节点 TP + PP
+
+当模型单节点放不下，可在已经建立并验证的 Ray 集群中启动：
+
+```bash
+vllm serve /models/large-model \
+  --tensor-parallel-size 8 \
+  --pipeline-parallel-size 2 \
+  --distributed-executor-backend ray \
+  --max-model-len 16384
+```
+
+例子表示每节点 8 卡、2 个 Pipeline Stage，共 16 卡。所有节点必须具有一致镜像、模型路径、
+Python 依赖和网络环境。上线前分别验证：GPU P2P、Host RDMA/GDR、NCCL、模型加载和真实请求。
+
+### 12.5 显式启用 Prefix Caching
+
+```bash
+vllm serve /models/qwen3-8b \
+  --enable-prefix-caching \
+  --max-model-len 32768 \
+  --gpu-memory-utilization 0.88
+```
+
+新版本可能已经默认启用，仍建议用 `--help=prefix` 核对。Prefix Cache 适合大量请求共享稳定长前缀，
+例如相同 System Prompt、长文档多轮问答。它主要减少重复 Prefill，不会让 Decode 本身变快。
+
+A/B 测试必须保证：请求集、并发、共享前缀比例、模型版本和采样参数相同；观察 Prefix Cache Hit、
+TTFT、吞吐和 KV 使用，而不是只测第二个请求。
+
+### 12.6 0.6.3 Swap 与当前 Offload 的版本差异
+
+0.6.3 的实验方式：
+
+```bash
+python -m vllm.entrypoints.openai.api_server \
+  --model /models/qwen3-8b \
+  --swap-space 8 \
+  --preemption-mode swap
+```
+
+`--swap-space 8` 是每张 GPU 对应的 CPU Swap 空间（GiB）。它用于把被抢占请求的 KV 状态移到
+CPU；不是 Linux Swap Partition，也不是把全部模型权重自动移到 CPU。
+
+当前版本已经把能力拆得更清楚：
+
+```bash
+vllm serve /models/qwen3-8b \
+  --kv-offloading-size 16 \
+  --kv-offloading-backend native
+```
+
+KV Offload 用于 KV Cache；权重 Offload 则是另一条路径：
+
+```bash
+vllm serve /models/qwen3-14b \
+  --cpu-offload-gb 8
+```
+
+`--cpu-offload-gb` 按每张 GPU 计算，会增加 CPU-GPU 传输和延迟。不要把 KV Offload、Weight
+Offload、旧版 Swap 和操作系统 Swap 混为一谈。
+
+使用 Offload 前必须验证：Pinned/系统内存余量、NUMA、PCIe 带宽、TTFT/TPOT、抢占次数和尾延迟。
+如果根因是过长上下文、过高并发或模型本身放不下，先决定是否降低预算、量化或更换并行策略。
+
+### 12.7 LoRA 服务
+
+```bash
+vllm serve /models/qwen3-8b \
+  --served-model-name qwen3-8b \
+  --enable-lora \
+  --lora-modules sql=/models/adapters/sql \
+  --max-loras 2 \
+  --max-lora-rank 64
+```
+
+验证模型列表：
+
+```bash
+curl -fsS http://127.0.0.1:8000/v1/models | jq
+```
+
+请求时把 `model` 设置为 Adapter 名称 `sql`。上线前验证：
+
+- Adapter 的 Base Model、Tokenizer 和 Target Modules 是否匹配；
+- 实际 Rank 不超过 `--max-lora-rank`；
+- 同一 Batch 并发 Adapter 数不超过 `--max-loras`；
+- Base/LoRA 分别做正确性、显存和延迟回归；
+- Adapter 路径只允许受信任制品，禁止用户任意加载服务器本地路径。
+
+### 12.8 长上下文与并发预算
+
+```bash
+vllm serve /models/qwen3-8b \
+  --max-model-len 32768 \
+  --max-num-seqs 16 \
+  --max-num-batched-tokens 8192 \
+  --enable-chunked-prefill \
+  --gpu-memory-utilization 0.88
+```
+
+四个参数的因果关系：
+
+```text
+max-model-len 增大
+→ 单请求最坏 KV 占用增加
+→ 可并发请求数下降
+
+max-num-seqs / max-num-batched-tokens 增大
+→ 调度器单轮工作更多
+→ 吞吐可能提高
+→ 显存、排队和尾延迟也可能上升
+```
+
+不要同时修改多个预算后只看 QPS。至少记录 TTFT、TPOT、端到端 P95/P99、请求失败、KV 使用、
+Preemption 和 GPU 利用率。
+
+### 12.9 OOM 的安全收敛顺序
+
+如果启动时 OOM：
+
+1. 确认 GPU 上没有其他进程；
+2. 降低 `--gpu-memory-utilization`，给非 vLLM 分配保留空间；
+3. 降低 `--max-model-len`；
+4. 检查模型 Dtype/Quantization；
+5. 模型权重放不下时增加 TP、使用匹配量化或评估 Weight Offload；
+6. 使用 `--enforce-eager` 判断是否与 CUDA Graph 捕获有关，但不要把它默认当永久优化。
+
+如果运行时 OOM 或频繁 Preemption：
+
+1. 降低 `--max-num-seqs`；
+2. 收紧租户最大输入/输出 Token；
+3. 分析长短请求混跑；
+4. 评估 Prefix Cache、Chunked Prefill 和 KV Dtype；
+5. 最后再决定 KV Offload 或增加副本/GPU。
+
+### 12.10 参数调优实验矩阵
+
+| 轮次 | 只改变的变量 | 主要观察 |
+|---|---|---|
+| A | `max-model-len` | KV 容量、最大请求、并发 |
+| B | `max-num-seqs` | 吞吐、排队、P99 |
+| C | `max-num-batched-tokens` | Prefill 吞吐、TTFT |
+| D | Prefix Cache | Cache Hit、共享前缀 TTFT |
+| E | TP Size | 单副本吞吐、通信、显存 |
+| F | KV/Weight Offload | PCIe、CPU 内存、TPOT |
+| G | LoRA 数量/Rank | 显存、正确性、批处理效率 |
+
+每轮先预热，使用 Open-loop 压测，保存原始命令、日志、Prometheus 指标和请求分布。只有在 SLO 下
+可复现的最大稳定吞吐才是容量，不要把短时峰值当生产容量。
+
+### 12.11 生产启动检查清单
+
+- [ ] 固定镜像 Digest、vLLM 版本和模型 Revision；
+- [ ] 命令来自该镜像内 `--help`，不存在未知参数；
+- [ ] 模型、Tokenizer、Chat Template 与 API 匹配；
+- [ ] 单卡/TP/NCCL/存储加载基线通过；
+- [ ] Startup、Readiness、Liveness 分工正确；
+- [ ] API 位于鉴权、限流和请求大小限制之后；
+- [ ] `/metrics`、日志、GPU 和业务 SLI 可关联；
+- [ ] 冷启动、滚动升级、OOM、节点丢失和容量降级已经演练；
+- [ ] 参数 A/B 结果和回滚命令已经保存。
 
 ## 13 总结
 
@@ -451,3 +720,15 @@ vLLM 支持在基座模型上挂载 **LoRA 适配器**做轻量微调推理。�
 - **并发与调度**（3）：`--max-num-seqs`、`--max-num-batched-tokens`、`--preemption-mode` 等与（三）调度预算与抢占对应。
 - **分布式**（5）：`-tp`、`-pp`、`--distributed-executor-backend` 用于多卡/多节点。
 - **前缀缓存与 LoRA**（6）：`--enable-prefix-caching` 与（五）PrefixCaching 对应；LoRA 相关参数用于多适配器场景。
+
+参数调优的正确顺序是：固定版本和工作负载，建立最小基线，只改变一个预算，观察显存、吞吐和尾延迟，
+最后才形成生产启动模板。版本升级后必须重新检查 `--help` 和默认值，不能把 0.6.3 的命令直接用于当前版本。
+
+## 参考资料
+
+- [vLLM CLI Guide](https://docs.vllm.ai/en/latest/cli/)
+- [vLLM Serve 参数](https://docs.vllm.ai/en/latest/cli/serve/)
+- [OpenAI-Compatible Server](https://docs.vllm.ai/en/latest/serving/online_serving/openai_compatible_server/)
+- [Parallelism and Scaling](https://docs.vllm.ai/en/latest/serving/parallelism_scaling/)
+- [Automatic Prefix Caching](https://docs.vllm.ai/en/latest/features/automatic_prefix_caching/)
+- [LoRA Adapters](https://docs.vllm.ai/en/latest/features/lora/)
