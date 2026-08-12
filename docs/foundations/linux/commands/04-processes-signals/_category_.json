@@ -1,0 +1,9 @@
+{
+  "label": "进程、作业与信号",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "foundations/linux/commands/processes-signals/进程线程作业与信号命令导读"
+  }
+}

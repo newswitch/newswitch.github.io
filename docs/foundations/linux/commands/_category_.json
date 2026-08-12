@@ -1,0 +1,10 @@
+{
+  "label": "Linux 命令参考库",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Linux 命令参考库",
+    "description": "按类别逐个掌握生产 Linux 常用命令的完整参数、输出、风险和故障排查方法。"
+  }
+}

@@ -14,7 +14,11 @@ description: "按计算、网络、存储、调度、推理、可观测性、性
 
 ```mermaid
 flowchart LR
-    A["计算与加速器"] --> B["高速网络"]
+    L["Linux 系统基础"] --> A["计算与加速器"]
+    L --> B["高速网络"]
+    L --> C["存储系统"]
+    L --> D["集群与调度"]
+    A --> B
     A --> C["存储系统"]
     B --> D["集群与调度"]
     C --> D
@@ -36,6 +40,16 @@ flowchart LR
 
 ---
 
+## 0. Linux 系统基础
+
+Linux 是计算、网络、存储和 Kubernetes 的共同运行底座。这里既要理解进程、权限、文件系统、网络栈和 cgroup，也要能准确使用命令获取证据、改变状态并判断退出结果。
+
+- [Linux 命令参考库：从命令行入门到生产故障排查](../foundations/linux/00-Linux命令参考库学习路线.md)
+- Linux 生产 SRE 核心命令库 v1 已全部完成，共 203 篇核心技术文章和 11 篇分类导读：新增 Shell/帮助与安全自动化、归档同步校验、grep/sed/awk/jq、Namespace/cgroup/容器现场，以及 strace/perf/ftrace/eBPF 深度诊断；网络、存储、GPU、Kubernetes 和大数据产品命令继续在各自模块维护。
+- 学习顺序采用“操作系统对象 → 命令完整参数 → 输出与退出码 → 安全实验 → 生产排障”，不把命令背成孤立单词。
+
+---
+
 ## 1. 计算与加速器模块
 
 ### 学习目标
@@ -53,6 +67,8 @@ flowchart LR
 - [CPU 与 GPU 之间的数据搬运](../foundations/compute/gpu/04-CPU与GPU之间的数据搬运.md)
 - [NVLink 与 NVSwitch 原理](../foundations/compute/gpu/05-NVLink与NVSwitch原理.md)
 - [PCIe 基本架构](../foundations/compute/pcie/PCIe总线学习（一）基本架构.md)
+- [GPU 与加速器命令参考库：从设备识别到分布式通信验证](../foundations/compute/commands/00-GPU与加速器命令参考库学习路线.md)
+- GPU 命令参考库包含 16 个主题：复用现有 `nvidia-smi`、`nsys`、`ncu` 三篇成熟文章，新补 13 篇，覆盖 DCGM、驱动证据采集、容器注入、CUDA 编译调试、二进制分析、Samples 基线与 NCCL 单机/多机验证；所有主动负载和状态变更操作均标注安全边界。
 
 ### P1 进阶内容
 
@@ -85,6 +101,8 @@ Linux 网络基础
 
 ### 已有内容
 
+- [网络命令参考库：从主机配置到路径、DNS、防火墙、二层邻居与吞吐](../foundations/networking/commands/00-网络命令参考库学习路线.md)
+- 网络命令参考库已完成 29 篇：除本机网络、路径、DNS、防火墙、配置所有权和二层拓扑外，新增 `curl`/`openssl s_client` 的 HTTP/TLS 链路诊断，以及 `rdma`、verbs/GID 发现与 RDMA perftest，形成从 netdev 到 RoCE/InfiniBand 数据面的证据链。
 - [传统网络从零到精通学习路线](../foundations/networking/traditional/00-传统网络从零到精通学习路线.md)
 - [Linux 高性能网络详解](../foundations/networking/linux-high-performance/linux高性能网络详解读书笔记（一）.md)
 - [RDMA 技术概述](../foundations/networking/rdma/RDMA技术详解（一）：RDMA概述.md)
@@ -133,6 +151,8 @@ Linux 网络基础
 
 ### 已有内容
 
+- [存储命令参考库：从块设备到 NFS、Ceph 与 S3](../foundations/storage/commands/00-存储命令参考库学习路线.md)
+- 存储命令参考库已完成 28 篇：覆盖块设备与挂载、文件系统容量、I/O 性能与介质健康、LVM/MD RAID、NFS/RPC、Ceph/RADOS/RBD/CephFS，以及 S3 API 和多工具数据搬运；所有修复、格式化、阵列、同步和删除动作都给出安全边界。
 - [Ceph 从零基础到生产运维学习路线](../foundations/storage/ceph/00-Ceph学习路线.md)
 - [NFS 在 AI 集群中的使用与性能分析](../foundations/storage/nfs/01-NFS在AI集群中的使用与性能分析.md)
 - [Ceph 三种接口在 AI 集群中的选型](../foundations/storage/ceph/PartIX-AI场景/30-AI集群中的Ceph接口选型.md)
@@ -163,6 +183,8 @@ Linux 网络基础
 ### 已有内容
 
 - [Kubernetes 学习路线](../platform/kubernetes/00-Kubernetes学习路线.md)
+- [Kubernetes 与容器命令参考库：从 API 对象到 OCI 进程](../platform/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)
+- Kubernetes 与容器命令参考库已完成 16 篇：覆盖 `kubectl` API 发现、对象查询、声明式变更、Pod 调试、发布与节点维护、RBAC/指标/API，及 Helm、Kustomize、kubeadm、etcdctl、crictl、ctr、nerdctl、Docker、Podman/Buildah/Skopeo、runc；每篇都区分 API、CRI、containerd 与 OCI 对象，并标注读取、主动操作、写入和破坏性操作边界。
 - [Kubernetes 如何识别和管理 GPU](../platform/gpu-cluster/device-runtime/01-Kubernetes%20如何识别和管理%20GPU.md)
 - [GPU 节点标签与调度策略](../platform/gpu-cluster/scheduling-sharing/01-Kubernetes%20GPU%20节点标签与调度策略.md)
 - [Volcano GPU 调度器入门](../platform/gpu-cluster/scheduling-sharing/04-Volcano%20GPU%20调度器入门.md)

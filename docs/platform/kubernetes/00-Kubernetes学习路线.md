@@ -13,6 +13,8 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线。
 
 与 [Kubernetes GPU 集群专栏](../gpu-cluster/00-Kubernetes-GPU集群学习路线.md) 可并行：本专栏打 K8s 底座，GPU 专栏侧重算力与推理。
 
+学习原理章节的同时，建议使用新增的 [Kubernetes 与容器命令参考库](./commands/00-Kubernetes与容器命令参考库学习路线.md)完成动手闭环。参考库包含 16 篇独立文章：前 6 篇把 `kubectl` 按 API 发现、查询、变更、Pod 调试、发布维护和权限/指标拆开，后 10 篇覆盖 Helm、Kustomize、kubeadm、etcdctl、crictl、ctr、nerdctl、Docker、Podman 工具链与 runc/OCI。原理文章解释系统为什么这样设计，命令文章负责把对象、参数、输出、安全边界和排障证据连起来。
+
 ---
 
 ## 当前进度
@@ -30,6 +32,7 @@ description: 按 Part I～III 组织的 Kubernetes 学习路线。
 | Part I · 存储 | **已完成** | [存储 · 本章导读](./K8s学习-PartI-存储/00-本章导读.md) |
 | Part I | **已全部完成** | 见下方各章目录 |
 | Part II · 安全 | **已完成** | [安全 · 本章导读](./K8s学习-PartII-安全/00-本章导读.md) |
+| Kubernetes 与容器命令参考库 | **已完成** | [16 篇命令与排障文章](./commands/00-Kubernetes与容器命令参考库学习路线.md) |
 | Part II · 访问集群 | **已完成** | [访问集群 · 本章导读](./K8s学习-PartII-访问集群/00-本章导读.md) |
 | Part II · 扩展 Kubernetes | **已完成** | [扩展 · 本章导读](./K8s学习-PartII-扩展Kubernetes/00-本章导读.md) |
 | Part II · 多集群管理 | **已完成** | [多集群 · 本章导读](./K8s学习-PartII-多集群管理/00-本章导读.md) |
