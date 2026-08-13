@@ -1,0 +1,9 @@
+{
+  "label": "部署应用",
+  "position": 26,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/operations/application-delivery/本章导读"
+  }
+}

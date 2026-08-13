@@ -7,7 +7,7 @@ tags: ["Kubernetes", "PyTorch", "DDP", "Volcano", "torchrun", "GPU", "学习路�
 
 # PyTorch DDP 在 Kubernetes 中的部署
 
-本文把官方教程 [使用 DDP 进行多 GPU 训练](https://docs.pytorch.ac.cn/tutorials/beginner/ddp_series_multigpu.html) 里的改法，落到 **单机多卡 Pod** 与 **多机多卡 + Volcano Gang**。前置：[分布式训练基础](./01-Kubernetes%20分布式训练基础.md)、[Gang](../../../platform/gpu-cluster/scheduling-sharing/06-Gang%20Scheduling%20在分布式训练中的作用.md)、[Queue](../../../platform/gpu-cluster/scheduling-sharing/05-Volcano%20Queue%20与%20GPU%20配额管理.md)。
+本文把官方教程 [使用 DDP 进行多 GPU 训练](https://docs.pytorch.ac.cn/tutorials/beginner/ddp_series_multigpu.html) 里的改法，落到 **单机多卡 Pod** 与 **多机多卡 + Volcano Gang**。前置：[分布式训练基础](./01-Kubernetes%20分布式训练基础.md)、[Gang](../../../gpu/cluster/scheduling/06-Gang%20Scheduling%20在分布式训练中的作用.md)、[Queue](../../../gpu/cluster/scheduling/05-Volcano%20Queue%20与%20GPU%20配额管理.md)。
 
 ---
 

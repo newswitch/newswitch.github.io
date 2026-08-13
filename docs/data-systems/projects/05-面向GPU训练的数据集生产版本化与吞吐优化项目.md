@@ -85,7 +85,7 @@ flowchart LR
 
 GPU、NIC、NVMe和CPU NUMA不对齐会跨 socket/PCIe。使用硬件拓扑、进程/IRQ/NUMA指标确认。存储读取和跨节点 AllReduce共享 NIC时，可分网、multi-rail、QoS/限速或错峰预取。
 
-深入参考 [GPU-NIC 拓扑与 NUMA](../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/06-GPU-NIC拓扑与NUMA亲和.md) 与 [AI 工作负载存储 I/O](../../foundations/storage/ai-workloads/01-AI工作负载的存储IO模型.md)。
+深入参考 [GPU-NIC 拓扑与 NUMA](../../networking/rdma-roce/ai-cluster/06-GPU-NIC拓扑与NUMA亲和.md) 与 [AI 工作负载存储 I/O](../../storage/ai-workloads/01-AI工作负载的存储IO模型.md)。
 
 ## 10. 故障注入
 

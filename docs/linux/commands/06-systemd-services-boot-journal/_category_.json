@@ -1,0 +1,9 @@
+{
+  "label": "systemd 服务、启动与日志",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/commands/systemd-services-boot-journal/systemd服务启动与日志命令导读"
+  }
+}

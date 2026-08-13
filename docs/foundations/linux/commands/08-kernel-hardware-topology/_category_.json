@@ -1,9 +1,0 @@
-{
-  "label": "内核、硬件拓扑与中断",
-  "position": 8,
-  "collapsed": true,
-  "link": {
-    "type": "doc",
-    "id": "foundations/linux/commands/kernel-hardware-topology/内核硬件拓扑与中断命令导读"
-  }
-}

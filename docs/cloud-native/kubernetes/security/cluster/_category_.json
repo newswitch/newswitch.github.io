@@ -1,0 +1,9 @@
+{
+  "label": "安全",
+  "position": 20,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/security/cluster/本章导读"
+  }
+}

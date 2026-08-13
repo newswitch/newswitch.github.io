@@ -1,0 +1,9 @@
+{
+  "label": "LSM、capabilities 与审计",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/commands/lsm-capabilities-audit/LSM-capabilities与审计命令导读"
+  }
+}

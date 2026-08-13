@@ -283,7 +283,7 @@ Parquet 适合特征表的列裁剪和批量扫描，但 GPU 训练吞吐还受�
 
 分析查询的最佳布局不一定是训练的最佳布局。生产链路常从湖仓的权威 snapshot 导出一个不可变训练 manifest 和优化后的 shards，同时保留源 snapshot ID、转换代码版本和 checksum，保证可复现。
 
-相关硬件和数据加载基础可继续阅读 [GPU 基础知识：从计算核心到显存](../../foundations/compute/gpu/01-GPU%20基础知识：从计算核心到显存.md) 和 [AI 工作负载的存储 I/O 模型](../../foundations/storage/ai-workloads/01-AI工作负载的存储IO模型.md)。
+相关硬件和数据加载基础可继续阅读 [GPU 基础知识：从计算核心到显存](../../gpu/fundamentals/01-GPU基础知识：从计算核心到显存.md) 和 [AI 工作负载的存储 I/O 模型](../../storage/ai-workloads/01-AI工作负载的存储IO模型.md)。
 
 ## 13. 文件损坏与正确性
 

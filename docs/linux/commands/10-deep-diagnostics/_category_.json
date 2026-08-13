@@ -1,0 +1,9 @@
+{
+  "label": "深度性能与故障诊断",
+  "position": 10,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/commands/deep-diagnostics/深度性能与故障诊断命令导读"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "label": "云原生",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/fundamentals/本章导读"
+  }
+}

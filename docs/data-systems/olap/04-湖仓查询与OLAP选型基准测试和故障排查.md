@@ -69,7 +69,7 @@ Ad-hoc 大查询和 dashboard 不应无界共享。使用 resource group/workloa
 - 从排队/规划/执行逐层排障；
 - 把资源隔离与数据新鲜度同时纳入 SLO。
 
-上一篇：[Doris MPP 与物化视图](./03-Doris-MPP-Tablet物化视图与查询加速.md)　下一模块：[Debezium CDC](../engineering/01-Debezium-CDC-Binlog快照与Schema-Change.md)
+上一篇：[Doris MPP 与物化视图](./03-Doris-MPP-Tablet物化视图与查询加速.md)　下一模块：[Debezium CDC](../engineering-governance/01-Debezium-CDC-Binlog快照与Schema-Change.md)
 
 ## 参考资料
 

@@ -1,0 +1,9 @@
+{
+  "label": "集群资源管理",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/scheduling/本章导读"
+  }
+}

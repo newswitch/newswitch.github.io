@@ -1,0 +1,9 @@
+{
+  "label": "访问集群",
+  "position": 21,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/operations/access/本章导读"
+  }
+}

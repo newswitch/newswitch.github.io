@@ -1,0 +1,9 @@
+{
+  "label": "Kubernetes",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/Kubernetes学习路线"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "label": "Hadoop 与 Hive",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "从 HDFS 数据路径到 YARN、MapReduce 与 Hive 的生产实践。"
+  }
+}

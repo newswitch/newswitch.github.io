@@ -1,0 +1,9 @@
+{
+  "label": "开放接口",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/interfaces/本章导读"
+  }
+}

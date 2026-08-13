@@ -1,0 +1,9 @@
+{
+  "label": "集群运维",
+  "position": 25,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/operations/cluster/本章导读"
+  }
+}

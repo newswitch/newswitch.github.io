@@ -12,7 +12,7 @@ tags: ["Kubernetes", "vLLM", "GPU", "推理", "Helm", "学习路线"]
 1. **原生 Deployment + Service**（最易跟练）  
 2. **Production Stack Helm**（路由、监控、扩缩的参考实现）  
 
-前置：[GPU Pod 配置](../../../platform/gpu-cluster/device-runtime/04-Kubernetes%20GPU%20Pod%20配置详解.md)、[GPU Operator](../../../platform/gpu-cluster/device-runtime/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)。显存规划见 [第 24 篇](./02-vLLM%20GPU%20显存组成与容量规划.md)，指标见 [第 28 篇](./06-大模型推理服务性能指标设计.md)。
+前置：[GPU Pod 配置](../../../gpu/cluster/device-management/04-Kubernetes%20GPU%20Pod%20配置详解.md)、[GPU Operator](../../../gpu/cluster/device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)。显存规划见 [第 24 篇](./02-vLLM%20GPU%20显存组成与容量规划.md)，指标见 [第 28 篇](./06-大模型推理服务性能指标设计.md)。
 
 ---
 
@@ -331,7 +331,7 @@ curl -X POST http://localhost:30080/v1/completions \
 | 探针精细设计 | [26](./04-大模型服务%20Kubernetes%20探针设计.md) |
 | 滚动升级 / 优雅退出 | [27](./05-大模型推理服务滚动升级与优雅退出.md) |
 | TTFT / KV / `/metrics` | [28](./06-大模型推理服务性能指标设计.md) |
-| 队列与优先级 | [Volcano 16～18](../../../platform/gpu-cluster/scheduling-sharing/04-Volcano%20GPU%20调度器入门.md) |
+| 队列与优先级 | [Volcano 16～18](../../../gpu/cluster/scheduling/04-Volcano%20GPU%20调度器入门.md) |
 
 ---
 

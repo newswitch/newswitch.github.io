@@ -7,7 +7,7 @@ tags: ["Kubernetes", "分布式训练", "DDP", "TP", "PP", "Volcano", "学习路
 
 # Kubernetes 分布式训练基础
 
-单卡训练脚本能跑通后，上集群会立刻碰到：多进程怎么编号、谁当 Master、何时做集合通信、为什么「起了一半 Worker」会占死 GPU。本文给第六阶段搭地图——并行范式、进程角色、Rendezvous、以及在 Kubernetes / Volcano 上的任务生命周期。代码级 DDP 见 [第 30 篇](./02-PyTorch%20DDP%20在%20Kubernetes%20中的部署.md)；Gang 见 [第 18 篇](../../../platform/gpu-cluster/scheduling-sharing/06-Gang%20Scheduling%20在分布式训练中的作用.md)。
+单卡训练脚本能跑通后，上集群会立刻碰到：多进程怎么编号、谁当 Master、何时做集合通信、为什么「起了一半 Worker」会占死 GPU。本文给第六阶段搭地图——并行范式、进程角色、Rendezvous、以及在 Kubernetes / Volcano 上的任务生命周期。代码级 DDP 见 [第 30 篇](./02-PyTorch%20DDP%20在%20Kubernetes%20中的部署.md)；Gang 见 [第 18 篇](../../../gpu/cluster/scheduling/06-Gang%20Scheduling%20在分布式训练中的作用.md)。
 
 推荐先读 PyTorch 官方系列：[什么是 DDP](https://docs.pytorch.org/tutorials/beginner/ddp_series_intro.html)、[使用 DDP 进行多 GPU 训练](https://docs.pytorch.ac.cn/tutorials/beginner/ddp_series_multigpu.html)（中文镜像）。
 

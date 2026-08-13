@@ -1,0 +1,9 @@
+{
+  "label": "Kubernetes 与容器命令参考库",
+  "position": 11,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/commands/Kubernetes与容器命令参考库学习路线"
+  }
+}

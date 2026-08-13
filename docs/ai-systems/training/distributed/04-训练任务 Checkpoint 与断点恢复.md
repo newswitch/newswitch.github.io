@@ -40,7 +40,7 @@ Checkpoint 不是“把模型权重写到共享盘”。一个能够真正续训
 
 - [PyTorch DDP 在 Kubernetes 中部署](./02-PyTorch%20DDP%20在%20Kubernetes%20中的部署.md)
 - [DeepSpeed ZeRO 与 GPU 显存优化](./03-DeepSpeed%20ZeRO%20与%20GPU%20显存优化.md)
-- [模型文件在 Kubernetes 中的存储方案](../../../foundations/storage/ai-workloads/06-大模型文件在%20Kubernetes%20中的存储方案.md)
+- [模型文件在 Kubernetes 中的存储方案](../../../storage/ai-workloads/06-大模型文件在%20Kubernetes%20中的存储方案.md)
 
 ## 2. Checkpoint 应该保存什么
 

@@ -1,0 +1,9 @@
+{
+  "label": "身份与权限认证",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/security/identity/本章导读"
+  }
+}

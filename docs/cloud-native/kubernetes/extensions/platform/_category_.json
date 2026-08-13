@@ -1,0 +1,9 @@
+{
+  "label": "扩展 Kubernetes",
+  "position": 22,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/extensions/platform/本章导读"
+  }
+}

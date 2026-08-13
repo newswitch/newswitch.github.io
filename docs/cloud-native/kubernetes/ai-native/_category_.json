@@ -1,0 +1,9 @@
+{
+  "label": "AI 原生",
+  "position": 10,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/ai-native/本章导读"
+  }
+}

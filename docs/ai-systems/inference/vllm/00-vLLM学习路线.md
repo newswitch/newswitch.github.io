@@ -65,10 +65,10 @@ vllm serve --help
 
 ### 推荐先读
 
-- [GPU 基础知识](../../../foundations/compute/gpu/01-GPU%20基础知识：从计算核心到显存.md)
-- [HBM 显存原理](../../../foundations/compute/gpu/02-HBM显存原理：容量、带宽与访问效率.md)
-- [CPU 与 GPU 之间的数据搬运](../../../foundations/compute/gpu/04-CPU与GPU之间的数据搬运.md)
-- [NVLink 与 NVSwitch](../../../foundations/compute/gpu/05-NVLink与NVSwitch原理.md)
+- [GPU 基础知识](../../../gpu/fundamentals/01-GPU基础知识：从计算核心到显存.md)
+- [HBM 显存原理](../../../gpu/memory/01-HBM显存原理：容量、带宽与访问效率.md)
+- [CPU 与 GPU 之间的数据搬运](../../../gpu/pcie-numa/05-CPU与GPU之间的数据搬运.md)
+- [NVLink 与 NVSwitch](../../../gpu/nvlink-nvswitch/01-NVLink与NVSwitch原理.md)
 - [Kubernetes 部署 vLLM](../serving/01-Kubernetes%20部署%20vLLM%20推理服务.md)
 
 ---
@@ -140,7 +140,7 @@ OpenAI API Server
 已有文章：
 
 - [vLLM GPU 显存组成与容量规划](../serving/02-vLLM%20GPU%20显存组成与容量规划.md)
-- [CUDA OOM 排查与优化](../../../platform/gpu-cluster/troubleshooting/05-CUDA%20OOM%20排查与优化.md)
+- [CUDA OOM 排查与优化](../../../gpu/cluster/troubleshooting/05-CUDA%20OOM%20排查与优化.md)
 
 计划继续补充：
 
@@ -166,7 +166,7 @@ OpenAI API Server
 - [TP、PP、DP、EP 与 MoE 推理并行策略](./10-TP-PP-DP-EP与MoE推理并行策略.md)
 - [vLLM Tensor Parallel 多卡部署](../serving/03-vLLM%20Tensor%20Parallel%20多卡部署.md)
 - [NCCL 通信原理](../../training/distributed/05-NCCL%20通信原理与常见问题.md)
-- [多机训练的完整路径](../../../projects/end-to-end/04-多机训练的完整路径.md)
+- [多机训练的完整路径](../../../projects/ai-infra-end-to-end/04-多机训练的完整路径.md)
 
 ---
 
@@ -178,7 +178,7 @@ OpenAI API Server
 | [大模型推理服务性能指标](../serving/06-大模型推理服务性能指标设计.md) | TTFT、TPOT、E2E、waiting、KV Cache |
 | [探针设计](../serving/04-大模型服务%20Kubernetes%20探针设计.md) | startup/readiness/liveness |
 | [滚动升级与优雅退出](../serving/05-大模型推理服务滚动升级与优雅退出.md) | 摘流、Drain、SSE、回滚 |
-| [LLM 服务 SLI/SLO](../../../engineering/reliability/01-LLM服务SLI-SLO-SLA工程化.md) | 可用性、流式完成、延迟 SLO |
+| [LLM 服务 SLI/SLO](../../../sre/reliability/01-LLM服务SLI-SLO-SLA工程化.md) | 可用性、流式完成、延迟 SLO |
 
 ---
 

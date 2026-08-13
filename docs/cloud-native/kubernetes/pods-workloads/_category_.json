@@ -1,0 +1,9 @@
+{
+  "label": "Pod",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/pods-workloads/本章导读"
+  }
+}

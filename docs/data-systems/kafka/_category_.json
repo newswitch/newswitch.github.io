@@ -2,5 +2,8 @@
   "label": "Kafka",
   "position": 4,
   "collapsed": true,
-  "link": {"type": "generated-index", "description": "掌握分区日志、生产消费、复制、事务、容量与故障治理。"}
+  "link": {
+    "type": "generated-index",
+    "description": "掌握分区日志、生产消费、复制、事务、容量与故障治理。"
+  }
 }

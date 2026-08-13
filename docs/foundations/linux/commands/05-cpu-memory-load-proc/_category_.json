@@ -1,9 +1,0 @@
-{
-  "label": "CPU、内存、负载与 procfs",
-  "position": 5,
-  "collapsed": true,
-  "link": {
-    "type": "doc",
-    "id": "foundations/linux/commands/cpu-memory-load-proc/CPU内存负载与procfs命令导读"
-  }
-}

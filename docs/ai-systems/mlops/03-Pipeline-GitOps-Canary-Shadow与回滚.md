@@ -651,8 +651,8 @@ Canary 期间同时判断：
 
 参考：
 
-- [LLM 服务 SLI、SLO 与 SLA](../../engineering/reliability/01-LLM服务SLI-SLO-SLA工程化.md)
-- [Error Budget 与多窗口燃烧率告警](../../engineering/reliability/02-Error-Budget与多窗口燃烧率告警.md)
+- [LLM 服务 SLI、SLO 与 SLA](../../sre/reliability/01-LLM服务SLI-SLO-SLA工程化.md)
+- [Error Budget 与多窗口燃烧率告警](../../sre/reliability/02-Error-Budget与多窗口燃烧率告警.md)
 
 ## 21. 回滚不是只换模型 URI
 
@@ -856,8 +856,8 @@ Pipeline 在创建 PR 后崩溃并重试
 
 仓库已有工具基础介绍：
 
-- [Argo CD](../../platform/kubernetes/K8s学习-PartII-部署应用/08-ArgoCD.md)
-- [Argo Rollout](../../platform/kubernetes/K8s学习-PartII-部署应用/09-Argo-Rollout.md)
+- [Argo CD](../../cloud-native/kubernetes/operations/application-delivery/08-ArgoCD.md)
+- [Argo Rollout](../../cloud-native/kubernetes/operations/application-delivery/09-Argo-Rollout.md)
 
 本文重点是把它们放进模型发布协议，并补齐 LLM 流量、证据、门禁和回滚边界。
 

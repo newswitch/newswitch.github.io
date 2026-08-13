@@ -2,5 +2,8 @@
   "label": "Trino 与 OLAP",
   "position": 8,
   "collapsed": true,
-  "link": {"type": "generated-index", "description": "学习 MPP 查询、列式存储、物化视图、选型与故障排查。"}
+  "link": {
+    "type": "generated-index",
+    "description": "学习 MPP 查询、列式存储、物化视图、选型与故障排查。"
+  }
 }

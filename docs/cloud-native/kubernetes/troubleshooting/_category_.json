@@ -1,0 +1,9 @@
+{
+  "label": "命令与调试",
+  "position": 12,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/troubleshooting/本章导读"
+  }
+}

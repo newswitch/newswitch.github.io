@@ -1,0 +1,9 @@
+{
+  "label": "存储",
+  "position": 9,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "storage/kubernetes/volumes/本章导读"
+  }
+}

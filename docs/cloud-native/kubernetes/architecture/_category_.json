@@ -1,0 +1,9 @@
+{
+  "label": "Kubernetes 架构",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/kubernetes/architecture/本章导读"
+  }
+}

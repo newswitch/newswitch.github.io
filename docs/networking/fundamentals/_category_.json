@@ -1,0 +1,9 @@
+{
+  "label": "网络基础",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "networking/fundamentals/传统网络从零到精通学习路线"
+  }
+}

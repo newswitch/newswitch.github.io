@@ -1,0 +1,9 @@
+{
+  "label": "Ceph",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "storage/ceph/Ceph学习路线"
+  }
+}

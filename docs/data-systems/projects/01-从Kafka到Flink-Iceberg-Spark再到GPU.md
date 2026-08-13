@@ -372,7 +372,7 @@ GPU utilization 呈锯齿且 DataLoader 队列经常为空，才更像数据供�
 - 数据预取限速，避免与 collective 峰值争抢；
 - 使用拓扑和 NCCL 日志确认真实通信路径。
 
-深入学习可阅读 [NVLink 与 NVSwitch 原理](../../foundations/compute/gpu/05-NVLink与NVSwitch原理.md)、[GPU-NIC 拓扑与 NUMA 亲和](../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/06-GPU-NIC拓扑与NUMA亲和.md) 和 [训练与推理通信流量模型](../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/01-训练与推理通信流量模型.md)。
+深入学习可阅读 [NVLink 与 NVSwitch 原理](../../gpu/nvlink-nvswitch/01-NVLink与NVSwitch原理.md)、[GPU-NIC 拓扑与 NUMA 亲和](../../networking/rdma-roce/ai-cluster/06-GPU-NIC拓扑与NUMA亲和.md) 和 [训练与推理通信流量模型](../../networking/rdma-roce/ai-cluster/01-训练与推理通信流量模型.md)。
 
 ## 12. 调度跨越了哪些层
 
@@ -544,7 +544,7 @@ Compaction 常需要同时保留旧文件和新文件，磁盘接近满水位时
 - [分区、并行度、Shuffle 与数据倾斜](../foundations/03-分区并行度Shuffle与数据倾斜.md)
 - [数据一致性、幂等与 Exactly-Once](../foundations/04-数据一致性幂等与Exactly-Once.md)
 - [Parquet、ORC、Avro 与压缩编码](../foundations/05-Parquet-ORC-Avro与压缩编码.md)
-- [AI 工作负载的存储 I/O 模型](../../foundations/storage/ai-workloads/01-AI工作负载的存储IO模型.md)
+- [AI 工作负载的存储 I/O 模型](../../storage/ai-workloads/01-AI工作负载的存储IO模型.md)
 - [Kubernetes 分布式训练基础](../../ai-systems/training/distributed/01-Kubernetes%20分布式训练基础.md)
 
 ## 参考资料

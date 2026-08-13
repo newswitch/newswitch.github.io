@@ -38,9 +38,9 @@ NVLink/PCIe/RDMA/Socket 路径故障
 
 前置阅读：
 
-- [NVLink 与 NVSwitch 原理](../../../foundations/compute/gpu/05-NVLink与NVSwitch原理.md)
-- [NCCL 集合通信算法与协议](../../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/02-NCCL集合通信算法与协议.md)
-- [RDMA 与 NCCL 基准测试](../../../foundations/networking/ai-cluster/PartI-通信与RDMA基础/09-RDMA与NCCL基准测试方法.md)
+- [NVLink 与 NVSwitch 原理](../../../gpu/nvlink-nvswitch/01-NVLink与NVSwitch原理.md)
+- [NCCL 集合通信算法与协议](../../../networking/rdma-roce/ai-cluster/02-NCCL集合通信算法与协议.md)
+- [RDMA 与 NCCL 基准测试](../../../networking/rdma-roce/ai-cluster/09-RDMA与NCCL基准测试方法.md)
 
 ## 2. NCCL 在系统中的位置
 
@@ -440,7 +440,7 @@ RoCE 还要检查：
 - pause storm、拥塞树和微突发；
 - ECMP 与多 rail 对称性。
 
-详见 [AI Fabric 与无损网络](../../../foundations/networking/ai-cluster/PartII-AI-Fabric与无损网络/00-第二阶段学习路线.md)。
+详见 [AI Fabric 与无损网络](../../../networking/ai-fabric/fabric/00-第二阶段学习路线.md)。
 
 ## 17. 常用环境变量的正确用法
 
@@ -609,4 +609,4 @@ NCCL 报错/超时
 - [NCCL RAS](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/ras.html)
 - [NVIDIA nccl-tests](https://github.com/NVIDIA/nccl-tests)
 
-超时现场可继续使用：[NCCL Timeout 排查流程](../../../platform/gpu-cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
+超时现场可继续使用：[NCCL Timeout 排查流程](../../../gpu/cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
