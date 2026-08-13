@@ -46,9 +46,10 @@ flowchart LR
 
 | 顺序 | 文章 | 学习成果 |
 | --- | --- | --- |
-| 01 | [MLflow 实验追踪、模型注册与制品血缘](./01-MLflow实验追踪模型注册与制品血缘.md) | 能从生产模型反查代码、数据、环境、评测和制品摘要 |
-| 02 | [模型评测门禁与版本晋级](./02-模型评测门禁与版本晋级.md) | 能把正确性、安全、性能和兼容性变成可执行策略 |
-| 03 | [Pipeline、GitOps、Canary、Shadow 与回滚](./03-Pipeline-GitOps-Canary-Shadow与回滚.md) | 能设计从构建到渐进发布、分析和回滚的状态机 |
+| 01 | [MLOps 与供应链命令参考库](./commands/00-MLOps与供应链命令参考库.md) | 能操作MLflow、DVC、Argo CD、Trivy、Cosign和ORAS，并理解每个写操作的边界 |
+| 02 | [MLflow 实验追踪、模型注册与制品血缘](./01-MLflow实验追踪模型注册与制品血缘.md) | 能从生产模型反查代码、数据、环境、评测和制品摘要 |
+| 03 | [模型评测门禁与版本晋级](./02-模型评测门禁与版本晋级.md) | 能把正确性、安全、性能和兼容性变成可执行策略 |
+| 04 | [Pipeline、GitOps、Canary、Shadow 与回滚](./03-Pipeline-GitOps-Canary-Shadow与回滚.md) | 能设计从构建到渐进发布、分析和回滚的状态机 |
 
 推荐前置：
 
@@ -158,4 +159,3 @@ Run 完成
 - [Argo CD Automated Sync](https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/)
 - [Argo Rollouts Analysis](https://argo-rollouts.readthedocs.io/en/stable/features/analysis/)
 - [KServe](https://kserve.github.io/website/)
-

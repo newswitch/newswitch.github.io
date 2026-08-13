@@ -294,6 +294,8 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 
 ### 第三阶段：GPU 调度（第 5、7 周）
 
+开始原理与实践前，先完成[GPU 调度命令参考库](./commands/00-GPU调度命令参考库.md)，学会用 `vcctl`、`kubectl kueue`/`kueuectl` 和原生 `kubectl` 区分队列等待、Workload未准入、Gang资源不足与Pod调度失败。
+
 #### 13.《[Kubernetes GPU 节点标签与调度策略](./scheduling-sharing/01-Kubernetes%20GPU%20节点标签与调度策略.md)》
 
 - GFD 标签

@@ -1,0 +1,9 @@
+{
+  "label": "GPU 调度命令参考库",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "platform/gpu-cluster/commands/GPU调度命令参考库"
+  }
+}

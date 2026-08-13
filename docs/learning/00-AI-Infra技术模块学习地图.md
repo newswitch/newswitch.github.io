@@ -185,6 +185,7 @@ Linux 网络基础
 - [Kubernetes 学习路线](../platform/kubernetes/00-Kubernetes学习路线.md)
 - [Kubernetes 与容器命令参考库：从 API 对象到 OCI 进程](../platform/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)
 - Kubernetes 与容器命令参考库已完成 16 篇：覆盖 `kubectl` API 发现、对象查询、声明式变更、Pod 调试、发布与节点维护、RBAC/指标/API，及 Helm、Kustomize、kubeadm、etcdctl、crictl、ctr、nerdctl、Docker、Podman/Buildah/Skopeo、runc；每篇都区分 API、CRI、containerd 与 OCI 对象，并标注读取、主动操作、写入和破坏性操作边界。
+- [GPU 调度命令参考库：Volcano 与 Kueue](../platform/gpu-cluster/commands/00-GPU调度命令参考库.md)
 - [Kubernetes 如何识别和管理 GPU](../platform/gpu-cluster/device-runtime/01-Kubernetes%20如何识别和管理%20GPU.md)
 - [GPU 节点标签与调度策略](../platform/gpu-cluster/scheduling-sharing/01-Kubernetes%20GPU%20节点标签与调度策略.md)
 - [Volcano GPU 调度器入门](../platform/gpu-cluster/scheduling-sharing/04-Volcano%20GPU%20调度器入门.md)
@@ -224,6 +225,10 @@ Transformer 推理基础
 
 ### 已有内容
 
+- [AI 运行环境命令参考库](../ai-systems/runtime/commands/00-AI运行环境命令参考库.md)
+- [模型制品命令参考库](../ai-systems/models/commands/00-模型制品命令参考库.md)
+- [分布式训练命令参考库](../ai-systems/training/commands/00-分布式训练命令参考库.md)
+- [推理服务命令参考库](../ai-systems/inference/commands/00-推理服务命令参考库.md)
 - [vLLM 整体代码架构](../ai-systems/inference/vllm/vLLM学习笔记（一）整体代码架构.md)
 - [vLLM 调度器策略](../ai-systems/inference/vllm/vLLM学习笔记（三）vLLM调度器策略.md)
 - [vLLM Tensor Parallel 多卡部署](../ai-systems/inference/serving/03-vLLM%20Tensor%20Parallel%20多卡部署.md)
@@ -250,6 +255,7 @@ Transformer 推理基础
 
 ### 已有内容
 
+- [可观测性命令参考库：promtool、amtool 与 logcli](../engineering/observability/commands/00-可观测性命令参考库.md)
 - [可观测性本章导读](../platform/kubernetes/K8s学习-PartII-可观测性/00-本章导读.md)
 - [OpenTelemetry](../platform/kubernetes/K8s学习-PartII-可观测性/08-OpenTelemetry.md)
 - [DCGM Exporter GPU 指标](../engineering/observability/gpu/01-DCGM%20Exporter%20GPU%20监控指标详解.md)
@@ -307,6 +313,7 @@ Transformer 推理基础
 | 文章 | 技术重点 |
 | --- | --- |
 | [MLOps 学习路线](../ai-systems/mlops/00-MLOps学习路线.md) | 可复现、可追溯、可评测和可回滚的生命周期 |
+| [MLOps 与供应链命令参考库](../ai-systems/mlops/commands/00-MLOps与供应链命令参考库.md) | MLflow、DVC、Argo CD、Trivy、Cosign 与 ORAS 的生产操作边界 |
 | [MLflow 实验追踪、模型注册与制品血缘](../ai-systems/mlops/01-MLflow实验追踪模型注册与制品血缘.md) | Run、Backend Store、Artifact Store、Registry、Alias 和不可变坐标 |
 | [模型评测门禁与版本晋级](../ai-systems/mlops/02-模型评测门禁与版本晋级.md) | 质量、安全、性能、兼容性、三值门禁和晋级状态机 |
 | [Pipeline、GitOps、Canary、Shadow 与回滚](../ai-systems/mlops/03-Pipeline-GitOps-Canary-Shadow与回滚.md) | Argo Workflows、Argo CD、渐进式流量、在线分析和完整发布单元回滚 |

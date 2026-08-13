@@ -1,0 +1,9 @@
+{
+  "label": "训练命令参考库",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/training/commands/分布式训练命令参考库"
+  }
+}
