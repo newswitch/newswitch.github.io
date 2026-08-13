@@ -1,12 +1,17 @@
 ---
 title: vLLM 学习笔记（三）：vLLM 调度器策略
-sidebar_position: 3
+sidebar_position: 93
 date: 2026-02-16 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]
 ---
 
 # vLLM 学习笔记（三）：vLLM 调度器策略
+
+:::warning 历史版本说明
+本文代码基于 **vLLM 0.6.3 V0**，waiting/running/swapped 三队列及 Swap 调度不代表 V1。
+当前统一 Token 调度主线请阅读 [EngineCore 主循环与请求状态机](./04-EngineCore主循环与请求状态机.md)。
+:::
 
 本系列基于 vLLM 0.6.3 版本。
 

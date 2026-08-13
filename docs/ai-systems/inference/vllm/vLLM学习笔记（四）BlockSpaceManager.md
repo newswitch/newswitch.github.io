@@ -1,12 +1,17 @@
 ---
 title: vLLM 学习笔记（四）：BlockSpaceManager
-sidebar_position: 4
+sidebar_position: 94
 date: 2026-02-17 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]
 ---
 
 # vLLM 学习笔记（四）：BlockSpaceManager
+
+:::warning 历史版本说明
+本文分析 **vLLM 0.6.3 V0** 的 `BlockSpaceManager` 与 GPU/CPU Swap。V1 使用新的
+`KVCacheManager`、`BlockPool` 和重算/连接器机制，不能直接沿用本文流程。
+:::
 
 本系列基于 vLLM 0.6.3 版本。
 

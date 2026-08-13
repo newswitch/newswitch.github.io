@@ -1,12 +1,18 @@
 ---
 title: vLLM 学习笔记（一）：整体代码架构
-sidebar_position: 1
+sidebar_position: 91
 date: 2026-02-13 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]
 ---
 
 # vLLM 学习笔记（一）：整体代码架构
+
+:::warning 历史版本说明
+本文基于 **vLLM 0.6.3 的 V0 架构**，用于理解早期 `LLMEngine`、三状态队列和 GPU/CPU
+KV Swap。学习当前实现请先阅读 [V1 整体架构与组件职责](./01-vLLM-V1整体架构与组件职责.md)，
+不要把本文类名和执行流程直接套用到 V1。
+:::
 
 本系列基于 vLLM 0.6.3 版本。
 

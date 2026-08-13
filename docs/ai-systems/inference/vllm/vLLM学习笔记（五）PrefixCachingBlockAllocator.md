@@ -1,6 +1,6 @@
 ---
 title: vLLM 学习笔记（五）：PrefixCachingBlockAllocator
-sidebar_position: 5
+sidebar_position: 95
 date: 2026-02-18 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]
@@ -8,21 +8,28 @@ tags: [vLLM, 大模型, 推理, LLM, 深度学习]
 
 # vLLM 学习笔记（五）：PrefixCachingBlockAllocator
 
+:::danger 历史版本与概念纠正
+本文类名基于 **vLLM 0.6.3 V0**。旧文将 vLLM 的哈希块方案与 RadixAttention/Radix Tree 混合
+描述，并使用过“相似前缀可以复用”的不准确说法。vLLM 的 Automatic Prefix Caching 基于 Token
+块与父前缀哈希进行**精确匹配**，不是语义或近似匹配。本文暂只作为历史阅读材料，不能作为当前
+V1 实现依据。
+:::
+
 本系列基于 vLLM 0.6.3 版本。
 
 ## 概述
 
-在上一篇博客中，我们详细探讨了 BlockSpaceManager 和 NaiveBlockAllocator 的设计与内存管理策略，了解了 vLLM 在生成任务中如何通过分配内存块来支持多任务并发、动态扩展及数据交换等需求。NaiveBlockAllocator 提供了基础的内存分配和回收机制，确保了序列在生成不同阶段（如 prefill 和 decode 阶段）所需的资源。然而，随着任务规模的增大，特别是对于频繁出现相同或相似前缀的请求，简单的内存管理策略在效率上面临瓶颈。
+在上一篇博客中，我们详细探讨了 BlockSpaceManager 和 NaiveBlockAllocator 的设计与内存管理策略，了解了 vLLM 在生成任务中如何通过分配内存块来支持多任务并发、动态扩展及数据交换等需求。NaiveBlockAllocator 提供了基础的内存分配和回收机制，确保了序列在生成不同阶段（如 prefill 和 decode 阶段）所需的资源。然而，随着任务规模的增大，特别是对于频繁出现相同 Token 前缀的请求，简单的内存管理策略在效率上面临瓶颈。
 
 在深度学习生成任务中，特别是长文本生成或多轮对话应用场景中，缓存机制显得尤为重要。每当需要重复生成某一段相同内容时，如果可以将已经生成的部分缓存下来以供复用，就能够显著降低系统的开销，提高任务效率。vLLM 的 PrefixCachingBlockAllocator 就是为了解决这一需求而设计的一种优化器，其通过前缀缓存实现了对已有内容生成结果的重用，避免了无效计算。
 
-在长 prompt 场景或多轮对话生成任务中，经常会遇到相似的请求。例如，对于同一系统 prompt 或在多轮对话场景中需要不断复用的历史上下文，重复计算会大幅增加系统的延迟，降低处理效率。如果能在生成过程中，将相同 prompt 的计算结果以 KV 缓存的形式保存下来，供后续请求复用，不仅可以节省内存和计算资源，还可以减少首 token 的生成时间。
+在长 Prompt 或多轮对话中，经常出现完全相同的系统 Prompt 或历史 Token 前缀。若后续请求的前缀 Token 与已缓存内容精确一致，就可以复用对应 KV Cache，减少重复 Prefill 和首 Token 延迟。
 
-vLLM 中的 PrefixCachingBlockAllocator 主要基于 RadixAttention 算法实现，该算法通过基数树的结构来高效地复用相似前缀内容。在 vLLM 的缓存体系中，PrefixCaching 不仅缓存 prefix 阶段的 KV 数据，还包括生成阶段的 KV 缓存数据。RadixAttention 则通过标识内容的 hash 方式来唯一标识不同的缓存单元，并在必要时动态生成 KV 缓存块。这种设计方式，避免了多轮对话或长 prompt 生成中大量重复计算。
+vLLM 0.6.3 的 `PrefixCachingBlockAllocator` 使用哈希表组织可复用 Block。Block 的内容哈希由父前缀哈希与当前完整 Token 块共同决定；后续请求只有产生相同的哈希链，才能复用对应物理块。它不是通过语义相似度查找缓存，也不是以 Radix Tree 作为 vLLM 的核心数据结构。
 
 本篇文章将深入分析 PrefixCachingBlockAllocator 的整体架构与内部机制，主要涵盖以下几点：
 
-- **Prefix Caching 的核心原理**：介绍 RadixAttention 算法的应用，及其在 PrefixCaching 中的作用。
+- **Prefix Caching 的核心原理**：介绍父前缀哈希、完整 Token 块与精确缓存命中。
 - **缓存复用的具体实现**：讲解 **allocate_immutable_block** 方法如何实现基于内容的缓存复用。
 - **状态管理和块分配策略**：分析 **BlockTracker**、**Evictor** 等核心组件如何协作管理缓存状态，保证高效利用内存。
 - **多轮对话和生成优化**：通过典型应用场景展示 PrefixCaching 的具体优化效果。
@@ -31,47 +38,47 @@ vLLM 中的 PrefixCachingBlockAllocator 主要基于 RadixAttention 算法实现
 
 > 本系列代码基于 vLLM 0.6.3 版本。
 
-## 1 Prefix Caching：RadixAttention 原理及应用
+## 1 Prefix Caching：哈希块与精确前缀匹配
 
-### 1.1 RadixAttention 的基本原理
+### 1.1 哈希块的基本原理
 
-**RadixAttention** 是一种创新的缓存机制，利用**基数树（Radix Tree）**的数据结构来管理和复用缓存。它的核心思想是通过共享公共前缀的内容，减少在生成任务中重复计算的成本，尤其是在对话生成和长 prompt 场景下尤为有效。
+每个可缓存 Block 由“此前缀”和“当前块 Token”共同标识。简化表达如下：
 
-**基数树如何用于缓存复用？**
+```text
+H1 = hash(None, Block1 Tokens)
+H2 = hash(H1, Block2 Tokens)
+H3 = hash(H2, Block3 Tokens)
+```
 
-基数树是一种压缩的前缀树结构，常用于存储具有相同前缀的字符串。在 RadixAttention 中，基数树的每个节点代表一个内容块，节点之间的边代表着从父节点到子节点的前缀关系。通过这样的树结构，我们可以高效地存储和复用具有相同前缀的内容。例如：
+第二个 Block 即使自身 Token 相同，只要第一个 Block 不同，父哈希就不同，因此不能错误共享。这个哈希链保证缓存表示的是完整前缀，而不是孤立片段。
 
-- 在长 prompt 生成任务中，如果两个不同的请求都包含相似的系统 prompt，这些内容就可以被映射到树的同一条路径上。这样后续的请求就不需要重新计算已有的部分。
-- 在多轮对话的生成任务中，前几轮的 KV 数据被保留在前缀缓存中，后续轮次的请求直接复用已有的前缀，减少重复计算。
+- 长 Prompt 只有完整 Token 块精确一致时才能命中。
+- 多轮对话只有把前几轮内容以相同模板再次放入 Prompt，才能复用相同前缀。
+- 两段文本语义相似但 Token 不同，不会命中。
 
-### 1.2 Radix Tree 与 Prefix Tree 的区别
+### 1.2 哈希表与 Radix Tree 的区别
 
-Radix Tree 和 Prefix Tree 在结构上有所不同，尤其是在处理共享前缀的数据场景中，Radix Tree 更为灵活和高效。具体来说：
+SGLang 的 RadixAttention 常用树结构表达共享前缀；vLLM 这套实现选择哈希表，将内容哈希映射到物理 Block。二者都利用公共前缀，但数据结构不能混写。
 
-- **Radix Tree 的分片特性**：Radix Tree 支持节点的内容以“片段”形式存储，即一个节点不仅可以包含一个字符（或一个 token），还可以包含一段连续的字符串或 token 序列。这样，当多个请求共享一段较长的前缀时，Radix Tree 可以将该前缀作为一个整体存储，而不是像 Prefix Tree 那样逐字符或逐 token 进行分解。
-- **动态调整特性**：Radix Tree 能够根据新请求的内容对现有节点进行动态分裂。例如，如果一个请求和已有缓存的前缀部分重合，但有部分不同，Radix Tree 会将共同的前缀保留为一个节点，随后创建新的分支节点。这一特性极大地提高了缓存的复用率和效率，尤其适用于大模型推理中的对话生成和长 prompt 处理。
+- vLLM：以固定大小 Block 为主要分配和匹配粒度，使用父哈希保持前缀关系。
+- Radix Tree：通过树节点和公共路径组织前缀，可在节点/边层面表达分支。
+- 共同点：都只能复用实际相同的 Token 前缀，不是语义缓存。
 
-在多轮对话或长 prompt 场景中，这种动态分片和调整的能力让 Radix Tree 能更好地组织和管理大量重叠的上下文。例如，在对话系统中，如果用户在一轮对话中询问了多种问题，每个问题的开头可能相同，但后续内容不同。Radix Tree 可以在保留共同开头的同时，为每个分支问题创建单独的节点，最大限度地复用共享的前缀内容。
+vLLM 使用哈希表的一个工程优势是查找和缓存管理相对直接，不必维护一棵显式前缀树。
 
 ### 1.3 Prefix + Generated KV Caching
 
 在大型语言模型推理过程中，生成任务涉及多个阶段的计算，特别是 **Prefix 阶段**（生成开始时的前缀部分）和 **Generate 阶段**（生成过程中新产生的部分）。为减少计算量并提高生成效率，PrefixCachingBlockAllocator 引入了 **Prefix + Generated KV Caching**，即在生成任务中缓存并复用 KV 数据，避免重复计算。
 
-### 1.4 RadixAttention 的工作流程
+### 1.4 哈希缓存的工作流程
 
-- **构建基数树**：对 prompt/生成内容算哈希得到缓存标识，映射到树上节点，共享前缀落在同一分支。
-- **复用**：新请求到来时在树中查找已有路径，前缀相同则复用；仅当内容变化时创建新节点。
-- **动态拆分**：相似但不完全相同的 prompt 可对已有块做拆分、建分支，实现细粒度共享（如共享同一 system prompt）。
+- **计算哈希链**：从第一个完整 Token Block 开始逐块计算父子哈希。
+- **查找**：按从左到右顺序在缓存哈希表中查找，命中连续前缀后停止于第一个 Miss。
+- **复用**：增加命中 Block 的引用，让新请求的 Block Table 指向已有物理块。
+- **插入与淘汰**：新完成的完整块可以加入缓存；空间不足时从未被活动请求引用的块中按策略淘汰。
 
-![RadixAttention 与 Prefix Caching 流程](/images/vllm学习笔记（五）/vllm5-1.png)
-
-上图展示了 RadixAttention 在对话和长 prompt 缓存中的工作流程。在最开始，基数树是空的。随着第一个用户请求 "Hello!" 到来，系统生成了回复 "Hi!"。整个对话（包括系统提示 "You are a helpful assistant"）被合并为一个节点 a 存储在基数树中。
-
-当用户再次请求 "Hello!" 时，系统直接复用了之前节点 a 中缓存的内容，生成同样的响应 "Hi!"。之后，用户提出新的问题（如 "Solve this problem ..."），该对话内容被存储在一个新节点 b 中。此时基数树上保存了不同对话分支，并共享了同样的前缀节点 a。
-
-随着更多不同请求的加入（如 "What can you do?" 和 "Write a story ..."），系统开始在不同请求中共享公共前缀，并在需要时分裂节点。对于共享的 prompt，系统不会重复计算，而是复用已有的前缀节点数据。
-
-当内存资源不足时，某些节点会被“逐出”（evicted），如图中第 5 步所示。节点 c 被清除以释放内存，为新的请求腾出空间。系统基于 **LRU**（最近最少使用）策略，将最久未使用的缓存逐出。基数树继续扩展，通过分支来适应更多请求；当缓存压力增大时，系统会优先保留那些可能重复使用的节点，逐出那些较长时间未被使用的节点（如 j 和 k 等）。
+例如，请求 A 与 B 的前两个完整 Token Block 相同、第三个块不同，则 B 可以复用 A 的前两个块，
+从第三个块开始 Prefill。缓存只节省 Prefill 计算，不会直接复用 A 已经生成的自然语言答案。
 
 ## 2 vLLM Automatic Prefix Caching：核心架构
 
@@ -280,25 +287,25 @@ class BlockTracker:
 
 ### 4.2 典型应用
 
-多轮对话的缓存管理不仅适用于相同的系统 prompt，也支持在相似上下文中的缓存复用。以下是几个典型的应用场景：
+多轮对话只有在历史被重新编码为相同 Token 前缀时才能复用。以下是几个典型应用场景：
 
 **相同系统 prompt 的复用**
 
 在许多应用中，如客户服务机器人或长期对话的智能助手，系统 prompt 通常保持不变。在这种情况下，PrefixCachingBlockAllocator 会将系统 prompt 的 KV 缓存下来，后续所有的对话轮次都直接复用该缓存。例如，客户服务的系统 prompt 为“您是一位专业的技术支持人员，请为客户提供帮助”，只需在首次生成时计算 KV 数据，在后续对话中直接从缓存中读取即可，这样可以极大地提升响应速度。
 
-**相似上下文的缓存复用**
+**公共 Token 前缀的复用**
 
-在一些多轮对话中，虽然系统 prompt 可能会略有不同，但上下文非常相似。此时 PrefixCachingBlockAllocator 通过 **content_hash** 识别相似的 KV 数据块，将这些类似的数据标记为相同的前缀来进行缓存。例如，两个用户的对话均涉及“技术支持”，仅细节部分有所差异，则系统会检测到大部分 KV 数据一致性，并在缓存中共享这些数据块。
+两个请求可以在分叉点之前复用完全相同的完整 Token 块，分叉后的块重新计算。例如两个请求具有相同 System Prompt，但 User Prompt 不同，则只复用共同的 System Prompt 前缀。若 System Prompt 只是语义相似、实际 Token 不同，则不会命中。
 
 **高负载下的缓存管理策略**
 
-在高 QPS（Queries Per Second）负载情况下，系统的缓存可能面临较大的压力。为确保响应速度和资源合理分配，PrefixCachingBlockAllocator 结合 **LRU** 策略（Least Recently Used），优先保留高频访问的数据，逐出低优先级的缓存块。例如，当多个对话会话同时访问相似的历史上下文时，Evictor 会优先逐出较早未被访问的数据块，保证缓存的空间可用，避免内存溢出。
+在高 QPS 负载下，PrefixCachingBlockAllocator 结合 **LRU** 与引用状态管理可淘汰较久未访问、当前未被活动请求使用的缓存块，为新请求腾出空间。缓存淘汰会降低后续命中率，但不应破坏仍在运行请求的数据。
 
 ## 5 总结
 
-PrefixCachingBlockAllocator 和 vLLM 中的 **Automatic Prefix Caching** 为高效生成任务提供了关键支持。通过 **RadixAttention** 的基数树结构以及哈希缓存管理，这一架构实现了前缀数据和生成数据的高效缓存与复用，在长系统提示和多轮对话场景中表现突出。
+PrefixCachingBlockAllocator 和 vLLM 的 **Automatic Prefix Caching** 通过父前缀哈希、当前完整 Token 块、引用状态与淘汰策略，实现精确前缀 KV Cache 复用。
 
-首先，RadixAttention 利用基数树（Radix Tree）的特性，实现了对共享前缀的存储优化。无论是系统提示的重复生成还是多轮对话的历史上下文，这一结构都能够有效避免冗余计算。同时，Automatic Prefix Caching 通过内容哈希将每个 KV 数据块唯一标识，大幅提升了缓存的命中率，实现了资源的动态管理和分配。
+哈希链使每个块同时绑定当前 Token 和此前全部前缀。新请求从左到右查找连续命中块，只复用第一个 Miss 之前的精确公共前缀。
 
 在多轮对话场景中，Prefix Caching 与 Generated KV Caching 相结合，确保了系统 prompt 和上下文的持续复用，使得对历史对话的依赖极大减少，显著提升了生成效率。在高 QPS 负载场景下，LRU 策略和引用计数的结合进一步优化了缓存管理，确保系统在高并发下依旧稳定。
 

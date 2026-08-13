@@ -1,12 +1,17 @@
 ---
 title: vLLM 学习笔记（二）：vLLM 调度前的预处理工作
-sidebar_position: 2
+sidebar_position: 92
 date: 2026-02-14 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]
 ---
 
 # vLLM 学习笔记（二）：vLLM 调度前的预处理工作
+
+:::warning 历史版本说明
+本文代码基于 **vLLM 0.6.3 V0**，其中 `Sequence`、`SequenceGroup` 和旧 `LLMEngine` 输入链路
+不代表当前 V1。当前请求对象主线请阅读 [一句话如何变成 EngineCoreRequest](./03-一句话如何变成EngineCoreRequest.md)。
+:::
 
 本系列基于 vLLM 0.6.3 版本。
 

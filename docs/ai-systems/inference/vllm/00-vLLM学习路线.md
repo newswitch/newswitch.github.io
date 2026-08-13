@@ -42,7 +42,9 @@ HTTP / SSE 协议
 这些文章适合学习设计思想和历史实现，但不能把所有类名、默认值和执行流程直接套到
 当前 V1。
 
-新补充文章以当前 vLLM V1 官方文档为基线，重点描述稳定的工程概念。执行实验前仍要：
+V1 源码主线固定以 **vLLM v0.23.0** 为阅读基线，并在文章末尾链接对应 tag 的源码。
+这可以避免 `main` 分支开发中的目录和类名变化影响学习。工程概念仍尽量使用稳定边界；阅读其他
+版本时，先比较 Release Note 和实际源码，再更新调用链。执行实验前仍要：
 
 ```bash
 vllm --version
@@ -73,7 +75,26 @@ vllm serve --help
 
 ---
 
-## 3. 第一阶段：一次推理到底发生了什么
+## 3. 第一阶段：建立 V1 组件与源码主线
+
+目标：不从大段代码开始，而是用“一句话如何完成推理”串起进程、组件、数据对象和 Engine Step。
+
+| 顺序 | 文章 | 学习成果 |
+| --- | --- | --- |
+| 01 | [vLLM V1 整体架构与组件职责](./01-vLLM-V1整体架构与组件职责.md) | 能画出 API Server、EngineCore、GPU Worker 及组件边界 |
+| 02 | [执行 vllm serve 后发生了什么](./02-vllm-serve启动与初始化全流程.md) | 能解释权重加载、显存探测、KV Cache 与 CUDA Graph 初始化 |
+| 03 | [一句话如何变成 EngineCoreRequest](./03-一句话如何变成EngineCoreRequest.md) | 能追踪 JSON、Chat Template、Token ID 和请求对象变化 |
+| 04 | [EngineCore 主循环与请求状态机](./04-EngineCore主循环与请求状态机.md) | 能解释 Schedule、Execute、Update 和统一 Token 调度 |
+| 05 | [KVCacheManager、BlockPool 与 Prefix Cache](./05-KVCacheManager-BlockPool与PrefixCache.md) | 能解释命中、Block 分配、释放、缓存与抢占 |
+| 06 | [Executor、Worker 与 GPUModelRunner](./06-Executor-Worker与GPUModelRunner.md) | 能追踪 SchedulerOutput 如何跨进程和 rank 变成 GPU 执行 |
+| 07 | [Model、Attention Backend 与 Sampling](./12-Model-AttentionBackend与Sampling.md) | 能解释模型前向、KV 写入、Attention Backend、Logits 与采样 |
+| 08 | [OutputProcessor、Detokenizer 与流式返回](./13-OutputProcessor-Detokenizer与流式返回.md) | 能解释 token 到增量文本、SSE、取消和资源释放 |
+
+这八篇是源码主线。学习时以组件接口、状态变化和一次请求为主，不需要先背诵大段实现代码。
+
+---
+
+## 4. 第二阶段：一次推理到底发生了什么
 
 目标：能从 HTTP 请求一直讲到首 token 和流式结束。
 
@@ -93,9 +114,9 @@ vllm serve --help
 
 ---
 
-## 4. 第二阶段：阅读 vLLM 源码
+## 5. V0 历史源码笔记
 
-原有源码笔记：
+下面是原有 V0 源码笔记，放在完成 V1 主线之后作为历史对照阅读：
 
 | 顺序 | 文章 | 版本定位 |
 | --- | --- | --- |
@@ -106,7 +127,7 @@ vllm serve --help
 | 05 | [PrefixCachingBlockAllocator](./vLLM学习笔记（五）PrefixCachingBlockAllocator.md) | V0 Prefix Cache 实现 |
 | 06 | [参数使用](./vLLM学习笔记（六）参数使用.md) | 旧版本参数，需要与当前 CLI 核对 |
 
-### V1 源码建议入口
+### V1 源码阅读入口
 
 ```text
 OpenAI API Server
@@ -124,7 +145,7 @@ OpenAI API Server
 
 ---
 
-## 5. 第三阶段：显存与缓存
+## 6. 第三阶段：显存与缓存
 
 需要掌握：
 
@@ -142,16 +163,14 @@ OpenAI API Server
 - [vLLM GPU 显存组成与容量规划](../serving/02-vLLM%20GPU%20显存组成与容量规划.md)
 - [CUDA OOM 排查与优化](../../../gpu/cluster/troubleshooting/05-CUDA%20OOM%20排查与优化.md)
 
-计划继续补充：
-
-- Automatic Prefix Caching 的哈希、Block、引用计数和 LRU。
-- 多租户 Prefix Cache 隔离与 `cache_salt`。
-- KV Cache Offload 与外部 KV Connector。
-- Prefill/Decode 分离及 KV Cache 传输。
+本模块已经在 [KVCacheManager、BlockPool 与 Prefix Cache](./05-KVCacheManager-BlockPool与PrefixCache.md)
+中补齐 Automatic Prefix Caching 的哈希、Block、缓存和回收主线。KV Cache Offload、外部
+KV Connector 及 Prefill/Decode 分离属于进阶架构；采用前需要结合所用 vLLM 版本和实际存储、
+网络链路单独验证。
 
 ---
 
-## 6. 第四阶段：并行推理
+## 7. 第四阶段：并行推理
 
 | 策略 | 解决问题 |
 | --- | --- |
@@ -170,7 +189,7 @@ OpenAI API Server
 
 ---
 
-## 7. 第五阶段：生产服务
+## 8. 第五阶段：生产服务
 
 | 文章 | 技术重点 |
 | --- | --- |
@@ -182,41 +201,41 @@ OpenAI API Server
 
 ---
 
-## 8. 第六阶段：性能分析
+## 9. 第六阶段：性能分析与源码归因
 
-一次调优必须固定：
+目标：不仅知道指标异常，还能把异常映射到 Gateway、Tokenizer、EngineCore、KV、
+GPUModelRunner、Kernel、NCCL 或输出层。
 
-```text
-模型与 Revision
-量化和 dtype
-GPU 型号与数量
-TP/PP/DP/EP
-输入 Token 分布
-输出 Token 分布
-并发和到达模型
-Prefix Cache 命中率
-max_num_seqs
-max_num_batched_tokens
-网络与存储环境
-```
+| 顺序 | 文章 | 能解决的问题 |
+| --- | --- | --- |
+| 01 | [vLLM 性能分析总论](./14-vLLM性能分析总论-TTFT-TPOT-吞吐与GPU利用率.md) | 建立 TTFT、TPOT、吞吐、GPU 利用率与饱和点模型 |
+| 02 | [TTFT 超标但 GPU 利用率低](./15-TTFT超标但GPU利用率低完整排查案例.md) | 对 GPU 30%、TTFT 超标做端到端证据排查 |
+| 03 | [指标到 V1 组件与源码映射](./16-vLLM指标到V1组件与源码映射.md) | 从 Dashboard 快速找到组件、状态和源码入口 |
+| 04 | [CPU、Tokenizer 与 EngineCore 饥饿](./17-CPU-Tokenizer与EngineCore饥饿分析.md) | 识别 CPU 单核、事件循环、Throttle 与 GPU 空洞 |
+| 05 | [Scheduler、Batch、KV Cache 与抢占实验](./18-Scheduler-Batch-KVCache与抢占性能实验.md) | 用控制变量确定调度参数的 SLO 安全区 |
+| 06 | [GPUModelRunner、CUDA Graph 与 Kernel 空洞](./19-GPUModelRunner-CUDAGraph与Kernel空洞分析.md) | 用 CPU-GPU Timeline 区分上游饥饿和 Kernel 瓶颈 |
+| 07 | [TP 慢 Rank、NVLink 与 NCCL 排障](./20-TP慢Rank-NVLink与NCCL推理故障排查.md) | 定位多卡慢 rank、链路、拓扑与 collective 问题 |
 
-核心结果：
-
-- QPS。
-- Prompt tokens/s。
-- Generation tokens/s。
-- TTFT P50/P95/P99。
-- TPOT/ITL P50/P95/P99。
-- E2E P50/P95/P99。
-- 排队时间。
-- 错误率和流式完成率。
-- 单请求 GPU 秒、token 成本和功耗。
-
-不能只比较“每秒生成多少 token”，也不能只用一次 curl 的延迟代表生产性能。
+一次调优必须固定模型 Revision、镜像、硬件、并行策略、真实输入/输出 Token 联合分布、
+到达模型、Prefix 命中和 Scheduler 参数。结果同时比较 TTFT/TPOT/E2E P50/P95/P99、
+Prompt/Generation tokens/s、错误与流式完成、资源余量和 token 成本。
 
 ---
 
-## 9. 建议实验
+## 10. 第七阶段：容量规划与生产故障
+
+| 顺序 | 文章 | 学习成果 |
+| --- | --- | --- |
+| 01 | [按真实 Token 分布完成单副本容量规划](./21-按真实Token分布完成单副本容量规划.md) | 从权重、KV、计算、CPU 与 SLO 得到单副本安全容量 |
+| 02 | [多副本、N-1、冷启动与扩缩容容量规划](./22-多副本-N-1-冷启动与扩缩容容量规划.md) | 把单副本容量扩展到故障域、发布、冷缓存与自动扩缩容 |
+| 03 | [vLLM 生产故障排查 Runbook](./23-vLLM生产故障排查Runbook.md) | 能在 5/15/60 分钟内完成分流、缓解、取证和恢复验证 |
+
+容量以满足 SLO 的安全工作率为准，不以最大无错误 QPS 或显存装满为准。生产故障结束条件
+也不只是“重启恢复”，还要恢复流式完成、尾延迟、N-1 余量并形成可复验根因。
+
+---
+
+## 11. 建议实验
 
 ### 实验 A：请求生命周期
 
@@ -251,7 +270,7 @@ TP=2, DP=4
 
 ---
 
-## 10. 模块验收
+## 12. 模块验收
 
 - [ ] 能画出一次流式请求的端到端路径。
 - [ ] 能解释 TTFT、TPOT、E2E 分别由哪些阶段组成。
@@ -262,8 +281,11 @@ TP=2, DP=4
 - [ ] 能设计有界队列、准入控制、超时和过载降级。
 - [ ] 能建立以 waiting、TTFT、KV Cache 为核心的看板。
 - [ ] 能完成压测、发布、回滚和故障注入。
+- [ ] 能回答 GPU 利用率 30% 但 TTFT 超标可能在哪一层，并用时间戳和 Timeline 证明。
+- [ ] 能按真实 Token 联合分布计算单副本容量，并覆盖 N-1 与冷启动。
+- [ ] 能把一次异常从指标映射到 V1 组件、源码入口和可逆缓解动作。
 
-## 11. 官方资料
+## 13. 官方资料
 
 - [vLLM V1 User Guide](https://docs.vllm.ai/en/latest/getting_started/v1_user_guide.html)
 - [vLLM OpenAI-Compatible Server](https://docs.vllm.ai/en/stable/serving/openai_compatible_server.html)

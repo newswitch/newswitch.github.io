@@ -1,12 +1,18 @@
 ---
 title: vLLM 学习笔记（六）：参数使用
-sidebar_position: 6
+sidebar_position: 96
 date: 2026-02-19 12:00:00
 categories: 机器学习
 tags: [vLLM, 大模型, 推理, LLM, 深度学习]
 ---
 
 # vLLM 学习笔记（六）：参数使用
+
+:::warning 版本敏感内容
+vLLM CLI 参数、默认值和支持状态变化很快。本文含 V0/V1 及不同发布版内容，只适合建立参数分类，
+执行前必须以当前环境的 `vllm serve --help=all` 和固定版本官方文档为准。源码主线固定使用
+vLLM v0.23.0。
+:::
 
 本系列基于 vLLM 0.6.3 版本。前五篇侧重源码与内部机制，本文整理 **vLLM 的常用参数与配置**，便于部署与调优时查阅。
 
