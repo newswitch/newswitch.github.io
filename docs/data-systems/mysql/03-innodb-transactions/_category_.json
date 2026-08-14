@@ -1,0 +1,9 @@
+{
+  "label": "InnoDB 与事务内核",
+  "position": 3,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "深入 InnoDB 的内存、Page、索引、日志、MVCC、锁与崩溃恢复。"
+  }
+}

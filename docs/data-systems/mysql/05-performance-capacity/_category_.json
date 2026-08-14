@@ -1,0 +1,8 @@
+{
+  "label": "05. 性能、可观测性与容量",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "从实例内存和线程模型出发，建立数据库、操作系统、基准测试、容量规划与 SLO 的生产观测体系。"
+  }
+}

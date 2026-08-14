@@ -1,0 +1,8 @@
+{
+  "label": "09. 命令与实验手册",
+  "position": 9,
+  "link": {
+    "type": "generated-index",
+    "description": "面向日常运维、备份恢复、集群管理和故障实验的 MySQL 命令参考与安全操作手册。"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "label": "04. 索引与优化器",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "从 B+Tree、联合索引和执行计划出发，掌握统计信息、优化器决策、复杂 SQL 与慢查询优化。"
+  }
+}

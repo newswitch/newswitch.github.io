@@ -1,0 +1,9 @@
+{
+  "label": "Schema 与应用设计",
+  "position": 2,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "掌握约束、关系建模、类型边界、Online DDL，以及应用连接、事务、超时与重试。"
+  }
+}
