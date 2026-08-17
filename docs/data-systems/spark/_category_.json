@@ -1,9 +1,0 @@
-{
-  "label": "Spark",
-  "position": 12,
-  "collapsed": true,
-  "link": {
-    "type": "generated-index",
-    "description": "从执行模型、Spark SQL 到流批、Kubernetes 和性能排障。"
-  }
-}

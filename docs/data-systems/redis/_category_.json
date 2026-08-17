@@ -1,9 +1,0 @@
-{
-  "label": "Redis",
-  "position": 5,
-  "collapsed": true,
-  "link": {
-    "type": "doc",
-    "id": "data-systems/redis/Redis从零到精通学习路线"
-  }
-}

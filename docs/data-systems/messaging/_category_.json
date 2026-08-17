@@ -1,0 +1,9 @@
+{
+  "label": "消息与事件",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "Kafka 与 RocketMQ：消息日志、消费、事务、复制、容量和灾备。"
+  }
+}

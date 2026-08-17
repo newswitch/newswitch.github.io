@@ -1,0 +1,9 @@
+{
+  "label": "数据工程与治理",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "补齐 CDC、编排、质量、血缘、安全、成本和数据平台 SRE。"
+  }
+}

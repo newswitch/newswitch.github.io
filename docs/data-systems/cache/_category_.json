@@ -1,0 +1,9 @@
+{
+  "label": "缓存与内存数据",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "缓存模式、内存数据结构、持久化、复制、分片和故障治理。"
+  }
+}

@@ -41,9 +41,9 @@ const SECTIONS = [
     to: '/docs/ai-systems/大模型系统学习地图',
   },
   {
-    title: '大数据',
-    desc: 'Hadoop、Kafka、Spark、Flink、湖仓、OLAP 与数据治理。',
-    to: '/docs/data-systems/大数据技术学习地图',
+    title: '数据系统',
+    desc: '数据库、缓存、消息、搜索、向量、OLAP 与大数据工程。',
+    to: '/docs/data-systems/数据系统学习地图',
   },
   {
     title: '可观测性与 SRE',

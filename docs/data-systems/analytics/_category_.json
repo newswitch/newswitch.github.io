@@ -1,0 +1,9 @@
+{
+  "label": "OLAP 与分析数据库",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "ClickHouse、Trino、Doris 与列式分析、MPP 查询和数据服务。"
+  }
+}

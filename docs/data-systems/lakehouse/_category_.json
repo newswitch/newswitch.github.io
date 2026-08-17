@@ -1,9 +1,0 @@
-{
-  "label": "数据湖与 Iceberg",
-  "position": 14,
-  "collapsed": true,
-  "link": {
-    "type": "generated-index",
-    "description": "理解 Catalog、Snapshot、表演进、小文件及多引擎生产链路。"
-  }
-}

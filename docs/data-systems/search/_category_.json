@@ -1,0 +1,9 @@
+{
+  "label": "搜索引擎",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "Elasticsearch、Lucene、全文与混合检索、分片和搜索集群治理。"
+  }
+}

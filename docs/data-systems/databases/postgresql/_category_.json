@@ -1,0 +1,9 @@
+{
+  "label": "PostgreSQL",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/databases/postgresql/PostgreSQL从零到精通学习路线"
+  }
+}

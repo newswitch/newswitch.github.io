@@ -20,7 +20,7 @@ docs/
 ├── storage/             # 存储
 ├── cloud-native/        # 容器与 Kubernetes
 ├── ai-systems/          # AI 训练、推理与 MLOps
-├── data-systems/        # 大数据系统
+├── data-systems/        # 数据库、缓存、消息、搜索、分析与大数据工程
 ├── sre/                 # 可观测性、可靠性、性能与事故复盘
 ├── automation/          # 自动化与 DevOps
 └── projects/            # 综合项目
@@ -82,6 +82,31 @@ ai-systems/
 ├── inference/           # 推理原理、vLLM、服务与压测命令
 └── mlops/               # 模型生命周期、发布与供应链
 
+data-systems/
+├── databases/           # 关系数据库
+│   ├── mysql/           # MySQL
+│   └── postgresql/      # PostgreSQL
+├── cache/               # 缓存与内存数据
+│   └── redis/           # Redis
+├── messaging/           # 消息与事件
+│   ├── kafka/           # Kafka
+│   └── rocketmq/        # RocketMQ
+├── search/              # 搜索引擎
+│   └── elasticsearch/   # Elasticsearch
+├── vector-databases/    # 向量数据库
+│   └── milvus/          # Milvus
+├── analytics/           # OLAP 与分析数据库
+│   ├── clickhouse/      # ClickHouse
+│   └── olap/            # Trino、Doris 与横向选型
+└── big-data/            # 大数据工程
+    ├── foundations/     # 分布式数据基础
+    ├── hadoop-hive/     # Hadoop、HDFS、YARN 与 Hive
+    ├── spark/           # Spark
+    ├── flink/           # Flink
+    ├── lakehouse/       # 数据湖与 Iceberg
+    ├── engineering-governance/ # CDC、编排、质量、治理与 SRE
+    └── projects/        # 端到端数据项目
+
 sre/
 ├── observability/       # 指标、日志、追踪、GPU 与 Kubernetes 观测
 ├── reliability/         # SLI、SLO、Error Budget 与自动修复
@@ -101,6 +126,12 @@ sre/
 | Kubernetes PV、PVC、StorageClass、CSI | `storage/kubernetes/` |
 | Kubernetes 通用能力与扩展 | `cloud-native/kubernetes/` |
 | AI 训练、推理、模型制品和 MLOps | `ai-systems/` |
+| MySQL、PostgreSQL | `data-systems/databases/` |
+| Redis | `data-systems/cache/` |
+| Kafka、RocketMQ | `data-systems/messaging/` |
+| Elasticsearch、Milvus | `data-systems/search/`、`data-systems/vector-databases/` |
+| ClickHouse、Trino、Doris | `data-systems/analytics/` |
+| Hadoop、Hive、Spark、Flink、湖仓与数据治理 | `data-systems/big-data/` |
 | 指标、SLO、性能、事故复盘 | `sre/` |
 | 跨越三个以上模块的完整实践 | `projects/` |
 
@@ -131,5 +162,6 @@ npm run build
 
 - `scripts/restructure-docs.mjs`：第一次知识域迁移的历史脚本。
 - `scripts/migrate-topic-structure.mjs`：本次主题式目录迁移脚本，包含文件映射、分类入口更新和 Markdown 链接重写逻辑。
+- `scripts/migrate-data-systems-taxonomy.mjs`：将数据系统拆分为数据库、缓存、消息、搜索、向量、分析和大数据工程，并重写全站相对链接。
 
-两份脚本用于审计历史迁移，不应在已经迁移完成的目录上重复执行。
+这些脚本用于审计历史迁移，不应在已经迁移完成的目录上重复执行。

@@ -24,7 +24,7 @@ tags: [Linux, 命令参考, GNU coreutils, SRE, 学习路线]
 | sysstat | `iostat`、`mpstat`、`pidstat`、`sar` | 性能与历史指标 |
 | 专用基础工具 | `strace`、`perf`、`tcpdump`、`ethtool` | 深度诊断 |
 
-本系列收录主流 GNU/Linux 服务器中用于日常管理、自动化和 SRE 排障的命令。`kubectl`、`nvidia-smi`、`ceph`、Kafka CLI 等产品专用命令仍放在各自技术模块中，避免边界混乱。目前可直接进入[Kubernetes 与容器命令参考库](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)、[GPU 与加速器命令参考库](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)、[网络命令参考库](../networking/commands/00-网络命令参考库学习路线.md)、[存储命令参考库](../storage/commands/00-存储命令参考库学习路线.md)和[包含 10 篇命令与实验手册的大数据学习地图](../data-systems/00-大数据技术学习地图.md)。
+本系列收录主流 GNU/Linux 服务器中用于日常管理、自动化和 SRE 排障的命令。`kubectl`、`nvidia-smi`、`ceph`、Kafka CLI 等产品专用命令仍放在各自技术模块中，避免边界混乱。目前可直接进入[Kubernetes 与容器命令参考库](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)、[GPU 与加速器命令参考库](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)、[网络命令参考库](../networking/commands/00-网络命令参考库学习路线.md)、[存储命令参考库](../storage/commands/00-存储命令参考库学习路线.md)和[包含 10 篇命令与实验手册的大数据学习地图](../data-systems/big-data/00-大数据技术学习地图.md)。
 
 ## 2. 版本与实现约定
 
@@ -228,7 +228,7 @@ v1 共包含 **203 篇核心技术文章、11 篇分类导读和本学习路线*
 18. [`timeout`：期限、信号升级、前台 TTY 与退出码](./commands/04-processes-signals/18-timeout命令详解.md)
 19. [`sleep`：延迟、信号中断、轮询与指数退避](./commands/04-processes-signals/19-sleep命令详解.md)
 
-CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 节的 CPU 拓扑与调度模块完成，systemd 服务生命周期已经进入第 11 节。跨模块的[Kubernetes 与容器命令参考库](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)、[网络命令参考库](../networking/commands/00-网络命令参考库学习路线.md)、[存储命令参考库](../storage/commands/00-存储命令参考库学习路线.md)、[大数据学习地图](../data-systems/00-大数据技术学习地图.md)和[GPU 与加速器命令参考库](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)继续直接复用。
+CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 节的 CPU 拓扑与调度模块完成，systemd 服务生命周期已经进入第 11 节。跨模块的[Kubernetes 与容器命令参考库](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)、[网络命令参考库](../networking/commands/00-网络命令参考库学习路线.md)、[存储命令参考库](../storage/commands/00-存储命令参考库学习路线.md)、[大数据学习地图](../data-systems/big-data/00-大数据技术学习地图.md)和[GPU 与加速器命令参考库](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)继续直接复用。
 
 ## 10. 已完成：CPU、内存、负载与 procfs 批次
 

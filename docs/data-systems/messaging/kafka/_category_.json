@@ -1,0 +1,9 @@
+{
+  "label": "Kafka",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/messaging/kafka/Kafka从零到精通学习路线"
+  }
+}

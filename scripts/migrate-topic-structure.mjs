@@ -397,10 +397,10 @@ const mapTarget = (source) => {
   if (source.startsWith('engineering/')) return mapEngineering(source);
   if (source.startsWith('ai-systems/')) return source;
   if (source.startsWith('data-systems/hadoop/')) {
-    return `data-systems/hadoop-hive/${source.slice('data-systems/hadoop/'.length)}`;
+    return `data-systems/big-data/hadoop-hive/${source.slice('data-systems/hadoop/'.length)}`;
   }
   if (source.startsWith('data-systems/engineering/')) {
-    return `data-systems/engineering-governance/${source.slice('data-systems/engineering/'.length)}`;
+    return `data-systems/big-data/engineering-governance/${source.slice('data-systems/engineering/'.length)}`;
   }
   if (source.startsWith('data-systems/')) return source;
   if (source.startsWith('projects/end-to-end/')) {

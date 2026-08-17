@@ -1,0 +1,9 @@
+{
+  "label": "RocketMQ",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/messaging/rocketmq/RocketMQ从零到精通学习路线"
+  }
+}
