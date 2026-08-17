@@ -28,3 +28,22 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/*
+ * Generated index cards use a one-line title by default. Most learning-path
+ * labels include a visible sequence and a descriptive title, so keep up to
+ * two lines before truncating them.
+ */
+.theme-doc-card-title {
+  display: -webkit-box;
+  max-height: 3rem;
+  overflow: hidden;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.theme-doc-card-heading {
+  align-items: flex-start;
+}
