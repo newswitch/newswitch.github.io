@@ -1,6 +1,6 @@
 {
-  "label": "08. 生产架构与故障排查",
-  "position": 8,
+  "label": "09. 生产架构与故障排查",
+  "position": 9,
   "link": {
     "type": "generated-index",
     "description": "覆盖版本升级、Kubernetes、CDC、代理与故障编排，并形成统一生产故障 Runbook。"

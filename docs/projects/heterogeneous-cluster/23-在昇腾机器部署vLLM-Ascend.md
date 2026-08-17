@@ -18,7 +18,7 @@ tags: [vLLM-Ascend, 昇腾, CANN, HCCL, NPU, 双资源池]
 资源池 A = **NVIDIA GPU**（vLLM）· 资源池 B = **华为昇腾 NPU**（vLLM-Ascend）· 同一 Kubernetes · 共享存储/网关/监控 · **禁止**跨池组成同一分布式模型实例。
 :::
 
-[第 22 篇](./22-在NVIDIA机器部署原生vLLM.md) 已经在 NVIDIA 资源池部署了原生 vLLM。本篇使用相同的学习顺序，在昇腾资源池部署 vLLM-Ascend。
+[第 22 篇](./22-在NVIDIA机器部署原生vLLM.md) 已经在 NVIDIA 资源池部署了原生 vLLM。本篇使用相同的学习顺序，在昇腾资源池部署 vLLM-Ascend。若要进一步理解两者为何能共享 API 和调度框架、却不能共享 Worker、Attention、图执行、通信和量化实现，参见 [昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别](../../ai-systems/inference/vllm/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md)。
 
 两者在外部看起来很相似：`vllm serve` → 监听 8000 → OpenAI 兼容 API。但底层软件栈完全不同：
 

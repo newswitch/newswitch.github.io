@@ -1,0 +1,9 @@
+{
+  "label": "vLLM-Ascend",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/inference/vllm-ascend/vLLM-Ascend学习路线"
+  }
+}

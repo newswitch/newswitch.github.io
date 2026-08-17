@@ -1,0 +1,9 @@
+{
+  "label": "etcd",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/etcd/etcd从零到精通学习路线"
+  }
+}

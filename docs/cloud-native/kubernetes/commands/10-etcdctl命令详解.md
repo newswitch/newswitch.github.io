@@ -93,7 +93,40 @@ etcdutl snapshot restore snapshot.db \
 | DB 很大 In Use 很小 | 存在可回收碎片，计划逐成员 Defrag |
 | 恢复后对象状态异常 | 快照时间点、Revision 回退、Informer Cache、外部资源与集群证书 |
 
-## 8. 掌握标准
+## 8. Revision、成员与安全进阶
+
+### 8.1 Revision、Watch 与 Lease 只读诊断
+
+```bash
+# 返回 Header Revision 和 Key 元数据，避免大范围读取 Value
+etcdctl get /controlled/prefix/ --prefix --keys-only --limit=20 -w json
+
+# 仅在实验前缀观察后续事件；生产 Watch 必须实现断线续传和 ErrCompacted 后重新 List
+etcdctl watch /controlled/lab/ --prefix
+
+# Lease 列表和单个 Lease 详情可能较大，先在隔离环境验证命令版本
+etcdctl lease list
+etcdctl lease timetolive <lease-id> --keys
+```
+
+Revision 是集群级逻辑序号，不是时间戳。Watch 从最后成功处理的 Revision+1 恢复；历史已 Compact 时必须重新 List 当前状态，不能继续等待一个永远不存在的旧事件。
+
+### 8.2 成员和安全变更门禁
+
+执行 `member add/remove/promote`、`user/role`、`auth enable` 前必须保存快照、成员列表和 Endpoint 状态，并确认剩余成员仍构成多数派。添加节点优先以 Learner 追平后再 Promote；删除 StatefulSet Pod 不等于删除 etcd Member。
+
+启用 Auth 的顺序是创建 root/管理身份、创建应用最小 Prefix Role、验证允许/拒绝矩阵，最后启用；否则可能把所有客户端锁在集群外。证书轮换先双信任、逐成员更新并验证 Peer/Client 链路，最后撤旧 CA。
+
+### 8.3 日常检查矩阵
+
+| 频率 | 检查 |
+|---|---|
+| 每分钟 | Endpoint health、Leader change、WAL fsync、Backend commit、API P99 |
+| 每小时 | DB Size/In Use、Alarm、Applied Index lag、磁盘空间 |
+| 每天 | Snapshot 成功/哈希/异地复制、证书有效期、成员/版本 |
+| 每月 | 隔离恢复、Revision Bump/Informer、单成员故障和逐成员 Defrag 演练 |
+
+## 9. 掌握标准
 
 能解释 Member 与 Endpoint、Leader/Term/Index；能安全生成、验证、加密和演练快照；能说明为何现代恢复使用 etcdutl；不会绕过 API Server 修改 `/registry`；能在不破坏 Quorum 的情况下规划维护。
 

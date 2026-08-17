@@ -2,7 +2,7 @@
 title: "MySQL 从零到精通学习路线"
 sidebar_position: 0
 tags: [MySQL, InnoDB, SQL, 数据库, 学习路线]
-description: "以 MySQL 8.4 LTS 为主线，从关系模型与 SQL 开始，系统学习 InnoDB、事务、索引、优化器、高可用、备份恢复、性能和生产故障排查。"
+description: "以 MySQL 8.4 LTS 为主线，从关系模型与 SQL 开始，系统学习多种部署方式、InnoDB、事务、索引、优化器、高可用、备份恢复、性能和生产故障排查。"
 ---
 
 # MySQL 从零到精通学习路线
@@ -68,6 +68,7 @@ SHOW VARIABLES LIKE 'version%';
 
 ### 运维与 SRE 能力
 
+- 根据场景选择 RPM、APT、离线二进制、Docker、复制、InnoDB Cluster 或 Kubernetes Operator，并解释其生命周期与持久化原理；
 - 建立 QPS、延迟、错误、连接、锁、Redo、Buffer Pool、I/O 和复制看板；
 - 根据工作负载做容量规划与基准测试；
 - 设计复制、高可用、备份、PITR 和灾难恢复；
@@ -76,18 +77,19 @@ SHOW VARIABLES LIKE 'version%';
 
 ---
 
-## 3. 九个学习模块
+## 3. 十个学习模块
 
 ```text
 01 基础与 SQL 入门
-→ 02 Schema 与应用设计
-→ 03 InnoDB 与事务内核
-→ 04 索引与优化器
-→ 05 性能、可观测性与容量
-→ 06 复制与高可用
-→ 07 备份、恢复与安全
-→ 08 生产架构与故障排查
-→ 09 命令与实验手册
+→ 02 部署原理与实战
+→ 03 Schema 与应用设计
+→ 04 InnoDB 与事务内核
+→ 05 索引与优化器
+→ 06 性能、可观测性与容量
+→ 07 复制与高可用
+→ 08 备份、恢复与安全
+→ 09 生产架构与故障排查
+→ 10 命令与实验手册
 ```
 
 顺序不是绝对限制，但不能跳过事务、索引和恢复基础就直接修改生产参数。
@@ -96,7 +98,7 @@ SHOW VARIABLES LIKE 'version%';
 
 ## 4. 完整文章清单
 
-整套路线规划 **49 篇**，现已全部完成。可以按模块顺序学习，也可以沿 P0/P1/P2 和故障场景交叉练习。
+整套路线现有 **61 篇**，已全部完成。原有 49 篇继续保留编号，新部署专题使用 D1～D12，避免旧文章编号和外部引用整体漂移。可以按模块顺序学习，也可以沿 P0/P1/P2 和故障场景交叉练习。
 
 ### 模块一：基础与 SQL 入门（5 篇，已完成）
 
@@ -106,7 +108,22 @@ SHOW VARIABLES LIKE 'version%';
 4. [数据库、表、数据类型、字符集与排序规则](./01-foundations/04-数据库表数据类型字符集与排序规则.md)
 5. [从 CRUD 到 Join、聚合、CTE 与窗口函数](./01-foundations/05-从CRUD到Join聚合CTE与窗口函数.md)
 
-### 模块二：Schema 与应用设计（5 篇，已完成）
+### 模块二：部署原理与实战（12 篇，已完成）
+
+- D1. [MySQL 部署学习路线与方案选型](./deployment/00-MySQL部署学习路线与方案选型.md)
+- D2. [MySQL 部署原理：进程、目录、配置、初始化与启动](./deployment/01-MySQL部署原理-进程目录配置初始化与启动.md)
+- D3. [RHEL/Rocky 使用 RPM 仓库部署 MySQL 8.4](./deployment/02-RHEL-Rocky使用RPM仓库部署MySQL8.4.md)
+- D4. [Ubuntu/Debian 使用 APT 部署 MySQL 8.4](./deployment/03-Ubuntu-Debian使用APT部署MySQL8.4.md)
+- D5. [通用二进制包离线部署与 systemd 托管](./deployment/04-通用二进制包离线部署与systemd托管.md)
+- D6. [Docker 与 Compose 部署 MySQL](./deployment/05-Docker与Compose部署MySQL.md)
+- D7. [源码编译部署 MySQL 与适用边界](./deployment/06-源码编译部署MySQL与适用边界.md)
+- D8. [主从与半同步复制生产部署](./deployment/07-主从半同步复制生产部署.md)
+- D9. [InnoDB Cluster 与 Router 高可用部署](./deployment/08-InnoDBCluster与Router高可用部署.md)
+- D10. [MySQL Operator 在 Kubernetes 生产部署](./deployment/09-MySQL-Operator在Kubernetes生产部署.md)
+- D11. [Ansible 自动化批量部署 MySQL](./deployment/10-Ansible自动化批量部署MySQL.md)
+- D12. [部署验收、安全、监控、备份与故障排查](./deployment/11-部署验收安全监控备份与故障排查.md)
+
+### 模块三：Schema 与应用设计（5 篇，已完成）
 
 6. [主键、唯一约束、外键、NULL 与数据完整性](./02-schema-application/01-主键唯一外键NULL与数据完整性.md)
 7. [范式、反范式、宽表与关系建模](./02-schema-application/02-范式反范式宽表与关系建模.md)
@@ -114,7 +131,7 @@ SHOW VARIABLES LIKE 'version%';
 9. [Online DDL、Metadata Lock 与 Schema 变更](./02-schema-application/04-Online-DDL-MDL与Schema变更.md)
 10. [连接池、Prepared Statement、事务边界、超时与重试](./02-schema-application/05-连接池Prepared-Statement事务超时与重试.md)
 
-### 模块三：InnoDB 与事务内核（7 篇，已完成）
+### 模块四：InnoDB 与事务内核（7 篇，已完成）
 
 11. [InnoDB 内存与磁盘整体架构](./03-innodb-transactions/01-InnoDB内存与磁盘整体架构.md)
 12. [Page、Row Format、聚簇索引与二级索引](./03-innodb-transactions/02-Page-RowFormat聚簇索引与二级索引.md)
@@ -124,7 +141,7 @@ SHOW VARIABLES LIKE 'version%';
 16. [行锁、间隙锁、Next-Key Lock、MDL 与死锁](./03-innodb-transactions/06-行锁间隙锁NextKeyLock-MDL与死锁.md)
 17. [Checkpoint、Crash Recovery 与持久性边界](./03-innodb-transactions/07-Checkpoint-CrashRecovery与持久性边界.md)
 
-### 模块四：索引与优化器（6 篇，已完成）
+### 模块五：索引与优化器（6 篇，已完成）
 
 18. [B+Tree、联合索引、最左前缀、覆盖索引与回表](./04-index-optimizer/01-BTree联合索引最左前缀覆盖索引与回表.md)
 19. [EXPLAIN、EXPLAIN ANALYZE 与执行计划阅读](./04-index-optimizer/02-EXPLAIN与EXPLAIN-ANALYZE执行计划阅读.md)
@@ -133,7 +150,7 @@ SHOW VARIABLES LIKE 'version%';
 22. [慢 SQL 从发现、归因、改写到回归验证](./04-index-optimizer/05-慢SQL发现归因改写与回归验证.md)
 23. [深分页、COUNT、批量写入与热点更新优化](./04-index-optimizer/06-深分页COUNT批量写入与热点更新优化.md)
 
-### 模块五：性能、可观测性与容量（6 篇，已完成）
+### 模块六：性能、可观测性与容量（6 篇，已完成）
 
 24. [MySQL 配置分层、内存预算、连接与线程模型](./05-performance-capacity/01-MySQL配置分层内存预算连接与线程模型.md)
 25. [Performance Schema、sys Schema 与关键状态指标](./05-performance-capacity/02-PerformanceSchema-sysSchema与关键状态指标.md)
@@ -142,7 +159,7 @@ SHOW VARIABLES LIKE 'version%';
 28. [QPS、数据增长、IOPS、复制与备份容量规划](./05-performance-capacity/05-QPS数据增长IOPS复制与备份容量规划.md)
 29. [数据库 SLI/SLO、Dashboard、告警与变更关联](./05-performance-capacity/06-数据库SLI-SLO-Dashboard告警与变更关联.md)
 
-### 模块六：复制与高可用（5 篇，已完成）
+### 模块七：复制与高可用（5 篇，已完成）
 
 30. [Binlog Format、Position、GTID 与复制数据路径](./06-replication-ha/01-BinlogFormat-Position-GTID与复制数据路径.md)
 31. [异步复制、半同步复制与只读副本搭建](./06-replication-ha/02-异步半同步复制与只读副本搭建.md)
@@ -150,7 +167,7 @@ SHOW VARIABLES LIKE 'version%';
 33. [主从切换、脑裂、数据丢失边界与故障演练](./06-replication-ha/04-主从切换脑裂数据丢失边界与故障演练.md)
 34. [Group Replication、InnoDB Cluster 与 MySQL Router](./06-replication-ha/05-GroupReplication-InnoDBCluster与MySQLRouter.md)
 
-### 模块七：备份、恢复与安全（5 篇，已完成）
+### 模块八：备份、恢复与安全（5 篇，已完成）
 
 35. [备份不是复制：RPO、RTO、一致性与保留策略](./07-backup-security/01-备份不是复制-RPO-RTO一致性与保留策略.md)
 36. [逻辑备份、导出导入与跨版本迁移](./07-backup-security/02-逻辑备份导出导入与跨版本迁移.md)
@@ -158,7 +175,7 @@ SHOW VARIABLES LIKE 'version%';
 38. [Binlog PITR、误删恢复与灾难恢复演练](./07-backup-security/04-Binlog-PITR误删恢复与灾难恢复演练.md)
 39. [账户、角色、最小权限、TLS、加密、审计与密钥](./07-backup-security/05-账户角色最小权限TLS加密审计与密钥.md)
 
-### 模块八：生产架构与故障排查（5 篇，已完成）
+### 模块九：生产架构与故障排查（5 篇，已完成）
 
 40. [MySQL 版本升级、兼容性、回滚与灰度验证](./08-production-operations/01-MySQL版本升级兼容性回滚与灰度验证.md)
 41. [MySQL on Kubernetes、Operator、存储与反模式](./08-production-operations/02-MySQL-on-Kubernetes-Operator存储与反模式.md)
@@ -166,7 +183,7 @@ SHOW VARIABLES LIKE 'version%';
 43. [ProxySQL、Orchestrator 与读写路由架构](./08-production-operations/04-ProxySQL-Orchestrator与读写路由架构.md)
 44. [MySQL 生产故障排查 Runbook 与事故复盘](./08-production-operations/05-MySQL生产故障排查Runbook与事故复盘.md)
 
-### 模块九：命令与实验手册（5 篇，已完成）
+### 模块十：命令与实验手册（5 篇，已完成）
 
 45. [`mysql` 命令完整参考与安全连接](./09-command-labs/01-mysql命令完整参考与安全连接.md)
 46. [`mysqladmin`、`mysqlcheck` 与实例维护命令](./09-command-labs/02-mysqladmin-mysqlcheck与实例维护命令.md)
@@ -181,6 +198,7 @@ SHOW VARIABLES LIKE 'version%';
 ### P0：必须掌握
 
 - 文章 1～23：SQL、数据模型、InnoDB、事务、锁、索引和执行计划；
+- 部署 D1～D6、D12：部署共同原理、主流单实例交付和统一上线验收；
 - 文章 25：Performance Schema；
 - 文章 30：Binlog/GTID；
 - 文章 35～38：备份和恢复；
@@ -190,7 +208,7 @@ P0 的验收不是笔试，而是能解释一条慢查询、一次死锁、一�
 
 ### P1：生产必需
 
-- 性能、容量、复制、高可用、监控、安全、DDL、升级与 Kubernetes；
+- 部署 D7～D11，以及性能、容量、复制、高可用、监控、安全、DDL、升级与 Kubernetes；
 - 能在预生产完成压力、故障、备份恢复和切换演练；
 - 能建立 SLO、变更审计和容量水位。
 
@@ -251,9 +269,10 @@ SELECT @@hostname, @@port, @@server_uuid, @@read_only, @@super_read_only;
 
 ## 8. 最终验收
 
-完成 49 篇后，应能独立完成：
+完成 61 篇后，应能独立完成：
 
 - 从需求设计 Schema、索引、事务和查询；
+- 根据环境完成包管理、离线、容器、复制、InnoDB Cluster、Operator 与自动化部署，并解释各自原理和故障边界；
 - 解释 SQL 从连接到 InnoDB Page 的完整路径；
 - 从 `EXPLAIN ANALYZE`、Performance Schema 和 Linux 指标定位性能问题；
 - 计算内存、连接、数据增长、IOPS、Binlog 和备份容量；

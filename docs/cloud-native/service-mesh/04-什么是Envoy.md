@@ -9,6 +9,23 @@ description: "Envoy 是一个高性能的代理服务器，专为现代微服务
 
 > Envoy 让服务间通信变得可观、可控、可扩展，是现代云原生架构的“网络底座”。
 
+本文是概念入口。实际学习请使用 [Envoy 从零到精通学习路线](../../networking/load-balancing-proxy/envoy/00-Envoy从零到精通学习路线.md)，并固定一个 stable minor/补丁镜像；`latest` 文档和开发版能力不能直接当成生产版本事实。
+
+## 先建立两条主线
+
+```text
+配置路径：bootstrap / xDS control plane
+  → Listener / Route / Cluster / Endpoint / Secret
+  → validate / warm / ACK-NACK / active
+
+请求路径：downstream connection
+  → Listener / Filter Chain / HCM / HTTP Filters / Route
+  → Cluster / Endpoint / connection pool
+  → upstream response / access log / metrics / trace
+```
+
+Envoy 是数据面代理，不会自己理解 Kubernetes Service、业务租户或发布意图。静态配置或控制面把这些意图翻译成 Envoy 资源，Envoy 再在每条连接/请求上执行。
+
 随着 IT 行业向微服务架构和云原生解决方案的转型，企业面临着管理数百个微服务的挑战。这些使用不同技术栈开发的服务带来了系统复杂性和调试难题。
 
 作为应用开发者，你专注于业务逻辑——如处理订单或生成报表。然而，任何业务操作都涉及多个服务间的调用，每个服务都有自己的超时机制、重试逻辑和网络相关代码。
@@ -40,9 +57,9 @@ Envoy 是独立进程，设计为与每个应用程序并行运行。多个 Envo
 - **一致性**：在不同技术栈间保持统一的网络行为
 - **独立升级**：可透明地在整个基础设施中部署和升级 Envoy
 
-### L3/L4 过滤器架构
+### L3/L4 网络处理与过滤器架构
 
-Envoy 是 L3/L4 网络代理，基于 IP 地址和 TCP/UDP 端口做路由决策。它采用可插拔的过滤器链架构，类似于 Linux shell 的管道机制：
+Envoy 能接受 TCP/UDP 连接或数据报，并通过 Listener、Filter Chain 和 Network Filter 处理 L4 流量；启用 HTTP Connection Manager 后，它会解析并代理 L7 HTTP。它不是只能依据 IP 和端口做决定：Filter Chain 可以使用 SNI、ALPN 等连接属性，HTTP Route 还可以使用域名、路径和 Header。它采用可插拔过滤器链架构，可类比为有固定生命周期与方向的处理管线：
 
 ```bash
 ls -l | grep "*.go" | wc -l
@@ -67,9 +84,9 @@ ls -l | grep "*.go" | wc -l
 
 ### HTTP/2 和 HTTP/3 支持
 
-Envoy 原生支持 HTTP/1.1、HTTP/2 和 HTTP/3，可作为透明的协议转换代理。即使遗留应用仍使用 HTTP/1.1，通过 Envoy 部署后也能自动获得 HTTP/2 的性能优势。
+Envoy 可以处理 HTTP/1.1、HTTP/2，并在满足构建、Listener、QUIC/UDP、TLS 与客户端条件时处理 HTTP/3。Downstream 和 upstream 是两段独立协议，只有显式配置并经兼容性验证才会发生转换；把 HTTP/1.1 应用放到 Envoy 后面不会自动获得 HTTP/2 的所有收益。
 
-推荐在服务网格中全面使用 HTTP/2，创建持久连接网格以提高性能。
+是否采用 HTTP/2/3 应由 gRPC/流式能力、连接复用、流控制、上游兼容和故障域共同决定。HTTP/2 单连接承载多个 Stream，也可能带来单连接 reset、流控制和长连接排空问题，不能一概要求“全面使用”。
 
 ### 智能路由
 
@@ -101,6 +118,8 @@ Envoy 完全支持 gRPC 所需的 HTTP/2 功能，包括：
 - **RDS**（路由发现服务）：动态更新路由规则
 
 这使得 Envoy 能够适应动态的云原生环境。
+
+动态配置有四个不同阶段：控制面保存、Envoy 收到并 ACK、依赖完成 warming 后 active、真实请求命中。`ACK` 不等于业务流量正确；`NACK` 时要根据 node、资源类型、nonce/version 和 error detail 定位，并确认 Envoy 当前仍使用的最后有效版本。详见 [xDS、ADS、Delta 与 ACK/NACK](../../networking/load-balancing-proxy/envoy/05-xDS-Bootstrap-ADS-Delta与ACK-NACK.md)。
 
 ## 高级功能
 
@@ -149,3 +168,13 @@ Envoy 适用于多种场景：
 4. **负载均衡器**：替代传统的硬件或软件负载均衡器
 
 Envoy 已成为现代微服务架构中不可或缺的基础设施组件，为构建可靠、可扩展的分布式系统提供了强大支撑。
+
+## 能力边界与掌握标准
+
+- Envoy 的重试、超时和熔断不能替代业务幂等与数据一致性；
+- mTLS 证明工作负载身份，不替代用户/对象级授权；
+- 健康检查和异常检测不能创造上游容量；
+- xDS 控制面、SDS、外部鉴权和遥测后端都是独立故障域；
+- Admin 接口包含配置与控制能力，只能放在受控管理网络。
+
+完成入门后，你应能说清 downstream/upstream 两段连接、Listener→Route→Cluster→Endpoint 请求路径，以及静态配置与 xDS 控制面的责任边界，再进入 [请求生命周期](../../networking/load-balancing-proxy/envoy/02-Listener-Filter-HCM-Route-Cluster与请求生命周期.md) 实验。

@@ -1,0 +1,9 @@
+{
+  "label": "ClickHouse",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/clickhouse/ClickHouse从零到精通学习路线"
+  }
+}

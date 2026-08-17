@@ -1,6 +1,9 @@
 {
-  "label": "Nginx 源码",
-  "position": 5,
+  "label": "Nginx",
+  "position": 1,
   "collapsed": true,
-  "link": null
+  "link": {
+    "type": "doc",
+    "id": "networking/load-balancing-proxy/nginx/Nginx从零到精通学习路线"
+  }
 }

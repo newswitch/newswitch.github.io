@@ -1,9 +1,9 @@
 {
   "label": "Kafka",
-  "position": 5,
+  "position": 9,
   "collapsed": true,
   "link": {
-    "type": "generated-index",
-    "description": "掌握分区日志、生产消费、复制、事务、容量与故障治理。"
+    "type": "doc",
+    "id": "data-systems/kafka/Kafka从零到精通学习路线"
   }
 }

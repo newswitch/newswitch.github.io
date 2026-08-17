@@ -92,6 +92,17 @@ vllm serve --help
 
 这八篇是源码主线。学习时以组件接口、状态变化和一次请求为主，不需要先背诵大段实现代码。
 
+### 硬件平台分叉阅读
+
+完成上述共同控制面后，再学习硬件执行面：
+
+| 文章 | 学习成果 |
+| --- | --- |
+| [昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别](./24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md) | 能从 Platform Plugin、NPU Worker、Attention、ACLGraph、HCCL 和 CANN 解释一次请求在何处与 CUDA 路径分叉 |
+| [vLLM Serve 生产参数参考](./25-vLLM-Serve生产参数参考.md) | 能将服务、模型、显存、调度、并行、编译和请求参数映射到组件、资源预算与 SLO |
+
+这篇文章不是重复部署步骤，而是将已有 V1 源码主线映射到昇腾 910B 执行面。阅读后应能判断一个问题属于共同的 API/EngineCore/Scheduler 层，还是属于 vLLM-Ascend、torch_npu、CANN、ACLGraph 或 HCCL 层。
+
 ---
 
 ## 4. 第二阶段：一次推理到底发生了什么

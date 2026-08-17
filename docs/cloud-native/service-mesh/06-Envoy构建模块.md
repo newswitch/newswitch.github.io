@@ -9,6 +9,8 @@ description: "详细介绍 Envoy 代理的核心构建模块，包括监听器�
 
 > Envoy 的每一个构建模块都是现代服务网格灵活性与可观测性的基石，理解它们才能真正驾驭流量治理的全貌。
 
+本文从静态配置解释对象结构。完整动态配置、性能和故障路径请继续阅读 [Envoy 从零到精通学习路线](../../networking/load-balancing-proxy/envoy/00-Envoy从零到精通学习路线.md)。
+
 ## 概述
 
 在本节中，我们将深入探讨 Envoy 代理的基本构建模块及其工作原理。
@@ -22,6 +24,22 @@ Envoy 配置的根节点称为**引导配置**（Bootstrap Configuration）。�
 下图展示了请求在 Envoy 各个构建模块中的流转过程：
 
 ![Envoy 构建块](/images/k8s/service-mesh/envoy-building-blocks/envoy-block.webp)
+
+配置引用与真实执行可以先压缩为一张地图：
+
+```text
+Listener accepts connection
+→ Listener Filter extracts connection metadata
+→ Filter Chain match + optional downstream TLS
+→ Network Filter / HTTP Connection Manager
+→ HTTP decoder filters → VirtualHost/Route
+→ Cluster → priority/locality/LB → Endpoint/connection pool
+→ upstream
+→ response encoder filters (reverse direction)
+→ access log/stats/trace
+```
+
+Listener、Route、Cluster 是配置对象，连接、HTTP Stream 和 upstream connection 才是运行时工作。不要把一个 Listener 等同于一个请求，也不要把 Cluster 当成单一服务器。
 
 ## 监听器（Listener）
 
@@ -50,10 +68,10 @@ static_resources:
 
 ### 过滤器类型
 
-Envoy 定义了三类过滤器：
+理解 HTTP 代理时常见三类过滤器：
 
-1. **监听器过滤器**：在收到数据包后立即启动，通常操作数据包的头部信息
-2. **网络过滤器**：通常操作数据包的有效载荷，解析并处理数据
+1. **监听器过滤器**：在 Filter Chain 选择前处理新连接并提取元数据，例如 Proxy Protocol、TLS ClientHello/SNI 或原始目的地址
+2. **网络过滤器**：在选定 Filter Chain 后处理连接级字节流，例如 HCM、TCP Proxy
 3. **HTTP 过滤器**：在 HTTP 连接管理器内部运行，处理 HTTP 级别的操作
 
 网络过滤器通常对数据包的有效载荷进行操作，查看和解析其内容。例如，Postgres 网络过滤器会解析数据包主体，检查数据库操作类型或其返回结果。
@@ -77,6 +95,8 @@ Envoy 定义了三类过滤器：
 ![HCM 过滤器](/images/k8s/service-mesh/envoy-building-blocks/hcm-filter.webp)
 
 **重要提示**：HTTP 过滤器链中的最后一个过滤器必须是路由器过滤器（`envoy.filters.http.router`），它负责执行实际的路由任务。
+
+HTTP 请求按 Decoder Filter 顺序前进，响应通常按 Encoder 方向反向经过 Filter。Filter 可以暂停 Stream 等待异步外调、直接响应或缓冲 Body，因此每个 Filter 都必须有延迟、内存、超时和失败策略。
 
 ## 路由配置
 
@@ -193,6 +213,8 @@ clusters:
 - **端点权重**：可以为端点设置权重，影响流量分配
 - **地域性**：可以配置端点的地理位置信息，用于就近路由
 
+Cluster 是逻辑上游配置，Endpoint/Host 才是真实地址。Route 匹配成功但 Cluster 不存在、Cluster 没有健康 Host、连接 Endpoint 失败，会产生不同的本地错误和 response flag；排障时必须分开。
+
 ### 可选功能
 
 集群还支持以下高级功能：
@@ -296,6 +318,19 @@ curl -v localhost:10000
 
 这表明请求成功通过 Envoy 代理转发到了后端服务。
 
+### 不只验证 200
+
+完成成功请求后，主动制造四类故障：
+
+| 实验 | 预期观察 |
+| --- | --- |
+| 使用不匹配的 Host/Path | No Route，本地响应且上游无请求 |
+| 清空/禁用 Endpoint | Cluster 无健康 Host |
+| 配错上游端口或 TLS | upstream connect/handshake failure |
+| 让上游慢于 Route timeout | 504/timeout，并检查是否发生重试 |
+
+从受控 Admin 通道检查 `/listeners`、`/config_dump`、`/clusters` 和 `/stats`，再把 Access Log 中 Route、Cluster、upstream Host、response flags/details 与实验对应。Admin 不得对业务网络开放。
+
 ## 总结
 
 Envoy 的核心构建模块包括：
@@ -306,3 +341,9 @@ Envoy 的核心构建模块包括：
 4. **集群**：定义上游服务端点
 
 这些组件协同工作，为现代微服务架构提供了强大而灵活的代理能力。理解这些基本概念是掌握 Envoy 高级功能的基础。
+
+## 静态对象到动态 xDS
+
+静态配置中的对象在动态控制面分别由 LDS、RDS、CDS、EDS、SDS 等资源提供。新资源先校验和 warming，再切为 active；依赖缺失可能让资源停在 warming 或 NACK。控制面断开时数据面通常继续使用最后有效配置，但 Endpoint、Route 和证书不会再更新。
+
+下一步依次学习 [请求生命周期](../../networking/load-balancing-proxy/envoy/02-Listener-Filter-HCM-Route-Cluster与请求生命周期.md)、[xDS 配置路径](../../networking/load-balancing-proxy/envoy/05-xDS-Bootstrap-ADS-Delta与ACK-NACK.md) 和 [生产故障 Runbook](../../networking/load-balancing-proxy/envoy/14-源码xDS-NACK-503-504内存与生产故障Runbook.md)。

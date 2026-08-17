@@ -1,0 +1,9 @@
+{
+  "label": "Milvus",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/milvus/Milvus从零到精通学习路线"
+  }
+}

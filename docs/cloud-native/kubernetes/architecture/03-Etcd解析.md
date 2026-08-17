@@ -9,6 +9,12 @@ description: "深入解析 etcd 在 Kubernetes 中的核心作用，包括分布
 
 > Etcd 作为 Kubernetes 的“中枢神经”，以强一致性和高可用性保障集群数据安全，是云原生架构不可或缺的基石。
 
+本文以 **etcd 3.6** 为主线。阅读时先建立五层路径：`kube-apiserver/client → gRPC/Auth → Raft → MVCC/Lease/Watch → WAL/Snapshot/bbolt`。写成功、Raft Commit、状态机 Apply、Backend 持久化和所有 Follower 追平不是同一个时间点；故障分析必须说明观察的是哪一层。
+
+:::warning 版本与安全边界
+etcd 支持 Client/Peer TLS 和 RBAC，但不会因为启动了三节点就自动启用完整认证。生产必须显式配置双向 TLS、网络隔离、最小 Key Prefix 权限、快照恢复与逐成员维护。Kubernetes 键空间只能通过 API Server 管理。
+:::
+
 ## Etcd 简介
 
 Etcd 是 Kubernetes 集群的核心组件之一，作为分布式键值存储系统，负责保存集群的所有配置信息和状态数据。本文将深入解析 etcd 在 Kubernetes 中的作用、原理和使用方法。
@@ -25,8 +31,8 @@ Etcd 作为高可用的分布式键值存储系统，采用 Raft 共识算法保
 ### 核心特性
 
 - 简单性：定义良好的用户 API (gRPC)
-- 安全性：自动 TLS，可选客户端证书认证
-- 高性能：基准测试显示 10,000 次写入/秒
+- 安全性：支持客户端与 Peer TLS、客户端证书认证和 RBAC，需显式启用
+- 性能：吞吐和尾延迟由请求大小、磁盘 fsync、多数派网络、Watcher 与历史窗口共同决定，必须实测
 - 可靠性：使用 Raft 共识算法正确分布
 - 一致性：强一致性读写
 - 高可用性：容忍机器故障，包括 leader 故障

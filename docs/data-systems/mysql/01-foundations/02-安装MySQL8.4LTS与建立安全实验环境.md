@@ -16,6 +16,8 @@ description: "以 MySQL 8.4 LTS 为基线，建立可复现、可观测、与生
 
 > 所有命令只用于独立实验实例。不要把示例密码、目录或配置直接用于生产。
 
+本篇只负责建立后续 SQL 与内核实验环境。需要系统学习 RPM、APT、离线二进制、Docker/Compose、源码、复制、InnoDB Cluster、Kubernetes Operator、Ansible 和生产验收，请进入 [MySQL 部署学习路线与方案选型](../deployment/00-MySQL部署学习路线与方案选型.md)。
+
 ---
 
 ## 1. 为什么采用 8.4 LTS

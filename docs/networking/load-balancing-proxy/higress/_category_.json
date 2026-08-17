@@ -1,0 +1,9 @@
+{
+  "label": "Higress",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "networking/load-balancing-proxy/higress/Higress从零到精通学习路线"
+  }
+}

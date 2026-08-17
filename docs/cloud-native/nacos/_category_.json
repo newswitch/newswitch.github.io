@@ -1,0 +1,9 @@
+{
+  "label": "Nacos",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/nacos/Nacos从零到精通学习路线"
+  }
+}
