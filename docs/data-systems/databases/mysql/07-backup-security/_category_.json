@@ -1,6 +1,7 @@
 {
   "label": "08. 备份、恢复与安全",
   "position": 8,
+  "collapsed": true,
   "link": {
     "type": "generated-index",
     "description": "围绕 RPO/RTO 设计逻辑与物理备份、Clone、PITR、恢复演练和数据库纵深安全。"

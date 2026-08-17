@@ -1,6 +1,7 @@
 {
   "label": "07. 复制与高可用",
   "position": 7,
+  "collapsed": true,
   "link": {
     "type": "generated-index",
     "description": "理解 Binary Log、GTID、复制线程、延迟、故障切换以及 Group Replication 与 InnoDB Cluster。"

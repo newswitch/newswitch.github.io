@@ -1,7 +1,7 @@
 {
   "label": "02. 部署原理与实战",
   "position": 2,
-  "collapsed": false,
+  "collapsed": true,
   "link": {
     "type": "doc",
     "id": "data-systems/databases/mysql/deployment/MySQL部署学习路线与方案选型"
