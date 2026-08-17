@@ -1,5 +1,6 @@
 ---
 title: "昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别"
+sidebar_label: "24. 昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别"
 sidebar_position: 24
 tags: [vLLM, vLLM-Ascend, 昇腾910B, CANN, torch-npu, HCCL, 源码分析]
 description: "沿一次请求的源码路径，分析 vLLM-Ascend 如何通过平台插件把 upstream vLLM 的 CUDA 执行面替换为昇腾 910B、CANN、ACLGraph 与 HCCL 执行面。"

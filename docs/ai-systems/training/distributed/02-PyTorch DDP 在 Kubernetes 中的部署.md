@@ -1,5 +1,6 @@
 ---
 title: PyTorch DDP 在 Kubernetes 中的部署
+sidebar_label: "02. PyTorch DDP 在 Kubernetes 中的部署"
 date: 2026-07-22 17:35:00
 categories: 云原生
 tags: ["Kubernetes", "PyTorch", "DDP", "Volcano", "torchrun", "GPU", "学习路线"]

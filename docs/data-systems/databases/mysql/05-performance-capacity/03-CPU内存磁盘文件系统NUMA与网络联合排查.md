@@ -1,5 +1,6 @@
 ---
 title: "CPU、内存、磁盘、文件系统、NUMA 与网络联合排查"
+sidebar_label: "03. CPU、内存、磁盘、文件系统、NUMA 与网络联合排查"
 sidebar_position: 3
 tags: [MySQL, Linux, CPU, IO, NUMA, 网络]
 description: "把 MySQL 内部等待与 Linux CPU、内存、磁盘、文件系统、NUMA 和网络证据对齐，避免单指标调优。"

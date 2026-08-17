@@ -1,5 +1,6 @@
 ---
 title: "通用二进制包离线部署与 systemd 托管"
+sidebar_label: "04. 通用二进制包离线部署与 systemd 托管"
 sidebar_position: 4
 tags: [MySQL, 离线部署, 二进制包, systemd, 制品管理]
 description: "在隔离网络使用 MySQL 8.4 通用二进制包完成制品校验、定制目录、初始化、systemd 托管、升级与故障排查。"

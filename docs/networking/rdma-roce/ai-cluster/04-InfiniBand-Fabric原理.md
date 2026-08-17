@@ -1,5 +1,6 @@
 ---
 title: InfiniBand Fabric 原理
+sidebar_label: "04. InfiniBand Fabric 原理"
 sidebar_position: 4
 tags: [InfiniBand, HCA, Subnet Manager, LID, GID, PKey, SL, VL]
 description: 理解 InfiniBand HCA、Switch、Subnet Manager、LID/GID、PKey、SL/VL、路由和端口状态。

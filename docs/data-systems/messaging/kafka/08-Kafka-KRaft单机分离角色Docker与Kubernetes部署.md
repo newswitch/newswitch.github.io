@@ -1,5 +1,6 @@
 ---
 title: "Kafka KRaft 单机、分离角色集群、Docker 与 Kubernetes 部署"
+sidebar_label: "08. Kafka KRaft 单机、分离角色集群、Docker 与 Kubernetes 部署"
 sidebar_position: 8
 tags: [Kafka, KRaft, 部署, Docker, Kubernetes]
 description: "从 KRaft 单机实验到 Controller/Broker 分离集群，解释存储格式化、Listener、故障域、容器和 Kubernetes 交付。"

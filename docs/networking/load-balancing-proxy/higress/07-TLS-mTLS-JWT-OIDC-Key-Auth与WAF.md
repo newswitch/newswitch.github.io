@@ -1,5 +1,6 @@
 ---
 title: "TLS、mTLS、JWT/OIDC、Key Auth、WAF 与安全"
+sidebar_label: "07. TLS、mTLS、JWT/OIDC、Key Auth、WAF 与安全"
 sidebar_position: 7
 tags: [Higress, TLS, JWT, OIDC, WAF]
 description: "构建 Higress 边界身份、传输安全、授权、Secret 轮换和 WAF。"

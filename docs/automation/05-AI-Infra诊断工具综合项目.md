@@ -1,5 +1,6 @@
 ---
 title: "AI Infra 诊断工具综合项目"
+sidebar_label: "05. AI Infra 诊断工具综合项目"
 sidebar_position: 5
 tags: [AI Infra, Python, Kubernetes, Prometheus, GPU, 网络, 存储, 诊断]
 description: "设计一个只读优先、证据驱动的 AI Infra 诊断工具，统一采集 Kubernetes、GPU、网络、存储、日志和 Prometheus 数据并生成可审计报告。"

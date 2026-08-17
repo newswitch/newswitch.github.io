@@ -1,5 +1,6 @@
 ---
 title: "vLLM 性能分析总论：TTFT、TPOT、吞吐与 GPU 利用率"
+sidebar_label: "14. vLLM 性能分析总论：TTFT、TPOT、吞吐与 GPU 利用率"
 sidebar_position: 14
 tags: [vLLM, 性能分析, TTFT, TPOT, GPU]
 description: "建立从业务 SLO 到排队、Prefill、Decode、GPU Timeline 和成本的 vLLM 性能分析方法。"

@@ -1,5 +1,6 @@
 ---
 title: "Binlog Format、Position、GTID 与复制数据路径"
+sidebar_label: "01. Binlog Format、Position、GTID 与复制数据路径"
 sidebar_position: 1
 tags: [MySQL, Binlog, GTID, Replication]
 description: "从源库提交、Binlog、传输、Relay Log 到副本应用，理解格式、位置、GTID 和一致性边界。"

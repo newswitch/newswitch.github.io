@@ -1,5 +1,6 @@
 ---
 title: "缓存模式、穿透、击穿、雪崩、热 Key 与大 Key"
+sidebar_label: "12. 缓存模式、穿透、击穿、雪崩、热 Key 与大 Key"
 sidebar_position: 12
 tags: [Redis, Cache Aside, 缓存治理, 热Key, 大Key]
 description: "用并发时间线和保护闭环设计 Redis 缓存，而不是只追求命中率。"

@@ -1,5 +1,6 @@
 ---
 title: "容器存储接口（CSI）"
+sidebar_label: "04. 容器存储接口（CSI）"
 sidebar_position: 4
 tags: [Kubernetes, 开放接口, 学习路线]
 description: "介绍 Kubernetes 容器存储接口（CSI）的概念、架构、使用方法和最佳实践，包括动态配置、预配置卷和 CSI 驱动程序的开发部署。"

@@ -1,5 +1,6 @@
 ---
 title: "B-Tree、GIN、GiST、BRIN、Hash 与索引设计"
+sidebar_label: "10. B-Tree、GIN、GiST、BRIN、Hash 与索引设计"
 sidebar_position: 10
 tags: [PostgreSQL, Index, BTree, GIN, GiST, BRIN]
 description: "按访问模式、排序、选择性、写放大和空间选择 PostgreSQL 索引。"

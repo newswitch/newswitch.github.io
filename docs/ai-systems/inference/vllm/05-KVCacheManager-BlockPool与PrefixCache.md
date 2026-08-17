@@ -1,5 +1,6 @@
 ---
 title: "KVCacheManager、BlockPool 与 Prefix Cache"
+sidebar_label: "05. KVCacheManager、BlockPool 与 Prefix Cache"
 sidebar_position: 5
 tags: [vLLM, V1, KV Cache, Prefix Cache, 源码分析]
 description: "以 vLLM v0.23.0 为基线，沿一次请求分析 KV Cache 命中、Block 分配、回收、抢占与前缀复用。"

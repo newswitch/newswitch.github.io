@@ -1,5 +1,6 @@
 ---
 title: DataNode 复制、机架感知、再平衡与纠删码
+sidebar_label: "03. DataNode 复制、机架感知、再平衡与纠删码"
 sidebar_position: 3
 tags: [HDFS, DataNode, 机架感知, Erasure Coding]
 description: 掌握副本放置、故障域、Balancer、Disk Balancer 和纠删码的容量与恢复取舍。

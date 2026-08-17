@@ -1,5 +1,6 @@
 ---
 title: "ReplicatedMergeTree、Shard、Replica、Distributed Table 与路由"
+sidebar_label: "10. ReplicatedMergeTree、Shard、Replica、Distributed Table 与路由"
 sidebar_position: 10
 tags: [ClickHouse, Replication, Shard, Distributed]
 description: "理解本地复制表、分片、Distributed 路由、写入与查询故障语义。"

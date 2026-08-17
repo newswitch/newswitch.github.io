@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes 原生 Serverless 模式"
+sidebar_label: "05. Kubernetes 原生 Serverless 模式"
 sidebar_position: 5
 tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "使用 Kubernetes 原生功能实现 Serverless 模式，包括 HPA、KEDA 和 Job 模式"

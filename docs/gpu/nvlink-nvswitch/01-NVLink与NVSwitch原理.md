@@ -1,5 +1,6 @@
 ---
 title: NVLink 与 NVSwitch 原理：多 GPU 如何交换显存数据
+sidebar_label: "01. NVLink 与 NVSwitch 原理：多 GPU 如何交换显存数据"
 date: 2026-08-06 18:20:00
 categories: 云原生
 tags: [GPU, NVLink, NVSwitch, NCCL, 拓扑]

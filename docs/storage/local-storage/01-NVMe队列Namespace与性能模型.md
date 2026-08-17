@@ -1,5 +1,6 @@
 ---
 title: "NVMe 队列、Namespace 与性能模型"
+sidebar_label: "01. NVMe 队列、Namespace 与性能模型"
 sidebar_position: 1
 tags: [NVMe, SSD, PCIe, blk-mq, Namespace, 性能]
 description: "从 PCIe、Controller、Submission/Completion Queue、Namespace 到 Linux blk-mq，理解 NVMe 的并行性能、时延与排障方法。"

@@ -1,5 +1,6 @@
 ---
 title: "Nsight Systems 端到端时间线分析"
+sidebar_label: "03. Nsight Systems 端到端时间线分析"
 sidebar_position: 3
 tags: [NVIDIA, Nsight Systems, CUDA, NVTX, NCCL, GPU, 性能分析]
 description: "使用 Nsight Systems 从 CPU 线程、CUDA API、Memcpy、GPU Kernel、NVTX 和 NCCL 时间线定位 GPU 空洞、同步、通信与流水重叠问题。"

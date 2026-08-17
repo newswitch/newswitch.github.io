@@ -1,5 +1,6 @@
 ---
 title: "Kafka 从零到精通学习路线"
+sidebar_label: "00. Kafka 从零到精通学习路线"
 sidebar_position: 0
 tags: [Kafka, KRaft, 消息队列, 流处理, 学习路线]
 description: "在现有 Kafka 原理文章基础上，补齐 KRaft 多种部署、安全、协议源码、跨集群灾备与生产验收，形成从零到精通路线。"

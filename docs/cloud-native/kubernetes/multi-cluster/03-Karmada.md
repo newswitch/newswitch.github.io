@@ -1,5 +1,6 @@
 ---
 title: "Karmada"
+sidebar_label: "03. Karmada"
 sidebar_position: 3
 tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "Karmada 是一个开源的 Kubernetes 多集群管理系统，通过原生 API 和先进调度功能实现跨多个集群和云的应用统一管理，无需修改应用程序即可实现真正的开放式多云 Kubernetes 部署。"

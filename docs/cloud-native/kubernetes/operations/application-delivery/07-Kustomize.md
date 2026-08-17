@@ -1,5 +1,6 @@
 ---
 title: "使用 Kustomize 配置 Kubernetes 应用"
+sidebar_label: "07. 使用 Kustomize 配置 Kubernetes 应用"
 sidebar_position: 7
 tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Kustomize 是一个强大的 Kubernetes 配置管理工具，支持声明式配置定制、多环境管理和配置复用。本文介绍 Kustomize 的核心功能、最佳实践以及与 kubectl 的集成使用方法。"

@@ -1,5 +1,6 @@
 ---
 title: "Kubelet 的认证授权"
+sidebar_label: "06. Kubelet 的认证授权"
 sidebar_position: 6
 tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "详细介绍 Kubelet HTTPS 端点的认证和授权机制，包括匿名访问控制、X.509 证书认证、Bearer Token 认证以及基于 Webhook 的授权配置方法。"

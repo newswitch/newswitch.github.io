@@ -1,5 +1,6 @@
 ---
 title: GPU 服务器硬件拓扑与 NUMA
+sidebar_label: "04. GPU 服务器硬件拓扑与 NUMA"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["GPU", "NUMA", "PCIe", "NVLink", "学习路线"]

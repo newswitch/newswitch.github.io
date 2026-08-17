@@ -1,5 +1,6 @@
 ---
 title: NFS 在 AI 集群中的使用与性能分析
+sidebar_label: "01. NFS 在 AI 集群中的使用与性能分析"
 date: 2026-08-06 17:10:00
 categories: 云原生
 tags: [Kubernetes, GPU, NFS, CSI, 存储]

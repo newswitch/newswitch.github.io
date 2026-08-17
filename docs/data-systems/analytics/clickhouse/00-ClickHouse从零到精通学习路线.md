@@ -1,5 +1,6 @@
 ---
 title: "ClickHouse 从零到精通学习路线"
+sidebar_label: "00. ClickHouse 从零到精通学习路线"
 sidebar_position: 0
 tags: [ClickHouse, OLAP, MergeTree, 列式存储, 学习路线]
 description: "从列式存储和 MergeTree 深入 Part、稀疏索引、Merge、查询流水线、复制分片、Keeper、容量性能与生产故障排查。"

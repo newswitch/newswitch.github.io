@@ -1,5 +1,6 @@
 ---
 title: 2 Spine + 4 Leaf AI Fabric 综合项目
+sidebar_label: "10. 2 Spine + 4 Leaf AI Fabric 综合项目"
 sidebar_position: 10
 tags: [Lab, AI Fabric, RoCE, Multi-Rail, PFC, ECN]
 description: 设计并验收双 Rail、2 Spine + 4 Leaf RoCE Fabric，完成容量、QoS、拥塞控制与故障注入。

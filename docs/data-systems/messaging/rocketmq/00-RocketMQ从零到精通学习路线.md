@@ -1,5 +1,6 @@
 ---
 title: "RocketMQ 从零到精通学习路线"
+sidebar_label: "00. RocketMQ 从零到精通学习路线"
 sidebar_position: 0
 tags: [RocketMQ, 消息队列, 事务消息, Controller, 学习路线]
 description: "以 RocketMQ 5.5 为主线，从 Topic、Queue、CommitLog 深入 Producer/Consumer、事务/顺序/延迟消息、Controller 高可用、容量和源码排障。"

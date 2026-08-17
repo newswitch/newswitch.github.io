@@ -1,5 +1,6 @@
 ---
 title: "Pipeline、GitOps、Canary、Shadow 与回滚"
+sidebar_label: "03. Pipeline、GitOps、Canary、Shadow 与回滚"
 sidebar_position: 3
 tags: [Argo Workflows, Argo CD, Argo Rollouts, GitOps, Canary, Shadow, MLOps]
 description: "把模型构建、评测、注册、GitOps 变更、Shadow、Canary、在线分析和回滚设计成幂等、可审计的渐进式发布状态机。"

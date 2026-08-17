@@ -1,5 +1,6 @@
 ---
 title: "Cephadm 部署 Ceph：从主机准备到创建 OSD 的完整流程"
+sidebar_label: "09. Cephadm 部署 Ceph：从主机准备到创建 OSD 的完整流程"
 sidebar_position: 9
 tags: [Ceph, 学习路线, 存储, Cephadm]
 description: "用 cephadm 完成三节点学习集群：主机准备、Bootstrap、添加 Host、ServiceSpec 部署 MON/MGR，以及安全创建 OSD。"

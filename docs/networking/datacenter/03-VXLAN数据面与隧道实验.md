@@ -1,5 +1,6 @@
 ---
 title: VXLAN 数据面：VTEP、VNI、封装、MTU 与 Linux 实验
+sidebar_label: "03. VXLAN 数据面：VTEP、VNI、封装、MTU 与 Linux 实验"
 sidebar_position: 3
 tags: [VXLAN, VTEP, VNI, Overlay, Linux, MTU]
 description: 从内外层报文理解 VXLAN 数据面，并用 Linux VXLAN 设备完成跨三层二层互通实验。

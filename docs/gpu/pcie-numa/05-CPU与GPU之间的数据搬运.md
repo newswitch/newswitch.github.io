@@ -1,5 +1,6 @@
 ---
 title: CPU 与 GPU 之间的数据搬运：PCIe、Pinned Memory、DMA 与 CUDA Stream
+sidebar_label: "05. CPU 与 GPU 之间的数据搬运：PCIe、Pinned Memory、DMA 与 CUDA Stream"
 date: 2026-08-06 18:10:00
 categories: 云原生
 tags: [GPU, CUDA, PCIe, DMA, Pinned Memory, NUMA]

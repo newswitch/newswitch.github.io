@@ -1,5 +1,6 @@
 ---
 title: ECN、CNP 与 DCQCN 拥塞控制
+sidebar_label: "05. ECN、CNP 与 DCQCN 拥塞控制"
 sidebar_position: 5
 tags: [ECN, CNP, DCQCN, RoCE, Congestion Control]
 description: 理解交换机 CE 标记、接收端 CNP、发送端速率控制，以及 ECN 阈值与 PFC 的协同。

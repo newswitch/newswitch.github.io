@@ -1,5 +1,6 @@
 ---
 title: Flink CLI、REST、Checkpoint 与 Savepoint 命令手册
+sidebar_label: "90. Flink CLI、REST、Checkpoint 与 Savepoint 命令手册"
 sidebar_position: 90
 description: 从作业提交、状态查看和 SQL Client，到 Checkpoint、Savepoint、恢复升级、REST 指标与 Kubernetes Operator 排障。
 tags: [Flink, 命令手册, 流计算, Checkpoint, Savepoint]

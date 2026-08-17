@@ -1,5 +1,6 @@
 ---
 title: "JVM Heap、GC、Page Cache、Circuit Breaker 与 Cache"
+sidebar_label: "12. JVM Heap、GC、Page Cache、Circuit Breaker 与 Cache"
 sidebar_position: 12
 tags: [Elasticsearch, JVM, GC, Page Cache, Circuit Breaker]
 description: "理解 Elasticsearch 堆内、堆外、文件缓存和内存保护边界。"

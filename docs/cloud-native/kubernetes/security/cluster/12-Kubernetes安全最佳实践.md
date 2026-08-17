@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes 集群安全性配置最佳实践"
+sidebar_label: "12. Kubernetes 集群安全性配置最佳实践"
 sidebar_position: 12
 tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "全面介绍 Kubernetes 集群安全配置的最佳实践，包括端口管理、API 安全设置、RBAC 配置以及安全扫描工具的使用指南。"

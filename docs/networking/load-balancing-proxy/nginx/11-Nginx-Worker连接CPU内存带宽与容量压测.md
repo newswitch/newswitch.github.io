@@ -1,5 +1,6 @@
 ---
 title: "Worker、连接、CPU、内存、带宽与容量压测"
+sidebar_label: "11. Worker、连接、CPU、内存、带宽与容量压测"
 sidebar_position: 11
 tags: [Nginx, 容量规划, Benchmark]
 description: "按短连接、长连接、TLS、响应体和上游延迟规划 Nginx。"

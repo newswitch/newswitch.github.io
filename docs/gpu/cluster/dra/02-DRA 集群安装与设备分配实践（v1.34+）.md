@@ -1,5 +1,6 @@
 ---
 title: DRA 集群安装与设备分配实践（v1.34+）
+sidebar_label: "02. DRA 集群安装与设备分配实践（v1.34+）"
 date: 2026-07-22 19:45:00
 categories: 云原生
 tags: ["Kubernetes", "DRA", "ResourceClaim", "DeviceClass", "GPU", "学习路线"]

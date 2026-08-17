@@ -1,5 +1,6 @@
 ---
 title: "逻辑复制、Publication/Subscription、CDC 与迁移"
+sidebar_label: "15. 逻辑复制、Publication/Subscription、CDC 与迁移"
 sidebar_position: 15
 tags: [PostgreSQL, Logical Replication, CDC, Migration]
 description: "理解逻辑解码、Publication/Subscription、复制身份、Slot、DDL 和迁移切换。"

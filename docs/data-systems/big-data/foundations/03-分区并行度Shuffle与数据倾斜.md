@@ -1,5 +1,6 @@
 ---
 title: 分区、并行度、Shuffle 与数据倾斜：理解分布式计算性能
+sidebar_label: "03. 分区、并行度、Shuffle 与数据倾斜：理解分布式计算性能"
 sidebar_position: 3
 tags: [分区, 并行度, Shuffle, 数据倾斜, 性能调优]
 description: 从数据分布和任务执行路径理解分区、并行度与 Shuffle，学会用指标识别倾斜、长尾、spill 和网络瓶颈并选择治理方案。

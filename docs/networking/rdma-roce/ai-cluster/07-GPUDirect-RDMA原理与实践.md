@@ -1,5 +1,6 @@
 ---
 title: GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存
+sidebar_label: "07. GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存"
 sidebar_position: 7
 date: 2026-08-06 18:30:00
 categories: 云原生

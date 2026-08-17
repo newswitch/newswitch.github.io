@@ -1,5 +1,6 @@
 ---
 title: "CUDA 执行模型与 Kernel 性能基础"
+sidebar_label: "01. CUDA 执行模型与 Kernel 性能基础"
 sidebar_position: 8
 tags: [CUDA, Kernel, Thread, Warp, Occupancy, Memory Coalescing, GPU]
 description: "从 Grid、Block、Thread、Warp、SM 和内存层次理解 CUDA Kernel 的执行、同步、分支、访存与性能分析。"

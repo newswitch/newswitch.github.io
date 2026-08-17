@@ -1,5 +1,6 @@
 ---
 title: "使用 kubeconfig 或 token 进行用户身份认证"
+sidebar_label: "10. 使用 kubeconfig 或 token 进行用户身份认证"
 sidebar_position: 10
 tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "详细介绍在 Kubernetes 集群中使用 kubeconfig 文件和 Service Account token 两种方式进行用户身份认证的方法，包括证书配置、token 生成和权限管理。"

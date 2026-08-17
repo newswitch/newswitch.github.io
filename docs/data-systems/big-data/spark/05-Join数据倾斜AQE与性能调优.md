@@ -1,5 +1,6 @@
 ---
 title: Spark Join、数据倾斜、AQE 与性能调优
+sidebar_label: "05. Spark Join、数据倾斜、AQE 与性能调优"
 sidebar_position: 5
 tags: [Spark, Join, 数据倾斜, AQE]
 description: 从物理计划和 task 分布识别 Join 倾斜，正确使用广播、AQE、salting 和两阶段聚合。

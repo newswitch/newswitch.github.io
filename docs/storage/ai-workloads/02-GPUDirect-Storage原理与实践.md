@@ -1,5 +1,6 @@
 ---
 title: GPUDirect Storage 原理与实践：存储如何直接进入 GPU 显存
+sidebar_label: "02. GPUDirect Storage 原理与实践：存储如何直接进入 GPU 显存"
 date: 2026-08-06 18:50:00
 categories: 云原生
 tags: [GPU, GPUDirect Storage, GDS, cuFile, NVMe, 存储]

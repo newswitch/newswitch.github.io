@@ -1,5 +1,6 @@
 ---
 title: "Keeper/Raft、复制队列、选主、故障恢复和扩缩容"
+sidebar_label: "11. Keeper/Raft、复制队列、选主、故障恢复和扩缩容"
 sidebar_position: 11
 tags: [ClickHouse, Keeper, Raft, Replication Queue]
 description: "理解 Keeper 元数据、Part 复制任务、Replica leader、只读状态和安全扩缩。"

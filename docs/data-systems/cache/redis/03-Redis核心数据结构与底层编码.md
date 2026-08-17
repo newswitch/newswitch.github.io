@@ -1,5 +1,6 @@
 ---
 title: "String、Hash、List、Set、ZSet 与底层编码"
+sidebar_label: "03. String、Hash、List、Set、ZSet 与底层编码"
 sidebar_position: 3
 tags: [Redis, String, Hash, List, Set, ZSet]
 description: "从业务语义、复杂度、对象编码和内存代价选择 Redis 核心数据结构。"

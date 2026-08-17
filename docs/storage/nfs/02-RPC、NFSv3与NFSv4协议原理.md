@@ -1,5 +1,6 @@
 ---
 title: "RPC、NFSv3 与 NFSv4 协议原理"
+sidebar_label: "02. RPC、NFSv3 与 NFSv4 协议原理"
 sidebar_position: 2
 tags: [NFS, RPC, NFSv3, NFSv4, Linux, 网络文件系统]
 description: "从 ONC RPC、XDR、文件句柄和客户端调用链理解 NFSv3/NFSv4 的端口、状态、会话、锁与故障恢复差异。"

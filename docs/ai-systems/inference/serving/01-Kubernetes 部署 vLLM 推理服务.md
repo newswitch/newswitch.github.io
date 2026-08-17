@@ -1,5 +1,6 @@
 ---
 title: Kubernetes 部署 vLLM 推理服务
+sidebar_label: "01. Kubernetes 部署 vLLM 推理服务"
 date: 2026-07-22 17:10:00
 categories: 云原生
 tags: ["Kubernetes", "vLLM", "GPU", "推理", "Helm", "学习路线"]

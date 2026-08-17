@@ -1,5 +1,6 @@
 ---
 title: "AI Infra 技术模块学习地图"
+sidebar_label: "00. AI Infra 技术模块学习地图"
 sidebar_position: 0
 tags: [AI Infra, 学习路线, GPU, 网络, 存储, Kubernetes, vLLM, SRE]
 description: "按计算、网络、存储、调度、推理、可观测性、性能工程和自动化八个技术模块学习 AI 基础设施，并通过综合实战理解完整数据路径。"

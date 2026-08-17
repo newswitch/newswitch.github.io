@@ -1,5 +1,6 @@
 ---
 title: "InnoDB Cluster 与 Router 高可用部署"
+sidebar_label: "08. InnoDB Cluster 与 Router 高可用部署"
 sidebar_position: 8
 tags: [MySQL, InnoDB Cluster, Group Replication, MySQL Router, 高可用]
 description: "从 Group Replication 多数派、事务认证和 Router 元数据路由原理出发，使用 MySQL Shell AdminAPI 部署并验收三节点 InnoDB Cluster。"

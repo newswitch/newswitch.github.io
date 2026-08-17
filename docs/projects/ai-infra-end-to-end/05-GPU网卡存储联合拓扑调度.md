@@ -1,5 +1,6 @@
 ---
 title: GPU、网卡、存储联合拓扑调度
+sidebar_label: "05. GPU、网卡、存储联合拓扑调度"
 date: 2026-08-06 18:40:00
 categories: 云原生
 tags: [Kubernetes, GPU, 调度, RDMA, NVLink, CSI, 拓扑]

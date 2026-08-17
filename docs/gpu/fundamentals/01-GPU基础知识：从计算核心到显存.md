@@ -1,5 +1,6 @@
 ---
 title: GPU 基础知识：从计算核心到显存
+sidebar_label: "01. GPU 基础知识：从计算核心到显存"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["GPU", "CUDA", "显存", "Tensor Core", "nvidia-smi", "学习路线"]

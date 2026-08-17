@@ -1,5 +1,6 @@
 ---
 title: "使用 Terraform 管理 Kubernetes：从集群到应用的 IaC 实践"
+sidebar_label: "01. 使用 Terraform 管理 Kubernetes：从集群到应用的 IaC 实践"
 sidebar_position: 1
 tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "介绍 Terraform 在 Kubernetes 集群管理和资源编排中的最佳实践与应用场景。"

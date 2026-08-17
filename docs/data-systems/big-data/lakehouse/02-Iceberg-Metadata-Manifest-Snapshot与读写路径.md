@@ -1,5 +1,6 @@
 ---
 title: Iceberg Metadata、Manifest、Snapshot 与读写路径
+sidebar_label: "02. Iceberg Metadata、Manifest、Snapshot 与读写路径"
 sidebar_position: 2
 tags: [Iceberg, Metadata, Manifest, Snapshot]
 description: 读懂 Iceberg 元数据树、文件统计、快照提交、扫描规划和乐观并发。

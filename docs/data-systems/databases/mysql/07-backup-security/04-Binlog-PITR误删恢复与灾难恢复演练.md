@@ -1,5 +1,6 @@
 ---
 title: "Binlog PITR、误删恢复与灾难恢复演练"
+sidebar_label: "04. Binlog PITR、误删恢复与灾难恢复演练"
 sidebar_position: 4
 tags: [MySQL, Binlog, PITR, 误删恢复, 灾难恢复]
 description: "从基线备份和连续 Binlog 恢复到目标事务之前，掌握误删隔离、事件定位、重放与业务校验。"

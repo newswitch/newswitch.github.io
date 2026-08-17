@@ -1,5 +1,6 @@
 ---
 title: "Ceph 整体架构：MON、MGR、OSD、MDS 和 RGW 如何协作"
+sidebar_label: "03. Ceph 整体架构：MON、MGR、OSD、MDS 和 RGW 如何协作"
 sidebar_position: 3
 tags: [Ceph, 学习路线, 存储, RADOS, MON, OSD]
 description: "从分层视图讲清 RADOS、MON、MGR、OSD、MDS、RGW 的职责、协作链路，以及组件故障对业务的影响。"

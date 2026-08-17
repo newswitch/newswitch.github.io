@@ -1,5 +1,6 @@
 ---
 title: "Merge、Mutation、TTL、小 Part、磁盘与对象存储治理"
+sidebar_label: "12. Merge、Mutation、TTL、小 Part、磁盘与对象存储治理"
 sidebar_position: 12
 tags: [ClickHouse, Merge, Mutation, TTL, Parts]
 description: "治理后台合并、Mutation、生命周期、小 Part 和多磁盘/对象存储。"

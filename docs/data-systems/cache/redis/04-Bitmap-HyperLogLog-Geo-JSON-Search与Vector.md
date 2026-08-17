@@ -1,5 +1,6 @@
 ---
 title: "Bitmap、HyperLogLog、Geo、JSON、Search 与 Vector"
+sidebar_label: "04. Bitmap、HyperLogLog、Geo、JSON、Search 与 Vector"
 sidebar_position: 4
 tags: [Redis, Bitmap, HyperLogLog, JSON, Search, Vector]
 description: "理解 Redis 特殊结构与模块能力的精度、内存、索引和产品边界。"

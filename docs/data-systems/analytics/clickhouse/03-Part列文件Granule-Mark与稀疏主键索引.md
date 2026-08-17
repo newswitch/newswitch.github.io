@@ -1,5 +1,6 @@
 ---
 title: "Part、Column File、Granule、Mark 与稀疏主键索引"
+sidebar_label: "03. Part、Column File、Granule、Mark 与稀疏主键索引"
 sidebar_position: 3
 tags: [ClickHouse, Part, Granule, Mark, Primary Index]
 description: "理解 MergeTree Part 内列文件、压缩块、Granule、Mark 和稀疏索引裁剪。"

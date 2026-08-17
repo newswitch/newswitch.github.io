@@ -1,5 +1,6 @@
 ---
 title: "OutputProcessor、Detokenizer 与流式返回"
+sidebar_label: "13. OutputProcessor、Detokenizer 与流式返回"
 sidebar_position: 13
 tags: [vLLM, V1, OutputProcessor, Detokenizer, SSE, 源码分析]
 description: "从 ModelRunnerOutput 出发，分析 token 验收、停止判断、增量解码、SSE 返回、取消与资源释放。"

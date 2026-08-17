@@ -1,5 +1,6 @@
 ---
 title: Airflow DAG、依赖、补数、重试与幂等调度
+sidebar_label: "02. Airflow DAG、依赖、补数、重试与幂等调度"
 sidebar_position: 2
 tags: [Airflow, DAG, Backfill, 幂等, 调度]
 description: 从 Data Interval 和 Task Instance 设计可重跑、可补数、可观测的数据工作流。

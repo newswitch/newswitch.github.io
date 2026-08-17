@@ -1,5 +1,6 @@
 ---
 title: "Push/Simple Consumer、Offset、负载均衡与重试 DLQ"
+sidebar_label: "06. Push/Simple Consumer、Offset、负载均衡与重试 DLQ"
 sidebar_position: 6
 tags: [RocketMQ, Consumer, Offset, Retry, DLQ]
 description: "理解消费模式、Queue 分配、确认、重复、重试和死信治理。"

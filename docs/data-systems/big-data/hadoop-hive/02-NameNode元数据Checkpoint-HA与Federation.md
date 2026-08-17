@@ -1,5 +1,6 @@
 ---
 title: NameNode 元数据、Checkpoint、HA 与 Federation
+sidebar_label: "02. NameNode 元数据、Checkpoint、HA 与 Federation"
 sidebar_position: 2
 tags: [HDFS, NameNode, HA, Federation]
 description: 理解 fsimage、edits、JournalNode、主备切换和 Federation，建立 NameNode 容量与恢复模型。

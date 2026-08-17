@@ -1,5 +1,6 @@
 ---
 title: "向量维度、Segment、索引、QPS、内存与容量规划"
+sidebar_label: "12. 向量维度、Segment、索引、QPS、内存与容量规划"
 sidebar_position: 12
 tags: [Milvus, 容量规划, Vector, Segment]
 description: "估算向量原始空间、索引放大、查询加载、写入和对象存储容量。"

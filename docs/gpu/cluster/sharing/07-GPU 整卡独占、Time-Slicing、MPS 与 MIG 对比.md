@@ -1,5 +1,6 @@
 ---
 title: GPU 整卡独占、Time-Slicing、MPS 与 MIG 对比
+sidebar_label: "07. GPU 整卡独占、Time-Slicing、MPS 与 MIG 对比"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "Time-Slicing", "MPS", "MIG", "学习路线"]

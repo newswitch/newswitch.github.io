@@ -1,5 +1,6 @@
 ---
 title: "页缓存、预读、回写与 Direct I/O"
+sidebar_label: "02. 页缓存、预读、回写与 Direct I/O"
 sidebar_position: 2
 tags: [Linux, Page Cache, Direct IO, mmap, writeback, 存储]
 description: "理解 Linux 页缓存、readahead、脏页回写、fsync、mmap 与 Direct I/O 的语义、性能和排障方法。"

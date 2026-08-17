@@ -1,5 +1,6 @@
 ---
 title: NVIDIA Device Plugin 部署与配置
+sidebar_label: "02. NVIDIA Device Plugin 部署与配置"
 date: 2026-07-22 16:40:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "Device Plugin", "Helm", "Time-Slicing", "MPS", "学习路线"]

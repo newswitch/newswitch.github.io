@@ -1,5 +1,6 @@
 ---
 title: "Pause 容器"
+sidebar_label: "04. Pause 容器"
 sidebar_position: 4
 tags: [Kubernetes, Pod, 学习路线]
 description: "深入探究 Kubernetes 中 Pause 容器（Infra 容器）的作用与原理，了解它如何实现 Pod 内容器间的网络命名空间共享，以及在 Pod 生命周期管理中的关键作用。"

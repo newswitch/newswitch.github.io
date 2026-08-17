@@ -1,5 +1,6 @@
 ---
 title: "MySQL 解决什么问题及一条 SQL 的完整路径"
+sidebar_label: "01. MySQL 解决什么问题及一条 SQL 的完整路径"
 sidebar_position: 1
 tags: [MySQL, OLTP, SQL, InnoDB, 架构]
 description: "从关系数据库、OLTP 和客户端服务器架构开始，追踪一条 SQL 从连接、解析、优化、执行到 InnoDB 与磁盘的完整路径。"

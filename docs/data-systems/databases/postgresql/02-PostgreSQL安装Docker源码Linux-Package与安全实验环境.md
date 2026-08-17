@@ -1,5 +1,6 @@
 ---
 title: "PostgreSQL 安装、Docker、源码、Linux Package 与安全实验环境"
+sidebar_label: "02. PostgreSQL 安装、Docker、源码、Linux Package 与安全实验环境"
 sidebar_position: 2
 tags: [PostgreSQL, 部署, Docker, 源码编译, 安全]
 description: "使用 Package、Docker 与源码建立 PostgreSQL 18 安全实验环境，并理解 initdb、实例目录、认证、服务管理、验收和回滚。"

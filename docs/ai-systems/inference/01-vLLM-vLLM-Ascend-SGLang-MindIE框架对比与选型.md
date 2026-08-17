@@ -1,5 +1,6 @@
 ---
 title: vLLM、vLLM-Ascend、SGLang、MindIE 框架对比与选型
+sidebar_label: "01. vLLM、vLLM-Ascend、SGLang、MindIE 框架对比与选型"
 sidebar_position: 1
 tags: [vLLM, vLLM-Ascend, SGLang, MindIE, 推理框架, 选型]
 description: 从控制面、执行面、KV Cache、前缀缓存、调度、参数、硬件生态和生产运维对比四大推理框架，并给出公平压测和迁移方法。

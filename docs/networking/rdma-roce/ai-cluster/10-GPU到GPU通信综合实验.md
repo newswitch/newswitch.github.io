@@ -1,5 +1,6 @@
 ---
 title: GPU 到 GPU 通信综合实验
+sidebar_label: "10. GPU 到 GPU 通信综合实验"
 sidebar_position: 10
 tags: [Lab, GPU, RDMA, GPUDirect, NCCL]
 description: 用两台 GPU 服务器完成 Socket、Host RDMA、GPU RDMA 和 NCCL 的分层验证与故障注入。

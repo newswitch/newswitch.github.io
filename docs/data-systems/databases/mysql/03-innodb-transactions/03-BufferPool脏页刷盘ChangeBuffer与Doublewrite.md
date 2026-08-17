@@ -1,5 +1,6 @@
 ---
 title: "Buffer Pool、脏页、刷盘、Change Buffer 与 Doublewrite"
+sidebar_label: "03. Buffer Pool、脏页、刷盘、Change Buffer 与 Doublewrite"
 sidebar_position: 3
 tags: [MySQL, InnoDB, Buffer Pool, 脏页, Doublewrite]
 description: "理解 InnoDB 缓存、LRU、脏页、Checkpoint 刷盘、Change Buffer 和 Doublewrite 的性能与完整性边界。"

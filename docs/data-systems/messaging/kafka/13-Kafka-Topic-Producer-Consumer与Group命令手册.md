@@ -1,5 +1,6 @@
 ---
 title: Kafka Topic、Producer、Consumer 与 Group 命令手册
+sidebar_label: "13. Kafka Topic、Producer、Consumer 与 Group 命令手册"
 sidebar_position: 13
 description: 从连接验证、Topic 管理和消息收发，到消费组积压、Offset 重置、分区迁移与 KRaft 仲裁排查。
 tags: [Kafka, 命令手册, 消息队列, 故障排查]

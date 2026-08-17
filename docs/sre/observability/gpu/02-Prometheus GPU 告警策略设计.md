@@ -1,5 +1,6 @@
 ---
 title: Prometheus GPU 告警策略设计
+sidebar_label: "02. Prometheus GPU 告警策略设计"
 date: 2026-07-22 18:35:00
 categories: 云原生
 tags: ["Prometheus", "Alertmanager", "DCGM", "GPU", "告警", "学习路线"]

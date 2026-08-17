@@ -1,5 +1,6 @@
 ---
 title: 湖仓查询与 OLAP 选型、基准测试和故障排查
+sidebar_label: "04. 湖仓查询与 OLAP 选型、基准测试和故障排查"
 sidebar_position: 4
 tags: [OLAP, 选型, 基准测试, 故障排查]
 description: 根据数据所有权、新鲜度、并发和查询模式选择 Trino、ClickHouse、Doris 或混合架构。

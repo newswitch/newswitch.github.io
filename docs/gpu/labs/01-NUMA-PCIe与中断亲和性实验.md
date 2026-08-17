@@ -1,5 +1,6 @@
 ---
 title: "NUMA、PCIe 与中断亲和性实验：对齐 CPU、GPU、NIC 和 NVMe"
+sidebar_label: "01. NUMA、PCIe 与中断亲和性实验：对齐 CPU、GPU、NIC 和 NVMe"
 sidebar_position: 10
 tags: [NUMA, PCIe, IRQ Affinity, GPU, NIC, NVMe, 拓扑]
 description: "通过只读拓扑检查和单变量实验，验证 CPU/内存/GPU/NIC/NVMe 的 NUMA 与 PCIe 亲和性，并避免盲目绑核。"

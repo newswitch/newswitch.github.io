@@ -1,5 +1,6 @@
 ---
 title: "etcd 从零到精通学习路线"
+sidebar_label: "00. etcd 从零到精通学习路线"
 sidebar_position: 0
 tags: [etcd, Raft, MVCC, Kubernetes, 学习路线]
 description: "以 etcd 3.6 为主线，从 KV、Revision、Watch、Lease 深入 Raft、WAL、Snapshot、线性一致读、集群维护、灾难恢复和源码。"

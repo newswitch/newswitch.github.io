@@ -1,5 +1,6 @@
 ---
 title: "备份、Snapshot、升级、迁移、安全与多租户"
+sidebar_label: "14. 备份、Snapshot、升级、迁移、安全与多租户"
 sidebar_position: 14
 tags: [Milvus, Backup, Upgrade, Security, Multi-tenancy]
 description: "建立 Milvus 一致备份、恢复、版本升级、Collection 迁移和租户安全。"

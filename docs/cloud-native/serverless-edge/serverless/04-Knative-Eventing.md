@@ -1,5 +1,6 @@
 ---
 title: "Knative Eventing"
+sidebar_label: "04. Knative Eventing"
 sidebar_position: 4
 tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative Eventing 的事件驱动架构和使用方法。"

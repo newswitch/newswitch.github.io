@@ -1,5 +1,6 @@
 ---
 title: "Scheduler、Batch、KV Cache 与抢占性能实验"
+sidebar_label: "18. Scheduler、Batch、KV Cache 与抢占性能实验"
 sidebar_position: 18
 tags: [vLLM, Scheduler, Continuous Batching, KV Cache, 性能实验]
 description: "用控制变量实验分析 max_num_seqs、max_num_batched_tokens、Chunked Prefill、KV 容量和抢占的相互作用。"

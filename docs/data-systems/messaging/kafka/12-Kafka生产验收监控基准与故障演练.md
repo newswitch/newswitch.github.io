@@ -1,5 +1,6 @@
 ---
 title: "生产验收、监控告警、基准测试与故障演练"
+sidebar_label: "12. 生产验收、监控告警、基准测试与故障演练"
 sidebar_position: 12
 tags: [Kafka, Monitoring, Benchmark, Runbook]
 description: "建立 Kafka 从端到端 SLO、容量和监控到 Broker/Controller/磁盘故障演练的验收体系。"

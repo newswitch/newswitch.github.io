@@ -1,5 +1,6 @@
 ---
 title: Flink DataStream、Operator Chain、分区与并行度
+sidebar_label: "02. Flink DataStream、Operator Chain、分区与并行度"
 sidebar_position: 2
 tags: [Flink, DataStream, Operator Chain, Parallelism]
 description: 理解 DataStream 转换、keyBy/rebalance/rescale/broadcast、算子链和端到端并行度匹配。

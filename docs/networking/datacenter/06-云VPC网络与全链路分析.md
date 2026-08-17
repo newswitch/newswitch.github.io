@@ -1,5 +1,6 @@
 ---
 title: 云 VPC 网络与全链路分析
+sidebar_label: "06. 云 VPC 网络与全链路分析"
 sidebar_position: 6
 tags: [VPC, Route Table, Security Group, NAT Gateway, Load Balancer]
 description: 用通用网络原理拆解 VPC、子网、路由、安全组、NAT、负载均衡和跨 VPC 访问路径。

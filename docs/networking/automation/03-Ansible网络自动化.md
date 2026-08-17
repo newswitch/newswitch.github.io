@@ -1,5 +1,6 @@
 ---
 title: Ansible 网络自动化与幂等变更
+sidebar_label: "03. Ansible 网络自动化与幂等变更"
 sidebar_position: 3
 tags: [Ansible, Network Resource Modules, Idempotency, Check Mode]
 description: 理解 Inventory、连接插件、资源模块状态、差异预览、分批执行与变更后验证。

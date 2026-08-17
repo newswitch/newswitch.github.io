@@ -1,5 +1,6 @@
 ---
 title: "TTFT 超标但 GPU 利用率低：完整排查案例"
+sidebar_label: "15. TTFT 超标但 GPU 利用率低：完整排查案例"
 sidebar_position: 15
 tags: [vLLM, TTFT, GPU利用率, 故障排查, 案例]
 description: "以 GPU 利用率 30%、TTFT 超标为例，给出从测量校验到网关、CPU、调度、KV、GPU 和多卡通信的证据闭环。"

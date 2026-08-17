@@ -1,5 +1,6 @@
 ---
 title: 数据一致性、幂等、At-Least-Once 与 Exactly-Once
+sidebar_label: "04. 数据一致性、幂等、At-Least-Once 与 Exactly-Once"
 sidebar_position: 4
 tags: [数据一致性, 幂等, At-Least-Once, Exactly-Once, Checkpoint]
 description: 从消息投递、状态恢复和下游提交三个边界理解处理语义，设计可重放、可去重和可验证的端到端数据链路。

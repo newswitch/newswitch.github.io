@@ -1,5 +1,6 @@
 ---
 title: "MySQL 生产故障排查 Runbook 与事故复盘"
+sidebar_label: "05. MySQL 生产故障排查 Runbook 与事故复盘"
 sidebar_position: 5
 tags: [MySQL, Runbook, OnCall, 故障排查, 事故复盘]
 description: "用影响、时间线、执行与等待分类组织 MySQL 事故响应，覆盖止血、取证、恢复、校验和无责复盘。"

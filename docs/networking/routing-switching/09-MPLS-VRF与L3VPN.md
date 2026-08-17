@@ -1,5 +1,6 @@
 ---
 title: MPLS、VRF、RD/RT 与 L3VPN
+sidebar_label: "09. MPLS、VRF、RD/RT 与 L3VPN"
 sidebar_position: 9
 tags: [MPLS, VRF, LDP, MP-BGP, L3VPN, RD, RT]
 description: 从标签转发和 VRF 隔离开始，理解 MPLS L3VPN 控制面、数据面、RD/RT 与分层排障。

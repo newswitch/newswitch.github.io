@@ -1,5 +1,6 @@
 ---
 title: "倒排索引、Term Dictionary、Postings 与 Doc Values"
+sidebar_label: "02. 倒排索引、Term Dictionary、Postings 与 Doc Values"
 sidebar_position: 2
 tags: [Elasticsearch, Lucene, Inverted Index, Doc Values]
 description: "理解全文搜索、过滤、排序和聚合背后的 Lucene 数据结构。"

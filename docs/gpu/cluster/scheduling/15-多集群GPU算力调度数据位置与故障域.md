@@ -1,5 +1,6 @@
 ---
 title: "多集群 GPU 算力调度：配额、数据位置与故障域"
+sidebar_label: "15. 多集群 GPU 算力调度：配额、数据位置与故障域"
 sidebar_position: 15
 tags: [多集群, GPU, MultiKueue, Karmada, 调度, 数据本地性, 容灾]
 description: "从集群能力、GPU 配额、模型与数据位置、网络成本和故障域出发设计多集群训练与推理放置，并分析 MultiKueue 的职责边界。"

@@ -1,5 +1,6 @@
 ---
 title: "什么是 Istio?"
+sidebar_label: "02. 什么是 Istio?"
 sidebar_position: 2
 tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "Istio 是一个开源的服务网格平台，提供流量管理、安全性和可观测性功能。本文介绍 Istio 的核心特性、架构组件以及数据平面和控制平面的工作原理。"

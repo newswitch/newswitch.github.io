@@ -1,5 +1,6 @@
 ---
 title: NCCL Collective、算法与协议
+sidebar_label: "02. NCCL Collective、算法与协议"
 sidebar_position: 2
 tags: [NCCL, Ring, Tree, Channel, LL, LL128, Simple]
 description: 理解 Rank、Communicator、Collective、Channel、算法、协议和 Transport，正确解读 NCCL 日志与性能。

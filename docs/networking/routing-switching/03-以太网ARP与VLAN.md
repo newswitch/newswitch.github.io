@@ -1,5 +1,6 @@
 ---
 title: 以太网、MAC、ARP、VLAN 与 Linux Bridge
+sidebar_label: "03. 以太网、MAC、ARP、VLAN 与 Linux Bridge"
 sidebar_position: 3
 tags: [Ethernet, MAC, ARP, VLAN, Trunk, Linux Bridge]
 description: 从以太网帧、MAC 学习和 ARP 开始，理解 VLAN 隔离、Access/Trunk 与 Linux Bridge 实验。

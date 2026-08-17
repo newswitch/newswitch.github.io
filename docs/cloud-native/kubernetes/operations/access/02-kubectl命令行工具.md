@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes API 访问与 kubectl 实践"
+sidebar_label: "02. Kubernetes API 访问与 kubectl 实践"
 sidebar_position: 2
 tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "详解如何通过 kubectl 命令行工具与 Kubernetes API 交互，涵盖认证机制、请求模式、资源管理与自动化实践，助力高效管理集群资源。"

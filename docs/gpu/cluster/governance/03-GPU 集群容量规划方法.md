@@ -1,5 +1,6 @@
 ---
 title: GPU 集群容量规划方法
+sidebar_label: "03. GPU 集群容量规划方法"
 date: 2026-07-22 19:15:00
 categories: 云原生
 tags: ["容量规划", "GPU", "Kueue", "利用率", "学习路线"]

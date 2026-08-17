@@ -1,5 +1,6 @@
 ---
 title: "NFS 性能指标、压测与参数调优"
+sidebar_label: "05. NFS 性能指标、压测与参数调优"
 sidebar_position: 5
 tags: [NFS, nfsstat, nfsiostat, fio, rsize, wsize, nconnect, 性能调优]
 description: "按应用、客户端 RPC、网络、服务端和后端五层测量 NFS，并基于证据调整 rsize、wsize、nconnect、缓存和并发。"

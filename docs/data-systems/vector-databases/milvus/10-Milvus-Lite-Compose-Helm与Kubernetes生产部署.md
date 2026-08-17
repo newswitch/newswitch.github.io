@@ -1,5 +1,6 @@
 ---
 title: "Lite、Compose Standalone、Helm/K8s Distributed 多种部署"
+sidebar_label: "10. Lite、Compose Standalone、Helm/K8s Distributed 多种部署"
 sidebar_position: 10
 tags: [Milvus, 部署, Docker Compose, Helm, Kubernetes]
 description: "提供 Milvus 从本地 Lite 到 Standalone 和 Distributed 的可复现交付、验收与迁移流程。"

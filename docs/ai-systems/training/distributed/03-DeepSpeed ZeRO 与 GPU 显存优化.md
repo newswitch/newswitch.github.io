@@ -1,5 +1,6 @@
 ---
 title: "DeepSpeed ZeRO：从显存估算到多机训练与故障排查"
+sidebar_label: "03. DeepSpeed ZeRO：从显存估算到多机训练与故障排查"
 date: 2026-07-22 17:40:00
 categories: 云原生
 tags: ["DeepSpeed", "ZeRO", "GPU", "显存", "分布式训练", "故障排查"]

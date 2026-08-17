@@ -1,5 +1,6 @@
 ---
 title: "Envoy Native、Wasm、Dynamic Module 与 Filter 扩展开发"
+sidebar_label: "12. Envoy Native、Wasm、Dynamic Module 与 Filter 扩展开发"
 sidebar_position: 12
 tags: [Envoy, Filter, Wasm, Dynamic Module, Extension]
 description: "比较 Envoy 原生扩展、Wasm 和动态模块的能力、隔离、发布、性能与故障边界。"

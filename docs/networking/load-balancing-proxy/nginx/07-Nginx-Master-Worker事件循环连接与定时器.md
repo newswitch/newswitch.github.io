@@ -1,5 +1,6 @@
 ---
 title: "Master/Worker、Event Loop、Accept、连接与定时器"
+sidebar_label: "07. Master/Worker、Event Loop、Accept、连接与定时器"
 sidebar_position: 7
 tags: [Nginx, Master, Worker, Event Loop]
 description: "从 accept 到 epoll 事件、连接对象、定时器和响应发送理解 Nginx 内核。"

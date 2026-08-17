@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes Dashboard - 官方 Web UI"
+sidebar_label: "10. Kubernetes Dashboard - 官方 Web UI"
 sidebar_position: 10
 tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "Kubernetes Dashboard 是 Kubernetes 官方提供的基于 Web 的用户界面，用于管理 Kubernetes 集群中的应用和资源，支持资源查看、部署管理、故障排查等功能。"

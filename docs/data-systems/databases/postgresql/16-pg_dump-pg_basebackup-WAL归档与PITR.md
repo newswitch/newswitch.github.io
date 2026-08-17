@@ -1,5 +1,6 @@
 ---
 title: "pg_dump、pg_basebackup、WAL Archive 与 PITR"
+sidebar_label: "16. pg_dump、pg_basebackup、WAL Archive 与 PITR"
 sidebar_position: 16
 tags: [PostgreSQL, Backup, PITR, pg_dump, pg_basebackup]
 description: "设计 PostgreSQL 逻辑/物理备份、WAL 归档、时间点恢复和恢复验收。"

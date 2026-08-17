@@ -1,5 +1,6 @@
 ---
 title: "备份恢复、权限、配额、升级与生产故障 Runbook"
+sidebar_label: "14. 备份恢复、权限、配额、升级与生产故障 Runbook"
 sidebar_position: 14
 tags: [ClickHouse, Backup, Security, Upgrade, Runbook]
 description: "建立 ClickHouse 备份恢复、安全、资源治理、滚动升级和故障定位闭环。"

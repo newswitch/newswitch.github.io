@@ -1,5 +1,6 @@
 ---
 title: GPU 集群升级与变更管理
+sidebar_label: "05. GPU 集群升级与变更管理"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU Operator", "变更管理", "升级", "学习路线"]

@@ -1,5 +1,6 @@
 ---
 title: Iceberg 并发提交、小文件、Compaction 与快照生命周期
+sidebar_label: "04. Iceberg 并发提交、小文件、Compaction 与快照生命周期"
 sidebar_position: 4
 tags: [Iceberg, Compaction, 小文件, Snapshot Expiration]
 description: 治理高频提交、文件与 Manifest 膨胀、并发冲突、Delete Files 和安全垃圾回收。

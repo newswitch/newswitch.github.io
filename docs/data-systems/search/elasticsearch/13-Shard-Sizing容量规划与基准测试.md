@@ -1,5 +1,6 @@
 ---
 title: "Shard Sizing、吞吐、延迟、容量规划与基准测试"
+sidebar_label: "13. Shard Sizing、吞吐、延迟、容量规划与基准测试"
 sidebar_position: 13
 tags: [Elasticsearch, Shard Sizing, 容量规划, Benchmark]
 description: "从真实数据压缩比、Shard 大小、并发和恢复窗口估算 Elasticsearch 集群。"

@@ -1,5 +1,6 @@
 ---
 title: Flink Event Time、Watermark、Window 与迟到数据
+sidebar_label: "03. Flink Event Time、Watermark、Window 与迟到数据"
 sidebar_position: 3
 tags: [Flink, Event Time, Watermark, Window]
 description: 从事件时间与乱序出发设计 Watermark、窗口触发、允许迟到和状态清理。

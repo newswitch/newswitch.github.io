@@ -1,5 +1,6 @@
 ---
 title: "PostgreSQL 源码、Extension、Hook 与内核调试"
+sidebar_label: "18. PostgreSQL 源码、Extension、Hook 与内核调试"
 sidebar_position: 18
 tags: [PostgreSQL, 源码, Extension, Hook, Debug]
 description: "从 postmaster/backend、Parser/Planner/Executor 到存储/WAL，并理解扩展与 Hook 边界。"

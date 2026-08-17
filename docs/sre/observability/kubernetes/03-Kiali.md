@@ -1,5 +1,6 @@
 ---
 title: "Kiali 服务网格观测面板"
+sidebar_label: "03. Kiali 服务网格观测面板"
 sidebar_position: 3
 tags: [Kubernetes, 可观测性, PartII, 学习路线]
 description: "Kiali 的安装、配置和使用方法，专注于 Istio 服务网格的可观测性。"

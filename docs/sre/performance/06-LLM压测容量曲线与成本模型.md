@@ -1,5 +1,6 @@
 ---
 title: "LLM 压测、容量曲线与成本模型"
+sidebar_label: "06. LLM 压测、容量曲线与成本模型"
 sidebar_position: 6
 tags: [LLM, vLLM, 压测, 容量规划, TTFT, TPOT, 成本]
 description: "设计符合真实 Token 分布和到达模型的 LLM 在线压测，绘制过载曲线，计算 SLO 容量、冗余、副本数和单位 Token 成本。"

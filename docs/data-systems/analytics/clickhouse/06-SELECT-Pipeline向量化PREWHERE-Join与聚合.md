@@ -1,5 +1,6 @@
 ---
 title: "SELECT Pipeline、向量化、PREWHERE、Join 与聚合"
+sidebar_label: "06. SELECT Pipeline、向量化、PREWHERE、Join 与聚合"
 sidebar_position: 6
 tags: [ClickHouse, Query Pipeline, PREWHERE, Join]
 description: "从解析、裁剪、列读取到并行 Pipeline、Join、聚合和输出定位查询成本。"

@@ -1,5 +1,6 @@
 ---
 title: "Ceph PG 异常排查：从状态含义到 Inactive、Peering、Inconsistent 与 Unfound"
+sidebar_label: "18. Ceph PG 异常排查：从状态含义到 Inactive、Peering、Inconsistent 与 Unfound"
 sidebar_position: 18
 tags: [Ceph, 学习路线, 存储, PG]
 description: "读懂 PG 组合状态，排查 inactive/peering/degraded/inconsistent/unfound，并建立可执行的 PG Runbook。"

@@ -1,5 +1,6 @@
 ---
 title: "Envoy Sidecar、DaemonSet、Gateway、Service Mesh 与多级代理拓扑"
+sidebar_label: "13. Envoy Sidecar、DaemonSet、Gateway、Service Mesh 与多级代理拓扑"
 sidebar_position: 13
 tags: [Envoy, Sidecar, DaemonSet, Gateway, Service Mesh]
 description: "比较 Envoy 部署拓扑、故障域、资源成本、身份边界，并追踪多级代理中的请求与超时。"

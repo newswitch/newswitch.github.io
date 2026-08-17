@@ -1,5 +1,6 @@
 ---
 title: "Primary/Replica Shard、路由、分配、恢复与 Rebalance"
+sidebar_label: "07. Primary/Replica Shard、路由、分配、恢复与 Rebalance"
 sidebar_position: 7
 tags: [Elasticsearch, Shard, Replica, Allocation]
 description: "理解文档路由、主副分片、allocation decider、恢复和再均衡。"

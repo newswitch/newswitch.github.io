@@ -1,5 +1,6 @@
 ---
 title: PFC 原理、缓冲阈值与风险
+sidebar_label: "04. PFC 原理、缓冲阈值与风险"
 sidebar_position: 4
 tags: [PFC, IEEE 802.1Qbb, Xoff, Xon, Headroom, Pause Storm]
 description: 理解按优先级暂停、Xoff/Xon、Headroom、Pause 传播、PFC Storm、死锁与 Watchdog。

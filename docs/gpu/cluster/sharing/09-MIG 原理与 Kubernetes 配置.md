@@ -1,5 +1,6 @@
 ---
 title: MIG 原理与 Kubernetes 配置
+sidebar_label: "09. MIG 原理与 Kubernetes 配置"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "MIG", "GPU Operator", "学习路线"]

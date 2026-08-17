@@ -1,5 +1,6 @@
 ---
 title: "KubeEdge：云原生边缘计算框架"
+sidebar_label: "02. KubeEdge：云原生边缘计算框架"
 sidebar_position: 2
 tags: [Kubernetes, 边缘计算, PartIII, 学习路线]
 description: "KubeEdge 是 CNCF 托管的云原生边缘计算框架，扩展 Kubernetes 能力至边缘和物联网场景，实现云边端一体化管理。"

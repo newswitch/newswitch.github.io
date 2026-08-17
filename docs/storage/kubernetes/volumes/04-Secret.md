@@ -1,5 +1,6 @@
 ---
 title: "Secret"
+sidebar_label: "04. Secret"
 sidebar_position: 4
 tags: [Kubernetes, 存储, 学习路线]
 description: "Secret 是 Kubernetes 中用于存储敏感数据的对象，包括密码、token、密钥等，支持以 Volume 或环境变量方式使用，主要类型有 Opaque、Service Account 和 dockerconfigjson。"

@@ -1,5 +1,6 @@
 ---
 title: "Ingress"
+sidebar_label: "04. Ingress"
 sidebar_position: 4
 tags: [Kubernetes, 服务发现, 学习路线]
 description: "Ingress 是 Kubernetes 中管理集群外部访问服务的资源对象，提供 HTTP 和 HTTPS 路由功能。本文介绍 Ingress 的工作原理、配置方法、IngressClass 概念以及各种使用场景。"

@@ -1,5 +1,6 @@
 ---
 title: GPU 集群优先级与抢占策略
+sidebar_label: "03. GPU 集群优先级与抢占策略"
 date: 2026-07-22 19:00:00
 categories: 云原生
 tags: ["Kubernetes", "PriorityClass", "抢占", "GPU", "学习路线"]

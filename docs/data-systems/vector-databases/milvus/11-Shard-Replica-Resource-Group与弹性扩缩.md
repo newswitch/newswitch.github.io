@@ -1,5 +1,6 @@
 ---
 title: "Shard、Replica、Resource Group、Load/Release 与弹性扩缩"
+sidebar_label: "11. Shard、Replica、Resource Group、Load/Release 与弹性扩缩"
 sidebar_position: 11
 tags: [Milvus, Shard, Replica, Resource Group, Scaling]
 description: "理解写入 Shard、查询 Replica、Resource Group 和 Collection 加载调度。"

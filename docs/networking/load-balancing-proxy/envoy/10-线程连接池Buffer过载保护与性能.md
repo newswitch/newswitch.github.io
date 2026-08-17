@@ -1,5 +1,6 @@
 ---
 title: "Envoy 线程、连接池、Buffer、Overload Manager 与性能"
+sidebar_label: "10. Envoy 线程、连接池、Buffer、Overload Manager 与性能"
 sidebar_position: 10
 tags: [Envoy, Threading, Connection Pool, Buffer, Overload Manager, Performance]
 description: "理解 Envoy 主线程与 Worker、连接归属、上游连接池、背压、内存和代理自身过载保护。"

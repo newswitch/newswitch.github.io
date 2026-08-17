@@ -1,5 +1,6 @@
 ---
 title: "FLAT、IVF、HNSW、DISKANN、SCANN 与索引参数"
+sidebar_label: "06. FLAT、IVF、HNSW、DISKANN、SCANN 与索引参数"
 sidebar_position: 6
 tags: [Milvus, ANN, HNSW, IVF, DISKANN]
 description: "按召回、延迟、内存、构建和硬件选择 Milvus 向量索引。"

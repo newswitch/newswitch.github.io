@@ -1,5 +1,6 @@
 ---
 title: "WAL、Commit、Checkpoint、Crash Recovery 与 Timeline"
+sidebar_label: "08. WAL、Commit、Checkpoint、Crash Recovery 与 Timeline"
 sidebar_position: 8
 tags: [PostgreSQL, WAL, Checkpoint, Recovery, Timeline]
 description: "理解 WAL 先行、提交刷盘、检查点、崩溃重放、归档和 Timeline。"

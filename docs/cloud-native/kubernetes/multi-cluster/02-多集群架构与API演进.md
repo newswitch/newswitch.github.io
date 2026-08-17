@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes 中的多集群管理架构与 API 的演进"
+sidebar_label: "02. Kubernetes 中的多集群管理架构与 API 的演进"
 sidebar_position: 2
 tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "本文回顾 Kubernetes 多集群架构与 API 从 Federation 到 MCS API，再到 Multi-Cluster Gateway API 的演进历程，探讨当前业界主流的多集群治理模式与架构趋势。"

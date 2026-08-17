@@ -1,5 +1,6 @@
 ---
 title: "Index、Refresh、Translog、Flush、Segment 与 Merge"
+sidebar_label: "05. Index、Refresh、Translog、Flush、Segment 与 Merge"
 sidebar_position: 5
 tags: [Elasticsearch, Refresh, Translog, Segment, Merge]
 description: "理解 Elasticsearch 写入可见性、持久性和 Lucene Segment I/O 放大。"

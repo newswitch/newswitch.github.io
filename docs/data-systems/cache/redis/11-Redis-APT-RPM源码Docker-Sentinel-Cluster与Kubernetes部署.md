@@ -1,5 +1,6 @@
 ---
 title: "Redis APT/RPM、源码、Docker、Sentinel、Cluster 与 Kubernetes 部署"
+sidebar_label: "11. Redis APT/RPM、源码、Docker、Sentinel、Cluster 与 Kubernetes 部署"
 sidebar_position: 11
 tags: [Redis, 部署, Sentinel, Cluster, Docker, Kubernetes]
 description: "从单机实验到 Sentinel、Cluster 和 Kubernetes，讲清 Redis 多种部署形态的组件、持久化、故障域、验收与回滚。"

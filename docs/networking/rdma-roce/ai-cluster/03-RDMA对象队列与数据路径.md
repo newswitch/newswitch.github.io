@@ -1,5 +1,6 @@
 ---
 title: RDMA 对象、队列与数据路径
+sidebar_label: "03. RDMA 对象、队列与数据路径"
 sidebar_position: 3
 tags: [RDMA, Verbs, QP, CQ, MR, WQE, RDMA CM]
 description: 从 Context、PD、MR、CQ、QP、WQE 和 SGE 出发，理解 Send/Receive、Read、Write 的完整执行过程。

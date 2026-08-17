@@ -1,5 +1,6 @@
 ---
 title: "Envoy 从零到精通学习路线"
+sidebar_label: "00. Envoy 从零到精通学习路线"
 sidebar_position: 0
 tags: [Envoy, xDS, Proxy, Service Mesh, Gateway, 学习路线]
 description: "从 Listener、Filter、Cluster、Endpoint 和一次请求深入 xDS、负载均衡、TLS、可观测性、过载保护、扩展、性能和源码排障。"

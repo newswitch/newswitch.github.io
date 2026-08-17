@@ -1,5 +1,6 @@
 ---
 title: "Milvus 从零到精通学习路线"
+sidebar_label: "00. Milvus 从零到精通学习路线"
 sidebar_position: 0
 tags: [Milvus, 向量数据库, RAG, ANN, 学习路线]
 description: "以 Milvus 3.x 为主线，从 Embedding 与 ANN 深入 Collection、Segment、Index、Query、Streaming、对象存储、分布式部署、容量和故障排查。"

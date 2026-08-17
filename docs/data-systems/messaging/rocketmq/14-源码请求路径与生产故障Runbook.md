@@ -1,5 +1,6 @@
 ---
 title: "源码请求路径、积压、发送失败、主从异常与故障 Runbook"
+sidebar_label: "14. 源码请求路径、积压、发送失败、主从异常与故障 Runbook"
 sidebar_position: 14
 tags: [RocketMQ, 源码, Runbook]
 description: "从客户端、Remoting/Proxy、Broker Processor 到 CommitLog 和复制定位 RocketMQ 故障。"

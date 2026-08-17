@@ -1,5 +1,6 @@
 ---
 title: "主从复制、PSYNC、Replication Backlog 与一致性"
+sidebar_label: "08. 主从复制、PSYNC、Replication Backlog 与一致性"
 sidebar_position: 8
 tags: [Redis, Replication, PSYNC, Backlog]
 description: "拆解 Redis 全量/部分同步、offset、backlog、读副本和数据丢失窗口。"

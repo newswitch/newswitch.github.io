@@ -1,5 +1,6 @@
 ---
 title: "Envoy xDS、Bootstrap、ADS、SotW/Delta 与 ACK/NACK"
+sidebar_label: "05. Envoy xDS、Bootstrap、ADS、SotW/Delta 与 ACK/NACK"
 sidebar_position: 5
 tags: [Envoy, xDS, ADS, ACK, NACK, Control Plane]
 description: "理解 Envoy 动态配置协议、资源依赖、版本确认、配置预热和控制面正确性。"

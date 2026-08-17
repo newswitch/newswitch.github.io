@@ -1,5 +1,6 @@
 ---
 title: "MySQL Operator 在 Kubernetes 生产部署"
+sidebar_label: "09. MySQL Operator 在 Kubernetes 生产部署"
 sidebar_position: 9
 tags: [MySQL, Kubernetes, Operator, InnoDBCluster, PVC]
 description: "从控制器协调循环、InnoDBCluster CR、Stateful Pod、PVC、Service 和 Router 原理出发，部署并验收 MySQL Operator 管理的生产集群。"

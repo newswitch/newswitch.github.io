@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes Scheduler Framework 插件机制"
+sidebar_label: "12. Kubernetes Scheduler Framework 插件机制"
 sidebar_position: 12
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "深入理解并实践 Kubernetes Scheduler Framework 插件开发，掌握自定义调度逻辑的编写、注册、调试与应用，为 AI 原生与 GPU 调度扩展打下基础。"

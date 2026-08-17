@@ -1,5 +1,6 @@
 ---
 title: "自定义资源定义（CustomResourceDefinition, CRD）"
+sidebar_label: "04. 自定义资源定义（CustomResourceDefinition, CRD）"
 sidebar_position: 4
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "CRD 是 Kubernetes 最常用的扩展机制。通过定义自定义资源类型（Custom Resource），用户无需修改核心代码即可扩展 Kubernetes 的 API，实现领域特定的控制逻辑。"

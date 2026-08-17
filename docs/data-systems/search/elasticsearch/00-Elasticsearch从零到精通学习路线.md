@@ -1,5 +1,6 @@
 ---
 title: "Elasticsearch 从零到精通学习路线"
+sidebar_label: "00. Elasticsearch 从零到精通学习路线"
 sidebar_position: 0
 tags: [Elasticsearch, Lucene, 搜索, 分布式, 学习路线]
 description: "以 Elasticsearch 9.x 为主线，从倒排索引和 Mapping 深入写入搜索路径、分片、集群状态、ILM、向量检索、性能容量与生产故障排查。"

@@ -1,5 +1,6 @@
 ---
 title: Doris MPP、Tablet、物化视图与查询加速
+sidebar_label: "03. Doris MPP、Tablet、物化视图与查询加速"
 sidebar_position: 3
 tags: [Doris, MPP, Tablet, 物化视图]
 description: 理解 FE/BE、PlanFragment、Tablet、数据模型、导入和同步/异步物化视图。

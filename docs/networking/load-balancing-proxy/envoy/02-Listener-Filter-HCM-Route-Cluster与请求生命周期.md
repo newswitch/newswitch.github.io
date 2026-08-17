@@ -1,5 +1,6 @@
 ---
 title: "Envoy Listener、Filter、HCM、Route、Cluster 与请求生命周期"
+sidebar_label: "02. Envoy Listener、Filter、HCM、Route、Cluster 与请求生命周期"
 sidebar_position: 2
 tags: [Envoy, Listener, Filter Chain, HCM, Route, Cluster]
 description: "跟踪一条 HTTP 请求从下游连接进入 Envoy，到选择上游 Endpoint 并返回响应的完整运行时路径。"

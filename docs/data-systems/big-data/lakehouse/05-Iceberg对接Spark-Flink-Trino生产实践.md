@@ -1,5 +1,6 @@
 ---
 title: Iceberg 对接 Spark、Flink、Trino 的生产实践
+sidebar_label: "05. Iceberg 对接 Spark、Flink、Trino 的生产实践"
 sidebar_position: 5
 tags: [Iceberg, Spark, Flink, Trino, 多引擎]
 description: 设计 Flink 实时写、Spark 维护/批处理、Trino 查询的多引擎兼容、发布与排障链路。

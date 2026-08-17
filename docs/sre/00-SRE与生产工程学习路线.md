@@ -1,5 +1,6 @@
 ---
 title: 工程能力学习地图
+sidebar_label: "00. 工程能力学习地图"
 sidebar_position: 0
 tags: [SRE, 可观测性, 性能, 自动化, RCA]
 description: AI Infra 可观测性、可靠性、性能、自动化与事故复盘学习入口。

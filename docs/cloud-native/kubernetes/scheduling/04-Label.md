@@ -1,5 +1,6 @@
 ---
 title: "Label"
+sidebar_label: "04. Label"
 sidebar_position: 4
 tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "Kubernetes Label 是附着到对象上的键值对，用于标识和选择对象。本文详细介绍了 Label 的语法规则、选择器类型，以及在不同场景下的使用方法。"

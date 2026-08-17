@@ -1,5 +1,6 @@
 ---
 title: Spark Submit、SQL、History Server 与排障命令手册
+sidebar_label: "90. Spark Submit、SQL、History Server 与排障命令手册"
 sidebar_position: 90
 description: 覆盖 Spark 作业提交、交互式验证、SQL 执行、事件日志、REST API，以及 YARN/Kubernetes 环境的故障定位。
 tags: [Spark, 命令手册, 性能分析, 故障排查]

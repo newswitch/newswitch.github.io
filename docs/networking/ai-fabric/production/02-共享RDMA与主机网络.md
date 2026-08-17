@@ -1,5 +1,6 @@
 ---
 title: 共享 RDMA、Host Device 与 Macvlan
+sidebar_label: "02. 共享 RDMA、Host Device 与 Macvlan"
 sidebar_position: 2
 tags: [RDMA Shared Device Plugin, Host Device, Macvlan, Kubernetes]
 description: 理解多个 Pod 共享 PF/HCA 的资源模型、Host Device/Macvlan 数据面、隔离边界和容量治理。

@@ -1,5 +1,6 @@
 ---
 title: "ArgoCD：Kubernetes 的 GitOps 持续交付工具"
+sidebar_label: "08. ArgoCD：Kubernetes 的 GitOps 持续交付工具"
 sidebar_position: 8
 tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Argo CD 是 Kubernetes 生态中最重要的 GitOps 工具之一，通过声明式配置和自动化同步，实现了高效、可审计的持续交付流程，适用于多集群和多租户场景。"

@@ -1,5 +1,6 @@
 ---
 title: "基于 eBPF 的网络 Cilium"
+sidebar_label: "04. 基于 eBPF 的网络 Cilium"
 sidebar_position: 4
 tags: [Kubernetes, 网络, 学习路线]
 description: "Cilium 是一个基于 eBPF 技术的开源云原生网络、可观测性和安全解决方案。本文介绍 Cilium 的核心概念、架构组件、主要特性以及与 Hubble 的集成，帮助读者了解如何利用 eBPF 技术实现高性能的容器网络和安全策略。"

@@ -1,5 +1,6 @@
 ---
 title: "Init 容器"
+sidebar_label: "03. Init 容器"
 sidebar_position: 3
 tags: [Kubernetes, Pod, 学习路线]
 description: "Init 容器是一种专用的容器，在应用程序容器启动之前运行，用来包含一些应用镜像中不存在的实用工具或安装脚本。本文详细介绍 Init 容器的概念、用法和最佳实践。"

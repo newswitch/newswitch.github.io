@@ -1,5 +1,6 @@
 ---
 title: Spark Structured Streaming、状态、Watermark 与 Checkpoint
+sidebar_label: "06. Spark Structured Streaming、状态、Watermark 与 Checkpoint"
 sidebar_position: 6
 tags: [Structured Streaming, Watermark, Checkpoint, Exactly-Once]
 description: 理解微批/连续查询、offset、state store、watermark、output mode 与 sink 一致性边界。

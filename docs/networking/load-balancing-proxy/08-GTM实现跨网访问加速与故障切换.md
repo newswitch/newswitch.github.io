@@ -1,5 +1,6 @@
 ---
 title: GTM 实现跨网访问加速与故障切换
+sidebar_label: "08. GTM 实现跨网访问加速与故障切换"
 sidebar_position: 8
 date: 2026-07-06 09:30:00
 categories: 网络

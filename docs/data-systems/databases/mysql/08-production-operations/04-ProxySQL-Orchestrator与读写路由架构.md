@@ -1,5 +1,6 @@
 ---
 title: "ProxySQL、Orchestrator 与读写路由架构"
+sidebar_label: "04. ProxySQL、Orchestrator 与读写路由架构"
 sidebar_position: 4
 tags: [MySQL, ProxySQL, Orchestrator, 读写分离, Failover]
 description: "区分代理路由与拓扑故障编排，设计事务粘性、复制新鲜度、fencing、配置发布和组件自身高可用。"

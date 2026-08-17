@@ -1,5 +1,6 @@
 ---
 title: 综合项目：Kafka、Flink、Iceberg 实时湖仓
+sidebar_label: "03. 综合项目：Kafka、Flink、Iceberg 实时湖仓"
 sidebar_position: 3
 tags: [Kafka, Flink, Iceberg, 实时湖仓, 项目]
 description: 从事件契约、流计算、Checkpoint、表提交、迟到与小文件治理构建生产级实时湖仓。

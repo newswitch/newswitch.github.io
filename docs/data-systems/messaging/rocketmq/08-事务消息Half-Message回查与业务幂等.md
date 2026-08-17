@@ -1,5 +1,6 @@
 ---
 title: "事务消息、Half Message、回查与业务幂等"
+sidebar_label: "08. 事务消息、Half Message、回查与业务幂等"
 sidebar_position: 8
 tags: [RocketMQ, Transaction Message, Idempotency]
 description: "理解 RocketMQ 事务消息 Half、提交/回滚、状态回查和最终一致性边界。"

@@ -1,5 +1,6 @@
 ---
 title: HDFS 容量规划、性能指标与故障排查
+sidebar_label: "04. HDFS 容量规划、性能指标与故障排查"
 sidebar_position: 4
 tags: [HDFS, 容量规划, 性能, 故障排查]
 description: 建立 HDFS 容量、吞吐、安全水位和恢复模型，并用分层证据排查读写慢、坏块与空间异常。

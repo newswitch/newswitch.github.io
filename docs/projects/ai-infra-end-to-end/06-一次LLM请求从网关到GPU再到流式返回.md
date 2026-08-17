@@ -1,5 +1,6 @@
 ---
 title: "一次 LLM 请求从网关到 GPU 再到流式返回"
+sidebar_label: "06. 一次 LLM 请求从网关到 GPU 再到流式返回"
 date: 2026-08-10 12:10:00
 categories: AI基础设施
 tags: ["LLM", "vLLM", "Kubernetes", "GPU", "网关", "可观测性"]

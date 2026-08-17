@@ -1,5 +1,6 @@
 ---
 title: Airflow DAG、Task、Backfill 与恢复命令手册
+sidebar_label: "90. Airflow DAG、Task、Backfill 与恢复命令手册"
 sidebar_position: 90
 description: 掌握 Airflow 环境检查、DAG 导入、任务测试、触发、补数、池、连接和数据库清理，并建立幂等恢复流程。
 tags: [Airflow, 命令手册, 调度, Backfill, 故障排查]

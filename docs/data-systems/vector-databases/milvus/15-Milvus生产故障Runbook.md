@@ -1,5 +1,6 @@
 ---
 title: "写入积压、加载失败、OOM、慢查询与生产故障 Runbook"
+sidebar_label: "15. 写入积压、加载失败、OOM、慢查询与生产故障 Runbook"
 sidebar_position: 15
 tags: [Milvus, Runbook, OOM, Slow Query]
 description: "从 API、Proxy、协调器、Worker 到 etcd/WAL/对象存储定位 Milvus 故障。"

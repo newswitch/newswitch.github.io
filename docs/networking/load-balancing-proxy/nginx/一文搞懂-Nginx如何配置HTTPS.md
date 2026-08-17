@@ -1,7 +1,8 @@
 ---
 title: 一文搞懂 Nginx 如何配置 HTTPS：从 HTTP 跳转、混合访问到生产实践
+sidebar_label: "05. Nginx HTTPS、TLS 握手、证书与性能"
 description: 从 HTTP 跳转、HTTPS 混合访问到生产环境证书与配置实践的完整指南。
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 在日常部署 Web 服务时，Nginx 经常被放在系统的最前面，用来承担静态资源访问、反向代理、负载均衡、HTTPS 证书卸载等职责。

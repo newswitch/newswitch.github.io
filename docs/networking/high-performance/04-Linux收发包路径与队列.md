@@ -1,5 +1,6 @@
 ---
 title: "Linux 收发包路径与队列：从 Socket 到 NIC Ring"
+sidebar_label: "04. Linux 收发包路径与队列：从 Socket 到 NIC Ring"
 sidebar_position: 4
 tags: [Linux, Socket, TCP, NAPI, qdisc, RSS, RPS, XPS, 网卡]
 description: "从应用 Socket、TCP/IP、qdisc、驱动、NIC ring、IRQ、NAPI 和 softirq 完整解释 Linux 发包与收包路径及分层排障。"

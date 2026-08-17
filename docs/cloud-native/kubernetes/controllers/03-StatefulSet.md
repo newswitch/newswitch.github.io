@@ -1,5 +1,6 @@
 ---
 title: "StatefulSet"
+sidebar_label: "03. StatefulSet"
 sidebar_position: 3
 tags: [Kubernetes, 控制器, 学习路线]
 description: "StatefulSet 是 Kubernetes 中用于管理有状态应用的控制器，提供稳定的网络标识、持久化存储和有序部署等特性，适用于数据库、消息队列等需要状态保持的应用场景。"

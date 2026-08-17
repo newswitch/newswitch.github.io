@@ -1,5 +1,6 @@
 ---
 title: "GPU Roofline 性能模型：算力、显存带宽与算术强度"
+sidebar_label: "01. GPU Roofline 性能模型：算力、显存带宽与算术强度"
 sidebar_position: 9
 tags: [GPU, Roofline, Arithmetic Intensity, FLOPS, HBM, Nsight Compute]
 description: "用 Roofline 的算术强度、内存带宽上限和计算峰值判断 Kernel 是访存受限还是计算受限，并指导优化实验。"

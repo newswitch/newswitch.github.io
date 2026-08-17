@@ -1,5 +1,6 @@
 ---
 title: HAMi Core 与 Memory 隔离测试
+sidebar_label: "11. HAMi Core 与 Memory 隔离测试"
 date: 2026-07-22 16:30:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "隔离测试", "学习路线"]

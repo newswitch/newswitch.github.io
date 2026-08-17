@@ -1,5 +1,6 @@
 ---
 title: "Argo Rollout：Kubernetes 的渐进式交付控制器"
+sidebar_label: "09. Argo Rollout：Kubernetes 的渐进式交付控制器"
 sidebar_position: 9
 tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Argo Rollout 是 Kubernetes 的渐进式交付控制器，提供蓝绿部署和金丝雀部署等高级部署策略，支持细粒度流量控制和自动化分析，提升应用交付的安全性和可靠性。"

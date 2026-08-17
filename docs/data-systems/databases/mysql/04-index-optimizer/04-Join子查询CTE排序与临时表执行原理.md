@@ -1,5 +1,6 @@
 ---
 title: "Join、子查询、CTE、排序与临时表的执行原理"
+sidebar_label: "04. Join、子查询、CTE、排序与临时表的执行原理"
 sidebar_position: 4
 tags: [MySQL, Join, 子查询, CTE, Filesort, 临时表]
 description: "从数据流理解 Join 顺序与算法、子查询改写、CTE 合并和物化、排序以及内存与磁盘临时表。"

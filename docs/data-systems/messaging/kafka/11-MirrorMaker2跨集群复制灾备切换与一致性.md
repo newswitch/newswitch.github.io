@@ -1,5 +1,6 @@
 ---
 title: "MirrorMaker 2、跨集群复制、灾备切换与一致性"
+sidebar_label: "11. MirrorMaker 2、跨集群复制、灾备切换与一致性"
 sidebar_position: 11
 tags: [Kafka, MirrorMaker 2, Disaster Recovery]
 description: "理解 MM2 Topic/Offset/ACL 复制、命名、Lag、切换和回切。"

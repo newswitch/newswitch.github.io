@@ -1,5 +1,6 @@
 ---
 title: SGLang 生产参数参考
+sidebar_label: "02. SGLang 生产参数参考"
 sidebar_position: 2
 tags: [SGLang, 参数, Radix Cache, Scheduler, CUDA Graph]
 description: 按模型、内存、Radix Cache、调度、Kernel、Graph、并行和请求层解释 SGLang Server 参数及调优因果关系。

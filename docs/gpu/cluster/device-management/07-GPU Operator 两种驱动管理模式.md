@@ -1,5 +1,6 @@
 ---
 title: GPU Operator 两种驱动管理模式
+sidebar_label: "07. GPU Operator 两种驱动管理模式"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU Operator", "驱动", "学习路线"]

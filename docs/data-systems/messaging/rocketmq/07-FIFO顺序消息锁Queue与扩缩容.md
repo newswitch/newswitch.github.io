@@ -1,5 +1,6 @@
 ---
 title: "FIFO 顺序消息、锁、Queue 与扩缩容"
+sidebar_label: "07. FIFO 顺序消息、锁、Queue 与扩缩容"
 sidebar_position: 7
 tags: [RocketMQ, FIFO, Ordered Message]
 description: "理解 RocketMQ 局部顺序、sharding key、Queue 锁、失败阻塞和扩缩容。"

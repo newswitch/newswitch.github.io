@@ -1,5 +1,6 @@
 ---
 title: "Kueue 队列、GPU 配额与工作负载准入"
+sidebar_label: "13. Kueue 队列、GPU 配额与工作负载准入"
 sidebar_position: 13
 tags: [Kueue, Kubernetes, GPU, ClusterQueue, LocalQueue, ResourceFlavor, 配额]
 description: "从 ResourceFlavor、ClusterQueue、LocalQueue、Workload 和 AdmissionCheck 理解 Kueue 如何为 GPU 训练、批推理和服务工作负载进行排队与准入。"

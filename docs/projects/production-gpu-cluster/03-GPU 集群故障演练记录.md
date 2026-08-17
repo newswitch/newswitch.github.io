@@ -1,5 +1,6 @@
 ---
 title: "GPU 集群故障演练：从场景设计到复盘闭环"
+sidebar_label: "03. GPU 集群故障演练：从场景设计到复盘闭环"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["GPU", "故障演练", "GameDay", "SRE", "Kubernetes", "NCCL"]

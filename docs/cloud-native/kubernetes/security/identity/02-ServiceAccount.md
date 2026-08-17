@@ -1,5 +1,6 @@
 ---
 title: "ServiceAccount"
+sidebar_label: "02. ServiceAccount"
 sidebar_position: 2
 tags: [Kubernetes, 身份认证, 学习路线]
 description: "详细介绍 Kubernetes 中的 ServiceAccount 概念，包括其作用、配置方法和最佳实践，帮助理解 Pod 身份认证机制。"

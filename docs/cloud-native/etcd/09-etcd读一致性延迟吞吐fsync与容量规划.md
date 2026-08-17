@@ -1,5 +1,6 @@
 ---
 title: "线性/串行读、延迟、吞吐、磁盘 fsync 与容量规划"
+sidebar_label: "09. 线性/串行读、延迟、吞吐、磁盘 fsync 与容量规划"
 sidebar_position: 9
 tags: [etcd, Performance, fsync, 容量规划]
 description: "按请求语义、值大小、Watcher、WAL fsync 和故障恢复规划 etcd。"

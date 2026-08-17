@@ -1,5 +1,6 @@
 ---
 title: "GPUModelRunner、CUDA Graph 与 Kernel 空洞分析"
+sidebar_label: "19. GPUModelRunner、CUDA Graph 与 Kernel 空洞分析"
 sidebar_position: 19
 tags: [vLLM, GPUModelRunner, CUDA Graph, Nsight Systems, 性能分析]
 description: "用 CPU-GPU 时间线定位 vLLM 执行间空洞、Graph Replay、Eager 路径、同步和 Kernel 瓶颈。"

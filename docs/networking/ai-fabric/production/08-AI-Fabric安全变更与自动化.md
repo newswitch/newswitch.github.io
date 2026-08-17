@@ -1,5 +1,6 @@
 ---
 title: AI Fabric 安全变更与自动化
+sidebar_label: "08. AI Fabric 安全变更与自动化"
 sidebar_position: 8
 tags: [Automation, Canary, Firmware, PFC, ECN, Rollback]
 description: 针对驱动、固件、PFC/ECN、路由和 Kubernetes Operator 建立故障域灰度、停止与回滚闭环。

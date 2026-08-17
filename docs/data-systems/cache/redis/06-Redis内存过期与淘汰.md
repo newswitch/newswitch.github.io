@@ -1,5 +1,6 @@
 ---
 title: "jemalloc、对象共享、过期删除与内存淘汰"
+sidebar_label: "06. jemalloc、对象共享、过期删除与内存淘汰"
 sidebar_position: 6
 tags: [Redis, jemalloc, 内存, 过期, 淘汰]
 description: "解释 used_memory、RSS、碎片、TTL、淘汰与 OOM 的完整内存路径。"

@@ -1,5 +1,6 @@
 ---
 title: "sysbench 基准测试、工作负载建模与结果解释"
+sidebar_label: "04. sysbench 基准测试、工作负载建模与结果解释"
 sidebar_position: 4
 tags: [MySQL, sysbench, 基准测试, 压力测试]
 description: "掌握 sysbench prepare/run/cleanup、数据与并发建模、分阶段加压、结果解释和可复现实验报告。"

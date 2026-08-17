@@ -1,5 +1,6 @@
 ---
 title: "CronJob"
+sidebar_label: "07. CronJob"
 sidebar_position: 7
 tags: [Kubernetes, 控制器, 学习路线]
 description: "CronJob 是 Kubernetes 中用于管理基于时间调度的 Job 资源，支持一次性和周期性任务执行，类似于 Linux 系统中的 crontab 功能。"

@@ -1,5 +1,6 @@
 ---
 title: SGLang 学习路线
+sidebar_label: "00. SGLang 学习路线"
 sidebar_position: 0
 tags: [SGLang, RadixAttention, 推理框架, CUDA, LLM]
 description: 从请求生命周期、Radix Cache、调度与 ModelRunner 到生产参数、容量和故障排查的 SGLang 系统学习路线。

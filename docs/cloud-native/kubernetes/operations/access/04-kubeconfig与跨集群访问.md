@@ -1,5 +1,6 @@
 ---
 title: "使用 kubeconfig 文件配置跨集群认证"
+sidebar_label: "04. 使用 kubeconfig 文件配置跨集群认证"
 sidebar_position: 4
 tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "详细介绍 Kubernetes kubeconfig 文件的结构、组成和使用方法，包括集群、用户、上下文的配置，以及跨集群认证的最佳实践。"

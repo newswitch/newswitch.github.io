@@ -1,5 +1,6 @@
 ---
 title: "NFS CSI、生产故障排查与 AI 冷启动"
+sidebar_label: "06. NFS CSI、生产故障排查与 AI 冷启动"
 sidebar_position: 6
 tags: [NFS, Kubernetes, CSI, 故障排查, 模型冷启动, Runbook]
 description: "串联 PVC、NFS CSI、kubelet、Linux mount、RPC 与后端存储，处理 Pending、FailedMount、权限、D 状态、stale handle 和模型冷启动风暴。"

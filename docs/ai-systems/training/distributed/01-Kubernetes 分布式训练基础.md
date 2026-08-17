@@ -1,5 +1,6 @@
 ---
 title: Kubernetes 分布式训练基础
+sidebar_label: "01. Kubernetes 分布式训练基础"
 date: 2026-07-22 17:30:00
 categories: 云原生
 tags: ["Kubernetes", "分布式训练", "DDP", "TP", "PP", "Volcano", "学习路线"]

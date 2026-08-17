@@ -1,5 +1,6 @@
 ---
 title: "Online DDL、Metadata Lock 与 Schema 变更"
+sidebar_label: "04. Online DDL、Metadata Lock 与 Schema 变更"
 sidebar_position: 4
 tags: [MySQL, Online DDL, MDL, ALTER TABLE, Schema变更]
 description: "理解 INSTANT、INPLACE、COPY、Metadata Lock 和长事务，建立可观察、可停止、可回滚的生产 Schema 变更流程。"

@@ -1,5 +1,6 @@
 ---
 title: "高可用、Keepalived/LB、热升级、灰度与故障 Runbook"
+sidebar_label: "12. 高可用、Keepalived/LB、热升级、灰度与故障 Runbook"
 sidebar_position: 12
 tags: [Nginx, High Availability, Keepalived, Runbook]
 description: "设计 Nginx 多实例入口、VIP/LB、无损变更、灰度和 4xx/5xx/延迟故障处理。"

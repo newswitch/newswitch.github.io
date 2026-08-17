@@ -1,5 +1,6 @@
 ---
 title: "性能、容量、监控、安全、备份、升级与故障 Runbook"
+sidebar_label: "14. 性能、容量、监控、安全、备份、升级与故障 Runbook"
 sidebar_position: 14
 tags: [Redis, 性能, 容量规划, 安全, Runbook]
 description: "建立 Redis 从 SLO、基准、容量、监控到备份升级和故障恢复的生产闭环。"

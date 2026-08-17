@@ -1,5 +1,6 @@
 ---
 title: "Network Thread、Request Handler、Replica Fetch 与源码路径"
+sidebar_label: "10. Network Thread、Request Handler、Replica Fetch 与源码路径"
 sidebar_position: 10
 tags: [Kafka, 源码, Network Thread, Replica Fetch]
 description: "从 SocketServer 到 KafkaApis、日志追加和副本拉取追踪 Kafka Broker 请求。"

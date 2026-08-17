@@ -1,5 +1,6 @@
 ---
 title: "同步复制、刷盘、SyncStateSet、选主与数据丢失边界"
+sidebar_label: "11. 同步复制、刷盘、SyncStateSet、选主与数据丢失边界"
 sidebar_position: 11
 tags: [RocketMQ, Replication, SyncStateSet, RPO]
 description: "拆解 Broker 写确认、磁盘刷盘、复制确认、Controller 选主和数据丢失窗口。"

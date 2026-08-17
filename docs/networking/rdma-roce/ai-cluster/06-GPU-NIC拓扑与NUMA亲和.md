@@ -1,5 +1,6 @@
 ---
 title: GPU、PCIe、NIC 与 NUMA 亲和
+sidebar_label: "06. GPU、PCIe、NIC 与 NUMA 亲和"
 sidebar_position: 6
 tags: [GPU, NIC, PCIe, NUMA, NVLink, Topology]
 description: 使用 nvidia-smi、lspci、numactl 和 hwloc 建立 GPU、NIC、CPU、PCIe Switch 与 NUMA 的联合拓扑。

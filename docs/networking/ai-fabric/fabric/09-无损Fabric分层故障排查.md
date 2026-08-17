@@ -1,5 +1,6 @@
 ---
 title: 无损 Fabric 分层故障排查
+sidebar_label: "09. 无损 Fabric 分层故障排查"
 sidebar_position: 9
 tags: [Troubleshooting, RoCE, InfiniBand, PFC, ECN, NCCL]
 description: 从失败 Collective、GPU/NIC、RDMA、路由、队列到 PFC/ECN 建立 AI Fabric 的分层证据链。

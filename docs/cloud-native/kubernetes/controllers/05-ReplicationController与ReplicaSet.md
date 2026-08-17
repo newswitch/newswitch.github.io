@@ -1,5 +1,6 @@
 ---
 title: "ReplicationController 和 ReplicaSet"
+sidebar_label: "05. ReplicationController 和 ReplicaSet"
 sidebar_position: 5
 tags: [Kubernetes, 控制器, 学习路线]
 description: "介绍 Kubernetes 中 ReplicationController 和 ReplicaSet 的概念、区别和使用方法，包括配置示例和最佳实践建议。"

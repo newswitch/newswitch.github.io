@@ -1,5 +1,6 @@
 ---
 title: "TLS Bootstrap"
+sidebar_label: "07. TLS Bootstrap"
 sidebar_position: 7
 tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "介绍如何为 Kubernetes kubelet 配置 TLS 客户端证书自动引导，包括 kube-apiserver、kube-controller-manager 和 kubelet 的详细配置步骤。"

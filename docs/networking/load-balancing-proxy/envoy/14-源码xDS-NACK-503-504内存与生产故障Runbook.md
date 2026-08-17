@@ -1,5 +1,6 @@
 ---
 title: "Envoy 源码、xDS NACK、503/504、内存与生产故障 Runbook"
+sidebar_label: "14. Envoy 源码、xDS NACK、503/504、内存与生产故障 Runbook"
 sidebar_position: 14
 tags: [Envoy, Source Code, Troubleshooting, NACK, 503, 504]
 description: "把请求主路径和配置主路径映射到 Envoy 源码，并给出 xDS、路由、上游、内存、崩溃的生产排障顺序。"

@@ -1,5 +1,6 @@
 ---
 title: AI 工作负载的存储 IO 模型：模型、数据集与 Checkpoint
+sidebar_label: "01. AI 工作负载的存储 IO 模型：模型、数据集与 Checkpoint"
 date: 2026-08-06 18:40:00
 categories: 云原生
 tags: [GPU, 存储, NFS, Ceph, 对象存储, NVMe, Checkpoint]

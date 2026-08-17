@@ -1,5 +1,6 @@
 ---
 title: "使用 Operator SDK 构建 Operator"
+sidebar_label: "07. 使用 Operator SDK 构建 Operator"
 sidebar_position: 7
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Operator SDK 的核心概念、架构设计、安装配置、CLI 插件系统及开发工作流，帮助读者掌握使用 Operator SDK 构建 Kubernetes Operator 的方法与最佳实践。"

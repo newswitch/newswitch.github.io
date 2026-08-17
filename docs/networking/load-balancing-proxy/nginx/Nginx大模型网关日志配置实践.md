@@ -1,7 +1,8 @@
 ---
 title: Nginx 大模型网关日志配置实践
+sidebar_label: "10. Nginx 大模型网关日志配置与请求观测"
 description: 面向 vLLM / OpenAI 兼容推理网关的 Nginx 访问日志格式、关键字段与落盘注意事项。
-sidebar_position: 3
+sidebar_position: 10
 ---
 
 ## 1. 背景

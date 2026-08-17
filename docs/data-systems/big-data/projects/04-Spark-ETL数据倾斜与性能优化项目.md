@@ -1,5 +1,6 @@
 ---
 title: 综合项目：Spark ETL 数据倾斜与性能优化
+sidebar_label: "04. 综合项目：Spark ETL 数据倾斜与性能优化"
 sidebar_position: 4
 tags: [Spark, ETL, 数据倾斜, 性能优化, 项目]
 description: 用可重复基准从物理计划、Task 长尾、Shuffle、Spill 和文件布局完成一次性能优化闭环。

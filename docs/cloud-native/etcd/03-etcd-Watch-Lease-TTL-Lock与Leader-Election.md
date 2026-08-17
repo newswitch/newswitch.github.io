@@ -1,5 +1,6 @@
 ---
 title: "Watch、Lease、TTL、Lock 与 Leader Election"
+sidebar_label: "03. Watch、Lease、TTL、Lock 与 Leader Election"
 sidebar_position: 3
 tags: [etcd, Watch, Lease, Lock, Leader Election]
 description: "理解 Watch 断点续传、Lease 保活、TTL、分布式锁和 Fencing。"

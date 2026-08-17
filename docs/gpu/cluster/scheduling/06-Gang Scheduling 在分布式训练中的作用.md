@@ -1,5 +1,6 @@
 ---
 title: Gang Scheduling 在分布式训练中的作用
+sidebar_label: "06. Gang Scheduling 在分布式训练中的作用"
 date: 2026-07-22 17:00:00
 categories: 云原生
 tags: ["Kubernetes", "Volcano", "Gang", "分布式训练", "GPU", "学习路线"]

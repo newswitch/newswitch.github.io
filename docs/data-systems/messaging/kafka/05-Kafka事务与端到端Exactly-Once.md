@@ -1,5 +1,6 @@
 ---
 title: Kafka 事务与端到端 Exactly-Once 边界
+sidebar_label: "05. Kafka 事务与端到端 Exactly-Once 边界"
 sidebar_position: 5
 tags: [Kafka Transactions, Exactly-Once, 幂等]
 description: 从 transactional producer、read_committed 和 offset 事务理解 Kafka EOS 能保证什么、不能保证什么。

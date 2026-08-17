@@ -1,5 +1,6 @@
 ---
 title: "连接池、Prepared Statement、事务、超时与重试"
+sidebar_label: "05. 连接池、Prepared Statement、事务、超时与重试"
 sidebar_position: 5
 tags: [MySQL, 连接池, Prepared Statement, 事务, 超时, 重试]
 description: "从应用侧建立安全连接池、参数化 SQL、短事务、分层超时、取消、幂等和有限重试的生产边界。"

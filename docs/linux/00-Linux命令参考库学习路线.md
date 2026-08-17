@@ -1,5 +1,6 @@
 ---
 title: Linux 命令参考库：从命令行入门到生产故障排查
+sidebar_label: "00. Linux 命令参考库：从命令行入门到生产故障排查"
 sidebar_position: 1
 description: 按命令来源和使用场景分类学习 Linux 常用命令，每篇完整讲解一个命令的语法、长短参数、输出、风险、实验与生产排障方法。
 tags: [Linux, 命令参考, GNU coreutils, SRE, 学习路线]

@@ -1,5 +1,6 @@
 ---
 title: "client-go 中的 informer 源码分析"
+sidebar_label: "05. client-go 中的 informer 源码分析"
 sidebar_position: 5
 tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "本文将以图文并茂的方式对 client-go 中的 informer 的源码进行深入分析，揭示其核心实现机制。"

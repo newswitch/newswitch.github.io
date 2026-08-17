@@ -1,5 +1,6 @@
 ---
 title: vLLM-Ascend 学习路线
+sidebar_label: "00. vLLM-Ascend 学习路线"
 sidebar_position: 0
 tags: [vLLM-Ascend, 昇腾, 910B, CANN, HCCL]
 description: 从 upstream vLLM 控制面出发，掌握 vLLM-Ascend 的插件架构、NPU 执行面、参数体系、性能调优与生产验证。

@@ -1,5 +1,6 @@
 ---
 title: Kafka 副本、ISR、Leader 选举与 KRaft 控制面
+sidebar_label: "04. Kafka 副本、ISR、Leader 选举与 KRaft 控制面"
 sidebar_position: 4
 tags: [Kafka, ISR, Leader Election, KRaft]
 description: 理解分区复制、High Watermark、ISR、leader 故障和 KRaft 元数据控制面。

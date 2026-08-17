@@ -1,5 +1,6 @@
 ---
 title: "WAL、Snapshot、bbolt、Compaction、Defrag 与 Quota"
+sidebar_label: "05. WAL、Snapshot、bbolt、Compaction、Defrag 与 Quota"
 sidebar_position: 5
 tags: [etcd, WAL, Snapshot, Compaction, Defrag]
 description: "理解 etcd Raft WAL、快照、MVCC Backend、历史压缩、物理碎片和 NOSPACE。"

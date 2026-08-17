@@ -1,5 +1,6 @@
 ---
 title: "TP、PP、DP、EP 与 MoE 推理并行策略"
+sidebar_label: "10. TP、PP、DP、EP 与 MoE 推理并行策略"
 sidebar_position: 10
 tags: [vLLM, Tensor Parallel, Pipeline Parallel, Data Parallel, Expert Parallel, MoE]
 description: "比较大模型推理中的张量并行、流水线并行、数据并行和专家并行，理解显存切分、通信模式、拓扑约束与生产选型。"

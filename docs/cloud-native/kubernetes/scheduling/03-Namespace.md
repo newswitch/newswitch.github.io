@@ -1,5 +1,6 @@
 ---
 title: "Namespace"
+sidebar_label: "03. Namespace"
 sidebar_position: 3
 tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "详细介绍 Kubernetes 中 Namespace 的概念、使用场景和管理方法，包括如何创建和管理命名空间以实现资源隔离和环境划分。"

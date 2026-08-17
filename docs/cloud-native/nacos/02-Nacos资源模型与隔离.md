@@ -1,5 +1,6 @@
 ---
 title: "Namespace、Group、Service、Cluster、Instance 与 DataId"
+sidebar_label: "02. Namespace、Group、Service、Cluster、Instance 与 DataId"
 sidebar_position: 2
 tags: [Nacos, Namespace, Service, DataId]
 description: "掌握 Nacos Naming/Config 资源模型、环境租户隔离和命名规范。"

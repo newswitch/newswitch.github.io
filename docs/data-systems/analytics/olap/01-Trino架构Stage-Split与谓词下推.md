@@ -1,5 +1,6 @@
 ---
 title: Trino Coordinator、Worker、Stage、Split 与谓词下推
+sidebar_label: "01. Trino Coordinator、Worker、Stage、Split 与谓词下推"
 sidebar_position: 1
 tags: [Trino, MPP, Stage, Split, Pushdown]
 description: 从 SQL 计划、Stage、Task、Split、Exchange 和 Connector 理解 Trino 分布式查询与性能边界。

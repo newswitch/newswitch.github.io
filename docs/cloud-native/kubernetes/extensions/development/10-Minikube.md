@@ -1,5 +1,6 @@
 ---
 title: "Minikube"
+sidebar_label: "10. Minikube"
 sidebar_position: 10
 tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "介绍如何安装配置 Minikube，以及常用的操作命令。"

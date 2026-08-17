@@ -1,5 +1,6 @@
 ---
 title: "延迟/定时消息、批量、Filter 与 LiteTopic"
+sidebar_label: "09. 延迟/定时消息、批量、Filter 与 LiteTopic"
 sidebar_position: 9
 tags: [RocketMQ, Delay Message, Timer, Filter, LiteTopic]
 description: "理解 RocketMQ 特殊消息能力、时间精度、过滤、批量与版本边界。"

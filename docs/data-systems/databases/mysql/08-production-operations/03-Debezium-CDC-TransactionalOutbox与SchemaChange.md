@@ -1,5 +1,6 @@
 ---
 title: "Debezium CDC、Transactional Outbox 与 Schema Change"
+sidebar_label: "03. Debezium CDC、Transactional Outbox 与 Schema Change"
 sidebar_position: 3
 tags: [MySQL, Debezium, CDC, Outbox, Schema Evolution]
 description: "理解从一致性快照、Binlog、offset、Schema History 到消费者幂等和 Outbox 的端到端 CDC 语义。"

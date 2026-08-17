@@ -1,5 +1,6 @@
 ---
 title: "性能分析与压测：从业务模型、RADOS/RBD/FIO 到 Slow Ops 定位"
+sidebar_label: "21. 性能分析与压测：从业务模型、RADOS/RBD/FIO 到 Slow Ops 定位"
 sidebar_position: 21
 tags: [Ceph, 学习路线, 存储, 性能]
 description: "建立可重复负载模型，用 rados/rbd/FIO 分层压测，并沿客户端到 BlueStore/磁盘定位 Slow Ops。"

@@ -1,5 +1,6 @@
 ---
 title: "Higress AI Gateway：模型路由、SSE、Token 治理、Fallback 与缓存"
+sidebar_label: "10. Higress AI Gateway：模型路由、SSE、Token 治理、Fallback 与缓存"
 sidebar_position: 10
 tags: [Higress, AI Gateway, SSE, LLM, Token]
 description: "追踪一次 LLM 请求经过 Higress AI Gateway 的完整路径，理解流式代理、模型治理、限额、回退、缓存和可观测性。"

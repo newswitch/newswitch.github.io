@@ -1,5 +1,6 @@
 ---
 title: "Streams、Pub/Sub、可靠队列与 Kafka/RocketMQ 对比"
+sidebar_label: "13. Streams、Pub/Sub、可靠队列与 Kafka/RocketMQ 对比"
 sidebar_position: 13
 tags: [Redis, Streams, PubSub, Kafka, RocketMQ]
 description: "理解 Redis Pub/Sub 与 Streams 的投递、消费组、Pending、重放和积压边界。"

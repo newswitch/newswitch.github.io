@@ -1,5 +1,6 @@
 ---
 title: GPU 利用率低但显存占满怎么分析
+sidebar_label: "04. GPU 利用率低但显存占满怎么分析"
 date: 2026-07-22 18:45:00
 categories: 云原生
 tags: ["DCGM", "GPU", "利用率", "显存", "排障", "学习路线"]

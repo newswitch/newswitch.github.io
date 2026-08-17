@@ -1,5 +1,6 @@
 ---
 title: "HAMi：Kubernetes 上的异构算力虚拟化中间件"
+sidebar_label: "11. HAMi：Kubernetes 上的异构算力虚拟化中间件"
 sidebar_position: 11
 tags: [Kubernetes, AI原生, PartIII, 学习路线]
 description: "探索 HAMi：Kubernetes 上的异构算力虚拟化中间件，提升 AI 加速器管理与调度效率，助力资源优化与灵活性。"

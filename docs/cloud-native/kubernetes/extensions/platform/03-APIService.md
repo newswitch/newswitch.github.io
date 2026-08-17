@@ -1,5 +1,6 @@
 ---
 title: "API 聚合层（APIService）"
+sidebar_label: "03. API 聚合层（APIService）"
 sidebar_position: 3
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "APIService 是 Kubernetes 的 API 聚合层机制，允许外部 API Server 注册到主 API Server 下，实现统一的 API 接口暴露。本文介绍其架构原理、注册方式与典型应用。"

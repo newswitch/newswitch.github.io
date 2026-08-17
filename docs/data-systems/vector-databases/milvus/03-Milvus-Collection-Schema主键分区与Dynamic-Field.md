@@ -1,5 +1,6 @@
 ---
 title: "Collection、Schema、Primary Key、Partition 与 Dynamic Field"
+sidebar_label: "03. Collection、Schema、Primary Key、Partition 与 Dynamic Field"
 sidebar_position: 3
 tags: [Milvus, Collection, Schema, Partition]
 description: "设计 Milvus Collection、向量/标量字段、主键、分区和租户边界。"

@@ -1,5 +1,6 @@
 ---
 title: Kafka Consumer Group、Offset、Rebalance 与顺序边界
+sidebar_label: "03. Kafka Consumer Group、Offset、Rebalance 与顺序边界"
 sidebar_position: 3
 tags: [Kafka Consumer, Consumer Group, Offset, Rebalance]
 description: 理解消费者拉取、分区分配、offset 提交、重平衡和消息积压的正确性与性能边界。

@@ -1,5 +1,6 @@
 ---
 title: "Nacos Standalone、三节点、外部数据库、Docker 与 Kubernetes 部署"
+sidebar_label: "07. Nacos Standalone、三节点、外部数据库、Docker 与 Kubernetes 部署"
 sidebar_position: 7
 tags: [Nacos, 部署, 集群, Docker, Kubernetes, MySQL]
 description: "面向 Nacos 3.x，讲清单机、三节点、独立 Console、外部数据库、端口、Docker/Kubernetes 部署和验收。"

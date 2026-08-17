@@ -1,5 +1,6 @@
 ---
 title: Clos 与 Spine-Leaf 数据中心架构
+sidebar_label: "01. Clos 与 Spine-Leaf 数据中心架构"
 sidebar_position: 1
 tags: [Clos, Spine-Leaf, ECMP, Oversubscription, 数据中心网络]
 description: 从东西向流量、可扩展性和故障域出发，理解 Clos/Spine-Leaf 拓扑与容量规划。

@@ -1,5 +1,6 @@
 ---
 title: "创建用户认证授权的 kubeconfig 文件"
+sidebar_label: "09. 创建用户认证授权的 kubeconfig 文件"
 sidebar_position: 9
 tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "详细介绍如何为 Kubernetes 集群创建用户认证授权的 kubeconfig 文件，包括 CA 证书生成、kubeconfig 配置和 RBAC 权限绑定的完整流程。"

@@ -1,5 +1,6 @@
 ---
 title: Kafka Topic、Partition、磁盘、网络与容量规划
+sidebar_label: "06. Kafka Topic、Partition、磁盘、网络与容量规划"
 sidebar_position: 6
 tags: [Kafka, 容量规划, Partition, 性能]
 description: 从峰值流量、保留、副本、恢复和消费者并行度估算 Kafka broker、partition、磁盘与网络。

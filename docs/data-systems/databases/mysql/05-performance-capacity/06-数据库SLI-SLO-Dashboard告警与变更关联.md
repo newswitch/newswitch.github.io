@@ -1,5 +1,6 @@
 ---
 title: "数据库 SLI/SLO、Dashboard、告警与变更关联"
+sidebar_label: "06. 数据库 SLI/SLO、Dashboard、告警与变更关联"
 sidebar_position: 6
 tags: [MySQL, SLI, SLO, Dashboard, 告警]
 description: "从用户结果定义数据库服务目标，构建症状优先、可下钻且关联发布和容量的监控告警体系。"

@@ -1,5 +1,6 @@
 ---
 title: "Ceph Pool 与 CephX 实战：存储策略、配额与最小权限"
+sidebar_label: "11. Ceph Pool 与 CephX 实战：存储策略、配额与最小权限"
 sidebar_position: 11
 tags: [Ceph, 学习路线, 存储, Pool, CephX, 安全]
 description: "理解 Pool 的边界，安全创建副本池，使用 PG autoscaler、配额和应用标签，并为 RBD、CephFS 客户端配置最小权限 CephX 账号。"

@@ -1,5 +1,6 @@
 ---
 title: HDFS 架构、Block 与读写路径
+sidebar_label: "01. HDFS 架构、Block 与读写路径"
 sidebar_position: 1
 tags: [HDFS, Hadoop, Block, 数据路径]
 description: 从 NameNode、DataNode、Block 和客户端协议理解 HDFS 的读写、容错与性能边界。

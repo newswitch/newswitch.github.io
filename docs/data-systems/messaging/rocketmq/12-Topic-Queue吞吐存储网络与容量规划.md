@@ -1,5 +1,6 @@
 ---
 title: "Topic/Queue、吞吐、存储、网络与容量规划"
+sidebar_label: "12. Topic/Queue、吞吐、存储、网络与容量规划"
 sidebar_position: 12
 tags: [RocketMQ, 容量规划, Queue, Storage]
 description: "按消息速率、大小、保留、副本、积压和恢复估算 RocketMQ Broker。"

@@ -1,5 +1,6 @@
 ---
 title: "MySQL 配置分层、内存预算、连接与线程模型"
+sidebar_label: "01. MySQL 配置分层、内存预算、连接与线程模型"
 sidebar_position: 1
 tags: [MySQL, 配置, 内存, 连接池, 线程模型]
 description: "建立配置来源、全局与会话内存、连接和执行线程的容量模型，避免照抄参数与连接数失控。"

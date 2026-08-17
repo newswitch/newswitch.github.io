@@ -1,5 +1,6 @@
 ---
 title: "Envoy HTTP/1.1、HTTP/2、HTTP/3、gRPC、WebSocket 与 TCP/UDP"
+sidebar_label: "07. Envoy HTTP/1.1、HTTP/2、HTTP/3、gRPC、WebSocket 与 TCP/UDP"
 sidebar_position: 7
 tags: [Envoy, HTTP2, HTTP3, gRPC, WebSocket, TCP, UDP]
 description: "理解 Envoy 下游和上游协议的独立协商、转换能力、流控制和协议排障。"

@@ -1,5 +1,6 @@
 ---
 title: Kubernetes AI 多网络架构
+sidebar_label: "01. Kubernetes AI 多网络架构"
 sidebar_position: 1
 tags: [Kubernetes, Multus, CNI, NetworkAttachmentDefinition, RDMA]
 description: 理解默认 Pod 网络、Multus 辅助网络、NetworkAttachmentDefinition、IPAM 和 RDMA 资源的职责边界。

@@ -1,5 +1,6 @@
 ---
 title: Kubernetes GPU Time-Slicing 配置实践
+sidebar_label: "08. Kubernetes GPU Time-Slicing 配置实践"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "Time-Slicing", "Device Plugin", "学习路线"]

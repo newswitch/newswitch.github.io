@@ -1,5 +1,6 @@
 ---
 title: "Nsight Compute CUDA Kernel 分析"
+sidebar_label: "04. Nsight Compute CUDA Kernel 分析"
 sidebar_position: 4
 tags: [NVIDIA, Nsight Compute, CUDA, Kernel, Roofline, Occupancy]
 description: "使用 Nsight Compute CLI 对目标 CUDA Kernel 进行 Roofline、Speed of Light、Occupancy、Memory Workload 和 Warp Stall 分析。"

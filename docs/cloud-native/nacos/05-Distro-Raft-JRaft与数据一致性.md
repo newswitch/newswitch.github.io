@@ -1,5 +1,6 @@
 ---
 title: "Distro、Raft/JRaft、AP/CP 与数据一致性"
+sidebar_label: "05. Distro、Raft/JRaft、AP/CP 与数据一致性"
 sidebar_position: 5
 tags: [Nacos, Distro, Raft, JRaft, Consistency]
 description: "按数据类型理解 Nacos Distro 与 Raft/JRaft 的一致性、可用性和故障行为。"

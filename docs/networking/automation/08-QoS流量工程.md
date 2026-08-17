@@ -1,5 +1,6 @@
 ---
 title: QoS 分类、队列与流量工程
+sidebar_label: "08. QoS 分类、队列与流量工程"
 sidebar_position: 8
 tags: [QoS, DSCP, Queuing, Policing, Shaping, Congestion]
 description: 从拥塞发生位置出发，掌握分类、标记、排队、整形、监管和端到端 QoS 验证。

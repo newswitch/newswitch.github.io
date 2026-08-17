@@ -1,5 +1,6 @@
 ---
 title: Spark 架构、RDD、DataFrame 与 Driver/Executor
+sidebar_label: "01. Spark 架构、RDD、DataFrame 与 Driver/Executor"
 sidebar_position: 1
 tags: [Spark, RDD, DataFrame, Driver, Executor]
 description: 建立 Spark Application、Driver、Executor、RDD 与 DataFrame 的执行和容错模型。

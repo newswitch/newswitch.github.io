@@ -1,5 +1,6 @@
 ---
 title: "RESP、客户端连接、Pipeline、事务与 Lua"
+sidebar_label: "02. RESP、客户端连接、Pipeline、事务与 Lua"
 sidebar_position: 2
 tags: [Redis, RESP, Pipeline, Transaction, Lua]
 description: "理解 Redis 协议、连接池、Pipeline、MULTI/EXEC 与 Lua 的原子性、延迟和阻塞边界。"

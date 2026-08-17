@@ -1,5 +1,6 @@
 ---
 title: "vLLM 与大模型推理学习路线"
+sidebar_label: "00. vLLM 与大模型推理学习路线"
 sidebar_position: 0
 tags: [vLLM, LLM, 推理, KV Cache, PagedAttention, 学习路线]
 description: "从 Transformer 推理、Prefill/Decode、KV Cache 和调度开始，系统学习 vLLM 架构、并行部署、性能分析与生产运维。"

@@ -1,5 +1,6 @@
 ---
 title: GPU 多租户与资源配额设计
+sidebar_label: "02. GPU 多租户与资源配额设计"
 date: 2026-07-22 19:10:00
 categories: 云原生
 tags: ["Kubernetes", "多租户", "ResourceQuota", "Kueue", "ClusterQueue", "GPU", "学习路线"]

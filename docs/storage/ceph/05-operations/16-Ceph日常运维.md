@@ -1,5 +1,6 @@
 ---
 title: "Ceph 日常运维实战：巡检、变更、维护与恢复观察"
+sidebar_label: "16. Ceph 日常运维实战：巡检、变更、维护与恢复观察"
 sidebar_position: 16
 tags: [Ceph, 学习路线, 存储, 运维, cephadm]
 description: "建立 Ceph 日常运维方法，覆盖状态、容量、OSD、Pool、PG、配置、主机维护、扩缩容、故障盘更换和恢复验收。"

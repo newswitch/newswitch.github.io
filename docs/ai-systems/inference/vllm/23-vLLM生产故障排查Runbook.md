@@ -1,5 +1,6 @@
 ---
 title: "vLLM 生产故障排查 Runbook"
+sidebar_label: "23. vLLM 生产故障排查 Runbook"
 sidebar_position: 23
 tags: [vLLM, SRE, Runbook, 故障排查, 应急响应]
 description: "覆盖 TTFT/TPOT、排队、KV、OOM、Worker、NCCL、输出和冷启动的 vLLM 生产故障处置流程。"

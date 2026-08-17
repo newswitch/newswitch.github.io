@@ -1,5 +1,6 @@
 ---
 title: 从 Kafka 到 Flink、Iceberg、Spark 再到 GPU：一条数据的完整路径
+sidebar_label: "01. 从 Kafka 到 Flink、Iceberg、Spark 再到 GPU：一条数据的完整路径"
 sidebar_position: 1
 tags: [Kafka, Flink, Iceberg, Spark, GPU, 端到端]
 description: 串联 CDC、Kafka、Flink、Iceberg、对象存储、Spark 和 GPU 数据加载，理解每一跳的数据面、控制面、一致性、性能指标与故障排查。

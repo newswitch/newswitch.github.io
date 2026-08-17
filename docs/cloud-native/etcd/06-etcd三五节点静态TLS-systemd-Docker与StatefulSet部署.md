@@ -1,5 +1,6 @@
 ---
 title: "etcd 三/五节点静态、TLS、systemd、Docker 与 StatefulSet 部署"
+sidebar_label: "06. etcd 三/五节点静态、TLS、systemd、Docker 与 StatefulSet 部署"
 sidebar_position: 6
 tags: [etcd, 部署, Raft, TLS, systemd, StatefulSet]
 description: "以 etcd 3.6 为基线，从单机实验到三/五节点 Raft 集群，讲清静态引导、双向 TLS、持久化、验收和成员变更。"

@@ -1,5 +1,6 @@
 ---
 title: "Cephadm 日常管理：Host、ServiceSpec、维护模式与日志排查"
+sidebar_label: "10. Cephadm 日常管理：Host、ServiceSpec、维护模式与日志排查"
 sidebar_position: 10
 tags: [Ceph, 学习路线, 存储, Cephadm]
 description: "建立 cephadm 日常管理模型：Host/Service/Daemon、Placement、ServiceSpec 变更、维护与 Drain、配置与日志排查。"

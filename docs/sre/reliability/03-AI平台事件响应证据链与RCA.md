@@ -1,5 +1,6 @@
 ---
 title: "AI 平台事件响应、证据链与 RCA"
+sidebar_label: "03. AI 平台事件响应、证据链与 RCA"
 sidebar_position: 11
 tags: [Kubernetes, SRE, Incident, RCA, LLM, GPU, 故障排查]
 description: "以 LLM 推理服务为对象，建立从 SLO 告警到请求、Pod、Node、GPU、网络和存储的技术证据链，并使用故障树和时间线完成可验证 RCA。"

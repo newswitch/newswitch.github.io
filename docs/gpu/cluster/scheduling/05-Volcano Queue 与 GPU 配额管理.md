@@ -1,5 +1,6 @@
 ---
 title: Volcano Queue 与 GPU 配额管理
+sidebar_label: "05. Volcano Queue 与 GPU 配额管理"
 date: 2026-07-22 16:55:00
 categories: 云原生
 tags: ["Kubernetes", "Volcano", "Queue", "GPU", "多租户", "学习路线"]

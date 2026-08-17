@@ -1,5 +1,6 @@
 ---
 title: Kafka 积压、故障排查、滚动升级与 Kubernetes 部署
+sidebar_label: "07. Kafka 积压、故障排查、滚动升级与 Kubernetes 部署"
 sidebar_position: 7
 tags: [Kafka, 故障排查, 滚动升级, Kubernetes]
 description: 用数据路径诊断 lag、ISR 和 broker 故障，设计可回滚升级及 Kubernetes 有状态部署。

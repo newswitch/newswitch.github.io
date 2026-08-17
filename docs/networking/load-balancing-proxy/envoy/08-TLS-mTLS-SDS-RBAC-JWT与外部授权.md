@@ -1,5 +1,6 @@
 ---
 title: "Envoy TLS、mTLS、SDS、证书轮换、RBAC、JWT 与外部授权"
+sidebar_label: "08. Envoy TLS、mTLS、SDS、证书轮换、RBAC、JWT 与外部授权"
 sidebar_position: 8
 tags: [Envoy, TLS, mTLS, SDS, RBAC, JWT, ext_authz]
 description: "从下游与上游两段 TLS 深入 SDS 动态 Secret、身份验证、授权 Filter、轮换与安全排障。"

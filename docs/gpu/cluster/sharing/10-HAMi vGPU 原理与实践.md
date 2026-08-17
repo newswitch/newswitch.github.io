@@ -1,5 +1,6 @@
 ---
 title: HAMi vGPU 原理与实践
+sidebar_label: "10. HAMi vGPU 原理与实践"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "GPU共享", "学习路线"]

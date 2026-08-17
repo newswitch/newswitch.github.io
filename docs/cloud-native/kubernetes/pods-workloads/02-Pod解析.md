@@ -1,5 +1,6 @@
 ---
 title: "Pod 解析"
+sidebar_label: "02. Pod 解析"
 sidebar_position: 2
 tags: [Kubernetes, Pod, 学习路线]
 description: "深入了解 Kubernetes Pod 架构、设计理念、生命周期管理和最佳实践，包括 Pod 的创建、调度、终止和故障处理机制。"

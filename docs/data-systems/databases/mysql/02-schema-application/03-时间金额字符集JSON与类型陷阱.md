@@ -1,5 +1,6 @@
 ---
 title: "时间、金额、字符集、JSON 与数据类型陷阱"
+sidebar_label: "03. 时间、金额、字符集、JSON 与数据类型陷阱"
 sidebar_position: 3
 tags: [MySQL, 数据类型, 时间, 金额, JSON, 字符集]
 description: "分析生产中最容易出错的 MySQL 时间、金额、字符串、JSON、隐式转换、溢出和 SQL Mode 问题。"

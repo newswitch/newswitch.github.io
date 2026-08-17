@@ -1,5 +1,6 @@
 ---
 title: "NetworkPolicy"
+sidebar_label: "04. NetworkPolicy"
 sidebar_position: 4
 tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "Kubernetes NetworkPolicy 是一种声明式的网络安全策略，用于控制 Pod 之间的网络通信。本文详细介绍了 NetworkPolicy 的工作原理、配置方法、使用场景和最佳实践。"

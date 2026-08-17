@@ -1,5 +1,6 @@
 ---
 title: Iceberg Schema Evolution、Partition Evolution 与 Time Travel
+sidebar_label: "03. Iceberg Schema Evolution、Partition Evolution 与 Time Travel"
 sidebar_position: 3
 tags: [Iceberg, Schema Evolution, Partition Evolution, Time Travel]
 description: 理解字段 ID、分区规范演进、隐藏分区、历史快照和安全回滚。

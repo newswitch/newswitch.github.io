@@ -1,5 +1,6 @@
 ---
 title: "LLM 服务 SLI、SLO 与 SLA 工程化"
+sidebar_label: "01. LLM 服务 SLI、SLO 与 SLA 工程化"
 sidebar_position: 9
 tags: [Kubernetes, SRE, SLI, SLO, SLA, LLM, Prometheus]
 description: "从服务边界、good/valid events、TTFT、TPOT 和端到端延迟出发，为大模型推理服务建立可计算、可告警、可验证的 SLO。"

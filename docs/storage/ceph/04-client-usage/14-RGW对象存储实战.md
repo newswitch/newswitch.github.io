@@ -1,5 +1,6 @@
 ---
 title: "Ceph RGW 实战：部署 S3 对象存储、用户、Bucket、Quota 与高可用"
+sidebar_label: "14. Ceph RGW 实战：部署 S3 对象存储、用户、Bucket、Quota 与高可用"
 sidebar_position: 14
 tags: [Ceph, 学习路线, 存储, RGW, S3]
 description: "用 cephadm 部署 RGW，创建 S3 用户与 Bucket，配置 Quota、版本控制与高可用入口，并排查常见故障。"

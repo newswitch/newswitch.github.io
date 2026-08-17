@@ -1,5 +1,6 @@
 ---
 title: "Pod 的生命周期"
+sidebar_label: "06. Pod 的生命周期"
 sidebar_position: 6
 tags: [Kubernetes, Pod, 学习路线]
 description: "详细介绍 Kubernetes Pod 的生命周期管理，包括 Pod 状态阶段、容器探针配置、重启策略以及生命周期的各种实际应用场景。"

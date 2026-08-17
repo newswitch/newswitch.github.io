@@ -1,5 +1,6 @@
 ---
 title: "从 CRUD 到 Join、聚合、CTE 与窗口函数"
+sidebar_label: "05. 从 CRUD 到 Join、聚合、CTE 与窗口函数"
 sidebar_position: 5
 tags: [MySQL, SQL, CRUD, Join, CTE, 窗口函数]
 description: "使用订单模型系统学习 SELECT、INSERT、UPDATE、DELETE、Join、聚合、子查询、CTE 和窗口函数，并建立正确性与执行计划意识。"

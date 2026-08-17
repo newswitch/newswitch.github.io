@@ -1,5 +1,6 @@
 ---
 title: "物理备份、Clone 与大库恢复设计"
+sidebar_label: "03. 物理备份、Clone 与大库恢复设计"
 sidebar_position: 3
 tags: [MySQL, 物理备份, Clone, 大库恢复]
 description: "理解 InnoDB 物理备份的一致性、prepare/copy-back、Clone 供应和大库恢复的资源与时间预算。"

@@ -1,5 +1,6 @@
 ---
 title: "Executor、Worker 与 GPUModelRunner"
+sidebar_label: "06. Executor、Worker 与 GPUModelRunner"
 sidebar_position: 6
 tags: [vLLM, V1, Executor, GPUModelRunner, 源码分析]
 description: "沿 SchedulerOutput 分析 vLLM 多进程 Executor、Worker、GPUModelRunner 的职责、通信和一次执行。"

@@ -1,5 +1,6 @@
 ---
 title: "监控、日志、备份、升级、迁移与多集群"
+sidebar_label: "11. 监控、日志、备份、升级、迁移与多集群"
 sidebar_position: 11
 tags: [Nacos, Monitoring, Backup, Upgrade, Multi-cluster]
 description: "建立 Nacos 服务/配置控制面的生命周期、灾备和多集群治理。"

@@ -1,5 +1,6 @@
 ---
 title: Kubernetes DRA 概念与核心 API（v1.35+）
+sidebar_label: "01. Kubernetes DRA 概念与核心 API（v1.35+）"
 date: 2026-07-22 19:40:00
 categories: 云原生
 tags: ["Kubernetes", "DRA", "DeviceClass", "ResourceClaim", "ResourceSlice", "GPU", "学习路线"]

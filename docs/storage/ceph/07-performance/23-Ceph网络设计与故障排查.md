@@ -1,5 +1,6 @@
 ---
 title: "Ceph 网络设计与故障排查：Public/Cluster Network、丢包、MTU 与带宽"
+sidebar_label: "23. Ceph 网络设计与故障排查：Public/Cluster Network、丢包、MTU 与带宽"
 sidebar_position: 23
 tags: [Ceph, 学习路线, 存储, 网络]
 description: "讲清 Public/Cluster Network、LACP、MTU 与带宽模型，并按路径做只读排障与受控变更。"

@@ -1,5 +1,6 @@
 ---
 title: "NameServer、Broker、Proxy、Controller 架构"
+sidebar_label: "03. NameServer、Broker、Proxy、Controller 架构"
 sidebar_position: 3
 tags: [RocketMQ, NameServer, Broker, Proxy, Controller]
 description: "区分 RocketMQ 路由、存储、接入与选主组件并追踪配置传播。"

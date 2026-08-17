@@ -1,5 +1,6 @@
 ---
 title: MindIE config.json 生产参数参考
+sidebar_label: "02. MindIE config.json 生产参数参考"
 sidebar_position: 2
 tags: [MindIE, config.json, 参数, KV Cache, ScheduleConfig]
 description: 逐层解释 MindIE 2.3 ServerConfig、BackendConfig、ModelDeployConfig、ModelConfig、ScheduleConfig 和模型侧参数。

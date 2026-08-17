@@ -1,5 +1,6 @@
 ---
 title: vLLM-Ascend 生产参数参考
+sidebar_label: "02. vLLM-Ascend 生产参数参考"
 sidebar_position: 2
 tags: [vLLM-Ascend, 参数, Additional Config, ACLGraph, HCCL]
 description: 解释 vLLM 公共参数、Ascend Additional Config、Graph 配置与 HCCL/CANN 环境参数怎样共同控制 910B 推理。

@@ -1,5 +1,6 @@
 ---
 title: "静态文件、Sendfile、Buffer、Compression 与 Cache"
+sidebar_label: "06. 静态文件、Sendfile、Buffer、Compression 与 Cache"
 sidebar_position: 6
 tags: [Nginx, Sendfile, Buffer, Cache, Compression]
 description: "理解静态文件零拷贝、代理缓冲、压缩、缓存键、新鲜度和回源保护。"

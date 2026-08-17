@@ -1,5 +1,6 @@
 ---
 title: "Dense Vector、ANN、HNSW、Hybrid Search 与 RAG"
+sidebar_label: "11. Dense Vector、ANN、HNSW、Hybrid Search 与 RAG"
 sidebar_position: 11
 tags: [Elasticsearch, Vector, HNSW, Hybrid Search, RAG]
 description: "理解 Elasticsearch 向量索引、ANN、混合召回、重排和 RAG 质量成本。"

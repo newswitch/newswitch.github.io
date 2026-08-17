@@ -1,5 +1,6 @@
 ---
 title: "Member Add/Remove/Replace、Learner、扩缩和滚动升级"
+sidebar_label: "07. Member Add/Remove/Replace、Learner、扩缩和滚动升级"
 sidebar_position: 7
 tags: [etcd, Member, Learner, Upgrade]
 description: "安全执行 etcd 成员添加、Learner 追平、移除替换和逐成员升级。"

@@ -1,5 +1,6 @@
 ---
 title: "Performance Schema、sys Schema 与关键状态指标"
+sidebar_label: "02. Performance Schema、sys Schema 与关键状态指标"
 sidebar_position: 2
 tags: [MySQL, Performance Schema, sys Schema, 可观测性]
 description: "从累计状态到事件、等待、摘要和 sys 视图，建立低基数、可归因的 MySQL 观测方法。"

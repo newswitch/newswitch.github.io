@@ -1,5 +1,6 @@
 ---
 title: Rail-Optimized 与 Multi-Rail
+sidebar_label: "02. Rail-Optimized 与 Multi-Rail"
 sidebar_position: 2
 tags: [Rail-Optimized, Multi-Rail, NCCL, Fault Domain, Topology]
 description: 理解每 GPU/NIC Rail 的拓扑、Rank 映射、带宽聚合、跨 Rail 转发和故障隔离。

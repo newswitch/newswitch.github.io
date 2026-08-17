@@ -1,5 +1,6 @@
 ---
 title: "Mapping、字段类型、Analyzer、Tokenizer 与相关性"
+sidebar_label: "03. Mapping、字段类型、Analyzer、Tokenizer 与相关性"
 sidebar_position: 3
 tags: [Elasticsearch, Mapping, Analyzer, BM25]
 description: "在写入前设计 Mapping、分析链、多字段和动态字段边界。"

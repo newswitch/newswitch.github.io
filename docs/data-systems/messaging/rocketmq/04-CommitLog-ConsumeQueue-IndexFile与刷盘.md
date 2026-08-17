@@ -1,5 +1,6 @@
 ---
 title: "CommitLog、ConsumeQueue、IndexFile 与刷盘"
+sidebar_label: "04. CommitLog、ConsumeQueue、IndexFile 与刷盘"
 sidebar_position: 4
 tags: [RocketMQ, CommitLog, ConsumeQueue, IndexFile]
 description: "理解 RocketMQ 顺序消息存储、逻辑消费索引、Key 查询和刷盘恢复。"

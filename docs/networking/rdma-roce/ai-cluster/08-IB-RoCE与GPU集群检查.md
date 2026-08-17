@@ -1,5 +1,6 @@
 ---
 title: InfiniBand、RoCE 与 GPU 集群网络
+sidebar_label: "08. InfiniBand、RoCE 与 GPU 集群网络"
 sidebar_position: 8
 date: 2026-07-22 18:05:00
 categories: 云原生

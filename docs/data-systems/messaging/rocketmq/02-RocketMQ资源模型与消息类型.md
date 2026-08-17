@@ -1,5 +1,6 @@
 ---
 title: "Topic、MessageQueue、Tag、Key、Group 与消息类型"
+sidebar_label: "02. Topic、MessageQueue、Tag、Key、Group 与消息类型"
 sidebar_position: 2
 tags: [RocketMQ, Topic, MessageQueue, Group]
 description: "掌握 RocketMQ 资源模型、路由、过滤和消息类型边界。"

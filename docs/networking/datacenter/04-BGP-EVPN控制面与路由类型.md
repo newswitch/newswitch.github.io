@@ -1,5 +1,6 @@
 ---
 title: BGP EVPN 控制面与五类路由
+sidebar_label: "04. BGP EVPN 控制面与五类路由"
 sidebar_position: 4
 tags: [BGP, EVPN, VXLAN, Route Type, ARP Suppression]
 description: 从 RD、RT、VNI 到 EVPN 五类路由，理解控制面如何分发 MAC、IP、前缀和多归属信息。

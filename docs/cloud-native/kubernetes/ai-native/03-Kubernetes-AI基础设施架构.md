@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes AI 基础设施架构"
+sidebar_label: "03. Kubernetes AI 基础设施架构"
 sidebar_position: 3
 tags: [Kubernetes, AI原生, PartIII, 学习路线]
 description: "Kubernetes AI 基础设施的设计原则、硬件加速、网络与存储优化及运维实践。"

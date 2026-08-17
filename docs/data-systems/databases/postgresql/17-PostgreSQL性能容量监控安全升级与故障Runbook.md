@@ -1,5 +1,6 @@
 ---
 title: "性能、容量、监控、安全、升级与故障 Runbook"
+sidebar_label: "17. 性能、容量、监控、安全、升级与故障 Runbook"
 sidebar_position: 17
 tags: [PostgreSQL, 性能, 容量, 安全, Runbook]
 description: "建立 PostgreSQL SLO、容量、监控、安全、升级和事故响应闭环。"

@@ -1,5 +1,6 @@
 ---
 title: "数据类型、Nullable、LowCardinality、Array/Map 与 Schema"
+sidebar_label: "02. 数据类型、Nullable、LowCardinality、Array/Map 与 Schema"
 sidebar_position: 2
 tags: [ClickHouse, Schema, LowCardinality, Nullable]
 description: "按压缩、查询、空值、动态属性和写入演进设计 ClickHouse Schema。"

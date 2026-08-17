@@ -1,5 +1,6 @@
 ---
 title: Iceberg Spark SQL 快照、时间旅行与维护命令手册
+sidebar_label: "90. Iceberg Spark SQL 快照、时间旅行与维护命令手册"
 sidebar_position: 90
 description: 使用 Spark SQL 查询 Iceberg 元数据表、执行时间旅行、演进 Schema 与分区，并安全完成小文件合并和快照清理。
 tags: [Iceberg, Spark SQL, 湖仓, 快照, 命令手册]

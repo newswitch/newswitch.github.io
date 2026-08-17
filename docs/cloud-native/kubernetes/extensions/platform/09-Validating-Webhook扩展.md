@@ -1,5 +1,6 @@
 ---
 title: "ValidatingWebhook 扩展：实例验证请求的动态策略控制"
+sidebar_label: "09. ValidatingWebhook 扩展：实例验证请求的动态策略控制"
 sidebar_position: 9
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "ValidatingWebhook 扩展用于在资源创建、更新、删除等操作发生前对请求进行验证，以动态地实现策略控制、安全防护和合规审计。"

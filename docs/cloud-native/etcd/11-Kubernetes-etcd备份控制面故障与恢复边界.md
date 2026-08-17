@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes etcd 备份、控制面故障和恢复边界"
+sidebar_label: "11. Kubernetes etcd 备份、控制面故障和恢复边界"
 sidebar_position: 11
 tags: [etcd, Kubernetes, Backup, Control Plane]
 description: "理解 kube-apiserver、etcd、Informer、外部资源在备份恢复和控制面故障中的边界。"

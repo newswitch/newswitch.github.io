@@ -1,5 +1,6 @@
 ---
 title: "NCCL：从集合通信、拓扑选择到多机超时排查"
+sidebar_label: "05. NCCL：从集合通信、拓扑选择到多机超时排查"
 date: 2026-07-22 18:00:00
 categories: 云原生
 tags: ["NCCL", "NVLink", "RDMA", "RoCE", "InfiniBand", "分布式训练", "故障排查"]

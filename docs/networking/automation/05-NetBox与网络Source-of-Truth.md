@@ -1,5 +1,6 @@
 ---
 title: NetBox 与网络 Source of Truth
+sidebar_label: "05. NetBox 与网络 Source of Truth"
 sidebar_position: 5
 tags: [NetBox, Source of Truth, DCIM, IPAM, Reconciliation]
 description: 建立从站点、设备、接口、线缆到 IP、VLAN、VRF 的网络意图模型，并与实际状态持续对账。

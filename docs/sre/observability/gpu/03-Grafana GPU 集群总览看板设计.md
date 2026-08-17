@@ -1,5 +1,6 @@
 ---
 title: Grafana GPU 集群总览看板设计
+sidebar_label: "03. Grafana GPU 集群总览看板设计"
 date: 2026-07-22 18:40:00
 categories: 云原生
 tags: ["Grafana", "DCGM", "Prometheus", "看板", "学习路线"]

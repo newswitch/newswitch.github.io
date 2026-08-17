@@ -1,5 +1,6 @@
 ---
 title: "Sentinel 监控、主观/客观下线与故障转移"
+sidebar_label: "09. Sentinel 监控、主观/客观下线与故障转移"
 sidebar_position: 9
 tags: [Redis, Sentinel, Failover]
 description: "理解 Sentinel 发现、SDOWN/ODOWN、quorum、leader、候选副本和客户端切换。"

@@ -1,5 +1,6 @@
 ---
 title: "Ceph 容量规划：原始容量、可用容量、恢复预留与 Full 红线"
+sidebar_label: "08. Ceph 容量规划：原始容量、可用容量、恢复预留与 Full 红线"
 sidebar_position: 8
 tags: [Ceph, 学习路线, 存储, 容量规划]
 description: "讲清 Raw、理论可用与规划可用容量，以及副本/纠删码开销、恢复预留与 nearfull/backfillfull/full 红线。"

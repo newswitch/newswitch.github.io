@@ -1,5 +1,6 @@
 ---
 title: "Redis 从零到精通学习路线"
+sidebar_label: "00. Redis 从零到精通学习路线"
 sidebar_position: 0
 tags: [Redis, 缓存, 数据结构, 高可用, 学习路线]
 description: "以 Redis Open Source 8.x 为主线，从命令与数据结构逐步深入事件循环、内存、持久化、复制、Sentinel、Cluster、性能容量和生产故障排查。"

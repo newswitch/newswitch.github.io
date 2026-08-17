@@ -1,5 +1,6 @@
 ---
 title: "Linux VFS 与一次 read 的完整路径"
+sidebar_label: "01. Linux VFS 与一次 read 的完整路径"
 sidebar_position: 1
 tags: [Linux, VFS, 文件系统, 块设备, eBPF, 存储]
 description: "从文件描述符、系统调用、VFS、页缓存、文件系统、块层到 NVMe，完整解释一次 Linux 文件读取以及分层排查方法。"

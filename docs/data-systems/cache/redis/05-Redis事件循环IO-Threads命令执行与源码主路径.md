@@ -1,5 +1,6 @@
 ---
 title: "事件循环、I/O Threads、命令执行与源码主路径"
+sidebar_label: "05. 事件循环、I/O Threads、命令执行与源码主路径"
 sidebar_position: 5
 tags: [Redis, 源码, Event Loop, I/O Threads]
 description: "沿连接就绪、RESP 解析、命令表、数据结构、传播和回复追踪 Redis 源码主路径。"

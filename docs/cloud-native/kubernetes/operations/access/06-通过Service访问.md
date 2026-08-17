@@ -1,5 +1,6 @@
 ---
 title: "使用 Service 访问集群中的应用程序"
+sidebar_label: "06. 使用 Service 访问集群中的应用程序"
 sidebar_position: 6
 tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "学习如何创建 Kubernetes Service 对象来访问集群中运行的应用程序，包括创建 Deployment、配置 NodePort 服务以及实现负载均衡的完整流程。"

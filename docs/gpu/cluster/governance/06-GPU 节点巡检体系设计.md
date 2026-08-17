@@ -1,5 +1,6 @@
 ---
 title: "GPU 节点巡检：从资产基线到隔离、诊断与重新上线"
+sidebar_label: "06. GPU 节点巡检：从资产基线到隔离、诊断与重新上线"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["GPU", "巡检", "DCGM", "NVIDIA", "Kubernetes", "故障排查"]

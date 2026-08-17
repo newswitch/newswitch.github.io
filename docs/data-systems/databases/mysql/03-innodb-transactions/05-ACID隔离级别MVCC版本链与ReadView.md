@@ -1,5 +1,6 @@
 ---
 title: "ACID、隔离级别、MVCC、版本链与 Read View"
+sidebar_label: "05. ACID、隔离级别、MVCC、版本链与 Read View"
 sidebar_position: 5
 tags: [MySQL, ACID, MVCC, 隔离级别, Read View]
 description: "理解事务 ACID、四种隔离级别、一致性读、当前读、Undo 版本链和 Read View 的可见性规则。"

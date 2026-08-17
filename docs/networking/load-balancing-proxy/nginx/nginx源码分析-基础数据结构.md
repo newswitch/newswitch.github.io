@@ -1,5 +1,7 @@
 ---
 title: Nginx 源码阅读导论：Core 模块与基础数据结构
+sidebar_label: "13. Nginx 源码架构与基础数据结构"
+sidebar_position: 13
 date: 2025-11-10 15:00:00
 categories: NGINX
 tags: [Nginx, 源码解析, C语言, 事件驱动, 技术学习]

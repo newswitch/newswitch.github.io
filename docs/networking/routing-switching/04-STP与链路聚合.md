@@ -1,5 +1,6 @@
 ---
 title: 二层环路、STP、MLAG 与链路聚合
+sidebar_label: "04. 二层环路、STP、MLAG 与链路聚合"
 sidebar_position: 4
 tags: [STP, RSTP, LACP, Bonding, MLAG, 二层环路]
 description: 理解二层环路为什么致命，STP 如何构造无环拓扑，以及 LACP/MLAG 如何提供链路与设备级冗余。

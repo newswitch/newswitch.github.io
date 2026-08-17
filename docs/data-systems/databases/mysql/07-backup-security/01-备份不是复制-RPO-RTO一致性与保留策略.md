@@ -1,5 +1,6 @@
 ---
 title: "备份不是复制：RPO、RTO、一致性与保留策略"
+sidebar_label: "01. 备份不是复制：RPO、RTO、一致性与保留策略"
 sidebar_position: 1
 tags: [MySQL, 备份, RPO, RTO, 灾备]
 description: "从失败场景和恢复目标设计备份组合、保留、校验、加密与演练，避免把副本和快照误当可恢复备份。"

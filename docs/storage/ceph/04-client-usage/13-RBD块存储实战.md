@@ -1,5 +1,6 @@
 ---
 title: "Ceph RBD 实战：创建块设备、挂载、快照、克隆与故障排查"
+sidebar_label: "13. Ceph RBD 实战：创建块设备、挂载、快照、克隆与故障排查"
 sidebar_position: 13
 tags: [Ceph, 学习路线, 存储, RBD]
 description: "完整 RBD 实验：创建 Pool、最小权限用户、Image 映射挂载、扩容、快照克隆、Trash 与常见故障排查。"

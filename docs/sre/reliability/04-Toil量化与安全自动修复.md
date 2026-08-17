@@ -1,5 +1,6 @@
 ---
 title: "Toil 量化与安全自动修复"
+sidebar_label: "04. Toil 量化与安全自动修复"
 sidebar_position: 12
 tags: [Kubernetes, SRE, Toil, 自动化, Python, Remediation]
 description: "识别和量化 AI Infra 运维中的 Toil，并通过状态机、幂等、锁、限速、审批、验证和回滚构建安全的自动修复系统。"

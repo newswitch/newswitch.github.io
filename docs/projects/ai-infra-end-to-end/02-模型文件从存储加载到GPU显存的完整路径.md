@@ -1,5 +1,6 @@
 ---
 title: 模型文件从存储加载到 GPU 显存的完整路径
+sidebar_label: "02. 模型文件从存储加载到 GPU 显存的完整路径"
 date: 2026-08-06 18:10:00
 categories: 云原生
 tags: [GPU, HBM, 存储, PCIe, GDS, 模型加载]

@@ -1,5 +1,6 @@
 ---
 title: Hive、Beeline 与 Metastore 命令手册
+sidebar_label: "91. Hive、Beeline 与 Metastore 命令手册"
 sidebar_position: 91
 tags: [Hive, Beeline, Metastore, SQL, 命令手册]
 description: 掌握 Beeline 安全连接、表与分区检查、EXPLAIN、统计信息、批量脚本和 Metastore schema 运维命令。

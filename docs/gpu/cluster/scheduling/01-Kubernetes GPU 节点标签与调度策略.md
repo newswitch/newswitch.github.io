@@ -1,5 +1,6 @@
 ---
 title: Kubernetes GPU 节点标签与调度策略
+sidebar_label: "01. Kubernetes GPU 节点标签与调度策略"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "调度", "GFD", "nodeSelector", "学习路线"]

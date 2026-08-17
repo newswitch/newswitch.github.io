@@ -1,5 +1,6 @@
 ---
 title: Flink Kubernetes Operator、升级、恢复与生产运维
+sidebar_label: "07. Flink Kubernetes Operator、升级、恢复与生产运维"
 sidebar_position: 7
 tags: [Flink, Kubernetes Operator, 升级, 恢复]
 description: 理解 Operator 调谐、Application/Session 部署、有状态升级、HA、观测和回滚。

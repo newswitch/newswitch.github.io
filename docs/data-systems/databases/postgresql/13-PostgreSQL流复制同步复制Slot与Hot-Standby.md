@@ -1,5 +1,6 @@
 ---
 title: "流复制、同步复制、Replication Slot 与 Hot Standby"
+sidebar_label: "13. 流复制、同步复制、Replication Slot 与 Hot Standby"
 sidebar_position: 13
 tags: [PostgreSQL, Streaming Replication, Replication Slot]
 description: "理解 WAL Sender/Receiver、同步提交、复制槽、只读冲突和 RPO。"

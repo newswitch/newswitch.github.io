@@ -1,5 +1,6 @@
 ---
 title: 数据湖、表格式、Catalog 与存算分离
+sidebar_label: "01. 数据湖、表格式、Catalog 与存算分离"
 sidebar_position: 1
 tags: [数据湖, 表格式, Catalog, 存算分离]
 description: 分清对象存储、文件格式、表格式、Catalog 与计算引擎，建立湖仓的分层架构。

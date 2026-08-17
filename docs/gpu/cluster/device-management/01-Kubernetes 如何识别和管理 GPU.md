@@ -1,5 +1,6 @@
 ---
 title: Kubernetes 如何识别和管理 GPU
+sidebar_label: "01. Kubernetes 如何识别和管理 GPU"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "Device Plugin", "扩展资源", "学习路线"]

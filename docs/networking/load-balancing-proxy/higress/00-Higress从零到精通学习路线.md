@@ -1,5 +1,6 @@
 ---
 title: "Higress 从零到精通学习路线"
+sidebar_label: "00. Higress 从零到精通学习路线"
 sidebar_position: 0
 tags: [Higress, API Gateway, AI Gateway, Envoy, Wasm, 学习路线]
 description: "从 Higress 控制面与 Envoy 数据面深入 Gateway API、服务发现、流量、安全、Wasm、AI 网关、性能容量和生产排障。"

@@ -1,5 +1,6 @@
 ---
 title: "按真实 Token 分布完成单副本容量规划"
+sidebar_label: "21. 按真实 Token 分布完成单副本容量规划"
 sidebar_position: 21
 tags: [vLLM, 容量规划, Token, KV Cache, SLO]
 description: "从权重、KV、激活和真实输入输出 token 分布出发，建立满足 TTFT/TPOT SLO 的单副本容量模型。"

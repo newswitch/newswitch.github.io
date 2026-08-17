@@ -1,5 +1,6 @@
 ---
 title: "Proxy、Coordinator、Streaming、Query、Data Node 源码职责"
+sidebar_label: "08. Proxy、Coordinator、Streaming、Query、Data Node 源码职责"
 sidebar_position: 8
 tags: [Milvus, 源码, Proxy, Coordinator, QueryNode]
 description: "从源码组件职责追踪 Milvus DDL、写入、索引、加载与查询主路径。"

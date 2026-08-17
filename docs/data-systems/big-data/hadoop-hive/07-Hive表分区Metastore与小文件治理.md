@@ -1,5 +1,6 @@
 ---
 title: Hive 表、分区、Metastore、执行引擎与小文件治理
+sidebar_label: "07. Hive 表、分区、Metastore、执行引擎与小文件治理"
 sidebar_position: 7
 tags: [Hive, Metastore, 分区, 小文件]
 description: 理解 Hive 如何把文件组织成表、Metastore 保存什么、SQL 如何执行，以及分区和小文件的生产治理。

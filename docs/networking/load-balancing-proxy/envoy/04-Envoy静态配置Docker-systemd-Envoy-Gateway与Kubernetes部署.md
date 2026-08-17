@@ -1,5 +1,6 @@
 ---
 title: "Envoy 静态配置、Docker、systemd、Envoy Gateway 与 Kubernetes 部署"
+sidebar_label: "04. Envoy 静态配置、Docker、systemd、Envoy Gateway 与 Kubernetes 部署"
 sidebar_position: 4
 tags: [Envoy, 部署, Docker, systemd, Envoy Gateway, Kubernetes]
 description: "从单 Envoy 静态代理到 systemd、Docker 和 Envoy Gateway，讲清 bootstrap、admin、安全、配置校验、数据面滚动与控制面边界。"

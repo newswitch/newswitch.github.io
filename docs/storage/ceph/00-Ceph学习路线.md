@@ -1,5 +1,6 @@
 ---
 title: "Ceph 学习路线"
+sidebar_label: "00. Ceph 学习路线"
 sidebar_position: 0
 tags: [Ceph, 学习路线, 存储]
 description: 《Ceph 从零基础到生产运维实战》总目录：认识 Ceph → 核心原理 → 规划部署 → 实战 → 运维监控 → 排障 → 优化 → 综合项目。

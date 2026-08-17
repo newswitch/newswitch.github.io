@@ -1,5 +1,6 @@
 ---
 title: Kubernetes GPU 集群学习路线
+sidebar_label: "00. Kubernetes GPU 集群学习路线"
 date: 2026-07-22 15:40:00
 categories: 云原生
 tags: [学习计划, Kubernetes, GPU, GPU Operator, Volcano, vLLM]

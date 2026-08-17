@@ -1,5 +1,6 @@
 ---
 title: "监控、滚动升级、红黄集群与生产故障 Runbook"
+sidebar_label: "16. 监控、滚动升级、红黄集群与生产故障 Runbook"
 sidebar_position: 16
 tags: [Elasticsearch, Monitoring, Upgrade, Runbook]
 description: "从端到端 SLO 定位 Elasticsearch 节点、Shard、JVM、磁盘与查询故障。"

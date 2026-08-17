@@ -1,5 +1,6 @@
 ---
 title: "Raft Term、Log、Commit、Apply、Election 与 ReadIndex"
+sidebar_label: "04. Raft Term、Log、Commit、Apply、Election 与 ReadIndex"
 sidebar_position: 4
 tags: [etcd, Raft, ReadIndex, Consensus]
 description: "从提案、日志复制、Commit、Apply 到线性读理解 etcd Raft。"

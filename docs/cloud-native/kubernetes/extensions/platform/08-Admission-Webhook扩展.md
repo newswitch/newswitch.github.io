@@ -1,5 +1,6 @@
 ---
 title: "Admission Webhook 扩展：可拔插策略控制"
+sidebar_label: "08. Admission Webhook 扩展：可拔插策略控制"
 sidebar_position: 8
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "通过准入 Webhook 扩展 Kubernetes API 的请求处理逻辑，实现策略验证、默认值注入与动态审计。"

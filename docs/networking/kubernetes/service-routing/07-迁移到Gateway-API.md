@@ -1,5 +1,6 @@
 ---
 title: "从 Ingress 迁移到 Gateway API"
+sidebar_label: "07. 从 Ingress 迁移到 Gateway API"
 sidebar_position: 7
 tags: [Kubernetes, 服务发现, 学习路线]
 description: "详细介绍如何从 Kubernetes Ingress API 迁移到新一代的 Gateway API，包括两者的主要区别、功能映射、迁移步骤和最佳实践，帮助用户顺利完成从传统 Ingress 到 Gateway API 的平滑过渡。"

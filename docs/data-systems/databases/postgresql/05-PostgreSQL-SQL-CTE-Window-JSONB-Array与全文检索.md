@@ -1,5 +1,6 @@
 ---
 title: "SQL、CTE、Window、JSONB、Array 与全文检索"
+sidebar_label: "05. SQL、CTE、Window、JSONB、Array 与全文检索"
 sidebar_position: 5
 tags: [PostgreSQL, SQL, CTE, Window, JSONB]
 description: "系统掌握 PostgreSQL 高级 SQL，并用执行计划约束表达力带来的成本。"

@@ -1,5 +1,6 @@
 ---
 title: RoCEv2 报文、寻址与转发
+sidebar_label: "05. RoCEv2 报文、寻址与转发"
 sidebar_position: 5
 tags: [RoCEv2, UDP 4791, GID, RDMA CM, ECMP, MTU]
 description: 从 GID、IP、UDP 4791、BTH 和 QP 一路理解 RoCEv2 报文如何跨三层以太网转发。

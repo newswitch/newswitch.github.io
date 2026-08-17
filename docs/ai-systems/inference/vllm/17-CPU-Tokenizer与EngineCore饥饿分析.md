@@ -1,5 +1,6 @@
 ---
 title: "CPU、Tokenizer 与 EngineCore 饥饿分析"
+sidebar_label: "17. CPU、Tokenizer 与 EngineCore 饥饿分析"
 sidebar_position: 17
 tags: [vLLM, CPU, Tokenizer, EngineCore, 性能分析]
 description: "分析 API 前处理、Tokenizer、Python 事件循环、EngineCore 调度与 CPU throttling 如何让 GPU 吃不饱。"

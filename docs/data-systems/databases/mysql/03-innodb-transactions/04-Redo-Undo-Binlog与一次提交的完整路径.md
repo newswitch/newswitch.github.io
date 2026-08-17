@@ -1,5 +1,6 @@
 ---
 title: "Redo、Undo、Binlog 与一次提交的完整路径"
+sidebar_label: "04. Redo、Undo、Binlog 与一次提交的完整路径"
 sidebar_position: 4
 tags: [MySQL, Redo, Undo, Binlog, 事务提交]
 description: "区分 Redo、Undo 和 Binlog，追踪 InnoDB 事务从修改、两阶段提交到持久化、复制与恢复的完整路径。"

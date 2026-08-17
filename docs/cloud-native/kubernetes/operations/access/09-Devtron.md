@@ -1,5 +1,6 @@
 ---
 title: "Devtron - 云原生应用管理平台"
+sidebar_label: "09. Devtron - 云原生应用管理平台"
 sidebar_position: 9
 tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "Devtron 是一款开源的云原生应用管理平台，提供完整的应用生命周期管理，包括 CI/CD、GitOps、安全扫描、监控告警等功能，帮助团队高效管理 Kubernetes 应用。"

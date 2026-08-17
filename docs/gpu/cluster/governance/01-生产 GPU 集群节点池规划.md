@@ -1,5 +1,6 @@
 ---
 title: 生产 GPU 集群节点池规划
+sidebar_label: "01. 生产 GPU 集群节点池规划"
 date: 2026-07-22 19:05:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "节点池", "ResourceFlavor", "Kueue", "学习路线"]

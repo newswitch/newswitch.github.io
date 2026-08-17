@@ -1,5 +1,6 @@
 ---
 title: SGLang 整体架构与请求生命周期
+sidebar_label: "01. SGLang 整体架构与请求生命周期"
 sidebar_position: 1
 tags: [SGLang, RadixAttention, Scheduler, ModelRunner, 源码分析]
 description: 不堆砌代码，沿一个请求分析 SGLang 的 HTTP Server、TokenizerManager、Scheduler、TP Worker、Radix Cache 与 DetokenizerManager。

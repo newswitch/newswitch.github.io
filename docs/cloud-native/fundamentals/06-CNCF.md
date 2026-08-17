@@ -1,5 +1,6 @@
 ---
 title: "云原生计算基金会（CNCF）"
+sidebar_label: "06. 云原生计算基金会（CNCF）"
 sidebar_position: 6
 tags: [Kubernetes, 云原生, PartIII, 学习路线]
 description: "深入了解云原生计算基金会（CNCF）的使命、组织架构、项目成熟度分级体系，以及如何成为 CNCF Ambassador。探索 CNCF 如何推动云原生技术生态系统的发展。"

@@ -1,5 +1,6 @@
 ---
 title: "Query DSL、BM25、Filter、Aggregation 与 Profile"
+sidebar_label: "04. Query DSL、BM25、Filter、Aggregation 与 Profile"
 sidebar_position: 4
 tags: [Elasticsearch, Query DSL, BM25, Aggregation, Profile]
 description: "从 bool query、相关性、过滤、聚合和 Profile 构建可解释搜索。"

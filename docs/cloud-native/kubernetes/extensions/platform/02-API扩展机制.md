@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes API 扩展机制（API Extension）"
+sidebar_label: "02. Kubernetes API 扩展机制（API Extension）"
 sidebar_position: 2
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "Kubernetes 提供了 API 聚合层（APIService）和自定义资源定义（CRD）两种扩展机制，用于添加新的资源类型或集成外部 API 服务，是整个生态系统可扩展性的基础。"

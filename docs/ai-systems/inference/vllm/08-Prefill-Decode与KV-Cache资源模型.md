@@ -1,5 +1,6 @@
 ---
 title: "Prefill、Decode 与 KV Cache 资源模型"
+sidebar_label: "08. Prefill、Decode 与 KV Cache 资源模型"
 sidebar_position: 8
 tags: [vLLM, Prefill, Decode, KV Cache, PagedAttention, TTFT, TPOT]
 description: "从计算量、显存带宽和 KV Cache 容量出发，理解 Prefill 与 Decode 的性能差异，并建立可用于容量规划和故障分析的资源模型。"

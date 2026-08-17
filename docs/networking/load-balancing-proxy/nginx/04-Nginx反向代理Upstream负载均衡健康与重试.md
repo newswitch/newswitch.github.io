@@ -1,5 +1,6 @@
 ---
 title: "Reverse Proxy、Upstream、负载均衡、健康与重试"
+sidebar_label: "04. Reverse Proxy、Upstream、负载均衡、健康与重试"
 sidebar_position: 4
 tags: [Nginx, Reverse Proxy, Upstream, Retry]
 description: "理解 Nginx Upstream 选择、连接池、超时、失败判断和重试放大。"

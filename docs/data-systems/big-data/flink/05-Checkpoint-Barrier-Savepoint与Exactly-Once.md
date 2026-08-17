@@ -1,5 +1,6 @@
 ---
 title: Flink Checkpoint、Barrier、Savepoint 与 Exactly-Once
+sidebar_label: "05. Flink Checkpoint、Barrier、Savepoint 与 Exactly-Once"
 sidebar_position: 5
 tags: [Flink, Checkpoint, Barrier, Savepoint, Exactly-Once]
 description: 从分布式快照理解 source、in-flight 数据、operator state 和 sink 提交的一致恢复。

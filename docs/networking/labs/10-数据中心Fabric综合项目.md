@@ -1,5 +1,6 @@
 ---
 title: 数据中心 Fabric 综合项目
+sidebar_label: "10. 数据中心 Fabric 综合项目"
 sidebar_position: 10
 tags: [Lab, Clos, eBGP, VXLAN, EVPN, Fabric]
 description: 用 2 Spine、4 Leaf 和 3 个租户完成从需求、地址规划、Underlay、Overlay 到故障演练的综合项目。

@@ -1,5 +1,6 @@
 ---
 title: 模型驱动网络与 gNMI
+sidebar_label: "04. 模型驱动网络与 gNMI"
 sidebar_position: 4
 tags: [YANG, NETCONF, RESTCONF, gNMI, OpenConfig]
 description: 分清数据模型与传输协议，掌握 YANG、NETCONF、RESTCONF、gNMI 的能力发现、读写和订阅语义。

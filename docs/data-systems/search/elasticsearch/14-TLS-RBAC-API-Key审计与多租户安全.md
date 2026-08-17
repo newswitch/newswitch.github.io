@@ -1,5 +1,6 @@
 ---
 title: "TLS、RBAC、API Key、审计与多租户安全"
+sidebar_label: "14. TLS、RBAC、API Key、审计与多租户安全"
 sidebar_position: 14
 tags: [Elasticsearch, TLS, RBAC, API Key, Security]
 description: "建立 Elasticsearch 节点与客户端身份、最小权限、审计和租户隔离。"

@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes 次世代的云原生应用"
+sidebar_label: "03. Kubernetes 次世代的云原生应用"
 sidebar_position: 3
 tags: [Kubernetes, 云原生, PartIII, 学习路线]
 description: "探讨 Kubernetes 生态发展历程，分析云原生应用碎片化问题，介绍 OAM（开放应用模型）等解决方案，展望以应用为中心的云原生未来。"

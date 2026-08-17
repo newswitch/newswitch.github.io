@@ -1,5 +1,6 @@
 ---
 title: Kafka 架构、分区日志、Segment 与索引
+sidebar_label: "01. Kafka 架构、分区日志、Segment 与索引"
 sidebar_position: 1
 tags: [Kafka, Partition, Log Segment, Index]
 description: 从 broker、topic、partition、offset、segment 和 page cache 理解 Kafka 的存储与读写路径。

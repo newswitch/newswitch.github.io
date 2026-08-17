@@ -1,5 +1,6 @@
 ---
 title: DCGM Exporter GPU 监控指标详解
+sidebar_label: "01. DCGM Exporter GPU 监控指标详解"
 date: 2026-07-22 18:30:00
 categories: 云原生
 tags: ["DCGM", "dcgm-exporter", "Prometheus", "GPU", "监控", "学习路线"]

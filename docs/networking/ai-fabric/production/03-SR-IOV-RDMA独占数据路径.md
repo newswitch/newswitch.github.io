@@ -1,5 +1,6 @@
 ---
 title: SR-IOV RDMA 独占数据路径
+sidebar_label: "03. SR-IOV RDMA 独占数据路径"
 sidebar_position: 3
 tags: [SR-IOV, VF, RDMA, Device Plugin, CNI, IOMMU]
 description: 从 PF/VF 创建、资源发现、Device Plugin 分配、SR-IOV CNI 配置到 Pod 内 RDMA 验收。

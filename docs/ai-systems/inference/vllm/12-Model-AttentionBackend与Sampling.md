@@ -1,5 +1,6 @@
 ---
 title: "Model、Attention Backend 与 Sampling"
+sidebar_label: "12. Model、Attention Backend 与 Sampling"
 sidebar_position: 12
 tags: [vLLM, V1, Attention, Sampling, 源码分析]
 description: "从 GPUModelRunner 的输入张量出发，理解模型层、Attention Backend、KV Cache 写入、Logits 与采样的边界。"

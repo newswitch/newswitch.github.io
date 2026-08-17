@@ -1,5 +1,6 @@
 ---
 title: "安装 MySQL 8.4 LTS 与建立安全实验环境"
+sidebar_label: "02. 安装 MySQL 8.4 LTS 与建立安全实验环境"
 sidebar_position: 2
 tags: [MySQL, 安装, Docker, Linux, 安全]
 description: "以 MySQL 8.4 LTS 为基线，建立可复现、可观测、与生产隔离的 Linux 或容器实验环境。"

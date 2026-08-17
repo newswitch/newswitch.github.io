@@ -1,5 +1,6 @@
 ---
 title: "Go Context、并发与可靠 HTTP 客户端"
+sidebar_label: "03. Go Context、并发与可靠 HTTP 客户端"
 sidebar_position: 3
 tags: [Go, Context, Goroutine, Channel, HTTP, 并发, SRE]
 description: "从 Context 取消传播、Goroutine 生命周期、有界 Worker Pool、HTTP 连接池、重试和优雅退出构建可靠的 Go 常驻程序。"

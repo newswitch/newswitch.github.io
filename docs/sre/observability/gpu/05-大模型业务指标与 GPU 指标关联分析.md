@@ -1,5 +1,6 @@
 ---
 title: 大模型业务指标与 GPU 指标关联分析
+sidebar_label: "05. 大模型业务指标与 GPU 指标关联分析"
 date: 2026-07-22 18:50:00
 categories: 云原生
 tags: ["vLLM", "DCGM", "TTFT", "监控", "容量", "学习路线"]

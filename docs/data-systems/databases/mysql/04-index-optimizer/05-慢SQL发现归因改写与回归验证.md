@@ -1,5 +1,6 @@
 ---
 title: "慢 SQL 从发现、归因、改写到回归验证"
+sidebar_label: "05. 慢 SQL 从发现、归因、改写到回归验证"
 sidebar_position: 5
 tags: [MySQL, 慢SQL, Performance Schema, SQL优化, 故障排查]
 description: "建立以 SLO 和工作负载为入口的慢 SQL 处理闭环，覆盖采集、计划、等待、改写、压测、灰度与回滚。"

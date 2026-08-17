@@ -1,5 +1,6 @@
 ---
 title: Flink Keyed State、Operator State 与 State Backend
+sidebar_label: "04. Flink Keyed State、Operator State 与 State Backend"
 sidebar_position: 4
 tags: [Flink State, Keyed State, State Backend]
 description: 理解状态类型、key-group、TTL、State Backend、本地恢复和状态容量治理。

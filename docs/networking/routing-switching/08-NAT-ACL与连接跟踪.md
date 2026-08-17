@@ -1,5 +1,6 @@
 ---
 title: NAT、ACL、状态防火墙与连接跟踪
+sidebar_label: "08. NAT、ACL、状态防火墙与连接跟踪"
 sidebar_position: 8
 tags: [NAT, ACL, Firewall, Conntrack, nftables]
 description: 理解无状态过滤、状态防火墙、Netfilter Hook、连接跟踪和 SNAT/DNAT 的真实数据路径。

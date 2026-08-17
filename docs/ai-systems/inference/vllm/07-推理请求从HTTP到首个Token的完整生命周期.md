@@ -1,5 +1,6 @@
 ---
 title: "推理请求从 HTTP 到首个 Token 的完整生命周期"
+sidebar_label: "07. 推理请求从 HTTP 到首个 Token 的完整生命周期"
 sidebar_position: 7
 tags: [vLLM, LLM, 推理, HTTP, SSE, Tokenization, TTFT]
 description: "追踪一次 OpenAI 兼容流式请求经过网关、API Server、Tokenizer、EngineCore、Scheduler、Worker、GPU 和 SSE 返回的完整路径。"

@@ -1,5 +1,6 @@
 ---
 title: "vLLM 在 Kubernetes 中的实践"
+sidebar_label: "06. vLLM 在 Kubernetes 中的实践"
 sidebar_position: 6
 tags: [Kubernetes, AI原生, PartIII, 学习路线]
 description: "vLLM 推理引擎在 Kubernetes 中的部署、配置和优化指南。"

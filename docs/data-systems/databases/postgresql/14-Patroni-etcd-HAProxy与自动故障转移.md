@@ -1,5 +1,6 @@
 ---
 title: "Patroni、etcd、HAProxy 与自动故障转移"
+sidebar_label: "14. Patroni、etcd、HAProxy 与自动故障转移"
 sidebar_position: 14
 tags: [PostgreSQL, Patroni, etcd, HAProxy, 高可用]
 description: "理解 DCS Leader Lock、PostgreSQL Promote、Fencing、接入切换与故障演练。"

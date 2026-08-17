@@ -1,5 +1,6 @@
 ---
 title: "Sidecar 容器"
+sidebar_label: "05. Sidecar 容器"
 sidebar_position: 5
 tags: [Kubernetes, Pod, 学习路线]
 description: "介绍 Kubernetes 中 Sidecar 容器模式的概念、使用场景和最佳实践"

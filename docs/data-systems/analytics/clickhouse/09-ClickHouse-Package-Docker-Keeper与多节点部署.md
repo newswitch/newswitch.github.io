@@ -1,5 +1,6 @@
 ---
 title: "ClickHouse Package、Docker、Keeper 与多节点部署"
+sidebar_label: "09. ClickHouse Package、Docker、Keeper 与多节点部署"
 sidebar_position: 9
 tags: [ClickHouse, 部署, Docker, ClickHouse Keeper, 集群]
 description: "从单机 Package/Docker 到 ReplicatedMergeTree、Shard、Replica 和 ClickHouse Keeper，建立生产部署与验收闭环。"

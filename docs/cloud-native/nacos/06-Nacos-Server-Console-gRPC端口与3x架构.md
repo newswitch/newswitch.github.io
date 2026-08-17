@@ -1,5 +1,6 @@
 ---
 title: "Server、Console、gRPC、端口与 3.x 架构"
+sidebar_label: "06. Server、Console、gRPC、端口与 3.x 架构"
 sidebar_position: 6
 tags: [Nacos, Server, Console, gRPC, Architecture]
 description: "理解 Nacos 3.x 运行面、管理面、客户端/服务端协议和端口边界。"

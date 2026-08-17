@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes 社区组织：SIG 和工作组"
+sidebar_label: "02. Kubernetes 社区组织：SIG 和工作组"
 sidebar_position: 2
 tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "本文系统梳理 Kubernetes 社区组织架构、主要 SIG/WG 列表、参与路径及资源，帮助读者高效融入全球云原生生态。"

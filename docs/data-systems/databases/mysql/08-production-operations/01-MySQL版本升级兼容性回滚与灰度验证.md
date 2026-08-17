@@ -1,5 +1,6 @@
 ---
 title: "MySQL 版本升级、兼容性、回滚与灰度验证"
+sidebar_label: "01. MySQL 版本升级、兼容性、回滚与灰度验证"
 sidebar_position: 1
 tags: [MySQL, 升级, 兼容性, 灰度, 回滚]
 description: "从支持路径、Upgrade Checker、数据与应用兼容、性能回归到分阶段上线和回退边界设计 MySQL 升级。"

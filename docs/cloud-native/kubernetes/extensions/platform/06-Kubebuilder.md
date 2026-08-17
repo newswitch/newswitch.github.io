@@ -1,5 +1,6 @@
 ---
 title: "使用 Kubebuilder 构建控制器"
+sidebar_label: "06. 使用 Kubebuilder 构建控制器"
 sidebar_position: 6
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Kubebuilder 的核心概念、设计原则、工作流程及最佳实践，帮助开发者快速上手使用 Kubebuilder 构建 Kubernetes 扩展。"

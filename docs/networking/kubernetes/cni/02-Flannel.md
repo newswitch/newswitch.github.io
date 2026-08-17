@@ -1,5 +1,6 @@
 ---
 title: "扁平网络 Flannel"
+sidebar_label: "02. 扁平网络 Flannel"
 sidebar_position: 2
 tags: [Kubernetes, 网络, 学习路线]
 description: "深入介绍 Kubernetes 网络插件 Flannel 的工作原理，包括网络架构、配置方式、与 Docker 的集成以及路由机制，帮助理解容器网络的底层实现。"

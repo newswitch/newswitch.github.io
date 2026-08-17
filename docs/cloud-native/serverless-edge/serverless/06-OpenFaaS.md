@@ -1,5 +1,6 @@
 ---
 title: "OpenFaaS"
+sidebar_label: "06. OpenFaaS"
 sidebar_position: 6
 tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "OpenFaaS 的架构、安装和使用方法。"

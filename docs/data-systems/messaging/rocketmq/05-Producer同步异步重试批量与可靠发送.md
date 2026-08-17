@@ -1,5 +1,6 @@
 ---
 title: "Producer 同步/异步、重试、批量与可靠发送"
+sidebar_label: "05. Producer 同步/异步、重试、批量与可靠发送"
 sidebar_position: 5
 tags: [RocketMQ, Producer, Retry, Batch]
 description: "理解发送模式、路由、超时不确定性、重试重复、批量和可靠 Outbox。"

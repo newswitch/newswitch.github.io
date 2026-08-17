@@ -1,5 +1,6 @@
 ---
 title: "Calico 网络：从 Pod veth 到 BGP、VXLAN 与 eBPF 数据路径"
+sidebar_label: "03. Calico 网络：从 Pod veth 到 BGP、VXLAN 与 eBPF 数据路径"
 sidebar_position: 3
 tags: [Kubernetes, Calico, CNI, BGP, VXLAN, eBPF, 网络排障]
 description: "从 CNI、IPAM、veth、路由、BGP、IPIP/VXLAN、NetworkPolicy 到 eBPF 和故障排查，建立完整 Calico 数据路径。"

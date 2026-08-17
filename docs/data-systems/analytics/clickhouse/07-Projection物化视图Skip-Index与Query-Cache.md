@@ -1,5 +1,6 @@
 ---
 title: "Projection、Materialized View、Skip Index 与 Query Cache"
+sidebar_label: "07. Projection、Materialized View、Skip Index 与 Query Cache"
 sidebar_position: 7
 tags: [ClickHouse, Projection, Materialized View, Skip Index]
 description: "按查询形状选择投影、物化视图、跳数索引和缓存，理解写放大与一致性。"

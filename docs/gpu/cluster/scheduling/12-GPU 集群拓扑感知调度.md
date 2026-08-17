@@ -1,5 +1,6 @@
 ---
 title: GPU 集群拓扑感知调度
+sidebar_label: "12. GPU 集群拓扑感知调度"
 date: 2026-07-22 18:10:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "拓扑", "NUMA", "NVLink", "NCCL", "学习路线"]

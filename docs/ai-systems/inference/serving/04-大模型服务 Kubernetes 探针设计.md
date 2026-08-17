@@ -1,5 +1,6 @@
 ---
 title: "大模型服务 Kubernetes 探针：启动、存活、就绪与过载语义"
+sidebar_label: "04. 大模型服务 Kubernetes 探针：启动、存活、就绪与过载语义"
 date: 2026-07-22 15:30:00
 categories: 云原生
 tags: ["Kubernetes", "Probe", "vLLM", "Readiness", "Liveness", "SRE"]

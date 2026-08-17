@@ -1,5 +1,7 @@
 ---
 title: nginx源码分析-基础数据结构
+sidebar_label: "14. Nginx 内存池与基础数据结构实现"
+sidebar_position: 14
 date: 2025-11-10 15:00:00
 categories: NGINX
 tags: [Nginx, 源码解析, 技术学习]

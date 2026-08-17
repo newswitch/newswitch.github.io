@@ -1,5 +1,6 @@
 ---
 title: "Nginx 从零到精通学习路线"
+sidebar_label: "00. Nginx 从零到精通学习路线"
 sidebar_position: 0
 tags: [Nginx, 反向代理, 负载均衡, 源码, 学习路线]
 description: "从配置与反向代理深入 Master/Worker、事件循环、HTTP 阶段、Upstream、TLS、缓存、性能容量、热升级和源码。"

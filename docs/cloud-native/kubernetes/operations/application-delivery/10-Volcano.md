@@ -1,5 +1,6 @@
 ---
 title: "Volcano：Kubernetes 上的批处理和高性能计算调度器"
+sidebar_label: "10. Volcano：Kubernetes 上的批处理和高性能计算调度器"
 sidebar_position: 10
 tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Volcano 是一个专为高性能计算（HPC）和大规模批处理任务设计的 Kubernetes 调度器扩展，提供先进的调度策略和资源管理功能。"

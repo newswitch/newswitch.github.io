@@ -1,5 +1,6 @@
 ---
 title: "psql、Database、Schema、Role 与元数据导航"
+sidebar_label: "03. psql、Database、Schema、Role 与元数据导航"
 sidebar_position: 3
 tags: [PostgreSQL, psql, Schema, Role]
 description: "掌握 PostgreSQL 对象层级、连接、psql 元命令、角色和最小权限导航。"

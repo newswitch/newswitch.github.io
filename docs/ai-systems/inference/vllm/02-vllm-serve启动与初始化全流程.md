@@ -1,5 +1,6 @@
 ---
 title: "执行 vllm serve 后发生了什么：启动与初始化全流程"
+sidebar_label: "02. 执行 vllm serve 后发生了什么：启动与初始化全流程"
 sidebar_position: 2
 tags: [vLLM, vllm serve, 模型加载, KV Cache, CUDA Graph, 源码分析]
 description: "以 vLLM v0.23.0 为基线，分析从 CLI 参数解析、进程拉起、权重加载、显存探测、KV Cache 分配到服务 Ready 的启动路径。"

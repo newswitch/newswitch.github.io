@@ -1,5 +1,6 @@
 ---
 title: "Scalar Filter、Hybrid Search、Sparse/Dense、Rerank 与 Grouping"
+sidebar_label: "07. Scalar Filter、Hybrid Search、Sparse/Dense、Rerank 与 Grouping"
 sidebar_position: 7
 tags: [Milvus, Hybrid Search, Rerank, Scalar Filter]
 description: "设计标量过滤、稀疏/稠密多路召回、重排和按文档分组。"

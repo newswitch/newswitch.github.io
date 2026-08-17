@@ -1,5 +1,6 @@
 ---
 title: "Error Budget 与多窗口燃烧率告警"
+sidebar_label: "02. Error Budget 与多窗口燃烧率告警"
 sidebar_position: 10
 tags: [Kubernetes, SRE, Error Budget, Burn Rate, Prometheus, PromQL]
 description: "从 SLO 推导错误预算和燃烧率，使用 Prometheus recording rules 与多窗口多燃烧率告警发现真正威胁用户体验的问题。"

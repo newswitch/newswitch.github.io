@@ -1,5 +1,6 @@
 ---
 title: "DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型"
+sidebar_label: "13. DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型"
 sidebar_position: 13
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "DRA（Dynamic Resource Allocation）将“设备类资源”的分配从静态整数配额升级为可协商、可选择、可共享、可晚绑定的声明式流程，是 Kubernetes 面向 GPU/FPGA/SmartNIC 等异构硬件的核心演进方向。"

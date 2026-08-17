@@ -1,5 +1,6 @@
 ---
 title: Debezium CDC、Binlog、快照与 Schema Change
+sidebar_label: "01. Debezium CDC、Binlog、快照与 Schema Change"
 sidebar_position: 1
 tags: [Debezium, CDC, Binlog, Schema Change]
 description: 理解数据库快照与增量日志的无缝衔接、事件 Envelope、Schema History 和生产排障。

@@ -1,5 +1,6 @@
 ---
 title: "Service"
+sidebar_label: "02. Service"
 sidebar_position: 2
 tags: [Kubernetes, 服务发现, 学习路线]
 description: "Kubernetes Service 为 Pod 提供稳定的网络访问抽象，通过标签选择器将流量路由到后端 Pod，支持多种服务发现方式和代理模式，是微服务架构中的核心组件。"

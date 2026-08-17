@@ -1,5 +1,6 @@
 ---
 title: "TLS、SASL、ACL、配额与多租户安全"
+sidebar_label: "09. TLS、SASL、ACL、配额与多租户安全"
 sidebar_position: 9
 tags: [Kafka, TLS, SASL, ACL, Quota]
 description: "建立 Kafka Broker/Controller/Client 身份、最小 ACL、配额和租户隔离。"

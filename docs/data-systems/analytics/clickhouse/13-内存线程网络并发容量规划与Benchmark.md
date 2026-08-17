@@ -1,5 +1,6 @@
 ---
 title: "内存、线程、网络、并发、容量规划与 Benchmark"
+sidebar_label: "13. 内存、线程、网络、并发、容量规划与 Benchmark"
 sidebar_position: 13
 tags: [ClickHouse, 容量规划, Benchmark, Memory]
 description: "按查询混合、写入、Merge、复制和故障恢复规划 ClickHouse 资源。"

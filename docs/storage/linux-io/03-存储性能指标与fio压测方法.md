@@ -1,5 +1,6 @@
 ---
 title: "存储性能指标与 fio 压测方法"
+sidebar_label: "03. 存储性能指标与 fio 压测方法"
 sidebar_position: 3
 tags: [Linux, fio, IOPS, 延迟, 吞吐, 队列深度, 性能测试]
 description: "从 IOPS、吞吐、延迟和队列深度的关系出发，设计可复现、符合业务语义且不会误伤生产的 fio 存储实验。"

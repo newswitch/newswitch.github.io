@@ -1,5 +1,6 @@
 ---
 title: "Nginx 解决什么问题与一次请求完整路径"
+sidebar_label: "01. Nginx 解决什么问题与一次请求完整路径"
 sidebar_position: 1
 tags: [Nginx, HTTP, 反向代理, Event Loop, Upstream]
 description: "从 master/worker、TCP/TLS、HTTP phases、location、upstream、buffering 与日志拆解 Nginx 一次请求的完整路径。"

@@ -1,5 +1,6 @@
 ---
 title: "etcd、WAL/Woodpecker 与 S3/MinIO 依赖原理"
+sidebar_label: "09. etcd、WAL/Woodpecker 与 S3/MinIO 依赖原理"
 sidebar_position: 9
 tags: [Milvus, etcd, Woodpecker, S3, MinIO]
 description: "区分 Milvus 元数据、顺序日志和向量/索引大对象的持久化责任。"

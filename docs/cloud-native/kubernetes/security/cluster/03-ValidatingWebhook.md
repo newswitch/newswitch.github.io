@@ -1,5 +1,6 @@
 ---
 title: "验证（Validating）Webhook"
+sidebar_label: "03. 验证（Validating）Webhook"
 sidebar_position: 3
 tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "验证（Validating）Webhook 扩展用于在资源创建、更新、删除等操作发生前对请求进行验证，以动态地实现策略控制、安全防护和合规审计。"

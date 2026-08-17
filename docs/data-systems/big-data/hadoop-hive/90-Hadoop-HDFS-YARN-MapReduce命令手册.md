@@ -1,5 +1,6 @@
 ---
 title: Hadoop、HDFS、YARN 与 MapReduce 命令手册
+sidebar_label: "90. Hadoop、HDFS、YARN 与 MapReduce 命令手册"
 sidebar_position: 90
 tags: [Hadoop, HDFS, YARN, MapReduce, 命令手册]
 description: 按只读、写入和危险操作分级掌握 HDFS 文件、集群健康、HA、纠删码、YARN 应用和 MapReduce 作业命令。

@@ -1,5 +1,6 @@
 ---
 title: "NFS 生产部署、安全与高可用"
+sidebar_label: "04. NFS 生产部署、安全与高可用"
 sidebar_position: 4
 tags: [NFS, Linux, 高可用, Kerberos, root_squash, 备份, 容灾]
 description: "从需求、磁盘与网络规划开始部署 NFSv4，治理 exports、身份权限，并设计 VIP、状态恢复、备份和故障切换验收。"

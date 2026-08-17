@@ -1,5 +1,6 @@
 ---
 title: "RDB、AOF、多段 AOF、fork 与 Copy-on-Write"
+sidebar_label: "07. RDB、AOF、多段 AOF、fork 与 Copy-on-Write"
 sidebar_position: 7
 tags: [Redis, RDB, AOF, Fork, COW]
 description: "理解 Redis 快照、追加日志、刷盘、重写、恢复优先级和 fork 风险。"

@@ -1,5 +1,6 @@
 ---
 title: HBM 显存原理：容量、带宽与访问效率
+sidebar_label: "01. HBM 显存原理：容量、带宽与访问效率"
 date: 2026-08-06 18:00:00
 categories: 云原生
 tags: [GPU, HBM, 显存, CUDA, 性能]

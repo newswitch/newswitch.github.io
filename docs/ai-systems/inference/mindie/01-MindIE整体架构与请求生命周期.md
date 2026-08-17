@@ -1,5 +1,6 @@
 ---
 title: MindIE 整体架构与请求生命周期
+sidebar_label: "01. MindIE 整体架构与请求生命周期"
 sidebar_position: 1
 tags: [MindIE, MindIE LLM, ATB Models, Scheduler, Ascend 910B]
 description: 沿一次 OpenAI 请求解释 MindIE Server、LLM Manager、Text Generator、Modeling、CANN 与 910B 的职责和运行过程。

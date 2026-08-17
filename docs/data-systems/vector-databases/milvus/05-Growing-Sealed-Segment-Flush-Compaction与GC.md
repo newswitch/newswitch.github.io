@@ -1,5 +1,6 @@
 ---
 title: "Growing/Sealed Segment、Flush、Compaction 与 Garbage Collection"
+sidebar_label: "05. Growing/Sealed Segment、Flush、Compaction 与 Garbage Collection"
 sidebar_position: 5
 tags: [Milvus, Segment, Flush, Compaction]
 description: "理解向量数据从实时 Growing Segment 到 Sealed、索引和垃圾回收。"

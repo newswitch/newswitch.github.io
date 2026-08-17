@@ -1,5 +1,6 @@
 ---
 title: GPU 节点 Taint 与 Toleration 实践
+sidebar_label: "02. GPU 节点 Taint 与 Toleration 实践"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "Taint", "Toleration", "学习路线"]

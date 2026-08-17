@@ -1,5 +1,6 @@
 ---
 title: 网络可观测性与 Telemetry
+sidebar_label: "07. 网络可观测性与 Telemetry"
 sidebar_position: 7
 tags: [Observability, SNMP, Syslog, IPFIX, Streaming Telemetry, SLO]
 description: 用指标、日志、流记录、配置和主动探测构建从设备健康到业务路径的网络证据链。

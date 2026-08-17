@@ -1,5 +1,6 @@
 ---
 title: "Embedding、距离度量、Top-K 与 ANN 基础"
+sidebar_label: "01. Embedding、距离度量、Top-K 与 ANN 基础"
 sidebar_position: 1
 tags: [Milvus, Embedding, Vector, ANN, Top-K]
 description: "在进入 Milvus 组件之前，建立向量生成、归一化、距离度量、Top-K、精确检索与近似最近邻的正确模型。"

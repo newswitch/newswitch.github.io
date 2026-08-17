@@ -1,5 +1,6 @@
 ---
 title: "Job"
+sidebar_label: "06. Job"
 sidebar_position: 6
 tags: [Kubernetes, 控制器, 学习路线]
 description: "Job 是 Kubernetes 中用于批处理任务的控制器，负责管理一次性任务的执行，确保指定数量的 Pod 成功完成后结束。支持并行执行、失败重试和超时控制等特性。"

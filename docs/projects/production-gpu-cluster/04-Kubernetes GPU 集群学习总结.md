@@ -1,5 +1,6 @@
 ---
 title: Kubernetes GPU 集群学习总结
+sidebar_label: "04. Kubernetes GPU 集群学习总结"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "学习路线", "总结"]

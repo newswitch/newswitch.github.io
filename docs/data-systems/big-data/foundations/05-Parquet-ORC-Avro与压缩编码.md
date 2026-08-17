@@ -1,5 +1,6 @@
 ---
 title: Parquet、ORC、Avro 与压缩编码：从文件布局到查询和训练吞吐
+sidebar_label: "05. Parquet、ORC、Avro 与压缩编码：从文件布局到查询和训练吞吐"
 sidebar_position: 5
 tags: [Parquet, ORC, Avro, 列式存储, 压缩]
 description: 理解行式与列式文件、schema、编码、压缩、统计信息和文件大小，学会为消息、分析查询和 AI 数据集选择格式并做基准测试。

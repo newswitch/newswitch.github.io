@@ -1,5 +1,6 @@
 ---
 title: "Vacuum、Autovacuum、Freeze、XID Wraparound 与 Bloat"
+sidebar_label: "09. Vacuum、Autovacuum、Freeze、XID Wraparound 与 Bloat"
 sidebar_position: 9
 tags: [PostgreSQL, Vacuum, Autovacuum, Bloat, XID]
 description: "理解旧版本回收、冻结、防回卷、表索引膨胀和 Autovacuum 调优。"

@@ -1,5 +1,6 @@
 ---
 title: "ACL、TLS、监控、Dashboard、升级与跨集群迁移"
+sidebar_label: "13. ACL、TLS、监控、Dashboard、升级与跨集群迁移"
 sidebar_position: 13
 tags: [RocketMQ, ACL, TLS, Monitoring, Migration]
 description: "建立 RocketMQ 安全身份、可观测、Dashboard 管理、滚动升级和迁移闭环。"

@@ -1,5 +1,6 @@
 ---
 title: "vLLM Tensor Parallel：从矩阵切分到 Kubernetes 多卡部署"
+sidebar_label: "03. vLLM Tensor Parallel：从矩阵切分到 Kubernetes 多卡部署"
 date: 2026-07-22 15:20:00
 categories: 云原生
 tags: ["vLLM", "Tensor Parallel", "NCCL", "NVLink", "Kubernetes", "推理"]

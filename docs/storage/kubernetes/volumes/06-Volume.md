@@ -1,5 +1,6 @@
 ---
 title: "Volume"
+sidebar_label: "06. Volume"
 sidebar_position: 6
 tags: [Kubernetes, 存储, 学习路线]
 description: "本文详细介绍 Kubernetes Volume 的概念、类型和使用方法，包括各种存储卷类型的配置示例、挂载传播、subPath 等高级特性，以及最佳实践和使用场景。"

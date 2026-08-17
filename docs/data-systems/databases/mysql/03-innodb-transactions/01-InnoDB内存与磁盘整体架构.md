@@ -1,5 +1,6 @@
 ---
 title: "InnoDB 内存与磁盘整体架构"
+sidebar_label: "01. InnoDB 内存与磁盘整体架构"
 sidebar_position: 1
 tags: [MySQL, InnoDB, Buffer Pool, Tablespace, 架构]
 description: "建立 InnoDB 内存、磁盘、后台线程和一次读写的全局地图，为事务、索引和恢复打基础。"

@@ -1,5 +1,6 @@
 ---
 title: Volcano GPU 调度器入门
+sidebar_label: "04. Volcano GPU 调度器入门"
 date: 2026-07-22 16:50:00
 categories: 云原生
 tags: ["Kubernetes", "Volcano", "GPU", "调度", "Gang", "学习路线"]

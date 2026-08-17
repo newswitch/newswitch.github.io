@@ -1,5 +1,6 @@
 ---
 title: "MLflow 实验追踪、模型注册与制品血缘"
+sidebar_label: "01. MLflow 实验追踪、模型注册与制品血缘"
 sidebar_position: 1
 tags: [MLflow, Experiment Tracking, Model Registry, Artifact, Lineage, MLOps]
 description: "从 Run、Backend Store、Artifact Store、Model Registry、Alias 和不可变版本坐标出发，建立能从生产模型反查代码、数据、环境与评测的血缘链。"

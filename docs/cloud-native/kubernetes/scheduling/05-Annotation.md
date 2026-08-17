@@ -1,5 +1,6 @@
 ---
 title: "Annotation"
+sidebar_label: "05. Annotation"
 sidebar_position: 5
 tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "详细介绍 Kubernetes 中 Annotation 的概念、用途和使用方法，包括与 Label 的区别、常见应用场景和实际示例。"

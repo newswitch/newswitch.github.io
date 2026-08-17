@@ -1,5 +1,6 @@
 ---
 title: "Bulk、Ingest Pipeline、Logstash、Beats 与数据建模"
+sidebar_label: "10. Bulk、Ingest Pipeline、Logstash、Beats 与数据建模"
 sidebar_position: 10
 tags: [Elasticsearch, Bulk, Ingest Pipeline, Logstash]
 description: "设计高吞吐摄取、转换、重试、失败队列与幂等文档模型。"

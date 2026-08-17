@@ -1,5 +1,6 @@
 ---
 title: "Ingress、Gateway API、Domain、Route 与 Backend"
+sidebar_label: "04. Ingress、Gateway API、Domain、Route 与 Backend"
 sidebar_position: 4
 tags: [Higress, Ingress, Gateway API, Route]
 description: "理解 Kubernetes Ingress/Gateway API 所有权、Host/Path 匹配、Backend 和状态。"

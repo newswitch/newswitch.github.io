@@ -1,5 +1,6 @@
 ---
 title: "Page、Heap Tuple、TOAST、FSM 与 Visibility Map"
+sidebar_label: "06. Page、Heap Tuple、TOAST、FSM 与 Visibility Map"
 sidebar_position: 6
 tags: [PostgreSQL, Page, Heap, TOAST, Visibility Map]
 description: "从页面和行版本理解 PostgreSQL 表文件、宽字段、空闲空间与 Index-Only Scan。"

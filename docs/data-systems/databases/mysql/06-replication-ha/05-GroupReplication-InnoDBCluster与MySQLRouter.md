@@ -1,5 +1,6 @@
 ---
 title: "Group Replication、InnoDB Cluster 与 MySQL Router"
+sidebar_label: "05. Group Replication、InnoDB Cluster 与 MySQL Router"
 sidebar_position: 5
 tags: [MySQL, Group Replication, InnoDB Cluster, MySQL Router]
 description: "理解组成员、共识排序、认证冲突、AdminAPI 管理和 Router 路由，建立集群运行与故障演练方法。"

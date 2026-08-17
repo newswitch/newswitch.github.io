@@ -1,5 +1,6 @@
 ---
 title: "Ceph 自动化巡检与报告：从只读命令、风险分级到每日健康评分"
+sidebar_label: "26. Ceph 自动化巡检与报告：从只读命令、风险分级到每日健康评分"
 sidebar_position: 26
 tags: [Ceph, 学习路线, 存储, 巡检, 运维自动化]
 description: "设计只读、可比较、可告警的 Ceph 巡检：JSON 采集、严重度规则、Shell 骨架、Markdown/Prometheus 报告与历史基线。"

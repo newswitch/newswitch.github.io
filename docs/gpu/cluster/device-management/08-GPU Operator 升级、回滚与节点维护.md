@@ -1,5 +1,6 @@
 ---
 title: GPU Operator 升级、回滚与节点维护
+sidebar_label: "08. GPU Operator 升级、回滚与节点维护"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU Operator", "升级", "回滚", "运维", "学习路线"]

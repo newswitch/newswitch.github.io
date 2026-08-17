@@ -1,5 +1,6 @@
 ---
 title: "主键、唯一约束、外键、NULL 与数据完整性"
+sidebar_label: "01. 主键、唯一约束、外键、NULL 与数据完整性"
 sidebar_position: 1
 tags: [MySQL, 主键, 外键, 约束, 数据完整性]
 description: "从实体完整性、唯一性、引用完整性和业务范围出发，正确设计 MySQL 主键、唯一键、外键、CHECK、NULL 与默认值。"

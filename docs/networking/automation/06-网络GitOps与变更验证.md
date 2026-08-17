@@ -1,5 +1,6 @@
 ---
 title: 网络 GitOps 与变更验证
+sidebar_label: "06. 网络 GitOps 与变更验证"
 sidebar_position: 6
 tags: [GitOps, Batfish, CI, Validation, Canary]
 description: 把网络意图、配置和测试纳入 Pull Request，构建从静态检查、语义验证到灰度发布的变更流水线。

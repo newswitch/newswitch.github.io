@@ -1,5 +1,6 @@
 ---
 title: "S3 Multipart、Range 与大模型分发"
+sidebar_label: "01. S3 Multipart、Range 与大模型分发"
 sidebar_position: 1
 tags: [S3, Multipart Upload, Range GET, Checksum, 模型分发, 对象存储]
 description: "从 S3 对象语义出发，设计可并发、可续传、可校验、可控回源的大模型上传下载与节点分发链路。"

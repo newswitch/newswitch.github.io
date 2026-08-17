@@ -1,5 +1,6 @@
 ---
 title: 大模型文件在 Kubernetes 中的存储方案
+sidebar_label: "06. 大模型文件在 Kubernetes 中的存储方案"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "存储", "PVC", "大模型", "vLLM", "学习路线"]

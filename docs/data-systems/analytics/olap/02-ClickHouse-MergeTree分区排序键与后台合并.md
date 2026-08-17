@@ -1,5 +1,6 @@
 ---
 title: ClickHouse MergeTree、分区、排序键与后台合并
+sidebar_label: "02. ClickHouse MergeTree、分区、排序键与后台合并"
 sidebar_position: 2
 tags: [ClickHouse, MergeTree, 排序键, 列式存储]
 description: 理解 MergeTree 的 Part、稀疏主索引、排序键、分区、后台合并和复制数据路径。

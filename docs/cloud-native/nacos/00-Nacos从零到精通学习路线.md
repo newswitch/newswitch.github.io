@@ -1,5 +1,6 @@
 ---
 title: "Nacos 从零到精通学习路线"
+sidebar_label: "00. Nacos 从零到精通学习路线"
 sidebar_position: 0
 tags: [Nacos, 服务发现, 配置中心, Raft, 学习路线]
 description: "以 Nacos 3.x 为主线，从 Naming 与 Config 深入 gRPC 推送、Distro/Raft、集群部署、安全、容量、升级和故障排查。"

@@ -1,5 +1,6 @@
 ---
 title: "Knative"
+sidebar_label: "02. Knative"
 sidebar_position: 2
 tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative 是一个基于 Kubernetes 的开源 Serverless 平台，提供 Serving 和 Eventing 两大核心组件。"

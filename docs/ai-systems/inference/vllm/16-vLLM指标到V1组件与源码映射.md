@@ -1,5 +1,6 @@
 ---
 title: "vLLM 指标到 V1 组件与源码映射"
+sidebar_label: "16. vLLM 指标到 V1 组件与源码映射"
 sidebar_position: 16
 tags: [vLLM, 可观测性, 指标, V1, 源码分析]
 description: "把请求延迟、调度、KV、GPU、NCCL 和输出指标映射到 vLLM V1 组件、状态变化与源码入口。"

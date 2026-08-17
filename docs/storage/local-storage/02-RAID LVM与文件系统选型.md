@@ -1,5 +1,6 @@
 ---
 title: "RAID、LVM 与文件系统选型"
+sidebar_label: "02. RAID、LVM 与文件系统选型"
 sidebar_position: 2
 tags: [RAID, LVM, ext4, XFS, 文件系统, NVMe, 容量规划]
 description: "从故障模型、性能、扩容与恢复出发选择 RAID、LVM、ext4/XFS，并设计 AI 节点本地盘布局。"

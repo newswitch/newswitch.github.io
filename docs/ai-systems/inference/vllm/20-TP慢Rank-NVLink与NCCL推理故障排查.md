@@ -1,5 +1,6 @@
 ---
 title: "TP 慢 Rank、NVLink 与 NCCL 推理故障排查"
+sidebar_label: "20. TP 慢 Rank、NVLink 与 NCCL 推理故障排查"
 sidebar_position: 20
 tags: [vLLM, Tensor Parallel, NCCL, NVLink, 故障排查]
 description: "从 vLLM TP 同步点出发，排查慢 rank、GPU 拓扑、NVLink/PCIe、NCCL、跨机网络和硬件降级。"

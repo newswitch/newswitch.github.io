@@ -1,5 +1,6 @@
 ---
 title: Doris SQL、Load、Tablet 与诊断命令手册
+sidebar_label: "91. Doris SQL、Load、Tablet 与诊断命令手册"
 sidebar_position: 91
 description: 覆盖 Doris FE/BE 状态、SQL 计划、Stream Load、Routine Load、Tablet 副本健康、诊断与生产故障排查。
 tags: [Doris, 命令手册, OLAP, Tablet, 故障排查]

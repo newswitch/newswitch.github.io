@@ -1,5 +1,6 @@
 ---
 title: "Docker 与 Compose 部署 MySQL"
+sidebar_label: "05. Docker 与 Compose 部署 MySQL"
 sidebar_position: 5
 tags: [MySQL, Docker, Compose, 容器, 持久化]
 description: "理解 MySQL 容器镜像、entrypoint 初始化、Volume、配置、健康检查、日志、升级和备份边界，并用 Compose 建立可重复实验环境。"

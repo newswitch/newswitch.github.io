@@ -1,5 +1,6 @@
 ---
 title: "Java/Spring Cloud/Dubbo 客户端、版本兼容与推送故障"
+sidebar_label: "08. Java/Spring Cloud/Dubbo 客户端、版本兼容与推送故障"
 sidebar_position: 8
 tags: [Nacos, Java, Spring Cloud, Dubbo, SDK]
 description: "理解 Nacos SDK 地址发现、长连接、缓存、线程和框架适配兼容。"

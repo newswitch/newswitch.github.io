@@ -1,5 +1,6 @@
 ---
 title: "Gateway API 推理扩展"
+sidebar_label: "06. Gateway API 推理扩展"
 sidebar_position: 6
 tags: [Kubernetes, 服务发现, 学习路线]
 description: "Gateway API 推理扩展"

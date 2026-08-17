@@ -1,5 +1,6 @@
 ---
 title: "类型、约束、Sequence、Partition 与 Schema 设计"
+sidebar_label: "04. 类型、约束、Sequence、Partition 与 Schema 设计"
 sidebar_position: 4
 tags: [PostgreSQL, Schema设计, Partition, Constraint]
 description: "从数据类型、约束、标识列、分区和在线演进设计可长期维护的 PostgreSQL Schema。"

@@ -1,5 +1,6 @@
 ---
 title: Kubernetes CSI 挂载链路与故障排查
+sidebar_label: "05. Kubernetes CSI 挂载链路与故障排查"
 date: 2026-08-06 17:40:00
 categories: 云原生
 tags: [Kubernetes, GPU, CSI, PVC, 调度, 故障排查]

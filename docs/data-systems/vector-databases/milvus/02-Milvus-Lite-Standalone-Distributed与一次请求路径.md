@@ -1,5 +1,6 @@
 ---
 title: "Milvus Lite、Standalone、Distributed 与一次请求路径"
+sidebar_label: "02. Milvus Lite、Standalone、Distributed 与一次请求路径"
 sidebar_position: 2
 tags: [Milvus, Lite, Standalone, Distributed, 部署架构]
 description: "从 Lite 本地文件、Standalone 单机服务到 Distributed 分离架构，理解三种部署形态及写入、查询的组件路径。"

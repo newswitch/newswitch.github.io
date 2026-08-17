@@ -1,5 +1,6 @@
 ---
 title: vLLM GPU 显存组成与容量规划
+sidebar_label: "02. vLLM GPU 显存组成与容量规划"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["vLLM", "GPU", "显存", "KV Cache", "容量规划", "学习路线"]

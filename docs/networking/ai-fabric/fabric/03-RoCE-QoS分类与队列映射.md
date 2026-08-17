@@ -1,5 +1,6 @@
 ---
 title: RoCE QoS 分类与队列映射
+sidebar_label: "03. RoCE QoS 分类与队列映射"
 sidebar_position: 3
 tags: [RoCE, QoS, DSCP, PCP, Traffic Class, DCBX, ETS]
 description: 建立从 NIC Traffic Class、DSCP/PCP、交换优先级到硬件队列、PFC 和 ECN Profile 的端到端映射。

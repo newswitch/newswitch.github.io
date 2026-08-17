@@ -1,5 +1,6 @@
 ---
 title: MindIE 学习路线
+sidebar_label: "00. MindIE 学习路线"
 sidebar_position: 0
 tags: [MindIE, 昇腾, 910B, ATB, CANN, 推理框架]
 description: 从 MindIE Server、LLM Manager、Text Generator 与 Modeling 到 config.json、调度、容量和生产排障的学习路线。

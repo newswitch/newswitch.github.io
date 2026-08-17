@@ -1,5 +1,6 @@
 ---
 title: "B+Tree、联合索引、最左前缀、覆盖索引与回表"
+sidebar_label: "01. B+Tree、联合索引、最左前缀、覆盖索引与回表"
 sidebar_position: 1
 tags: [MySQL, InnoDB, B+Tree, 联合索引, 覆盖索引]
 description: "从访问路径而不是口诀出发，理解 InnoDB B+Tree、联合索引边界、回表、索引下推和生产索引设计方法。"

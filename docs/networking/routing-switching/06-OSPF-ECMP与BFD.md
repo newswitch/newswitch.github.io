@@ -1,5 +1,6 @@
 ---
 title: 静态路由、OSPF、ECMP 与 BFD
+sidebar_label: "06. 静态路由、OSPF、ECMP 与 BFD"
 sidebar_position: 6
 tags: [Static Route, OSPF, ECMP, BFD, FRRouting]
 description: 从 RIB/FIB 进入动态路由，理解 OSPF 邻居、LSDB、SPF、ECMP 哈希和 BFD 快速故障检测。

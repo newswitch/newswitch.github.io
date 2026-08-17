@@ -1,5 +1,6 @@
 ---
 title: "Authentication、Token、TLS、RBAC、Namespace 与内网隔离"
+sidebar_label: "09. Authentication、Token、TLS、RBAC、Namespace 与内网隔离"
 sidebar_position: 9
 tags: [Nacos, Authentication, TLS, RBAC, Security]
 description: "保护 Nacos Client/Admin/Console、配置与服务注册，建立最小权限和密钥轮换。"

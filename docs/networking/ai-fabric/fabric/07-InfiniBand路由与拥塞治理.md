@@ -1,5 +1,6 @@
 ---
 title: InfiniBand 路由与拥塞治理
+sidebar_label: "07. InfiniBand 路由与拥塞治理"
 sidebar_position: 7
 tags: [InfiniBand, Fat-Tree, Adaptive Routing, Credit, SL, VL]
 description: 理解 IB Fat-Tree 路由、LID Path、SL/VL、Credit 反压、Adaptive Routing 和拥塞定位。

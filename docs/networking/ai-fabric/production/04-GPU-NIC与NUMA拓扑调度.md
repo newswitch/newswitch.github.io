@@ -1,5 +1,6 @@
 ---
 title: GPU、NIC 与 NUMA 拓扑调度
+sidebar_label: "04. GPU、NIC 与 NUMA 拓扑调度"
 sidebar_position: 4
 tags: [Kubernetes, Topology Manager, CPU Manager, NUMA, GPU, NIC]
 description: 协调 CPU、HugePage、GPU、VF/RDMA NIC 和 NUMA，避免资源数量满足但物理拓扑错误。

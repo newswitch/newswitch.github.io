@@ -1,5 +1,6 @@
 ---
 title: Spark Shuffle、内存管理、缓存、Spill 与序列化
+sidebar_label: "04. Spark Shuffle、内存管理、缓存、Spill 与序列化"
 sidebar_position: 4
 tags: [Spark, Shuffle, Memory, Spill, Serialization]
 description: 追踪 Spark Shuffle 的内存、磁盘和网络路径，定位 OOM、spill、fetch failure 与缓存误用。

@@ -1,5 +1,6 @@
 ---
 title: "限流、限连、鉴权、WAF 边界与安全加固"
+sidebar_label: "09. 限流、限连、鉴权、WAF 边界与安全加固"
 sidebar_position: 9
 tags: [Nginx, Rate Limit, Authentication, WAF, Security]
 description: "用限流限连、请求约束、TLS、鉴权和 WAF 分层保护 Nginx 与上游。"

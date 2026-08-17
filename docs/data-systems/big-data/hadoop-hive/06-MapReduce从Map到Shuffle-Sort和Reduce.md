@@ -1,5 +1,6 @@
 ---
 title: MapReduce 从 Map 到 Shuffle、Sort 和 Reduce
+sidebar_label: "06. MapReduce 从 Map 到 Shuffle、Sort 和 Reduce"
 sidebar_position: 6
 tags: [MapReduce, Shuffle, Sort, Reduce]
 description: 通过单词计数和 Join 理解 MapReduce 的 split、spill、partition、shuffle、sort、容错和性能瓶颈。

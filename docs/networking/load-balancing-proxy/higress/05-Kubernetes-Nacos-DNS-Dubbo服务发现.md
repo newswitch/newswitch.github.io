@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes、Nacos、DNS、Dubbo 服务发现"
+sidebar_label: "05. Kubernetes、Nacos、DNS、Dubbo 服务发现"
 sidebar_position: 5
 tags: [Higress, Service Discovery, Nacos, Dubbo]
 description: "理解 Higress 不同 Endpoint 来源、协议元数据、同步、缓存和故障。"

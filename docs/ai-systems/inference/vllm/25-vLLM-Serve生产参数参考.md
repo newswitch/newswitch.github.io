@@ -1,5 +1,6 @@
 ---
 title: vLLM Serve 生产参数参考
+sidebar_label: "25. vLLM Serve 生产参数参考"
 sidebar_position: 25
 tags: [vLLM, 参数, vllm serve, KV Cache, Scheduler, CUDA Graph]
 description: 按服务、模型、显存、调度、并行、编译、量化和请求层解释 vLLM 参数的作用、因果关系与生产调优方法。

@@ -1,5 +1,6 @@
 ---
 title: 本地 NVMe 与 Local PV 实践
+sidebar_label: "03. 本地 NVMe 与 Local PV 实践"
 date: 2026-08-06 17:00:00
 categories: 云原生
 tags: [Kubernetes, GPU, NVMe, Local PV, 存储]

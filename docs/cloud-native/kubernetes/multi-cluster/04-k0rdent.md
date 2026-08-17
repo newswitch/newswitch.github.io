@@ -1,5 +1,6 @@
 ---
 title: "k0rdent：超级控制平面与平台工程"
+sidebar_label: "04. k0rdent：超级控制平面与平台工程"
 sidebar_position: 4
 tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "k0rdent 是 Mirantis 推出的多集群 Kubernetes 超级控制平面（Super Control Plane），助力平台工程与跨云治理，支持声明式多集群管理、策略模板和集中观测。"

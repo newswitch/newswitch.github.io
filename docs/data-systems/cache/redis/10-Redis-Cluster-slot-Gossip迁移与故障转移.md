@@ -1,5 +1,6 @@
 ---
 title: "Redis Cluster、slot、Gossip、迁移与故障转移"
+sidebar_label: "10. Redis Cluster、slot、Gossip、迁移与故障转移"
 sidebar_position: 10
 tags: [Redis, Cluster, Slot, Gossip]
 description: "理解 16384 slots、MOVED/ASK、Gossip、主从选举、reshard 和热点治理。"

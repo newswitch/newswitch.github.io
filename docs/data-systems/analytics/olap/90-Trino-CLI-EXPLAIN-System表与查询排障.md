@@ -1,5 +1,6 @@
 ---
 title: Trino CLI、EXPLAIN、System 表与查询排障
+sidebar_label: "90. Trino CLI、EXPLAIN、System 表与查询排障"
 sidebar_position: 90
 description: 掌握 Trino CLI、Catalog 元数据、执行计划、会话参数、运行时系统表，以及跨数据源查询故障和性能定位。
 tags: [Trino, SQL, 命令手册, 查询引擎, 故障排查]

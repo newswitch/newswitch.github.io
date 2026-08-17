@@ -1,5 +1,6 @@
 ---
 title: "eBPF 与 bpftrace 网络和 I/O 分析"
+sidebar_label: "02. eBPF 与 bpftrace 网络和 I/O 分析"
 sidebar_position: 2
 tags: [eBPF, bpftrace, Linux, 网络, I/O, 性能分析]
 description: "理解 eBPF Probe、Map、Histogram 和 Cgroup 过滤，使用 bpftrace 分析系统调用、调度、网络与块 I/O，并控制生产采集开销。"

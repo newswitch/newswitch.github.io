@@ -1,5 +1,6 @@
 ---
 title: Ceph RBD、CephFS 与 RGW 在 AI 集群中的选型
+sidebar_label: "30. Ceph RBD、CephFS 与 RGW 在 AI 集群中的选型"
 date: 2026-08-06 17:20:00
 categories: 云原生
 tags: [Kubernetes, GPU, Ceph, RBD, CephFS, RGW]

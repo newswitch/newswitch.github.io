@@ -1,5 +1,6 @@
 ---
 title: "Knative Serving"
+sidebar_label: "03. Knative Serving"
 sidebar_position: 3
 tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative Serving 的核心概念、配置和使用方法。"

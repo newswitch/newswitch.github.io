@@ -1,5 +1,6 @@
 ---
 title: "MVCC、Snapshot、隔离级别、锁与 SSI"
+sidebar_label: "07. MVCC、Snapshot、隔离级别、锁与 SSI"
 sidebar_position: 7
 tags: [PostgreSQL, MVCC, Isolation, Lock, SSI]
 description: "理解行版本可见性、Read Committed、Repeatable Read、Serializable、阻塞和死锁。"

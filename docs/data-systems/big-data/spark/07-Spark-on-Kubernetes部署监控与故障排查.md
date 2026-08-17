@@ -1,5 +1,6 @@
 ---
 title: Spark on Kubernetes 部署、监控与故障排查
+sidebar_label: "07. Spark on Kubernetes 部署、监控与故障排查"
 sidebar_position: 7
 tags: [Spark, Kubernetes, 监控, 故障排查]
 description: 理解 Driver/Executor Pod、身份权限、资源、存储、动态分配、日志和生产恢复。

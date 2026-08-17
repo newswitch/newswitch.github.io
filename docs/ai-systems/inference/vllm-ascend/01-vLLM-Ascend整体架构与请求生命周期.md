@@ -1,5 +1,6 @@
 ---
 title: vLLM-Ascend 整体架构与请求生命周期
+sidebar_label: "01. vLLM-Ascend 整体架构与请求生命周期"
 sidebar_position: 1
 tags: [vLLM-Ascend, Ascend 910B, NPUModelRunner, ACLGraph, HCCL]
 description: 从平台插件到 NPUModelRunner，沿一次请求解释 vLLM-Ascend 如何复用 vLLM 控制面并替换昇腾执行面。

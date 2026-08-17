@@ -1,5 +1,6 @@
 ---
 title: "Node"
+sidebar_label: "02. Node"
 sidebar_position: 2
 tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "Kubernetes 集群中的工作节点管理，包括节点状态监控、资源管理和维护操作等核心概念和实践。"

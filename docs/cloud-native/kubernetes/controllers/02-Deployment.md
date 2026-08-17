@@ -1,5 +1,6 @@
 ---
 title: "Deployment"
+sidebar_label: "02. Deployment"
 sidebar_position: 2
 tags: [Kubernetes, 控制器, 学习路线]
 description: "Deployment 为 Pod 和 ReplicaSet 提供了声明式的部署方案，支持滚动更新、扩缩容、暂停恢复等操作，是 Kubernetes 中管理无状态应用的核心控制器。"

@@ -1,5 +1,6 @@
 ---
 title: "MySQL 部署学习路线与方案选型"
+sidebar_label: "00. MySQL 部署学习路线与方案选型"
 sidebar_position: 0
 tags: [MySQL, 部署, 架构, 高可用, Kubernetes]
 description: "从部署原理出发，系统掌握 MySQL 8.4 LTS 的 RPM、APT、离线二进制、Docker、源码、复制、高可用、Kubernetes 与自动化部署。"

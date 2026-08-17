@@ -1,5 +1,6 @@
 ---
 title: "Ubuntu/Debian 使用 APT 部署 MySQL 8.4"
+sidebar_label: "03. Ubuntu/Debian 使用 APT 部署 MySQL 8.4"
 sidebar_position: 3
 tags: [MySQL, Ubuntu, Debian, APT, AppArmor, systemd]
 description: "使用 MySQL 官方 APT 仓库在 Ubuntu 与 Debian 部署 MySQL 8.4 LTS，并控制仓库替换、自动初始化、服务重启、AppArmor 与升级风险。"

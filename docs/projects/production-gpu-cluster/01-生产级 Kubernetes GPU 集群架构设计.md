@@ -1,5 +1,6 @@
 ---
 title: "生产级 Kubernetes GPU 集群：需求、分层架构与容量设计"
+sidebar_label: "01. 生产级 Kubernetes GPU 集群：需求、分层架构与容量设计"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "AI Infra", "架构", "高可用", "容量规划"]

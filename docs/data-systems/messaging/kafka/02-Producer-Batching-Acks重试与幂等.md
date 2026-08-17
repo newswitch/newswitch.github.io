@@ -1,5 +1,6 @@
 ---
 title: Kafka Producer：Batching、Acks、重试与幂等生产
+sidebar_label: "02. Kafka Producer：Batching、Acks、重试与幂等生产"
 sidebar_position: 2
 tags: [Kafka Producer, Acks, Batching, 幂等]
 description: 理解 Producer 从序列化、分区、批处理到确认、重试和幂等的完整发送路径。

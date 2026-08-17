@@ -1,5 +1,6 @@
 ---
 title: "Benchmark、Recall、P95/P99、监控与性能调优"
+sidebar_label: "13. Benchmark、Recall、P95/P99、监控与性能调优"
 sidebar_position: 13
 tags: [Milvus, Benchmark, Recall, 性能]
 description: "把检索正确性与吞吐、尾延迟、资源和冷启动统一评测。"

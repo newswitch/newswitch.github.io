@@ -1,5 +1,6 @@
 ---
 title: "OpenYurt：零侵入式云原生边缘平台"
+sidebar_label: "04. OpenYurt：零侵入式云原生边缘平台"
 sidebar_position: 4
 tags: [Kubernetes, 边缘计算, PartIII, 学习路线]
 description: "OpenYurt 是阿里巴巴开源的零侵入式云原生边缘平台，支持 Kubernetes 集群一键扩展到边缘，具备边缘自治、节点池、流量闭环等特性。"

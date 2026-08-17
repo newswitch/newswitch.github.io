@@ -1,5 +1,6 @@
 ---
 title: 数据中心 Underlay：eBGP、OSPF、ECMP 与收敛设计
+sidebar_label: "02. 数据中心 Underlay：eBGP、OSPF、ECMP 与收敛设计"
 sidebar_position: 2
 tags: [Underlay, eBGP, OSPF, ECMP, BFD, FRRouting]
 description: 设计 VTEP IP 可达的稳定 Underlay，比较 eBGP 与 IGP，并建立收敛和故障验证方法。

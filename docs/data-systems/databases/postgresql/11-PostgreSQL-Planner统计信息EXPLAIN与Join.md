@@ -1,5 +1,6 @@
 ---
 title: "Planner、统计信息、EXPLAIN ANALYZE 与 Join"
+sidebar_label: "11. Planner、统计信息、EXPLAIN ANALYZE 与 Join"
 sidebar_position: 11
 tags: [PostgreSQL, Planner, EXPLAIN, Join]
 description: "从基数估算到扫描与 Join 选择，建立 PostgreSQL 慢 SQL 证据链。"

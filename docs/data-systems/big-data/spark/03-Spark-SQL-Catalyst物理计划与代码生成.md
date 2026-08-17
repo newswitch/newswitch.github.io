@@ -1,5 +1,6 @@
 ---
 title: Spark SQL、Catalyst、物理计划与代码生成
+sidebar_label: "03. Spark SQL、Catalyst、物理计划与代码生成"
 sidebar_position: 3
 tags: [Spark SQL, Catalyst, Physical Plan, CBO]
 description: 从 SQL 解析到优化逻辑计划和物理执行，掌握 EXPLAIN、统计、下推和代码生成的调优方法。

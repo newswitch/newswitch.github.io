@@ -1,5 +1,6 @@
 ---
 title: "从 NFS 到 Ceph：为什么我们需要分布式存储"
+sidebar_label: "01. 从 NFS 到 Ceph：为什么我们需要分布式存储"
 sidebar_position: 1
 tags: [Ceph, 学习路线, 存储, NFS]
 description: "从 10 台 2TB 服务器挂 NFS 仍只有 2TB 讲起，说明 NFS 与 Ceph 的本质区别、Ceph 核心能力，以及三副本下的容量估算。"

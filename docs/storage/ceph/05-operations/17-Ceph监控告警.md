@@ -1,5 +1,6 @@
 ---
 title: "Ceph 监控与健康检查：Prometheus、Grafana、告警设计与排障方法"
+sidebar_label: "17. Ceph 监控与健康检查：Prometheus、Grafana、告警设计与排障方法"
 sidebar_position: 17
 tags: [Ceph, 学习路线, 存储, 监控, Prometheus]
 description: "建立 Ceph 观察系统：健康检查、Prometheus/Grafana、告警分级、分层排障与 Runbook。"

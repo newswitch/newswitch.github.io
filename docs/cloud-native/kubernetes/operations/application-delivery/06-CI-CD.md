@@ -1,5 +1,6 @@
 ---
 title: "持续集成与交付（CI/CD）"
+sidebar_label: "06. 持续集成与交付（CI/CD）"
 sidebar_position: 6
 tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "深入介绍持续集成与交付（CI/CD）的概念、优势和实践，重点讲解 ArgoCD 和 Argo Rollouts 等 GitOps 工具在现代软件开发中的应用。"

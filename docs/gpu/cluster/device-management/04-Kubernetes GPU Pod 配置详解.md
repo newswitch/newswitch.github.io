@@ -1,5 +1,6 @@
 ---
 title: Kubernetes GPU Pod 配置详解
+sidebar_label: "04. Kubernetes GPU Pod 配置详解"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "Pod", "调度", "NFD", "学习路线"]

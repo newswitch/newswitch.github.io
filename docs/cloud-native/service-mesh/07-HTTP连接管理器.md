@@ -1,5 +1,6 @@
 ---
 title: "HTTP 连接管理器介绍"
+sidebar_label: "07. HTTP 连接管理器介绍"
 sidebar_position: 7
 tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "详细介绍 Envoy 的 HTTP 连接管理器（HCM）工作原理，包括 HTTP 过滤器机制、数据共享方式、过滤器执行顺序以及内置过滤器功能。"

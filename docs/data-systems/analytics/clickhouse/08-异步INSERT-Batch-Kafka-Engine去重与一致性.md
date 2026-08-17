@@ -1,5 +1,6 @@
 ---
 title: "异步 INSERT、Batch、Kafka Engine、去重与一致性"
+sidebar_label: "08. 异步 INSERT、Batch、Kafka Engine、去重与一致性"
 sidebar_position: 8
 tags: [ClickHouse, Async Insert, Kafka Engine, Deduplication]
 description: "设计 ClickHouse 高吞吐摄取、异步确认、Kafka 消费、去重和可重放链路。"

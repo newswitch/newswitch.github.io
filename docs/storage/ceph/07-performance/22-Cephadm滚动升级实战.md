@@ -1,5 +1,6 @@
 ---
 title: "Cephadm 滚动升级实战：评估、执行、暂停、恢复与验收"
+sidebar_label: "22. Cephadm 滚动升级实战：评估、执行、暂停、恢复与验收"
 sidebar_position: 22
 tags: [Ceph, 学习路线, 存储, cephadm, 升级]
 description: "按官方支持路径完成 cephadm 滚动升级：前置评估、固定镜像、pause/resume/stop、排障与业务验收。"

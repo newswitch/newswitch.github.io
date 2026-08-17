@@ -1,5 +1,6 @@
 ---
 title: "TLS、Authentication、Role、Network Isolation 与审计"
+sidebar_label: "10. TLS、Authentication、Role、Network Isolation 与审计"
 sidebar_position: 10
 tags: [etcd, TLS, Authentication, RBAC, Security]
 description: "保护 etcd peer/client 身份、Key Prefix 权限、管理面网络和证书轮换。"

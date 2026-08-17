@@ -1,5 +1,6 @@
 ---
 title: "EXPLAIN、EXPLAIN ANALYZE 与执行计划阅读"
+sidebar_label: "02. EXPLAIN、EXPLAIN ANALYZE 与执行计划阅读"
 sidebar_position: 2
 tags: [MySQL, EXPLAIN, EXPLAIN ANALYZE, 执行计划, SQL优化]
 description: "从访问类型、估算行数到迭代器真实时间，建立可重复的 MySQL 执行计划阅读与验证方法。"

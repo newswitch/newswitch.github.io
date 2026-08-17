@@ -1,5 +1,6 @@
 ---
 title: "Rook + Ceph on Kubernetes：架构、生产部署、CSI 使用与双层排障"
+sidebar_label: "15. Rook + Ceph on Kubernetes：架构、生产部署、CSI 使用与双层排障"
 sidebar_position: 15
 tags: [Ceph, 学习路线, 存储, Kubernetes, Rook, CSI]
 description: "讲清 Rook Operator、CephCluster CRD、CSI 与双层排障：内部/外部集群选型、显式选盘、RBD/CephFS StorageClass 与生产维护。"

@@ -1,5 +1,6 @@
 ---
 title: "Controller、Pilot/Config、Gateway/Envoy 与一次请求"
+sidebar_label: "02. Controller、Pilot/Config、Gateway/Envoy 与一次请求"
 sidebar_position: 2
 tags: [Higress, Controller, Envoy, Architecture]
 description: "追踪 Higress 声明式配置从 Kubernetes/Nacos 到 Envoy 数据面和请求过滤链。"

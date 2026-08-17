@@ -1,5 +1,6 @@
 ---
 title: "Ingress 控制器"
+sidebar_label: "08. Ingress 控制器"
 sidebar_position: 8
 tags: [Kubernetes, 控制器, 学习路线]
 description: "深入了解 Kubernetes Ingress 控制器的作用、官方支持的控制器类型、第三方控制器选择，以及如何在集群中部署和管理多个 Ingress 控制器。"

@@ -1,5 +1,6 @@
 ---
 title: "SPIRE"
+sidebar_label: "05. SPIRE"
 sidebar_position: 5
 tags: [Kubernetes, 身份认证, 学习路线]
 description: "本文详细介绍 SPIRE 的架构、核心组件、证明机制和工作原理。"

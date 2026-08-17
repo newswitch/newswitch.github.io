@@ -1,5 +1,6 @@
 ---
 title: "连接进程、PgBouncer、内存、Huge Pages 与 I/O"
+sidebar_label: "12. 连接进程、PgBouncer、内存、Huge Pages 与 I/O"
 sidebar_position: 12
 tags: [PostgreSQL, PgBouncer, 内存, I/O]
 description: "预算 PostgreSQL 连接、共享/每操作内存、Huge Pages、Page Cache 和存储。"

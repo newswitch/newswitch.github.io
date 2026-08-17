@@ -1,5 +1,6 @@
 ---
 title: Flink 架构、JobManager、TaskManager 与 Slot
+sidebar_label: "01. Flink 架构、JobManager、TaskManager 与 Slot"
 sidebar_position: 1
 tags: [Flink, JobManager, TaskManager, Slot]
 description: 理解 Flink 作业从 StreamGraph 到 ExecutionGraph、资源 Slot、部署模式和故障恢复。

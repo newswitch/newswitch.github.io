@@ -1,5 +1,6 @@
 ---
 title: "SPIFFE"
+sidebar_label: "04. SPIFFE"
 sidebar_position: 4
 tags: [Kubernetes, 身份认证, 学习路线]
 description: "本文介绍了 SPIFFE 的核心概念，包括工作负载、SPIFFE ID、信任域、SVID 和工作负载 API 等，以及它们在云原生应用中的应用。"

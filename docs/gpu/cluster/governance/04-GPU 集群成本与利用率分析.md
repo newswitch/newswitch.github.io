@@ -1,5 +1,6 @@
 ---
 title: GPU 集群成本与利用率分析
+sidebar_label: "04. GPU 集群成本与利用率分析"
 date: 2026-07-22 19:20:00
 categories: 云原生
 tags: ["成本", "利用率", "GPU", "FinOps", "DCGM", "学习路线"]

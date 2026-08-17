@@ -1,5 +1,6 @@
 ---
 title: NVIDIA 驱动、CUDA 与容器运行时的关系
+sidebar_label: "01. NVIDIA 驱动、CUDA 与容器运行时的关系"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["GPU", "CUDA", "驱动", "Container Toolkit", "Device Plugin", "学习路线"]

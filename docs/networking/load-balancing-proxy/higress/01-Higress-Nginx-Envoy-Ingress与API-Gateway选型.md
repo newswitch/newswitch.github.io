@@ -1,5 +1,6 @@
 ---
 title: "Higress、Nginx、Envoy、Ingress 与 API Gateway 选型"
+sidebar_label: "01. Higress、Nginx、Envoy、Ingress 与 API Gateway 选型"
 sidebar_position: 1
 tags: [Higress, Nginx, Envoy, Ingress, API Gateway]
 description: "先区分规范、控制面、数据面与产品，再按流量类型、扩展、安全、运维和 AI 网关需求选择 Higress、Nginx 或 Envoy。"

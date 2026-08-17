@@ -1,5 +1,6 @@
 ---
 title: YARN ResourceManager、NodeManager、Container 与资源模型
+sidebar_label: "05. YARN ResourceManager、NodeManager、Container 与资源模型"
 sidebar_position: 5
 tags: [YARN, ResourceManager, Container, 调度]
 description: 理解 YARN 从应用提交到 Container 运行的控制路径、队列、公平性、资源隔离和故障恢复。

@@ -1,5 +1,6 @@
 ---
 title: "Nacos 解决什么问题与一次注册、配置发布路径"
+sidebar_label: "01. Nacos 解决什么问题与一次注册、配置发布路径"
 sidebar_position: 1
 tags: [Nacos, 服务发现, 配置中心, Naming, Config]
 description: "从 Naming 与 Config 两条控制面路径，理解 Nacos 客户端、服务端、健康检查、推送、缓存和一致性边界。"

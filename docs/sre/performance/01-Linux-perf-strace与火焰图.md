@@ -1,5 +1,6 @@
 ---
 title: "Linux perf、strace 与火焰图"
+sidebar_label: "01. Linux perf、strace 与火焰图"
 sidebar_position: 1
 tags: [Linux, perf, strace, FlameGraph, CPU, 性能分析]
 description: "使用 strace 定位系统调用等待，使用 perf stat/record 分析 CPU 与调用栈，并生成 On-CPU 火焰图完成可验证的 Linux 性能分析。"

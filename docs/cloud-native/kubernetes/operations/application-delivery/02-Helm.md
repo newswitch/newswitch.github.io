@@ -1,5 +1,6 @@
 ---
 title: "使用 Helm 管理 Kubernetes 应用"
+sidebar_label: "02. 使用 Helm 管理 Kubernetes 应用"
 sidebar_position: 2
 tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Helm 是 Kubernetes 的包管理工具，简化了应用的部署和管理过程。"

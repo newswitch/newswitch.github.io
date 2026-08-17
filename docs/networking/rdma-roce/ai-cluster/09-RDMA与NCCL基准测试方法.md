@@ -1,5 +1,6 @@
 ---
 title: perftest 与 nccl-tests 基准测试方法
+sidebar_label: "09. perftest 与 nccl-tests 基准测试方法"
 sidebar_position: 9
 tags: [perftest, nccl-tests, Benchmark, algbw, busbw]
 description: 建立从链路、CPU Memory RDMA、GPU Memory RDMA 到 NCCL Collective 的可重复性能基线。

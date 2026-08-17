@@ -1,5 +1,6 @@
 ---
 title: "Replacing/Summing/Aggregating/Collapsing MergeTree 语义"
+sidebar_label: "05. Replacing/Summing/Aggregating/Collapsing MergeTree 语义"
 sidebar_position: 5
 tags: [ClickHouse, ReplacingMergeTree, AggregatingMergeTree]
 description: "理解 MergeTree 家族在后台合并时去重、求和、聚合和折叠的最终语义。"

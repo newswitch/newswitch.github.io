@@ -1,5 +1,6 @@
 ---
 title: "扩展 Kubernetes 以支持 GPU 与 AI 调度"
+sidebar_label: "14. 扩展 Kubernetes 以支持 GPU 与 AI 调度"
 sidebar_position: 14
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "深入理解 Kubernetes 在 GPU 与 AI 原生场景下的调度机制，涵盖 GPU 设备插件、MIG、多任务共享、AI 作业编排（KubeRay、Volcano、Kueue）及自定义调度插件实践。"

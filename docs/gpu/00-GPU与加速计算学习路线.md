@@ -1,5 +1,6 @@
 ---
 title: 计算与加速器学习路线
+sidebar_label: "00. 计算与加速器学习路线"
 sidebar_position: 0
 tags: [GPU, HBM, NUMA, PCIe, NVLink, CUDA]
 description: 从 GPU 执行模型到显存、PCIe、NVLink 和软件栈的学习入口。

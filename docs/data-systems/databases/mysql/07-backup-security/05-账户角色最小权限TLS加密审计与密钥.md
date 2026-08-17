@@ -1,5 +1,6 @@
 ---
 title: "账户、角色、最小权限、TLS、加密、审计与密钥"
+sidebar_label: "05. 账户、角色、最小权限、TLS、加密、审计与密钥"
 sidebar_position: 5
 tags: [MySQL, 安全, RBAC, TLS, 加密, 审计]
 description: "建立身份、授权、传输与静态加密、审计和密钥生命周期组成的 MySQL 纵深防御。"

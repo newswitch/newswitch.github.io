@@ -1,5 +1,6 @@
 ---
 title: "Page、Row Format、聚簇索引与二级索引"
+sidebar_label: "02. Page、Row Format、聚簇索引与二级索引"
 sidebar_position: 2
 tags: [MySQL, InnoDB, Page, Row Format, 聚簇索引]
 description: "从 InnoDB Page 和记录布局理解聚簇索引、二级索引、回表、页分裂、大字段和主键设计。"

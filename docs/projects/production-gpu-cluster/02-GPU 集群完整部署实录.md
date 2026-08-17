@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes GPU 集群完整部署实录：从裸机到训练与推理验收"
+sidebar_label: "02. Kubernetes GPU 集群完整部署实录：从裸机到训练与推理验收"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU Operator", "Volcano", "DCGM", "vLLM", "部署"]

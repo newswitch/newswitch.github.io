@@ -1,5 +1,6 @@
 ---
 title: "深分页、COUNT、批量写入与热点更新优化"
+sidebar_label: "06. 深分页、COUNT、批量写入与热点更新优化"
 sidebar_position: 6
 tags: [MySQL, 深分页, COUNT, 批量写入, 热点更新]
 description: "分析四类随数据和并发增长而恶化的访问模式，给出游标分页、计数分层、受控批处理与热点消减方法。"

@@ -1,5 +1,6 @@
 ---
 title: "CRUSH 数据分布原理：Ceph 如何决定数据放在哪些服务器"
+sidebar_label: "05. CRUSH 数据分布原理：Ceph 如何决定数据放在哪些服务器"
 sidebar_position: 5
 tags: [Ceph, 学习路线, 存储, CRUSH]
 description: "讲清 CRUSH Map、Bucket、Rule、Weight、Failure Domain 与 Device Class，以及客户端如何计算目标 OSD。"

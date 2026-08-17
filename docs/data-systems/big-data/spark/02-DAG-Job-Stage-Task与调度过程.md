@@ -1,5 +1,6 @@
 ---
 title: Spark DAG、Job、Stage、Task 与调度过程
+sidebar_label: "02. Spark DAG、Job、Stage、Task 与调度过程"
 sidebar_position: 2
 tags: [Spark, DAG, Stage, Task, 调度]
 description: 从 Action 到 Job、Shuffle 边界、TaskSet 和本地性理解 Spark 调度与失败重算。

@@ -1,5 +1,6 @@
 ---
 title: "MySQL 部署原理：进程、目录、配置、初始化与启动"
+sidebar_label: "01. MySQL 部署原理：进程、目录、配置、初始化与启动"
 sidebar_position: 1
 tags: [MySQL, mysqld, systemd, 初始化, 配置]
 description: "从 mysqld 启动路径理解 MySQL 部署：软件目录、配置优先级、数据目录初始化、权限、服务托管、启动与关闭。"

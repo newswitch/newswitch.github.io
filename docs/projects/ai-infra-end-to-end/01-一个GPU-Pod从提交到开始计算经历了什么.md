@@ -1,5 +1,6 @@
 ---
 title: 一个 GPU Pod 从提交到开始计算经历了什么
+sidebar_label: "01. 一个 GPU Pod 从提交到开始计算经历了什么"
 date: 2026-08-06 18:00:00
 categories: 云原生
 tags: [Kubernetes, GPU, 调度, Device Plugin, CSI]

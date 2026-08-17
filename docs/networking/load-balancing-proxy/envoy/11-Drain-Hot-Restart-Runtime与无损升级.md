@@ -1,5 +1,6 @@
 ---
 title: "Envoy Drain、Hot Restart、Runtime、灰度与无损升级"
+sidebar_label: "11. Envoy Drain、Hot Restart、Runtime、灰度与无损升级"
 sidebar_position: 11
 tags: [Envoy, Drain, Hot Restart, Runtime, Upgrade]
 description: "理解配置更新、连接排空、进程热重启、Kubernetes 滚动和版本兼容，建立可回退升级流程。"

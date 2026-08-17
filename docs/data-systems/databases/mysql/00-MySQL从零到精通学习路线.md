@@ -1,5 +1,6 @@
 ---
 title: "MySQL 从零到精通学习路线"
+sidebar_label: "00. MySQL 从零到精通学习路线"
 sidebar_position: 0
 tags: [MySQL, InnoDB, SQL, 数据库, 学习路线]
 description: "以 MySQL 8.4 LTS 为主线，从关系模型与 SQL 开始，系统学习多种部署方式、InnoDB、事务、索引、优化器、高可用、备份恢复、性能和生产故障排查。"

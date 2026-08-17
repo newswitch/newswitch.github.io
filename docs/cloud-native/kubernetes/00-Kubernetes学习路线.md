@@ -1,5 +1,6 @@
 ---
 title: "K8s 学习路线"
+sidebar_label: "00. K8s 学习路线"
 sidebar_position: 0
 date: 2026-07-24
 categories: 云原生

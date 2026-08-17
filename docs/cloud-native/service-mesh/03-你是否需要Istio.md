@@ -1,5 +1,6 @@
 ---
 title: "你是否需要 Istio？"
+sidebar_label: "03. 你是否需要 Istio？"
 sidebar_position: 3
 tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "在决定是否在生产环境中采用 Istio 之前，需要全面评估团队能力、技术架构、业务需求等多个维度的因素。本文分析了 Istio 在实际应用中可能遇到的挑战和限制，帮助你做出明智的技术选择。"

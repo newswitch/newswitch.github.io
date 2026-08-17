@@ -1,5 +1,6 @@
 ---
 title: "什么是 Envoy？"
+sidebar_label: "04. 什么是 Envoy？"
 sidebar_position: 4
 tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "Envoy 是一个高性能的代理服务器，专为现代微服务架构设计。它提供进程外架构、多层过滤器、动态配置、负载均衡等功能，可作为 Sidecar 或边缘代理部署，帮助解决服务间通信的复杂性。"

@@ -1,5 +1,6 @@
 ---
 title: "mysql 客户端、连接、会话与元数据导航"
+sidebar_label: "03. mysql 客户端、连接、会话与元数据导航"
 sidebar_position: 3
 tags: [MySQL, mysql客户端, 连接, Session, 元数据]
 description: "掌握 mysql 客户端的安全连接、会话边界、交互命令和 information_schema、performance_schema、sys 导航方法。"

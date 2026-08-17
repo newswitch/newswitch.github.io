@@ -1,5 +1,6 @@
 ---
 title: "ConfigMap"
+sidebar_label: "03. ConfigMap"
 sidebar_position: 3
 tags: [Kubernetes, 存储, 学习路线]
 description: "ConfigMap 是 Kubernetes 用于存储配置数据的 API 资源，支持将配置信息与容器镜像解耦。本文详细介绍 ConfigMap 的概念、创建方法以及在 Pod 中的使用方式。"

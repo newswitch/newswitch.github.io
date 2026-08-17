@@ -1,5 +1,6 @@
 ---
 title: "client-go Informer、Workqueue 与 Controller"
+sidebar_label: "04. client-go Informer、Workqueue 与 Controller"
 sidebar_position: 4
 tags: [Kubernetes, client-go, Informer, Workqueue, Controller, Operator]
 description: "从 List/Watch、Reflector、DeltaFIFO 和 Indexer 到 Rate-Limited Workqueue 与幂等 Reconcile，构建可恢复、低写放大的 Kubernetes Controller。"

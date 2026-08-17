@@ -1,5 +1,6 @@
 ---
 title: NVIDIA GPU Operator 架构与组件说明
+sidebar_label: "05. NVIDIA GPU Operator 架构与组件说明"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU Operator", "NFD", "GFD", "Device Plugin", "学习路线"]

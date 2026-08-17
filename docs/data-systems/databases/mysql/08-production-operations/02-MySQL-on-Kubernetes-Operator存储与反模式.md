@@ -1,5 +1,6 @@
 ---
 title: "MySQL on Kubernetes、Operator、存储与反模式"
+sidebar_label: "02. MySQL on Kubernetes、Operator、存储与反模式"
 sidebar_position: 2
 tags: [MySQL, Kubernetes, Operator, StatefulSet, 存储]
 description: "理解数据库 Pod、PVC、调度、故障域、Operator 调谐、备份与高可用，识别把无状态经验套到 MySQL 的反模式。"

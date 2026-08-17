@@ -1,5 +1,6 @@
 ---
 title: "PostgreSQL 从零到精通学习路线"
+sidebar_label: "00. PostgreSQL 从零到精通学习路线"
 sidebar_position: 0
 tags: [PostgreSQL, MVCC, WAL, SQL, 高可用, 学习路线]
 description: "以 PostgreSQL 18 为主线，从 SQL 和数据建模深入 MVCC、WAL、查询优化、Vacuum、复制、PITR、高可用、性能容量和源码。"

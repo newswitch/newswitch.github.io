@@ -1,5 +1,6 @@
 ---
 title: Prompt，从输入到输出
+sidebar_label: "01. Prompt，从输入到输出"
 date: 2026-02-25 12:00:00
 categories: 机器学习
 tags: [LLM, 大模型, 推理, Transformer, Tokenizer, Attention, KV-Cache]

@@ -1,5 +1,6 @@
 ---
 title: SD-WAN 架构、应用选路与排障
+sidebar_label: "09. SD-WAN 架构、应用选路与排障"
 sidebar_position: 9
 tags: [SD-WAN, Overlay, SLA, Application Routing, SASE]
 description: 用厂商无关模型理解 SD-WAN 管理、控制、数据平面，分析隧道、策略、SLA 和故障切换。

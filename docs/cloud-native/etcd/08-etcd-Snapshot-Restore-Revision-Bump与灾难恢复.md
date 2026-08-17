@@ -1,5 +1,6 @@
 ---
 title: "Snapshot Backup/Restore、Revision Bump 与灾难恢复"
+sidebar_label: "08. Snapshot Backup/Restore、Revision Bump 与灾难恢复"
 sidebar_position: 8
 tags: [etcd, Snapshot, Restore, Disaster Recovery]
 description: "从在线快照、etcdutl 恢复、新集群引导到 Kubernetes Revision Bump 完成灾备。"

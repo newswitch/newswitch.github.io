@@ -1,5 +1,6 @@
 ---
 title: "容器运行时接口（CRI）"
+sidebar_label: "02. 容器运行时接口（CRI）"
 sidebar_position: 2
 tags: [Kubernetes, 开放接口, 学习路线]
 description: "容器运行时接口（CRI）是 Kubernetes 中定义容器和镜像服务的核心接口，基于 gRPC 协议，支持多种容器运行时后端如 containerd、CRI-O 等，为 Kubernetes 提供了灵活的容器运行时选择。"

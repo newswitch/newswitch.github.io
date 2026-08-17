@@ -1,5 +1,6 @@
 ---
 title: EVPN 网关、BUM 与多归属
+sidebar_label: "05. EVPN 网关、BUM 与多归属"
 sidebar_position: 5
 tags: [EVPN, Anycast Gateway, IRB, BUM, Multihoming]
 description: 掌握 L2VNI/L3VNI、对称 IRB、Anycast Gateway、BUM 复制与 EVPN 多归属的完整转发逻辑。

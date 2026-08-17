@@ -1,5 +1,6 @@
 ---
 title: "Snapshot、Restore、CCR、跨集群搜索与灾备"
+sidebar_label: "15. Snapshot、Restore、CCR、跨集群搜索与灾备"
 sidebar_position: 15
 tags: [Elasticsearch, Snapshot, CCR, Disaster Recovery]
 description: "理解副本与备份差异、增量快照、CCR、CCS 和灾备切换。"

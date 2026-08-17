@@ -1,5 +1,6 @@
 ---
 title: ICMP、UDP、TCP、DNS 与连接诊断
+sidebar_label: "05. ICMP、UDP、TCP、DNS 与连接诊断"
 sidebar_position: 5
 tags: [ICMP, UDP, TCP, DNS, MTU, Socket]
 description: 理解常用传输和诊断协议，掌握握手、重传、窗口、DNS 解析及端到端连接排查。

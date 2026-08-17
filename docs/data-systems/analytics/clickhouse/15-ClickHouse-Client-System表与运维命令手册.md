@@ -1,5 +1,6 @@
 ---
 title: ClickHouse Client、System 表与运维命令手册
+sidebar_label: "15. ClickHouse Client、System 表与运维命令手册"
 sidebar_position: 15
 description: 从 clickhouse-client、安全连接和执行计划，到 parts、merges、replicas、mutations、query_log 与慢查询排障。
 tags: [ClickHouse, 命令手册, OLAP, System Tables, 故障排查]

@@ -1,5 +1,6 @@
 ---
 title: "NFS 学习路线"
+sidebar_label: "00. NFS 学习路线"
 sidebar_position: 0
 tags: [NFS, Linux, 存储, Kubernetes, CSI, 学习路线]
 description: "从 NFS 协议、RPC、缓存与一致性开始，学习部署、高可用、性能分析、Kubernetes 接入和生产故障排查。"

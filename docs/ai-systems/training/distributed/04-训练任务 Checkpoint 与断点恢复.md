@@ -1,5 +1,6 @@
 ---
 title: "分布式训练 Checkpoint：一致性、原子发布与跨拓扑恢复"
+sidebar_label: "04. 分布式训练 Checkpoint：一致性、原子发布与跨拓扑恢复"
 date: 2026-07-22 17:50:00
 categories: 云原生
 tags: ["PyTorch", "Checkpoint", "DCP", "DeepSpeed", "Kubernetes", "容灾"]

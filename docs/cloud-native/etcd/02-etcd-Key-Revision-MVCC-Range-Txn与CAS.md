@@ -1,5 +1,6 @@
 ---
 title: "Key、Revision、MVCC、Range、Txn 与 Compare-And-Swap"
+sidebar_label: "02. Key、Revision、MVCC、Range、Txn 与 Compare-And-Swap"
 sidebar_position: 2
 tags: [etcd, MVCC, Transaction, CAS]
 description: "理解 etcd 全局 Revision、Key 元数据、范围读、事务比较与原子更新。"

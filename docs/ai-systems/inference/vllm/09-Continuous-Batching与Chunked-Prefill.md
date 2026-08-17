@@ -1,5 +1,6 @@
 ---
 title: "Continuous Batching 与 Chunked Prefill"
+sidebar_label: "09. Continuous Batching 与 Chunked Prefill"
 sidebar_position: 9
 tags: [vLLM, Continuous Batching, Chunked Prefill, Scheduler, TTFT, ITL]
 description: "理解 vLLM 如何在每个 Engine Step 动态重组批次、分配 Token Budget，并通过 Chunked Prefill 缓解长 Prompt 对 Decode 的阻塞。"

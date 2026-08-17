@@ -1,5 +1,6 @@
 ---
 title: "行锁、间隙锁、Next-Key Lock、MDL 与死锁"
+sidebar_label: "06. 行锁、间隙锁、Next-Key Lock、MDL 与死锁"
 sidebar_position: 6
 tags: [MySQL, 行锁, 间隙锁, Next-Key Lock, 死锁]
 description: "从索引记录和范围理解 InnoDB 锁，使用 Performance Schema 建立等待图并正确处理死锁。"

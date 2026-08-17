@@ -1,5 +1,6 @@
 ---
 title: BGP 原理、策略与双出口实验
+sidebar_label: "07. BGP 原理、策略与双出口实验"
 sidebar_position: 7
 date: 2026-02-19 12:00:00
 categories: 网络

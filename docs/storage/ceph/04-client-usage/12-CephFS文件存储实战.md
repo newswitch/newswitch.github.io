@@ -1,5 +1,6 @@
 ---
 title: "CephFS 实战：MDS、客户端挂载、Subvolume、Quota 与快照"
+sidebar_label: "12. CephFS 实战：MDS、客户端挂载、Subvolume、Quota 与快照"
 sidebar_position: 12
 tags: [Ceph, 学习路线, 存储, CephFS]
 description: "创建 CephFS、部署 MDS 主备、Subvolume、最小权限客户端挂载、Quota、快照 Clone 与 MDS 故障排查。"

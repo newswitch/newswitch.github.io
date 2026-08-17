@@ -1,5 +1,6 @@
 ---
 title: 使用 Helm 部署 GPU Operator
+sidebar_label: "06. 使用 Helm 部署 GPU Operator"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU Operator", "Helm", "学习路线"]

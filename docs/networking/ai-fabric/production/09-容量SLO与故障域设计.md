@@ -1,5 +1,6 @@
 ---
 title: 容量、SLO 与故障域设计
+sidebar_label: "09. 容量、SLO 与故障域设计"
 sidebar_position: 9
 tags: [Capacity Planning, SLO, Error Budget, Failure Domain, AI Network]
 description: 用有口径的 Collective 基线、Rail 可用性、训练影响和 N-1 容量定义 AI 网络 SLO。

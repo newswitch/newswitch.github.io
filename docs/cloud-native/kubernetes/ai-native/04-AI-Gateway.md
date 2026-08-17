@@ -1,5 +1,6 @@
 ---
 title: "AI Gateway"
+sidebar_label: "04. AI Gateway"
 sidebar_position: 4
 tags: [Kubernetes, AI原生, PartIII, 学习路线]
 description: "AI Gateway 的作用、架构和在 Kubernetes 中的实现。"

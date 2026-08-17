@@ -1,5 +1,6 @@
 ---
 title: "配置上下文、指令继承、变量、Location 与 Reload"
+sidebar_label: "03. 配置上下文、指令继承、变量、Location 与 Reload"
 sidebar_position: 3
 tags: [Nginx, Configuration, Location, Reload]
 description: "理解 Nginx 配置上下文、模块合并、Location 选择、URI 重写和无损发布。"

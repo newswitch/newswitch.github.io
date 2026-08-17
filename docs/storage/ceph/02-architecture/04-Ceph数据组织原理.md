@@ -1,5 +1,6 @@
 ---
 title: "Ceph 数据组织原理：Object、Pool、PG 与 OSD 到底是什么关系"
+sidebar_label: "04. Ceph 数据组织原理：Object、Pool、PG 与 OSD 到底是什么关系"
 sidebar_position: 4
 tags: [Ceph, 学习路线, 存储, PG, Pool, OSD]
 description: "讲清业务数据 → Object → Pool → PG → OSD 的定位链路，以及 PG 状态、osd map 查询与常见误区。"

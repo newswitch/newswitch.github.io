@@ -1,5 +1,6 @@
 ---
 title: "NFS 缓存、一致性、锁与文件句柄"
+sidebar_label: "03. NFS 缓存、一致性、锁与文件句柄"
 sidebar_position: 3
 tags: [NFS, 缓存一致性, 文件锁, delegation, stale file handle, close-to-open]
 description: "系统理解 NFS 数据/属性/目录缓存、close-to-open、一致性窗口、文件锁、delegation、lease 和 stale file handle。"

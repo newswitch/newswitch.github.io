@@ -1,5 +1,6 @@
 ---
 title: "源码、注册丢失、配置不生效、选主/数据库异常 Runbook"
+sidebar_label: "12. 源码、注册丢失、配置不生效、选主/数据库异常 Runbook"
 sidebar_position: 12
 tags: [Nacos, 源码, Runbook]
 description: "从 SDK、gRPC、Naming/Config、Distro/JRaft 到数据库定位 Nacos 生产故障。"

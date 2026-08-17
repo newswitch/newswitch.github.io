@@ -1,5 +1,6 @@
 ---
 title: "OpenTelemetry：Kubernetes 可观测性的事实标准"
+sidebar_label: "08. OpenTelemetry：Kubernetes 可观测性的事实标准"
 sidebar_position: 8
 tags: [Kubernetes, 可观测性, PartII, 学习路线]
 description: "OpenTelemetry 已成为 Kubernetes 可观测性领域的事实标准，统一了指标、追踪与日志采集，极大简化了云原生环境下的观测体系建设。"

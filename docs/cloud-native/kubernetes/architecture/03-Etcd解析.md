@@ -1,5 +1,6 @@
 ---
 title: "Etcd 解析"
+sidebar_label: "03. Etcd 解析"
 sidebar_position: 3
 tags: [Kubernetes, 架构, 学习路线]
 description: "深入解析 etcd 在 Kubernetes 中的核心作用，包括分布式存储原理、Raft 共识算法、数据备份恢复、性能优化和安全配置等实践指南。"

@@ -1,5 +1,6 @@
 ---
 title: "Horizontal Pod Autoscaling"
+sidebar_label: "09. Horizontal Pod Autoscaling"
 sidebar_position: 9
 tags: [Kubernetes, 控制器, 学习路线]
 description: "深入了解 Kubernetes HPA（Horizontal Pod Autoscaling）的工作原理、配置方法和自定义指标支持，包括基于 CPU、内存和自定义指标的自动扩缩容实现。"

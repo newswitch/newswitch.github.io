@@ -1,5 +1,6 @@
 ---
 title: "Checkpoint、Crash Recovery 与持久性边界"
+sidebar_label: "07. Checkpoint、Crash Recovery 与持久性边界"
 sidebar_position: 7
 tags: [MySQL, Checkpoint, Crash Recovery, 持久性, innodb_force_recovery]
 description: "理解 Fuzzy Checkpoint、Redo 重放、未提交事务回滚、Doublewrite 修复和强制恢复的安全边界。"

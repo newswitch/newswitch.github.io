@@ -1,5 +1,6 @@
 ---
 title: "Insert、Upsert、Delete、Timestamp 与一致性级别"
+sidebar_label: "04. Insert、Upsert、Delete、Timestamp 与一致性级别"
 sidebar_position: 4
 tags: [Milvus, Insert, Upsert, Consistency]
 description: "理解 Milvus 写入确认、Timestamp、可见性、删除和一致性级别。"

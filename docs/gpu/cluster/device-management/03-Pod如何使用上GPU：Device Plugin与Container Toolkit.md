@@ -1,5 +1,6 @@
 ---
 title: Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit
+sidebar_label: "03. Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit"
 date: 2026-07-22 16:00:00
 categories: 云原生
 tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "学习路线"]

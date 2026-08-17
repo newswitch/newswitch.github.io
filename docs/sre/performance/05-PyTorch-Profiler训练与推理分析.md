@@ -1,5 +1,6 @@
 ---
 title: "PyTorch Profiler 训练与推理分析"
+sidebar_label: "05. PyTorch Profiler 训练与推理分析"
 sidebar_position: 5
 tags: [PyTorch, Profiler, CUDA, Operator, Memory, TensorBoard]
 description: "使用 torch.profiler 分析训练与推理中的 CPU Operator、CUDA Kernel、输入 Shape、调用栈和 Tensor Memory，并控制采集窗口与开销。"

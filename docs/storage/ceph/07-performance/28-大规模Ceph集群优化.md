@@ -1,5 +1,6 @@
 ---
 title: "大规模 Ceph 集群设计与运维：OSD、PG、对象、恢复窗口和爆炸半径"
+sidebar_label: "28. 大规模 Ceph 集群设计与运维：OSD、PG、对象、恢复窗口和爆炸半径"
 sidebar_position: 28
 tags: [Ceph, 学习路线, 存储, 大规模, PG, 运维]
 description: "用性能/容量/恢复/控制面/运维五预算管理规模：CRUSH、PG autoscaler、MON/MGR、mClock、分批扩容与换盘流水线。"

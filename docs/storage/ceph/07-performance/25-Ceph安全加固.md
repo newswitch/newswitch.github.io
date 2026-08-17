@@ -1,5 +1,6 @@
 ---
 title: "Ceph 安全加固实战：CephX、最小权限、传输加密、静态加密与密钥治理"
+sidebar_label: "25. Ceph 安全加固实战：CephX、最小权限、传输加密、静态加密与密钥治理"
 sidebar_position: 25
 tags: [Ceph, 学习路线, 存储, 安全, CephX]
 description: "从威胁模型到整改：CephX 最小权限、msgr2 secure、网络分区、OSD LUKS、密钥轮换、Dashboard/cephadm 加固与泄露响应。"

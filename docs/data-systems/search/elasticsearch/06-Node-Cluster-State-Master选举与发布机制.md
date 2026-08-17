@@ -1,5 +1,6 @@
 ---
 title: "Node、Cluster State、Master 选举与发布机制"
+sidebar_label: "06. Node、Cluster State、Master 选举与发布机制"
 sidebar_position: 6
 tags: [Elasticsearch, Cluster State, Master]
 description: "理解节点角色、master election、cluster state publication 和控制面稳定性。"

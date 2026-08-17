@@ -1,5 +1,6 @@
 ---
 title: "Pod Hook"
+sidebar_label: "07. Pod Hook"
 sidebar_position: 7
 tags: [Kubernetes, Pod, 学习路线]
 description: "详细介绍 Kubernetes Pod Hook（钩子）的工作原理、类型配置和调试方法，包括 postStart 和 preStop 生命周期事件的使用场景和最佳实践。"

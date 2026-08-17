@@ -1,5 +1,6 @@
 ---
 title: "Kubernetes Operator"
+sidebar_label: "07. Kubernetes Operator"
 sidebar_position: 7
 tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "深入了解 Kubernetes Operator 的原理、架构、应用场景和 2025 年最佳实践。"

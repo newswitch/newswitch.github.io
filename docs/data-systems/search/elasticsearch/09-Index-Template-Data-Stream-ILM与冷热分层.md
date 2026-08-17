@@ -1,5 +1,6 @@
 ---
 title: "Index Template、Data Stream、ILM 与 Hot-Warm-Cold-Frozen"
+sidebar_label: "09. Index Template、Data Stream、ILM 与 Hot-Warm-Cold-Frozen"
 sidebar_position: 9
 tags: [Elasticsearch, ILM, Data Stream, Data Tier]
 description: "使用模板、Data Stream 和 ILM 管理时序数据滚动、保留和分层成本。"

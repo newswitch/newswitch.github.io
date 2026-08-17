@@ -1,5 +1,6 @@
 ---
 title: "HTTP Phase、Module、Subrequest、Filter 与变量源码"
+sidebar_label: "08. HTTP Phase、Module、Subrequest、Filter 与变量源码"
 sidebar_position: 8
 tags: [Nginx, 源码, HTTP Phase, Filter]
 description: "沿 Nginx HTTP 阶段、模块配置、Handler、Subrequest 和 Filter Chain 阅读源码。"

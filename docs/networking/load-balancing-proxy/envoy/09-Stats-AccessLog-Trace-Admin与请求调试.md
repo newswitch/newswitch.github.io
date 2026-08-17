@@ -1,5 +1,6 @@
 ---
 title: "Envoy Stats、Access Log、Tracing、Admin、Tap 与请求调试"
+sidebar_label: "09. Envoy Stats、Access Log、Tracing、Admin、Tap 与请求调试"
 sidebar_position: 9
 tags: [Envoy, Observability, Access Log, Tracing, Admin, Tap]
 description: "用低基数指标、结构化访问日志、Trace、Admin 状态和受控 Tap 还原 Envoy 请求与配置事实。"

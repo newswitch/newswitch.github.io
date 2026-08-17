@@ -1,5 +1,6 @@
 ---
 title: "Mutating Webhook 扩展：自动注入与资源修改控制"
+sidebar_label: "10. Mutating Webhook 扩展：自动注入与资源修改控制"
 sidebar_position: 10
 tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Kubernetes MutatingAdmissionWebhook 的工作机制与应用实践，包括自动注入 Sidecar、动态默认值填充、资源标签修改等场景，帮助你掌握集群级动态变更的最佳实践。"

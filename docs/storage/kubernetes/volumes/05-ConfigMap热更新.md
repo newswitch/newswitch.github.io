@@ -1,5 +1,6 @@
 ---
 title: "ConfigMap 热更新"
+sidebar_label: "05. ConfigMap 热更新"
 sidebar_position: 5
 tags: [Kubernetes, 存储, 学习路线]
 description: "深入解析 Kubernetes ConfigMap 的热更新机制，包括环境变量和 Volume 两种挂载方式的差异、更新延迟、最佳实践以及常见问题的解决方案。"

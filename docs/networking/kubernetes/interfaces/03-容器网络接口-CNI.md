@@ -1,5 +1,6 @@
 ---
 title: "容器网络接口（CNI）"
+sidebar_label: "03. 容器网络接口（CNI）"
 sidebar_position: 3
 tags: [Kubernetes, 开放接口, 学习路线]
 description: "深入了解容器网络接口（CNI）的设计原理、接口定义、插件实现和使用方式，掌握 Kubernetes 网络管理的核心机制。"

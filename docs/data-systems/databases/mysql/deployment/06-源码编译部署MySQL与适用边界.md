@@ -1,5 +1,6 @@
 ---
 title: "源码编译部署 MySQL 与适用边界"
+sidebar_label: "06. 源码编译部署 MySQL 与适用边界"
 sidebar_position: 6
 tags: [MySQL, 源码编译, CMake, 调试, 制品]
 description: "理解 MySQL 8.4 源码构建的依赖、CMake 配置、编译测试、制品化、运行部署以及为什么生产默认不应自行编译。"
