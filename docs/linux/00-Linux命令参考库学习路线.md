@@ -1,8 +1,8 @@
 ---
-title: Linux 命令参考库：从命令行入门到生产故障排查
+title: "Linux 命令参考库：从命令行入门到生产故障排查"
 sidebar_label: "00. Linux 命令参考库：从命令行入门到生产故障排查"
-sidebar_position: 1
-description: 按命令来源和使用场景分类学习 Linux 常用命令，每篇完整讲解一个命令的语法、长短参数、输出、风险、实验与生产排障方法。
+sidebar_position: 0
+description: "按命令来源和使用场景分类学习 Linux 常用命令，每篇完整讲解一个命令的语法、长短参数、输出、风险、实验与生产排障方法。"
 tags: [Linux, 命令参考, GNU coreutils, SRE, 学习路线]
 ---
 
@@ -406,7 +406,7 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 - 能用退出码、标准错误和系统证据判断命令为什么失败。
 - 能从 CPU、内存、网络、存储和容器故障反向选择正确命令。
 
-## 官方参考入口
+## 19. 官方参考入口 {/* #官方参考入口 */}
 
 - [GNU Coreutils 9.11 Manual](https://www.gnu.org/software/coreutils/manual/coreutils.html)
 - [GNU Findutils 4.10 Manual](https://www.gnu.org/software/findutils/manual/html_node/find_html/)

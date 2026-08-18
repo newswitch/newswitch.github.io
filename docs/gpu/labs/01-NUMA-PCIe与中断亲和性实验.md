@@ -1,9 +1,9 @@
 ---
 title: "NUMA、PCIe 与中断亲和性实验：对齐 CPU、GPU、NIC 和 NVMe"
 sidebar_label: "01. NUMA、PCIe 与中断亲和性实验：对齐 CPU、GPU、NIC 和 NVMe"
-sidebar_position: 10
-tags: [NUMA, PCIe, IRQ Affinity, GPU, NIC, NVMe, 拓扑]
+sidebar_position: 1
 description: "通过只读拓扑检查和单变量实验，验证 CPU/内存/GPU/NIC/NVMe 的 NUMA 与 PCIe 亲和性，并避免盲目绑核。"
+tags: [NUMA, PCIe, IRQ Affinity, GPU, NIC, NVMe, 拓扑]
 ---
 
 # NUMA、PCIe 与中断亲和性实验：对齐 CPU、GPU、NIC 和 NVMe
@@ -23,19 +23,19 @@ CPU cores + memory                       CPU cores + memory
 
 ## 1. 先理解四种“距离”
 
-### CPU/内存 NUMA
+### 1.1 CPU/内存 NUMA {/* #cpu内存-numa */}
 
 CPU 访问本地内存通常延迟更低、带宽更高；远端内存经过 socket interconnect。
 
-### GPU 到 CPU
+### 1.2 GPU 到 CPU {/* #gpu-到-cpu */}
 
 GPU DMA 到主机内存的路径可能经过本地 PCIe Root；若内存分配在另一 NUMA，数据会跨 socket。
 
-### GPU 到 NIC
+### 1.3 GPU 到 NIC {/* #gpu-到-nic */}
 
 GPUDirect RDMA 理想路径让 NIC 与 GPU peer DMA；是否跨 PCIe switch/root/NUMA影响带宽与 CPU/桥接路径。
 
-### GPU 到 NVMe
+### 1.4 GPU 到 NVMe {/* #gpu-到-nvme */}
 
 普通 I/O 经 CPU/page cache/H2D；GDS 在支持条件下可减少 bounce path。物理拓扑仍决定 PCIe 竞争和路径。
 
@@ -230,15 +230,15 @@ GPU pairs across root/NUMA
 
 ## 15. 实验 4：GPU↔NIC / NCCL
 
-### 普通网络
+### 15.1 普通网络 {/* #普通网络 */}
 
 用 iperf3 比较客户端进程 CPU/memory 绑在 NIC 本地与远端 NUMA。
 
-### RDMA
+### 15.2 RDMA {/* #rdma */}
 
 使用 perftest 等官方/发行版工具固定 HCA port、message size、queue pairs，比较 GPU 邻近/远端 CPU 绑定。生产网络压测需授权。
 
-### NCCL
+### 15.3 NCCL {/* #nccl */}
 
 固定 GPU 集合、rank、NIC 和节点，运行 `nccl-tests`。保存 NCCL 日志中的 NET/IB/Socket、HCA、Channel 和拓扑。对比合理绑定与故意远端 canary。
 
@@ -269,7 +269,7 @@ GPU pairs across root/NUMA
 
 ## 18. Kubernetes 中表达拓扑
 
-### 节点级
+### 18.1 节点级 {/* #节点级 */}
 
 - 节点标签表示 GPU 型号、网络域、机架；
 - taint 隔离训练/推理池；
@@ -279,7 +279,7 @@ GPU pairs across root/NUMA
 - SR-IOV/Multus 提供 NIC；
 - Kueue/调度插件处理队列与更高层拓扑。
 
-### Pod 级
+### 18.2 Pod 级 {/* #pod-级 */}
 
 要获得更确定的 CPU 管理，通常需要 CPU request=limit、整数 CPU 和正确 QoS；具体以 kubelet policy 和版本文档为准。
 
@@ -300,23 +300,23 @@ GPU 和 NIC 的“同 NUMA 联合分配”取决于各 device plugin/topology hi
 
 ## 20. 性能故障判断
 
-### 同型号只有一个节点慢
+### 20.1 同型号只有一个节点慢 {/* #同型号只有一个节点慢 */}
 
 比较 PCIe LnkSta、NUMA、IRQ、GPU clock、NIC/NVMe firmware 与放置。
 
-### 仅跨机训练慢
+### 20.2 仅跨机训练慢 {/* #仅跨机训练慢 */}
 
 检查 rank→GPU→HCA 映射、NCCL 选 NIC、RDMA、交换网络，而非本地 H2D。
 
-### 模型加载慢但 NVMe fio 正常
+### 20.3 模型加载慢但 NVMe fio 正常 {/* #模型加载慢但-nvme-fio-正常 */}
 
 检查 page cache、CPU/NUMA、checksum、反序列化和 H2D。
 
-### 网卡吞吐高但 CPU 单核满
+### 20.4 网卡吞吐高但 CPU 单核满 {/* #网卡吞吐高但-cpu-单核满 */}
 
 检查 queue/RSS/IRQ、应用线程和 NUMA；吞吐可能已被单核限制。
 
-### GPU 利用率周期空洞
+### 20.5 GPU 利用率周期空洞 {/* #gpu-利用率周期空洞 */}
 
 对齐 DataLoader、H2D、NCCL、IRQ/softirq 和 CPU throttling 时间线。
 
@@ -334,7 +334,7 @@ GPU 和 NIC 的“同 NUMA 联合分配”取决于各 device plugin/topology hi
 
 应能从 BDF/UUID 建立 CPU—GPU—NIC—NVMe 映射；解释 PCIe Root/NUMA/IRQ/RSS；设计本地/远端单变量实验；结合 H2D、P2P、RDMA、NCCL、NVMe 和业务指标决定是否绑核；将结果转成受控节点标签和调度策略。
 
-## 参考资料
+## 23. 参考资料 {/* #参考资料 */}
 
 - [Linux SMP IRQ affinity](https://docs.kernel.org/core-api/irq/irq-affinity.html)
 - [Linux PCI documentation](https://docs.kernel.org/PCI/index.html)

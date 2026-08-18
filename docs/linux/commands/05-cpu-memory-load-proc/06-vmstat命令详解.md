@@ -1,11 +1,12 @@
 ---
-title: vmstat 命令详解：运行队列、换页、IO、上下文切换与 CPU
+title: "vmstat 命令详解：运行队列、换页、IO、上下文切换与 CPU"
+sidebar_label: "06. vmstat 命令详解：运行队列、换页、IO、上下文切换与 CPU"
 sidebar_position: 6
-description: 完整讲解 procps-ng vmstat 的全部参数、首份报告、r/b/si/so/bi/bo/in/cs/CPU 字段和生产性能排障。
+description: "完整讲解 procps-ng vmstat 的全部参数、首份报告、r/b/si/so/bi/bo/in/cs/CPU 字段和生产性能排障。"
 tags: [Linux, vmstat, CPU, 内存, Swap, IO, procps-ng]
 ---
 
-# `vmstat` 命令详解：运行队列、换页、IO、上下文切换与 CPU
+# vmstat 命令详解：运行队列、换页、IO、上下文切换与 CPU
 
 `vmstat` 在一行中连接 runnable/blocked 任务、内存、换页、块 IO、interrupt、context switch 与 CPU 时间，是 Linux 性能排障最重要的“方向判断”工具之一。
 
@@ -123,7 +124,7 @@ vmstat -m
 
 掌握标准：能解释全部参数与默认字段，能从组合判断 CPU、内存、IO、虚拟化方向，并能指出首份报告、累计/瞬时/速率口径。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [procps-ng vmstat(8)](https://man7.org/linux/man-pages/man8/vmstat.8.html)
 - [Linux procfs 文档](https://docs.kernel.org/filesystems/proc.html)

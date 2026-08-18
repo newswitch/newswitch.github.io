@@ -1,11 +1,12 @@
 ---
-title: export 命令详解：进程环境、函数导出与作用域边界
+title: "export 命令详解：进程环境、函数导出与作用域边界"
+sidebar_label: "09. export 命令详解：进程环境、函数导出与作用域边界"
 sidebar_position: 9
-description: 完整讲解 Bash export 的 -f/-n/-p、NAME=VALUE、后代继承、环境快照、密钥泄露与 systemd/container 边界。
+description: "完整讲解 Bash export 的 -f/-n/-p、NAME=VALUE、后代继承、环境快照、密钥泄露与 systemd/container 边界。"
 tags: [Linux, Bash, export, 环境变量, 安全]
 ---
 
-# `export` 命令详解：环境只向后代复制
+# export 命令详解：进程环境、函数导出与作用域边界
 
 `export` 给 shell variable 加 export 属性；Bash 随后启动外部程序时把名称和值复制进其 environment。子进程不能反向修改父 Shell，也不能靠 `export` 改变已经运行的 sibling/service。
 

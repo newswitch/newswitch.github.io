@@ -2,8 +2,8 @@
 title: "数据库 SLI/SLO、Dashboard、告警与变更关联"
 sidebar_label: "06. 数据库 SLI/SLO、Dashboard、告警与变更关联"
 sidebar_position: 6
-tags: [MySQL, SLI, SLO, Dashboard, 告警]
 description: "从用户结果定义数据库服务目标，构建症状优先、可下钻且关联发布和容量的监控告警体系。"
+tags: [MySQL, SLI, SLO, Dashboard, 告警]
 ---
 
 # 数据库 SLI/SLO、Dashboard、告警与变更关联
@@ -12,14 +12,14 @@ description: "从用户结果定义数据库服务目标，构建症状优先、
 
 ## 1. SLI 分层
 
-### 用户层
+### 1.1 用户层 {/* #用户层 */}
 
 - 成功请求比例；
 - 读写延迟分布；
 - 数据新鲜度和一致性；
 - 超时、重复和错误提交。
 
-### 数据库服务层
+### 1.2 数据库服务层 {/* #数据库服务层 */}
 
 - 成功事务比例；
 - 查询/提交 P95、P99；
@@ -27,7 +27,7 @@ description: "从用户结果定义数据库服务目标，构建症状优先、
 - 只读路由新鲜度；
 - failover 恢复时间。
 
-### 原因指标
+### 1.3 原因指标 {/* #原因指标 */}
 
 CPU、锁、I/O、脏页和复制线程用于解释 SLI，不宜全部直接成为用户 SLO。
 
@@ -103,7 +103,7 @@ Dashboard、Runbook、回滚入口
 
 注入慢查询、锁等待、复制停顿、磁盘水位和主库故障。测 MTTD、告警噪声、上下文完整度、MTTR 和 SLO 计算是否与用户感受一致。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [MySQL Performance Schema](https://dev.mysql.com/doc/refman/8.4/en/performance-schema.html)
 - [Google SRE Workbook：Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/)

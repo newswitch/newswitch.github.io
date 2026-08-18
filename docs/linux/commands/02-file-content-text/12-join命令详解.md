@@ -1,11 +1,12 @@
 ---
-title: join 命令详解：按有序字段连接两个文件
+title: "join 命令详解：按有序字段连接两个文件"
+sidebar_label: "12. join 命令详解：按有序字段连接两个文件"
 sidebar_position: 12
-description: 完整讲解 GNU coreutils 9.11 join 的全部参数、连接键、预排序、内外连接、差集、输出字段、缺失值、header、大小写、NUL 记录、重复键笛卡尔组合和数据边界。
+description: "完整讲解 GNU coreutils 9.11 join 的全部参数、连接键、预排序、内外连接、差集、输出字段、缺失值、header、大小写、NUL 记录、重复键笛卡尔组合和数据边界。"
 tags: [Linux, join, GNU coreutils, 数据连接, 排序]
 ---
 
-# `join` 命令详解：按有序字段连接两个文件
+# join 命令详解：按有序字段连接两个文件
 
 `join` 对两个按连接键有序的文本流执行 merge join。默认输出键相等的配对行；它不是通用 CSV/JSON 解析器，也不会自动排序或验证 schema。重复键还会产生两组记录的笛卡尔组合，可能放大输出规模。
 
@@ -232,7 +233,7 @@ join -z -t: -1 1 -2 1 left.nul right.nul
 - 能用 `-o/0/-e` 设计稳定输出。
 - 能预判重复键笛卡尔放大、header 推断和结构化格式边界。
 
-## 官方参考
+## 16. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：join invocation](https://www.gnu.org/software/coreutils/manual/html_node/join-invocation.html)
 - [GNU coreutils：Pre-sorting](https://www.gnu.org/software/coreutils/manual/html_node/Pre_002dsorting.html)
@@ -241,4 +242,3 @@ join -z -t: -1 1 -2 1 left.nul right.nul
 上一篇：[`comm` 命令详解](./11-comm命令详解.md)
 
 下一篇：[`tr` 命令详解](./13-tr命令详解.md)
-

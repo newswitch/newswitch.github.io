@@ -1,11 +1,12 @@
 ---
-title: mapfile/readarray 命令详解：批量读取数组、分隔符与回调
+title: "mapfile/readarray 命令详解：批量读取数组、分隔符与回调"
+sidebar_label: "07. mapfile/readarray 命令详解：批量读取数组、分隔符与回调"
 sidebar_position: 7
-description: 完整讲解 Bash mapfile/readarray 的 -d/-t/-n/-O/-s/-u/-C/-c、NUL 记录、内存边界与 callback 时机。
+description: "完整讲解 Bash mapfile/readarray 的 -d/-t/-n/-O/-s/-u/-C/-c、NUL 记录、内存边界与 callback 时机。"
 tags: [Linux, Bash, mapfile, 数组, 自动化]
 ---
 
-# `mapfile` / `readarray` 命令详解：把记录批量读入数组
+# mapfile/readarray 命令详解：批量读取数组、分隔符与回调
 
 `mapfile` 从 FD 读取记录到 indexed array，`readarray` 是同义词。它避免 `for x in $(command)` 的分词和 glob 错误，但会把数据整体保存在内存，不适合无限流或超大输入。
 

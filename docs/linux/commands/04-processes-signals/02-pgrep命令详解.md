@@ -1,11 +1,12 @@
 ---
-title: pgrep 命令详解：按名称、身份、状态与 namespace 精确找进程
+title: "pgrep 命令详解：按名称、身份、状态与 namespace 精确找进程"
+sidebar_label: "02. pgrep 命令详解：按名称、身份、状态与 namespace 精确找进程"
 sidebar_position: 2
-description: 完整讲解 procps-ng pgrep 的参数、扩展正则、comm 与 cmdline、UID/组/session/cgroup/namespace 条件、线程、退出码和 PID 竞态。
+description: "完整讲解 procps-ng pgrep 的参数、扩展正则、comm 与 cmdline、UID/组/session/cgroup/namespace 条件、线程、退出码和 PID 竞态。"
 tags: [Linux, pgrep, procps-ng, PID, namespace]
 ---
 
-# `pgrep` 命令详解：按名称、身份、状态与 namespace 精确找进程
+# pgrep 命令详解：按名称、身份、状态与 namespace 精确找进程
 
 `pgrep` 用扩展正则和进程属性选择当前可见进程并输出 PID。不同类别条件之间是 AND，同一列表内部通常是 OR，比 `ps | grep` 更准确；它仍无法让“查询后再操作”自动成为无竞态事务。
 
@@ -102,7 +103,7 @@ fi
 
 掌握标准：能列出全部参数；能解释 ERE、comm/cmdline、PID/TID、真实/有效身份；能避免名称宽匹配和查询后 PID 复用风险。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [procps-ng：pgrep(1)](https://man7.org/linux/man-pages/man1/pgrep.1.html)
 - [Linux pid_namespaces(7)](https://man7.org/linux/man-pages/man7/pid_namespaces.7.html)

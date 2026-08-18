@@ -1,8 +1,8 @@
 ---
-title: Flink CLI、REST、Checkpoint 与 Savepoint 命令手册
+title: "Flink CLI、REST、Checkpoint 与 Savepoint 命令手册"
 sidebar_label: "90. Flink CLI、REST、Checkpoint 与 Savepoint 命令手册"
 sidebar_position: 90
-description: 从作业提交、状态查看和 SQL Client，到 Checkpoint、Savepoint、恢复升级、REST 指标与 Kubernetes Operator 排障。
+description: "从作业提交、状态查看和 SQL Client，到 Checkpoint、Savepoint、恢复升级、REST 指标与 Kubernetes Operator 排障。"
 tags: [Flink, 命令手册, 流计算, Checkpoint, Savepoint]
 ---
 
@@ -223,7 +223,7 @@ kubectl -n data get events --sort-by=.lastTimestamp
 7. 比较输入/输出、Lag、Checkpoint 和业务对账。
 8. 失败时停止新版本，从原 Savepoint 启动旧包。
 
-## 11. 30 分钟实验
+## 11. 分钟实验 {/* #11-30-分钟实验 */}
 
 1. 提交一个带状态的 WordCount 作业并记录 Job ID。
 2. 使用 CLI 和 REST 同时找到它。
@@ -240,10 +240,9 @@ kubectl -n data get events --sort-by=.lastTimestamp
 - 能把 Kafka Lag、Flink 反压、Checkpoint 和 Sink 延迟串成一条链。
 - 能在 Operator 环境区分声明状态、Job 状态和 Pod 状态。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [Flink Command-Line Interface](https://nightlies.apache.org/flink/flink-docs-stable/docs/deployment/cli/)
 - [Flink REST API](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/rest_api/)
 - [Flink Checkpoints](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/checkpoints/)
 - [Flink Savepoints](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/savepoints/)
-

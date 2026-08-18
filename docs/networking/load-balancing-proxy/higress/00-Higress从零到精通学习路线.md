@@ -2,8 +2,8 @@
 title: "Higress 从零到精通学习路线"
 sidebar_label: "00. Higress 从零到精通学习路线"
 sidebar_position: 0
-tags: [Higress, API Gateway, AI Gateway, Envoy, Wasm, 学习路线]
 description: "从 Higress 控制面与 Envoy 数据面深入 Gateway API、服务发现、流量、安全、Wasm、AI 网关、性能容量和生产排障。"
+tags: [Higress, API Gateway, AI Gateway, Envoy, Wasm, 学习路线]
 ---
 
 # Higress 从零到精通学习路线
@@ -30,7 +30,7 @@ Client → LB → Higress Gateway Listener
   → response stream / observability
 ```
 
-## 2. 13 篇文章规划
+## 2. 篇文章规划 {/* #2-13-篇文章规划 */}
 
 | 编号 | 文章 | 优先级 | 核心问题 | 状态 |
 | --- | --- | --- | --- | --- |
@@ -52,15 +52,15 @@ Client → LB → Higress Gateway Listener
 
 ## 3. 学习重点
 
-### 不把控制台当真相
+### 3.1 不把控制台当真相 {/* #不把控制台当真相 */}
 
 配置已经保存，只证明控制面接收；还要确认 CR/配置验证、xDS 下发、Envoy ACK/NACK、Listener/Route/Cluster/Endpoint 和真实请求。
 
-### AI Gateway 不是普通 HTTP 代理加一个域名
+### 3.2 AI Gateway 不是普通 HTTP 代理加一个域名 {/* #ai-gateway-不是普通-http-代理加一个域名 */}
 
 LLM 请求需要处理长时间连接、SSE 流、首 Token 延迟、输出 Token、客户端取消、模型级并发、Fallback、内容安全和成本计量。缓存也必须考虑 Prompt、模型、采样参数和权限隔离。
 
-### 插件必须进入性能预算
+### 3.3 插件必须进入性能预算 {/* #插件必须进入性能预算 */}
 
 Wasm 提供隔离和热更新，但插件仍会消耗 CPU、内存并影响请求延迟；需要限制执行、内存、外部调用和失败策略。
 

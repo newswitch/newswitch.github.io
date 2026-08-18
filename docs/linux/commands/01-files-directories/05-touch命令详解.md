@@ -1,11 +1,12 @@
 ---
-title: touch 命令详解：atime、mtime、时间格式与符号链接
+title: "touch 命令详解：atime、mtime、时间格式与符号链接"
+sidebar_label: "05. touch 命令详解：atime、mtime、时间格式与符号链接"
 sidebar_position: 5
-description: 完整讲解 GNU coreutils touch 的全部长短参数、文件创建、atime/mtime/ctime、日期解析、参考文件、符号链接和生产风险。
+description: "完整讲解 GNU coreutils touch 的全部长短参数、文件创建、atime/mtime/ctime、日期解析、参考文件、符号链接和生产风险。"
 tags: [Linux, touch, GNU coreutils, 时间戳, 文件系统]
 ---
 
-# `touch` 命令详解：atime、mtime、时间格式与符号链接
+# touch 命令详解：atime、mtime、时间格式与符号链接
 
 `touch` 用于修改文件的访问时间和修改时间；目标不存在时默认还会创建空文件。它属于 `[W]` 操作，因为时间戳变化可能影响增量构建、同步、备份、缓存和数据处理任务。
 
@@ -327,7 +328,7 @@ touch -r reference deployed-file
 - 能解释 `-r` 与相对 `-d` 的关系。
 - 能评估修改时间戳对构建、同步、调度和审计的影响。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：touch invocation](https://www.gnu.org/software/coreutils/manual/html_node/touch-invocation.html)
 - [GNU coreutils：File timestamps](https://www.gnu.org/software/coreutils/manual/html_node/File-timestamps.html)
@@ -335,4 +336,3 @@ touch -r reference deployed-file
 上一篇：[`rmdir` 命令详解](./04-rmdir命令详解.md)
 
 下一篇：[`mktemp` 命令详解](./06-mktemp命令详解.md)
-

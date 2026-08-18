@@ -1,16 +1,18 @@
 ---
-title: 在NVIDIA资源池部署原生vLLM——从单机验证到Kubernetes服务
-sidebar_label: 22 · NVIDIA池部署原生vLLM
+title: "在NVIDIA资源池部署原生vLLM——从单机验证到Kubernetes服务"
+sidebar_label: "22. 22 · NVIDIA池部署原生vLLM"
+sidebar_position: 22
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第六阶段——两套机器部署推理 本文定位：NVIDIA 池 vLLM 安装、部署、验收与故障排查篇"
+tags: [vLLM, NVIDIA, Kubernetes, Deployment, NCCL, 双资源池]
 date: 2026-08-07 22:00:00
 categories: 云原生
-tags: [vLLM, NVIDIA, Kubernetes, Deployment, NCCL, 双资源池]
 ---
 
 # 在NVIDIA资源池部署原生vLLM——从单机验证到Kubernetes服务
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第六阶段——两套机器部署推理  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第六阶段——两套机器部署推理
 **本文定位**：NVIDIA 池 vLLM 安装、部署、验收与故障排查篇
 :::
 
@@ -34,11 +36,9 @@ tags: [vLLM, NVIDIA, Kubernetes, Deployment, NCCL, 双资源池]
 
 本篇示例：资源池 NVIDIA · Namespace `ai-serving` · 模型 `/models/company-model-a/nvidia/3.0.0-bf16` · 单实例 4 张 GPU · 端口 8000。所有 `REPLACE_ME`、镜像摘要、资源数和模型参数都必须按实际环境替换。
 
-对照：[vLLM 整体代码架构](../../ai-systems/inference/vllm/vLLM学习笔记（一）整体代码架构.md) · [第 11 篇 NVIDIA 池](./11-部署NVIDIA-GPU资源池.md) · [第 13 篇 Label·Taint](./13-使用Label-Taint与Affinity隔离两个资源池.md)。
+对照：[vLLM 整体代码架构](../../ai-systems/inference/vllm/91-vLLM学习笔记（一）整体代码架构.md) · [第 11 篇 NVIDIA 池](./11-部署NVIDIA-GPU资源池.md) · [第 13 篇 Label·Taint](./13-使用Label-Taint与Affinity隔离两个资源池.md)。
 
----
-
-## 一、部署前必须满足的条件
+## 1. 部署前必须满足的条件 {/* #一部署前必须满足的条件 */}
 
 **Kubernetes 和资源池**：第 10 篇集群已验收；第 11 篇驱动、Container Toolkit、Device Plugin 正常；第 13 篇 Label/Taint 已配置；节点能上报 `nvidia.com/gpu`；CNI、DNS、镜像仓库和存储网络正常。
 
@@ -46,9 +46,7 @@ tags: [vLLM, NVIDIA, Kubernetes, Deployment, NCCL, 双资源池]
 
 **容量**：第 21 篇计算完成；TP/PP/上下文/并发已定；拓扑满足多卡通信；主机 RAM 与 `/dev/shm` 有余量；发布时有足够空闲 GPU，或已选择合适更新策略。
 
----
-
-## 二、先冻结兼容矩阵
+## 2. 先冻结兼容矩阵 {/* #二先冻结兼容矩阵 */}
 
 生产部署不是「找一个 latest 镜像 → 启动成功 → 完成」，而是冻结一组共同验收过的对象：
 
@@ -70,9 +68,7 @@ registry.example.com/ai/vllm-openai@sha256:REPLACE_ME
 
 不要在 Deployment 中使用 `vllm/vllm-openai:latest`。
 
----
-
-## 三、节点侧验收
+## 3. 节点侧验收 {/* #三节点侧验收 */}
 
 ```bash
 kubectl get nodes -l accelerator.vendor=nvidia,resource-pool=nvidia-pool -o wide
@@ -138,9 +134,7 @@ kubectl logs -n ai-serving nvidia-smoke-test
 kubectl delete pod -n ai-serving nvidia-smoke-test
 ```
 
----
-
-## 四、先用 Docker 做单机验证
+## 4. 先用 Docker 做单机验证 {/* #四先用-docker-做单机验证 */}
 
 Kubernetes 会同时引入调度、PVC、Secret、探针和网络变量。首次验证时，先在隔离验收节点上用 Docker 确认「模型 + 镜像 + 参数」本身能够运行。
 
@@ -198,9 +192,7 @@ watch -n 1 nvidia-smi
 
 同步记录：每卡显存是否接近；是否只有预期 4 张卡；温度功耗；日志中 TP World Size；模型名与上下文；NCCL/CUDA/OOM 错误。
 
----
-
-## 五～七、K8s 对象设计、Secret 与模型 PVC
+## 5. 五～七、K8s 对象设计、Secret 与模型 PVC {/* #五七k8s-对象设计secret-与模型-pvc */}
 
 本篇使用：Secret（API 密钥）、PVC（模型只读）、Deployment（单个 vLLM 实例）、Service、可选 ServiceMonitor / NetworkPolicy。
 
@@ -241,9 +233,7 @@ spec:
 
 StorageClass 和 AccessMode 按实际修改；也可对 RWX PVC 在 Pod 中设 `readOnly: true`；节点缓存需经安全设计的 hostPath/CSI；不要让推理容器修改权威模型。
 
----
-
-## 八、生产化 Deployment 示例
+## 6. 生产化 Deployment 示例 {/* #八生产化-deployment-示例 */}
 
 ```yaml
 apiVersion: apps/v1
@@ -409,9 +399,7 @@ spec:
 
 **为什么挂载 `/dev/shm`**：多进程和多 GPU 通信需要共享内存。内存型 emptyDir 消耗节点 RAM；`sizeLimit` 不是凭空增加内存；Pod Memory 与节点余量要一起设计；若安全团队不允许 `IPC_LOCK`，应在目标版本实测并采用批准方案。
 
----
-
-## 九、应用和观察部署
+## 7. 应用和观察部署 {/* #九应用和观察部署 */}
 
 ```bash
 kubectl apply -f company-model-a-nvidia.yaml
@@ -437,9 +425,7 @@ Pod 调度 → PVC 挂载 → 镜像拉取 → 获得 4 张 GPU
 
 不要因为 Pod 状态为 Running 就认为服务已可用。只有 Readiness 通过并完成业务请求验收，才能接流量。
 
----
-
-## 十、集群内 API 验收
+## 8. 集群内 API 验收 {/* #十集群内-api-验收 */}
 
 ```bash
 kubectl run api-test -n ai-serving --rm -it --restart=Never \
@@ -484,9 +470,7 @@ curl -fsS http://company-model-a-nvidia:8000/metrics | head
 
 验收不应只看 HTTP 200：返回模型名正确；输出可正常结束；流式持续正常；无乱码或 Chat Template 错误；错误密钥被拒绝；超长请求按预期拒绝；无 OOM 和 NCCL 警告。
 
----
-
-## 十一、监控哪些指标
+## 9. 监控哪些指标 {/* #十一监控哪些指标 */}
 
 | 层 | 关注点 |
 |----|--------|
@@ -496,9 +480,7 @@ curl -fsS http://company-model-a-nvidia:8000/metrics | head
 
 指标名可能随版本变化，Prometheus 规则必须与冻结的 vLLM 版本一起验收。
 
----
-
-## 十二、常见故障排查
+## 10. 常见故障排查 {/* #十二常见故障排查 */}
 
 | 现象 | 方向 |
 |------|------|
@@ -529,31 +511,25 @@ env:
 
 诊断完成后移除。部分调试变量不应长期保留在生产配置中。
 
----
-
-## 十三～十四、trust_remote_code 与安全基线
+## 11. 十三～十四、trust_remote_code 与安全基线 {/* #十三十四trustremotecode-与安全基线 */}
 
 不要为了启动盲目增加 `--trust-remote-code`。生产前应：固定 Revision；拉取到内部制品库；代码审计；隔离镜像；关闭不必要出站；最小权限。若当前 vLLM 原生支持该模型，优先不启用。
 
 安全基线：API 密钥进 Secret；不直接公网暴露 Pod 端口；经第 26 篇网关鉴权限流审计；模型只读；非必要不用特权；限制出站；多机通信隔离网络；镜像与模型用 Digest；日志不记完整 Prompt/密钥/个人数据；限制 `/metrics` 访问。多节点分布式通信默认并不安全，应放在隔离网络并按版本配置保护。
 
----
+## 12. 十五～十六、发布前验收与练习 {/* #十五十六发布前验收与练习 */}
 
-## 十五～十六、发布前验收与练习
-
-**节点和设备**：Label/Taint；`nvidia-smi` 健康；卡数型号显存一致；拓扑满足 TP；Allocatable 正确；无异常占卡。  
-**制品和版本**：镜像 Digest；模型不可变摘要；Driver/CUDA/PyTorch/vLLM 矩阵；Tokenizer/Chat Template 一致；未审计 Remote Code 未启用。  
-**Deployment**：只调度到 NVIDIA 池；GPU 请求与 TP 一致；模型只读；`/dev/shm` 与 RAM 匹配；探针通过；更新策略与空闲 GPU 匹配；优雅终止足够。  
+**节点和设备**：Label/Taint；`nvidia-smi` 健康；卡数型号显存一致；拓扑满足 TP；Allocatable 正确；无异常占卡。
+**制品和版本**：镜像 Digest；模型不可变摘要；Driver/CUDA/PyTorch/vLLM 矩阵；Tokenizer/Chat Template 一致；未审计 Remote Code 未启用。
+**Deployment**：只调度到 NVIDIA 池；GPU 请求与 TP 一致；模型只读；`/dev/shm` 与 RAM 匹配；探针通过；更新策略与空闲 GPU 匹配；优雅终止足够。
 **服务**：`/health`、`/v1/models`、非流式/流式、错误密钥拒绝、指标可采、长短压测、OOM/NCCL/GPU 告警、回滚演练。
 
-**练习 1**：单卡小模型，TP=1，记录启动时长与显存。  
-**练习 2**：单机 4 卡 TP，核对申请/可见卡数、显存、NCCL、容量表。  
-**练习 3**：测试环境把 GPU 请求改成 2 但保留 TP=4，观察错误并写出排查过程，再恢复。  
+**练习 1**：单卡小模型，TP=1，记录启动时长与显存。
+**练习 2**：单机 4 卡 TP，核对申请/可见卡数、显存、NCCL、容量表。
+**练习 3**：测试环境把 GPU 请求改成 2 但保留 TP=4，观察错误并写出排查过程，再恢复。
 **练习 4**：分别在有/无额外 4 张空闲 GPU 时观察 RollingUpdate，说明为什么昂贵设备服务不能照搬普通 Web Deployment 策略。
 
----
-
-## 十七、本篇小结
+## 13. 本篇小结 {/* #十七本篇小结 */}
 
 ```text
 冻结 Driver、CUDA、PyTorch、vLLM、镜像和模型矩阵
@@ -566,9 +542,7 @@ OpenAI 兼容 API、指标和压测完成验收
 
 下一篇使用相同的学习结构部署 vLLM-Ascend，并重点讲清楚它与 NVIDIA 部署中不能简单复制的部分。
 
----
-
-## 参考资料
+## 14. 参考资料 {/* #参考资料 */}
 
 - [vLLM Using Docker](https://docs.vllm.ai/en/latest/deployment/docker.html)
 - [vLLM Using Kubernetes](https://docs.vllm.ai/en/latest/deployment/k8s.html)
@@ -579,14 +553,10 @@ OpenAI 兼容 API、指标和压测完成验收
 - [NCCL Environment Variables](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html)
 - [NCCL GPU Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)
 
----
-
-## 相关链接
+## 15. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 21 篇：显存/HBM与启动参数](./21-部署前计算显存HBM与vLLM启动参数.md)
 - [第 23 篇：在昇腾资源池部署 vLLM-Ascend](./23-在昇腾机器部署vLLM-Ascend.md)
-
----
 
 ← [第 21 篇](./21-部署前计算显存HBM与vLLM启动参数.md) · → [第 23 篇：昇腾池部署vLLM-Ascend](./23-在昇腾机器部署vLLM-Ascend.md)

@@ -1,11 +1,12 @@
 ---
-title: ctr 命令详解：containerd Namespace、Content、Image、Container 与 Task
+title: "ctr 命令详解：containerd Namespace、Content、Image、Container 与 Task"
+sidebar_label: "12. ctr 命令详解：containerd Namespace、Content、Image、Container 与 Task"
 sidebar_position: 12
-description: 理解 ctr 是 containerd 调试客户端，掌握 Namespace、Content Store、Image Metadata、Snapshot、Container Metadata 与运行中 Task 的区别。
+description: "理解 ctr 是 containerd 调试客户端，掌握 Namespace、Content Store、Image Metadata、Snapshot、Container Metadata 与运行中 Task 的区别。"
 tags: [containerd, ctr, Kubernetes, OCI, 容器运行时]
 ---
 
-# ctr 命令详解
+# ctr 命令详解：containerd Namespace、Content、Image、Container 与 Task
 
 `ctr` 是随 containerd 发布的低层调试/管理客户端，接口和输出不承诺面向最终用户稳定。它直接操作 containerd 内部对象；Kubernetes 节点日常先用 `crictl`，Docker 风格交互优先 `nerdctl`。
 
@@ -107,7 +108,7 @@ journalctl -u containerd --since '-30 min'
 
 能解释 containerd Namespace 与 Kubernetes Namespace 的不同；能画出 Content→Image→Snapshot→Container→Task 引用；能用 PID 进入 Linux 证据层；能说明为何 Kubernetes 排障先 crictl 后 ctr。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [containerd ctr command source](https://github.com/containerd/containerd/tree/main/cmd/ctr)
 - [containerd Architecture](https://github.com/containerd/containerd/blob/main/docs/architecture.md)

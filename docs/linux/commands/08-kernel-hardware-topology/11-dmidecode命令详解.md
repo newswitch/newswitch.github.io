@@ -1,11 +1,12 @@
 ---
-title: dmidecode 命令详解：解析 SMBIOS、内存插槽与服务器固件资产
+title: "dmidecode 命令详解：解析 SMBIOS、内存插槽与服务器固件资产"
+sidebar_label: "11. dmidecode 命令详解：解析 SMBIOS、内存插槽与服务器固件资产"
 sidebar_position: 11
-description: 完整讲解 dmidecode 的全部参数、SMBIOS 类型、内存 DIMM 与插槽映射、句柄关联、固件可信边界、二进制 dump 和敏感字段治理。
+description: "完整讲解 dmidecode 的全部参数、SMBIOS 类型、内存 DIMM 与插槽映射、句柄关联、固件可信边界、二进制 dump 和敏感字段治理。"
 tags: [Linux, dmidecode, SMBIOS, DMI, 服务器硬件]
 ---
 
-# `dmidecode` 命令详解：解析 SMBIOS、内存插槽与服务器固件资产
+# dmidecode 命令详解：解析 SMBIOS、内存插槽与服务器固件资产
 
 `dmidecode` 读取固件提供的 SMBIOS/DMI 表，把系统、主板、机箱、处理器、内存槽和扩展槽记录解码成人类可读文本。它展示的是**固件声明**，不是实时探测；字段可能为空、错误、复制或在虚拟机中由 hypervisor 合成。
 

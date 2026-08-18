@@ -1,11 +1,12 @@
 ---
-title: trace-cmd 命令详解：ftrace 事件录制、过滤、回放与远程代理
+title: "trace-cmd 命令详解：ftrace 事件录制、过滤、回放与远程代理"
+sidebar_label: "09. trace-cmd 命令详解：ftrace 事件录制、过滤、回放与远程代理"
 sidebar_position: 9
-description: 讲清 trace-cmd list/start/record/stop/extract/report/reset、event/filter/trigger、buffer、PID/CPU、function graph 和生产清理。
+description: "讲清 trace-cmd list/start/record/stop/extract/report/reset、event/filter/trigger、buffer、PID/CPU、function graph 和生产清理。"
 tags: [Linux, trace-cmd, ftrace, tracepoint, 内核]
 ---
 
-# `trace-cmd` 命令详解：把 ftrace 变成可回放证据
+# trace-cmd 命令详解：ftrace 事件录制、过滤、回放与远程代理
 
 `trace-cmd` 管理 tracefs/ftrace，能列出事件、配置过滤器、录制每 CPU ring buffer 到 `trace.dat` 并离线 report。与直接读 `trace_pipe` 相比，它更适合保存和复盘；配置全局 tracefs 仍会影响其他 tracer。
 

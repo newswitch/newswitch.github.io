@@ -1,11 +1,12 @@
 ---
-title: unshare 命令详解：创建 Namespace、UID 映射与最小容器实验
+title: "unshare 命令详解：创建 Namespace、UID 映射与最小容器实验"
+sidebar_label: "03. unshare 命令详解：创建 Namespace、UID 映射与最小容器实验"
 sidebar_position: 3
-description: 完整讲解 unshare 的 namespace、fork、proc、root、propagation、UID/GID 映射、time offset、信号和持久化参数及安全边界。
+description: "完整讲解 unshare 的 namespace、fork、proc、root、propagation、UID/GID 映射、time offset、信号和持久化参数及安全边界。"
 tags: [Linux, unshare, Namespace, user namespace, 容器原理]
 ---
 
-# `unshare` 命令详解：创建 Namespace、UID 映射与最小容器实验
+# unshare 命令详解：创建 Namespace、UID 映射与最小容器实验
 
 `unshare` 为调用路径创建一个或多个新 namespace 后执行程序。它适合学习和构建受控沙箱原型，但 namespace 本身不提供完整安全隔离：仍需 rootfs、capability、LSM、seccomp、cgroup 和文件描述符治理。
 

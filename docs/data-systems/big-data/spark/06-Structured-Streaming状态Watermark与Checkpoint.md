@@ -1,9 +1,9 @@
 ---
-title: Spark Structured Streaming、状态、Watermark 与 Checkpoint
+title: "Spark Structured Streaming、状态、Watermark 与 Checkpoint"
 sidebar_label: "06. Spark Structured Streaming、状态、Watermark 与 Checkpoint"
 sidebar_position: 6
+description: "理解微批/连续查询、offset、state store、watermark、output mode 与 sink 一致性边界。"
 tags: [Structured Streaming, Watermark, Checkpoint, Exactly-Once]
-description: 理解微批/连续查询、offset、state store、watermark、output mode 与 sink 一致性边界。
 ---
 
 # Spark Structured Streaming、状态、Watermark 与 Checkpoint
@@ -77,6 +77,6 @@ Kafka source 的每批读取上限可控制恢复压力，但设置过低会永�
 
 上一篇：[Join、倾斜与 AQE](./05-Join数据倾斜AQE与性能调优.md)　下一篇：[Spark on Kubernetes 部署、监控与故障排查](./07-Spark-on-Kubernetes部署监控与故障排查.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Structured Streaming Programming Guide](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)

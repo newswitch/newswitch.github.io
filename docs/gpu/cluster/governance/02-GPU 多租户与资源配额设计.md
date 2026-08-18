@@ -1,16 +1,16 @@
 ---
-title: GPU 多租户与资源配额设计
+title: "GPU 多租户与资源配额设计"
 sidebar_label: "02. GPU 多租户与资源配额设计"
+sidebar_position: 2
+description: "共享 GPU 集群能降本，但会带来 安全、公平、嘈杂邻居 问题。本文按 Kubernetes 多租户 搭隔离底座，再用 Kueue ClusterQueue（及已有 Volcano Queue）做 GPU 配额、借用与抢占。节点池见 第 51 篇，优先级见 第 15 篇。"
+tags: ["Kubernetes", "多租户", "ResourceQuota", "Kueue", "ClusterQueue", "GPU", "学习路线"]
 date: 2026-07-22 19:10:00
 categories: 云原生
-tags: ["Kubernetes", "多租户", "ResourceQuota", "Kueue", "ClusterQueue", "GPU", "学习路线"]
 ---
 
 # GPU 多租户与资源配额设计
 
 共享 GPU 集群能降本，但会带来 **安全、公平、嘈杂邻居** 问题。本文按 [Kubernetes 多租户](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/) 搭隔离底座，再用 [Kueue ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)（及已有 Volcano Queue）做 GPU 配额、借用与抢占。节点池见 [第 51 篇](./01-生产%20GPU%20集群节点池规划.md)，优先级见 [第 15 篇](../scheduling/03-GPU%20集群优先级与抢占策略.md)。
-
----
 
 ## 1. 多租户要解决什么
 
@@ -25,21 +25,19 @@ GPU 场景的嘈杂邻居：一人占满 H100、NCCL 打满网、或低优训练
 
 隔离谱系从「软」（同集群 Namespace）到「硬」（独立集群/硬件）；本文聚焦 **共享集群内的软～中等隔离**。
 
----
-
 ## 2. Namespace 隔离（控制面）
 
 Namespace 提供：
 
-1. 名称隔离  
-2. RBAC / NetworkPolicy / ResourceQuota 的作用域  
+1. 名称隔离
+2. RBAC / NetworkPolicy / ResourceQuota 的作用域
 
 建议：
 
-- **一团队一 Namespace**（或一关键工作负载一 Namespace）  
-- RBAC 最小权限，禁止租户改集群级对象  
-- NetworkPolicy：默认拒绝跨 ns，再按需放行（需 CNI 支持）  
-- 存储用动态 PVC，避免 HostPath 互踩  
+- **一团队一 Namespace**（或一关键工作负载一 Namespace）
+- RBAC 最小权限，禁止租户改集群级对象
+- NetworkPolicy：默认拒绝跨 ns，再按需放行（需 CNI 支持）
+- 存储用动态 PVC，避免 HostPath 互踩
 
 ```yaml
 apiVersion: v1
@@ -50,8 +48,6 @@ metadata:
     tenant: team-llm
     research-cohort: ai-platform
 ```
-
----
 
 ## 3. ResourceQuota 与 LimitRange
 
@@ -74,13 +70,11 @@ spec:
 
 注意：
 
-- 有配额时，容器通常必须写 **requests/limits**  
-- 配额 **不区分** H100/T4（若都叫 `nvidia.com/gpu`）→ 用 **节点池 + Flavor** 或不同扩展资源名  
-- 配额管不住网络带宽等；强隔离靠节点池/独立网  
+- 有配额时，容器通常必须写 **requests/limits**
+- 配额 **不区分** H100/T4（若都叫 `nvidia.com/gpu`）→ 用 **节点池 + Flavor** 或不同扩展资源名
+- 配额管不住网络带宽等；强隔离靠节点池/独立网
 
 LimitRange 可给默认 requests，避免有人漏写抢光节点。
-
----
 
 ## 4. Kueue：ClusterQueue / LocalQueue / 借用
 
@@ -140,16 +134,16 @@ spec:
 
 借用语义要点（官方）：
 
-- 优先用自己的 `nominalQuota`  
-- 不够且 cohort 有空闲时，可 **borrowing**（受 borrowingLimit / 对方 lendingLimit 约束）  
-- 有待办时，优先保证各方名义配额被「自己人」用上  
+- 优先用自己的 `nominalQuota`
+- 不够且 cohort 有空闲时，可 **borrowing**（受 borrowingLimit / 对方 lendingLimit 约束）
+- 有待办时，优先保证各方名义配额被「自己人」用上
 
 ### 4.2 抢占（队列层）
 
 ClusterQueue 可配：
 
-- `preemption.reclaimWithinCohort`：回收 cohort 内超用配额  
-- `borrowWithinCohort`：为了借用是否抢别人  
+- `preemption.reclaimWithinCohort`：回收 cohort 内超用配额
+- `borrowWithinCohort`：为了借用是否抢别人
 
 与 PriorityClass 配合：高优 Workload 更易在借用竞争中胜出（见官方 Fair Sharing / priority 相关说明）。
 
@@ -164,12 +158,10 @@ ClusterQueue 可配：
 
 可组合：RQ 防失控 + Kueue/Volcano 做公平排队；选一个作为批处理主账本，避免双重扣减逻辑不清。
 
----
-
 ## 5. 推荐租户蓝图（GPU）
 
 ```text
-Namespace team-* 
+Namespace team-*
   ├─ ResourceQuota（GPU/CPU/Pod 硬顶）
   ├─ NetworkPolicy（默认拒绝跨租户）
   ├─ LimitRange
@@ -181,8 +173,6 @@ Namespace team-*
 
 推理线上服务：可只走 Deployment + 推理池，不强制进 Kueue；训练/批推理进队列。
 
----
-
 ## 6. 嘈杂邻居对策一览
 
 | 问题 | 手段 |
@@ -193,8 +183,6 @@ Namespace team-*
 | 跨租户打网 | NetworkPolicy / 独立 CNI 策略 |
 | 借用不还 | lendingLimit + reclaim 抢占 |
 | 半组占卡 | Gang / WaitForPodsReady |
-
----
 
 ## 7. 小结
 
@@ -208,13 +196,11 @@ Namespace team-*
 
 下一篇：[容量规划](./03-GPU%20集群容量规划方法.md)。
 
----
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [多租户 \| Kubernetes](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)  
-- [ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)  
-- [ResourceFlavor](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/)  
-- [拓扑感知调度](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/topology_aware_scheduling/)  
+- [多租户 \| Kubernetes](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)
+- [ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)
+- [ResourceFlavor](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/)
+- [拓扑感知调度](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/topology_aware_scheduling/)
 
 本文以官方多租户与 Kueue 概念为准，映射到 GPU 共享集群落地。

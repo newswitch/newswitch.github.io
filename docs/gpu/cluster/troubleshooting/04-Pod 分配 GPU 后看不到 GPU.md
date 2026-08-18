@@ -1,9 +1,11 @@
 ---
 title: "Pod 已分配 GPU 但容器看不到：从调度到 CDI 注入的完整排查"
+sidebar_label: "04. Pod 已分配 GPU 但容器看不到：从调度到 CDI 注入的完整排查"
+sidebar_position: 4
+description: "沿资源请求、调度、Device Plugin Allocate、containerd、Toolkit/CDI、设备节点、驱动库和应用框架定位 GPU 容器不可见问题。"
+tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "CDI", "故障排查"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "CDI", "故障排查"]
-description: "沿资源请求、调度、Device Plugin Allocate、containerd、Toolkit/CDI、设备节点、驱动库和应用框架定位 GPU 容器不可见问题。"
 ---
 
 # Pod 已分配 GPU 但容器看不到：从调度到 CDI 注入的完整排查
@@ -403,43 +405,43 @@ Pod 是否 Pending？
 
 ## 15. 实验
 
-### 实验一：故意省略 GPU request
+### 15.1 实验一：故意省略 GPU request {/* #实验一故意省略-gpu-request */}
 
 在测试集群分别创建“有 request”和“无 request”的两个 Pod，对比 Pod spec、设备节点、环境变量和框架结果。
 
-### 实验二：业务镜像与基准镜像 A/B
+### 15.2 实验二：业务镜像与基准镜像 A/B {/* #实验二业务镜像与基准镜像-ab */}
 
 同一节点、同一资源请求分别运行 NVIDIA CUDA 基准镜像和业务镜像。若前者成功后者失败，继续比较动态库和入口脚本。
 
-### 实验三：MIG 资源名
+### 15.3 实验三：MIG 资源名 {/* #实验三mig-资源名 */}
 
 在支持 MIG 的测试节点列出 Capacity，创建申请正确与错误 profile 的 Pod，观察 Pending Event 与成功后的设备视图。
 
-### 实验四：Device Plugin 注册
+### 15.4 实验四：Device Plugin 注册 {/* #实验四device-plugin-注册 */}
 
 只在测试集群停止插件，记录宿主机、Node status、现有 Pod 和新 Pod 的变化；恢复后验证资源重新注册。
 
 ## 16. 掌握标准
 
-### 入门
+### 16.1 入门 {/* #入门 */}
 
 - 能判断 Pod 是否真的请求 GPU；
 - 能区分镜像缺 `nvidia-smi` 与设备缺失；
 - 能使用最小测试 Pod 验证平台链路。
 
-### 进阶
+### 16.2 进阶 {/* #进阶 */}
 
 - 能从 Node Allocatable 下钻到 Device Plugin、runtime、Toolkit/CDI；
 - 能定位设备节点、驱动库和框架兼容性问题；
 - 能解释整卡、MIG 和共享模式看到的设备为什么不同。
 
-### 生产级
+### 16.3 生产级 {/* #生产级 */}
 
 - 能定位运行后失去 GPU 的 cgroup/CDI/Xid 证据链；
 - 能在不使用 privileged 作为永久方案的前提下修复注入；
 - 能建立资源注册、容器 CUDA 和业务 smoke test 的上线门禁。
 
-## 参考资料
+## 17. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Device Plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/)
 - [NVIDIA Kubernetes Device Plugin](https://github.com/NVIDIA/k8s-device-plugin)

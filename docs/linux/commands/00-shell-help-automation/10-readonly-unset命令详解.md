@@ -1,11 +1,12 @@
 ---
-title: readonly 与 unset 命令详解：不可重赋值、变量删除与函数边界
+title: "readonly 与 unset 命令详解：不可重赋值、变量删除与函数边界"
+sidebar_label: "10. readonly 与 unset 命令详解：不可重赋值、变量删除与函数边界"
 sidebar_position: 10
-description: 完整讲解 Bash readonly 的 -a/-A/-f/-p 与 unset 的 -f/-v/-n，以及动态作用域、nameref、数组和不可逆属性。
+description: "完整讲解 Bash readonly 的 -a/-A/-f/-p 与 unset 的 -f/-v/-n，以及动态作用域、nameref、数组和不可逆属性。"
 tags: [Linux, Bash, readonly, unset, 变量]
 ---
 
-# `readonly` 与 `unset`：变量生命周期的两端
+# readonly 与 unset 命令详解：不可重赋值、变量删除与函数边界
 
 `readonly` 使当前 Shell 中的变量或函数不能再赋值/删除；`unset` 删除变量或函数。二者高度耦合：readonly 是当前 Shell 生命周期内不可逆属性，但不能保护子进程、文件或其他配置源。
 

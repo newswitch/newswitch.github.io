@@ -1,11 +1,12 @@
 ---
-title: usermod 命令详解：修改 UID、主组、补充组与账户属性
+title: "usermod 命令详解：修改 UID、主组、补充组与账户属性"
+sidebar_label: "06. usermod 命令详解：修改 UID、主组、补充组与账户属性"
 sidebar_position: 6
-description: 完整讲解 shadow-utils usermod 的全部参数、追加组陷阱、UID/home 迁移、锁定解锁、subuid/subgid、SELinux 映射和在线变更风险。
+description: "完整讲解 shadow-utils usermod 的全部参数、追加组陷阱、UID/home 迁移、锁定解锁、subuid/subgid、SELinux 映射和在线变更风险。"
 tags: [Linux, usermod, 用户管理, UID, 用户组]
 ---
 
-# `usermod` 命令详解：修改 UID、主组、补充组与账户属性
+# usermod 命令详解：修改 UID、主组、补充组与账户属性
 
 `usermod` 修改本地账户记录。它可以改名字、数字 UID、主组、补充组、home、shell、过期策略和密码锁，但不会自动修复所有文件所有权、活动进程、网络存储、定时任务和外部目录引用。
 
@@ -118,7 +119,7 @@ sudo find /home/alice2 -xdev -not -user alice2 -ls
 
 掌握标准：能完整列出参数；能先列出所有引用再迁移 UID/名字/home；能说明数据库变化为何不会追溯修改现有进程凭据或共享存储所有权。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：usermod(8)](https://shadow-maint.github.io/shadow/man/usermod.html)
 - [Linux user_namespaces(7)](https://man7.org/linux/man-pages/man7/user_namespaces.7.html)

@@ -1,11 +1,12 @@
 ---
-title: aa-enforce 命令详解：把 AppArmor profile 切回强制模式
+title: "aa-enforce 命令详解：把 AppArmor profile 切回强制模式"
+sidebar_label: "11. aa-enforce 命令详解：把 AppArmor profile 切回强制模式"
 sidebar_position: 11
-description: 完整讲解 aa-enforce 的参数、profile 定位、立即 reload 与 --no-reload、进程附着验证、生产变更及回滚方法。
+description: "完整讲解 aa-enforce 的参数、profile 定位、立即 reload 与 --no-reload、进程附着验证、生产变更及回滚方法。"
 tags: [Linux, aa-enforce, AppArmor, enforce, 安全变更]
 ---
 
-# `aa-enforce` 命令详解：把 AppArmor profile 切回强制模式
+# aa-enforce 命令详解：把 AppArmor profile 切回强制模式
 
 `aa-enforce` 修改一个或多个 AppArmor profile，使其从 complain 或 disabled 状态进入 enforce 模式。它会改 profile 文件的模式标记，并默认重新加载；这既是文件变更也是运行时安全变更。
 
@@ -86,7 +87,7 @@ sudo aa-complain /usr/sbin/exampled
 
 掌握标准：能列出全部参数；能解释磁盘与内核模式差异；能在切回 enforce 前完成规则审计、负向测试和灰度；能把回滚限制到单个 profile。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [aa-enforce(8)](https://apparmor-documentation-c38b15.gitlab.io/documentation/manpages/manpage_aa-enforce.8/)
 - [Managing AppArmor profiles](https://apparmor-documentation-c38b15.gitlab.io/documentation/getting-started/managing-profiles/)

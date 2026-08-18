@@ -1,11 +1,12 @@
 ---
-title: set 命令详解：Shell 选项、位置参数、errexit 与 pipefail
+title: "set 命令详解：Shell 选项、位置参数、errexit 与 pipefail"
+sidebar_label: "11. set 命令详解：Shell 选项、位置参数、errexit 与 pipefail"
 sidebar_position: 11
-description: 完整讲解 Bash set 的短选项和 -o 长选项、$@ 重设、nounset、errexit、xtrace、noclobber、monitor 与 pipefail 陷阱。
+description: "完整讲解 Bash set 的短选项和 -o 长选项、$@ 重设、nounset、errexit、xtrace、noclobber、monitor 与 pipefail 陷阱。"
 tags: [Linux, Bash, set, pipefail, 安全脚本]
 ---
 
-# `set` 命令详解：改变当前 Shell 的执行语义
+# set 命令详解：Shell 选项、位置参数、errexit 与 pipefail
 
 `set` 同时管理 shell options 和位置参数。它影响当前执行环境及部分子 Shell，属于脚本最关键也最容易被误解的 builtin。
 

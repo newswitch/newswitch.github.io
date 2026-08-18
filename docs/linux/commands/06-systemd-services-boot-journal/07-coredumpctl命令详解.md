@@ -1,11 +1,12 @@
 ---
-title: coredumpctl 命令详解：崩溃转储查询、导出与调试
+title: "coredumpctl 命令详解：崩溃转储查询、导出与调试"
+sidebar_label: "07. coredumpctl 命令详解：崩溃转储查询、导出与调试"
 sidebar_position: 7
-description: 完整讲解 coredumpctl 的 list/info/dump/debug 子命令与全部参数，理解 core 存储、journal 元数据、匹配、符号、容器、敏感数据和证据保全。
+description: "完整讲解 coredumpctl 的 list/info/dump/debug 子命令与全部参数，理解 core 存储、journal 元数据、匹配、符号、容器、敏感数据和证据保全。"
 tags: [Linux, coredumpctl, core dump, systemd-coredump, GDB, 故障排查]
 ---
 
-# `coredumpctl` 命令详解：崩溃转储查询、导出与调试
+# coredumpctl 命令详解：崩溃转储查询、导出与调试
 
 core dump 是进程崩溃时地址空间等状态的快照，可能包含密码、token、请求正文、模型数据和用户隐私。`coredumpctl` 查询 systemd-coredump 写入 journal 的元数据，并在 core 仍存在时导出或交给调试器。
 
@@ -124,7 +125,7 @@ setuid/特权程序还有 `fs.suid_dumpable` 等安全限制；不要仅为取 c
 
 掌握标准：能列出全部命令和参数，解释 metadata/core 分离，按多个稳定字段定位 dump，安全导出并构建匹配符号环境，系统排查“为什么没有 core”。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [coredumpctl(1)](https://www.freedesktop.org/software/systemd/man/latest/coredumpctl.html)
 - [systemd-coredump(8)](https://www.freedesktop.org/software/systemd/man/latest/systemd-coredump.html)

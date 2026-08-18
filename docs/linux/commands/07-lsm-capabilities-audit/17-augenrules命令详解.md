@@ -1,11 +1,12 @@
 ---
-title: augenrules 命令详解：合并并持久化加载 Linux Audit 规则
+title: "augenrules 命令详解：合并并持久化加载 Linux Audit 规则"
+sidebar_label: "17. augenrules 命令详解：合并并持久化加载 Linux Audit 规则"
 sidebar_position: 17
-description: 完整讲解 augenrules 的 --check/--load、rules.d 自然排序、特殊指令重排、生成文件、原子验证、发行版加载路径和安全回滚。
+description: "完整讲解 augenrules 的 --check/--load、rules.d 自然排序、特殊指令重排、生成文件、原子验证、发行版加载路径和安全回滚。"
 tags: [Linux, augenrules, Audit, auditd, 配置管理]
 ---
 
-# `augenrules` 命令详解：合并并持久化加载 Linux Audit 规则
+# augenrules 命令详解：合并并持久化加载 Linux Audit 规则
 
 `augenrules` 把 `/etc/audit/rules.d/*.rules` 按自然顺序合并为 `/etc/audit/audit.rules`，并可把结果加载到内核。它解决模块化持久配置，不负责分析事件。源目录、生成文件和内核运行规则是三层状态，任何验收都必须同时核对。
 
@@ -118,7 +119,7 @@ sudo augenrules --check
 
 掌握标准：能列出全部参数；能解释三层状态和特殊重排；能发现备份文件误加载；能设计非原子加载的验证/回滚；理解 `-e 2` 后只能重启更改。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [augenrules(8)](https://manpages.debian.org/unstable/auditd/augenrules.8.en.html)
 - [audit.rules(7)](https://manpages.debian.org/unstable/auditd/audit.rules.7.en.html)

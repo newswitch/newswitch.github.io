@@ -2,8 +2,8 @@
 title: "Elasticsearch、Lucene 与一次请求的完整路径"
 sidebar_label: "01. Elasticsearch、Lucene 与一次请求的完整路径"
 sidebar_position: 1
-tags: [Elasticsearch, Lucene, Shard, 搜索, 数据路径]
 description: "从搜索引擎边界、协调节点、主分片、Refresh、Segment、Query 与 Fetch 阶段理解 Elasticsearch 的读写路径。"
+tags: [Elasticsearch, Lucene, Shard, 搜索, 数据路径]
 ---
 
 # Elasticsearch、Lucene 与一次请求的完整路径

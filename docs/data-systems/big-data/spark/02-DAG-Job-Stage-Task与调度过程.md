@@ -1,9 +1,9 @@
 ---
-title: Spark DAG、Job、Stage、Task 与调度过程
+title: "Spark DAG、Job、Stage、Task 与调度过程"
 sidebar_label: "02. Spark DAG、Job、Stage、Task 与调度过程"
 sidebar_position: 2
+description: "从 Action 到 Job、Shuffle 边界、TaskSet 和本地性理解 Spark 调度与失败重算。"
 tags: [Spark, DAG, Stage, Task, 调度]
-description: 从 Action 到 Job、Shuffle 边界、TaskSet 和本地性理解 Spark 调度与失败重算。
 ---
 
 # Spark DAG、Job、Stage、Task 与调度过程
@@ -78,7 +78,7 @@ Dynamic Allocation 可按 backlog 和空闲回收 executor。它要与 Shuffle �
 
 上一篇：[Spark 架构、RDD 与 DataFrame](./01-Spark架构RDD-DataFrame与Driver-Executor.md)　下一篇：[Spark SQL、Catalyst 与物理计划](./03-Spark-SQL-Catalyst物理计划与代码生成.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Spark Job Scheduling](https://spark.apache.org/docs/latest/job-scheduling.html)
 - [Spark Monitoring](https://spark.apache.org/docs/latest/monitoring.html)

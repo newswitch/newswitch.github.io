@@ -2,8 +2,8 @@
 title: "扩展 Kubernetes 以支持 GPU 与 AI 调度"
 sidebar_label: "14. 扩展 Kubernetes 以支持 GPU 与 AI 调度"
 sidebar_position: 14
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "深入理解 Kubernetes 在 GPU 与 AI 原生场景下的调度机制，涵盖 GPU 设备插件、MIG、多任务共享、AI 作业编排（KubeRay、Volcano、Kueue）及自定义调度插件实践。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # 扩展 Kubernetes 以支持 GPU 与 AI 调度
@@ -19,7 +19,7 @@ Kubernetes 社区通过多种机制支持 GPU 与 AI 作业调度，主要包括
 - AI 作业控制器（Volcano, Kueue, KubeRay 等）
 - 调度插件（Score, Permit, Bind 等）
 
-## GPU 调度的核心组件
+## 1. GPU 调度的核心组件 {/* #gpu-调度的核心组件 */}
 
 下图展示了 GPU 调度的主要流程和组件关系，有助于理解各环节的协同作用。
 
@@ -39,7 +39,7 @@ flowchart LR
 - **AI Job Controller**：定义任务依赖与同步调度
 - **Pod Binding**：最终在 GPU 节点上启动容器
 
-## GPU 设备插件（Device Plugin）
+## 2. GPU 设备插件（Device Plugin） {/* #gpu-设备插件device-plugin */}
 
 NVIDIA 提供的官方 GPU 插件为 Kubernetes 提供 `nvidia.com/gpu` 资源。通过如下命令部署插件：
 
@@ -78,7 +78,7 @@ spec:
           nvidia.com/gpu: 2
 ```
 
-## 基于 Scheduler Framework 的 GPU 感知调度
+## 3. 基于 Scheduler Framework 的 GPU 感知调度 {/* #基于-scheduler-framework-的-gpu-感知调度 */}
 
 GPU 调度涉及多维度资源匹配，传统调度器仅通过资源数量判断节点是否可用，而 GPU 场景下更复杂。下表总结了常见调度维度及插件类型。
 
@@ -90,7 +90,7 @@ GPU 调度涉及多维度资源匹配，传统调度器仅通过资源数量判�
 | MIG 切分     | 多任务共享 GPU                 | Reserve + Bind     |
 | 多 Pod 同步调度 | Elastic Job / Barrier Job | Permit Plugin      |
 
-## GPU 优先调度插件示例（Score Plugin）
+## 4. GPU 优先调度插件示例（Score Plugin） {/* #gpu-优先调度插件示例score-plugin */}
 
 下面是一个简单的 GPU 优先调度插件，根据节点的 GPU 数量打分。该插件可用于提升 GPU 资源利用率。
 
@@ -129,7 +129,7 @@ plugins:
 
 实际系统中可结合 GPU 监控指标（如 DCGM Exporter）实现基于显存利用率或功耗感知的动态调度。
 
-## GPU 多任务共享（MIG / vGPU）
+## 5. GPU 多任务共享（MIG / vGPU） {/* #gpu-多任务共享mig--vgpu */}
 
 在 GPU 资源稀缺的场景下，一个物理 GPU 可被分割为多个逻辑 GPU（如 NVIDIA A100 的 MIG）。下图展示了 MIG 分区的资源暴露流程。
 
@@ -156,7 +156,7 @@ Scheduler Framework 可以扩展插件：
 - Score Plugin：优先显存更匹配的节点
 - Reserve Plugin：提前锁定 MIG 分区，避免竞争
 
-## AI 训练作业与同步调度（Permit Plugin）
+## 6. AI 训练作业与同步调度（Permit Plugin） {/* #ai-训练作业与同步调度permit-plugin */}
 
 AI 训练任务常常由多个并行 Pod 组成（如 Parameter Server / Worker）。要求它们“要么一起运行，要么等待资源充足再一起启动”，这时就需要 Permit Plugin 实现同步调度。
 
@@ -187,7 +187,7 @@ func (p *BarrierPlugin) Permit(ctx context.Context, state *framework.CycleState,
 }
 ```
 
-## 与 AI 作业控制器的协同：KubeRay / Volcano / Kueue
+## 7. 与 AI 作业控制器的协同：KubeRay / Volcano / Kueue {/* #与-ai-作业控制器的协同kuberay--volcano--kueue */}
 
 不同 AI 作业控制器在调度机制和应用场景上各具特色。下表对主流控制器进行对比。
 
@@ -203,7 +203,7 @@ func (p *BarrierPlugin) Permit(ctx context.Context, state *framework.CycleState,
 - Kueue 实现了 Job admission control
 - KubeRay 适配 Ray 集群生命周期（用于 LLM 推理与分布式训练）
 
-## 调度策略设计参考
+## 8. 调度策略设计参考 {/* #调度策略设计参考 */}
 
 针对不同目标，调度插件类型和策略也有所不同。下表总结了常见调度目标与对应策略。
 
@@ -215,7 +215,7 @@ func (p *BarrierPlugin) Permit(ctx context.Context, state *framework.CycleState,
 | 多任务同步    | Permit         | Job Barrier 同步执行    |
 | AI 推理优化  | Bind           | 按 NUMA + GPU 拓扑绑定容器 |
 
-## 实践：在 KubeRay 中启用 GPU 感知调度
+## 9. 实践：在 KubeRay 中启用 GPU 感知调度 {/* #实践在-kuberay-中启用-gpu-感知调度 */}
 
 以下 YAML 示例展示了如何在 KubeRay 集群中启用 GPU 感知调度，确保 worker 分配在 GPU 节点并同步启动。
 
@@ -245,7 +245,7 @@ spec:
 
 结合 GPUPriority 与 Permit 插件，可确保 worker 分配在 GPU 节点并同步启动。
 
-## 未来趋势：AI-Native Scheduler
+## 10. 未来趋势：AI-Native Scheduler {/* #未来趋势ai-native-scheduler */}
 
 AI 原生调度的未来方向包括资源语义化、动态调度、能耗感知、多模型并行与 LLM-Aware Scheduling。下图展示了 AI-Native Scheduler 的主要发展方向。
 
@@ -261,11 +261,11 @@ mindmap
 
 ![AI-Native Scheduler 未来趋势](/images/k8s/extend/gpu-scheduling/8dc0c5fe603043a1165c46e525125060.svg)
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 本文系统梳理了 Kubernetes 在 GPU 与 AI 原生场景下的调度机制，包括设备插件、调度框架、作业控制器与调度插件的协同。通过 Scheduler Framework + 自定义插件 + AI 作业控制器，可以构建理解 AI 任务语义、感知异构资源、具备智能决策能力的调度系统。这是从 Cloud-Native 向 AI-Native Infrastructure 进化的关键一步。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 - [Kubernetes GPU Scheduling Guide - nvidia.com](https://docs.nvidia.com/datacenter/cloud-native/kubernetes/index.html)
 - [Kubernetes Scheduler Plugins - github.com](https://github.com/kubernetes-sigs/scheduler-plugins)

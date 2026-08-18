@@ -1,9 +1,9 @@
 ---
-title: 数据湖、表格式、Catalog 与存算分离
+title: "数据湖、表格式、Catalog 与存算分离"
 sidebar_label: "01. 数据湖、表格式、Catalog 与存算分离"
 sidebar_position: 1
+description: "分清对象存储、文件格式、表格式、Catalog 与计算引擎，建立湖仓的分层架构。"
 tags: [数据湖, 表格式, Catalog, 存算分离]
-description: 分清对象存储、文件格式、表格式、Catalog 与计算引擎，建立湖仓的分层架构。
 ---
 
 # 数据湖、表格式、Catalog 与存算分离
@@ -75,7 +75,7 @@ Catalog 保存/解析表标识、当前 metadata 指针和相关属性，实现�
 
 下一篇：[Iceberg Metadata、Manifest、Snapshot 与读写路径](./02-Iceberg-Metadata-Manifest-Snapshot与读写路径.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Apache Iceberg Documentation](https://iceberg.apache.org/docs/latest/)
 - [Apache Iceberg Specification](https://iceberg.apache.org/spec/)

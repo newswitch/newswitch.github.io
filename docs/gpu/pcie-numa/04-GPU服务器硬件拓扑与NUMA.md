@@ -1,9 +1,11 @@
 ---
-title: GPU 服务器硬件拓扑与 NUMA
+title: "GPU 服务器硬件拓扑与 NUMA"
 sidebar_label: "04. GPU 服务器硬件拓扑与 NUMA"
+sidebar_position: 4
+description: "单卡场景里，通常只要关心显存和 GPU 利用率。进入多卡推理、分布式训练、RDMA 和 NCCL 后，PCIe 插槽、CPU Socket、NUMA、网卡位置以及 GPU 互联方式都会影响传输效率。"
+tags: ["GPU", "NUMA", "PCIe", "NVLink", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "NUMA", "PCIe", "NVLink", "学习路线"]
 ---
 
 # GPU 服务器硬件拓扑与 NUMA
@@ -21,18 +23,14 @@ GPU3 → CPU1 → 内存1
 
 GPU0 访问由 CPU1 管理的远端内存时，可能跨 NUMA。Linux 把访问延迟/带宽不同的 CPU、内存划分为不同 NUMA Node，可用 CPU 亲和与内存策略改善局部性。前置概念见：[GPU 基础知识](../fundamentals/01-GPU基础知识：从计算核心到显存.md)。
 
----
-
 ## 1. 学习目标
 
-1. 理解 CPU Socket、Core、NUMA Node 的关系；  
-2. 理解 GPU 如何通过 PCIe 连接 CPU；  
-3. 看懂 `nvidia-smi topo -m`；  
-4. 判断 GPU 与 CPU、内存、网卡的亲和关系；  
-5. 判断多卡任务是否跨 NUMA、PCIe Host Bridge 或 NVLink；  
+1. 理解 CPU Socket、Core、NUMA Node 的关系；
+2. 理解 GPU 如何通过 PCIe 连接 CPU；
+3. 看懂 `nvidia-smi topo -m`；
+4. 判断 GPU 与 CPU、内存、网卡的亲和关系；
+5. 判断多卡任务是否跨 NUMA、PCIe Host Bridge 或 NVLink；
 6. 为多卡推理 / 分布式训练选更合理的 GPU 组合。
-
----
 
 ## 2. 什么是 NUMA
 
@@ -62,8 +60,6 @@ CPU0 访问 Memory0 为本地访问，访问 Memory1 为远端访问。NUMA 内�
 ```
 
 远端内存仍可访问，只是路径、延迟和带宽可能不同。
-
----
 
 ## 3. GPU 服务器的简化拓扑
 
@@ -95,12 +91,10 @@ CPU0 访问 Memory0 为本地访问，访问 Memory1 为远端访问。NUMA 内�
 
 在此结构下：
 
-- GPU0 与 GPU1、GPU2 与 GPU3 通常更近；  
-- GPU0 与 GPU2 通信可能经 CPU 间互联；  
-- GPU0 读 NUMA 1 的数据可能发生远端内存访问；  
+- GPU0 与 GPU1、GPU2 与 GPU3 通常更近；
+- GPU0 与 GPU2 通信可能经 CPU 间互联；
+- GPU0 读 NUMA 1 的数据可能发生远端内存访问；
 - 网卡所在 NUMA 也会影响 GPU↔RDMA 路径。
-
----
 
 ## 4. PCIe、NVLink 和 NVSwitch
 
@@ -117,8 +111,6 @@ NVIDIA 的 GPU 高速互联。有 NVLink 时可减轻部分 GPU 间通信对 PCI
 用于连接更多 GPU，形成更高带宽互联。
 
 > 有多张 GPU ≠ 一定有 NVLink。必须用拓扑命令确认。
-
----
 
 ## 5. 查看 CPU 和 NUMA
 
@@ -141,8 +133,6 @@ numactl --hardware
 
 典型输出含各 node 的 CPU、内存大小/空闲，以及 `node distances`（数值越小通常越近）。
 
----
-
 ## 6. 查看 GPU PCIe 信息
 
 ```bash
@@ -157,8 +147,6 @@ lspci -tv
 ```
 
 用 PCI Bus ID 把 `nvidia-smi` 中的 GPU 与 `lspci` 设备对应起来。
-
----
 
 ## 7. 使用 nvidia-smi 查看拓扑
 
@@ -192,8 +180,6 @@ GPU3     SYS   SYS   NV2    X      32-63            1
 
 解读：GPU0/1 在 NUMA 0 且有 NVLink；GPU2/3 在 NUMA 1 且有 NVLink；两组之间通信需跨 NUMA。
 
----
-
 ## 8. 进一步查看亲和关系
 
 ```bash
@@ -213,8 +199,6 @@ nvidia-smi topo -h
 
 命令细节也可对照：[nvidia-smi 常用命令与指标说明](../commands/01-nvidia-smi常用命令与指标说明.md)。
 
----
-
 ## 9. NUMA 绑定实验
 
 ```bash
@@ -229,8 +213,6 @@ taskset -c 0-31 python3 app.py
 
 生产环境勿在不了解应用线程模型与 Kubernetes CPU Manager 时随意绑定，先用基准测试对比。
 
----
-
 ## 10. 多卡任务如何选 GPU
 
 若拓扑为 `GPU0-GPU1: NVLink`、`GPU2-GPU3: NVLink`、`GPU0-GPU2: SYS`，两卡 Tensor Parallel 优先：
@@ -242,8 +224,6 @@ CUDA_VISIBLE_DEVICES=0,1 python3 app.py
 而不是 `0,2`。四卡无法避免跨 NUMA 时，还需关注：NCCL 网卡、CPU 是否跨 NUMA、数据加载用哪个 NUMA 内存、GPU 与 RDMA 距离、是否有 NVLink/NVSwitch、跨卡带宽是否达标。
 
 后续：[GPU、NIC 与 NUMA 亲和](../../networking/rdma-roce/ai-cluster/06-GPU-NIC拓扑与NUMA亲和.md)、[GPU 集群拓扑感知调度](../cluster/scheduling/12-GPU%20集群拓扑感知调度.md)。
-
----
 
 ## 11. 实验记录模板
 
@@ -264,16 +244,12 @@ nvidia-smi topo -m
 nvidia-smi topo -p2p r
 ```
 
----
-
 ## 12. 常见误区
 
-1. **同机 GPU 性能完全一样**：型号可相同，PCIe / NUMA / 网卡亲和可能不同。  
-2. **卡越多一定线性加速**：跨卡通信、PCIe、NVLink、NCCL、CPU、网络都可能成瓶颈。  
-3. **只看 GPU 编号判断距离**：GPU0 与 GPU1 不一定物理相邻。  
+1. **同机 GPU 性能完全一样**：型号可相同，PCIe / NUMA / 网卡亲和可能不同。
+2. **卡越多一定线性加速**：跨卡通信、PCIe、NVLink、NCCL、CPU、网络都可能成瓶颈。
+3. **只看 GPU 编号判断距离**：GPU0 与 GPU1 不一定物理相邻。
 4. **CPU 绑定与 GPU 无关**：预处理、网络收发、发起 CUDA 都在 CPU；CPU/内存远离 GPU 会增加开销。
-
----
 
 ## 13. 本篇总结
 
@@ -288,9 +264,7 @@ nvidia-smi topo -m
 
 数据路径补充：[CPU 与 GPU 之间的数据搬运](./05-CPU与GPU之间的数据搬运.md) → [NVLink 与 NVSwitch 原理](../nvlink-nvswitch/01-NVLink与NVSwitch原理.md)；主线下一篇：[nvidia-smi 常用命令与指标说明](../commands/01-nvidia-smi常用命令与指标说明.md)。
 
----
-
-## 参考与致谢
+## 14. 参考与致谢 {/* #参考与致谢 */}
 
 - [NUMA Memory Performance — Linux Kernel](https://docs.kernel.org/admin-guide/mm/numaperf.html)
 - [NUMA Memory Policy — Linux Kernel](https://docs.kernel.org/admin-guide/mm/numa_memory_policy.html)

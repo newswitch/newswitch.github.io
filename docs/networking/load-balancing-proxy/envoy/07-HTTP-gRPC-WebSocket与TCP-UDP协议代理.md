@@ -2,8 +2,8 @@
 title: "Envoy HTTP/1.1、HTTP/2、HTTP/3、gRPC、WebSocket 与 TCP/UDP"
 sidebar_label: "07. Envoy HTTP/1.1、HTTP/2、HTTP/3、gRPC、WebSocket 与 TCP/UDP"
 sidebar_position: 7
-tags: [Envoy, HTTP2, HTTP3, gRPC, WebSocket, TCP, UDP]
 description: "理解 Envoy 下游和上游协议的独立协商、转换能力、流控制和协议排障。"
+tags: [Envoy, HTTP2, HTTP3, gRPC, WebSocket, TCP, UDP]
 ---
 
 # Envoy HTTP/1.1、HTTP/2、HTTP/3、gRPC、WebSocket 与 TCP/UDP
@@ -56,7 +56,7 @@ TCP Proxy 的 Cluster 选择通常在连接级完成，不能使用 HTTP Path/He
 
 你应能独立说明两段协议如何协商，解释 HTTP/2 Stream 与连接、gRPC HTTP/业务状态、WebSocket/SSE 生命周期以及 TCP 与 HTTP Filter 的能力边界。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [HTTP Connection Management](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/http/http_connection_management)
 - [HTTP/3 Overview](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/http/http3)

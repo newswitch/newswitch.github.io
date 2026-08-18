@@ -2,15 +2,15 @@
 title: "HAMi：Kubernetes 上的异构算力虚拟化中间件"
 sidebar_label: "11. HAMi：Kubernetes 上的异构算力虚拟化中间件"
 sidebar_position: 11
-tags: [Kubernetes, AI原生, PartIII, 学习路线]
 description: "探索 HAMi：Kubernetes 上的异构算力虚拟化中间件，提升 AI 加速器管理与调度效率，助力资源优化与灵活性。"
+tags: [Kubernetes, AI原生, PartIII, 学习路线]
 ---
 
 # HAMi：Kubernetes 上的异构算力虚拟化中间件
 
 > HAMi 是一款面向 Kubernetes 的异构算力虚拟化中间件，支持多种 AI 加速器的统一管理与调度，极大提升了 GPU、NPU、MLU 等硬件的利用率和资源弹性。本文系统梳理 HAMi 的架构、功能、生态集成与实际应用，帮助读者全面理解其技术价值与行业意义。
 
-## 项目简介与定位
+## 1. 项目简介与定位 {/* #项目简介与定位 */}
 
 [HAMi](https://github.com/Project-HAMi/HAMi)（Heterogeneous AI Computing Virtualization Middleware，前身为 `k8s-vGPU-scheduler`）是一个专为 Kubernetes 设计的异构设备管理中间件。它扩展了 K8s 原生调度与资源管理能力，为 GPU、NPU、MLU、DCU 等 AI 加速硬件提供统一的资源分配与调度接口。HAMi 致力于打通不同异构设备间的管理壁垒，用户无需修改应用即可享受统一的算力资源管理体验。
 
@@ -22,7 +22,7 @@ description: "探索 HAMi：Kubernetes 上的异构算力虚拟化中间件，�
 - 资源隔离：对设备显存和计算核心实施硬隔离
 - 多厂商支持：通过统一接口屏蔽不同厂商设备差异
 
-## 系统架构与组件
+## 2. 系统架构与组件 {/* #系统架构与组件 */}
 
 HAMi 通过一系列关键组件与 Kubernetes 深度集成，扩展了原生的调度与资源管理能力：
 
@@ -65,7 +65,7 @@ graph TB
 
 ![HAMi 系统架构组件](/images/k8s/ai-native/hami/d9f1434b86dc245eb8545cbcb5b0585c.svg)
 
-## 设备虚拟化与共享机制
+## 3. 设备虚拟化与共享机制 {/* #设备虚拟化与共享机制 */}
 
 HAMi 的核心创新在于将物理设备虚拟化为多个虚拟实例，并实现资源隔离：
 
@@ -81,7 +81,7 @@ HAMi 的核心创新在于将物理设备虚拟化为多个虚拟实例，并实
 - 应用零侵入：无需修改现有 CUDA 应用
 - 动态资源伸缩：支持显存超配（比例大于 1.0）
 
-## 多厂商异构设备支持
+## 4. 多厂商异构设备支持 {/* #多厂商异构设备支持 */}
 
 HAMi 采用插件架构，支持多家主流厂商的异构设备：
 
@@ -96,7 +96,7 @@ HAMi 采用插件架构，支持多家主流厂商的异构设备：
 | Enflame   | GPU      | `enflame.com/gcu`, `enflame.com/gcu-memory`          | GCU 支持                  |
 | Metax     | GPU      | `metax-tech.com/gpu`, `metax-tech.com/sgpu`          | GPU 虚拟化                |
 
-## 调度与资源分配策略
+## 5. 调度与资源分配策略 {/* #调度与资源分配策略 */}
 
 HAMi 扩展了 Kubernetes 的调度能力，支持设备感知与拓扑优化：
 
@@ -111,7 +111,7 @@ HAMi 扩展了 Kubernetes 的调度能力，支持设备感知与拓扑优化：
 - `scheduler.defaultSchedulerPolicy.gpuSchedulerPolicy`：默认 GPU 分配策略
 - Pod 注解如 `hami.io/gpu-scheduler-policy` 支持单 Pod 策略覆盖
 
-## 云原生生态集成
+## 6. 云原生生态集成 {/* #云原生生态集成 */}
 
 HAMi 作为 [CNCF Sandbox 项目](https://landscape.cncf.io/?item=orchestration-management--scheduling-orchestration--hami)，与云原生生态深度融合：
 
@@ -120,7 +120,7 @@ HAMi 作为 [CNCF Sandbox 项目](https://landscape.cncf.io/?item=orchestration-
 - 部署与管理：官方 Helm Chart 支持一键安装与配置，适配 CI/CD 自动化部署，兼容 kube-scheduler 与 volcano-scheduler
 - 社区与治理：活跃的开源社区，50+ 机构参与，定期社区会议与治理机制，已在互联网、云、金融、电信、制造等行业生产落地
 
-## 快速入门
+## 7. 快速入门 {/* #快速入门 */}
 
 HAMi 安装与使用门槛低，几步即可在 Kubernetes 集群中实现 GPU 虚拟化：
 
@@ -154,7 +154,7 @@ resources:
     nvidia.com/gpucores: 50  # 分配 50% GPU 核心
 ```
 
-## 项目起源与发展历程及 CNCF 定位
+## 8. 项目起源与发展历程及 CNCF 定位 {/* #项目起源与发展历程及-cncf-定位 */}
 
 HAMi（Heterogeneous AI Computing Virtualization Middleware）前身是开源项目“k8s-vGPU-scheduler”，于 2021 年由第四范式等贡献者发起。项目目标是在 Kubernetes 集群中简化和自动化对 GPU、NPU、MLU 等异构 AI 加速硬件的管理。HAMi 通过将单张物理 GPU 拆分为多个虚拟单元供多任务共享，大幅提升硬件利用率。它解决了 Kubernetes 原生 NVIDIA Device Plugin 一卡一 Pod 导致的 GPU 利用率低下问题，使多个 Pod 能安全高效共享同一 GPU。
 
@@ -162,7 +162,7 @@ HAMi（Heterogeneous AI Computing Virtualization Middleware）前身是开源项
 
 HAMi 的核心愿景是成为“Kubernetes 上异构算力的一站式管理中间件”，打破不同加速硬件间的使用鸿沟，为用户提供统一的接口和体验，同时无需改动现有应用程序。2024 年 HAMi 通过 CNCF 沙箱项目投票，以超过规定票数通过并正式进入基金会治理。这标志着 HAMi 获得了云原生社区的认可，也使其生态加速壮大。
 
-## 技术架构设计与核心功能
+## 9. 技术架构设计与核心功能 {/* #技术架构设计与核心功能 */}
 
 **架构概览：** HAMi 采用模块化的架构，包含多个协同工作的组件：一个统一的 Mutating Webhook（变更准入控制器）、一个自定义的调度扩展（Scheduler Extender）、针对不同硬件的 Device Plugin 插件，以及每种异构设备对应的容器内虚拟化核心（HAMi-Core）。此外，HAMi 提供可选的 Web UI 界面用于资源可视化管理（v2.4+ 提供）。下图展示了 HAMi 的高层架构，各组件在 Kubernetes 集群中的配合（MutatingWebhook -> 调度器 -> 设备插件 -> HAMi-Core）：
 
@@ -172,24 +172,24 @@ graph TB
         API[Kubernetes API Server]
         Scheduler[kube-scheduler]
     end
-    
+
     subgraph "HAMi Control Components"
         Webhook[hami-scheduler<br/>Admission Webhook]
         Extender[hami-scheduler<br/>Scheduler Extender]
         ConfigMap[hami-scheduler-device<br/>ConfigMap]
     end
-    
+
     subgraph "Worker Nodes"
         DevicePlugin[hami-device-plugin<br/>DaemonSet]
         Monitor[vGPU Monitor]
         Hardware[GPU/NPU Hardware]
     end
-    
+
     subgraph "Monitoring"
         Metrics[Prometheus Metrics]
         Dashboard[Grafana Dashboard]
     end
-    
+
     API --> Webhook
     Scheduler --> Extender
     Webhook --> ConfigMap
@@ -200,7 +200,7 @@ graph TB
     Monitor --> Metrics
     DevicePlugin --> Metrics
     Metrics --> Dashboard
-    
+
     style Webhook fill:#f9f9f9
     style Extender fill:#f9f9f9
     style DevicePlugin fill:#f9f9f9
@@ -208,13 +208,13 @@ graph TB
 
 ![HAMi 架构图](/images/k8s/ai-native/hami/2b4151911c44acd2719c54a72a02111b.svg)
 
-### 关键组件
+### 9.1 关键组件 {/* #关键组件 */}
 
 下面分项说明 HAMi 的若干核心组件及其职责，便于读者快速定位各模块功能与交互关系。
 
 **Mutating Webhook（变更准入控制器）**
 
-Mutating Webhook 拦截集群中创建的 Pod 请求，判断是否包含 HAMi 支持的资源类型。  
+Mutating Webhook 拦截集群中创建的 Pod 请求，判断是否包含 HAMi 支持的资源类型。
 它为需要使用 GPU/NPU 的 Pod 打标并注入必要的环境变量、挂载信息和配置，保证后续由 HAMi 的设备插件与调度器接管设备分配与运行时约束。
 
 主要职责：
@@ -258,7 +258,7 @@ HAMi‑Core 由 `libvgpu.so` 等组件组成，通过 LD_PRELOAD 加载到容器
 
 从 2.4 起提供可选 Web UI，便于运维查看节点设备分配、每 Pod 的显存/算力使用量及历史指标。Web UI 可集成 Prometheus 指标与 Grafana 仪表盘模板，支持告警接入与可视化运维流程。
 
-### 核心功能与技术亮点
+### 9.2 核心功能与技术亮点 {/* #核心功能与技术亮点 */}
 
 以下按能力模块拆分，突出 HAMi 在虚拟化、调度、配额与 QoS 方面的关键技术点。
 
@@ -311,6 +311,6 @@ HAMi 设计强调对上层应用的透明兼容：无需修改 Pod YAML 即可�
 
 以上分节有助于读者快速定位 HAMi 的组件职责与关键能力，同时便于在文档中按需引用具体实现细节或使用示例。
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 从技术与行业趋势来看，HAMi 具有较高的研究与应用价值。它能显著提升 GPU 及其他异构加速器的利用率，在大模型训练与推理场景用更少硬件提供更多算力，已有顺丰、Prep EDU 等实践验证效果。插件化架构和拓扑感知调度使其易于扩展到更多异构设备（如 FPGA、定制 AI 芯片），具备明显成长空间。对系统研发者而言，HAMi 涉及虚拟化、GPU 内核拦截、资源配额与分布式调度等多领域，具有重要的学术与工程价值。若社区持续活跃并保持开发节奏，HAMi 有望在云原生生态中成为关键的异构算力管理组件。

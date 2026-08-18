@@ -1,16 +1,16 @@
 ---
-title: GPU 集群拓扑感知调度
+title: "GPU 集群拓扑感知调度"
 sidebar_label: "12. GPU 集群拓扑感知调度"
+sidebar_position: 12
+description: "同样 8 张卡，同 NVLink 域内 的 AllReduce 与 跨 PCIe / 跨 NUMA / 跨交换机 可以差一个数量级。拓扑感知调度的目标：让需要密通信的进程，尽量落在「高速互连」的 GPU 集合上。本文结合 nvidia-smi topo、NCCL GPU troubleshoo……"
+tags: ["Kubernetes", "GPU", "拓扑", "NUMA", "NVLink", "NCCL", "学习路线"]
 date: 2026-07-22 18:10:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "拓扑", "NUMA", "NVLink", "NCCL", "学习路线"]
 ---
 
 # GPU 集群拓扑感知调度
 
 同样 8 张卡，**同 NVLink 域内** 的 AllReduce 与 **跨 PCIe / 跨 NUMA / 跨交换机** 可以差一个数量级。拓扑感知调度的目标：让需要密通信的进程，尽量落在「高速互连」的 GPU 集合上。本文结合 `nvidia-smi topo`、NCCL [GPU troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html) 与 Kubernetes 调度实践。前置：[第 33](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)、[第 02 篇：GPU 服务器硬件拓扑与 NUMA](../../pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)。
-
----
 
 ## 1. 为什么调度要懂拓扑
 
@@ -23,8 +23,6 @@ tags: ["Kubernetes", "GPU", "拓扑", "NUMA", "NVLink", "NCCL", "学习路线"]
 | 跨机、IB/RoCE + GDR | RDMA | 可扩展，但仍慢于机内 NVLink |
 
 训练作业：优先 **整节点占满** 或 **按 NVLink 岛装箱**；推理多副本则另论。
-
----
 
 ## 2. 读懂 `nvidia-smi topo -m`
 
@@ -61,8 +59,6 @@ NCCL_P2P_DISABLE=1   # 或调整 NCCL_P2P_LEVEL
 
 若关闭 P2P 后「问题消失但变慢」→ 指向 P2P/ACS/驱动路径；若关闭后依旧挂 → 更可能是网络或应用逻辑。
 
----
-
 ## 3. ACS：拓扑看起来 OK，NCCL 仍惨
 
 官方要点：IO 虚拟化（VT-d / IOMMU）下 **PCI ACS** 可能把点对点流量拐到 CPU，导致性能暴跌或 hang。
@@ -80,19 +76,15 @@ sudo setpci -s 03:00.0 ECAP_ACS+0x6.w=0000
 
 **虚拟机**：ACS 通常不能关（VM 依赖）；要高性能需在网卡侧启用 **ATS** 等，按云厂商文档操作。
 
----
-
 ## 4. 容器与 `/sys` 拓扑
 
 NCCL 通过 **`/sys`** 发现 GPU 与网卡的 PCI 拓扑。容器中若 `/sys` 不完整或呈虚拟拓扑，会选次优算法。
 
 实践：
 
-- GPU Operator / device plugin 场景确认拓扑相关挂载  
-- 对比「宿主机 `nvidia-smi topo -m`」与「容器内同命令」是否一致  
-- 可疑时在 Privileged/调试 Pod 中复现  
-
----
+- GPU Operator / device plugin 场景确认拓扑相关挂载
+- 对比「宿主机 `nvidia-smi topo -m`」与「容器内同命令」是否一致
+- 可疑时在 Privileged/调试 Pod 中复现
 
 ## 5. Kubernetes 上怎么「感知拓扑」
 
@@ -108,14 +100,12 @@ NCCL 通过 **`/sys`** 发现 GPU 与网卡的 PCI 拓扑。容器中若 `/sys` 
 ### 5.2 拓扑标签从哪来
 
 - [GFD](../device-management/02-NVIDIA-Device-Plugin部署与配置.md) / Node Feature Discovery：暴露型号、驱动、部分 PCIe 信息
-- 人工或 DaemonSet 脚本：解析 `nvidia-smi topo -m`，打 `nvlink.domain` 等自定义标签  
-- 进阶：调度器扩展 / DRA / 厂商拓扑感知插件（视集群版本）  
+- 人工或 DaemonSet 脚本：解析 `nvidia-smi topo -m`，打 `nvlink.domain` 等自定义标签
+- 进阶：调度器扩展 / DRA / 厂商拓扑感知插件（视集群版本）
 
 ### 5.3 和 Gang 一起用
 
 跨机 DDP：`minAvailable = worker 数`，且每个 worker 申请的卡落在「同构节点池」。否则 Gang 凑齐了，但拓扑天差地别，作业能跑却极慢——监控上像「GPU 利用率低、NCCL 时间占比高」。
-
----
 
 ## 6. 单机多卡 vs 跨机：调度决策树
 
@@ -133,8 +123,6 @@ NCCL 通过 **`/sys`** 发现 GPU 与网卡的 PCI 拓扑。容器中若 `/sys` 
   → 拓扑次要；优先显存与延迟隔离
 ```
 
----
-
 ## 7. 小结
 
 | 工具 | 用途 |
@@ -147,12 +135,10 @@ NCCL 通过 **`/sys`** 发现 GPU 与网卡的 PCI 拓扑。容器中若 `/sys` 
 
 网络侧基线见 [RDMA 与 NCCL 基准测试](../../../networking/rdma-roce/ai-cluster/09-RDMA与NCCL基准测试方法.md)；超时复盘见 [NCCL Timeout](../troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
 
----
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [GPU troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html)  
-- [NCCL Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)  
-- [nvbandwidth](https://github.com/NVIDIA/nvbandwidth)  
+- [GPU troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html)
+- [NCCL Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)
+- [nvbandwidth](https://github.com/NVIDIA/nvbandwidth)
 
 本文把官方 GPU/拓扑排障要点落到 Kubernetes 调度选择上。

@@ -1,11 +1,12 @@
 ---
-title: insmod 命令详解：直接插入模块与理解底层失败
+title: "insmod 命令详解：直接插入模块与理解底层失败"
+sidebar_label: "06. insmod 命令详解：直接插入模块与理解底层失败"
 sidebar_position: 6
-description: 完整讲解 insmod 的全部参数、直接加载 .ko 的工作边界、依赖与符号错误、ABI 强制参数风险，以及与 modprobe 的区别。
+description: "完整讲解 insmod 的全部参数、直接加载 .ko 的工作边界、依赖与符号错误、ABI 强制参数风险，以及与 modprobe 的区别。"
 tags: [Linux, insmod, kmod, 内核模块, 驱动开发]
 ---
 
-# `insmod` 命令详解：直接插入模块与理解底层失败
+# insmod 命令详解：直接插入模块与理解底层失败
 
 `insmod` 把指定 `.ko` 文件直接交给内核加载。它不按模块名搜索、不解析依赖、不应用 `modprobe.d` 规则，因此主要用于驱动开发、救援和理解底层错误；日常运维优先用 `modprobe`。
 

@@ -2,8 +2,8 @@
 title: "vLLM 指标到 V1 组件与源码映射"
 sidebar_label: "16. vLLM 指标到 V1 组件与源码映射"
 sidebar_position: 16
-tags: [vLLM, 可观测性, 指标, V1, 源码分析]
 description: "把请求延迟、调度、KV、GPU、NCCL 和输出指标映射到 vLLM V1 组件、状态变化与源码入口。"
+tags: [vLLM, 可观测性, 指标, V1, 源码分析]
 ---
 
 # vLLM 指标到 V1 组件与源码映射
@@ -12,27 +12,23 @@ description: "把请求延迟、调度、KV、GPU、NCCL 和输出指标映射�
 
 本文建立 Dashboard → 组件 → 源码 → 下一步证据的索引。具体指标名可能随版本变化，升级时应以当前 `/metrics` 为准；本文优先使用稳定语义，不把某个易变前缀当成永久接口。
 
----
-
 ## 1. 先统一指标语义
 
-### Counter
+### 1.1 Counter {/* #counter */}
 
 单调累计事件，例如请求、token、抢占、错误。分析速率时使用 `rate()`，进程重启会归零。
 
-### Gauge
+### 1.2 Gauge {/* #gauge */}
 
 当前状态，例如 running、waiting、KV 使用率。它是瞬时快照，不等于期间完成量。
 
-### Histogram
+### 1.3 Histogram {/* #histogram */}
 
 延迟和长度分布。生产告警优先使用服务端原生 bucket 计算分位数；多个实例的 client-side quantile 不能直接正确聚合。
 
-### Trace/Event
+### 1.4 Trace/Event {/* #traceevent */}
 
 单请求路径和离散状态变化。指标告诉你“哪一类异常”，Trace 告诉你“这条请求在哪里慢”。
-
----
 
 ## 2. 端到端映射总表
 
@@ -49,8 +45,6 @@ description: "把请求延迟、调度、KV、GPU、NCCL 和输出指标映射�
 | TTFT/TPOT/E2E | 多层组合 | 结果指标，不是单组件 | 按 Trace 分段 |
 | GPU/NCCL | Model/Attention/Parallel | Kernel、带宽、慢 rank | Attention Backend + Nsight |
 | 输出积压/断连 | OutputProcessor/API | Detokenize、SSE、取消 | `output_processor.py`、`detokenizer.py` |
-
----
 
 ## 3. 请求状态的守恒关系
 
@@ -86,8 +80,6 @@ sent completion tokens
 
 这些值不应强求相等，但差异必须能解释。
 
----
-
 ## 4. TTFT 指标怎样关联组件
 
 TTFT 上升先按分段判断：
@@ -114,8 +106,6 @@ gateway queue
 
 这样 OnCall 才能在第一屏判断方向。
 
----
-
 ## 5. TPOT 指标怎样关联组件
 
 | 同时变化 | 优先假设 |
@@ -137,11 +127,9 @@ TPOT 必须按至少以下维度分桶：
 
 否则不同请求混合后，一个 P99 很难行动。
 
----
-
 ## 6. Scheduler 与 KV 的联合指标
 
-### 四象限
+### 6.1 四象限 {/* #四象限 */}
 
 | waiting | KV 使用率 | 解释 |
 | --- | --- | --- |
@@ -156,7 +144,7 @@ TPOT 必须按至少以下维度分桶：
 - waiting 高、每步 token 低、KV 高：Block/长短干扰；
 - waiting 高、每步 token 低、KV 低：Scheduler/CPU/输入没有形成批次。
 
-### Prefix Cache
+### 6.2 Prefix Cache {/* #prefix-cache */}
 
 比“命中率”更有用的是：
 
@@ -166,8 +154,6 @@ cached_prompt_tokens / total_prompt_tokens
 ```
 
 请求级命中 90% 但每次只命中很短前缀，节省的计算可能很少。
-
----
 
 ## 7. GPU 指标怎样回到 ModelRunner
 
@@ -199,11 +185,9 @@ cached_prompt_tokens / total_prompt_tokens
 
 不要把显存使用率作为计算繁忙度：模型权重加载后，即使零请求，显存也会长期占用。
 
----
-
 ## 8. 指标到源码的调查模板
 
-### 例一：waiting 上升但 KV 只有 40%
+### 8.1 例一：waiting 上升但 KV 只有 40% {/* #例一waiting-上升但-kv-只有-40 */}
 
 1. 查请求是否已到 Engine；
 2. 查 Scheduler 每轮耗时与 selected token；
@@ -213,7 +197,7 @@ cached_prompt_tokens / total_prompt_tokens
 
 源码路标：`scheduler.py` 的 waiting/running 迁移和 `engine_core.py` 主循环。
 
-### 例二：preemption 突增
+### 8.2 例二：preemption 突增 {/* #例二preemption-突增 */}
 
 1. 按输入/输出长度看流量变化；
 2. 查 KV 使用和 Block 分配失败；
@@ -223,7 +207,7 @@ cached_prompt_tokens / total_prompt_tokens
 
 源码路标：`kv_cache_manager.py` 的分配/释放和 Scheduler 抢占分支。
 
-### 例三：TPOT 只在某 TP Group 高
+### 8.3 例三：TPOT 只在某 TP Group 高 {/* #例三tpot-只在某-tp-group-高 */}
 
 1. 按副本分组；
 2. 对齐每 rank GPU/NCCL；
@@ -232,38 +216,36 @@ cached_prompt_tokens / total_prompt_tokens
 
 源码路标：Executor 输出 rank、模型 TP 层与通信实现。
 
----
-
 ## 9. Dashboard 建议布局
 
-### 第一行：用户结果
+### 9.1 第一行：用户结果 {/* #第一行用户结果 */}
 
 - 成功/取消/错误率；
 - TTFT、TPOT、E2E P50/P95/P99；
 - 流式完成率。
 
-### 第二行：工作负载
+### 9.2 第二行：工作负载 {/* #第二行工作负载 */}
 
 - 请求到达率；
 - input/output token 长度分布；
 - 功能标签占比；
 - 模型和租户分布。
 
-### 第三行：Engine 状态
+### 9.3 第三行：Engine 状态 {/* #第三行engine-状态 */}
 
 - running/waiting；
 - queue time；
 - scheduled tokens/step；
 - KV usage、Prefix cached tokens、preemption。
 
-### 第四行：资源
+### 9.4 第四行：资源 {/* #第四行资源 */}
 
 - API/Engine CPU、throttling、内存；
 - 每 GPU busy、显存、功耗、频率；
 - NCCL/NVLink/PCIe；
 - 网络与存储（冷启动阶段）。
 
-### 第五行：变更与拓扑
+### 9.5 第五行：变更与拓扑 {/* #第五行变更与拓扑 */}
 
 - 发布、配置、模型 revision；
 - Pod 重启/重调度；
@@ -271,8 +253,6 @@ cached_prompt_tokens / total_prompt_tokens
 - 节点、机架、TP Group。
 
 所有图统一时间范围，并支持按 model、revision、replica、GPU、tenant 下钻。
-
----
 
 ## 10. 基数与开销治理
 
@@ -291,8 +271,6 @@ Profile: 进程/Kernel 热点
 
 可观测性本身也要压测。高采样 Trace、同步日志和复杂 Histogram 可能成为 Engine CPU 瓶颈。
 
----
-
 ## 11. 版本升级检查
 
 每次 vLLM 升级：
@@ -305,8 +283,6 @@ Profile: 进程/Kernel 热点
 6. 确认 Dashboard 不会静默显示空数据。
 
 指标名是实现细节，SLO 和状态语义才是你的长期接口。
-
----
 
 ## 12. 验收题
 

@@ -1,9 +1,9 @@
 ---
-title: DataNode 复制、机架感知、再平衡与纠删码
+title: "DataNode 复制、机架感知、再平衡与纠删码"
 sidebar_label: "03. DataNode 复制、机架感知、再平衡与纠删码"
 sidebar_position: 3
+description: "掌握副本放置、故障域、Balancer、Disk Balancer 和纠删码的容量与恢复取舍。"
 tags: [HDFS, DataNode, 机架感知, Erasure Coding]
-description: 掌握副本放置、故障域、Balancer、Disk Balancer 和纠删码的容量与恢复取舍。
 ---
 
 # DataNode 复制、机架感知、再平衡与纠删码
@@ -98,7 +98,7 @@ hdfs fsck /warehouse/cold -files -blocks -locations
 
 上一篇：[NameNode 元数据、Checkpoint、HA 与 Federation](./02-NameNode元数据Checkpoint-HA与Federation.md)　下一篇：[HDFS 容量规划、性能指标与故障排查](./04-HDFS容量规划性能指标与故障排查.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [HDFS Erasure Coding](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html)
 - [HDFS Balancer](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSBalancer.html)

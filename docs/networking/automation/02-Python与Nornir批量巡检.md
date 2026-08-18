@@ -1,9 +1,9 @@
 ---
-title: Python 与 Nornir 批量巡检
+title: "Python 与 Nornir 批量巡检"
 sidebar_label: "02. Python 与 Nornir 批量巡检"
 sidebar_position: 2
+description: "从结构化 Inventory、任务、结果、并发和异常处理开始，构建可测试的只读网络巡检器。"
 tags: [Python, Nornir, YAML, Inventory, Network Automation]
-description: 从结构化 Inventory、任务、结果、并发和异常处理开始，构建可测试的只读网络巡检器。
 ---
 
 # Python 与 Nornir 批量巡检
@@ -230,7 +230,7 @@ summary = {
 - 核心检查有单元测试；
 - 报告能让值班人员直接找到证据。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Nornir 官方文档](https://nornir.readthedocs.io/en/latest/)
 - [Python logging 文档](https://docs.python.org/3/library/logging.html)

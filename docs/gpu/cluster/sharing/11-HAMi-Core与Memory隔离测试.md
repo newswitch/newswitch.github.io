@@ -1,9 +1,11 @@
 ---
-title: HAMi Core 与 Memory 隔离测试
+title: "HAMi Core 与 Memory 隔离测试"
 sidebar_label: "11. HAMi Core 与 Memory 隔离测试"
+sidebar_position: 11
+description: "上一篇 HAMi vGPU 原理与实践 介绍了安装与基本用法。本文对 GPU Core / Memory 隔离做实测验证。"
+tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "隔离测试", "学习路线"]
 date: 2026-07-22 16:30:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "隔离测试", "学习路线"]
 ---
 
 # HAMi Core 与 Memory 隔离测试
@@ -19,8 +21,6 @@ tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "隔离测试", "学习路线"]
 | Core 隔离 | 利用率会围绕设定值波动，一段时间平均后大致等于申请的 `gpucores` |
 | Memory 隔离 | 超过 `gpumem` 配额时会直接 CUDA OOM |
 
----
-
 ## 1. 环境准备
 
 测试环境示例：
@@ -34,7 +34,7 @@ tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "隔离测试", "学习路线"]
 ### 1.1 前置
 
 1. 用 [GPU Operator](../device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md) 装好驱动 / Toolkit 等
-2. 按 [HAMi 原理与实践](./10-HAMi%20vGPU%20原理与实践.md) 安装 HAMi  
+2. 按 [HAMi 原理与实践](./10-HAMi%20vGPU%20原理与实践.md) 安装 HAMi
 
 ### 1.2 测试镜像与脚本
 
@@ -116,8 +116,6 @@ spec:
 
 测 60% 时，把 `name` 改成 `hami-60`，并把 `nvidia.com/gpucores` 改为 `"60"` 即可。
 
----
-
 ## 2. Core 隔离测试
 
 ### 2.1 gpucores = 30%
@@ -163,8 +161,6 @@ Epoch: [0][ 151/5005]  Time  0.367 ( 0.289)  ...
 ![60% 算力隔离](/images/k8s-gpu/22-HAMi/hami-isolation-test2.png)
 
 *图：利用率围绕 60% 波动，平均与设定基本一致*
-
----
 
 ## 3. Memory 隔离测试
 
@@ -216,8 +212,6 @@ Successfully allocated 19500 MB on GPU.
 
 说明 Memory 隔离生效：顶满或略超配额会 OOM，略留余量可成功分配。
 
----
-
 ## 4. 小结
 
 | 测试项 | 现象 | 结论 |
@@ -228,17 +222,15 @@ Successfully allocated 19500 MB on GPU.
 
 整体上，HAMi 的 Core / Memory 隔离**基本符合预期**：
 
-- **Core**：瞬时会抖，但一段时间平均贴近 `gpucores`  
-- **Memory**：超过 `gpumem` 会走 CUDA OOM，而不是一直抢到物理卡打满  
+- **Core**：瞬时会抖，但一段时间平均贴近 `gpucores`
+- **Memory**：超过 `gpumem` 会走 CUDA OOM，而不是一直抢到物理卡打满
 
 生产验证时注意：
 
-1. 单租户场景记得设 `GPU_CORE_UTILIZATION_POLICY=force`，否则可能测不出算力限制  
-2. 显存测试留一点余量（元数据 / 对齐 / 其它开销），不要卡死在配额整数上  
-3. 结合 DCGM / Grafana 看一段窗口的平均值，比看单个瞬时点更有意义  
+1. 单租户场景记得设 `GPU_CORE_UTILIZATION_POLICY=force`，否则可能测不出算力限制
+2. 显存测试留一点余量（元数据 / 对齐 / 其它开销），不要卡死在配额整数上
+3. 结合 DCGM / Grafana 看一段窗口的平均值，比看单个瞬时点更有意义
 
----
-
-## 参考与致谢
+## 5. 参考与致谢 {/* #参考与致谢 */}
 
 本文内容整理自 [意琦行 / KubeExplorer - 开源 vGPU 方案 HAMi: core&memory 隔离测试](https://www.cnblogs.com/KubeExplorer/p/18964975)，并按本系列学习路线做了结构调整与补充。前置阅读：[HAMi vGPU 原理与实践](./10-HAMi%20vGPU%20原理与实践.md)。

@@ -2,8 +2,8 @@
 title: "Higress、Nginx、Envoy、Ingress 与 API Gateway 选型"
 sidebar_label: "01. Higress、Nginx、Envoy、Ingress 与 API Gateway 选型"
 sidebar_position: 1
-tags: [Higress, Nginx, Envoy, Ingress, API Gateway]
 description: "先区分规范、控制面、数据面与产品，再按流量类型、扩展、安全、运维和 AI 网关需求选择 Higress、Nginx 或 Envoy。"
+tags: [Higress, Nginx, Envoy, Ingress, API Gateway]
 ---
 
 # Higress、Nginx、Envoy、Ingress 与 API Gateway 选型
@@ -34,23 +34,23 @@ Higress 是一套网关实现/产品，而不是一种新的传输协议。讨�
 
 ## 2. 四个概念分别是什么
 
-### Kubernetes Ingress
+### 2.1 Kubernetes Ingress {/* #kubernetes-ingress */}
 
 Ingress 是较早的 Kubernetes HTTP/HTTPS 入口 API，表达 Host/Path 到 Service 的路由。许多高级能力依赖各 Controller 的 Annotation，因此可移植性有限。
 
-### Gateway API
+### 2.2 Gateway API {/* #gateway-api */}
 
 Gateway API 将基础设施拥有者、集群运营者和应用路由拥有者的职责拆得更清楚，通过 GatewayClass、Gateway、HTTPRoute 等资源表达入口与路由，并可扩展策略。
 
-### Nginx
+### 2.3 Nginx {/* #nginx */}
 
 Nginx 是成熟的事件驱动 Web Server 与代理，静态配置、反向代理、缓存、TLS 和 HTTP 能力清晰。动态服务发现、插件治理、租户控制面和复杂云原生策略需要额外组件或产品。
 
-### Envoy
+### 2.4 Envoy {/* #envoy */}
 
 Envoy 是面向动态配置和可观测性的 L4/L7 代理，使用 Listener、Filter、Route、Cluster、Endpoint 与 xDS 组织数据面。它提供构建网关/Service Mesh 的内核，但裸 Envoy 不等于带 UI、租户、策略和发布流程的完整网关平台。
 
-### Higress
+### 2.5 Higress {/* #higress */}
 
 Higress 以 Envoy 为数据面，围绕 Kubernetes Ingress/Gateway API、服务发现、Wasm 插件、可观测性和 AI Gateway 场景提供控制面与产品能力。选用它仍需要理解底层 Envoy 的连接池、超时、重试、路由和资源模型。
 

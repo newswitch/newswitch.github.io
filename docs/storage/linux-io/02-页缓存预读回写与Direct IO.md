@@ -2,8 +2,8 @@
 title: "页缓存、预读、回写与 Direct I/O"
 sidebar_label: "02. 页缓存、预读、回写与 Direct I/O"
 sidebar_position: 2
-tags: [Linux, Page Cache, Direct IO, mmap, writeback, 存储]
 description: "理解 Linux 页缓存、readahead、脏页回写、fsync、mmap 与 Direct I/O 的语义、性能和排障方法。"
+tags: [Linux, Page Cache, Direct IO, mmap, writeback, 存储]
 ---
 
 # 页缓存、预读、回写与 Direct I/O
@@ -385,7 +385,7 @@ Dirty 增长后达到限流阈值，设备持续写满，应用被 writeback 限
 
 下一篇：[存储性能指标与 fio 压测方法](./03-存储性能指标与fio压测方法.md)。
 
-## 参考资料
+## 19. 参考资料 {/* #参考资料 */}
 
 - [Linux kernel page cache](https://docs.kernel.org/mm/page_cache.html)
 - [Linux kernel memory management](https://docs.kernel.org/admin-guide/mm/index.html)

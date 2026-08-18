@@ -1,16 +1,18 @@
 ---
-title: 部署昇腾NPU资源池
-sidebar_label: 12 · 部署昇腾NPU资源池
+title: "部署昇腾NPU资源池"
+sidebar_label: "12. 12 · 部署昇腾NPU资源池"
+sidebar_position: 12
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第三阶段——从系统环境到双池就绪 本文定位：昇腾资源池部署与验收篇"
+tags: [昇腾, Ascend, NPU, Device Plugin, CANN, 双资源池]
 date: 2026-08-07 15:30:00
 categories: 云原生
-tags: [昇腾, Ascend, NPU, Device Plugin, CANN, 双资源池]
 ---
 
 # 部署昇腾NPU资源池
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第三阶段——从系统环境到双池就绪  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第三阶段——从系统环境到双池就绪
 **本文定位**：昇腾资源池部署与验收篇
 :::
 
@@ -34,11 +36,9 @@ Ascend NPU
 
 昇腾不同产品、CPU 架构、驱动、固件、CANN 和 MindCluster 版本差异较大。本文给出固定的实施顺序、检查点和故障边界；具体安装包名称、参数和资源键必须使用目标产品版本配套表确认。
 
----
+## 1. 先决定部署到什么程度 {/* #一先决定部署到什么程度 */}
 
-## 一、先决定部署到什么程度
-
-### 入门与普通推理调度
+### 1.1 入门与普通推理调度 {/* #入门与普通推理调度 */}
 
 可以先部署：
 
@@ -50,15 +50,13 @@ Ascend Docker Runtime
 
 MindCluster 官方快速入门将这种方式用于普通 Pod 的 NPU 资源调度验证。见 [Ascend mind-cluster 快速入门](https://www.hiascend.com/document)。
 
-### 复杂多卡、多机和故障感知调度
+### 1.2 复杂多卡、多机和故障感知调度 {/* #复杂多卡多机和故障感知调度 */}
 
 后续可能引入：Volcano、Ascend Operator、NodeD、ClusterD、NPU Exporter、Infer Operator、RDMA 相关组件。
 
 这些组件用于拓扑感知、批任务、HCCL 配置、故障上报和恢复等场景。本篇先完成**最小可调度资源池**，避免小白一次安装全部组件后无法判断故障位置。
 
----
-
-## 二、部署前必须锁定的兼容信息
+## 2. 部署前必须锁定的兼容信息 {/* #二部署前必须锁定的兼容信息 */}
 
 | 分类 | 必须确认 |
 |------|----------|
@@ -74,9 +72,7 @@ MindCluster 官方快速入门将这种方式用于普通 Pod 的 NPU 资源调�
 
 MindCluster 环境依赖文档要求根据实际硬件和版本配套表选择驱动、固件及相关组件。务必对照 [第 8 篇](./08-软硬件兼容矩阵与容量规划.md) 兼容矩阵。
 
----
-
-## 三、检查硬件和 PCIe 识别
+## 3. 检查硬件和 PCIe 识别 {/* #三检查硬件和-pcie-识别 */}
 
 ```bash
 lspci
@@ -90,9 +86,7 @@ uname -r
 
 如果 PCIe 层面无法识别设备，应先处理硬件、BIOS 或服务器问题，不要继续安装 Device Plugin。
 
----
-
-## 四、安装和验证驱动、固件
+## 4. 安装和验证驱动、固件 {/* #四安装和验证驱动固件 */}
 
 驱动和固件安装必须使用对应硬件产品的官方安装指南和配套软件包。
 
@@ -118,9 +112,7 @@ npu-smi info
 如果宿主机 `npu-smi info` 异常，不要进入 Kubernetes 层排障。
 :::
 
----
-
-## 五、安装和验证 CANN
+## 5. 安装和验证 CANN {/* #五安装和验证-cann */}
 
 CANN 提供昇腾运行时、算子和相关工具能力。具体安装哪些组件取决于：驱动与 CANN 配套关系；推理还是训练；CANN 安装在宿主机还是业务镜像；vLLM-Ascend 镜像构建方式；多机 HCCL 需求。
 
@@ -128,9 +120,7 @@ CANN 提供昇腾运行时、算子和相关工具能力。具体安装哪些组
 
 不要仅因为环境变量中出现 CANN 路径就判断安装成功，必须执行实际设备计算验证。
 
----
-
-## 六、安装 Ascend Docker Runtime 并接入 containerd
+## 6. 安装 Ascend Docker Runtime 并接入 containerd {/* #六安装-ascend-docker-runtime-并接入-containerd */}
 
 虽然名称中包含 Docker，官方文档同时提供 Docker 和 containerd 场景。该组件负责在容器创建时挂载昇腾设备及所需驱动文件，并支持 Kubernetes 集成 containerd。
 
@@ -165,7 +155,7 @@ sudo systemctl restart containerd
 sudo systemctl status containerd
 ```
 
-### 不要破坏默认 runc 运行时
+### 6.1 不要破坏默认 runc 运行时 {/* #不要破坏默认-runc-运行时 */}
 
 双资源池集群中还有普通 Pod 和 NVIDIA 工作负载。修改 containerd 时要确认：
 
@@ -178,9 +168,7 @@ sudo systemctl status containerd
 
 修改前必须备份 `config.toml`。
 
----
-
-## 七、准备 Ascend Device Plugin
+## 7. 准备 Ascend Device Plugin {/* #七准备-ascend-device-plugin */}
 
 Ascend Device Plugin 负责发现 NPU、向 kubelet 上报资源，并在 Pod 创建时协助挂载设备。
 
@@ -188,9 +176,7 @@ Ascend Device Plugin 负责发现 NPU、向 kubelet 上报资源，并在 Pod �
 
 内网环境需要：下载匹配版本的软件包；构建或获取匹配 OS/架构的 Device Plugin 镜像；推送内部 Harbor；修改部署清单镜像地址；保存镜像摘要；检查 DaemonSet 的 NodeSelector 和 Toleration；评估特权权限和宿主机挂载。
 
----
-
-## 八、部署 Ascend Device Plugin
+## 8. 部署 Ascend Device Plugin {/* #八部署-ascend-device-plugin */}
 
 可以使用目标版本提供的 Helm 安装工具或经过验证的官方 YAML。
 
@@ -209,9 +195,7 @@ Ascend Device Plugin 负责发现 NPU、向 kubelet 上报资源，并在 Pod �
 
 不要直接把其他硬件型号的 DaemonSet 原样应用到本环境。
 
----
-
-## 九、检查 Device Plugin 状态
+## 9. 检查 Device Plugin 状态 {/* #九检查-device-plugin-状态 */}
 
 ```bash
 kubectl get pods -n kube-system -o wide | grep -i device-plugin
@@ -228,9 +212,7 @@ kubectl get events -n kube-system --sort-by=.lastTimestamp
 
 Ascend Device Plugin 能够通过 Kubernetes Event 上报部分 NPU 故障信息，事件应纳入后续监控和告警。
 
----
-
-## 十、确认 Kubernetes 已经识别 NPU
+## 10. 确认 Kubernetes 已经识别 NPU {/* #十确认-kubernetes-已经识别-npu */}
 
 ```bash
 kubectl describe node npu-node-01
@@ -254,9 +236,7 @@ huawei.com/npu
 必须以目标节点 Allocatable 实际输出和对应版本官方文档为准，不要在模板中猜测资源键。
 :::
 
----
-
-## 十一、运行最小 NPU 测试 Pod
+## 11. 运行最小 NPU 测试 Pod {/* #十一运行最小-npu-测试-pod */}
 
 使用与硬件、驱动和 CANN 兼容的内部测试镜像。
 
@@ -299,9 +279,7 @@ kubectl logs ascend-npu-smoke-test
 
 验收：Pod 调度到昇腾节点；申请到一张 NPU；容器内能看到指定设备；`npu-smi` 或最小计算正常；运行时正确挂载设备和依赖；Pod 结束后资源释放；Node Allocated resources 变化正确。
 
----
-
-## 十二、验证双池隔离
+## 12. 验证双池隔离 {/* #十二验证双池隔离 */}
 
 必须验证：
 
@@ -317,9 +295,7 @@ kubectl get pods -A -o wide
 kubectl get nodes -L accelerator.vendor,resource-pool,kubernetes.io/arch
 ```
 
----
-
-## 十三、常见故障排查
+## 13. 常见故障排查 {/* #十三常见故障排查 */}
 
 | 现象 | 排查方向 |
 |------|----------|
@@ -331,9 +307,7 @@ kubectl get nodes -L accelerator.vendor,resource-pool,kubernetes.io/arch
 | NPU 测试 Pod Pending | `describe`：资源键、占用、requests/limits、标签污点 |
 | Pod 启动但容器内无法使用 NPU | Ascend Runtime、设备挂载、驱动库路径、CANN、镜像架构、最小计算日志 |
 
----
-
-## 十四、什么时候需要 Volcano 和 Ascend Operator
+## 14. 什么时候需要 Volcano 和 Ascend Operator {/* #十四什么时候需要-volcano-和-ascend-operator */}
 
 如果只是单 Pod、整卡、普通推理服务，可以先使用原生 Kubernetes 调度验证。
 
@@ -350,9 +324,7 @@ kubectl get nodes -L accelerator.vendor,resource-pool,kubernetes.io/arch
 
 不要为了「组件完整」在尚未理解基本资源链路时一次部署全部组件。
 
----
-
-## 十五、升级和回滚原则
+## 15. 升级和回滚原则 {/* #十五升级和回滚原则 */}
 
 昇腾升级涉及多层：
 
@@ -384,9 +356,7 @@ kubectl get nodes -L accelerator.vendor,resource-pool,kubernetes.io/arch
 
 升级前保存：安装包和校验和；驱动、固件和 CANN 版本；containerd 配置；Device Plugin 清单或 Helm Values；镜像摘要；资源键和节点标签；回滚包与回滚条件。
 
----
-
-## 十六、昇腾资源池验收清单
+## 16. 昇腾资源池验收清单 {/* #十六昇腾资源池验收清单 */}
 
 - [ ] PCIe 识别全部 NPU
 - [ ] 驱动和固件版本进入兼容矩阵
@@ -403,9 +373,7 @@ kubectl get nodes -L accelerator.vendor,resource-pool,kubernetes.io/arch
 - [ ] NPU 监控组件已有后续接入计划
 - [ ] 安装包、镜像、清单和回滚方案已归档
 
----
-
-## 十七、本篇小结
+## 17. 本篇小结 {/* #十七本篇小结 */}
 
 昇腾资源池部署成功的标志是整条链路通过：
 
@@ -422,9 +390,7 @@ kubectl get nodes -L accelerator.vendor,resource-pool,kubernetes.io/arch
 
 到这里，**第三阶段完成**：Kubernetes 已经能够同时管理 NVIDIA GPU 和昇腾 NPU。下一阶段将正式配置 Label、Taint、资源申请、配额、优先级以及整卡和共享调度策略。
 
----
-
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 部署前请打开目标版本配套文档（名称会随产品线更新）：
 
@@ -433,14 +399,10 @@ kubectl get nodes -L accelerator.vendor,resource-pool,kubernetes.io/arch
 
 以华为昇腾官方文档站点当前版本为准，勿依赖过时镜像或他人环境资源键。
 
----
-
-## 相关链接
+## 19. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 11 篇：部署 NVIDIA GPU 资源池](./11-部署NVIDIA-GPU资源池.md)
 - [第 8 篇：兼容矩阵](./08-软硬件兼容矩阵与容量规划.md)
-
----
 
 ← [第 11 篇](./11-部署NVIDIA-GPU资源池.md) · → [第 13 篇：Label、Taint 与 Affinity 隔离](./13-使用Label-Taint与Affinity隔离两个资源池.md)

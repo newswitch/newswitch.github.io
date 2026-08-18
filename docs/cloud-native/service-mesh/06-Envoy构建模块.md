@@ -2,8 +2,8 @@
 title: "Envoy 的构建模块"
 sidebar_label: "06. Envoy 的构建模块"
 sidebar_position: 6
-tags: [Kubernetes, 服务网格, PartII, 学习路线]
 description: "详细介绍 Envoy 代理的核心构建模块，包括监听器、过滤器链、路由配置和集群等概念，以及它们如何协同工作来处理网络流量。"
+tags: [Kubernetes, 服务网格, PartII, 学习路线]
 ---
 
 # Envoy 的构建模块
@@ -12,7 +12,7 @@ description: "详细介绍 Envoy 代理的核心构建模块，包括监听器�
 
 本文从静态配置解释对象结构。完整动态配置、性能和故障路径请继续阅读 [Envoy 从零到精通学习路线](../../networking/load-balancing-proxy/envoy/00-Envoy从零到精通学习路线.md)。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 在本节中，我们将深入探讨 Envoy 代理的基本构建模块及其工作原理。
 
@@ -42,7 +42,7 @@ Listener accepts connection
 
 Listener、Route、Cluster 是配置对象，连接、HTTP Stream 和 upstream connection 才是运行时工作。不要把一个 Listener 等同于一个请求，也不要把 Cluster 当成单一服务器。
 
-## 监听器（Listener）
+## 2. 监听器（Listener） {/* #监听器listener */}
 
 一切都从**监听器**开始。监听器是 Envoy 暴露的命名网络位置，可以是 IP 地址和端口的组合，也可以是 Unix 域套接字路径。Envoy 通过监听器接收连接和请求。
 
@@ -63,11 +63,11 @@ static_resources:
 
 每个监听器都有不同的配置选项，但唯一必需的设置是地址。上述配置是有效的，可以用来运行 Envoy，但由于 `filter_chains` 为空，所有连接都会被直接关闭，因此实际上没有用处。
 
-## 过滤器与过滤器链
+## 3. 过滤器与过滤器链 {/* #过滤器与过滤器链 */}
 
 为了进入下一个构建模块（路由），我们需要创建一个或多个**网络过滤器链**（`filter_chains`），每个链至少包含一个过滤器。
 
-### 过滤器类型
+### 3.1 过滤器类型 {/* #过滤器类型 */}
 
 理解 HTTP 代理时常见三类过滤器：
 
@@ -81,7 +81,7 @@ static_resources:
 
 ![过滤器链](/images/k8s/service-mesh/envoy-building-blocks/filter-chain.webp)
 
-### HTTP 连接管理器
+### 3.2 HTTP 连接管理器 {/* #http-连接管理器 */}
 
 一个特殊的内置网络过滤器叫做 **HTTP 连接管理器**（HTTP Connection Manager，简称 HCM）。HCM 过滤器能够将原始字节转换为 HTTP 级别的消息，并提供以下功能：
 
@@ -99,11 +99,11 @@ static_resources:
 
 HTTP 请求按 Decoder Filter 顺序前进，响应通常按 Encoder 方向反向经过 Filter。Filter 可以暂停 Stream 等待异步外调、直接响应或缓冲 Body，因此每个 Filter 都必须有延迟、内存、超时和失败策略。
 
-## 路由配置
+## 4. 路由配置 {/* #路由配置 */}
 
 路由配置是 Envoy 的第二个核心构建模块。我们在 HCM 过滤器的 `route_config` 字段下定义路由配置。通过路由配置，我们可以根据请求的元数据（URI、Header 等）匹配传入的请求，并决定将流量发送到何处。
 
-### 虚拟主机
+### 4.1 虚拟主机 {/* #虚拟主机 */}
 
 路由配置中的顶级元素是**虚拟主机**。每个虚拟主机都有：
 
@@ -128,7 +128,7 @@ route_config:
 
 当传入请求的 `Host/Authority` 头匹配相应域名时，对应虚拟主机中的路由规则将被处理。
 
-### 域名匹配顺序
+### 4.2 域名匹配顺序 {/* #域名匹配顺序 */}
 
 如果在数组中指定多个域名，搜索顺序如下：
 
@@ -137,7 +137,7 @@ route_config:
 3. **前缀域名通配符**（如 `tetrate.*`）
 4. **匹配任何域的通配符**（`*`）
 
-### 路由匹配规则
+### 4.3 路由匹配规则 {/* #路由匹配规则 */}
 
 在虚拟主机的 `routes` 字段中，我们指定如何匹配请求以及后续处理方式。支持的匹配类型包括：
 
@@ -148,7 +148,7 @@ route_config:
 | `safe_regex` | 使用正则表达式匹配 `:path` 头 | `/\d{3}` 匹配三位数字路径 |
 | `connect_matcher` | 只匹配 CONNECT 请求 | 用于 HTTP CONNECT 方法 |
 
-### 直接响应示例
+### 4.4 直接响应示例 {/* #直接响应示例 */}
 
 以下是一个完整的配置示例，演示如何返回直接响应：
 
@@ -182,11 +182,11 @@ static_resources:
                     inline_string: "Hello from Envoy!"
 ```
 
-## 集群（Cluster）
+## 5. 集群（Cluster） {/* #集群cluster */}
 
 **集群**是 Envoy 的第三个核心构建模块，它代表一组接受流量的上游相似主机。这可以是服务监听的主机或 IP 地址列表。
 
-### 基本集群配置
+### 5.1 基本集群配置 {/* #基本集群配置 */}
 
 例如，假设我们的 hello world 服务运行在 `127.0.0.1:8000`，我们可以创建一个包含单个端点的集群：
 
@@ -206,7 +206,7 @@ clusters:
               port_value: 8000
 ```
 
-### 集群配置要点
+### 5.2 集群配置要点 {/* #集群配置要点 */}
 
 - **名称**：在所有集群中必须唯一，用于路由引用和统计数据导出
 - **连接超时**：通过 `connect_timeout` 字段设置
@@ -216,7 +216,7 @@ clusters:
 
 Cluster 是逻辑上游配置，Endpoint/Host 才是真实地址。Route 匹配成功但 Cluster 不存在、Cluster 没有健康 Host、连接 Endpoint 失败，会产生不同的本地错误和 response flag；排障时必须分开。
 
-### 可选功能
+### 5.3 可选功能 {/* #可选功能 */}
 
 集群还支持以下高级功能：
 
@@ -226,7 +226,7 @@ Cluster 是逻辑上游配置，Endpoint/Host 才是真实地址。Route 匹配�
 - **协议选项**：处理上游 HTTP 请求的额外协议设置
 - **网络过滤器**：应用于所有出站连接的过滤器
 
-## 完整配置示例
+## 6. 完整配置示例 {/* #完整配置示例 */}
 
 以下是一个完整的配置示例，展示了如何将所有构建模块组合在一起：
 
@@ -271,9 +271,9 @@ static_resources:
                 port_value: 8000
 ```
 
-## 实践测试
+## 7. 实践测试 {/* #实践测试 */}
 
-### 准备工作
+### 7.1 准备工作 {/* #准备工作 */}
 
 首先安装 func-e CLI 工具：
 
@@ -281,7 +281,7 @@ static_resources:
 curl https://func-e.io/install.sh | sudo bash -s -- -b /usr/local/bin
 ```
 
-### 启动测试服务
+### 7.2 启动测试服务 {/* #启动测试服务 */}
 
 启动一个 hello-world 测试服务：
 
@@ -295,7 +295,7 @@ docker run -dit -p 8000:3000 gcr.io/tetratelabs/hello-world:1.0.0
 curl 127.0.0.1:8000
 ```
 
-### 运行 Envoy
+### 7.3 运行 Envoy {/* #运行-envoy */}
 
 将上述完整配置保存为 `envoy-complete.yaml`，然后启动 Envoy：
 
@@ -303,7 +303,7 @@ curl 127.0.0.1:8000
 func-e run -c envoy-complete.yaml
 ```
 
-### 测试请求
+### 7.4 测试请求 {/* #测试请求 */}
 
 向 Envoy 代理发送请求：
 
@@ -319,7 +319,7 @@ curl -v localhost:10000
 
 这表明请求成功通过 Envoy 代理转发到了后端服务。
 
-### 不只验证 200
+### 7.5 不只验证 200 {/* #不只验证-200 */}
 
 完成成功请求后，主动制造四类故障：
 
@@ -332,7 +332,7 @@ curl -v localhost:10000
 
 从受控 Admin 通道检查 `/listeners`、`/config_dump`、`/clusters` 和 `/stats`，再把 Access Log 中 Route、Cluster、upstream Host、response flags/details 与实验对应。Admin 不得对业务网络开放。
 
-## 总结
+## 8. 总结 {/* #总结 */}
 
 Envoy 的核心构建模块包括：
 
@@ -343,7 +343,7 @@ Envoy 的核心构建模块包括：
 
 这些组件协同工作，为现代微服务架构提供了强大而灵活的代理能力。理解这些基本概念是掌握 Envoy 高级功能的基础。
 
-## 静态对象到动态 xDS
+## 9. 静态对象到动态 xDS {/* #静态对象到动态-xds */}
 
 静态配置中的对象在动态控制面分别由 LDS、RDS、CDS、EDS、SDS 等资源提供。新资源先校验和 warming，再切为 active；依赖缺失可能让资源停在 warming 或 NACK。控制面断开时数据面通常继续使用最后有效配置，但 Endpoint、Route 和证书不会再更新。
 

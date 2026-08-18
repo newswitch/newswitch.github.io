@@ -2,23 +2,23 @@
 title: "Kubernetes Operator"
 sidebar_label: "07. Kubernetes Operator"
 sidebar_position: 7
-tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "深入了解 Kubernetes Operator 的原理、架构、应用场景和 2025 年最佳实践。"
+tags: [Kubernetes, 开发指南, PartII, 学习路线]
 ---
 
 # Kubernetes Operator
 
 > Kubernetes Operator 通过将运维专家的领域知识编码为软件，实现了复杂有状态应用的自动化部署与运维，极大提升了云原生平台的可扩展性和智能化水平。
 
-## 引言
+## 1. 引言 {/* #引言 */}
 
 本文系统梳理了 Kubernetes Operator 的原理、架构、典型应用场景、开发最佳实践及生态现状，帮助读者全面理解 Operator 在现代云原生体系中的价值与落地方式。
 
-## 什么是 Operator
+## 2. 什么是 Operator {/* #什么是-operator */}
 
 Kubernetes Operator 是一种扩展 Kubernetes API 的方法，用于自动化复杂应用程序的部署、管理和运维操作。通过将运维专家的领域知识编码为软件，Operator 可以像 Kubernetes 原生资源一样管理复杂的有状态应用。
 
-### 核心特点
+### 2.1 核心特点 {/* #核心特点 */}
 
 - 应用特定的控制器：针对特定应用程序定制的自动化逻辑
 - 有状态应用管理：专门处理数据库、缓存、消息队列等复杂场景
@@ -27,7 +27,7 @@ Kubernetes Operator 是一种扩展 Kubernetes API 的方法，用于自动化�
 - 自愈能力：自动检测和修复偏离期望状态的情况
 - 生命周期管理：涵盖应用的完整生命周期从部署到销毁
 
-## 架构原理
+## 3. 架构原理 {/* #架构原理 */}
 
 下图展示了 Operator 的核心架构组成：
 
@@ -68,7 +68,7 @@ graph TB
 
 ![Operator 架构总览](/images/k8s/develop/operator/3e1efd2de8d05cae1f292191fc9fc0e2.svg)
 
-### 控制器模式详解
+### 3.1 控制器模式详解 {/* #控制器模式详解 */}
 
 Operator 本质上是实现了“控制循环”（Control Loop）的软件。下图展示了其典型工作流程：
 
@@ -102,7 +102,7 @@ sequenceDiagram
 
 ![Operator 控制循环时序图](/images/k8s/develop/operator/633c7efeaf30e9d09f7dcebaf78da546.svg)
 
-### 工作流程
+### 3.2 工作流程 {/* #工作流程 */}
 
 Operator 的工作流程遵循经典的“调谐循环”（Reconciliation Loop）模式：
 
@@ -112,7 +112,7 @@ Operator 的工作流程遵循经典的“调谐循环”（Reconciliation Loop�
 4. 反馈阶段：更新自定义资源的状态字段，记录操作结果
 5. 重试机制：处理临时失败，支持指数退避重试策略
 
-## 应用场景
+## 4. 应用场景 {/* #应用场景 */}
 
 Operator 适用于多种自动化运维场景。下图总结了典型用例与 Operator 能力的关系：
 
@@ -157,7 +157,7 @@ graph TD
 - 智能扩缩容：基于业务指标的自动扩缩容决策
 - 可观测性集成：深度集成日志、指标和分布式追踪
 
-### 实践示例：PostgreSQL Operator
+### 4.1 实践示例：PostgreSQL Operator {/* #实践示例postgresql-operator */}
 
 以下 YAML 展示了 PostgreSQL Operator 的完整生命周期管理配置：
 
@@ -240,11 +240,11 @@ stateDiagram-v2
 
 ![PostgreSQL Operator 生命周期流程](/images/k8s/develop/operator/40fba5ba728a5c718e0dc401057a164d.svg)
 
-## 开发最佳实践
+## 5. 开发最佳实践 {/* #开发最佳实践 */}
 
 本节介绍 Operator 设计原则、主流技术栈及现代开发流程。
 
-### 设计原则
+### 5.1 设计原则 {/* #设计原则 */}
 
 ```mermaid
 graph TB
@@ -331,7 +331,7 @@ graph TB
 - 安全性优先：实施最小权限原则，启用安全配置和审计
 - 测试驱动：编写单元测试、集成测试和端到端测试
 
-### 技术栈选择
+### 5.2 技术栈选择 {/* #技术栈选择 */}
 
 下图展示了主流 Operator 技术栈及其生态关系：
 
@@ -378,7 +378,7 @@ graph TD
 | Capsule v0.7+ | Go | 多租户 Operator | SaaS 平台 |
 | KUDO v1.4+ | YAML | 声明式，无代码开发 | 非开发者用户 |
 
-### 开发步骤
+### 5.3 开发步骤 {/* #开发步骤 */}
 
 以下流程图展示了 Operator SDK 的现代化开发步骤：
 
@@ -456,7 +456,7 @@ operator-sdk run bundle \
   --timeout=10m0s
 ```
 
-### 测试策略
+### 5.4 测试策略 {/* #测试策略 */}
 
 下图展示了 Operator 测试金字塔及主流测试工具：
 
@@ -488,11 +488,11 @@ graph TD
 - 端到端测试：使用 `KUTTL` 进行声明式测试，覆盖完整用户流程
 - 混沌测试：集成 Chaos Mesh 验证故障场景下的弹性
 
-## 生态系统
+## 6. 生态系统 {/* #生态系统 */}
 
 本节梳理了主流 Operator 项目及其应用领域。
 
-### 知名 Operator 项目
+### 6.1 知名 Operator 项目 {/* #知名-operator-项目 */}
 
 ```mermaid
 graph TD
@@ -616,11 +616,11 @@ graph TD
 - **[Awesome Operators](https://github.com/operator-framework/awesome-operators)** - 社区精选 Operator 列表
 - **[CNCF Landscape](https://landscape.cncf.io/)** - 云原生技术全景图
 
-## 运维考虑
+## 7. 运维考虑 {/* #运维考虑 */}
 
 本节介绍 Operator 运维中的监控、调试、安全与高可用等关键实践。
 
-### 现代化监控和调试
+### 7.1 现代化监控和调试 {/* #现代化监控和调试 */}
 
 下图展示了 Operator 可观测性与调试工具体系：
 
@@ -657,7 +657,7 @@ graph TD
 
 ![Operator 可观测性与调试工具](/images/k8s/develop/operator/b2e16e6a94717ebf130a78181149e0b7.svg)
 
-#### 监控和诊断命令
+#### 7.1.1 监控和诊断命令 {/* #监控和诊断命令 */}
 
 以下命令用于常见运维监控与调试场景：
 
@@ -676,7 +676,7 @@ kubectl get myapp my-instance -o yaml
 kubectl get events --field-selector involvedObject.name=my-instance
 ```
 
-### 安全配置
+### 7.2 安全配置 {/* #安全配置 */}
 
 下图总结了 Operator 关键安全配置：
 
@@ -724,25 +724,25 @@ security[安全性配置]
 - 审计日志：启用 Kubernetes 审计日志，记录所有 API 操作
 - 合规检查：定期运行 CIS Kubernetes Benchmark 等安全基准测试
 
-### 高可用性和弹性
+### 7.3 高可用性和弹性 {/* #高可用性和弹性 */}
 
 - 多副本部署：Operator 控制器运行多个副本
 - 领导者选举：使用 Lease 资源协调多个控制器实例
 - 故障转移：自动检测和切换故障实例
 - 优雅关闭：实现 SIGTERM 处理程序，确保清理资源
 
-### 升级和回滚策略
+### 7.4 升级和回滚策略 {/* #升级和回滚策略 */}
 
 - 渐进式升级：使用 Operator Lifecycle Manager (OLM) 管理版本
 - 数据迁移：自动处理 CRD 版本间的数据转换
 - 回滚能力：保持历史版本镜像，支持快速回滚
 - 兼容性保证：确保新版本能处理旧版本创建的资源
 
-## 总结
+## 8. 总结 {/* #总结 */}
 
 Kubernetes Operator 通过声明式 API 和自动化控制循环，实现了复杂有状态应用的全生命周期管理。结合现代开发工具链与最佳实践，Operator 已成为云原生平台智能化运维的核心能力。未来，随着生态的不断丰富和标准的完善，Operator 将在多云、AI、数据等领域持续发挥关键作用。
 
-## 参考文献
+## 9. 参考资料 {/* #参考文献 */}
 
 1. [Operator Pattern - kubernetes.io](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 2. [Operator Framework 官网 - operatorframework.io](https://operatorframework.io/)

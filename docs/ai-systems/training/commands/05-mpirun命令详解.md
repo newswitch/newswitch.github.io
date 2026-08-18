@@ -1,5 +1,6 @@
 ---
 title: "mpirun 与 MPI 作业诊断"
+sidebar_label: "05. mpirun 与 MPI 作业诊断"
 sidebar_position: 5
 description: "掌握 Open MPI mpirun 的进程映射、绑定、hostfile、MCA参数、输出治理，以及与NCCL和Kubernetes的边界。"
 tags: [MPI, mpirun, Open MPI, HPC, NCCL, 分布式训练]
@@ -104,11 +105,11 @@ MPI Operator通常创建Launcher与Worker Pod并准备SSH/服务发现。应在L
 | 输出无法关联 | 开启tag output或每rank日志，文件名加入job ID和rank |
 | 容器内RDMA不可用 | 设备、权限、verbs库、GID、memlock与CNI/RDMA配置 |
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能画出allocation、mapping、ranking、binding四个阶段；能证明每个rank的CPU/GPU/NIC本地性；能区分MPI启动控制面与NCCL GPU数据面；能在Operator受管集群中保持单一控制源。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [Open MPI mpirun manual](https://docs.open-mpi.org/en/main/man-openmpi/man1/mpirun.1.html)
 - [Open MPI documentation](https://docs.open-mpi.org/)

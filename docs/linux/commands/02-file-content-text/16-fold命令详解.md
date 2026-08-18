@@ -1,11 +1,12 @@
 ---
-title: fold 命令详解：按显示列、字符或字节折行
+title: "fold 命令详解：按显示列、字符或字节折行"
+sidebar_label: "16. fold 命令详解：按显示列、字符或字节折行"
 sidebar_position: 16
-description: 完整讲解 GNU coreutils fold 的全部参数、显示列/字符/字节宽度、空白边界、TAB/退格/回车、Unicode 宽字符、超长记录和日志展示边界。
+description: "完整讲解 GNU coreutils fold 的全部参数、显示列/字符/字节宽度、空白边界、TAB/退格/回车、Unicode 宽字符、超长记录和日志展示边界。"
 tags: [Linux, fold, GNU coreutils, 折行, Unicode]
 ---
 
-# `fold` 命令详解：按显示列、字符或字节折行
+# fold 命令详解：按显示列、字符或字节折行
 
 `fold` 把过长输入行切成多行。默认按屏幕列宽计算：TAB 可占多列，backspace 减少列计数，CR 把列位置重置为 0。它改变记录边界，所以只能用于展示或明确允许折行的文本，不能随意处理日志、JSON、签名和机器协议。
 
@@ -178,7 +179,7 @@ fold -b -w 80 -- input > by-bytes
 - 能说明 `-s` 不是段落排版器。
 - 能识别任何依赖原行边界的格式都不能直接 fold。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：fold invocation](https://www.gnu.org/software/coreutils/manual/html_node/fold-invocation.html)
 - [POSIX fold](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/fold.html)
@@ -186,4 +187,3 @@ fold -b -w 80 -- input > by-bytes
 上一篇：[`unexpand` 命令详解](./15-unexpand命令详解.md)
 
 返回：[Linux 命令参考库学习路线](../../00-Linux命令参考库学习路线.md)
-

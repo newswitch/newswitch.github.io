@@ -1,9 +1,11 @@
 ---
-title: Kubernetes 如何识别和管理 GPU
+title: "Kubernetes 如何识别和管理 GPU"
 sidebar_label: "01. Kubernetes 如何识别和管理 GPU"
+sidebar_position: 1
+description: "本文分析 Kubernetes 中的 Device Plugin 机制：它如何让集群像管理 CPU / Memory 一样管理 GPU（以及其它设备），并通过一个简化示例加深理解。"
+tags: ["Kubernetes", "GPU", "Device Plugin", "扩展资源", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "Device Plugin", "扩展资源", "学习路线"]
 ---
 
 # Kubernetes 如何识别和管理 GPU
@@ -11,8 +13,6 @@ tags: ["Kubernetes", "GPU", "Device Plugin", "扩展资源", "学习路线"]
 ![封面：K8s Device Plugin](/images/k8s-gpu/05-Device-Plugin/k8s-device-plugin.jpg)
 
 本文分析 Kubernetes 中的 **Device Plugin** 机制：它如何让集群像管理 CPU / Memory 一样管理 GPU（以及其它设备），并通过一个简化示例加深理解。
-
----
 
 ## 1. 背景
 
@@ -38,8 +38,6 @@ AI 负载还需要 GPU。在 [NVIDIA 驱动、CUDA 与容器运行时的关系](
 
 1. Kubernetes 的 **Device Plugin Framework**（框架本身）
 2. 厂商实现，例如 [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin)
-
----
 
 ## 2. 原理
 
@@ -102,7 +100,7 @@ Device Plugin 一般以 **DaemonSet** 跑在每个节点（要管节点本地设
 1. Kubelet 启动 Registration 服务（`kubelet.sock`），提供 `Register`
 2. Device Plugin 启动后，通过 `kubelet.sock` 注册：socket 路径、API Version、`ResourceName`
 3. 注册成功后，Kubelet 通过插件自己的 unix socket 调用 `ListAndWatch`，获取本节点设备列表
-4. Kubelet 更新 Node 状态，把发现的资源写入 Capacity / Allocatable  
+4. Kubelet 更新 Node 状态，把发现的资源写入 Capacity / Allocatable
    → `kubectl get node -o yaml` 中可见例如 `nvidia.com/gpu`
 5. 用户创建 Pod 申请该资源；调度完成后，本节点 Kubelet 调用插件 `Allocate` 完成分配
 
@@ -111,8 +109,6 @@ Device Plugin 一般以 **DaemonSet** 跑在每个节点（要管节点本地设
 ![Device Plugin 时序](/images/k8s-gpu/05-Device-Plugin/k8s-device-plugin-timeline.png)
 
 *图：注册 → ListAndWatch → 更新 Node → Allocate*
-
----
 
 ## 3. 实现要点（以教学 Demo 为例）
 
@@ -235,8 +231,6 @@ Kubelet 侧 `Register` 大致会：校验版本与扩展资源名 → `connectCl
 3）Watch kubelet.sock；变更则退出，交由 DaemonSet 重建
 ```
 
----
-
 ## 4. 测试（Demo）
 
 ### 4.1 部署
@@ -343,8 +337,6 @@ rm -f /etc/gophers/g2   # ListAndWatch 上报后 Capacity 回到 1
 
 这说明：**ListAndWatch 持续上报 ↔ Node 扩展资源数量 ↔ 调度器决策** 是打通的。
 
----
-
 ## 5. 和 GPU 的对应关系
 
 回到 GPU 场景，把 Demo 换成 NVIDIA Device Plugin，主线是一样的：
@@ -366,8 +358,6 @@ NVIDIA 官方插件的安装、Helm、Time-Slicing / MPS、GFD 等见：[NVIDIA 
 
 下一篇把「申请 GPU → 容器内可用」整条链路串起来：[Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit](./03-Pod如何使用上GPU：Device%20Plugin与Container%20Toolkit.md)。Pending 排查见：[GPU Pod 一直 Pending 的排查流程](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
 
----
-
 ## 6. 小结
 
 Device Plugin 机制并不复杂，核心就是：
@@ -378,9 +368,7 @@ Device Plugin 机制并不复杂，核心就是：
 
 GPU、以及其它加速设备，都是在这套框架上接入 Kubernetes 的。
 
----
-
-## 参考与致谢
+## 7. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Device Plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/)
 - [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin)

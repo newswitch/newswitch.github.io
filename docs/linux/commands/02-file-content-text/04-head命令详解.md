@@ -1,11 +1,12 @@
 ---
-title: head 命令详解：按行、字节与 NUL 记录截取前部
+title: "head 命令详解：按行、字节与 NUL 记录截取前部"
+sidebar_label: "04. head 命令详解：按行、字节与 NUL 记录截取前部"
 sidebar_position: 4
-description: 完整讲解 GNU coreutils head 的全部参数、正负计数、单位后缀、多文件头、NUL 记录、不可 seek 输入、SIGPIPE 和多字节字符风险。
+description: "完整讲解 GNU coreutils head 的全部参数、正负计数、单位后缀、多文件头、NUL 记录、不可 seek 输入、SIGPIPE 和多字节字符风险。"
 tags: [Linux, head, GNU coreutils, 流式处理, 日志]
 ---
 
-# `head` 命令详解：按行、字节与 NUL 记录截取前部
+# head 命令详解：按行、字节与 NUL 记录截取前部
 
 `head` 默认输出每个输入的前 10 行。它既能输出前 N 条，也能输出“除最后 N 条以外的全部内容”；后者往往必须保留尾部缓冲，不能误认为永远只读开头。
 
@@ -190,7 +191,7 @@ head -n -1 -- export.txt
 - 能处理多文件 header 和上游 SIGPIPE。
 - 能说明为什么 `head -c` 不能保证有效字符或文件格式。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：head invocation](https://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html)
 - [Linux pipe(7)](https://man7.org/linux/man-pages/man7/pipe.7.html)
@@ -198,4 +199,3 @@ head -n -1 -- export.txt
 上一篇：[`nl` 命令详解](./03-nl命令详解.md)
 
 下一篇：[`tail` 命令详解](./05-tail命令详解.md)
-

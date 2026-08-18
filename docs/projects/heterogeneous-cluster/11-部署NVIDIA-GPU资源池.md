@@ -1,16 +1,18 @@
 ---
-title: 部署NVIDIA GPU资源池
-sidebar_label: 11 · 部署NVIDIA GPU资源池
+title: "部署NVIDIA GPU资源池"
+sidebar_label: "11. 11 · 部署NVIDIA GPU资源池"
+sidebar_position: 11
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第三阶段——从系统环境到双池就绪 本文定位：NVIDIA 资源池部署与验收篇"
+tags: [NVIDIA, GPU Operator, Device Plugin, 双资源池, Kubernetes]
 date: 2026-08-07 15:00:00
 categories: 云原生
-tags: [NVIDIA, GPU Operator, Device Plugin, 双资源池, Kubernetes]
 ---
 
 # 部署NVIDIA GPU资源池
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第三阶段——从系统环境到双池就绪  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第三阶段——从系统环境到双池就绪
 **本文定位**：NVIDIA 资源池部署与验收篇
 :::
 
@@ -35,9 +37,7 @@ NVIDIA GPU
 
 本站 GPU Operator 深化文可交叉阅读：[09 架构](../../gpu/cluster/device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md) · [10 Helm 部署](../../gpu/cluster/device-management/06-使用%20Helm%20部署%20GPU%20Operator.md) · [11 驱动管理模式](../../gpu/cluster/device-management/07-GPU%20Operator%20两种驱动管理模式.md)。
 
----
-
-## 一、GPU Operator 到底部署什么
+## 1. GPU Operator 到底部署什么 {/* #一gpu-operator-到底部署什么 */}
 
 根据 NVIDIA 官方文档，GPU Operator 默认安装会在 GPU 工作节点上部署和管理 GPU 驱动、NVIDIA Container Toolkit、NVIDIA Device Plugin、DCGM Exporter 和 MIG Manager 等组件。见 [Installing the NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html)。
 
@@ -52,17 +52,15 @@ NVIDIA GPU
 | DCGM Exporter | 暴露 GPU 监控指标 |
 | MIG Manager | 管理支持 MIG 的设备配置 |
 
----
+## 2. 先选择部署模式 {/* #二先选择部署模式 */}
 
-## 二、先选择部署模式
-
-### 模式 A：GPU Operator 管理完整软件栈
+### 2.1 模式 A：GPU Operator 管理完整软件栈 {/* #模式-agpu-operator-管理完整软件栈 */}
 
 适合：GPU 节点操作系统比较统一；GPU Operator 平台支持矩阵覆盖该环境；希望统一管理驱动和 Toolkit；已评估驱动容器和内核依赖。
 
 NVIDIA 官方说明：若使用 Operator 的驱动容器管理 GPU 节点，相关 GPU 工作节点需要满足对应操作系统要求；如果驱动预装在宿主机，可以容纳不同的操作系统组合，但仍要验证平台支持。见 [GPU Operator Platform Support](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/platform-support.html)。
 
-### 模式 B：宿主机预装驱动，Operator 管理其余组件
+### 2.2 模式 B：宿主机预装驱动，Operator 管理其余组件 {/* #模式-b宿主机预装驱动operator-管理其余组件 */}
 
 适合：企业已有标准驱动安装流程；驱动需要与硬件厂商镜像绑定；内网环境不便使用驱动容器；希望驱动升级由节点维护流程负责。
 
@@ -70,7 +68,7 @@ NVIDIA 官方说明：若使用 Operator 的驱动容器管理 GPU 节点，相�
 driver.enabled=false
 ```
 
-### 模式 C：驱动和 Toolkit 都已经预装
+### 2.3 模式 C：驱动和 Toolkit 都已经预装 {/* #模式-c驱动和-toolkit-都已经预装 */}
 
 ```text
 driver.enabled=false
@@ -79,9 +77,7 @@ toolkit.enabled=false
 
 这种模式需要确保 containerd 的 NVIDIA 运行时配置已经正确。不要同时让宿主机脚本和 Operator 重复管理同一组件。
 
----
-
-## 三、部署前检查
+## 3. 部署前检查 {/* #三部署前检查 */}
 
 **Kubernetes 基础状态**
 
@@ -119,9 +115,7 @@ accelerator.vendor=nvidia
 resource-pool=nvidia-pool
 ```
 
----
-
-## 四、处理污点和 Operator 调度
+## 4. 处理污点和 Operator 调度 {/* #四处理污点和-operator-调度 */}
 
 如果 GPU 节点已经设置：
 
@@ -137,9 +131,7 @@ kubectl describe node gpu-node-01 | sed -n '/Taints:/,/Conditions:/p'
 
 生产环境中建议通过正式 Helm Values 管理 Toleration，不要安装失败后临时删除所有污点。
 
----
-
-## 五、准备 Helm 和内部镜像仓库
+## 5. 准备 Helm 和内部镜像仓库 {/* #五准备-helm-和内部镜像仓库 */}
 
 ```bash
 helm version
@@ -157,9 +149,7 @@ helm repo update
 
 NVIDIA 提供单独的隔离网络安装说明，不能只同步 Operator 主镜像而遗漏 Operand 镜像。见 [Air-Gapped GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/install-gpu-operator-air-gapped.html)。
 
----
-
-## 六、安装 GPU Operator
+## 6. 安装 GPU Operator {/* #六安装-gpu-operator */}
 
 **默认完整安装示例**
 
@@ -205,9 +195,7 @@ helm upgrade --install gpu-operator nvidia/gpu-operator \
   --wait
 ```
 
----
-
-## 七、检查 Operator 组件
+## 7. 检查 Operator 组件 {/* #七检查-operator-组件 */}
 
 ```bash
 kubectl get pods -n gpu-operator -o wide
@@ -222,9 +210,7 @@ kubectl describe pod <POD> -n gpu-operator
 kubectl logs <POD> -n gpu-operator --all-containers
 ```
 
----
-
-## 八、确认 Kubernetes 已经识别 GPU
+## 8. 确认 Kubernetes 已经识别 GPU {/* #八确认-kubernetes-已经识别-gpu */}
 
 ```bash
 kubectl describe node gpu-node-01
@@ -244,9 +230,7 @@ kubectl get nodes -L accelerator.vendor,resource-pool,nvidia.com/gpu.present
 
 自定义标签描述平台资源池；`nvidia.com/*` 等厂商标签由相关组件生成，不应人工伪造设备状态。
 
----
-
-## 九、运行最小 GPU 测试 Pod
+## 9. 运行最小 GPU 测试 Pod {/* #九运行最小-gpu-测试-pod */}
 
 先验证最小 CUDA 计算或 `nvidia-smi`，不要直接部署大模型。
 
@@ -285,9 +269,7 @@ kubectl describe pod nvidia-gpu-smoke-test
 
 NVIDIA 官方也使用申请 `nvidia.com/gpu: 1` 的 CUDA 样例验证 Operator 安装。
 
----
-
-## 十、双资源池场景下必须验证隔离
+## 10. 双资源池场景下必须验证隔离 {/* #十双资源池场景下必须验证隔离 */}
 
 **NVIDIA 测试 Pod 不能进入昇腾节点**
 
@@ -295,15 +277,13 @@ NVIDIA 官方也使用申请 `nvidia.com/gpu: 1` 的 CUDA 样例验证 Operator 
 kubectl get pod nvidia-gpu-smoke-test -o wide
 ```
 
-**普通 Pod 不能无意占用 GPU 节点**  
+**普通 Pod 不能无意占用 GPU 节点**
 创建不带 Toleration 的普通 Pod，确认它不会进入带有 NVIDIA 污点的节点。
 
-**昇腾 Pod 不能申请 NVIDIA 资源**  
+**昇腾 Pod 不能申请 NVIDIA 资源**
 两类部署模板、ServiceAccount 和镜像必须分开管理，避免模板复制后遗漏资源字段修改。
 
----
-
-## 十一、常见故障排查
+## 11. 常见故障排查 {/* #十一常见故障排查 */}
 
 | 现象 | 排查方向 |
 |------|----------|
@@ -314,9 +294,7 @@ kubectl get pod nvidia-gpu-smoke-test -o wide
 | 测试 Pod Pending | `kubectl describe`：GPU 占用、Label、Taint/Toleration、NodeSelector |
 | 测试 Pod 能启动但 CUDA 失败 | 镜像 CUDA 与宿主驱动兼容、设备挂载、依赖库、计算日志 |
 
----
-
-## 十二、升级和回滚原则
+## 12. 升级和回滚原则 {/* #十二升级和回滚原则 */}
 
 不要同时升级所有 GPU 节点。
 
@@ -335,9 +313,7 @@ kubectl get pod nvidia-gpu-smoke-test -o wide
 
 驱动和内核回滚能力必须在维护前验证。详见 [GPU Operator 升级、回滚与节点维护](../../gpu/cluster/device-management/08-GPU%20Operator%20升级、回滚与节点维护.md)。
 
----
-
-## 十三、NVIDIA 资源池验收清单
+## 13. NVIDIA 资源池验收清单 {/* #十三nvidia-资源池验收清单 */}
 
 - [ ] 宿主机识别全部 GPU
 - [ ] 驱动版本进入兼容矩阵
@@ -354,9 +330,7 @@ kubectl get pod nvidia-gpu-smoke-test -o wide
 - [ ] 离线镜像和 Helm Values 已经归档
 - [ ] 升级与回滚流程已经记录
 
----
-
-## 十四、本篇小结
+## 14. 本篇小结 {/* #十四本篇小结 */}
 
 NVIDIA 资源池接入完成的标志不是「安装了驱动」，而是整条链路通过：
 
@@ -373,22 +347,16 @@ NVIDIA 资源池接入完成的标志不是「安装了驱动」，而是整条�
 
 下一篇将使用相同的分层方法接入昇腾资源池：驱动和固件、CANN、Ascend Docker Runtime、Ascend Device Plugin、Kubernetes 资源上报和 NPU 测试任务。
 
----
-
-## 参考资料
+## 15. 参考资料 {/* #参考资料 */}
 
 - [Installing the NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html)
 - [GPU Operator Platform Support](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/platform-support.html)
 - [Air-Gapped GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/install-gpu-operator-air-gapped.html)
 
----
-
-## 相关链接
+## 16. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 10 篇：kubeadm 高可用集群](./10-部署高可用Kubernetes基础集群.md)
 - [GPU Operator 系列](../../gpu/cluster/device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)
-
----
 
 ← [第 10 篇](./10-部署高可用Kubernetes基础集群.md) · → [第 12 篇：部署昇腾 NPU 资源池](./12-部署昇腾NPU资源池.md)

@@ -1,9 +1,9 @@
 ---
-title: Kafka 事务与端到端 Exactly-Once 边界
+title: "Kafka 事务与端到端 Exactly-Once 边界"
 sidebar_label: "05. Kafka 事务与端到端 Exactly-Once 边界"
 sidebar_position: 5
+description: "从 transactional producer、read_committed 和 offset 事务理解 Kafka EOS 能保证什么、不能保证什么。"
 tags: [Kafka Transactions, Exactly-Once, 幂等]
-description: 从 transactional producer、read_committed 和 offset 事务理解 Kafka EOS 能保证什么、不能保证什么。
 ---
 
 # Kafka 事务与端到端 Exactly-Once 边界
@@ -81,6 +81,6 @@ sequenceDiagram
 
 上一篇：[副本、ISR 与 KRaft](./04-副本ISR-Leader选举与KRaft.md)　下一篇：[Topic、Partition、磁盘与网络容量规划](./06-Topic-Partition磁盘网络与容量规划.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Kafka Design: Transactions](https://kafka.apache.org/documentation/#design_transactions)

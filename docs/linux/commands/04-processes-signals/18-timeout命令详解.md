@@ -1,11 +1,12 @@
 ---
-title: timeout 命令详解：期限、信号升级、前台 TTY 与退出码
+title: "timeout 命令详解：期限、信号升级、前台 TTY 与退出码"
+sidebar_label: "18. timeout 命令详解：期限、信号升级、前台 TTY 与退出码"
 sidebar_position: 18
-description: 完整讲解 GNU coreutils timeout 参数、duration、TERM/KILL、foreground、preserve-status、进程组与子进程边界、124/125/126/127/137 退出码。
+description: "完整讲解 GNU coreutils timeout 参数、duration、TERM/KILL、foreground、preserve-status、进程组与子进程边界、124/125/126/127/137 退出码。"
 tags: [Linux, timeout, signal, deadline, coreutils]
 ---
 
-# `timeout` 命令详解：期限、信号升级、前台 TTY 与退出码
+# timeout 命令详解：期限、信号升级、前台 TTY 与退出码
 
 `timeout` 启动命令并在期限后发送信号，默认 TERM。它限制的是 wrapper 观察的进程/进程组生命周期，不保证远端请求取消、数据回滚、所有 daemonized descendants 退出或业务达到一致状态。
 
@@ -64,7 +65,7 @@ timeout --verbose --signal=TERM --kill-after=10s 2m command arg
 
 掌握标准：能列出全部参数；能算两段期限和解释 process group/foreground；能区分 wrapper timeout、业务 deadline 与控制面 grace period。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：timeout(1)](https://man7.org/linux/man-pages/man1/timeout.1.html)
 - [GNU coreutils：timeout invocation](https://www.gnu.org/software/coreutils/manual/html_node/timeout-invocation.html)

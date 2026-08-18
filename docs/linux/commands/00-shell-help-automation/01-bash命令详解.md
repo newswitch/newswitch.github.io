@@ -1,11 +1,12 @@
 ---
-title: bash 命令详解：调用模式、启动文件、POSIX、调试与受限 Shell
+title: "bash 命令详解：调用模式、启动文件、POSIX、调试与受限 Shell"
+sidebar_label: "01. bash 命令详解：调用模式、启动文件、POSIX、调试与受限 Shell"
 sidebar_position: 1
-description: 系统讲解 Bash invocation 长短参数、login/interactive/POSIX 模式、启动文件、-c/-s、调试选项和环境继承。
+description: "系统讲解 Bash invocation 长短参数、login/interactive/POSIX 模式、启动文件、-c/-s、调试选项和环境继承。"
 tags: [Linux, bash, Shell, POSIX, 自动化]
 ---
 
-# `bash` 命令详解：先理解 Shell 怎样启动
+# bash 命令详解：调用模式、启动文件、POSIX、调试与受限 Shell
 
 `bash` 既是交互 Shell 也是脚本解释器。调用参数决定它从哪里读命令、是否交互/login、读取哪些启动文件、启用哪些选项以及 `$0/$@` 如何赋值。
 

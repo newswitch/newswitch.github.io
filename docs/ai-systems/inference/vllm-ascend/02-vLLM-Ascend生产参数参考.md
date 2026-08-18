@@ -1,9 +1,9 @@
 ---
-title: vLLM-Ascend 生产参数参考
+title: "vLLM-Ascend 生产参数参考"
 sidebar_label: "02. vLLM-Ascend 生产参数参考"
 sidebar_position: 2
+description: "解释 vLLM 公共参数、Ascend Additional Config、Graph 配置与 HCCL/CANN 环境参数怎样共同控制 910B 推理。"
 tags: [vLLM-Ascend, 参数, Additional Config, ACLGraph, HCCL]
-description: 解释 vLLM 公共参数、Ascend Additional Config、Graph 配置与 HCCL/CANN 环境参数怎样共同控制 910B 推理。
 ---
 
 # vLLM-Ascend 生产参数参考
@@ -84,7 +84,7 @@ vllm serve /models/Qwen \
 | `--max-model-len` | 影响 KV 最坏成本、Graph Shape 与稳定并发 |
 | `--served-model-name` | API 别名，与真实权重身份分开记录 |
 
-### 权重可移植性
+### 4.1 权重可移植性 {/* #权重可移植性 */}
 
 - BF16/FP16 Hugging Face 权重通常最接近跨框架共享，但仍需模型实现支持。
 - NVIDIA AWQ/GPTQ/FP8 制品不能默认作为 Ascend 量化制品使用。
@@ -140,7 +140,7 @@ NVIDIA 环境验证过的 `max_num_seqs=64` 不能直接复制。两边的 Kerne
 | `--enable-eplb` / `--eplb-config` | Expert Load Balancing | ModelRunner V1/V2 配置 Schema 不同 |
 | `--disable-custom-all-reduce` | 禁用自定义 All-Reduce 路径 | Ascend 平台的实际支持与行为按版本确认 |
 
-### HCCL 网络环境族
+### 7.1 HCCL 网络环境族 {/* #hccl-网络环境族 */}
 
 | 环境变量族 | 用途 |
 |---|---|
@@ -170,7 +170,7 @@ vllm serve /models/Qwen \
 
 它是 vLLM 为插件提供的扩展配置字典。字段由 vLLM-Ascend 解析，不属于 upstream 通用 CLI。
 
-### 顶层配置概览
+### 8.1 顶层配置概览 {/* #顶层配置概览 */}
 
 | 字段 | 类型/默认思路 | 含义 |
 |---|---|---|
@@ -230,7 +230,7 @@ vllm serve /models/Qwen \
 | `cudagraph_capture_sizes` | 需要 Capture/Replay 的 Batch Size |
 | 编译 Shape/Level | upstream 编译配置，实际支持由插件约束 |
 
-### Graph 调优原则
+### 10.1 Graph 调优原则 {/* #graph-调优原则 */}
 
 1. Eager 跑通正确性。
 2. 开启默认 Graph，记录实际模式。
@@ -301,7 +301,7 @@ CPU Binding 错误可能让所有 NPU 周期性等待。容器的 CPU Request/Li
 | `mega_moe_max_tokens` | 融合 MoE 算子每 Rank Token Capacity | 太小会丢 Token 影响精度；太大 Workspace 线性增加 |
 | `enable_mlapo` | 模型分层自适应并行优化 | 默认/模型支持以版本为准 |
 
-### `mega_moe_max_tokens` 是精度参数
+### 14.1 `mega_moe_max_tokens` 是精度参数 {/* #megamoemaxtokens-是精度参数 */}
 
 当专家负载不均导致某 Rank 接收 Token 超过容量时，超出部分可能被丢弃，直接影响输出。不能只按“不 OOM”设置，必须监控溢出并做精度验证。
 
@@ -343,7 +343,7 @@ CPU Binding 错误可能让所有 NPU 周期性等待。容器的 CPU Request/Li
 | `batch_job_sched_config` | Batch Job 感知调度 | 在线/离线混部使用 |
 | `dyntra_lb_config` | PD Decode DP Rank 动态负载均衡 | 只在特定 PD Decode + DP 场景 |
 
-### Dynamic Chunk 字段
+### 16.1 Dynamic Chunk 字段 {/* #dynamic-chunk-字段 */}
 
 | 字段 | 含义 |
 |---|---|
@@ -353,7 +353,7 @@ CPU Binding 错误可能让所有 NPU 周期性等待。容器的 CPU Request/Li
 | `need_timing` | 是否在线采集校准时间 |
 | `max_fit_chunk` | 用于拟合的样本数量 |
 
-### DyntraLB 字段
+### 16.2 DyntraLB 字段 {/* #dyntralb-字段 */}
 
 | 字段 | 含义 |
 |---|---|
@@ -504,7 +504,7 @@ API 字段被接受不等于执行语义与 NVIDIA 完全一致。
 [ ] OOM、慢 Rank、NPU 故障、网络和滚动升级已演练
 ```
 
-## 官方资料
+## 26. 官方资料 {/* #官方资料 */}
 
 - [vLLM-Ascend Additional Configuration](https://docs.vllm.ai/projects/ascend/en/latest/user_guide/configuration/additional_config.html)
 - [vLLM-Ascend Configuration Guide](https://docs.vllm.ai/projects/ascend/en/latest/user_guide/configuration/)

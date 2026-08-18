@@ -2,8 +2,8 @@
 title: "AI Infra 诊断工具综合项目"
 sidebar_label: "05. AI Infra 诊断工具综合项目"
 sidebar_position: 5
-tags: [AI Infra, Python, Kubernetes, Prometheus, GPU, 网络, 存储, 诊断]
 description: "设计一个只读优先、证据驱动的 AI Infra 诊断工具，统一采集 Kubernetes、GPU、网络、存储、日志和 Prometheus 数据并生成可审计报告。"
+tags: [AI Infra, Python, Kubernetes, Prometheus, GPU, 网络, 存储, 诊断]
 ---
 
 # AI Infra 诊断工具综合项目
@@ -30,7 +30,7 @@ ai-diag collect incident \
 
 ## 1. 用户故事与非目标
 
-### 用户故事
+### 1.1 用户故事 {/* #用户故事 */}
 
 - 输入 Pod，自动找到 ReplicaSet、Deployment、Service、EndpointSlice、Node、PVC 和 GPU。
 - 输入 Model Revision，找到全部实例和节点。
@@ -39,7 +39,7 @@ ai-diag collect incident \
 - 给出事实、假设和下一步验证，不伪装成确定根因。
 - 输出可分享、可脱敏、可校验的证据包。
 
-### 非目标
+### 1.2 非目标 {/* #非目标 */}
 
 - 不替代 Prometheus、日志平台或 Trace Backend。
 - 不扫描整个集群的所有日志。
@@ -135,14 +135,12 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
-
 class SourceStatus(str, Enum):
     OK = "ok"
     PARTIAL = "partial"
     ERROR = "error"
     DENIED = "denied"
     UNSUPPORTED = "unsupported"
-
 
 @dataclass(frozen=True)
 class ObjectRef:
@@ -151,7 +149,6 @@ class ObjectRef:
     namespace: str | None
     name: str
     uid: str | None
-
 
 @dataclass(frozen=True)
 class Evidence:
@@ -276,7 +273,7 @@ ResourceQuota/LimitRange（必要时）
 
 查询模板按领域组织。
 
-### 服务
+### 8.1 服务 {/* #服务 */}
 
 ```text
 请求率
@@ -287,7 +284,7 @@ waiting / running
 KV Cache 使用与抢占
 ```
 
-### GPU
+### 8.2 GPU {/* #gpu */}
 
 ```text
 利用率
@@ -297,7 +294,7 @@ Xid/ECC
 PCIe/NVLink 吞吐（能力取决于 Exporter）
 ```
 
-### 网络
+### 8.3 网络 {/* #网络 */}
 
 ```text
 NIC bytes/packets
@@ -306,7 +303,7 @@ retransmit
 RDMA/PFC/ECN（若有）
 ```
 
-### 存储
+### 8.4 存储 {/* #存储 */}
 
 ```text
 文件系统空间/Inode
@@ -607,21 +604,21 @@ SHA-256 证明文件自生成后是否改变，不证明数据源说的就是真
 
 ## 18. 安全模型
 
-### 身份与权限
+### 18.1 身份与权限 {/* #身份与权限 */}
 
 - 中央 Collector 使用 namespace 只读 Role。
 - Node Agent 使用独立 ServiceAccount。
 - Prometheus 使用只读、短期 Token。
 - 对象存储上传使用最小路径权限。
 
-### 输入
+### 18.2 输入 {/* #输入 */}
 
 - namespace/name/UID 做格式和存在性校验。
 - 不接受任意文件路径。
 - 不接受任意 Shell、PromQL 或日志查询。
 - 时间范围、对象数、字节数和并发都有上限。
 
-### 输出
+### 18.3 输出 {/* #输出 */}
 
 - Secret/Data/Token/Header/Prompt 默认禁止。
 - 路径防穿越。
@@ -695,37 +692,37 @@ requires_approval: true
 
 ## 22. 开发里程碑
 
-### M1：离线假数据
+### 22.1 M1：离线假数据 {/* #m1离线假数据 */}
 
 - CLI、Schema、Renderer。
 - 从 Fixture 生成报告。
 - 规则单测。
 
-### M2：Kubernetes 只读
+### 22.2 M2：Kubernetes 只读 {/* #m2kubernetes-只读 */}
 
 - Pod/Owner/Node/Service/Endpoint/PVC/Event。
 - 最小 RBAC。
 - 部分失败。
 
-### M3：Prometheus
+### 22.3 M3：Prometheus {/* #m3prometheus */}
 
 - 固定模板。
 - 样本新鲜度。
 - 范围与基数限制。
 
-### M4：GPU/网络/存储
+### 22.4 M4：GPU/网络/存储 {/* #m4gpu网络存储 */}
 
 - DCGM 与基础 Node 指标。
 - 能力声明。
 - 不部署特权 Agent 也能正常降级。
 
-### M5：安全证据包
+### 22.5 M5：安全证据包 {/* #m5安全证据包 */}
 
 - 脱敏。
 - Manifest/Checksum。
 - 保留和上传。
 
-### M6：Shadow 生产验证
+### 22.6 M6：Shadow 生产验证 {/* #m6shadow-生产验证 */}
 
 - 与人工 Runbook 对比。
 - 统计覆盖率、误报和采集成本。
@@ -793,4 +790,3 @@ requires_approval: true
 
 完成这个项目后，你掌握的不只是 Python/Go 语法，而是把
 Kubernetes、GPU、网络、存储、监控和 SRE 方法转成可靠工程工具的完整过程。
-

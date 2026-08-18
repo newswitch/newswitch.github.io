@@ -2,21 +2,21 @@
 title: "容器运行时接口（CRI）"
 sidebar_label: "02. 容器运行时接口（CRI）"
 sidebar_position: 2
-tags: [Kubernetes, 开放接口, 学习路线]
 description: "容器运行时接口（CRI）是 Kubernetes 中定义容器和镜像服务的核心接口，基于 gRPC 协议，支持多种容器运行时后端如 containerd、CRI-O 等，为 Kubernetes 提供了灵活的容器运行时选择。"
+tags: [Kubernetes, 开放接口, 学习路线]
 ---
 
 # 容器运行时接口（CRI）
 
 > CRI（Container Runtime Interface）为 Kubernetes 提供了标准化的容器运行时抽象层，支持多种运行时后端，极大提升了平台的灵活性和可扩展性。
 
-## 总览
+## 1. 总览 {/* #总览 */}
 
 容器运行时接口（CRI）是一个插件接口，使 kubelet 能够在无需重新编译 Kubernetes 组件的情况下，支持多种容器运行时。CRI 由 Protocol Buffer 定义和 gRPC API 组成，规定了 Kubernetes 与容器运行时实现之间的契约。
 
 CRI **不是**通用的容器运行时 API，它专为 kubelet 与运行时通信以及节点级故障排查工具（如 `crictl`）设计。API 设计以 Kubernetes 为中心，可能包含 kubelet 所需的调用顺序或参数假设。
 
-## CRI 解决的问题
+## 2. CRI 解决的问题 {/* #cri-解决的问题 */}
 
 在 CRI 出现之前，集成新的容器运行时需要修改和重新编译 kubelet 代码。这种紧耦合导致：
 
@@ -35,14 +35,14 @@ graph TB
         KB1["Kubelet<br/>(含运行时代码)"]
         KB1 -->|"紧耦合"| RT1["容器运行时"]
     end
-    
+
     subgraph "有了 CRI"
         KB2["Kubelet<br/>(运行时无关)"]
         CRI["CRI API<br/>Protocol Buffer 定义<br/>gRPC 接口"]
         RT2A["containerd"]
         RT2B["CRI-O"]
         RT2C["其他运行时"]
-        
+
         KB2 -->|"gRPC 调用"| CRI
         CRI -->|"由实现"| RT2A
         CRI -->|"由实现"| RT2B
@@ -54,15 +54,15 @@ graph TB
 
 抽象层允许运行时实现独立演进，同时为 kubelet 保持稳定接口。
 
-## CRI 服务架构
+## 3. CRI 服务架构 {/* #cri-服务架构 */}
 
 CRI 定义了两个主要的 gRPC 服务，各自职责如下：
 
-### RuntimeService
+### 3.1 RuntimeService {/* #runtimeservice */}
 
 `RuntimeService` 管理 Pod 沙箱和容器的完整生命周期。Pod 沙箱是 Kubernetes Pod 的运行时表示，提供容器共享的环境（如网络、IPC 等）。
 
-### ImageService
+### 3.2 ImageService {/* #imageservice */}
 
 `ImageService` 独立处理所有镜像相关操作，允许运行时分别使用不同后端存储镜像和运行容器。
 
@@ -71,28 +71,28 @@ CRI 定义了两个主要的 gRPC 服务，各自职责如下：
 ```mermaid
 graph TB
     CRI["容器运行时接口"]
-    
+
     subgraph RS["RuntimeService"]
         direction TB
-        
+
         PS["Pod 沙箱操作<br/>RunPodSandbox<br/>StopPodSandbox<br/>RemovePodSandbox<br/>PodSandboxStatus<br/>ListPodSandbox<br/>UpdatePodSandboxResources"]
-        
+
         CT["容器操作<br/>CreateContainer<br/>StartContainer<br/>StopContainer<br/>RemoveContainer<br/>ContainerStatus<br/>ListContainers<br/>UpdateContainerResources"]
-        
+
         EX["执行操作<br/>ExecSync<br/>Exec<br/>Attach<br/>PortForward<br/>ReopenContainerLog<br/>CheckpointContainer"]
-        
+
         OBS["可观测性<br/>ContainerStats<br/>ListContainerStats<br/>PodSandboxStats<br/>ListPodSandboxStats<br/>GetContainerEvents<br/>ListMetricDescriptors<br/>ListPodSandboxMetrics"]
-        
+
         CFG["配置<br/>Version<br/>Status<br/>RuntimeConfig<br/>UpdateRuntimeConfig"]
     end
-    
+
     subgraph IS["ImageService"]
         IMG["镜像操作<br/>ListImages<br/>ImageStatus<br/>PullImage<br/>RemoveImage<br/>ImageFsInfo"]
     end
-    
+
     CRI --> RS
     CRI --> IS
-    
+
     PS -.->|"容器运行于其中"| CT
 ```
 
@@ -100,7 +100,7 @@ graph TB
 
 RuntimeService 与 ImageService 的分离为运行时管理镜像和容器提供了灵活性。
 
-## 技术基础
+## 4. 技术基础 {/* #技术基础 */}
 
 CRI 基于两项核心技术：
 
@@ -115,23 +115,23 @@ graph BT
         KUBELET("kubelet")
         CRICTL("crictl CLI")
     end
-    
+
     subgraph "CRI API 层"
         GRPC_DEF("gRPC 服务定义<br/>RuntimeService<br/>ImageService")
         PB_MSG("Protocol Buffer 消息<br/>PodSandboxConfig<br/>ContainerConfig<br/>ContainerStatus<br/>...")
     end
-    
+
     subgraph "运行时实现"
         CONTAINERD("containerd CRI 插件")
         CRIO("CRI-O")
         OTHER("其他运行时")
     end
-    
+
     KUBELET -->|"gRPC 客户端调用"| GRPC_DEF
     CRICTL -->|"gRPC 客户端调用"| GRPC_DEF
-    
+
     GRPC_DEF -->|"序列化使用"| PB_MSG
-    
+
     GRPC_DEF -->|"由实现"| CONTAINERD
     GRPC_DEF -->|"由实现"| CRIO
     GRPC_DEF -->|"由实现"| OTHER
@@ -139,9 +139,9 @@ graph BT
 
 ![gRPC 与 Protocol Buffers 在 CRI 中的作用](/images/k8s/interfaces/cri/a9ffe9bc753405c70dcc0584acc64bc7.svg)
 
-## 关键概念
+## 5. 关键概念 {/* #关键概念 */}
 
-### Pod 沙箱
+### 5.1 Pod 沙箱 {/* #pod-沙箱 */}
 
 Pod 沙箱是 Kubernetes Pod 的运行时表示，提供容器共享的执行环境，包括：
 
@@ -153,7 +153,7 @@ Pod 沙箱是 Kubernetes Pod 的运行时表示，提供容器共享的执行环
 
 `RunPodSandbox` RPC 创建并启动 Pod 沙箱，确保其就绪后才能在其中创建容器。
 
-### 容器生命周期
+### 5.2 容器生命周期 {/* #容器生命周期 */}
 
 容器在 Pod 沙箱内创建，生命周期如下：
 
@@ -164,7 +164,7 @@ Pod 沙箱是 Kubernetes Pod 的运行时表示，提供容器共享的执行环
 
 所有生命周期操作均为幂等，例如对已停止容器调用 `StopContainer` 也会返回成功。
 
-### 版本协商
+### 5.3 版本协商 {/* #版本协商 */}
 
 CRI 通过 `Version` RPC 支持版本协商，返回：
 
@@ -175,11 +175,11 @@ CRI 通过 `Version` RPC 支持版本协商，返回：
 
 kubelet 可据此校验与运行时的兼容性。
 
-## 预期应用场景
+## 6. 预期应用场景 {/* #预期应用场景 */}
 
 CRI 专为以下两类场景设计：
 
-### 1. kubelet 集成
+### 6.1 kubelet 集成 {/* #1-kubelet-集成 */}
 
 CRI 的主要消费者是 kubelet，使用该 API 实现：
 
@@ -191,7 +191,7 @@ CRI 的主要消费者是 kubelet，使用该 API 实现：
 
 kubelet 期望特定的调用模式，并可能根据操作顺序优化。
 
-### 2. 节点级故障排查
+### 6.2 节点级故障排查 {/* #2-节点级故障排查 */}
 
 `crictl` 命令行工具通过 CRI 实现节点级调试与排查：
 
@@ -207,21 +207,21 @@ CRI **不适用于**：
 - 直接应用级集成
 - 构建替代编排系统
 
-## 主流 CRI 实现
+## 7. 主流 CRI 实现 {/* #主流-cri-实现 */}
 
 | 运行时         | 维护者         | 特点                         | 使用场景                |
 | -------------- | -------------- | ---------------------------- | ----------------------- |
 | containerd     | CNCF           | 轻量级、高性能、生产就绪      | 云原生环境、生产部署     |
 | CRI-O          | Red Hat/CNCF   | 专为 Kubernetes 设计、OCI 兼容 | OpenShift、企业环境      |
 
-### 安全增强型运行时
+### 7.1 安全增强型运行时 {/* #安全增强型运行时 */}
 
 虽然以下运行时不直接实现 CRI 接口，但通过适配器可以与 Kubernetes 集成：
 
 - **[Kata Containers](https://katacontainers.io/)**：基于轻量级虚拟机的容器运行时，提供硬件级隔离
 - **[gVisor](https://gvisor.dev/)**：用户空间内核的容器沙箱，提供系统调用级别的隔离
 
-### 集成方式
+### 7.2 集成方式 {/* #集成方式 */}
 
 以下示例展示了如何通过 RuntimeClass 集成 Kata Containers 等安全增强型运行时：
 
@@ -244,16 +244,16 @@ spec:
     image: nginx
 ```
 
-## 最佳实践
+## 8. 最佳实践 {/* #最佳实践 */}
 
-### 选择容器运行时的考虑因素
+### 8.1 选择容器运行时的考虑因素 {/* #选择容器运行时的考虑因素 */}
 
 - **性能要求**：containerd 通常提供更好的性能
 - **安全需求**：高安全要求场景考虑 Kata Containers 或 gVisor
 - **生态兼容性**：CRI-O 与 OpenShift 生态集成更好
 - **维护成本**：考虑团队的技术栈和维护能力
 
-### 监控和故障排查
+### 8.2 监控和故障排查 {/* #监控和故障排查 */}
 
 在日常运维和故障排查中，建议结合 `crictl` 工具对容器运行时进行监控和诊断。常见操作包括：
 
@@ -278,7 +278,7 @@ crictl logs <container-id>
 crictl exec -it <container-id> /bin/bash
 ```
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 | 方面       | 详情                                                         |
 | ---------- | ------------------------------------------------------------ |
@@ -292,7 +292,7 @@ crictl exec -it <container-id> /bin/bash
 
 CRI 让 Kubernetes 生态支持多样化容器运行时实现，同时为 kubelet 保持稳定接口。这一架构决策使容器运行时技术能独立于 Kubernetes 编排逻辑持续演进。
 
-## 参考文献
+## 10. 参考资料 {/* #参考文献 */}
 
 - [Container Runtime Interface (CRI) - kubernetes.io](https://kubernetes.io/docs/concepts/architecture/cri/)
 - [containerd 官方文档 - containerd.io](https://containerd.io/)

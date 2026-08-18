@@ -1,11 +1,12 @@
 ---
-title: lspci 命令详解：读懂 BDF、PCIe 能力、链路与驱动绑定
+title: "lspci 命令详解：读懂 BDF、PCIe 能力、链路与驱动绑定"
+sidebar_label: "09. lspci 命令详解：读懂 BDF、PCIe 能力、链路与驱动绑定"
 sidebar_position: 9
-description: 完整讲解 lspci 的全部参数、BDF 与 ID、拓扑树、配置空间、PCIe 链路能力和状态、AER/ACS/SR-IOV，以及 GPU/NIC/NVMe 排障。
+description: "完整讲解 lspci 的全部参数、BDF 与 ID、拓扑树、配置空间、PCIe 链路能力和状态、AER/ACS/SR-IOV，以及 GPU/NIC/NVMe 排障。"
 tags: [Linux, lspci, PCIe, GPU, 网卡, NVMe]
 ---
 
-# `lspci` 命令详解：读懂 BDF、PCIe 能力、链路与驱动绑定
+# lspci 命令详解：读懂 BDF、PCIe 能力、链路与驱动绑定
 
 `lspci` 由 pciutils 提供，用来枚举 PCI/PCIe function、读取配置空间并解码 capability。GPU、NIC、NVMe、HBA 与加速卡的“系统是否枚举、插在哪棵树、以什么速率连接、绑定哪个驱动”都从它开始。
 

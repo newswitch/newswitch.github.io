@@ -1,9 +1,9 @@
 ---
-title: InfiniBand Fabric 原理
+title: "InfiniBand Fabric 原理"
 sidebar_label: "04. InfiniBand Fabric 原理"
 sidebar_position: 4
+description: "理解 InfiniBand HCA、Switch、Subnet Manager、LID/GID、PKey、SL/VL、路由和端口状态。"
 tags: [InfiniBand, HCA, Subnet Manager, LID, GID, PKey, SL, VL]
-description: 理解 InfiniBand HCA、Switch、Subnet Manager、LID/GID、PKey、SL/VL、路由和端口状态。
 ---
 
 # InfiniBand Fabric 原理
@@ -37,16 +37,16 @@ flowchart LR
 
 ## 2. GUID、LID 与 GID
 
-### GUID
+### 2.1 GUID {/* #guid */}
 
 全局唯一标识 Node、Port 或 System Image，类似硬件身份，不直接等同于转发表地址。
 
-### LID
+### 2.2 LID {/* #lid */}
 
 Local Identifier，由 SM 在 IB Subnet 内分配，交换机依据 LID 路由。端口必须进入 Active 并获得
 有效 LID 才能进行常规数据通信。
 
-### GID
+### 2.3 GID {/* #gid */}
 
 128 位 Global Identifier，用于全局/跨子网语义，也被 RDMA 地址体系使用。IB GID 与
 RoCE GID 表的来源和 Link Layer 不同，排障时不能只看字符串形式。
@@ -182,15 +182,15 @@ ibqueryerrors
 
 ## 10. 三个典型故障
 
-### 物理 Up 但 State 不是 Active
+### 10.1 物理 Up 但 State 不是 Active {/* #物理-up-但-state-不是-active */}
 
 检查 Master SM、SM LID、Partition、路由和端口管理状态。
 
-### 带宽只有预期的一部分
+### 10.2 带宽只有预期的一部分 {/* #带宽只有预期的一部分 */}
 
 检查 Link Width/Speed 是否降级、PCIe 宽度、单/多端口、消息大小、QP 数、NUMA 和路径热点。
 
-### 部分节点互通失败
+### 10.3 部分节点互通失败 {/* #部分节点互通失败 */}
 
 检查 PKey、LID 路由、HCA Port、重复 GUID、线缆映射和 SM 拓扑视图。
 
@@ -209,7 +209,7 @@ ibqueryerrors
 能够解释为什么“网卡灯亮”不代表 IB Fabric 可用；能从 SM、LID、PKey、SL/VL、路由和
 端口计数器建立完整证据链。
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA Subnet Manager Documentation](https://docs.nvidia.com/networking/display/NVIDIAMLNXOSUserManualv3122002/subnet-manager.pdf)
 - [OpenSM Documentation](https://github.com/linux-rdma/opensm)

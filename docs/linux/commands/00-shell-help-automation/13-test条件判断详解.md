@@ -1,11 +1,12 @@
 ---
-title: test、[ ] 与 [[ ]] 条件判断详解：文件、字符串、整数和正则
+title: "test、[ ] 与 [[ ]] 条件判断详解：文件、字符串、整数和正则"
+sidebar_label: "13. test、[ ] 与 [[ ]] 条件判断详解：文件、字符串、整数和正则"
 sidebar_position: 13
-description: 系统讲解 test/[ 的全部常用一元二元操作符、Bash [[ ]] pattern/regex、短路、引用与 -a/-o 歧义。
+description: "系统讲解 test/[ 的全部常用一元二元操作符、Bash [[ ]] pattern/regex、短路、引用与 -a/-o 歧义。"
 tags: [Linux, Bash, test, 条件判断, 正则]
 ---
 
-# `test`、`[ ]` 与 `[[ ]]`：条件表达式不是普通文本
+# test、[ ] 与 [[ ]] 条件判断详解：文件、字符串、整数和正则
 
 `test EXPRESSION` 和 `[ EXPRESSION ]` 是同一语义（`[` 需要最后一个 `]` 参数）；Bash `[[ EXPRESSION ]]` 是关键字语法，支持 pattern/regex 且不会对普通展开结果做 word splitting 和 filename expansion。
 

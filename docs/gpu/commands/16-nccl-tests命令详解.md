@@ -1,11 +1,12 @@
 ---
-title: nccl-tests 命令详解：单机与多机 GPU 集合通信验证
+title: "nccl-tests 命令详解：单机与多机 GPU 集合通信验证"
+sidebar_label: "16. nccl-tests 命令详解：单机与多机 GPU 集合通信验证"
 sidebar_position: 16
-description: 构建并运行 nccl-tests，理解 AllReduce 等集合通信、消息规模、进程到 GPU 映射、algbw/busbw 与多机故障排查。
+description: "构建并运行 nccl-tests，理解 AllReduce 等集合通信、消息规模、进程到 GPU 映射、algbw/busbw 与多机故障排查。"
 tags: [NCCL, nccl-tests, GPU, NVLink, RDMA, MPI]
 ---
 
-# nccl-tests 命令详解
+# nccl-tests 命令详解：单机与多机 GPU 集合通信验证
 
 `nccl-tests` 是 NVIDIA 官方 NCCL 正确性与性能测试集，包含 AllReduce、AllGather、Broadcast、ReduceScatter、SendRecv 等。它能隔离框架影响、验证 GPU 间集合通信，但必须与拓扑、进程映射、消息规模和 NCCL 版本一起解释。
 
@@ -137,7 +138,7 @@ NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,GRAPH,NET \
 
 能构建并证明运行时链接的 NCCL；能设计从单卡到多机的分层矩阵；能解释 algbw/busbw；能从 Hang 或退化判断是进程启动、GPU P2P、NVLink/PCIe、RDMA/Socket 网络还是 Collective 参数问题。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [NVIDIA nccl-tests repository](https://github.com/NVIDIA/nccl-tests)
 - [NCCL User Guide](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/)

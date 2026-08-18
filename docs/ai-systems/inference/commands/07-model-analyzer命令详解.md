@@ -1,5 +1,6 @@
 ---
 title: "Triton Model Analyzer 命令详解"
+sidebar_label: "07. Triton Model Analyzer 命令详解"
 sidebar_position: 7
 description: "使用 Model Analyzer 搜索Triton模型实例、动态Batch和资源配置，管理checkpoint并生成性能报告。"
 tags: [Triton, Model Analyzer, GPU, 性能调优, 容量规划]
@@ -106,11 +107,11 @@ checkpoint用于长搜索恢复和后续分析。结果目录必须记录模型�
 | 报告排序异常 | 目标/约束字段、单位、工具版本和已知问题 |
 | 最优配置线上变差 | 真实Token/请求分布、多租户、网关、热状态不同 |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能控制搜索空间；能设计约束与目标；能审计checkpoint；能解释Pareto候选；能把工具结果转化为需要二次验证的配置假设，而不是直接上线结论。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [Triton Model Analyzer](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/model_analyzer/docs/README.html)
 - [Model Analyzer reports](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/model_analyzer/docs/report.html)

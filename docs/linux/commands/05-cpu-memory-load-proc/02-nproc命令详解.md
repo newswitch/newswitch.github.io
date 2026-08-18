@@ -1,11 +1,12 @@
 ---
-title: nproc 命令详解：可用 CPU、affinity、cgroup 配额与并行度
+title: "nproc 命令详解：可用 CPU、affinity、cgroup 配额与并行度"
+sidebar_label: "02. nproc 命令详解：可用 CPU、affinity、cgroup 配额与并行度"
 sidebar_position: 2
-description: 完整讲解 GNU nproc 的全部参数、available 与 installed CPU、OpenMP 环境变量、affinity、cpuset 和 cgroup v2 quota。
+description: "完整讲解 GNU nproc 的全部参数、available 与 installed CPU、OpenMP 环境变量、affinity、cpuset 和 cgroup v2 quota。"
 tags: [Linux, nproc, CPU, cgroup, affinity, coreutils]
 ---
 
-# `nproc` 命令详解：可用 CPU、affinity、cgroup 配额与并行度
+# nproc 命令详解：可用 CPU、affinity、cgroup 配额与并行度
 
 `nproc` 输出当前进程可用的处理单元数量。它不是简单统计 `/proc/cpuinfo`，在容器和批处理系统中通常比“宿主机有几个 CPU”更接近安全并行度。
 
@@ -108,7 +109,7 @@ case $requested in (*[!0-9]*|'') exit 2;; esac
 
 掌握标准：能解释四种 CPU 数量的区别，能安全设置并行度上限，并知道何时必须看 cgroup throttling 和实际基准。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：nproc](https://www.gnu.org/software/coreutils/manual/html_node/nproc-invocation.html)
 - [Linux cgroup v2 CPU controller](https://docs.kernel.org/admin-guide/cgroup-v2.html#cpu)

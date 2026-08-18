@@ -2,8 +2,8 @@
 title: "物理备份、Clone 与大库恢复设计"
 sidebar_label: "03. 物理备份、Clone 与大库恢复设计"
 sidebar_position: 3
-tags: [MySQL, 物理备份, Clone, 大库恢复]
 description: "理解 InnoDB 物理备份的一致性、prepare/copy-back、Clone 供应和大库恢复的资源与时间预算。"
+tags: [MySQL, 物理备份, Clone, 大库恢复]
 ---
 
 # 物理备份、Clone 与大库恢复设计
@@ -63,7 +63,7 @@ effective throughput 受源盘、目标盘、网络、压缩 CPU、并发业务�
 
 全备恢复、全备+增量链、缺失增量、损坏块、密钥轮换后恢复、跨 AZ 下载、目标资源降级、恢复后建立复制。记录每阶段耗时，才能知道 RTO 的真正组成。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [InnoDB Backup](https://dev.mysql.com/doc/refman/8.4/en/innodb-backup.html)
 - [Clone Plugin](https://dev.mysql.com/doc/refman/8.4/en/clone-plugin.html)

@@ -1,11 +1,12 @@
 ---
-title: rdma 命令详解：Device、Link、Resource、Statistic 与 Namespace
+title: "rdma 命令详解：Device、Link、Resource、Statistic 与 Namespace"
+sidebar_label: "27. rdma 命令详解：Device、Link、Resource、Statistic 与 Namespace"
 sidebar_position: 27
-description: 系统讲解 iproute2 rdma dev/link/resource/statistic/system 子命令、JSON、driver detail、QP/CM/MR 资源与计数器排障。
+description: "系统讲解 iproute2 rdma dev/link/resource/statistic/system 子命令、JSON、driver detail、QP/CM/MR 资源与计数器排障。"
 tags: [网络, RDMA, RoCE, InfiniBand, iproute2]
 ---
 
-# `rdma` 命令详解：从 netdev 上升到 RDMA 对象
+# rdma 命令详解：Device、Link、Resource、Statistic 与 Namespace
 
 iproute2 的 `rdma` 读取/配置 RDMA device、port link、QP/CM/MR 等资源和硬件统计。`ip link up` 只证明以太网 netdev 状态，不证明 RDMA device、GID、QP 建连和数据面正常。
 

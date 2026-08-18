@@ -1,9 +1,9 @@
 ---
-title: NetBox 与网络 Source of Truth
+title: "NetBox 与网络 Source of Truth"
 sidebar_label: "05. NetBox 与网络 Source of Truth"
 sidebar_position: 5
+description: "建立从站点、设备、接口、线缆到 IP、VLAN、VRF 的网络意图模型，并与实际状态持续对账。"
 tags: [NetBox, Source of Truth, DCIM, IPAM, Reconciliation]
-description: 建立从站点、设备、接口、线缆到 IP、VLAN、VRF 的网络意图模型，并与实际状态持续对账。
 ---
 
 # NetBox 与网络 Source of Truth
@@ -188,7 +188,7 @@ NetBox 直接编辑方便，但生产意图变更仍需要审计：
 - 发布失败时怎样处理 SoT 与设备不一致；
 - 如何通过 Schema、唯一约束、生命周期和对账维持数据可信度。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [NetBox 官方文档](https://netbox.readthedocs.io/en/stable/)
 - [NetBox REST API 文档](https://netbox.readthedocs.io/en/stable/integrations/rest-api/)

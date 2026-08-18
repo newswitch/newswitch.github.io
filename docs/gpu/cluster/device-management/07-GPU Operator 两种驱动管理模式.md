@@ -1,9 +1,11 @@
 ---
-title: GPU Operator 两种驱动管理模式
+title: "GPU Operator 两种驱动管理模式"
 sidebar_label: "07. GPU Operator 两种驱动管理模式"
+sidebar_position: 7
+description: "GPU Operator 不只部署 Device Plugin，还可管理驱动、Container Toolkit、GFD、DCGM Exporter 和验证组件。驱动方面生产上主要有两种模式："
+tags: ["Kubernetes", "GPU Operator", "驱动", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU Operator", "驱动", "学习路线"]
 ---
 
 # GPU Operator 两种驱动管理模式
@@ -17,18 +19,14 @@ GPU Operator 不只部署 Device Plugin，还可管理驱动、Container Toolkit
 
 默认以容器化方式部署驱动；宿主机已装驱动时须设 `driver.enabled=false`。预装驱动**不受** Operator 生命周期管理。Helm 安装见：[使用 Helm 部署 GPU Operator](./06-使用%20Helm%20部署%20GPU%20Operator.md)。
 
----
-
 ## 1. 学习目标
 
-1. 理解两种驱动模式的工作方式；  
-2. 判断当前集群用哪种模式；  
-3. 掌握两种模式的安装参数；  
-4. 理解 Toolkit 与驱动是否必须一起管理；  
-5. 知道升级、回滚、故障处理上的差别；  
+1. 理解两种驱动模式的工作方式；
+2. 判断当前集群用哪种模式；
+3. 掌握两种模式的安装参数；
+4. 理解 Toolkit 与驱动是否必须一起管理；
+5. 知道升级、回滚、故障处理上的差别；
 6. 能按生产环境选型。
-
----
 
 ## 2. 模式一：Operator 管理驱动
 
@@ -74,8 +72,6 @@ kubectl logs "$DRIVER_POD" -n gpu-operator --all-containers --tail=500
 **优点**：版本集中配置、节点安装统一、可配合升级控制器滚动、降低人工逐节点成本、新节点可自动部署、状态可经 Kubernetes 对象观察。
 
 **风险**：与内核强相关——头文件缺失、内核不受支持、Secure Boot、nouveau 冲突、自定义内核匹配失败、Driver Pod 启动期间业务不可用、节点 OS 差异过大。容器化驱动要求 OS/内核满足支持矩阵；某些自定义内核更适合预装宿主机驱动。
-
----
 
 ## 3. 模式二：宿主机预装驱动
 
@@ -138,8 +134,6 @@ helm upgrade --install gpu-operator nvidia/gpu-operator \
 
 **风险**：需逐节点保证版本一致；新节点须先装驱动；Operator **不能**自动升级宿主机驱动；需额外巡检漂移；回滚由 OS 层负责。升级控制器只管理容器化驱动。
 
----
-
 ## 4. 如何判断当前模式
 
 ```bash
@@ -150,8 +144,6 @@ kubectl get clusterpolicy cluster-policy \
 kubectl get daemonset -n gpu-operator | grep nvidia-driver
 helm get values gpu-operator -n gpu-operator -a | grep -A10 '^driver:'
 ```
-
----
 
 ## 5. 对比与选型
 
@@ -169,22 +161,18 @@ helm get values gpu-operator -n gpu-operator -a | grep -A10 '^driver:'
 
 **更适合预装**：成熟补丁平台、定制内核、驱动须主机级审批、不能由 Pod 动态装驱动、内网源受限。
 
----
-
 ## 6. 本篇总结
 
 核心区别不是「驱动是否跑在容器里」，而是**谁负责驱动生命周期**：
 
-- Operator 模式：安装、升级、状态由 GPU Operator 管；  
+- Operator 模式：安装、升级、状态由 GPU Operator 管；
 - 预装模式：服务器运维体系管驱动，Operator 只管上层 GPU 组件。
 
 选型重点：OS 一致性、内核兼容、变更审批、升级方式、业务迁移能力、节点自动化程度。
 
 下一篇：[GPU Operator 升级、回滚与节点维护](./08-GPU%20Operator%20升级、回滚与节点维护.md)。
 
----
-
-## 参考与致谢
+## 7. 参考与致谢 {/* #参考与致谢 */}
 
 - [Install NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/install-gpu-operator.html)
 - [GPU Driver Upgrades](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-driver-upgrades.html)

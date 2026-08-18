@@ -1,9 +1,9 @@
 ---
-title: Ansible 网络自动化与幂等变更
+title: "Ansible 网络自动化与幂等变更"
 sidebar_label: "03. Ansible 网络自动化与幂等变更"
 sidebar_position: 3
+description: "理解 Inventory、连接插件、资源模块状态、差异预览、分批执行与变更后验证。"
 tags: [Ansible, Network Resource Modules, Idempotency, Check Mode]
-description: 理解 Inventory、连接插件、资源模块状态、差异预览、分批执行与变更后验证。
 ---
 
 # Ansible 网络自动化与幂等变更
@@ -157,19 +157,19 @@ Schema 校验
 
 ## 7. 常见反模式
 
-### 大段 `cli_config` 无差别推送
+### 7.1 大段 `cli_config` 无差别推送 {/* #大段-cliconfig-无差别推送 */}
 
 难以知道实际差异，重复执行可能不幂等。
 
-### 用 `ignore_errors: true` 隐藏失败
+### 7.2 用 `ignore_errors: true` 隐藏失败 {/* #用-ignoreerrors-true-隐藏失败 */}
 
 后续任务继续运行，设备进入不可预测的部分配置状态。应精确定义哪些错误可忽略。
 
-### 全网一次执行
+### 7.3 全网一次执行 {/* #全网一次执行 */}
 
 即使 Playbook 正确，厂商 Bug、版本差异或错误输入都可能扩大故障。按角色和故障域灰度。
 
-### 用输出字符串判断所有平台
+### 7.4 用输出字符串判断所有平台 {/* #用输出字符串判断所有平台 */}
 
 先使用结构化资源模块或解析器，并测试版本差异。
 
@@ -194,7 +194,7 @@ Schema 校验
 
 你应能解释一个资源模块每种状态可能删除什么；能够在执行前看到设备级差异，在执行中限制故障域，在执行后用运行状态验收，而不是只看 Play Recap 的 `failed=0`。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Ansible Network Getting Started](https://docs.ansible.com/ansible/latest/network/getting_started/index.html)
 - [Ansible Network Resource Modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html)

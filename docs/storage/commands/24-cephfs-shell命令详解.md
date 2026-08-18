@@ -1,11 +1,12 @@
 ---
-title: cephfs-shell 命令详解：无需挂载访问 CephFS、批处理与诊断
+title: "cephfs-shell 命令详解：无需挂载访问 CephFS、批处理与诊断"
+sidebar_label: "24. cephfs-shell 命令详解：无需挂载访问 CephFS、批处理与诊断"
 sidebar_position: 24
-description: 讲解 cephfs-shell 交互/非交互模式、配置、参数、路径模型、文件/目录/快照/xattr/配额命令、批处理、退出码和生产安全。
+description: "讲解 cephfs-shell 交互/非交互模式、配置、参数、路径模型、文件/目录/快照/xattr/配额命令、批处理、退出码和生产安全。"
 tags: [Ceph, CephFS, cephfs-shell, MDS, 文件系统]
 ---
 
-# `cephfs-shell` 命令详解：无需挂载访问 CephFS、批处理与诊断
+# cephfs-shell 命令详解：无需挂载访问 CephFS、批处理与诊断
 
 `cephfs-shell` 通过 Ceph client library 直接访问 CephFS，不需要先把文件系统挂载到 Linux VFS。它适合受控管理、验证 MDS/权限和批处理，但不能复现 kernel/FUSE mount、page cache、应用 syscall 的全部行为。
 

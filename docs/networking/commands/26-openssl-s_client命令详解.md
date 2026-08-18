@@ -1,11 +1,12 @@
 ---
-title: openssl s_client 命令详解：SNI、证书链、协议、ALPN 与 mTLS
+title: "openssl sclient 命令详解：SNI、证书链、协议、ALPN 与 mTLS"
+sidebar_label: "26. openssl sclient 命令详解：SNI、证书链、协议、ALPN 与 mTLS"
 sidebar_position: 26
-description: 系统讲解 openssl s_client connect/servername/showcerts/verify/CAfile/verify_hostname/brief/state/msg/tls/alpn/starttls/cert/key。
+description: "系统讲解 openssl s_client connect/servername/showcerts/verify/CAfile/verify_hostname/brief/state/msg/tls/alpn/starttls/cert/key。"
 tags: [网络, OpenSSL, TLS, 证书, mTLS]
 ---
 
-# `openssl s_client` 命令详解：握手成功不等于证书可信
+# openssl sclient 命令详解：SNI、证书链、协议、ALPN 与 mTLS
 
 `openssl s_client` 是通用 TLS 调试客户端，可显示握手、证书链、ALPN、session 和验证错误。它默认行为偏诊断：某些验证错误仍会继续并最终退出 0；自动化必须使用 `-verify_return_error` 并检查 hostname。
 

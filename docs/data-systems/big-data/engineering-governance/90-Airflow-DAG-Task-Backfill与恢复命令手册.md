@@ -1,8 +1,8 @@
 ---
-title: Airflow DAG、Task、Backfill 与恢复命令手册
+title: "Airflow DAG、Task、Backfill 与恢复命令手册"
 sidebar_label: "90. Airflow DAG、Task、Backfill 与恢复命令手册"
 sidebar_position: 90
-description: 掌握 Airflow 环境检查、DAG 导入、任务测试、触发、补数、池、连接和数据库清理，并建立幂等恢复流程。
+description: "掌握 Airflow 环境检查、DAG 导入、任务测试、触发、补数、池、连接和数据库清理，并建立幂等恢复流程。"
 tags: [Airflow, 命令手册, 调度, Backfill, 故障排查]
 ---
 
@@ -227,7 +227,7 @@ DAG ID / Run ID / Task ID / Try Number
   → 数据质量验收
 ```
 
-## 13. 30 分钟实验
+## 13. 分钟实验 {/* #13-30-分钟实验 */}
 
 1. 创建包含 extract、transform、quality 三个任务的实验 DAG。
 2. 使用 `dags list`、`tasks list --tree` 检查解析和依赖。
@@ -244,10 +244,9 @@ DAG ID / Run ID / Task ID / Try Number
 - 能识别 Pool、DAG、Executor 和外部系统的并发边界。
 - 能把 Airflow 状态、执行平台状态和业务数据状态完成三层对账。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [Airflow CLI and Environment Variables Reference](https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html)
 - [Using the Command Line Interface](https://airflow.apache.org/docs/apache-airflow/stable/howto/usage-cli.html)
 - [Backfill](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/backfill.html)
 - [Best Practices](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html)
-

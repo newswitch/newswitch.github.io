@@ -2,17 +2,17 @@
 title: "Mutating Webhook 扩展：自动注入与资源修改控制"
 sidebar_label: "10. Mutating Webhook 扩展：自动注入与资源修改控制"
 sidebar_position: 10
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Kubernetes MutatingAdmissionWebhook 的工作机制与应用实践，包括自动注入 Sidecar、动态默认值填充、资源标签修改等场景，帮助你掌握集群级动态变更的最佳实践。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # Mutating Webhook 扩展：自动注入与资源修改控制
 
 > Mutating Webhook 让 Kubernetes 集群具备“动态变更”能力，无需修改核心代码即可实现自动注入、资源规范统一等高级功能，是云原生架构可扩展性的典范。
 
-## Mutating Webhook 扩展：自动注入与资源修改控制
+## 1. Mutating Webhook 扩展：自动注入与资源修改控制 {/* #mutating-webhook-扩展自动注入与资源修改控制-1 */}
 
-在 Kubernetes 的 API 请求生命周期中，**准入控制器**（Admission Controller）是一个重要的扩展点。  
+在 Kubernetes 的 API 请求生命周期中，**准入控制器**（Admission Controller）是一个重要的扩展点。
 其中，**MutatingAdmissionWebhook**（变更型 Webhook）是最灵活的机制之一，允许开发者在对象被保存进 etcd 之前，对其进行自动修改（mutate）。
 
 常见应用场景包括：
@@ -24,7 +24,7 @@ description: "介绍 Kubernetes MutatingAdmissionWebhook 的工作机制与应�
 
 这些能力极大提升了集群的自动化和规范化水平。
 
-## 工作原理
+## 2. 工作原理 {/* #工作原理 */}
 
 Mutating Webhook 在 Kubernetes API Server 中的执行顺序如下。下图展示了请求流程：
 
@@ -54,11 +54,11 @@ sequenceDiagram
 
 这种机制保证了资源在落盘前即可被自动修改，满足多样化的业务需求。
 
-## 示例：为 Pod 自动添加 Label
+## 3. 示例：为 Pod 自动添加 Label {/* #示例为-pod-自动添加-label */}
 
 下面通过一个实际案例，演示如何使用 Mutating Webhook 自动为 Pod 添加标签。
 
-### 编写 Webhook 服务（Python 版示例）
+### 3.1 编写 Webhook 服务（Python 版示例） {/* #编写-webhook-服务python-版示例 */}
 
 以下代码实现了一个简单的 Webhook 服务，自动为新建 Pod 添加标签 `mutated-by=webhook`。
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
 该服务返回一个 JSON Patch，指示 API Server 添加标签。
 
-### 创建 MutatingWebhookConfiguration
+### 3.2 创建 MutatingWebhookConfiguration {/* #创建-mutatingwebhookconfiguration */}
 
 要让 Webhook 生效，需要配置 MutatingWebhookConfiguration 资源。如下所示：
 
@@ -132,7 +132,7 @@ webhooks:
 - `sideEffects: None` 表示调用无副作用；
 - `path` 指定 webhook 服务端点路径。
 
-### 验证效果
+### 3.3 验证效果 {/* #验证效果 */}
 
 创建 Pod 后，可以通过如下命令验证标签是否自动添加：
 
@@ -150,16 +150,16 @@ kubectl get pod test -o json | jq '.metadata.labels'
 }
 ```
 
-## 实际案例：Istio Sidecar 自动注入
+## 4. 实际案例：Istio Sidecar 自动注入 {/* #实际案例istio-sidecar-自动注入 */}
 
-Istio 的自动注入机制正是通过 Mutating Webhook 实现的。  
+Istio 的自动注入机制正是通过 Mutating Webhook 实现的。
 当你在命名空间中启用标签：
 
 ```bash
 kubectl label namespace default istio-injection=enabled
 ```
 
-Istio 的 Webhook 会在 Pod 创建时被触发，并将 `istio-proxy` 容器自动注入到 Pod Spec 中。  
+Istio 的 Webhook 会在 Pod 创建时被触发，并将 `istio-proxy` 容器自动注入到 Pod Spec 中。
 其核心逻辑是根据命名空间标签和 Pod 注解来判断是否注入。
 
 下图展示了 Istio Sidecar 自动注入的决策流程：
@@ -180,7 +180,7 @@ flowchart LR
 
 这种自动注入机制极大简化了服务网格的部署和运维。
 
-## 调试与故障排查
+## 5. 调试与故障排查 {/* #调试与故障排查 */}
 
 在实际使用 Mutating Webhook 时，常见问题及排查建议如下。
 
@@ -195,7 +195,7 @@ flowchart LR
 
 合理配置 Webhook 服务和 Kubernetes 资源，可有效避免上述问题。
 
-## 最佳实践
+## 6. 最佳实践 {/* #最佳实践 */}
 
 为了保证 Mutating Webhook 的稳定性和安全性，建议遵循以下最佳实践：
 
@@ -208,7 +208,7 @@ flowchart LR
 
 这些措施有助于提升系统的可靠性和可维护性。
 
-## 延伸阅读
+## 7. 延伸阅读 {/* #延伸阅读 */}
 
 以下资源有助于深入理解 Mutating Webhook 机制及相关应用：
 
@@ -217,7 +217,7 @@ flowchart LR
 - [Admission Webhook Example (官方示例) - github.com](./08-Admission-Webhook扩展.md)
 - [JSON Patch Specification (RFC 6902) - ietf.org](https://datatracker.ietf.org/doc/html/rfc6902)
 
-## 总结
+## 8. 总结 {/* #总结 */}
 
-Mutating Webhook 赋予 Kubernetes 集群强大的动态变更能力，无需修改核心代码即可实现自动注入、资源规范统一等高级功能。  
+Mutating Webhook 赋予 Kubernetes 集群强大的动态变更能力，无需修改核心代码即可实现自动注入、资源规范统一等高级功能。
 无论是 Istio 的 Sidecar 注入，还是企业内部的资源规范统一，Mutating Webhook 都是实现集群可扩展性和自动化的关键机制，充分体现了 Kubernetes“可扩展而不修改（Extensible Without Forking）”的设计哲学。

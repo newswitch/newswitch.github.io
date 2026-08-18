@@ -1,7 +1,8 @@
 ---
-title: Shell、帮助与安全自动化命令导读
+title: "Shell、帮助与安全自动化命令导读"
+sidebar_label: "00. Shell、帮助与安全自动化命令导读"
 sidebar_position: 0
-description: 从 Shell 解析顺序、展开、重定向、退出状态到可靠脚本接口，建立命令参考库真正的学习起点。
+description: "从 Shell 解析顺序、展开、重定向、退出状态到可靠脚本接口，建立命令参考库真正的学习起点。"
 tags: [Linux, Bash, Shell, 自动化, SRE]
 ---
 
@@ -80,7 +81,7 @@ trap cleanup EXIT
 
 能预测 quoting/globbing/redirection 的结果，区分 Shell 与外部程序参数，保留数组边界和退出状态，设计可重复、可中断、可回滚且不会泄露密钥的自动化。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [GNU Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
 - [ShellCheck Wiki](https://www.shellcheck.net/wiki/)

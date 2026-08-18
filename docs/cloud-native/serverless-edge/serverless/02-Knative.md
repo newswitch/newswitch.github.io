@@ -2,19 +2,19 @@
 title: "Knative"
 sidebar_label: "02. Knative"
 sidebar_position: 2
-tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative 是一个基于 Kubernetes 的开源 Serverless 平台，提供 Serving 和 Eventing 两大核心组件。"
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 ---
 
 # Knative
 
 > Knative 为 Kubernetes 提供了完整的 Serverless 能力，涵盖自动扩缩容、流量管理和事件驱动等核心特性，是企业构建云原生 Serverless 应用的首选平台。
 
-## Knative 简介
+## 1. Knative 简介 {/* #knative-简介 */}
 
 Knative 是 Google 发起的开源项目，是 Kubernetes 上的 Serverless 平台。它提供了两个核心组件：**Serving** 和 **Eventing**，为容器化应用提供了完整的 Serverless 体验。
 
-### 核心特性
+### 1.1 核心特性 {/* #核心特性 */}
 
 Knative 具备以下主要特性：
 
@@ -24,7 +24,7 @@ Knative 具备以下主要特性：
 - **标准兼容**：支持 CloudEvents 标准
 - **Kubernetes 原生**：完全基于 Kubernetes API
 
-## Knative 架构
+## 2. Knative 架构 {/* #knative-架构 */}
 
 下图展示了 Knative 的整体架构及各核心组件关系。
 
@@ -87,15 +87,15 @@ graph TD
 
 ![Knative 架构图](/images/k8s/serverless/knative/f066f72889e920855d549d6509fd0ef4.svg)
 
-## Knative Serving
+## 3. Knative Serving {/* #knative-serving */}
 
 Knative Serving 负责 Serverless 应用的部署、流量管理和自动扩缩容。以下介绍其核心概念和常用配置。
 
-### 核心概念
+### 3.1 核心概念 {/* #核心概念 */}
 
 Knative Serving 主要包含 Service、Configuration、Revision 和 Route 四类核心资源，分别负责应用生命周期、配置、版本和流量管理。
 
-#### Service（服务）
+#### 3.1.1 Service（服务） {/* #service服务 */}
 
 Service 是部署和管理 Serverless 应用的最高层抽象：
 
@@ -114,7 +114,7 @@ spec:
           value: "Go Sample v1"
 ```
 
-#### Configuration（配置）
+#### 3.1.2 Configuration（配置） {/* #configuration配置 */}
 
 Configuration 定义了应用的期望状态：
 
@@ -130,7 +130,7 @@ spec:
       - image: gcr.io/knative-samples/helloworld-go
 ```
 
-#### Revision（版本）
+#### 3.1.3 Revision（版本） {/* #revision版本 */}
 
 Revision 是应用的一个不可变快照：
 
@@ -146,7 +146,7 @@ spec:
   - image: gcr.io/knative-samples/helloworld-go
 ```
 
-#### Route（路由）
+#### 3.1.4 Route（路由） {/* #route路由 */}
 
 Route 管理流量的路由规则：
 
@@ -161,11 +161,11 @@ spec:
     revisionName: hello-world-abcde
 ```
 
-### 流量管理
+### 3.2 流量管理 {/* #流量管理 */}
 
 Knative Serving 支持多种流量管理策略，包括金丝雀部署和基于标签的路由。
 
-#### 金丝雀部署
+#### 3.2.1 金丝雀部署 {/* #金丝雀部署 */}
 
 通过 traffic 字段实现多版本流量分配，支持灰度发布。
 
@@ -184,7 +184,7 @@ spec:
     revisionName: hello-world-v2
 ```
 
-#### 基于标签的路由
+#### 3.2.2 基于标签的路由 {/* #基于标签的路由 */}
 
 可为不同版本分配标签，实现 A/B 测试或多环境路由。
 
@@ -203,11 +203,11 @@ spec:
     revisionName: hello-world-v2
 ```
 
-### 自动扩缩容
+### 3.3 自动扩缩容 {/* #自动扩缩容 */}
 
 Knative Serving 提供原生自动扩缩容能力，支持多维度配置和多种扩缩容策略。
 
-#### KPA (Knative Pod Autoscaler)
+#### 3.3.1 KPA (Knative Pod Autoscaler) {/* #kpa-knative-pod-autoscaler */}
 
 KPA 是 Knative 的原生自动扩缩容器，支持多维度配置。
 
@@ -228,7 +228,7 @@ spec:
       - image: gcr.io/knative-samples/helloworld-go
 ```
 
-#### 配置参数
+#### 3.3.2 配置参数 {/* #配置参数 */}
 
 下表汇总了常用扩缩容参数及其含义。
 
@@ -239,11 +239,11 @@ spec:
 | `autoscaling.knative.dev/target` | 目标并发数 | 100 |
 | `autoscaling.knative.dev/metric` | 扩缩容指标 | concurrency |
 
-## Knative Eventing
+## 4. Knative Eventing {/* #knative-eventing */}
 
 Knative Eventing 提供事件驱动架构，支持多种事件源和灵活的事件路由。
 
-### 事件驱动架构
+### 4.1 事件驱动架构 {/* #事件驱动架构 */}
 
 下图展示了 Knative Eventing 的事件流转与核心组件。
 
@@ -287,11 +287,11 @@ graph TD
 
 ![Knative Eventing 事件流](/images/k8s/serverless/knative/088d9a5b069ba7a0dccbf6ae09550835.svg)
 
-### 核心组件
+### 4.2 核心组件 {/* #核心组件 */}
 
 Knative Eventing 主要包含 Broker、Trigger 和 Source 三类核心资源。
 
-#### Broker（事件代理）
+#### 4.2.1 Broker（事件代理） {/* #broker事件代理 */}
 
 Broker 是事件的中央集线器：
 
@@ -303,7 +303,7 @@ metadata:
   namespace: default
 ```
 
-#### Trigger（触发器）
+#### 4.2.2 Trigger（触发器） {/* #trigger触发器 */}
 
 Trigger 定义了如何过滤和路由事件：
 
@@ -324,7 +324,7 @@ spec:
       name: hello-world
 ```
 
-#### Source（事件源）
+#### 4.2.3 Source（事件源） {/* #source事件源 */}
 
 Source 定义了如何从外部系统获取事件：
 
@@ -343,7 +343,7 @@ spec:
       name: event-display
 ```
 
-### CloudEvents 标准
+### 4.3 CloudEvents 标准 {/* #cloudevents-标准 */}
 
 Knative Eventing 完全兼容 CloudEvents 规范，便于事件互操作。
 
@@ -362,11 +362,11 @@ Knative Eventing 完全兼容 CloudEvents 规范，便于事件互操作。
 }
 ```
 
-## 安装和配置
+## 5. 安装和配置 {/* #安装和配置 */}
 
 Knative 支持多种安装方式，推荐使用 YAML 或 Operator。
 
-### 使用 YAML 安装
+### 5.1 使用 YAML 安装 {/* #使用-yaml-安装 */}
 
 ```bash
 # 安装 Knative Serving
@@ -381,7 +381,7 @@ kubectl apply -f https://github.com/knative/eventing/releases/latest/download/ev
 kubectl apply -f https://github.com/knative/net-istio/releases/latest/download/net-istio.yaml
 ```
 
-### 使用 Operator 安装
+### 5.2 使用 Operator 安装 {/* #使用-operator-安装 */}
 
 ```yaml
 apiVersion: v1
@@ -406,11 +406,11 @@ spec:
       ingress.class: "istio.ingress.networking.knative.dev"
 ```
 
-## 监控和调试
+## 6. 监控和调试 {/* #监控和调试 */}
 
 Knative 提供丰富的监控和调试能力，便于运维和故障排查。
 
-### 查看服务状态
+### 6.1 查看服务状态 {/* #查看服务状态 */}
 
 ```bash
 # 查看 Knative 服务
@@ -423,7 +423,7 @@ kubectl get pods -n knative-serving
 kubectl get events -n knative-serving
 ```
 
-### 日志调试
+### 6.2 日志调试 {/* #日志调试 */}
 
 ```bash
 # 查看 activator 日志
@@ -436,7 +436,7 @@ kubectl logs -n knative-serving deployment/controller
 kubectl logs -n knative-serving deployment/autoscaler
 ```
 
-### 性能监控
+### 6.3 性能监控 {/* #性能监控 */}
 
 可通过 Prometheus ServiceMonitor 收集关键指标。
 
@@ -457,11 +457,11 @@ spec:
     interval: 30s
 ```
 
-## 最佳实践
+## 7. 最佳实践 {/* #最佳实践 */}
 
 合理配置资源、优化启动时间和网络，有助于提升系统稳定性和效率。
 
-### 应用配置优化
+### 7.1 应用配置优化 {/* #应用配置优化 */}
 
 1. **资源限制**
 
@@ -489,7 +489,7 @@ spec:
        autoscaling.knative.dev/targetBurstCapacity: "200"
    ```
 
-### 网络配置
+### 7.2 网络配置 {/* #网络配置 */}
 
 1. **域名配置**
 
@@ -517,11 +517,11 @@ spec:
      secretName: example-tls
    ```
 
-## 故障排除
+## 8. 故障排除 {/* #故障排除 */}
 
 常见问题及调试技巧，帮助快速定位和解决问题。
 
-### 常见问题
+### 8.1 常见问题 {/* #常见问题 */}
 
 1. **服务无法启动**
 
@@ -553,7 +553,7 @@ spec:
    kubectl get metric
    ```
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 Knative 为 Kubernetes 提供了完整的 Serverless 体验：
 
@@ -563,7 +563,7 @@ Knative 为 Kubernetes 提供了完整的 Serverless 体验：
 
 通过 Knative，企业可以在 Kubernetes 上构建和管理 Serverless 应用，享受弹性伸缩、按需付费等优势，同时保持对底层基础设施的控制。
 
-## 参考文献
+## 10. 参考资料 {/* #参考文献 */}
 
 1. [Knative 官方文档 - knative.dev](https://knative.dev/)
 2. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/)

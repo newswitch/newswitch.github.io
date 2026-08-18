@@ -1,9 +1,9 @@
 ---
-title: GPU 到 GPU 通信综合实验
+title: "GPU 到 GPU 通信综合实验"
 sidebar_label: "10. GPU 到 GPU 通信综合实验"
 sidebar_position: 10
+description: "用两台 GPU 服务器完成 Socket、Host RDMA、GPU RDMA 和 NCCL 的分层验证与故障注入。"
 tags: [Lab, GPU, RDMA, GPUDirect, NCCL]
-description: 用两台 GPU 服务器完成 Socket、Host RDMA、GPU RDMA 和 NCCL 的分层验证与故障注入。
 ---
 
 # GPU 到 GPU 通信综合实验
@@ -103,23 +103,23 @@ All-to-All
 
 ## 7. 故障注入
 
-### 故障一：错误网络接口
+### 7.1 故障一：错误网络接口 {/* #故障一错误网络接口 */}
 
 让 NCCL 选择管理网。观察日志、NIC 流量和性能，修复后验证。
 
-### 故障二：错误 GID/Netdev
+### 7.2 故障二：错误 GID/Netdev {/* #故障二错误-gidnetdev */}
 
 在隔离环境选择不匹配条目，记录失败发生在地址解析、建连还是数据面。
 
-### 故障三：GPU/NIC 远端 NUMA
+### 7.3 故障三：GPU/NIC 远端 NUMA {/* #故障三gpunic-远端-numa */}
 
 把 Rank 绑定到非首选 NIC，比较性能和 CPU/PCIe 指标。
 
-### 故障四：路径 MTU 不一致
+### 7.4 故障四：路径 MTU 不一致 {/* #故障四路径-mtu-不一致 */}
 
 制造小包通、大包失败，证明 MTU 断点。
 
-### 故障五：RDMA 不可用导致 Socket 回退
+### 7.5 故障五：RDMA 不可用导致 Socket 回退 {/* #故障五rdma-不可用导致-socket-回退 */}
 
 观察作业是否失败或回退，以及监控能否发现“能运行但性能退化”。
 

@@ -2,8 +2,8 @@
 title: "SPIRE"
 sidebar_label: "05. SPIRE"
 sidebar_position: 5
-tags: [Kubernetes, 身份认证, 学习路线]
 description: "本文详细介绍 SPIRE 的架构、核心组件、证明机制和工作原理。"
+tags: [Kubernetes, 身份认证, 学习路线]
 ---
 
 # SPIRE
@@ -12,7 +12,7 @@ description: "本文详细介绍 SPIRE 的架构、核心组件、证明机制�
 
 SPIRE（SPIFFE Runtime Environment）是 [SPIFFE API](./04-SPIFFE.md) 的生产就绪实现，它执行节点和工作负载认证，根据预定义条件安全地向工作负载发布 SVID（SPIFFE Verifiable Identity Document），并验证其他工作负载的 SVID。
 
-## 核心架构
+## 1. 核心架构 {/* #核心架构 */}
 
 SPIRE 的部署架构由 SPIRE 服务器和一个或多个 SPIRE 代理组成。服务器作为证书颁发机构（CA），通过代理向工作负载分发身份，并维护身份注册表和验证条件。代理需部署在每个运行工作负载的节点上，负责本地暴露 SPIFFE 工作负载 API 并完成本地证明。
 
@@ -20,7 +20,7 @@ SPIRE 的部署架构由 SPIRE 服务器和一个或多个 SPIRE 代理组成。
 
 ![SPIRE 架构图](/images/k8s/auth/spire/spire-arch.svg)
 
-## SPIRE 服务器
+## 2. SPIRE 服务器 {/* #spire-服务器 */}
 
 SPIRE 服务器负责管理和发布其信任域内的所有身份，核心职责包括：
 
@@ -31,7 +31,7 @@ SPIRE 服务器负责管理和发布其信任域内的所有身份，核心职�
 
 ![SPIRE 服务器](/images/k8s/auth/spire/spire-server.svg)
 
-### 服务器插件体系
+### 2.1 服务器插件体系 {/* #服务器插件体系 */}
 
 SPIRE 服务器通过插件机制实现高度可扩展性，支持以下插件类型：
 
@@ -43,7 +43,7 @@ SPIRE 服务器通过插件机制实现高度可扩展性，支持以下插件�
 
 详细配置参考 [SPIRE 服务器配置参考](https://spiffe.io/docs/latest/deploying/spire_server/)。
 
-## SPIRE 代理
+## 3. SPIRE 代理 {/* #spire-代理 */}
 
 SPIRE 代理需在每个节点上运行，主要功能包括：
 
@@ -54,7 +54,7 @@ SPIRE 代理需在每个节点上运行，主要功能包括：
 
 ![SPIRE 代理](/images/k8s/auth/spire/spire-agent.svg)
 
-### 代理核心组件
+### 3.1 代理核心组件 {/* #代理核心组件 */}
 
 - **节点证明器插件**：与服务器协作，完成节点身份验证
 - **工作负载证明器插件**：通过进程信息等方式证明本地工作负载身份
@@ -62,7 +62,7 @@ SPIRE 代理需在每个节点上运行，主要功能包括：
 
 详细配置参考 [SPIRE 代理配置参考](https://spiffe.io/docs/latest/deploying/spire_agent/)。
 
-## 扩展性
+## 4. 扩展性 {/* #扩展性 */}
 
 SPIRE 支持自定义插件开发，适配不同平台和安全需求：
 
@@ -72,7 +72,7 @@ SPIRE 支持自定义插件开发，适配不同平台和安全需求：
 
 插件可在运行时动态加载，无需重新编译 SPIRE。
 
-## 工作负载注册
+## 5. 工作负载注册 {/* #工作负载注册 */}
 
 SPIRE 通过注册条目（Registration Entry）识别和授权工作负载。注册条目定义了：
 
@@ -83,14 +83,14 @@ SPIRE 通过注册条目（Registration Entry）识别和授权工作负载。�
 
 详细注册流程见 [SPIRE 文档](https://spiffe.io/docs/latest/spire/using/registering/)。
 
-## 身份证明机制
+## 6. 身份证明机制 {/* #身份证明机制 */}
 
 SPIRE 的证明（attestation）分为两阶段：
 
 1. **节点证明**：验证代理节点身份
 2. **工作负载证明**：验证节点上具体工作负载身份
 
-### 节点证明
+### 6.1 节点证明 {/* #节点证明 */}
 
 代理首次连接服务器时需完成节点证明。常见方式包括：
 
@@ -113,11 +113,11 @@ SPIRE 的证明（attestation）分为两阶段：
 
 SPIRE 支持多种节点证明器，详见官方文档。
 
-### 节点解析
+### 6.2 节点解析 {/* #节点解析 */}
 
 节点解析器插件可扩展节点属性，增强选择器能力，支持 AWS、Azure 等云平台。
 
-### 工作负载证明
+### 6.3 工作负载证明 {/* #工作负载证明 */}
 
 代理通过本地权限（如内核、kubelet）识别调用 API 的进程属性，包括：
 
@@ -137,7 +137,7 @@ SPIRE 内置支持 Unix/Linux、Kubernetes、Docker 等环境。
 
 节点证明不需要节点选择器，除非你需要[将工作负载映射到多个节点](https://spiffe.io/docs/latest/spire/using/registering/#mapping-workloads-to-multiple-nodes)。
 
-## SVID 身份颁发过程
+## 7. SVID 身份颁发过程 {/* #svid-身份颁发过程 */}
 
 以下为 SPIRE 向工作负载颁发身份的完整流程（以 AWS EC2 为例，X.509 SVID）：
 
@@ -153,7 +153,7 @@ SPIRE 内置支持 Unix/Linux、Kubernetes、Docker 等环境。
 10. 代理缓存 SVID 并监听 Workload API。
 11. 工作负载调用 API 请求 SVID，代理完成工作负载证明并返回 SVID。
 
-### 授权注册条目
+### 7.1 授权注册条目 {/* #授权注册条目 */}
 
 服务器仅向代理下发授权注册条目，具体流程包括：
 
@@ -164,7 +164,7 @@ SPIRE 内置支持 Unix/Linux、Kubernetes、Docker 等环境。
 
 详见[多节点映射](https://spiffe.io/docs/latest/spire/using/registering/#mapping-workloads-to-multiple-nodes)。
 
-## SPIRE Kubernetes 工作负载注册器
+## 8. SPIRE Kubernetes 工作负载注册器 {/* #spire-kubernetes-工作负载注册器 */}
 
 SPIRE Kubernetes 工作负载注册器支持多种自动注册模式，适配不同场景：
 
@@ -172,7 +172,7 @@ SPIRE Kubernetes 工作负载注册器支持多种自动注册模式，适配不
 - 控制器协调（reconcile）
 - CRD 声明式管理
 
-### 配置选项
+### 8.1 配置选项 {/* #配置选项 */}
 
 注册器支持命令行参数和 HCL 配置文件，核心配置项如下：
 
@@ -193,7 +193,7 @@ SPIRE Kubernetes 工作负载注册器支持多种自动注册模式，适配不
 | `mode`                | string   | 否   | 运行模式：`webhook`、`reconcile`、`crd` | `webhook`                    |
 | `disabled_namespaces` | []string | 否   | 禁用自动注册的命名空间列表              | `kube-system`, `kube-public` |
 
-### 工作负载注册模式
+### 8.2 工作负载注册模式 {/* #工作负载注册模式 */}
 
 不同模式支持的注册方式如下：
 
@@ -204,7 +204,7 @@ SPIRE Kubernetes 工作负载注册器支持多种自动注册模式，适配不
 | Pod 注解 | ✅            | ✅              | ✅        |
 | 身份模板 | ❌            | ❌              | ✅        |
 
-#### 服务账户模式
+#### 8.2.1 服务账户模式 {/* #服务账户模式 */}
 
 基于 Kubernetes 服务账户自动生成 SPIFFE ID，格式为：
 
@@ -222,7 +222,7 @@ Selectors     : k8s:ns:production
         k8s:pod-name:blog-app-98b6b79fd-jnv5m
 ```
 
-#### Pod 标签模式
+#### 8.2.2 Pod 标签模式 {/* #pod-标签模式 */}
 
 基于指定 Pod 标签值生成 SPIFFE ID：
 
@@ -240,7 +240,7 @@ spec:
   # Pod 配置
 ```
 
-#### Pod 注解模式
+#### 8.2.3 Pod 注解模式 {/* #pod-注解模式 */}
 
 基于指定 Pod 注解值生成自定义 SPIFFE ID 路径：
 
@@ -258,7 +258,7 @@ spec:
   # Pod 配置
 ```
 
-#### 联合身份注册
+#### 8.2.4 联合身份注册 {/* #联合身份注册 */}
 
 通过 `spiffe.io/federatesWith` 注解实现跨信任域联合身份：
 
@@ -272,11 +272,11 @@ spec:
   # Pod 配置
 ```
 
-### 部署方式
+### 8.3 部署方式 {/* #部署方式 */}
 
 SPIRE Kubernetes 工作负载注册器支持独立部署和 Sidecar 部署两种方式。
 
-#### 独立部署
+#### 8.3.1 独立部署 {/* #独立部署 */}
 
 ```yaml
 apiVersion: apps/v1
@@ -316,7 +316,7 @@ spec:
           type: DirectoryOrCreate
 ```
 
-#### Sidecar 部署
+#### 8.3.2 Sidecar 部署 {/* #sidecar-部署 */}
 
 ```yaml
 apiVersion: apps/v1
@@ -347,40 +347,40 @@ spec:
           name: k8s-workload-registrar
 ```
 
-### 运行模式详解
+### 8.4 运行模式详解 {/* #运行模式详解 */}
 
-#### Webhook 模式
+#### 8.4.1 Webhook 模式 {/* #webhook-模式 */}
 
 - 基于 ValidatingAdmissionWebhook 实现
 - 实时处理 Pod 创建/删除事件
 - 简单易用但可靠性有限，适合小规模或测试环境
 
-#### Reconcile 模式（推荐）
+#### 8.4.2 Reconcile 模式（推荐） {/* #reconcile-模式推荐 */}
 
 - 基于控制器协调机制
 - 支持故障恢复、状态同步和高可用
 - SPIFFE ID 仅限目标节点，自动清理失效条目
 - 生产环境首选
 
-#### CRD 模式
+#### 8.4.3 CRD 模式 {/* #crd-模式 */}
 
 - 基于自定义资源定义
 - 支持声明式管理和身份模板
 - 灵活适配复杂身份策略，适合 GitOps 流程
 
-### DNS 名称支持
+### 8.5 DNS 名称支持 {/* #dns-名称支持 */}
 
 在 `reconcile` 和 `crd` 模式下，可为 Pod 注册条目添加 DNS 名称。需注意部分服务（如 etcd）对 DNS 反向解析有特殊要求，必要时建议禁用该功能。
 
 部分服务（如 etcd）使用反向 DNS 验证客户端证书中的 DNS SAN。由于 Kubernetes 客户端 IP 可能无法有效反向解析，建议对这类服务禁用 DNS 名称功能。
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 - **模式选择**：生产环境优先使用 `reconcile`，复杂策略用 `crd`，测试可选 `webhook`
 - **安全配置**：启用客户端验证，合理配置 `disabled_namespaces`，最小权限原则
 - **性能优化**：多副本部署启用 `leader_election`，按需启用 DNS 名称，监控注册器指标
 
-## 故障排查
+## 10. 故障排查 {/* #故障排查 */}
 
 常见问题及排查建议：
 
@@ -390,17 +390,17 @@ spec:
 
 `reconcile` 模式下可监控 Pod 处理速度、注册成功率和控制器健康状态。
 
-## 平台兼容性
+## 11. 平台兼容性 {/* #平台兼容性 */}
 
 - **支持系统**：Linux/Unix
 - **Kubernetes 版本**：1.19+
 - **SPIRE 版本**：1.5.0+
 
-## 总结
+## 12. 总结 {/* #总结 */}
 
 SPIRE 作为 SPIFFE 标准的生产级实现，为云原生环境下的工作负载提供了自动化、可扩展的身份分发和证明机制。通过灵活的插件体系和多种注册模式，SPIRE 能够适配多样化的基础设施和安全需求，是实现零信任架构和细粒度身份管理的关键组件。建议结合实际场景选择合适的注册模式和安全配置，持续优化身份管理体系。
 
-## 参考文献
+## 13. 参考资料 {/* #参考文献 */}
 
 - [SPIRE Concepts - spiffe.io](https://spiffe.io/docs/latest/spire-about/spire-concepts/)
 - [SPIRE 服务器配置参考 - spiffe.io](https://spiffe.io/docs/latest/deploying/spire_server/)

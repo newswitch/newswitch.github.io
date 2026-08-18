@@ -1,11 +1,12 @@
 ---
-title: networkctl 命令详解：systemd-networkd 状态、配置与重载
+title: "networkctl 命令详解：systemd-networkd 状态、配置与重载"
+sidebar_label: "22. networkctl 命令详解：systemd-networkd 状态、配置与重载"
 sidebar_position: 22
-description: 以 systemd 上游 networkctl 手册为基线，系统讲解 list/status、operational/setup/online 状态、DHCP lease、LLDP、renew、reconfigure、reload、edit/cat/mask，以及 .network/.netdev/.link 配置模型。
+description: "以 systemd 上游 networkctl 手册为基线，系统讲解 list/status、operational/setup/online 状态、DHCP lease、LLDP、renew、reconfigure、reload、edit/cat/mask，以及 .network/.netdev/.link 配置模型。"
 tags: [Linux, networkctl, systemd-networkd, DHCP, LLDP, 路由, 网络配置]
 ---
 
-# `networkctl` 命令详解：systemd-networkd 状态、配置与重载
+# networkctl 命令详解：systemd-networkd 状态、配置与重载
 
 `networkctl` 用于查看和控制 `systemd-networkd` 管理的链路。它能展示内核链路状态、networkd 配置匹配、地址、路由、DNS、DHCP lease、LLDP 邻居和日志，也能触发 up/down、renew、reload、reconfigure 和配置文件编辑。
 
@@ -142,7 +143,7 @@ networkctl --no-legend --no-pager list
 IDX LINK TYPE OPERATIONAL SETUP
 ```
 
-### operational state
+### 6.1 operational state {/* #operational-state */}
 
 | 状态 | 含义 |
 |---|---|
@@ -156,7 +157,7 @@ IDX LINK TYPE OPERATIONAL SETUP
 | `enslaved` | 作为 bond/bridge port |
 | `routable` | 有可路由地址；不等于互联网或业务一定可达 |
 
-### setup state
+### 6.2 setup state {/* #setup-state */}
 
 | 状态 | 含义 |
 |---|---|
@@ -563,4 +564,3 @@ journalctl -u systemd-networkd --since '-10 min' --no-pager
 - [`systemd.network(5)` 官方手册](https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html)
 - [`systemd.netdev(5)` 官方手册](https://www.freedesktop.org/software/systemd/man/latest/systemd.netdev.html)
 - [`systemd.link(5)` 官方手册](https://www.freedesktop.org/software/systemd/man/latest/systemd.link.html)
-

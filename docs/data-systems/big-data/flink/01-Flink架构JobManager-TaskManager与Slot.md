@@ -1,9 +1,9 @@
 ---
-title: Flink 架构、JobManager、TaskManager 与 Slot
+title: "Flink 架构、JobManager、TaskManager 与 Slot"
 sidebar_label: "01. Flink 架构、JobManager、TaskManager 与 Slot"
 sidebar_position: 1
+description: "理解 Flink 作业从 StreamGraph 到 ExecutionGraph、资源 Slot、部署模式和故障恢复。"
 tags: [Flink, JobManager, TaskManager, Slot]
-description: 理解 Flink 作业从 StreamGraph 到 ExecutionGraph、资源 Slot、部署模式和故障恢复。
 ---
 
 # Flink 架构、JobManager、TaskManager 与 Slot
@@ -68,6 +68,6 @@ Restart strategy 只控制重试节奏，无法修复确定性坏数据、schema
 
 下一篇：[DataStream、Operator Chain、分区与并行度](./02-DataStream-Operator-Chain分区与并行度.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Flink Concepts](https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/flink-architecture/)

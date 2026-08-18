@@ -1,9 +1,9 @@
 ---
-title: Flink Checkpoint、Barrier、Savepoint 与 Exactly-Once
+title: "Flink Checkpoint、Barrier、Savepoint 与 Exactly-Once"
 sidebar_label: "05. Flink Checkpoint、Barrier、Savepoint 与 Exactly-Once"
 sidebar_position: 5
+description: "从分布式快照理解 source、in-flight 数据、operator state 和 sink 提交的一致恢复。"
 tags: [Flink, Checkpoint, Barrier, Savepoint, Exactly-Once]
-description: 从分布式快照理解 source、in-flight 数据、operator state 和 sink 提交的一致恢复。
 ---
 
 # Flink Checkpoint、Barrier、Savepoint 与 Exactly-Once
@@ -76,7 +76,7 @@ Savepoint 用于有计划停止、升级、迁移、rescale 和回滚。可靠�
 
 上一篇：[Flink State](./04-Keyed-State-Operator-State与State-Backend.md)　下一篇：[反压、倾斜、状态膨胀与性能调优](./06-反压数据倾斜状态膨胀与性能调优.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Flink Checkpointing](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/checkpointing/)
 - [Checkpointing under Backpressure](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/checkpointing_under_backpressure/)

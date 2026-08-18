@@ -2,8 +2,8 @@
 title: "Elasticsearch RPM/DEB、Docker 三节点与 ECK 部署"
 sidebar_label: "08. Elasticsearch RPM/DEB、Docker 三节点与 ECK 部署"
 sidebar_position: 8
-tags: [Elasticsearch, 部署, Docker, ECK, TLS, 集群]
 description: "从自管理 Package、Docker Compose 到 ECK，建立 Elasticsearch 生产拓扑、首次引导、安全、验收、升级和回滚流程。"
+tags: [Elasticsearch, 部署, Docker, ECK, TLS, 集群]
 ---
 
 # Elasticsearch RPM/DEB、Docker 三节点与 ECK 部署

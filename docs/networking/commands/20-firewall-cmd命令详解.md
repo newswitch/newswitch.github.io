@@ -1,11 +1,12 @@
 ---
-title: firewall-cmd 命令详解：zone、policy、服务与安全变更
+title: "firewall-cmd 命令详解：zone、policy、服务与安全变更"
+sidebar_label: "20. firewall-cmd 命令详解：zone、policy、服务与安全变更"
 sidebar_position: 20
-description: 系统讲解 firewall-cmd 的 runtime/permanent 双配置、zone、interface/source 绑定、service、port、rich rule、policy、ipset、NAT、panic、direct 弃用和生产变更流程。
+description: "系统讲解 firewall-cmd 的 runtime/permanent 双配置、zone、interface/source 绑定、service、port、rich rule、policy、ipset、NAT、panic、direct 弃用和生产变更流程。"
 tags: [Linux, firewall-cmd, firewalld, nftables, 防火墙, NAT, Zone, Policy]
 ---
 
-# `firewall-cmd` 命令详解：zone、policy、服务与安全变更
+# firewall-cmd 命令详解：zone、policy、服务与安全变更
 
 `firewall-cmd` 是 firewalld 的命令行客户端。firewalld 用 zone、service、policy、ipset 和 rich rule 把底层 Netfilter/nftables 规则抽象成长期可管理的对象，并通过 D-Bus 动态应用变更。
 
@@ -55,7 +56,7 @@ runtime configuration   -> 当前内核正在执行，firewalld reload/restart �
 permanent configuration -> 磁盘配置，下次 reload/restart 才进入 runtime
 ```
 
-### 正确的“先试后存”流程
+### 3.1 正确的“先试后存”流程 {/* #正确的先试后存流程 */}
 
 ```bash
 # 1. [W] 只改 runtime，立即验证
@@ -74,7 +75,7 @@ sudo firewall-cmd --permanent --zone=public --list-all
 
 也可以分别执行 runtime 和 permanent 两次 `--add-*`，但要确保参数完全相同。
 
-### 常见陷阱
+### 3.2 常见陷阱 {/* #常见陷阱 */}
 
 ```bash
 # 只改 permanent，不会立刻放行
@@ -121,7 +122,7 @@ firewall-cmd --list-all-zones
 firewall-cmd --zone=public --list-all
 ```
 
-### zone 发现与默认设置
+### 5.1 zone 发现与默认设置 {/* #zone-发现与默认设置 */}
 
 | 参数 | 作用 |
 |---|---|
@@ -137,7 +138,7 @@ firewall-cmd --zone=public --list-all
 | `--list-all` | 显示目标 zone 全部设置，省略 `--zone` 使用默认 zone |
 | `--list-all-zones` | 显示所有 zone 全部设置 |
 
-### 自定义 zone（permanent）
+### 5.2 自定义 zone（permanent） {/* #自定义-zonepermanent */}
 
 | 参数 | 作用 |
 |---|---|
@@ -149,7 +150,7 @@ firewall-cmd --zone=public --list-all
 
 ## 6. interface 与 source 绑定
 
-### interface
+### 6.1 interface {/* #interface */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -165,7 +166,7 @@ NetworkManager 管理的接口应优先在 connection profile 中设置 zone，�
 nmcli -f NAME,DEVICE,TYPE,connection.zone connection show
 ```
 
-### source
+### 6.2 source {/* #source */}
 
 source 可为 IPv4/IPv6 地址或网段、MAC，或 `ipset:NAME`：
 
@@ -181,7 +182,7 @@ source 可为 IPv4/IPv6 地址或网段、MAC，或 `ipset:NAME`：
 
 ## 7. service、port、protocol 与 source-port
 
-### service
+### 7.1 service {/* #service */}
 
 ```bash
 firewall-cmd --zone=public --list-services
@@ -197,7 +198,7 @@ firewall-cmd --zone=public --query-service=https
 
 service 是一组端口、协议、模块、helper 和 destination 的可复用定义，比裸端口更容易审计。
 
-### destination port
+### 7.2 destination port {/* #destination-port */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -206,7 +207,7 @@ service 是一组端口、协议、模块、helper 和 destination 的可复用�
 | `--remove-port=PORT[-PORT]/PROTO` | 删除端口 |
 | `--query-port=PORT[-PORT]/PROTO` | 查询端口 |
 
-### protocol
+### 7.3 protocol {/* #protocol */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -217,7 +218,7 @@ service 是一组端口、协议、模块、helper 和 destination 的可复用�
 
 `--add-protocol=gre` 允许的是 IP protocol GRE，不等于开放某个 TCP/UDP port。
 
-### source port
+### 7.4 source port {/* #source-port */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -240,7 +241,7 @@ timeout 常用单位包括秒、分钟、小时，具体语法以本机帮助为
 
 ## 9. masquerade、forward-port 与 forward
 
-### masquerade
+### 9.1 masquerade {/* #masquerade */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -248,7 +249,7 @@ timeout 常用单位包括秒、分钟、小时，具体语法以本机帮助为
 | `--add-masquerade [--timeout=TIME]` | `[W]` 启用源 NAT masquerade |
 | `--remove-masquerade` | `[W]/[D]` 关闭 |
 
-### forward-port
+### 9.2 forward-port {/* #forward-port */}
 
 ```text
 port=PORT[-PORT]:proto=PROTO[:toport=PORT[-PORT]][:toaddr=ADDRESS]
@@ -270,7 +271,7 @@ firewall-cmd --zone=public \
 
 转发还需要内核 forwarding、FORWARD policy、路由、回程和可能的 masquerade。仅看到 forward-port 不代表后端可达。
 
-### intra-zone forwarding
+### 9.3 intra-zone forwarding {/* #intra-zone-forwarding */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -338,7 +339,7 @@ firewall-cmd --get-policies
 firewall-cmd --info-policy=corp-to-dmz
 ```
 
-### policy 对象管理
+### 13.1 policy 对象管理 {/* #policy-对象管理 */}
 
 | 参数 | 作用 |
 |---|---|
@@ -351,7 +352,7 @@ firewall-cmd --info-policy=corp-to-dmz
 | `--permanent --load-policy-defaults=POLICY` | 恢复默认 |
 | `--permanent --path-policy=POLICY` | 显示 XML 路径 |
 
-### ingress/egress zone
+### 13.2 ingress/egress zone {/* #ingressegress-zone */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -366,7 +367,7 @@ firewall-cmd --info-policy=corp-to-dmz
 
 policy 内也支持 service、port、protocol、source-port、masquerade、forward-port、ICMP block 和 rich rule 等与 zone 类似的参数族。创建 policy 时应先在 permanent 定义对象和方向，再 reload 到 runtime 测试。
 
-### priority 与 target
+### 13.3 priority 与 target {/* #priority-与-target */}
 
 | 参数 | 作用 |
 |---|---|
@@ -386,7 +387,7 @@ firewall-cmd --get-ipsets
 firewall-cmd --info-ipset=admin-networks
 ```
 
-### 对象管理
+### 14.1 对象管理 {/* #对象管理 */}
 
 | 参数 | 作用 |
 |---|---|
@@ -398,7 +399,7 @@ firewall-cmd --info-ipset=admin-networks
 | `--permanent --load-ipset-defaults=NAME` | 恢复默认 |
 | `--permanent --path-ipset=NAME` | 输出 XML 路径 |
 
-### entry
+### 14.2 entry {/* #entry */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -415,7 +416,7 @@ firewall-cmd --info-ipset=admin-networks
 
 这些定义主要在 permanent 层管理。
 
-### service 对象
+### 15.1 service 对象 {/* #service-对象 */}
 
 ```bash
 firewall-cmd --info-service=https
@@ -437,7 +438,7 @@ firewall-cmd --permanent --service=https --get-ports
 | `--service=S --get/set-short` | 短名称 |
 | `--service=S --get/set-description` | 描述 |
 
-### helper 对象
+### 15.2 helper 对象 {/* #helper-对象 */}
 
 helper 与 conntrack ALG 相关：
 
@@ -451,7 +452,7 @@ helper 与 conntrack ALG 相关：
 
 不要无目的启用 FTP/SIP 等 helper。它们会解析应用协议并创建 expectation，需要独立安全评估。
 
-### icmptype 对象
+### 15.3 icmptype 对象 {/* #icmptype-对象 */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -487,7 +488,7 @@ direct 行为还受 `FirewallBackend` 和 `FlushAllOnReload` 影响，passthroug
 
 ## 18. NetworkManager、容器与 Kubernetes
 
-### NetworkManager
+### 18.1 NetworkManager {/* #networkmanager */}
 
 接口 zone 可能由 connection profile 下发：
 
@@ -496,7 +497,7 @@ nmcli -f NAME,DEVICE,connection.zone connection show
 firewall-cmd --get-active-zones
 ```
 
-### 容器平台
+### 18.2 容器平台 {/* #容器平台 */}
 
 Docker、Podman、Kubernetes 和 CNI 可能创建接口、zone、policy 或底层规则。排障时检查：
 
@@ -615,4 +616,3 @@ sudo tcpdump -i any -nn -c 100 'tcp port 443'
 - [firewalld zone 官方手册](https://firewalld.org/documentation/man-pages/firewalld.zones)
 - [firewalld policy 官方手册](https://firewalld.org/documentation/man-pages/firewalld.policies)
 - [firewalld rich language 官方手册](https://firewalld.org/documentation/man-pages/firewalld.richlanguage)
-

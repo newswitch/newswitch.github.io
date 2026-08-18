@@ -1,11 +1,12 @@
 ---
-title: pidof 命令详解：按程序名查询 PID 与实现边界
+title: "pidof 命令详解：按程序名查询 PID 与实现边界"
+sidebar_label: "03. pidof 命令详解：按程序名查询 PID 与实现边界"
 sidebar_position: 3
-description: 完整讲解 procps-ng pidof 的参数、单结果、root directory、脚本、内核线程、TID、排除 PID、分隔符和 pgrep 对比。
+description: "完整讲解 procps-ng pidof 的参数、单结果、root directory、脚本、内核线程、TID、排除 PID、分隔符和 pgrep 对比。"
 tags: [Linux, pidof, procps-ng, PID, 进程查找]
 ---
 
-# `pidof` 命令详解：按程序名查询 PID 与实现边界
+# pidof 命令详解：按程序名查询 PID 与实现边界
 
 `pidof` 按运行程序名称输出 PID，适合兼容脚本和简单查询。复杂筛选优先使用 `pgrep`；systemd 服务优先查询 unit/cgroup，而不是猜进程名。
 
@@ -53,7 +54,7 @@ pidof -o %PPID -x backup.sh
 
 掌握标准：能列出本实现全部参数；能说明 `-s` 不保证主进程、`-x` 不可靠识别所有脚本、`-c` 不等于 namespace 匹配；知道何时改用 pgrep/cgroup。
 
-## 官方参考
+## 5. 官方参考 {/* #官方参考 */}
 
 - [procps-ng：pidof(1)](https://man7.org/linux/man-pages/man1/pidof.1.html)
 - [Linux proc_pid_root(5)](https://man7.org/linux/man-pages/man5/proc_pid_root.5.html)

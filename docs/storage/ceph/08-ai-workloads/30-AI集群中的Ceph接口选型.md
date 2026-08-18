@@ -1,9 +1,11 @@
 ---
-title: Ceph RBD、CephFS 与 RGW 在 AI 集群中的选型
+title: "Ceph RBD、CephFS 与 RGW 在 AI 集群中的选型"
 sidebar_label: "30. Ceph RBD、CephFS 与 RGW 在 AI 集群中的选型"
+sidebar_position: 30
+description: "Ceph 不是一种单一的“共享盘”。它在同一个 RADOS 底座上提供块、文件和对象三种接口："
+tags: [Kubernetes, GPU, Ceph, RBD, CephFS, RGW]
 date: 2026-08-06 17:20:00
 categories: 云原生
-tags: [Kubernetes, GPU, Ceph, RBD, CephFS, RGW]
 ---
 
 # Ceph RBD、CephFS 与 RGW 在 AI 集群中的选型
@@ -21,8 +23,6 @@ Ceph 不是一种单一的“共享盘”。它在同一个 RADOS 底座上提�
 
 三者共用 Ceph 集群，不代表使用方式和性能模型相同。本篇只讨论它们在 AI/GPU 工作负载中的选择；Ceph 原理、部署和日常运维请按独立 Ceph 系列学习。
 
----
-
 ## 1. 学习目标
 
 完成本文后，你应该能够：
@@ -32,8 +32,6 @@ Ceph 不是一种单一的“共享盘”。它在同一个 RADOS 底座上提�
 - 解释 RBD、CephFS 和 RGW 到 GPU Pod 的数据路径。
 - 理解 Ceph CSI 在 RBD 与 CephFS 中承担什么工作。
 - 建立应用、CSI、Ceph 客户端和 OSD 四层排障方法。
-
----
 
 ## 2. 先从应用需要的语义选择
 
@@ -51,8 +49,6 @@ Ceph 不是一种单一的“共享盘”。它在同一个 RADOS 底座上提�
 | GPU 节点高速热缓存 | Local NVMe，源数据可来自 RGW/CephFS |
 
 性能只有在语义正确之后才有意义。
-
----
 
 ## 3. RBD：给 Pod 一块网络块设备
 
@@ -112,8 +108,6 @@ spec:
 
 `ceph-rbd` 的真实参数应由集群管理员配置，不能照抄未知集群的 FSID、Pool 和 Secret。
 
----
-
 ## 4. CephFS：多节点共享 POSIX 文件系统
 
 CephFS 提供目录、文件、权限和一致的文件系统命名空间。
@@ -170,8 +164,6 @@ volumeMounts:
 
 RWX 表示后端和卷允许多节点读写，不表示每个使用者都应该拥有写权限。
 
----
-
 ## 5. RGW：S3 兼容对象接口
 
 RGW 通过 HTTP API 提供 Bucket、Object、Key 和元数据语义。
@@ -210,11 +202,9 @@ RGW 中的不可变模型版本
 
 RGW 更适合“制品分发源”，Local NVMe 更适合“热缓存”。
 
----
-
 ## 6. 同一个模型的三种路径
 
-### RBD
+### 6.1 RBD {/* #rbd */}
 
 ```text
 RBD Image → 节点块设备 → 文件系统 → Pod → CPU 内存 → HBM
@@ -222,7 +212,7 @@ RBD Image → 节点块设备 → 文件系统 → Pod → CPU 内存 → HBM
 
 每个卷独立，容易做快照和克隆；多个节点共享同一路径不方便。
 
-### CephFS
+### 6.2 CephFS {/* #cephfs */}
 
 ```text
 CephFS → 多节点内核客户端 → Pod 共享路径 → CPU 内存 → HBM
@@ -230,15 +220,13 @@ CephFS → 多节点内核客户端 → Pod 共享路径 → CPU 内存 → HBM
 
 共享方便，但冷启动并发会集中打向 MDS、OSD 和存储网络。
 
-### RGW + NVMe
+### 6.3 RGW + NVMe {/* #rgw--nvme */}
 
 ```text
 RGW → HTTP 下载 → 节点 NVMe 缓存 → Pod → CPU 内存 → HBM
 ```
 
 首次分发多一步，命中本地缓存后的加载路径更短，也能隔离推理高峰对 Ceph 的持续压力。
-
----
 
 ## 7. AI 场景选型表
 
@@ -254,8 +242,6 @@ RGW → HTTP 下载 → 节点 NVMe 缓存 → Pod → CPU 内存 → HBM
 | 快照/克隆 | 推荐 | 视能力与方案 | 用版本/复制语义 |
 
 这张表是起点，不替代真实业务压测。
-
----
 
 ## 8. Pool 与故障域不能忽略
 
@@ -276,8 +262,6 @@ RBD、CephFS 和 RGW 可以共用一套 OSD，但生产中仍需考虑：
 
 三者可能同时争用存储网络和 OSD。只观察 GPU 和 NCCL，容易误判成计算或通信问题。
 
----
-
 ## 9. 容量规划
 
 Ceph 用户看到的可用容量不能简单等于所有裸盘之和。
@@ -296,8 +280,6 @@ Ceph 用户看到的可用容量不能简单等于所有裸盘之和。
 
 - [Ceph 容量计算](../03-deployment/08-Ceph容量计算.md)
 - [副本、纠删码与一致性](../02-architecture/06-副本纠删码与一致性.md)
-
----
 
 ## 10. 压测要按接口进行
 
@@ -333,8 +315,6 @@ Ceph 用户看到的可用容量不能简单等于所有裸盘之和。
 
 不要拿 RBD 的 4 KiB 随机写结果直接推断 RGW 下载模型的性能。
 
----
-
 ## 11. 建立完整时间线
 
 模型加载慢时，把时间拆开：
@@ -358,11 +338,9 @@ T7 Ready
 - T4→T5 慢：PCIe、pinned memory、NUMA。
 - T5→T7 慢：GPU 初始化、Kernel 编译、CUDA Graph 或预热。
 
----
-
 ## 12. 四层排障
 
-### 第一层：应用与 Pod
+### 12.1 第一层：应用与 Pod {/* #第一层应用与-pod */}
 
 ```bash
 kubectl -n ai describe pod <pod>
@@ -372,7 +350,7 @@ kubectl -n ai exec <pod> -- df -hT
 
 检查挂载路径、只读设置、UID/GID、文件是否完整。
 
-### 第二层：Kubernetes 与 CSI
+### 12.2 第二层：Kubernetes 与 CSI {/* #第二层kubernetes-与-csi */}
 
 ```bash
 kubectl -n ai get pvc
@@ -383,7 +361,7 @@ kubectl -n <ceph-csi-namespace> get pods -o wide
 
 检查 PVC 绑定、Controller、Node Plugin、Secret、StorageClass 和事件。
 
-### 第三层：节点 Ceph 客户端
+### 12.3 第三层：节点 Ceph 客户端 {/* #第三层节点-ceph-客户端 */}
 
 RBD 检查映射和挂载；CephFS 检查客户端挂载、内核日志和网络连通。
 
@@ -394,7 +372,7 @@ dmesg -T | tail -n 100
 journalctl -u kubelet --since "30 min ago"
 ```
 
-### 第四层：Ceph 集群
+### 12.4 第四层：Ceph 集群 {/* #第四层ceph-集群 */}
 
 ```bash
 ceph -s
@@ -406,31 +384,27 @@ ceph fs status
 
 根据接口继续检查 MDS、RGW、Pool、慢请求和 OSD 恢复状态。
 
----
-
 ## 13. 常见误区
 
-### CephFS 和 RBD 都在 Ceph 上，所以性能一样
+### 13.1 CephFS 和 RBD 都在 Ceph 上，所以性能一样 {/* #cephfs-和-rbd-都在-ceph-上所以性能一样 */}
 
 错误。两者客户端路径、元数据模型、挂载方式和共享语义都不同。
 
-### RBD 是分布式块存储，所以可以随意多节点挂同一个 ext4
+### 13.2 RBD 是分布式块存储，所以可以随意多节点挂同一个 ext4 {/* #rbd-是分布式块存储所以可以随意多节点挂同一个-ext4 */}
 
 错误。底层分布式不改变普通文件系统的单主机写入假设。
 
-### RGW 兼容 S3，所以就是共享文件系统
+### 13.3 RGW 兼容 S3，所以就是共享文件系统 {/* #rgw-兼容-s3所以就是共享文件系统 */}
 
 错误。对象语义与 POSIX 文件语义不同。
 
-### Ceph 健康为 OK，应用就不可能慢
+### 13.4 Ceph 健康为 OK，应用就不可能慢 {/* #ceph-健康为-ok应用就不可能慢 */}
 
 错误。`HEALTH_OK` 不代表当前延迟满足 AI 业务 SLO，也不排除 CSI、客户端缓存、网络和应用解析瓶颈。
 
-### GPU 利用率低一定是 GPU 问题
+### 13.5 GPU 利用率低一定是 GPU 问题 {/* #gpu-利用率低一定是-gpu-问题 */}
 
 错误。训练进程等待 CephFS 数据或 Checkpoint 写入时，GPU 同样会空闲。
-
----
 
 ## 14. 推荐分层架构
 
@@ -445,8 +419,6 @@ RGW：模型、数据集、Checkpoint 的权威版本和归档
 ```
 
 并非每个集群都要同时使用四层。小规模环境可以从 CephFS 或 NFS 开始；规模和性能问题出现后，再基于测量增加本地缓存或对象分发。
-
----
 
 ## 15. 本篇总结
 
@@ -463,8 +435,6 @@ RGW：模型、数据集、Checkpoint 的权威版本和归档
 
 Ceph 系统学习入口：[Ceph 学习路线](../00-Ceph学习路线.md)。
 
----
-
 ## 16. 课后练习
 
 1. 为什么多节点共享模型目录更适合 CephFS 而不是普通 RBD？
@@ -474,9 +444,7 @@ Ceph 系统学习入口：[Ceph 学习路线](../00-Ceph学习路线.md)。
 5. 同时启动多个 Pod 读取 CephFS 模型，记录 Ceph 和 GPU 指标。
 6. 人为停止一个 CSI Node Plugin，观察 Pod 事件并恢复。
 
----
-
-## 参考与致谢
+## 17. 参考与致谢 {/* #参考与致谢 */}
 
 - [Ceph Architecture](https://docs.ceph.com/en/latest/architecture/)
 - [Ceph Beginner's Guide — Storage Interfaces](https://docs.ceph.com/en/latest/start/beginners-guide/)

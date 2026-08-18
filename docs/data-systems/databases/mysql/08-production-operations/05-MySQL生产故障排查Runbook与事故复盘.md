@@ -2,8 +2,8 @@
 title: "MySQL 生产故障排查 Runbook 与事故复盘"
 sidebar_label: "05. MySQL 生产故障排查 Runbook 与事故复盘"
 sidebar_position: 5
-tags: [MySQL, Runbook, OnCall, 故障排查, 事故复盘]
 description: "用影响、时间线、执行与等待分类组织 MySQL 事故响应，覆盖止血、取证、恢复、校验和无责复盘。"
+tags: [MySQL, Runbook, OnCall, 故障排查, 事故复盘]
 ---
 
 # MySQL 生产故障排查 Runbook 与事故复盘
@@ -63,23 +63,23 @@ CPU 或并发过载
 
 ## 6. 常见分支
 
-### 连接爆满
+### 6.1 连接爆满 {/* #连接爆满 */}
 
 确认连接泄漏、慢 SQL、应用扩容和重试；保留管理连接；先限流和修复池，不把 `max_connections` 无限调高。
 
-### 锁队列
+### 6.2 锁队列 {/* #锁队列 */}
 
 沿 `data_lock_waits` 找最上游阻塞事务，评估回滚成本和业务；缩短事务、修复热点/DDL，而非只杀等待者。
 
-### 磁盘满
+### 6.3 磁盘满 {/* #磁盘满 */}
 
 确认文件归属、Binlog/relay/临时/备份和 deleted-open 文件；扩容或按官方流程清理。禁止操作系统直接删受 MySQL 管理的活跃日志/数据。
 
-### 复制故障
+### 6.4 复制故障 {/* #复制故障 */}
 
 区分 receive/apply，保存错误 GTID；修复根因，禁止为“变绿”盲跳事务；把超新鲜度副本从读流量移除。
 
-### 数据误操作
+### 6.5 数据误操作 {/* #数据误操作 */}
 
 冻结相关写、保护 Binlog、从备份在隔离环境 PITR，不覆盖现场。
 
@@ -120,7 +120,7 @@ CPU 或并发过载
 
 预先准备只读诊断账户、安全脚本、Dashboard、拓扑图、备份索引、回滚命令、联系表和演练环境。命令经过版本测试，避免事故现场从博客复制未知命令。
 
-## 参考资料
+## 11. 参考资料 {/* #参考资料 */}
 
 - [MySQL General Troubleshooting](https://dev.mysql.com/doc/refman/8.4/en/problems.html)
 - [InnoDB Troubleshooting](https://dev.mysql.com/doc/refman/8.4/en/innodb-troubleshooting.html)

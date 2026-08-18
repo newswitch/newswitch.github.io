@@ -2,8 +2,8 @@
 title: "Ceph 日常运维实战：巡检、变更、维护与恢复观察"
 sidebar_label: "16. Ceph 日常运维实战：巡检、变更、维护与恢复观察"
 sidebar_position: 16
-tags: [Ceph, 学习路线, 存储, 运维, cephadm]
 description: "建立 Ceph 日常运维方法，覆盖状态、容量、OSD、Pool、PG、配置、主机维护、扩缩容、故障盘更换和恢复验收。"
+tags: [Ceph, 学习路线, 存储, 运维, cephadm]
 ---
 
 # Ceph 日常运维实战：巡检、变更、维护与恢复观察
@@ -25,8 +25,7 @@ Ceph 的日常运维不是每天执行一串命令，然后确认输出里有 `H
 
 本文面向 cephadm 管理的较新 Ceph 集群。不同 Ceph 版本的命令选项和编排器行为可能不同，生产操作必须先查看当前版本帮助并在测试环境验证。
 
-
-## 本文目标
+## 1. 本文目标 {/* #本文目标 */}
 
 完成本文后，你应该能够：
 
@@ -39,17 +38,17 @@ Ceph 的日常运维不是每天执行一串命令，然后确认输出里有 `H
 - 区分主机维护、Host Drain 和永久退役
 - 为扩容、换盘和维护建立验收标准
 
-## 先建立运维原则
+## 2. 先建立运维原则 {/* #先建立运维原则 */}
 
-### 先读后写
+### 2.1 先读后写 {/* #先读后写 */}
 
 处理告警时先执行只读命令，保存现场，再决定是否需要改变集群。
 
-### 一次只改变一个主要变量
+### 2.2 一次只改变一个主要变量 {/* #一次只改变一个主要变量 */}
 
 同时调恢复参数、重启 OSD、修改 CRUSH Rule 和扩容，会让你无法判断哪个动作有效，也更难回退。
 
-### 先看业务影响，再看健康颜色
+### 2.3 先看业务影响，再看健康颜色 {/* #先看业务影响再看健康颜色 */}
 
 同样是 `HEALTH_WARN`：
 
@@ -59,7 +58,7 @@ Ceph 的日常运维不是每天执行一串命令，然后确认输出里有 `H
 
 严重程度不能只由颜色决定。
 
-### 维护结束不等于服务恢复
+### 2.4 维护结束不等于服务恢复 {/* #维护结束不等于服务恢复 */}
 
 必须同时验证：
 
@@ -69,7 +68,7 @@ Ceph 的日常运维不是每天执行一串命令，然后确认输出里有 `H
 4. 性能回到可接受基线
 5. 临时 flag、静默和维护标记已经清理
 
-## 日常状态读取顺序
+## 3. 日常状态读取顺序 {/* #日常状态读取顺序 */}
 
 建议每次都按同一顺序：
 
@@ -99,7 +98,7 @@ ceph df detail
 
 `--refresh` 会请求编排器刷新 daemon 状态，可能比缓存结果更慢，不需要在高频脚本中无节制调用。
 
-## `ceph -s` 状态解读
+## 4. `ceph -s` 状态解读 {/* #ceph--s-状态解读 */}
 
 典型输出包含：
 
@@ -126,7 +125,7 @@ io:
   recovery:
 ```
 
-### cluster
+### 4.1 cluster {/* #cluster */}
 
 确认：
 
@@ -140,7 +139,7 @@ io:
 ceph fsid
 ```
 
-### services
+### 4.2 services {/* #services */}
 
 重点读取：
 
@@ -150,7 +149,7 @@ ceph fsid
 - CephFS 的 MDS 是否 Active，是否有 Standby
 - RGW daemon 数量是否符合 placement
 
-### data
+### 4.3 data {/* #data */}
 
 关注：
 
@@ -159,11 +158,11 @@ ceph fsid
 - PG 是否 `active+clean`
 - 是否存在 inactive、unknown、stale、inconsistent、undersized 或 degraded
 
-### io
+### 4.4 io {/* #io */}
 
 同时看客户端和恢复流量。如果恢复吞吐很高但业务延迟恶化，需要评估恢复 QoS；如果 PG 长期处于恢复状态但 recovery 吞吐接近零，则可能被容量、网络、磁盘或调度限制阻塞。
 
-## 健康详情怎么读
+## 5. 健康详情怎么读 {/* #健康详情怎么读 */}
 
 ```bash
 ceph health detail
@@ -184,7 +183,7 @@ ceph health detail
 
 不要用 `ceph health mute` 代替修复。确需静默时要设置原因、负责人、到期时间，并确认不会掩盖新的同类故障。
 
-## 查看集群容量
+## 6. 查看集群容量 {/* #查看集群容量 */}
 
 ```bash
 ceph df
@@ -200,7 +199,7 @@ ceph osd df tree
 - 每个 OSD 利用率是否均衡
 - 某个 Host 或设备类是否接近阈值
 
-### 为什么总空闲很多仍会 nearfull
+### 6.1 为什么总空闲很多仍会 nearfull {/* #为什么总空闲很多仍会-nearfull */}
 
 写入由 PG 映射到特定 OSD，不会自动选择全局最空的任意磁盘。因此可能出现：
 
@@ -225,7 +224,7 @@ ceph balancer status
 - CRUSH Rule 是否只覆盖少量 OSD
 - Pool 的目标大小和 PG 是否合理
 
-### 容量运维要看趋势
+### 6.2 容量运维要看趋势 {/* #容量运维要看趋势 */}
 
 每天保存：
 
@@ -237,7 +236,7 @@ ceph balancer status
 
 扩容触发点应该早于 nearfull。触发线还要覆盖采购、上架、烧机、数据迁移和最大故障域恢复所需时间。
 
-## 查看 OSD 状态与拓扑
+## 7. 查看 OSD 状态与拓扑 {/* #查看-osd-状态与拓扑 */}
 
 ```bash
 ceph osd stat
@@ -264,7 +263,7 @@ OSD 有两组重要状态：
 
 不要看到 `down` 就立即执行 `out`。短暂网络波动或计划重启时，过早 `out` 会触发不必要的数据迁移。
 
-### 定位 OSD 的物理设备
+### 7.1 定位 OSD 的物理设备 {/* #定位-osd-的物理设备 */}
 
 ```bash
 ceph orch ps --daemon_id 12 --refresh
@@ -282,7 +281,7 @@ lsblk -o NAME,SIZE,MODEL,SERIAL,WWN,FSTYPE,MOUNTPOINTS
 
 物理操作必须依据序列号、WWN、槽位和 OSD 映射交叉确认，不能只凭 `/dev/sdX`。
 
-## 查看 Pool 和 PG
+## 8. 查看 Pool 和 PG {/* #查看-pool-和-pg */}
 
 ```bash
 ceph osd pool ls detail
@@ -303,7 +302,7 @@ ceph pg dump pgs_brief | grep -v active+clean
 ceph pg dump --format json-pretty
 ```
 
-### PG 非 clean 是否一定有故障
+### 8.1 PG 非 clean 是否一定有故障 {/* #pg-非-clean-是否一定有故障 */}
 
 不一定。下面这些操作都会产生暂时的恢复状态：
 
@@ -331,7 +330,7 @@ ceph pg <pg-id> query
 
 不要在不了解数据一致性和副本历史时使用 `pg repair`、`mark_unfound_lost` 或强制修改 acting set。
 
-## 查看集群配置
+## 9. 查看集群配置 {/* #查看集群配置 */}
 
 Ceph 的中央配置数据库是 cephadm 集群的主要配置入口。
 
@@ -363,7 +362,7 @@ ceph config set osd <option> <value>
 ceph config rm osd <option>
 ```
 
-### 配置变更流程
+### 9.1 配置变更流程 {/* #配置变更流程 */}
 
 1. 写明问题和目标指标
 2. 查当前值、默认值和生效范围
@@ -377,9 +376,9 @@ ceph config rm osd <option>
 
 不要永久保留没有解释的“祖传参数”。升级后还要重新验证这些 override 是否仍然必要。
 
-## 添加 OSD
+## 10. 添加 OSD {/* #添加-osd */}
 
-### 第一步：检查设备
+### 10.1 第一步：检查设备 {/* #第一步检查设备 */}
 
 ```bash
 ceph orch device ls --wide --refresh
@@ -387,7 +386,7 @@ ceph orch device ls --wide --refresh
 
 只有满足条件的设备才会显示为可用，例如没有分区、LVM、文件系统或旧 Ceph 签名。
 
-### 第二步：查看现有 OSD ServiceSpec
+### 10.2 第二步：查看现有 OSD ServiceSpec {/* #第二步查看现有-osd-servicespec */}
 
 ```bash
 ceph orch ls --service_type osd --export
@@ -419,7 +418,7 @@ ceph orch apply -i osd-ssd.yaml --dry-run
 ceph orch apply -i osd-ssd.yaml
 ```
 
-### 第三步：分批观察
+### 10.3 第三步：分批观察 {/* #第三步分批观察 */}
 
 ```bash
 ceph orch ps --daemon_type osd --refresh
@@ -431,7 +430,7 @@ ceph osd df tree
 
 大量扩容应分批完成，让每一批进入稳定状态后再继续。自动 OSDSpec 可能在新盘满足条件后立即创建 OSD，操作前必须理解声明式编排行为。
 
-## 移除 OSD
+## 11. 移除 OSD {/* #移除-osd */}
 
 移除 OSD 会迁移数据并消耗容量和性能。
 
@@ -466,7 +465,7 @@ ceph pg stat
 ceph orch osd rm --help
 ```
 
-### 移除前的容量问题
+### 11.1 移除前的容量问题 {/* #移除前的容量问题 */}
 
 “当前还有一份完整副本”不代表“有空间将数据迁移到其他 OSD”。移除前必须确认剩余 OSD：
 
@@ -475,7 +474,7 @@ ceph orch osd rm --help
 - 仍满足 CRUSH failure domain
 - 恢复期间业务性能可接受
 
-## 更换故障磁盘
+## 12. 更换故障磁盘 {/* #更换故障磁盘 */}
 
 换盘流程取决于：
 
@@ -512,8 +511,7 @@ ceph orch device replace <host> <device-path>
 
 详细换盘流程见：
 
-
-## 添加服务器
+## 13. 添加服务器 {/* #添加服务器 */}
 
 先完成操作系统、时间、网络、容器运行时和磁盘验收，再加入编排器：
 
@@ -540,7 +538,7 @@ ceph orch device ls --hostname ceph11 --wide --refresh
 
 加入 Host 不代表应该立即创建 OSD。先确认 CRUSH Location、网卡、设备序列号、时间同步和 OSDSpec 匹配结果。
 
-## 移除服务器
+## 14. 移除服务器 {/* #移除服务器 */}
 
 永久退役 Host 与短时维护完全不同。
 
@@ -581,11 +579,11 @@ ceph orch host rm ceph11
 
 不要随意给 Drain 加擦盘选项。数据擦除应有独立审批和设备身份复核。
 
-## 主机维护模式
+## 15. 主机维护模式 {/* #主机维护模式 */}
 
 计划重启、升级固件或更换非 OSD 硬件时，使用维护模式让 cephadm 进行安全检查并抑制不必要的重新调度。
 
-### 维护前
+### 15.1 维护前 {/* #维护前 */}
 
 ```bash
 ceph -s
@@ -616,7 +614,7 @@ ceph orch host maintenance enter ceph05
 ceph orch host maintenance exit ceph05
 ```
 
-### 维护后
+### 15.2 维护后 {/* #维护后 */}
 
 ```bash
 ceph orch host ls
@@ -632,7 +630,7 @@ ceph pg stat
 - CephFS 创建、读取、重命名和删除测试文件
 - RGW PUT、GET、HEAD 和 DELETE 测试对象
 
-### Maintenance 与 Drain 的区别
+### 15.3 Maintenance 与 Drain 的区别 {/* #maintenance-与-drain-的区别 */}
 
 | 操作 | 目的 | 数据迁移 |
 | --- | --- | --- |
@@ -641,7 +639,7 @@ ceph pg stat
 
 不要使用 Drain 代替一次短时重启，也不要使用 Maintenance 掩盖永久故障。
 
-## 数据均衡与恢复进度
+## 16. 数据均衡与恢复进度 {/* #数据均衡与恢复进度 */}
 
 查看：
 
@@ -662,7 +660,7 @@ ceph balancer status
 - 没有 nearfull/backfillfull
 - OSD 和主机没有反复 flapping
 
-### 恢复慢不等于卡死
+### 16.1 恢复慢不等于卡死 {/* #恢复慢不等于卡死 */}
 
 恢复可能受这些因素限制：
 
@@ -677,7 +675,7 @@ ceph balancer status
 
 在增大恢复并发前，先定位瓶颈。如果瓶颈是目标盘或网络，盲目增加并发只会进一步推高业务延迟。
 
-### Balancer
+### 16.2 Balancer {/* #balancer */}
 
 ```bash
 ceph balancer status
@@ -694,7 +692,7 @@ Balancer 适合改善 CRUSH 允许范围内的数据分布，但不能解决：
 
 启用或执行优化前要理解当前 balancer mode，并避免与手工 reweight、upmap 脚本互相冲突。
 
-## OSD Flags 管理
+## 17. OSD Flags 管理 {/* #osd-flags-管理 */}
 
 查看：
 
@@ -714,9 +712,9 @@ ceph osd dump | grep flags
 
 长期遗留的 `noout` 可能让永久故障 OSD 的数据迟迟不迁移；长期禁止恢复可能让集群在下一次故障时失去更多冗余。
 
-## 日常巡检周期
+## 18. 日常巡检周期 {/* #日常巡检周期 */}
 
-### 每日
+### 18.1 每日 {/* #每日 */}
 
 - `ceph -s` 和健康详情
 - MON Quorum、MGR 主备
@@ -727,7 +725,7 @@ ceph osd dump | grep flags
 - RBD/CephFS/RGW 业务探测
 - 前一天变更后的指标偏移
 
-### 每周
+### 18.2 每周 {/* #每周 */}
 
 - 容量增长和扩容提前量
 - OSD 利用率离散程度
@@ -738,7 +736,7 @@ ceph osd dump | grep flags
 - 备份任务与恢复抽样
 - 长期健康静默和 OSD flags
 
-### 每月
+### 18.3 每月 {/* #每月 */}
 
 - 版本和安全公告评估
 - Secret、证书和 keyring 轮换计划
@@ -748,9 +746,9 @@ ceph osd dump | grep flags
 - 随机选择备份执行真实恢复
 - 复查手工配置 override
 
-## 一次标准变更
+## 19. 一次标准变更 {/* #一次标准变更 */}
 
-### 变更前
+### 19.1 变更前 {/* #变更前 */}
 
 - 记录 FSID、版本、健康和容量基线
 - 定义业务影响和维护窗口
@@ -759,7 +757,7 @@ ceph osd dump | grep flags
 - 确认监控、人员和通知渠道
 - 确认没有其他大规模恢复或变更
 
-### 变更中
+### 19.2 变更中 {/* #变更中 */}
 
 - 一次只执行一个阶段
 - 每个阶段保存时间和输出
@@ -767,7 +765,7 @@ ceph osd dump | grep flags
 - 达到停止条件立即暂停
 - 不在压力下临时叠加未经验证的命令
 
-### 变更后
+### 19.3 变更后 {/* #变更后 */}
 
 - 所有 daemon 达到目标状态
 - PG 恢复到接受标准
@@ -776,39 +774,39 @@ ceph osd dump | grep flags
 - 临时 flag、静默、标签和维护模式已清理
 - 记录实际耗时、异常和后续改进
 
-## 常见错误
+## 20. 常见错误 {/* #常见错误 */}
 
-### 只看 `HEALTH_OK`
+### 20.1 只看 `HEALTH_OK` {/* #只看-healthok */}
 
 业务可能已经出现高延迟、局部路径错误或容量增长异常。
 
-### 看到 OSD down 就立即 out
+### 20.2 看到 OSD down 就立即 out {/* #看到-osd-down-就立即-out */}
 
 短暂故障会被放大为全量数据迁移。
 
-### 直接登录 Host 管理容器
+### 20.3 直接登录 Host 管理容器 {/* #直接登录-host-管理容器 */}
 
 使用 `podman restart` 等底层动作可能绕过 cephadm 的期望状态和审计。优先使用 `ceph orch daemon`、`reconfig` 或 `redeploy`。
 
-### 同时扩容和大规模调参
+### 20.4 同时扩容和大规模调参 {/* #同时扩容和大规模调参 */}
 
 恢复效果和性能变化无法归因。
 
-### 长期设置 noout
+### 20.5 长期设置 noout {/* #长期设置-noout */}
 
 它会推迟必要的数据迁移，使风险在表面平静中累积。
 
-### 自动消费所有空白盘
+### 20.6 自动消费所有空白盘 {/* #自动消费所有空白盘 */}
 
 新插入的维修盘、临时盘或错误识别设备可能被立刻创建为 OSD。
 
-### 运维完成后不做业务验证
+### 20.7 运维完成后不做业务验证 {/* #运维完成后不做业务验证 */}
 
 daemon 存活不代表 CephFS 路径、RBD Image 或 S3 API 一定可用。
 
-## 值班速查清单
+## 21. 值班速查清单 {/* #值班速查清单 */}
 
-### 发现异常
+### 21.1 发现异常 {/* #发现异常 */}
 
 ```bash
 date -Is
@@ -820,7 +818,7 @@ ceph pg stat
 ceph df detail
 ```
 
-### 做决定前
+### 21.2 做决定前 {/* #做决定前 */}
 
 - 影响哪个 Pool 和业务
 - 数据是否仍有足够副本
@@ -829,7 +827,7 @@ ceph df detail
 - 剩余容量能否完成迁移
 - 是否需要事故升级和业务限流
 
-### 恢复完成
+### 21.3 恢复完成 {/* #恢复完成 */}
 
 - [ ] MON Quorum 正常
 - [ ] MGR 主备正常
@@ -841,7 +839,7 @@ ceph df detail
 - [ ] 临时 flag 和静默已清理
 - [ ] 时间线和操作记录完整
 
-## 本文小结
+## 22. 本文小结 {/* #本文小结 */}
 
 Ceph 日常运维的核心不是记忆更多命令，而是建立稳定的工作方法：
 
@@ -856,12 +854,11 @@ Ceph 日常运维的核心不是记忆更多命令，而是建立稳定的工作
 → 清理临时措施并记录
 ```
 
-
 下一篇将把这些状态、指标和业务探测接入 Prometheus、Grafana 与告警系统。
 
 → [第 17 篇：Ceph 监控告警](./17-Ceph监控告警.md)
 
-## 课后练习
+## 23. 课后练习 {/* #课后练习 */}
 
 1. `up/down` 与 `in/out` 分别表示什么？
 2. 为什么总容量还有空间也会触发 nearfull？
@@ -872,7 +869,7 @@ Ceph 日常运维的核心不是记忆更多命令，而是建立稳定的工作
 7. 找出集群所有 OSD flags，并解释它们的设置原因和清理条件。
 8. 编写一个只读巡检脚本，将核心命令保存为带时间戳的 JSON。
 
-## 官方资料
+## 24. 官方资料 {/* #官方资料 */}
 
 - [Cephadm Operations](https://docs.ceph.com/en/latest/cephadm/operations/)
 - [Cephadm Host Management](https://docs.ceph.com/en/latest/cephadm/host-management/)

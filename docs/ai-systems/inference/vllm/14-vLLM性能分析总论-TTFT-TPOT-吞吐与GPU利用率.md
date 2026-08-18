@@ -2,8 +2,8 @@
 title: "vLLM 性能分析总论：TTFT、TPOT、吞吐与 GPU 利用率"
 sidebar_label: "14. vLLM 性能分析总论：TTFT、TPOT、吞吐与 GPU 利用率"
 sidebar_position: 14
-tags: [vLLM, 性能分析, TTFT, TPOT, GPU]
 description: "建立从业务 SLO 到排队、Prefill、Decode、GPU Timeline 和成本的 vLLM 性能分析方法。"
+tags: [vLLM, 性能分析, TTFT, TPOT, GPU]
 ---
 
 # vLLM 性能分析总论：TTFT、TPOT、吞吐与 GPU 利用率
@@ -11,8 +11,6 @@ description: "建立从业务 SLO 到排队、Prefill、Decode、GPU Timeline �
 vLLM 调优最常见的失败方式，是看到一个指标就改一个参数：GPU Util 低就加并发，TTFT 高就增大 `max_num_batched_tokens`，显存满就减小上下文。
 
 正确方法是先建立时间和资源模型，再用实验排除瓶颈层。
-
----
 
 ## 1. 四个结果指标各回答什么
 
@@ -30,8 +28,6 @@ E2E ≈ TTFT + (output_tokens - 1) × TPOT + tail_overhead
 ```
 
 这个式子不能替代真实直方图，但能做一致性检查。如果公式估算与实测差距很大，往往存在客户端缓冲、排队统计口径或输出尾处理问题。
-
----
 
 ## 2. TTFT 必须继续拆分
 
@@ -62,8 +58,6 @@ Engine 接收
 
 进一步再把 Engine 内拆为 Tokenization、排队和 Prefill。
 
----
-
 ## 3. TPOT 也不只是模型时间
 
 一次可见 token 间隔可能包含：
@@ -80,19 +74,17 @@ Engine 接收
 
 当 Decode Batch 很小，GPU Kernel 本身可能很短，CPU 准备、Kernel Launch 与同步会占据较大比例；这时单看 Kernel 性能会找错方向。
 
----
-
 ## 4. 三种吞吐不能混用
 
-### Requests/s
+### 4.1 Requests/s {/* #requestss */}
 
 适合请求长度接近的固定业务。若长短请求混合，QPS 会严重失真。
 
-### Prompt tokens/s
+### 4.2 Prompt tokens/s {/* #prompt-tokenss */}
 
 衡量 Prefill 工作量。Prefix Cache 命中后，业务 Prompt token 与实际计算 Prompt token 可能不同。
 
-### Generation tokens/s
+### 4.3 Generation tokens/s {/* #generation-tokenss */}
 
 衡量 Decode 产出，但仍受 Batch 大小、上下文长度与采样功能影响。
 
@@ -108,8 +100,6 @@ generation tokens/s
 GPU-seconds/request
 GPU-seconds/1K tokens
 ```
-
----
 
 ## 5. GPU Util 到底表示什么
 
@@ -135,8 +125,6 @@ F. 统计错位：看了节点平均或错误时间窗
 
 GPU Util 是症状，不是根因。
 
----
-
 ## 6. 分层性能模型
 
 | 层 | 关键问题 | 核心证据 |
@@ -151,8 +139,6 @@ GPU Util 是症状，不是根因。
 | Output | Detokenize/SSE/Proxy 是否延迟首包 | engine/server/client timestamp |
 
 每次分析只能在证据支持下向下一层钻取。
-
----
 
 ## 7. 基准测试必须固定的变量
 
@@ -176,7 +162,7 @@ Sampling、logprobs、grammar、spec decode
 网关和网络路径
 ```
 
-### Open-loop 与 Closed-loop
+### 7.1 Open-loop 与 Closed-loop {/* #open-loop-与-closed-loop */}
 
 Closed-loop：上一请求完成后才发下一请求。服务越慢，施加流量越低，容易掩盖过载。
 
@@ -184,18 +170,16 @@ Open-loop：按独立到达率发请求，更接近真实突发和排队，但�
 
 容量测试建议用 Open-loop 找到 SLO 饱和点，再用真实 Trace Replay 验证。
 
----
-
 ## 8. 一次标准性能实验
 
-### 第一步：建立单请求基线
+### 8.1 第一步：建立单请求基线 {/* #第一步建立单请求基线 */}
 
 - 固定 4 组输入/输出长度；
 - 无 Gateway 或记录 Gateway 时间；
 - 测冷启动与热态；
 - 得到 Prefill 与 Decode 下限。
 
-### 第二步：阶梯负载
+### 8.2 第二步：阶梯负载 {/* #第二步阶梯负载 */}
 
 ```text
 10 分钟低负载
@@ -206,18 +190,16 @@ Open-loop：按独立到达率发请求，更接近真实突发和排队，但�
 
 每阶记录 TTFT/TPOT/E2E、running/waiting、KV、preemption、Batch token、GPU/NCCL、错误和取消。
 
-### 第三步：只改一个变量
+### 8.3 第三步：只改一个变量 {/* #第三步只改一个变量 */}
 
 例如只改变 `max_num_batched_tokens`，其他变量保持不动。既看吞吐，也看 TTFT/TPOT P99，避免用平均吞吐掩盖交互延迟回退。
 
-### 第四步：复验与回滚
+### 8.4 第四步：复验与回滚 {/* #第四步复验与回滚 */}
 
 - 重复至少三次；
 - 交换实验顺序，避免热缓存偏差；
 - 保存命令、配置、Trace 和原始结果；
 - 若收益只在合成流量出现，不直接进入生产。
-
----
 
 ## 9. 饱和点怎样识别
 
@@ -237,8 +219,6 @@ Open-loop：按独立到达率发请求，更接近真实突发和排队，但�
 
 所以“最大无错误 QPS”不是可售容量。可售容量应是满足延迟、错误、资源余量与 N-1 条件的最大负载。
 
----
-
 ## 10. 常见错误结论
 
 | 错误结论 | 问题 |
@@ -249,8 +229,6 @@ Open-loop：按独立到达率发请求，更接近真实突发和排队，但�
 | Prefix Cache 命中率高，所以 Prefill 已解决 | 命中 token 占比和副本路由才决定收益 |
 | 单次 curl 很快，所以生产没问题 | 没有排队、长短混合、突发和多租户干扰 |
 | 平均延迟正常，所以服务健康 | LLM 业务通常被 P95/P99 和长尾决定 |
-
----
 
 ## 11. 性能报告最小模板
 
@@ -266,8 +244,6 @@ Open-loop：按独立到达率发请求，更接近真实突发和排队，但�
 副作用：公平性、长请求、冷启动、N-1
 结论：采用/不采用与回滚条件
 ```
-
----
 
 ## 12. 学完后的验收题
 

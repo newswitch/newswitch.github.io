@@ -1,9 +1,11 @@
 ---
-title: Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit
+title: "Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit"
 sidebar_label: "03. Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit"
+sidebar_position: 3
+description: "本文把整条链路串起来：宿主机上的 GPU，是怎么被 Kubernetes 里的 Pod 真正用上的？"
+tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "学习路线"]
 ---
 
 # Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit
@@ -20,10 +22,8 @@ tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "学习路线"
 
 拆成两个问题：
 
-1. Kubernetes **如何感知** GPU  
-2. GPU **如何分配** 给 Pod  
-
----
+1. Kubernetes **如何感知** GPU
+2. GPU **如何分配** 给 Pod
 
 ## 1. 大致工作流程
 
@@ -31,10 +31,10 @@ tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "学习路线"
 
 靠 Device Plugin 机制。NVIDIA 实现是 [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin)，主要做两件事：
 
-1. **检测并上报**节点 GPU → Kubelet → API Server  
-   集群因此知道每个节点有多少 `nvidia.com/gpu`，调度时才会往有 GPU 的节点靠  
-2. Pod 申请 GPU 时，给容器加上 **`NVIDIA_VISIBLE_DEVICES`**（以及可选的 mounts / devices / annotations）  
-   底层 Runtime 创建容器时，据此把 GPU 挂进容器  
+1. **检测并上报**节点 GPU → Kubelet → API Server
+   集群因此知道每个节点有多少 `nvidia.com/gpu`，调度时才会往有 GPU 的节点靠
+2. Pod 申请 GPU 时，给容器加上 **`NVIDIA_VISIBLE_DEVICES`**（以及可选的 mounts / devices / annotations）
+   底层 Runtime 创建容器时，据此把 GPU 挂进容器
 
 示例：
 
@@ -42,7 +42,7 @@ tags: ["Kubernetes", "GPU", "Device Plugin", "Container Toolkit", "学习路线"
 NVIDIA_VISIBLE_DEVICES=GPU-03f69c50-207a-2038-9b45-23cac89cb67d
 ```
 
-NVIDIA Device Plugin 策略较多，可用 `DEVICE_LIST_STRATEGY` 指定 env / volume-mounts / CDI 等，**默认仍是 env**。  
+NVIDIA Device Plugin 策略较多，可用 `DEVICE_LIST_STRATEGY` 指定 env / volume-mounts / CDI 等，**默认仍是 env**。
 `DEVICE_ID_STRATEGY` 默认是 **uuid**，所以 Pod 里常见的是 GPU UUID，而不是 Docker 里常见的 `0,1,2` 编号。
 
 ### 1.2 GPU 如何分配给 Pod
@@ -61,7 +61,7 @@ NVIDIA Device Plugin 策略较多，可用 `DEVICE_LIST_STRATEGY` 指定 env / v
 
 *图：containerd → nvidia-container-runtime → runC*
 
-#### nvidia-container-runtime
+#### 1.2.1 nvidia-container-runtime {/* #nvidia-container-runtime */}
 
 Docker / containerd 是高级 Runtime，**runC** 是低级 Runtime，中间用 **OCI Spec** 交互。
 
@@ -71,20 +71,20 @@ Docker / containerd 是高级 Runtime，**runC** 是低级 Runtime，中间用 *
 
 runC 按 Spec 启动容器时会执行该 hook，真正干活的是 hook。
 
-#### nvidia-container-runtime-hook
+#### 1.2.2 nvidia-container-runtime-hook {/* #nvidia-container-runtime-hook */}
 
 核心逻辑两步：
 
-1. 从容器 Spec 的 **env / mounts** 解析要给哪些 GPU（对应 Device Plugin 写的 Env / Mount / Device）  
-2. 调用 `nvidia-container-cli configure`，保证容器能用指定 GPU 及能力  
+1. 从容器 Spec 的 **env / mounts** 解析要给哪些 GPU（对应 Device Plugin 写的 Env / Mount / Device）
+2. 调用 `nvidia-container-cli configure`，保证容器能用指定 GPU 及能力
 
-#### nvidia-container-cli
+#### 1.2.3 nvidia-container-cli {/* #nvidia-container-cli */}
 
 命令行工具，常用子命令：
 
-- `list`：打印 NVIDIA 驱动库及路径  
-- `info`：打印 GPU 设备  
-- `configure`：进入目标进程命名空间，把驱动库、设备等挂进容器  
+- `list`：打印 NVIDIA 驱动库及路径
+- `info`：打印 GPU 设备
+- `configure`：进入目标进程命名空间，把驱动库、设备等挂进容器
 
 `configure` 会把 GPU Driver、CUDA Driver 等相关 `.so` 与设备节点，以挂载方式映射进容器。
 
@@ -101,12 +101,10 @@ runC 按 Spec 启动容器时会执行该 hook，真正干活的是 hook。
 
 一句话：
 
-- **Device Plugin**：按申请结果写好「给谁哪些 GPU」（主要是 Env）  
-- **nvidia-container-toolkit**：按 Env（等）把设备和驱动库挂进容器  
+- **Device Plugin**：按申请结果写好「给谁哪些 GPU」（主要是 Env）
+- **nvidia-container-toolkit**：按 Env（等）把设备和驱动库挂进容器
 
 也可以只有 Device Plugin、不配自家 toolkit：例如某些厂商实现只通过 `DeviceSpec` 挂 `/dev/xxx`。那样容器启动时会挂设备节点，但**若不挂驱动库，容器镜像里需要自带驱动用户态**。NVIDIA 路线则是 Plugin + Toolkit 分工明确、也兼容 Docker 的 `NVIDIA_VISIBLE_DEVICES` / `--gpus`。
-
----
 
 ## 2. Device Plugin 源码要点（Allocate）
 
@@ -147,7 +145,7 @@ func (plugin *NvidiaDevicePlugin) updateResponseForDeviceListEnvvar(
 }
 ```
 
-其中 `deviceListEnvvar` 初始化为 **`NVIDIA_VISIBLE_DEVICES`**。  
+其中 `deviceListEnvvar` 初始化为 **`NVIDIA_VISIBLE_DEVICES`**。
 device ID 策略：
 
 ```go
@@ -175,11 +173,9 @@ docker run -e NVIDIA_VISIBLE_DEVICES=0 -it tensorflow/tensorflow:latest-gpu bash
 
 Kubernetes 里用 Env 传递，正好对接 nvidia-container-toolkit。
 
----
-
 ## 3. nvidia-container-toolkit 源码要点
 
-仓库：[NVIDIA/nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit)  
+仓库：[NVIDIA/nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit)
 底层挂载能力多在 [libnvidia-container](https://github.com/NVIDIA/libnvidia-container)（`nvidia-container-cli`）。
 
 ### 3.1 nvidia-container-runtime：注入 Prestart Hook
@@ -201,10 +197,10 @@ spec.Hooks.Prestart = append(spec.Hooks.Prestart, specs.Hook{
 
 `prestart` 分支走 `doPrestart()`：
 
-1. `getContainerConfig`：从 stdin 的 hook state + bundle 里的 `config.json` 解析容器配置  
-2. 若不是 GPU 容器（解析不到 NVIDIA 配置），直接返回  
-3. 组装 `nvidia-container-cli ... configure --device=... --pid=... <rootfs>`  
-4. `syscall.Exec` 执行 CLI  
+1. `getContainerConfig`：从 stdin 的 hook state + bundle 里的 `config.json` 解析容器配置
+2. 若不是 GPU 容器（解析不到 NVIDIA 配置），直接返回
+3. 组装 `nvidia-container-cli ... configure --device=... --pid=... <rootfs>`
+4. `syscall.Exec` 执行 CLI
 
 解析设备时，`getDevices` 优先（若开启）从 **volume mounts** 取，否则从 **Env** 取：
 
@@ -227,7 +223,7 @@ NVIDIA_VISIBLE_DEVICES
 
 该 Env 来自 OCI Spec 的 `Process.Env`（正是 Device Plugin Allocate 写入的）。
 
-#### 为什么「没申请 GPU，Pod 里却能看到所有卡」？
+#### 3.2.1 为什么「没申请 GPU，Pod 里却能看到所有卡」？ {/* #为什么没申请-gpupod-里却能看到所有卡 */}
 
 特殊逻辑：若没有解析到任何 device，且镜像是 **legacy image**，则默认当作 `all`：
 
@@ -243,9 +239,9 @@ legacy 判定大致为：存在 `CUDA_VERSION`，且没有 `NVIDIA_REQUIRE_CUDA`
 
 CLI（C）大致步骤：
 
-1. `nvc_driver_info_new` / `nvc_device_info_new`：查驱动与设备信息  
-2. 按参数选出可见 GPU  
-3. `driver_mount` / `device_mount`：把驱动库与设备挂进容器命名空间  
+1. `nvc_driver_info_new` / `nvc_device_info_new`：查驱动与设备信息
+2. 按参数选出可见 GPU
+3. `driver_mount` / `device_mount`：把驱动库与设备挂进容器命名空间
 
 libnvidia-container 多用 **bind mount** 把需要的 libraries/binaries **逐个**挂进容器，而不是整目录硬塞。
 
@@ -259,8 +255,6 @@ docker run \
 ```
 
 `NVIDIA_DRIVER_CAPABILITIES=compute,utility` 表示挂载 compute / utility 相关库。
-
----
 
 ## 4. 全链路再串一遍
 
@@ -288,10 +282,8 @@ runC prestart
 
 核心就两步：
 
-1. Device Plugin 写 **`NVIDIA_VISIBLE_DEVICES`**（表达「分哪些卡」）  
-2. Toolkit 按该 Env **挂设备与驱动库**（落实「容器里真能用」）  
-
----
+1. Device Plugin 写 **`NVIDIA_VISIBLE_DEVICES`**（表达「分哪些卡」）
+2. Toolkit 按该 Env **挂设备与驱动库**（落实「容器里真能用」）
 
 ## 5. 小结
 
@@ -306,9 +298,7 @@ runC prestart
 
 下一篇可继续写生产向的 Pod 配置与 Pending 排查：[Kubernetes GPU Pod 配置详解](./04-Kubernetes%20GPU%20Pod%20配置详解.md)、[GPU Pod 一直 Pending 的排查流程](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
 
----
-
-## 参考与致谢
+## 6. 参考与致谢 {/* #参考与致谢 */}
 
 - [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin)
 - [NVIDIA/nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit)

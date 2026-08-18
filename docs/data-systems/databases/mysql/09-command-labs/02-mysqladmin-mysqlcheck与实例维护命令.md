@@ -1,8 +1,9 @@
 ---
 title: "mysqladmin、mysqlcheck 与实例维护命令"
+sidebar_label: "02. mysqladmin、mysqlcheck 与实例维护命令"
 sidebar_position: 2
-tags: [MySQL, mysqladmin, mysqlcheck, 运维命令]
 description: "整理实例探活、状态、连接管理和表检查/分析/优化命令，并明确锁、重建、权限与生产风险。"
+tags: [MySQL, mysqladmin, mysqlcheck, 运维命令]
 ---
 
 # mysqladmin、mysqlcheck 与实例维护命令
@@ -82,8 +83,7 @@ mysqlcheck [options] db [tables...]
 → 验证计划、业务和复制
 ```
 
-## 参考资料
+## 6. 参考资料 {/* #参考资料 */}
 
 - [mysqladmin](https://dev.mysql.com/doc/refman/8.4/en/mysqladmin.html)
 - [mysqlcheck](https://dev.mysql.com/doc/refman/8.4/en/mysqlcheck.html)
-

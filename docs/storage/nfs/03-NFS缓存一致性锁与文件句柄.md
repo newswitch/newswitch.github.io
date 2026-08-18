@@ -2,8 +2,8 @@
 title: "NFS 缓存、一致性、锁与文件句柄"
 sidebar_label: "03. NFS 缓存、一致性、锁与文件句柄"
 sidebar_position: 3
-tags: [NFS, 缓存一致性, 文件锁, delegation, stale file handle, close-to-open]
 description: "系统理解 NFS 数据/属性/目录缓存、close-to-open、一致性窗口、文件锁、delegation、lease 和 stale file handle。"
+tags: [NFS, 缓存一致性, 文件锁, delegation, stale file handle, close-to-open]
 ---
 
 # NFS 缓存、一致性、锁与文件句柄
@@ -334,7 +334,7 @@ grep -E 'Cached|Dirty|Writeback' /proc/meminfo
 
 下一篇：[NFS 生产部署、安全与高可用](./04-NFS生产部署安全与高可用.md)。
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [Linux NFS client documentation](https://docs.kernel.org/filesystems/nfs/client-identifier.html)
 - [nfs(5)](https://man7.org/linux/man-pages/man5/nfs.5.html)

@@ -2,15 +2,15 @@
 title: "Pause 容器"
 sidebar_label: "04. Pause 容器"
 sidebar_position: 4
-tags: [Kubernetes, Pod, 学习路线]
 description: "深入探究 Kubernetes 中 Pause 容器（Infra 容器）的作用与原理，了解它如何实现 Pod 内容器间的网络命名空间共享，以及在 Pod 生命周期管理中的关键作用。"
+tags: [Kubernetes, Pod, 学习路线]
 ---
 
 # Pause 容器
 
 > Pause 容器（Infra 容器）是 Kubernetes Pod 架构的核心机制，负责实现容器间命名空间共享和 Pod 生命周期管理，是多容器协作的基础。
 
-## Pause 容器配置
+## 1. Pause 容器配置 {/* #pause-容器配置 */}
 
 Pause 容器的镜像配置在 kubelet 参数中，以下为常见配置方式：
 
@@ -26,7 +26,7 @@ Pause 容器的镜像配置在 kubelet 参数中，以下为常见配置方式�
 
 Pause 容器可自定义，官方源代码见 [Kubernetes GitHub 仓库](https://github.com/kubernetes/kubernetes/tree/master/build/pause)，采用 C 语言实现。
 
-## 容器特点
+## 2. 容器特点 {/* #容器特点 */}
 
 Pause 容器具备以下显著特性：
 
@@ -35,14 +35,14 @@ Pause 容器具备以下显著特性：
 - **多架构支持**：兼容 AMD64、ARM64 等主流架构
 - **资源消耗极低**：几乎不占用 CPU 和内存
 
-## 设计背景
+## 3. 设计背景 {/* #设计背景 */}
 
 Pod 是 Kubernetes 的基本调度单元，本质为逻辑概念。为实现 Pod 内多容器高效共享资源，需打破 Linux Namespace 和 cgroups 的隔离。Kubernetes 通过 Pause 容器实现网络和存储共享，具体包括：
 
 - **网络共享**：通过 Network Namespace
 - **存储共享**：通过 Volume 挂载
 
-## 实现原理
+## 4. 实现原理 {/* #实现原理 */}
 
 Pause 容器的核心作用是为 Pod 内所有业务容器提供统一的命名空间基础。下图展示了 Pause 容器实现网络共享的流程：
 
@@ -56,7 +56,7 @@ graph TD
 
 ![Pause 容器网络共享机制](/images/k8s/pod/pause-container/4f3bc5b609243a71ffcd051b14e0b965.svg)
 
-### 网络共享机制
+### 4.1 网络共享机制 {/* #网络共享机制 */}
 
 Pod 内容器的网络共享按如下步骤实现：
 
@@ -64,20 +64,20 @@ Pod 内容器的网络共享按如下步骤实现：
 2. 业务容器通过 `--net=container:pause` 加入同一 Network Namespace
 3. 所有容器共享 IP、端口、路由表等网络资源
 
-### 关键特性
+### 4.2 关键特性 {/* #关键特性 */}
 
 - **统一网络视图**：Pod 内所有容器共享网络设备、IP、MAC 地址
 - **生命周期管理**：Pod 生命周期等同于 Pause 容器生命周期
 - **独立更新**：可单独更新业务容器，无需重建整个 Pod
 
-## 实际作用
+## 5. 实际作用 {/* #实际作用 */}
 
 Pause 容器在 Pod 中承担以下职责：
 
 - **命名空间共享基础**：Network、IPC、PID Namespace 共享
 - **Init 进程角色**：作为 Pod 内 PID 1，负责回收僵尸进程和信号处理
 
-## 查看运行状态
+## 6. 查看运行状态 {/* #查看运行状态 */}
 
 可通过以下命令在节点上查看 Pause 容器运行情况：
 
@@ -92,13 +92,13 @@ crictl ps | grep pause
 5a5ef33b0d58   registry.k8s.io/pause:3.9   3 hours ago   Running   k8s_POD_redis-cluster-...
 ```
 
-## 实战演示
+## 7. 实战演示 {/* #实战演示 */}
 
 下图展示了 Pause 容器在 Pod 内部的资源共享机制：
 
 ![Pause 容器示意图](/images/k8s/objects/pause-container/pause-container.webp)
 
-### 步骤一：启动 Pause 容器
+### 7.1 步骤一：启动 Pause 容器 {/* #步骤一启动-pause-容器 */}
 
 手动启动 Pause 容器作为命名空间基础：
 
@@ -106,7 +106,7 @@ crictl ps | grep pause
 docker run -d --name pause -p 8880:80 --ipc=shareable registry.k8s.io/pause:3.9
 ```
 
-### 步骤二：启动 Nginx 容器并共享命名空间
+### 7.2 步骤二：启动 Nginx 容器并共享命名空间 {/* #步骤二启动-nginx-容器并共享命名空间 */}
 
 通过 `--net=container:pause` 等参数将 Nginx 容器加入 Pause 容器命名空间：
 
@@ -134,7 +134,7 @@ docker run -d --name nginx \
   nginx
 ```
 
-### 步骤三：启动 Ghost 应用容器
+### 7.3 步骤三：启动 Ghost 应用容器 {/* #步骤三启动-ghost-应用容器 */}
 
 将 Ghost 容器加入 Pause 容器命名空间，实现多容器协作：
 
@@ -148,7 +148,7 @@ docker run -d --name ghost \
 
 访问 `http://localhost:8880/` 即可看到 Ghost 博客界面。
 
-### 验证共享效果
+### 7.4 验证共享效果 {/* #验证共享效果 */}
 
 进入 Ghost 容器查看进程：
 
@@ -172,7 +172,7 @@ node        10  0.3  2.0 1254200 83788 ?       Ssl  13:53   0:03 node current/in
 - 所有容器进程在同一 PID 命名空间
 - 容器间可通过 `localhost` 通信
 
-## 版本演进
+## 8. 版本演进 {/* #版本演进 */}
 
 | Kubernetes 版本 | Pause 容器版本 | 主要变化                     |
 |-----------------|----------------|------------------------------|
@@ -180,7 +180,7 @@ node        10  0.3  2.0 1254200 83788 ?       Ssl  13:53   0:03 node current/in
 | 1.21-1.24       | pause:3.5      | 多架构支持                   |
 | 1.25+           | pause:3.9      | 镜像仓库迁移到 registry.k8s.io |
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 Pause 容器相关建议如下：
 
@@ -189,11 +189,11 @@ Pause 容器相关建议如下：
 - **监控观察**：通过 Pause 容器状态判断 Pod 健康
 - **故障排查**：Pause 容器异常通常意味着整个 Pod 存在问题
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 Pause 容器是 Kubernetes Pod 内部资源共享和生命周期管理的基础。通过 Pause 容器实现命名空间统一，保障多容器高效协作和稳定运行。建议在实际运维中关注 Pause 容器状态，提升故障排查和集群可靠性。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 - [The Almighty Pause Container - ianlewis.org](https://www.ianlewis.org/en/almighty-pause-container)
 - [Kubernetes Pause Container Source Code - github.com](https://github.com/kubernetes/kubernetes/tree/master/build/pause)

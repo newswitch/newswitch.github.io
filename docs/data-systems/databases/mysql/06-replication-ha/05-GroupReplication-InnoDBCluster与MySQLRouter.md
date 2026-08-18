@@ -2,8 +2,8 @@
 title: "Group Replication、InnoDB Cluster 与 MySQL Router"
 sidebar_label: "05. Group Replication、InnoDB Cluster 与 MySQL Router"
 sidebar_position: 5
-tags: [MySQL, Group Replication, InnoDB Cluster, MySQL Router]
 description: "理解组成员、共识排序、认证冲突、AdminAPI 管理和 Router 路由，建立集群运行与故障演练方法。"
+tags: [MySQL, Group Replication, InnoDB Cluster, MySQL Router]
 ---
 
 # Group Replication、InnoDB Cluster 与 MySQL Router
@@ -89,7 +89,7 @@ SELECT * FROM performance_schema.replication_group_member_stats;
 
 Group Replication 适合希望官方集成、自动成员管理和较强 HA 的场景；它不替代跨地域灾备、备份/PITR、容量规划和应用幂等。比较传统异步拓扑时，应基于 RPO/RTO、写延迟、操作复杂度和团队能力，而非“节点数量”。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [MySQL Group Replication](https://dev.mysql.com/doc/refman/8.4/en/group-replication.html)
 - [MySQL InnoDB Cluster](https://dev.mysql.com/doc/mysql-shell/8.4/en/mysql-innodb-cluster.html)

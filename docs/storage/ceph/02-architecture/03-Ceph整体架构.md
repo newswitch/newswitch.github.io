@@ -2,8 +2,8 @@
 title: "Ceph 整体架构：MON、MGR、OSD、MDS 和 RGW 如何协作"
 sidebar_label: "03. Ceph 整体架构：MON、MGR、OSD、MDS 和 RGW 如何协作"
 sidebar_position: 3
-tags: [Ceph, 学习路线, 存储, RADOS, MON, OSD]
 description: "从分层视图讲清 RADOS、MON、MGR、OSD、MDS、RGW 的职责、协作链路，以及组件故障对业务的影响。"
+tags: [Ceph, 学习路线, 存储, RADOS, MON, OSD]
 ---
 
 # Ceph 整体架构：MON、MGR、OSD、MDS 和 RGW 如何协作
@@ -29,8 +29,7 @@ description: "从分层视图讲清 RADOS、MON、MGR、OSD、MDS、RGW 的职�
 
 本文将从整体架构出发，把这些组件放到一条完整的数据链路中理解。
 
-
-## 先建立 Ceph 的分层视图
+## 1. 先建立 Ceph 的分层视图 {/* #先建立-ceph-的分层视图 */}
 
 为了便于理解，可以把 Ceph 分成四层：
 
@@ -56,7 +55,7 @@ flowchart TD
 1. **真正保存业务数据的是 OSD**
 2. **MON 和 MGR 非常重要，但普通业务数据不会全部经过它们转发**
 
-## RADOS：Ceph 的底层存储系统
+## 2. RADOS：Ceph 的底层存储系统 {/* #radosceph-的底层存储系统 */}
 
 RADOS 全称为 Reliable Autonomic Distributed Object Store，可以理解为 Ceph 底层的可靠、自主管理的分布式对象存储系统。
 
@@ -80,7 +79,7 @@ RADOS 负责的核心能力包括：
 
 因此，RBD、CephFS 和 RGW 并不是三套完全独立的存储系统，而是建立在同一个 RADOS 底座之上的三种访问方式。
 
-## MON：集群状态的权威来源
+## 3. MON：集群状态的权威来源 {/* #mon集群状态的权威来源 */}
 
 MON 是 Monitor 的缩写，中文通常称为监视器。
 
@@ -88,7 +87,7 @@ MON 是 Monitor 的缩写，中文通常称为监视器。
 
 > **保存并维护 Ceph 集群状态的权威副本。**
 
-### MON 维护哪些信息
+### 3.1 MON 维护哪些信息 {/* #mon-维护哪些信息 */}
 
 Ceph 集群不是静态的。OSD 可能上线或下线，节点可能故障，Pool 配置可能修改，MDS 和 MGR 的状态也会发生变化。
 
@@ -104,7 +103,7 @@ MON 维护的集群地图主要包括：
 
 客户端和其他 Ceph 守护进程会从 MON 获取最新的集群地图。
 
-### MON 为什么需要 Quorum
+### 3.2 MON 为什么需要 Quorum {/* #mon-为什么需要-quorum */}
 
 多个 MON 之间需要对关键集群状态达成一致，这个多数派集合称为 **Quorum**（仲裁）。
 
@@ -120,7 +119,7 @@ MON 维护的集群地图主要包括：
 
 因此，高可用不是「MON 进程还活着」，而是「足够数量的 MON 可以互相通信并形成 Quorum」。
 
-### MON 是否转发业务数据
+### 3.3 MON 是否转发业务数据 {/* #mon-是否转发业务数据 */}
 
 通常不会。
 
@@ -128,7 +127,7 @@ MON 维护的集群地图主要包括：
 
 如果所有数据都必须经过 MON，MON 就会变成中心瓶颈和单点。Ceph 正是通过「客户端获取地图后直接访问 OSD」避免这种问题。
 
-### 查看 MON 状态
+### 3.4 查看 MON 状态 {/* #查看-mon-状态 */}
 
 ```bash
 ceph mon stat
@@ -138,11 +137,11 @@ ceph mon dump
 
 这些命令分别用于查看 MON 总体状态、Quorum 详情和 Monitor Map。
 
-## MGR：集群管理与监控中心
+## 4. MGR：集群管理与监控中心 {/* #mgr集群管理与监控中心 */}
 
 MGR 是 Manager 的缩写，主要负责收集集群运行信息，并向管理、监控和编排功能提供接口。
 
-### MGR 主要做什么
+### 4.1 MGR 主要做什么 {/* #mgr-主要做什么 */}
 
 MGR 的常见职责包括：
 
@@ -160,19 +159,19 @@ MGR 的常见职责包括：
 | MON | 维护集群关键状态和集群地图 |
 | MGR | 管理、监控、统计和扩展模块 |
 
-### Active 与 Standby MGR
+### 4.2 Active 与 Standby MGR {/* #active-与-standby-mgr */}
 
 Ceph 通常运行一个 Active MGR 和一个或多个 Standby MGR。
 
 Active MGR 负责运行大部分管理模块；Active 发生故障后，Standby 可以接替。这样可以避免 Dashboard、Prometheus 指标和管理模块长期不可用。
 
-### MGR 故障会不会让业务 IO 立即中断
+### 4.3 MGR 故障会不会让业务 IO 立即中断 {/* #mgr-故障会不会让业务-io-立即中断 */}
 
 一般不会直接中断正常的 RADOS 数据读写，因为 MGR 不在普通数据 IO 主链路中。
 
 但是，MGR 故障会影响 Dashboard、监控指标、部分管理命令和编排功能。长期没有可用 MGR 也不属于正常运行状态，必须及时恢复。
 
-### 查看 MGR 状态
+### 4.4 查看 MGR 状态 {/* #查看-mgr-状态 */}
 
 ```bash
 ceph mgr stat
@@ -180,7 +179,7 @@ ceph mgr dump
 ceph mgr module ls
 ```
 
-## OSD：真正保存和处理数据的核心组件
+## 5. OSD：真正保存和处理数据的核心组件 {/* #osd真正保存和处理数据的核心组件 */}
 
 OSD 是 Object Storage Daemon 的缩写，是 Ceph 数据面的核心。
 
@@ -194,7 +193,7 @@ OSD 负责：
 - 执行 Scrub 和 Deep Scrub
 - 向 MON 和 MGR 上报状态及性能数据
 
-### OSD 等于一块磁盘吗
+### 5.1 OSD 等于一块磁盘吗 {/* #osd-等于一块磁盘吗 */}
 
 严格来说，OSD 是一个守护进程和对应的逻辑存储单元，不是磁盘本身。
 
@@ -208,7 +207,7 @@ osd.1 → /dev/sdc
 osd.2 → /dev/sdd
 ```
 
-### Up/Down 和 In/Out 不是一回事
+### 5.2 Up/Down 和 In/Out 不是一回事 {/* #updown-和-inout-不是一回事 */}
 
 OSD 有两组非常重要的状态：
 
@@ -228,13 +227,13 @@ OSD 有两组非常重要的状态：
 
 这些状态会在后面的 OSD 故障排查文章中反复出现。
 
-### OSD 之间如何协作
+### 5.3 OSD 之间如何协作 {/* #osd-之间如何协作 */}
 
 在副本池中，一个 PG 会对应一组 OSD。其中一个是 **Primary OSD**，其余是 **Replica OSD**。
 
 客户端通常把写请求发送给 Primary OSD，由 Primary 协调其他 Replica 完成副本写入。满足当前写入确认条件后，Primary 再向客户端确认。
 
-### 查看 OSD 状态
+### 5.4 查看 OSD 状态 {/* #查看-osd-状态 */}
 
 ```bash
 ceph osd stat
@@ -243,13 +242,13 @@ ceph osd df
 ceph osd dump
 ```
 
-## MDS：CephFS 的元数据服务
+## 6. MDS：CephFS 的元数据服务 {/* #mdscephfs-的元数据服务 */}
 
 MDS 是 Metadata Server 的缩写，**只在使用 CephFS 时需要**。
 
 如果集群只使用 RBD 或 RGW，不需要因为这两种服务专门部署 MDS。
 
-### 什么是文件系统元数据
+### 6.1 什么是文件系统元数据 {/* #什么是文件系统元数据 */}
 
 CephFS 中的元数据包括：
 
@@ -262,13 +261,13 @@ CephFS 中的元数据包括：
 
 MDS 负责管理这些元数据，让客户端能够执行 `ls`、`cd`、`mkdir`、打开文件和权限检查等文件系统操作。
 
-### MDS 是否保存文件数据
+### 6.2 MDS 是否保存文件数据 {/* #mds-是否保存文件数据 */}
 
 MDS 不负责转发所有文件内容。
 
 CephFS 客户端获得所需的元数据和能力授权后，会直接访问 RADOS 中的文件数据。这样可以避免所有文件 IO 都集中经过 MDS。
 
-### Active 与 Standby MDS
+### 6.3 Active 与 Standby MDS {/* #active-与-standby-mds */}
 
 为了实现高可用，CephFS 通常至少准备：
 
@@ -277,7 +276,7 @@ CephFS 客户端获得所需的元数据和能力授权后，会直接访问 RAD
 
 Active 故障后，Standby 可以接管对应的 MDS Rank。切换过程中，CephFS 元数据操作可能短暂停顿。
 
-### 查看 MDS 和 CephFS 状态
+### 6.4 查看 MDS 和 CephFS 状态 {/* #查看-mds-和-cephfs-状态 */}
 
 ```bash
 ceph fs status
@@ -285,13 +284,13 @@ ceph mds stat
 ceph fs dump
 ```
 
-## RGW：对象存储访问网关
+## 7. RGW：对象存储访问网关 {/* #rgw对象存储访问网关 */}
 
 RGW 是 RADOS Gateway 的缩写，它向外提供兼容 S3 和 Swift 基本数据模型的 HTTP 接口。
 
 应用不需要理解 Pool、PG 和 OSD，只需要通过 Bucket、Object Key、Access Key 和 Secret Key 访问对象。
 
-### RGW 在链路中的位置
+### 7.1 RGW 在链路中的位置 {/* #rgw-在链路中的位置 */}
 
 ```mermaid
 flowchart TD
@@ -308,19 +307,19 @@ RGW 主要负责：
 - 将对象请求转换为 RADOS 操作
 - 管理 RGW 用户和对象元数据
 
-### RGW 是否保存对象数据
+### 7.2 RGW 是否保存对象数据 {/* #rgw-是否保存对象数据 */}
 
 对象数据最终保存在 RADOS 中。RGW 是访问网关，不应该被理解成对象数据只存放在 RGW 服务器本地。
 
 因此，可以部署多个 RGW 实例并在前面配置负载均衡，提高接口容量和可用性。
 
-### RGW 故障影响什么
+### 7.3 RGW 故障影响什么 {/* #rgw-故障影响什么 */}
 
 如果只有一个 RGW 实例，它故障后，S3 或 Swift 接口会不可用，但底层 RADOS 数据仍然存在，RBD 和 CephFS 通常不会因此中断。
 
 如果部署多个 RGW 并正确配置负载均衡，单个 RGW 实例故障时可以由其他实例继续提供服务。
 
-### 查看 RGW 服务
+### 7.4 查看 RGW 服务 {/* #查看-rgw-服务 */}
 
 在 Cephadm 管理的集群中可以使用：
 
@@ -329,7 +328,7 @@ ceph orch ls --service_type rgw
 ceph orch ps --daemon_type rgw
 ```
 
-## Ceph 客户端：真正发起数据访问的一方
+## 8. Ceph 客户端：真正发起数据访问的一方 {/* #ceph-客户端真正发起数据访问的一方 */}
 
 Ceph 客户端不只指一台 Linux 服务器，也可以是：
 
@@ -342,7 +341,7 @@ Ceph 客户端不只指一台 Linux 服务器，也可以是：
 
 不同客户端的接口不同，但它们最终都访问同一套 RADOS 集群。
 
-### 客户端为什么必须先联系 MON
+### 8.1 客户端为什么必须先联系 MON {/* #客户端为什么必须先联系-mon */}
 
 客户端在访问数据前，需要完成两件事：
 
@@ -351,7 +350,7 @@ Ceph 客户端不只指一台 Linux 服务器，也可以是：
 
 客户端有了集群地图后，才能判断有哪些 OSD、OSD 当前状态如何，以及数据应该访问哪个 PG 和 OSD。
 
-## 一次 RBD 写入是怎么完成的
+## 9. 一次 RBD 写入是怎么完成的 {/* #一次-rbd-写入是怎么完成的 */}
 
 先用一个简化流程把所有组件串起来。假设虚拟机向 RBD 写入一段数据：
 
@@ -386,7 +385,7 @@ sequenceDiagram
 - RBD 不需要 MDS
 - 真正处理数据的是 OSD
 
-## 不同存储服务需要哪些组件
+## 10. 不同存储服务需要哪些组件 {/* #不同存储服务需要哪些组件 */}
 
 | 使用场景 | 基础组件 | 额外组件或客户端 |
 | --- | --- | --- |
@@ -400,7 +399,7 @@ sequenceDiagram
 2. MDS 只服务 CephFS，不负责 RBD 和 RGW
 3. RGW 是对象接口网关，业务对象最终仍保存在 OSD 中
 
-## 组件故障会产生什么影响
+## 11. 组件故障会产生什么影响 {/* #组件故障会产生什么影响 */}
 
 | 故障场景 | 可能影响 |
 | --- | --- |
@@ -413,7 +412,7 @@ sequenceDiagram
 
 故障影响不是只由「某个进程是否存活」决定，还与副本数、Quorum、Standby 数量、故障域和剩余容量有关。
 
-## 常见误区
+## 12. 常见误区 {/* #常见误区 */}
 
 **误区一：MON 是 Ceph 的数据中心**
 
@@ -435,7 +434,7 @@ MDS 主要处理文件系统元数据。客户端获得能力授权后可以直�
 
 RGW 是访问网关。RGW 进程故障会影响对象接口，但对象数据仍保存在 RADOS 中。
 
-## 本篇总结
+## 13. 本篇总结 {/* #本篇总结 */}
 
 这一篇需要记住以下内容：
 
@@ -450,8 +449,7 @@ RGW 是访问网关。RGW 进程故障会影响对象接口，但对象数据仍
 
 **业务数据如何变成 Object，Object 为什么属于 Pool，又如何通过 PG 找到 OSD？**
 
-
-## 自测题
+## 14. 自测题 {/* #自测题 */}
 
 1. MON 和 MGR 的职责有什么区别？
 2. 为什么三个 MON 最多只能容忍一个 MON 故障？
@@ -461,7 +459,7 @@ RGW 是访问网关。RGW 进程故障会影响对象接口，但对象数据仍
 6. RBD 客户端为什么要先连接 MON？
 7. 一次 RBD 写入过程中，哪个组件负责协调副本写入？
 
-## 参考资料
+## 15. 参考资料 {/* #参考资料 */}
 
 - [Ceph 官方架构文档](https://docs.ceph.com/en/latest/architecture/)
 - [Ceph 存储集群文档](https://docs.ceph.com/en/latest/rados/)

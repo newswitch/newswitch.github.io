@@ -1,11 +1,12 @@
 ---
-title: dcgmi 命令详解：GPU 发现、健康、字段监控与诊断
+title: "dcgmi 命令详解：GPU 发现、健康、字段监控与诊断"
+sidebar_label: "02. dcgmi 命令详解：GPU 发现、健康、字段监控与诊断"
 sidebar_position: 2
-description: 掌握 DCGM CLI 的对象模型、常用子命令、健康策略、字段组、诊断等级和生产排障方法。
+description: "掌握 DCGM CLI 的对象模型、常用子命令、健康策略、字段组、诊断等级和生产排障方法。"
 tags: [GPU, DCGM, dcgmi, 监控, 诊断, SRE]
 ---
 
-# dcgmi 命令详解
+# dcgmi 命令详解：GPU 发现、健康、字段监控与诊断
 
 `dcgmi` 是 NVIDIA Data Center GPU Manager 的管理 CLI。它通过 Host Engine 管理 GPU、GPU Instance、Compute Instance、Switch 和字段数据，适合节点巡检与集群监控；`nvidia-smi` 更像单机 NVML 入口，两者互补。
 
@@ -128,7 +129,7 @@ dcgmi policy --help
 
 你应能解释 DCGM 的 Host Engine—Group—Entity—Field 模型；在不影响在线任务的前提下完成发现和健康检查；能说明主动诊断为什么必须进维护窗口；能把 DCGM 告警关联到物理 GPU、应用进程和内核日志。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [DCGM command-line reference](https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/index.html)
 - [dcgmi diag reference](https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/dcgmi/dcgmi-diag.html)

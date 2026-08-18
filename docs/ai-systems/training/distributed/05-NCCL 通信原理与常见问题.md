@@ -1,10 +1,11 @@
 ---
 title: "NCCL：从集合通信、拓扑选择到多机超时排查"
 sidebar_label: "05. NCCL：从集合通信、拓扑选择到多机超时排查"
+sidebar_position: 5
+description: "理解 AllReduce、Ring/Tree、P2P/SHM/NET、拓扑与网卡选择，使用日志、RAS、nccl-tests 和跨 rank 时间线定位挂起与性能问题。"
+tags: ["NCCL", "NVLink", "RDMA", "RoCE", "InfiniBand", "分布式训练", "故障排查"]
 date: 2026-07-22 18:00:00
 categories: 云原生
-tags: ["NCCL", "NVLink", "RDMA", "RoCE", "InfiniBand", "分布式训练", "故障排查"]
-description: "理解 AllReduce、Ring/Tree、P2P/SHM/NET、拓扑与网卡选择，使用日志、RAS、nccl-tests 和跨 rank 时间线定位挂起与性能问题。"
 ---
 
 # NCCL：从集合通信、拓扑选择到多机超时排查
@@ -503,14 +504,14 @@ RoCE 还要检查：
 
 ## 19. Kubernetes 生产检查表
 
-### 调度
+### 19.1 调度 {/* #调度 */}
 
 - [ ] 所有 rank 通过 Gang 同时获得 GPU；
 - [ ] GPU/NVLink/NIC/NUMA topology 符合并行组；
 - [ ] Pod 间反亲和/亲和没有破坏 rail 设计；
 - [ ] 失败时控制器终止整组并从 Checkpoint 恢复。
 
-### 容器
+### 19.2 容器 {/* #容器 */}
 
 - [ ] GPU、RDMA device、驱动库和 GDR 模块可见；
 - [ ] `/dev/shm`、memlock、IPC 配置经验证；
@@ -518,7 +519,7 @@ RoCE 还要检查：
 - [ ] 所有 Pod 使用一致环境变量；
 - [ ] 日志按 host/PID/rank 独立保存。
 
-### 网络
+### 19.3 网络 {/* #网络 */}
 
 - [ ] bootstrap、管理网和训练网角色明确；
 - [ ] Multus/SR-IOV/host network 地址选择正确；
@@ -558,51 +559,51 @@ NCCL 报错/超时
 
 ## 21. 故障演练
 
-### 实验一：单机 topology
+### 21.1 实验一：单机 topology {/* #实验一单机-topology */}
 
 输出 `nvidia-smi topo -m` 和 NCCL topology，预测哪组 GPU 更快，再用不同 GPU 组合运行 all_reduce 验证。
 
-### 实验二：P2P/SHM A/B
+### 21.2 实验二：P2P/SHM A/B {/* #实验二p2pshm-ab */}
 
 在测试节点分别使用默认、禁用 P2P 的配置，比较日志 transport 与 busbw。临时变量不要进入生产默认。
 
-### 实验三：Socket 与 RDMA A/B
+### 21.3 实验三：Socket 与 RDMA A/B {/* #实验三socket-与-rdma-ab */}
 
 在隔离测试集群确认默认走 RDMA，再临时禁用 IB 观察 Socket 性能和日志，理解 fallback。
 
-### 实验四：缺失 rank
+### 21.4 实验四：缺失 rank {/* #实验四缺失-rank */}
 
 在短 timeout 的测试程序中故意不启动一个 rank，观察 bootstrap/框架日志与 RAS。不要在生产作业实施。
 
-### 实验五：collective 顺序不一致
+### 21.5 实验五：collective 顺序不一致 {/* #实验五collective-顺序不一致 */}
 
 编写最小两 rank 程序，让 rank 执行不同顺序的 collective，在隔离环境验证超时和日志特征。
 
-### 实验六：分层扩容
+### 21.6 实验六：分层扩容 {/* #实验六分层扩容 */}
 
 单机、双机、四机逐级运行相同 message sweep，绘制 algbw/busbw 与节点数曲线，识别扩展效率拐点。
 
 ## 22. 掌握标准
 
-### 入门
+### 22.1 入门 {/* #入门 */}
 
 - 能解释 AllReduce、AllGather、ReduceScatter；
 - 能看懂 rank/world size 和 `nvidia-smi topo -m`；
 - 能运行 nccl-tests 并保存日志。
 
-### 进阶
+### 22.2 进阶 {/* #进阶 */}
 
 - 能区分 P2P、SHM、IB/RoCE 和 Socket；
 - 能定位缺 rank、collective 不一致和网卡错选；
 - 能解释 algbw、busbw、Ring/Tree 和 channel。
 
-### 生产级
+### 22.3 生产级 {/* #生产级 */}
 
 - 能把 GPU、NVLink、PCIe、NIC、Fabric、Kubernetes 和训练 step 串成证据链；
 - 能使用 RAS、全 rank 日志和分层基线定位慢 rank；
 - 能通过 topology-aware placement 和数据证明 NCCL 调优有效且正确。
 
-## 参考资料
+## 23. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA NCCL User Guide](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/)
 - [NCCL Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)

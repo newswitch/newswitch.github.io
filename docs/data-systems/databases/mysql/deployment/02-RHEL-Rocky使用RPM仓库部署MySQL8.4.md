@@ -2,8 +2,8 @@
 title: "RHEL/Rocky 使用 RPM 仓库部署 MySQL 8.4"
 sidebar_label: "02. RHEL/Rocky 使用 RPM 仓库部署 MySQL 8.4"
 sidebar_position: 2
-tags: [MySQL, RHEL, Rocky Linux, RPM, DNF, systemd]
 description: "使用 MySQL 官方 Yum/DNF 仓库在 RHEL、Rocky Linux 与兼容发行版部署 MySQL 8.4 LTS，并完成版本、SELinux、systemd、安全和升级验收。"
+tags: [MySQL, RHEL, Rocky Linux, RPM, DNF, systemd]
 ---
 
 # RHEL/Rocky 使用 RPM 仓库部署 MySQL 8.4

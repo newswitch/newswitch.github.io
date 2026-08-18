@@ -1,11 +1,12 @@
 ---
-title: modprobe 命令详解：按依赖加载、卸载与诊断内核模块
+title: "modprobe 命令详解：按依赖加载、卸载与诊断内核模块"
+sidebar_label: "05. modprobe 命令详解：按依赖加载、卸载与诊断内核模块"
 sidebar_position: 5
-description: 系统讲解 modprobe 的全部长短参数、别名与依赖解析、配置优先级、黑名单、模块参数、卸载及 Secure Boot 排障。
+description: "系统讲解 modprobe 的全部长短参数、别名与依赖解析、配置优先级、黑名单、模块参数、卸载及 Secure Boot 排障。"
 tags: [Linux, modprobe, kmod, 内核模块, 驱动]
 ---
 
-# `modprobe` 命令详解：按依赖加载、卸载与诊断内核模块
+# modprobe 命令详解：按依赖加载、卸载与诊断内核模块
 
 `modprobe` 是生产环境管理模块的首选入口：它读取 `depmod` 生成的索引，解析模块名/alias、依赖、softdep、install/remove 规则和参数，再调用内核加载或移除模块。与 `insmod` 不同，它不要求操作者手工按顺序处理依赖。
 

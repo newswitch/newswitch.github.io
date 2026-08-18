@@ -1,11 +1,12 @@
 ---
-title: lsns 命令详解：盘点 Namespace、父子所有权与成员进程
+title: "lsns 命令详解：盘点 Namespace、父子所有权与成员进程"
+sidebar_label: "01. lsns 命令详解：盘点 Namespace、父子所有权与成员进程"
 sidebar_position: 1
-description: 完整讲解 lsns 参数、namespace inode、类型、owner/parent/process 树、持久 namespace、JSON 输出、权限与容器现场用法。
+description: "完整讲解 lsns 参数、namespace inode、类型、owner/parent/process 树、持久 namespace、JSON 输出、权限与容器现场用法。"
 tags: [Linux, lsns, Namespace, 容器, util-linux]
 ---
 
-# `lsns` 命令详解：盘点 Namespace、父子所有权与成员进程
+# lsns 命令详解：盘点 Namespace、父子所有权与成员进程
 
 `lsns` 扫描 procfs，按 namespace inode 聚合成员进程，并尽可能解析 user namespace 所有权、父子关系和 nsfs 持久挂载。它是盘点入口，不会进入或创建 namespace。
 

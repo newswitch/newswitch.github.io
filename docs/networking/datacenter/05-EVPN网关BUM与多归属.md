@@ -1,9 +1,9 @@
 ---
-title: EVPN 网关、BUM 与多归属
+title: "EVPN 网关、BUM 与多归属"
 sidebar_label: "05. EVPN 网关、BUM 与多归属"
 sidebar_position: 5
+description: "掌握 L2VNI/L3VNI、对称 IRB、Anycast Gateway、BUM 复制与 EVPN 多归属的完整转发逻辑。"
 tags: [EVPN, Anycast Gateway, IRB, BUM, Multihoming]
-description: 掌握 L2VNI/L3VNI、对称 IRB、Anycast Gateway、BUM 复制与 EVPN 多归属的完整转发逻辑。
 ---
 
 # EVPN 网关、BUM 与多归属
@@ -54,7 +54,7 @@ sequenceDiagram
 
 非对称 IRB 通常让入口 VTEP完成全部三层路由，然后直接进入目标 L2VNI；结果是每个可能作为入口的 Leaf都需要实例化所有目标二层广播域。小规模可用，但大规模扩展和运维更困难。
 
-### 排查对称 IRB 必看的表
+### 2.1 排查对称 IRB 必看的表 {/* #排查对称-irb-必看的表 */}
 
 ```text
 入口：本地 ARP/FDB → VRF 路由表 → EVPN Type 2/5 → L3VNI
@@ -122,7 +122,7 @@ DF 主要约束从 Fabric 向多归属以太网段发送 BUM 的方向。不要�
 
 ## 5. 两个典型故障
 
-### 故障一：单播正常，ARP 偶发重复
+### 5.1 故障一：单播正常，ARP 偶发重复 {/* #故障一单播正常arp-偶发重复 */}
 
 检查顺序：
 
@@ -132,7 +132,7 @@ DF 主要约束从 Fabric 向多归属以太网段发送 BUM 的方向。不要�
 4. 是否同时存在传统 MLAG 泛洪与 EVPN 多归属泛洪；
 5. 主机 Bond/LACP 状态是否一致。
 
-### 故障二：一条接入链路断开后大量主机长时间中断
+### 5.2 故障二：一条接入链路断开后大量主机长时间中断 {/* #故障二一条接入链路断开后大量主机长时间中断 */}
 
 检查：
 
@@ -182,7 +182,7 @@ vtysh -c 'show evpn vni'
 
 掌握不是会背术语，而是能从“主机 A 发出的第一帧”开始，解释入口路由、VNI 切换、远端解封装和出口二层转发，并说明多归属为什么不产生环路。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [RFC 7432：EVPN 与多归属机制](https://www.rfc-editor.org/rfc/rfc7432)
 - [RFC 8365：EVPN Overlay](https://www.rfc-editor.org/rfc/rfc8365)

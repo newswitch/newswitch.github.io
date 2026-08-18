@@ -2,8 +2,8 @@
 title: "NFS 生产部署、安全与高可用"
 sidebar_label: "04. NFS 生产部署、安全与高可用"
 sidebar_position: 4
-tags: [NFS, Linux, 高可用, Kerberos, root_squash, 备份, 容灾]
 description: "从需求、磁盘与网络规划开始部署 NFSv4，治理 exports、身份权限，并设计 VIP、状态恢复、备份和故障切换验收。"
+tags: [NFS, Linux, 高可用, Kerberos, root_squash, 备份, 容灾]
 ---
 
 # NFS 生产部署、安全与高可用
@@ -52,19 +52,19 @@ Clients / Kubernetes Nodes
 
 ## 3. 服务端资源规划
 
-### CPU
+### 3.1 CPU {/* #cpu */}
 
 RPC/XDR、权限、元数据、校验/加密会消耗 CPU。多客户端和小 I/O 更容易 CPU/线程受限。
 
-### 内存
+### 3.2 内存 {/* #内存 */}
 
 服务端 page cache 可提高热读，但不能把缓存吞吐当后端能力。内存压力会改变冷启动。
 
-### 网络
+### 3.3 网络 {/* #网络 */}
 
 规划速率、bond/LACP、VLAN、MTU、交换机冗余和故障域。多客户端聚合带宽不能超过服务端 NIC 与交换网络。
 
-### 存储
+### 3.4 存储 {/* #存储 */}
 
 模型读、大量元数据和 Checkpoint 写应按负载选 RAID/文件系统/共享后端。同步写的持久化能力与掉电保护必须验证。
 
@@ -216,19 +216,19 @@ Clients → VIP
 
 ## 11. 数据后端选择
 
-### 共享块存储
+### 11.1 共享块存储 {/* #共享块存储 */}
 
 两个 NFS 节点访问同一 SAN/云盘，HA 管理文件系统单主挂载。需处理卷 fencing、路径多路和后端单点。
 
-### 块复制
+### 11.2 块复制 {/* #块复制 */}
 
 DRBD 等复制本地块，切换时提升副本并挂载。需明确同步/异步、网络分区、split-brain 与 RPO。
 
-### 分布式文件/存储后端
+### 11.3 分布式文件/存储后端 {/* #分布式文件存储后端 */}
 
 NFS Gateway 运行在分布式后端之上，后端提供冗余。网关状态和入口仍需 HA；不要双重缓存/协议后就忽略一致性和性能。
 
-### 专用 NAS
+### 11.4 专用 NAS {/* #专用-nas */}
 
 由设备提供双控制器、NFS 状态和后端 RAID，但仍需验证实际 RTO、升级、容量与客户端行为。
 
@@ -355,7 +355,7 @@ RAID/复制/快照不等于备份。备份设计：
 
 下一篇：[NFS 性能指标、压测与参数调优](./05-NFS性能指标压测与参数调优.md)。
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [exports(5)](https://man7.org/linux/man-pages/man5/exports.5.html)
 - [nfs(5)](https://man7.org/linux/man-pages/man5/nfs.5.html)

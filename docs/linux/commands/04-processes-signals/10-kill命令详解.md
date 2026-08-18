@@ -1,11 +1,12 @@
 ---
-title: kill 命令详解：信号、进程组、pidfd 与安全升级
+title: "kill 命令详解：信号、进程组、pidfd 与安全升级"
+sidebar_label: "10. kill 命令详解：信号、进程组、pidfd 与安全升级"
 sidebar_position: 10
-description: 完整讲解 Bash builtin 与 util-linux kill 的参数、信号 0、PID/PGID、signal mask、queue、handler、pidfd timeout、退出码和生产终止流程。
+description: "完整讲解 Bash builtin 与 util-linux kill 的参数、信号 0、PID/PGID、signal mask、queue、handler、pidfd timeout、退出码和生产终止流程。"
 tags: [Linux, kill, signal, pidfd, 进程终止]
 ---
 
-# `kill` 命令详解：信号、进程组、pidfd 与安全升级
+# kill 命令详解：信号、进程组、pidfd 与安全升级
 
 `kill` 的本质是发送信号，不是“必然杀死”。Shell 通常优先执行 builtin，外部 util-linux `kill` 提供 signal mask、pidfd timeout、queue 等更多功能；必须先确认实现。
 
@@ -105,7 +106,7 @@ util-linux：`0` 成功，`1` 失败，`64` 多目标部分成功。Bash builtin
 
 掌握标准：能列出两种实现参数；能解释信号权限、默认动作、线程交付、pidfd；能不用固定 `sleep` 竞态实现安全升级。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [util-linux：kill(1)](https://man7.org/linux/man-pages/man1/kill.1.html)
 - [Linux signal(7)](https://man7.org/linux/man-pages/man7/signal.7.html)

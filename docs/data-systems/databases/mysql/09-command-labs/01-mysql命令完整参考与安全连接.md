@@ -1,8 +1,9 @@
 ---
 title: "mysql 命令完整参考与安全连接"
+sidebar_label: "01. mysql 命令完整参考与安全连接"
 sidebar_position: 1
-tags: [MySQL, mysql客户端, 命令参考, TLS]
 description: "系统整理 mysql 客户端连接、TLS、批处理、输出和交互命令，建立不泄露凭据的安全使用方式。"
+tags: [MySQL, mysql客户端, 命令参考, TLS]
 ---
 
 # mysql 命令完整参考与安全连接
@@ -153,9 +154,8 @@ mysql --no-defaults --protocol=TCP -h HOST -P PORT -u USER -p \
 
 分别验证 DNS/TCP、TLS、认证、授权、默认库和 SQL；不要用 root 无 TLS“试一下”而绕过真正问题。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [mysql Client](https://dev.mysql.com/doc/refman/8.4/en/mysql.html)
 - [mysql Client Options](https://dev.mysql.com/doc/refman/8.4/en/mysql-command-options.html)
 - [mysql Client Commands](https://dev.mysql.com/doc/refman/8.4/en/mysql-commands.html)
-

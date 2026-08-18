@@ -1,11 +1,12 @@
 ---
-title: bpftool 命令详解：Program、Map、Link、BTF、cgroup 与 net 对象治理
+title: "bpftool 命令详解：Program、Map、Link、BTF、cgroup 与 net 对象治理"
+sidebar_label: "11. bpftool 命令详解：Program、Map、Link、BTF、cgroup 与 net 对象治理"
 sidebar_position: 11
-description: 讲清 bpftool 全局选项和 prog/map/link/btf/cgroup/net/perf/feature/struct_ops/iter/gen 子命令的查询与高风险变更。
+description: "讲清 bpftool 全局选项和 prog/map/link/btf/cgroup/net/perf/feature/struct_ops/iter/gen 子命令的查询与高风险变更。"
 tags: [Linux, bpftool, eBPF, BTF, cgroup]
 ---
 
-# `bpftool` 命令详解：观察和治理已加载 eBPF 对象
+# bpftool 命令详解：Program、Map、Link、BTF、cgroup 与 net 对象治理
 
 `bpftool` 是内核树配套的 eBPF 管理器，直接操作 program、map、link、BTF、cgroup attachment、网络 attachment 和 pinned object。它不仅只读：load、attach、detach、map update/delete、pin/unpin 都会改变内核状态。
 

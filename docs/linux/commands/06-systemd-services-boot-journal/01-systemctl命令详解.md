@@ -1,11 +1,12 @@
 ---
-title: systemctl 命令详解：unit 生命周期、依赖事务与开机状态
+title: "systemctl 命令详解：unit 生命周期、依赖事务与开机状态"
+sidebar_label: "01. systemctl 命令详解：unit 生命周期、依赖事务与开机状态"
 sidebar_position: 1
-description: 完整讲解 systemctl 的子命令与长短参数，区分运行状态、unit file 状态、依赖事务、配置重载、信号、用户 manager 和生产回滚。
+description: "完整讲解 systemctl 的子命令与长短参数，区分运行状态、unit file 状态、依赖事务、配置重载、信号、用户 manager 和生产回滚。"
 tags: [Linux, systemctl, systemd, unit, 服务管理, 故障排查]
 ---
 
-# `systemctl` 命令详解：unit 生命周期、依赖事务与开机状态
+# systemctl 命令详解：unit 生命周期、依赖事务与开机状态
 
 `systemctl` 是 systemd manager 的控制与查询客户端。它通常通过 D-Bus 向系统 PID 1 或用户 manager 发请求；它既能只读查看，也能启停服务、修改 unit file 关系、改变系统状态。
 
@@ -200,7 +201,7 @@ journalctl -b -u api.service --since '-30 min' --no-pager
 
 掌握标准：能解释所有子命令类别和参数，使用稳定属性写脚本，在任何状态变更前采证，并能给出 unit file、manager、业务配置各自正确的重载方式。
 
-## 官方参考
+## 12. 官方参考 {/* #官方参考 */}
 
 - [systemctl(1)](https://www.freedesktop.org/software/systemd/man/latest/systemctl.html)
 - [systemd.unit(5)](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html)

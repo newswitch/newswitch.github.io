@@ -2,8 +2,8 @@
 title: "StatefulSet"
 sidebar_label: "03. StatefulSet"
 sidebar_position: 3
-tags: [Kubernetes, 控制器, 学习路线]
 description: "StatefulSet 是 Kubernetes 中用于管理有状态应用的控制器，提供稳定的网络标识、持久化存储和有序部署等特性，适用于数据库、消息队列等需要状态保持的应用场景。"
+tags: [Kubernetes, 控制器, 学习路线]
 ---
 
 # StatefulSet
@@ -12,7 +12,7 @@ description: "StatefulSet 是 Kubernetes 中用于管理有状态应用的控制
 
 StatefulSet 是 Kubernetes 中专门用于管理有状态应用的控制器。与 Deployment 和 ReplicaSet 为无状态服务设计不同，StatefulSet 为 Pod 提供唯一标识，并保证部署和扩缩容的有序性。
 
-## 应用场景
+## 1. 应用场景 {/* #应用场景 */}
 
 StatefulSet 主要解决有状态服务的问题，其典型应用场景包括：
 
@@ -22,7 +22,7 @@ StatefulSet 主要解决有状态服务的问题，其典型应用场景包括�
 - **有序收缩和删除**：按照从 N-1 到 0 的顺序进行
 - **有序滚动更新**：支持分段更新和金丝雀发布
 
-## 核心组件
+## 2. 核心组件 {/* #核心组件 */}
 
 StatefulSet 由以下几个关键部分组成：
 
@@ -30,7 +30,7 @@ StatefulSet 由以下几个关键部分组成：
 - **volumeClaimTemplates**：用于创建 PersistentVolumes 的模板
 - **StatefulSet 规约**：定义具体应用的配置
 
-## DNS 命名规则
+## 3. DNS 命名规则 {/* #dns-命名规则 */}
 
 StatefulSet 中每个 Pod 的 DNS 格式如下，便于集群内服务发现和通信：
 
@@ -46,7 +46,7 @@ StatefulSet 中每个 Pod 的 DNS 格式如下，便于集群内服务发现和�
 - `namespace`：所在的命名空间
 - `cluster.local`：集群域名
 
-## 适用条件
+## 4. 适用条件 {/* #适用条件 */}
 
 StatefulSet 适用于具有以下一个或多个需求的应用：
 
@@ -58,14 +58,14 @@ StatefulSet 适用于具有以下一个或多个需求的应用：
 
 如果应用不需要稳定的标识符或有序部署，建议使用 Deployment 或 ReplicaSet。
 
-## 使用限制
+## 5. 使用限制 {/* #使用限制 */}
 
 - 给定 Pod 的存储必须由 PersistentVolume Provisioner 根据 storage class 配置，或由管理员预先配置
 - 删除或缩容 StatefulSet 不会删除相关联的存储卷，需要手动清理
 - StatefulSet 需要 Headless Service 来管理 Pod 的网络身份
 - 不建议将 `pod.Spec.TerminationGracePeriodSeconds` 设置为 0，这样做不安全
 
-## 基础示例
+## 6. 基础示例 {/* #基础示例 */}
 
 以下 YAML 示例展示了一个典型的 nginx StatefulSet 配置方式：
 
@@ -120,15 +120,15 @@ spec:
           storage: 1Gi
 ```
 
-## Pod 身份管理
+## 7. Pod 身份管理 {/* #pod-身份管理 */}
 
 StatefulSet 通过序数和 DNS 规则为每个 Pod 提供唯一身份，便于服务发现和数据隔离。
 
-### 序数标识
+### 7.1 序数标识 {/* #序数标识 */}
 
 对于有 N 个副本的 StatefulSet，每个副本都有一个唯一的整数序数，范围在 [0,N) 之间。
 
-### 稳定的网络标识
+### 7.2 稳定的网络标识 {/* #稳定的网络标识 */}
 
 每个 Pod 的主机名遵循 `$(statefulset 名称)-$(序数)` 的模式。上述示例将创建名为 `web-0`、`web-1`、`web-2` 的 Pod。
 
@@ -138,11 +138,11 @@ DNS 解析示例：
 |--------|---------|-------------|---------|-----------|
 | cluster.local | default/nginx | default/web | `web-{0..N-1}.nginx.default.svc.cluster.local` | `web-{0..N-1}` |
 
-### 稳定存储
+### 7.3 稳定存储 {/* #稳定存储 */}
 
 Kubernetes 会为每个 VolumeClaimTemplate 创建 PersistentVolume。Pod 重新调度时，volumeMounts 会挂载对应的 PersistentVolume。需要注意的是，删除 Pod 或 StatefulSet 时，PersistentVolume 不会被自动删除。
 
-## 部署和扩缩容保证
+## 8. 部署和扩缩容保证 {/* #部署和扩缩容保证 */}
 
 StatefulSet 在部署和扩缩容过程中，严格保证 Pod 的有序性和依赖关系。
 
@@ -151,15 +151,15 @@ StatefulSet 在部署和扩缩容过程中，严格保证 Pod 的有序性和依
 - **扩容前提**：执行扩容前，所有前序 Pod 必须处于 Running 和 Ready 状态
 - **缩容前提**：终止 Pod 前，所有后续 Pod 必须完全关闭
 
-## Pod 管理策略
+## 9. Pod 管理策略 {/* #pod-管理策略 */}
 
 StatefulSet 支持两种 Pod 管理策略，适应不同业务场景。
 
-### OrderedReady（默认）
+### 9.1 OrderedReady（默认） {/* #orderedready默认 */}
 
 按序启动和终止 Pod，确保前一个 Pod 就绪后再启动下一个。
 
-### Parallel
+### 9.2 Parallel {/* #parallel */}
 
 并行启动和终止所有 Pod，不等待其他 Pod 状态。
 
@@ -168,11 +168,11 @@ spec:
   podManagementPolicy: "Parallel"
 ```
 
-## 更新策略
+## 10. 更新策略 {/* #更新策略 */}
 
 StatefulSet 支持多种更新策略，满足不同的升级需求。
 
-### OnDelete
+### 10.1 OnDelete {/* #ondelete */}
 
 手动删除 Pod 后才会重新创建新版本的 Pod。
 
@@ -182,7 +182,7 @@ spec:
     type: OnDelete
 ```
 
-### RollingUpdate（推荐）
+### 10.2 RollingUpdate（推荐） {/* #rollingupdate推荐 */}
 
 自动滚动更新，按序数从大到小更新 Pod。
 
@@ -194,7 +194,7 @@ spec:
       partition: 0
 ```
 
-#### 分区更新
+#### 10.2.1 分区更新 {/* #分区更新 */}
 
 通过设置 `partition` 参数可以实现分段更新：
 
@@ -206,11 +206,11 @@ spec:
       partition: 2  # 只更新序数 >= 2 的 Pod
 ```
 
-## 实际操作示例
+## 11. 实际操作示例 {/* #实际操作示例 */}
 
 以下命令展示了 StatefulSet 的常用运维操作。
 
-### 部署 StatefulSet
+### 11.1 部署 StatefulSet {/* #部署-statefulset */}
 
 ```bash
 # 创建 StatefulSet
@@ -227,7 +227,7 @@ kubectl get pvc
 kubectl get pods -l app=nginx
 ```
 
-### 基本运维操作
+### 11.2 基本运维操作 {/* #基本运维操作 */}
 
 ```bash
 # 扩容到 5 个副本
@@ -250,14 +250,14 @@ kubectl delete service nginx
 kubectl delete pvc www-web-0 www-web-1 www-web-2
 ```
 
-### DNS 验证
+### 11.3 DNS 验证 {/* #dns-验证 */}
 
 ```bash
 # 创建测试 Pod 验证 DNS 解析
 kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup web-0.nginx.default.svc.cluster.local
 ```
 
-## 高级示例：ZooKeeper 集群
+## 12. 高级示例：ZooKeeper 集群 {/* #高级示例zookeeper-集群 */}
 
 以下 YAML 示例展示了生产级 ZooKeeper StatefulSet 的配置方式：
 
@@ -357,11 +357,11 @@ spec:
           storage: 10Gi
 ```
 
-## 外部访问
+## 13. 外部访问 {/* #外部访问 */}
 
 对于需要从集群外部访问 StatefulSet 中特定 Pod 的场景，可以通过以下方式实现。
 
-### 方法一：NodePort Service
+### 13.1 方法一：NodePort Service {/* #方法一nodeport-service */}
 
 ```bash
 # 为特定 Pod 添加标签
@@ -376,7 +376,7 @@ kubectl expose pod zk-1 --port=2181 --target-port=2181 \
   --name=zk-1-external --selector=instance=zk-1 --type=NodePort
 ```
 
-### 方法二：LoadBalancer Service
+### 13.2 方法二：LoadBalancer Service {/* #方法二loadbalancer-service */}
 
 ```yaml
 apiVersion: v1
@@ -392,7 +392,7 @@ spec:
     statefulset.kubernetes.io/pod-name: zk-0
 ```
 
-## 最佳实践
+## 14. 最佳实践 {/* #最佳实践 */}
 
 在生产环境中，建议遵循以下最佳实践以提升有状态服务的可靠性和可维护性。
 
@@ -403,7 +403,7 @@ spec:
 - **监控告警**：配置完善的监控和告警机制
 - **备份策略**：制定数据备份和恢复策略
 
-## 故障排查
+## 15. 故障排查 {/* #故障排查 */}
 
 常见问题及解决方案如下：
 
@@ -412,11 +412,11 @@ spec:
 - **数据丢失**：确认 PVC 配置和存储类设置
 - **更新卡住**：检查 Pod 反亲和性和资源可用性
 
-## 总结
+## 16. 总结 {/* #总结 */}
 
 StatefulSet 是 Kubernetes 管理有状态应用的核心控制器，提供稳定标识、持久存储和有序部署等能力。通过合理配置 Headless Service、PVC、Pod 管理策略和更新策略，可以高效支撑数据库、消息队列等关键业务场景。建议结合最佳实践和监控体系，持续优化有状态服务的高可用性和可维护性。
 
-## 参考文献
+## 17. 参考资料 {/* #参考文献 */}
 
 - [Kubernetes 官方文档 - StatefulSet](./03-StatefulSet.md)
 - [有状态应用部署教程 - kubernetes.io](https://kubernetes.io/docs/tutorials/stateful-application/)

@@ -1,16 +1,16 @@
 ---
-title: GPU 集群成本与利用率分析
+title: "GPU 集群成本与利用率分析"
 sidebar_label: "04. GPU 集群成本与利用率分析"
+sidebar_position: 4
+description: "GPU 往往是集群最大成本项。分析目标：知道 钱花在哪、浪费在哪、扩容是否值得。结合 DCGM 利用率、队列配额与节点池标签，做每月 FinOps 复盘。前置：第 41、第 53、第 52 篇。"
+tags: ["成本", "利用率", "GPU", "FinOps", "DCGM", "学习路线"]
 date: 2026-07-22 19:20:00
 categories: 云原生
-tags: ["成本", "利用率", "GPU", "FinOps", "DCGM", "学习路线"]
 ---
 
 # GPU 集群成本与利用率分析
 
 GPU 往往是集群最大成本项。分析目标：知道 **钱花在哪、浪费在哪、扩容是否值得**。结合 DCGM 利用率、队列配额与节点池标签，做每月 FinOps 复盘。前置：[第 41](../../../sre/observability/gpu/04-GPU%20利用率低但显存占满怎么分析.md)、[第 53](./03-GPU%20集群容量规划方法.md)、[第 52](./02-GPU%20多租户与资源配额设计.md) 篇。
-
----
 
 ## 1. 成本结构（简化）
 
@@ -22,8 +22,6 @@ GPU 往往是集群最大成本项。分析目标：知道 **钱花在哪、浪�
 | 人力与平台 | Operator、值班、排队系统 |
 
 单位常用：**元 / GPU·小时**。先固定每型号单价表，再乘使用量。
-
----
 
 ## 2. 利用率怎么定义（避免吵架）
 
@@ -42,8 +40,6 @@ GPU 往往是集群最大成本项。分析目标：知道 **钱花在哪、浪�
 争用率 ≈ Pending 等待 GPU 的作业时长
 ```
 
----
-
 ## 3. 分摊到租户 / 池
 
 标签来源：`namespace`（DCGM `-k`）、`pool`、Kueue Cohort、Volcano queue。
@@ -57,13 +53,11 @@ GPU 往往是集群最大成本项。分析目标：知道 **钱花在哪、浪�
 
 月报最小集：
 
-1. 各池 GPU·小时与费用  
-2. 平均时间利用率、浪费小时数  
-3. 排队等待小时（机会成本）  
-4. Top5 浪费 Namespace/Pod  
-5. 扩缩容建议（链到容量表）  
-
----
+1. 各池 GPU·小时与费用
+2. 平均时间利用率、浪费小时数
+3. 排队等待小时（机会成本）
+4. Top5 浪费 Namespace/Pod
+5. 扩缩容建议（链到容量表）
 
 ## 4. 成本优化杠杆
 
@@ -79,8 +73,6 @@ GPU 往往是集群最大成本项。分析目标：知道 **钱花在哪、浪�
 
 「再买 8 张 H100」前，先算：若把浪费率降一半，是否已够一个季度。
 
----
-
 ## 5. 和 SLA 的平衡
 
 | 只追利用率 | 只追 SLA |
@@ -90,23 +82,19 @@ GPU 往往是集群最大成本项。分析目标：知道 **钱花在哪、浪�
 
 健康区间因业务而异；许多平台把 **分配率 70%～85%**、**时间利用率视负载类型分别看** 作为讨论起点，而不是唯一 KPI。
 
-推理：允许较低 util + 高显存（权重常驻），但用「每 1k 请求成本」替代纯 util。  
+推理：允许较低 util + 高显存（权重常驻），但用「每 1k 请求成本」替代纯 util。
 训练：看 **GPU·小时 / epoch** 或 / token，结合 NCCL 是否拖后腿。
-
----
 
 ## 6. 示例核算
 
 假设：
 
-- H100 单价 30 元/卡时  
-- 训练池 16 卡，月 720h → 理论 16×720=11520 卡时  
-- 平均分配率 80% → 计费相关使用 9216 卡时 → 约 27.6 万元  
-- 其中浪费（高 FB 低 util）占分配时间 15% → 约 4.1 万元「可挖潜」  
+- H100 单价 30 元/卡时
+- 训练池 16 卡，月 720h → 理论 16×720=11520 卡时
+- 平均分配率 80% → 计费相关使用 9216 卡时 → 约 27.6 万元
+- 其中浪费（高 FB 低 util）占分配时间 15% → 约 4.1 万元「可挖潜」
 
 把挖潜排进下月：缩容、清僵尸、调配额，再决定是否采购。
-
----
 
 ## 7. 小结
 
@@ -119,12 +107,10 @@ GPU 往往是集群最大成本项。分析目标：知道 **钱花在哪、浪�
 
 生产治理主线至此可闭环：池（51）→ 租户配额（52）→ 容量（53）→ 成本（54）。升级与巡检见 [55](./05-GPU%20集群升级与变更管理.md)、[56](./06-GPU%20节点巡检体系设计.md)。
 
----
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [Kubernetes 多租户](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)（公平与嘈杂邻居）  
-- [ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)（配额与借用）  
-- [使用 DCGM 监控 Kubernetes 中的 GPU](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/)  
+- [Kubernetes 多租户](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)（公平与嘈杂邻居）
+- [ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)（配额与借用）
+- [使用 DCGM 监控 Kubernetes 中的 GPU](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/)
 
 本文从 FinOps 视角把利用率与采购决策绑在一起，数字需换成你的单价与指标名。

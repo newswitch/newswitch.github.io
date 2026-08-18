@@ -1,9 +1,11 @@
 ---
 title: "GPU Pod Running 但服务无响应：从进程、EndpointSlice 到模型队列的完整排查"
+sidebar_label: "09. GPU Pod Running 但服务无响应：从进程、EndpointSlice 到模型队列的完整排查"
+sidebar_position: 9
+description: "沿 Pod Condition、进程监听、探针、EndpointSlice、Service、NetworkPolicy、网关和模型内部队列定位 GPU 服务无响应。"
+tags: ["Kubernetes", "GPU", "Service", "EndpointSlice", "vLLM", "故障排查"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "Service", "EndpointSlice", "vLLM", "故障排查"]
-description: "沿 Pod Condition、进程监听、探针、EndpointSlice、Service、NetworkPolicy、网关和模型内部队列定位 GPU 服务无响应。"
 ---
 
 # GPU Pod Running 但服务无响应：从进程、EndpointSlice 到模型队列的完整排查
@@ -468,47 +470,47 @@ Service 数据面前后
 
 ## 18. 可复现实验
 
-### 实验一：错误 targetPort
+### 18.1 实验一：错误 targetPort {/* #实验一错误-targetport */}
 
 在测试 namespace 创建一个正确 Service 和一个错误 targetPort 的 Service，对比 EndpointSlice、Pod IP 与 ClusterIP 测试。
 
-### 实验二：readiness 失败
+### 18.2 实验二：readiness 失败 {/* #实验二readiness-失败 */}
 
 让测试应用 readiness 返回失败，观察 Pod Running、Ready=False、EndpointSlice ready 状态和 Service 流量。
 
-### 实验三：只监听 loopback
+### 18.3 实验三：只监听 loopback {/* #实验三只监听-loopback */}
 
 让测试服务监听 `127.0.0.1`，证明容器内 loopback 成功但 Pod IP 失败，再改为合适监听地址复验。
 
-### 实验四：流式超时
+### 18.4 实验四：流式超时 {/* #实验四流式超时 */}
 
 在测试网关使用可控慢流服务，逐步调整 idle/read timeout，观察普通健康请求和 streaming 行为。
 
-### 实验五：过载而非死锁
+### 18.5 实验五：过载而非死锁 {/* #实验五过载而非死锁 */}
 
 用受控压测提高并发，观察 waiting、TTFT、readiness 和 liveness，证明过载应由准入/扩容处理而不是重启风暴。
 
 ## 19. 掌握标准
 
-### 入门
+### 19.1 入门 {/* #入门 */}
 
 - 能区分 Running 与 Ready；
 - 能验证进程、监听端口和容器 loopback；
 - 能读取 Service 与 EndpointSlice。
 
-### 进阶
+### 19.2 进阶 {/* #进阶 */}
 
 - 能从 Pod IP、ClusterIP 到网关逐跳定位；
 - 能排查 selector、targetPort、NetworkPolicy 和探针；
 - 能区分网络超时与模型加载/OOM/排队。
 
-### 生产级
+### 19.3 生产级 {/* #生产级 */}
 
 - 能处理流式响应、滚动发布、优雅退出和重试放大；
 - 能关联 request、Pod、GPU、NCCL、NIC 和存储时间线；
 - 能使用目标负载与 SLO 证明服务恢复，而不是只看 `/health` 返回 200。
 
-## 参考资料
+## 20. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Pod Lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 - [Kubernetes Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/concepts/workloads/pods/probes/)

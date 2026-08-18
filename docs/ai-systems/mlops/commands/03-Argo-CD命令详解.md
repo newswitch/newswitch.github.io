@@ -1,5 +1,6 @@
 ---
 title: "Argo CD CLI 命令详解"
+sidebar_label: "03. Argo CD CLI 命令详解"
 sidebar_position: 3
 description: "掌握argocd Application查询、diff、sync、wait、history与rollback，安全发布AI训练和推理平台。"
 tags: [Argo CD, GitOps, Kubernetes, 发布, 回滚]
@@ -105,11 +106,11 @@ Argo CD Health只描述Kubernetes资源和自定义health check，不等于模�
 | rollback后又回到坏版 | Git desired state未revert或自动sync仍开启 |
 | prune将删PVC/模型缓存 | resource ownership、sync option、retain策略和备份 |
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能在同步前做diff；能固定revision并wait；能解释sync与health差异；能优先通过Git revert回滚；不会用force/prune解决未理解的漂移。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [Argo CD command reference](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/)
 - [Argo CD CI automation](https://argo-cd.readthedocs.io/en/stable/user-guide/ci_automation/)

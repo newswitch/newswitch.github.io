@@ -2,8 +2,8 @@
 title: "Nsight Systems 端到端时间线分析"
 sidebar_label: "03. Nsight Systems 端到端时间线分析"
 sidebar_position: 3
-tags: [NVIDIA, Nsight Systems, CUDA, NVTX, NCCL, GPU, 性能分析]
 description: "使用 Nsight Systems 从 CPU 线程、CUDA API、Memcpy、GPU Kernel、NVTX 和 NCCL 时间线定位 GPU 空洞、同步、通信与流水重叠问题。"
+tags: [NVIDIA, Nsight Systems, CUDA, NVTX, NCCL, GPU, 性能分析]
 ---
 
 # Nsight Systems 端到端时间线分析
@@ -19,8 +19,6 @@ Nsight Systems 回答的是：
 Nsight Systems：先找到“哪个阶段/哪个 Kernel/哪段等待”
 Nsight Compute：再分析“这个 Kernel 内部为什么慢”
 ```
-
----
 
 ## 1. 时间线包含什么
 
@@ -53,8 +51,6 @@ gantt
 - OS Runtime/线程调度。
 - GPU Metrics（受平台和权限限制）。
 
----
-
 ## 2. 采集前准备
 
 记录：
@@ -77,8 +73,6 @@ python -c "import torch; print(torch.__version__)"
 - 请求负载。
 
 Nsight 工具版本与 Driver/GPU 支持矩阵应参考目标版本官方文档。
-
----
 
 ## 3. 第一次采集
 
@@ -103,7 +97,7 @@ llm-baseline.nsys-rep
 该命令强调 CUDA/NVTX，关闭 CPU Sampling 和 Context Switch 以降低数据量。需要 CPU
 线程分析时再开启相关采集。
 
-### 重要：Duration 后进程行为
+### 3.1 重要：Duration 后进程行为 {/* #重要duration-后进程行为 */}
 
 当前 Nsight Systems CLI 对“由它启动的应用”在采集结束后的处理受 `--kill` 等选项控制。
 分析在线服务前必须查：
@@ -114,8 +108,6 @@ nsys profile --help
 
 不要因为设置 `--duration` 意外终止生产服务。优先在隔离副本、测试进程或受控 Canary
 采集。
-
----
 
 ## 4. 默认分析与低开销 Trace
 
@@ -148,8 +140,6 @@ nsys profile \
 | 多卡通信 | cuda,nvtx,nccl（按版本支持） |
 | MPI 应用 | mpi/NVTX wrapper（按支持） |
 | 系统 I/O/调度 | OS Runtime/FTrace，权限和开销更高 |
-
----
 
 ## 5. NVTX：给时间线加入业务语义
 
@@ -186,7 +176,7 @@ finally:
 
 或使用 context manager 封装。
 
-### NVTX 命名
+### 5.1 NVTX 命名 {/* #nvtx-命名 */}
 
 推荐低基数：
 
@@ -201,8 +191,6 @@ batch_class=small
 不要把 Prompt、用户信息放入 NVTX。
 
 Request ID 可用于短期隔离采集，但会产生大量唯一字符串，应限制采集范围和敏感性。
-
----
 
 ## 6. 用 NVTX 控制采集窗口
 
@@ -234,8 +222,6 @@ nsys profile \
 
 具体采用目标版本展示的形式。
 
----
-
 ## 7. 多进程 vLLM
 
 典型进程：
@@ -265,11 +251,9 @@ GPU UUID
 TP/PP/DP/EP Group
 ```
 
----
-
 ## 8. GUI 时间线阅读顺序
 
-### 第一步：确定业务窗口
+### 8.1 第一步：确定业务窗口 {/* #第一步确定业务窗口 */}
 
 通过：
 
@@ -280,7 +264,7 @@ TP/PP/DP/EP Group
 
 缩小到 1～10 个代表性 Iteration。
 
-### 第二步：看 GPU 是否有空洞
+### 8.2 第二步：看 GPU 是否有空洞 {/* #第二步看-gpu-是否有空洞 */}
 
 ```text
 GPU Busy ━━━━━━━     ━━━━━━━
@@ -296,7 +280,7 @@ GPU Busy ━━━━━━━     ━━━━━━━
 - NCCL 等待。
 - 数据准备。
 
-### 第三步：沿空洞向上找 CPU
+### 8.3 第三步：沿空洞向上找 CPU {/* #第三步沿空洞向上找-cpu */}
 
 检查空洞之前：
 
@@ -306,14 +290,14 @@ GPU Busy ━━━━━━━     ━━━━━━━
 - 是否等待 Future/Queue/Futex。
 - 是否发生 Context Switch。
 
-### 第四步：看 Stream 是否重叠
+### 8.4 第四步：看 Stream 是否重叠 {/* #第四步看-stream-是否重叠 */}
 
 - Compute 与 Memcpy 是否重叠。
 - 多 Stream 是否实际并发。
 - NCCL 是否与可重叠计算同时进行。
 - 不必要的 Default Stream 同步。
 
-### 第五步：找到热点 Kernel
+### 8.5 第五步：找到热点 Kernel {/* #第五步找到热点-kernel */}
 
 按：
 
@@ -323,8 +307,6 @@ GPU Busy ━━━━━━━     ━━━━━━━
 - 与 SLO 阶段的对应关系。
 
 选择下一步 Nsight Compute 目标。
-
----
 
 ## 9. 常见模式：CPU Launch Gap
 
@@ -351,8 +333,6 @@ GPU:       idle        kernel      idle
 - `sched`/Off-CPU。
 - 增大 Batch 后 Kernel 数是否减少。
 
----
-
 ## 10. 常见模式：同步阻塞
 
 ```text
@@ -372,8 +352,6 @@ GPU: kernel ━━━━━━━━━━━━━━━━━━━━━━�
 
 不能简单删除同步；需要保证依赖和正确性。
 
----
-
 ## 11. 常见模式：大量小 Kernel
 
 ```text
@@ -391,8 +369,6 @@ K1 K2 K3 K4 K5 K6 K7 ...
 - 减少 Python/Framework Dispatch。
 
 需要用 Nsight Compute 验证 Kernel 本身和 Launch 配置。
-
----
 
 ## 12. 常见模式：Memcpy 无法重叠
 
@@ -418,8 +394,6 @@ Copy:       [H2D]   [D2H]
 - Tensor 是否在错误设备。
 - H2D 大小与频率。
 
----
-
 ## 13. 常见模式：NCCL 等待
 
 多 GPU 时间线：
@@ -441,18 +415,16 @@ Rank 0 先到 Collective 后等待 Rank 1。
 
 不要只优化 NCCL；先找最晚到达 Rank。
 
----
-
 ## 14. Prefill/Decode 时间线
 
-### Prefill
+### 14.1 Prefill {/* #prefill */}
 
 - 大 GEMM。
 - Attention。
 - KV 写入。
 - TP Collective。
 
-### Decode
+### 14.2 Decode {/* #decode */}
 
 - 大量重复小 Step。
 - 每 Step 多个 Kernel/Collective。
@@ -467,8 +439,6 @@ running_sequences
 ```
 
 避免把 Prefill 长 Kernel 误认为 Decode 退化。
-
----
 
 ## 15. CLI 统计
 
@@ -493,15 +463,13 @@ nsys stats --help-reports
 
 可导出 CSV/SQLite 进行 A/B 对比。不要只凭 GUI 截图比较。
 
-### 统计重点
+### 15.1 统计重点 {/* #统计重点 */}
 
 - CUDA API 总时间/调用次数。
 - Kernel 总时间/平均/中位/最大。
 - Memcpy 时间和字节。
 - NVTX Range 总时间。
 - OS Runtime 等待。
-
----
 
 ## 16. A/B 对比
 
@@ -526,8 +494,6 @@ NVTX phase duration
 
 Profiler 下的绝对延迟与无 Profiler 可能不同，最终收益仍要用无采集压测验证。
 
----
-
 ## 17. Kubernetes 采集
 
 建议流程：
@@ -547,35 +513,31 @@ Profiler 下的绝对延迟与无 Profiler 可能不同，最终收益仍要用�
 - 用特权容器长期运行。
 - 在多租户报告中暴露进程和路径。
 
----
-
 ## 18. 常见错误
 
-### 一上来采全部 Trace
+### 18.1 一上来采全部 Trace {/* #一上来采全部-trace */}
 
 报告巨大、开销高、重点被淹没。
 
-### 只看 GPU 利用率轨道
+### 18.2 只看 GPU 利用率轨道 {/* #只看-gpu-利用率轨道 */}
 
 看不到是哪一个 Kernel、Memcpy 或 Collective。
 
-### 把时间线空洞等于 GPU 问题
+### 18.3 把时间线空洞等于 GPU 问题 {/* #把时间线空洞等于-gpu-问题 */}
 
 空洞常由 CPU/Scheduler/同步导致。
 
-### 用 Systems 判断 Kernel 内部瓶颈
+### 18.4 用 Systems 判断 Kernel 内部瓶颈 {/* #用-systems-判断-kernel-内部瓶颈 */}
 
 Systems 给出时长和顺序，不给完整指令级原因。
 
-### 忽略多 Rank 最慢者
+### 18.5 忽略多 Rank 最慢者 {/* #忽略多-rank-最慢者 */}
 
 Collective 的等待可能来自另一张 GPU。
 
-### 采集窗口包含加载和 Warmup
+### 18.6 采集窗口包含加载和 Warmup {/* #采集窗口包含加载和-warmup */}
 
 启动行为掩盖稳态。
-
----
 
 ## 19. 实验
 

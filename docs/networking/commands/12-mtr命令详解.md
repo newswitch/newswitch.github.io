@@ -1,11 +1,12 @@
 ---
-title: mtr 命令详解：持续路径质量、丢包与抖动分析
+title: "mtr 命令详解：持续路径质量、丢包与抖动分析"
+sidebar_label: "12. mtr 命令详解：持续路径质量、丢包与抖动分析"
 sidebar_position: 12
-description: 以 MTR 0.96 为基线，系统讲解交互、报告、JSON、ICMP/TCP/UDP 探测、字段排序、丢包与时延判读，以及生产网络路径质量取证方法。
+description: "以 MTR 0.96 为基线，系统讲解交互、报告、JSON、ICMP/TCP/UDP 探测、字段排序、丢包与时延判读，以及生产网络路径质量取证方法。"
 tags: [Linux, mtr, ICMP, TCP, UDP, 丢包, 时延, 网络排障]
 ---
 
-# `mtr` 命令详解：持续路径质量、丢包与抖动分析
+# mtr 命令详解：持续路径质量、丢包与抖动分析
 
 `mtr` 把 `ping` 的连续测量和 `traceroute` 的逐跳探测结合在一起。它不只回答“经过哪些 hop”，还会持续统计每一跳的发送数、接收数、丢包率、最新/最好/平均/最坏时延和抖动。
 
@@ -118,7 +119,7 @@ mtr -4 -n -j -c 20 203.0.113.10
 
 `-z/-y` 会引入外部查询、缓存和数据时效性问题，不能作为路由归属的唯一证据。生产取证先保存 `-n` 的原始地址，再单独补充名称和 AS 信息。
 
-### `-o` 字段代码
+### 6.1 `-o` 字段代码 {/* #-o-字段代码 */}
 
 | 代码 | 字段 | 含义 |
 |---|---|---|
@@ -213,7 +214,7 @@ Host              Loss%   Snt   Last   Avg  Best  Wrst StDev
 - `Wrst`：最坏样本，适合发现尖峰但不能单独定性；
 - `StDev`：离散程度，越大表示时延越不稳定。
 
-### 最重要的判读规则
+### 9.1 最重要的判读规则 {/* #最重要的判读规则 */}
 
 ```text
 某中间 hop 丢包高，后续 hop 与终点不丢包
@@ -245,7 +246,7 @@ MTR 显示的是探测响应形成的观测结果：去程探测到达某 hop，
 
 ## 11. 场景化排障
 
-### 场景一：公网 API 偶发高延迟
+### 11.1 场景一：公网 API 偶发高延迟 {/* #场景一公网-api-偶发高延迟 */}
 
 ```bash
 date -Is
@@ -262,7 +263,7 @@ curl -o /dev/null -sS \
 
 MTR 只能定位网络路径质量，`curl` 才能进一步分离 TCP、TLS、首字节和总耗时。
 
-### 场景二：验证 DSCP 路径
+### 11.2 场景二：验证 DSCP 路径 {/* #场景二验证-dscp-路径 */}
 
 ```bash
 ip route get 203.0.113.10
@@ -275,7 +276,7 @@ mtr -4 -n -r -c 100 -Q 184 203.0.113.10
 sudo tcpdump -i eth0 -nn -vv -c 20 host 203.0.113.10
 ```
 
-### 场景三：定时留档
+### 11.3 场景三：定时留档 {/* #场景三定时留档 */}
 
 ```bash
 mtr -4 -n -j -c 20 -T -P 443 203.0.113.10
@@ -315,4 +316,3 @@ ss -tin dst 203.0.113.10
 - [MTR 官方仓库](https://github.com/traviscross/mtr)
 - [MTR 0.96 手册源文件](https://github.com/traviscross/mtr/blob/master/man/mtr.8.in)
 - [Linux `ip-route(8)` 手册](https://man7.org/linux/man-pages/man8/ip-route.8.html)
-

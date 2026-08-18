@@ -1,11 +1,12 @@
 ---
-title: time 命令详解：墙钟、CPU、峰值 RSS、缺页与退出状态
+title: "time 命令详解：墙钟、CPU、峰值 RSS、缺页与退出状态"
+sidebar_label: "10. time 命令详解：墙钟、CPU、峰值 RSS、缺页与退出状态"
 sidebar_position: 10
-description: 完整讲解 GNU Time 1.10 与 Bash time 的区别、全部参数、format specifier、stderr、pipeline、峰值 RSS、上下文切换和基准边界。
+description: "完整讲解 GNU Time 1.10 与 Bash time 的区别、全部参数、format specifier、stderr、pipeline、峰值 RSS、上下文切换和基准边界。"
 tags: [Linux, time, Benchmark, CPU, 内存, GNU Time]
 ---
 
-# `time` 命令详解：墙钟、CPU、峰值 RSS、缺页与退出状态
+# time 命令详解：墙钟、CPU、峰值 RSS、缺页与退出状态
 
 `time` 运行一个命令并在结束后报告 `getrusage/wait` 可见的时间与资源。它适合比较一次任务的墙钟、CPU、峰值 RSS、缺页和上下文切换，但不是微基准框架或持续 profiler。
 
@@ -126,7 +127,7 @@ printf 'wrapper_status=%d\n' "$status"
 
 掌握标准：能识别实现、列出全部参数和格式符，解释时间/内存/缺页/切换口径，正确计量 pipeline，并设计可复现而非单次的基准。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [GNU Time 1.10 Manual](https://www.gnu.org/software/time/manual/time.html)
 - [GNU Bash Pipelines 与 time](https://www.gnu.org/software/bash/manual/html_node/Pipelines.html)

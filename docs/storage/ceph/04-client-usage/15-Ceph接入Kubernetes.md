@@ -2,8 +2,8 @@
 title: "Rook + Ceph on Kubernetes：架构、生产部署、CSI 使用与双层排障"
 sidebar_label: "15. Rook + Ceph on Kubernetes：架构、生产部署、CSI 使用与双层排障"
 sidebar_position: 15
-tags: [Ceph, 学习路线, 存储, Kubernetes, Rook, CSI]
 description: "讲清 Rook Operator、CephCluster CRD、CSI 与双层排障：内部/外部集群选型、显式选盘、RBD/CephFS StorageClass 与生产维护。"
+tags: [Ceph, 学习路线, 存储, Kubernetes, Rook, CSI]
 ---
 
 # Rook + Ceph on Kubernetes：架构、生产部署、CSI 使用与双层排障
@@ -14,8 +14,7 @@ description: "讲清 Rook Operator、CephCluster CRD、CSI 与双层排障：内
 
 Rook 不是把 Ceph 简化成几个 Pod，而是用 Kubernetes Operator 和 CRD 管理 Ceph 的生命周期，再通过 CSI 向工作负载提供 RBD 与 CephFS。本篇从架构开始，逐步完成部署、StorageClass/PVC 使用、监控、维护、升级和故障排查。
 
-
-## 本文目标
+## 1. 本文目标 {/* #本文目标 */}
 
 读完并完成测试环境实验后，你应该能够：
 
@@ -34,7 +33,7 @@ Rook 不是把 Ceph 简化成几个 Pod，而是用 Kubernetes Operator 和 CRD 
 Rook 的测试清单可能使用所有可用裸盘；`cleanupPolicy`、删除 CephCluster、OSD purge 和磁盘 zap 都可能永久删除数据。只能在明确识别设备、确认集群和完成审批后执行。
 :::
 
-## Rook 到底是什么
+## 2. Rook 到底是什么 {/* #rook-到底是什么 */}
 
 Rook 是 Kubernetes 的存储编排器。它通过 Operator 模式把 Ceph 运维动作转换为 Kubernetes 声明式资源。
 
@@ -49,7 +48,7 @@ Rook Operator 会持续协调实际状态，使 MON、MGR、OSD 等资源向 spe
 
 Rook 管理 Ceph，但数据可靠性、CRUSH、PG、副本、容量和恢复仍由 Ceph 机制决定。
 
-## 架构组件
+## 3. 架构组件 {/* #架构组件 */}
 
 ```mermaid
 flowchart TD
@@ -62,36 +61,36 @@ flowchart TD
     A["应用 Pod + PVC"] --> S
 ```
 
-### Rook Operator
+### 3.1 Rook Operator {/* #rook-operator */}
 
 - Watch Rook CRD
 - 创建和更新 Ceph daemon
 - 执行配置收敛
 - 协调升级、健康检查和部分运维动作
 
-### Ceph daemon Pod
+### 3.2 Ceph daemon Pod {/* #ceph-daemon-pod */}
 
 - MON、MGR、OSD
 - 可选 MDS、RGW、rbd-mirror 等
 - 它们仍是标准 Ceph 守护进程
 
-### CSI Controller
+### 3.3 CSI Controller {/* #csi-controller */}
 
 - 处理 CreateVolume、DeleteVolume、ControllerPublish
 - 创建 RBD image 或 CephFS subvolume
 - 处理快照、扩容等控制面请求
 
-### CSI Node Plugin
+### 3.4 CSI Node Plugin {/* #csi-node-plugin */}
 
 - 通常以 DaemonSet 运行
 - 在目标节点 map/mount/unmount
 - 与 kubelet 交互
 
-## 两套控制面必须同时理解
+## 4. 两套控制面必须同时理解 {/* #两套控制面必须同时理解 */}
 
 Rook Ceph 故障可能发生在：
 
-### Kubernetes 层
+### 4.1 Kubernetes 层 {/* #kubernetes-层 */}
 
 - Pod Pending/CrashLoopBackOff
 - Operator 无法 reconcile
@@ -101,7 +100,7 @@ Rook Ceph 故障可能发生在：
 - CSI controller/node plugin
 - PV/PVC/VolumeAttachment
 
-### Ceph 层
+### 4.2 Ceph 层 {/* #ceph-层 */}
 
 - MON quorum
 - OSD down/full
@@ -113,9 +112,9 @@ Rook Ceph 故障可能发生在：
 
 `kubectl get pod` 全是 Running，不代表 PG 健康；`ceph -s` 为 `HEALTH_OK`，也不能证明某个节点的 CSI mount 正常。
 
-## 内部集群还是外部集群
+## 5. 内部集群还是外部集群 {/* #内部集群还是外部集群 */}
 
-### 内部 Rook Ceph
+### 5.1 内部 Rook Ceph {/* #内部-rook-ceph */}
 
 Ceph daemon 与业务都运行在同一 Kubernetes 集群或由同一集群管理。
 
@@ -132,7 +131,7 @@ Ceph daemon 与业务都运行在同一 Kubernetes 集群或由同一集群管�
 - 节点维护同时影响应用和 OSD
 - 集群级灾难恢复更复杂
 
-### 外部 Ceph 集群
+### 5.2 外部 Ceph 集群 {/* #外部-ceph-集群 */}
 
 Ceph 由独立 bare-metal/cephadm 或另一管理域提供，Kubernetes 只运行 CSI/消费者配置。
 
@@ -151,9 +150,9 @@ Ceph 由独立 bare-metal/cephadm 或另一管理域提供，Kubernetes 只运�
 
 选择取决于组织、规模、SLO 和故障域，不是「云原生就必须内部部署」。
 
-## 生产前置条件
+## 6. 生产前置条件 {/* #生产前置条件 */}
 
-### Kubernetes 兼容性
+### 6.1 Kubernetes 兼容性 {/* #kubernetes-兼容性 */}
 
 每个 Rook release 只支持一定范围的 Kubernetes 和 Ceph 版本。部署前检查：
 
@@ -166,7 +165,7 @@ Ceph 由独立 bare-metal/cephadm 或另一管理域提供，Kubernetes 只运�
 
 不要从 latest-release 页面复制清单，却部署一个旧版 Rook 镜像。
 
-### 节点
+### 6.2 节点 {/* #节点 */}
 
 生产 host-based 示例通常要求至少三个 worker 节点，以承载 MON quorum 和副本故障域。还应评估：
 
@@ -178,7 +177,7 @@ Ceph 由独立 bare-metal/cephadm 或另一管理域提供，Kubernetes 只运�
 - taint/toleration
 - PodDisruptionBudget
 
-### 设备
+### 6.3 设备 {/* #设备 */}
 
 可使用的后端取决于版本，包括：
 
@@ -191,9 +190,9 @@ Ceph 由独立 bare-metal/cephadm 或另一管理域提供，Kubernetes 只运�
 
 设备必须准确盘点。不要根据 `/dev/sdb` 名称长期绑定，设备枚举可能在重启后变化，优先使用稳定设备标识和显式选择。
 
-## 存储节点是否与业务节点混部
+## 7. 存储节点是否与业务节点混部 {/* #存储节点是否与业务节点混部 */}
 
-### 混部
+### 7.1 混部 {/* #混部 */}
 
 适合小型或成本敏感环境，但需：
 
@@ -203,7 +202,7 @@ Ceph 由独立 bare-metal/cephadm 或另一管理域提供，Kubernetes 只运�
 - 设置节点标签、亲和和 taint
 - 测试 drain 和资源压力
 
-### 专用存储节点
+### 7.2 专用存储节点 {/* #专用存储节点 */}
 
 优点：
 
@@ -214,7 +213,7 @@ Ceph 由独立 bare-metal/cephadm 或另一管理域提供，Kubernetes 只运�
 
 代价是硬件利用率和管理成本。关键生产环境通常更倾向专用或至少强隔离。
 
-## 网络规划
+## 8. 网络规划 {/* #网络规划 */}
 
 需要考虑：
 
@@ -231,7 +230,7 @@ RBD/CephFS 客户端最终需要访问 MON 和 OSD。只允许访问 Operator Se
 
 CNI 的 VXLAN/Geneve 等封装会降低有效 MTU。小请求正常、大 I/O 卡住时应检查端到端 MTU。
 
-## Rook 的安装方式
+## 9. Rook 的安装方式 {/* #rook-的安装方式 */}
 
 常见两种：
 
@@ -265,7 +264,7 @@ kubectl -n rook-ceph logs deploy/rook-ceph-operator --tail=200
 
 Operator 稳定 Running 后再创建 CephCluster。
 
-## 一个 CephCluster 骨架
+## 10. 一个 CephCluster 骨架 {/* #一个-cephcluster-骨架 */}
 
 下面只展示结构，不应直接作为生产完整配置：
 
@@ -311,7 +310,7 @@ spec:
 - 不使用危险的全节点/全设备匹配
 - resource、network、placement、security 按生产设计补全
 
-## dataDirHostPath 为什么重要
+## 11. dataDirHostPath 为什么重要 {/* #datadirhostpath-为什么重要 */}
 
 该目录保存 daemon 的主机侧状态和配置。需要：
 
@@ -323,7 +322,7 @@ spec:
 
 它不是 OSD 业务数据本身的备份，但错误丢失会影响 daemon 身份和恢复。
 
-## 显式设备选择
+## 12. 显式设备选择 {/* #显式设备选择 */}
 
 生产中推荐：
 
@@ -336,7 +335,7 @@ spec:
 
 Rook 检测到「可用盘」并不代表它是「应该用于 Ceph 的盘」。
 
-## 创建并观察 CephCluster
+## 13. 创建并观察 CephCluster {/* #创建并观察-cephcluster */}
 
 ```bash
 kubectl apply -f cluster.yaml
@@ -357,7 +356,7 @@ kubectl -n rook-ceph get events --sort-by=.lastTimestamp
 
 不要因为 Pod 创建慢就重复 apply 不同版本配置。
 
-## Toolbox
+## 14. Toolbox {/* #toolbox */}
 
 Toolbox 提供包含 `ceph`、`rbd`、`rados` 等工具的 Pod。应从同一 tagged Rook release 使用 `toolbox.yaml`：
 
@@ -384,7 +383,7 @@ Toolbox 通常持有高权限，生产中应：
 - 使用后按制度删除或收紧
 - 不把 keyring 复制出集群
 
-## 验证 Ceph 健康
+## 15. 验证 Ceph 健康 {/* #验证-ceph-健康 */}
 
 Kubernetes：
 
@@ -412,7 +411,7 @@ ceph versions
 - 没有意外消费设备
 - 版本符合审批
 
-## CephBlockPool
+## 16. CephBlockPool {/* #cephblockpool */}
 
 示例：
 
@@ -438,7 +437,7 @@ spec:
 
 节点不足时不要为了让 Pool 创建成功把 size 降为 1。
 
-## RBD StorageClass
+## 17. RBD StorageClass {/* #rbd-storageclass */}
 
 下例展示主要字段，Secret 名称应以对应 release 官方示例为准：
 
@@ -464,18 +463,18 @@ allowVolumeExpansion: true
 volumeBindingMode: Immediate
 ```
 
-### reclaimPolicy
+### 17.1 reclaimPolicy {/* #reclaimpolicy */}
 
 - `Delete`：删除 PVC 后，通常删除底层 RBD image
 - `Retain`：保留 PV 和数据，需人工回收
 
 关键数据不应只靠 Retain 代替备份，但它能降低误删 PVC 的即时损失。
 
-### RBD 访问模式
+### 17.2 RBD 访问模式 {/* #rbd-访问模式 */}
 
 普通文件系统上的 RBD 常用于 ReadWriteOnce。不要因为 Kubernetes 接受某个 AccessMode，就假设普通 ext4/xfs 卷可以被多节点同时安全写入。
 
-## 创建 RBD PVC
+## 18. 创建 RBD PVC {/* #创建-rbd-pvc */}
 
 ```yaml
 apiVersion: v1
@@ -509,7 +508,7 @@ rbd du --pool replicapool
 
 不要依赖底层自动生成的 image 名称作为业务标识，应通过 PV/PVC/CSI 元数据关联。
 
-## CephFilesystem
+## 19. CephFilesystem {/* #cephfilesystem */}
 
 示例：
 
@@ -541,7 +540,7 @@ spec:
 - 数据 Pool 可按容量和性能设计 replicated/EC
 - 节点不足时不能安全使用三副本故障域
 
-## CephFS StorageClass
+## 20. CephFS StorageClass {/* #cephfs-storageclass */}
 
 示意：
 
@@ -575,7 +574,7 @@ CephFS 常用于：
 
 它不是所有数据库的最佳后端，需按元数据、小文件和一致性负载压测。
 
-## RBD 与 CephFS 如何选
+## 21. RBD 与 CephFS 如何选 {/* #rbd-与-cephfs-如何选 */}
 
 | 维度 | RBD | CephFS |
 | --- | --- | --- |
@@ -588,7 +587,7 @@ CephFS 常用于：
 
 选择基于应用语义，不是基于哪个 YAML 更短。
 
-## PVC 从创建到挂载的路径
+## 22. PVC 从创建到挂载的路径 {/* #pvc-从创建到挂载的路径 */}
 
 ```mermaid
 flowchart TD
@@ -603,7 +602,7 @@ flowchart TD
 
 排障时先确认卡在哪一步，而不是一开始就查看 OSD 日志。
 
-## PVC Pending 排查
+## 23. PVC Pending 排查 {/* #pvc-pending-排查 */}
 
 ```bash
 kubectl get pvc -A
@@ -633,7 +632,7 @@ kubectl -n rook-ceph get pods | grep csi
 kubectl -n rook-ceph logs <csi-controller-pod> -c <container> --tail=200
 ```
 
-## Pod Pending 与 PVC Bound
+## 24. Pod Pending 与 PVC Bound {/* #pod-pending-与-pvc-bound */}
 
 PVC 已 Bound 但 Pod Pending，可能是：
 
@@ -653,7 +652,7 @@ kubectl describe pv <pv>
 
 不要删除 PV/PVC 来「重试」，这可能触发底层 RBD 删除。
 
-## MountVolume/Map 失败
+## 25. MountVolume/Map 失败 {/* #mountvolumemap-失败 */}
 
 检查应用 Pod 事件：
 
@@ -688,7 +687,7 @@ journalctl -k --since '-30 min'
 
 强制解除 lock 或删除 VolumeAttachment 前必须确认旧节点不会继续写。
 
-## Pod Running 但 I/O 卡住
+## 26. Pod Running 但 I/O 卡住 {/* #pod-running-但-io-卡住 */}
 
 这是数据面问题，需同时查：
 
@@ -722,7 +721,7 @@ ceph fs status
 
 不要只重启应用 Pod。新 Pod 调度到同一故障节点后会再次失败，调到其他节点可能暂时掩盖节点问题。
 
-## Operator 不收敛
+## 27. Operator 不收敛 {/* #operator-不收敛 */}
 
 ```bash
 kubectl -n rook-ceph logs deploy/rook-ceph-operator --since=30m
@@ -745,7 +744,7 @@ kubectl get crd | grep ceph.rook.io
 
 不要删除 finalizer 作为第一步。finalizer 通常在保护挂载和数据清理流程。
 
-## OSD prepare 失败
+## 28. OSD prepare 失败 {/* #osd-prepare-失败 */}
 
 ```bash
 kubectl -n rook-ceph get jobs,pods | grep osd
@@ -766,7 +765,7 @@ lsblk -f
 
 不要看到「盘不干净」就执行全节点 zap。先通过序列号/WWN 确认唯一目标盘，并查明残留是否来自仍有用的集群。
 
-## OSD Pod CrashLoopBackOff
+## 29. OSD Pod CrashLoopBackOff {/* #osd-pod-crashloopbackoff */}
 
 ```bash
 kubectl -n rook-ceph describe pod <osd-pod>
@@ -795,7 +794,7 @@ ceph crash ls-new
 
 Pod 重建无法修复故障磁盘。
 
-## 节点维护与 drain
+## 30. 节点维护与 drain {/* #节点维护与-drain */}
 
 直接 `kubectl drain` 存储节点可能同时：
 
@@ -825,7 +824,7 @@ kubectl get pdb -A
 - 节点回来后确认 OSD up/in 和 PG 恢复
 - 清理临时 flag
 
-## 新增 OSD 节点
+## 31. 新增 OSD 节点 {/* #新增-osd-节点 */}
 
 步骤：
 
@@ -848,7 +847,7 @@ ceph -s
 
 一次新增太多 OSD 会产生大规模数据迁移，应分批并观察网络和尾延迟。
 
-## 移除故障 OSD
+## 32. 移除故障 OSD {/* #移除故障-osd */}
 
 先确认：
 
@@ -864,7 +863,7 @@ ceph -s
 
 具体步骤必须使用对应 Rook release 的 OSD Management 文档，因为 host-based 与 PVC-based 集群不同。
 
-## 监控
+## 33. 监控 {/* #监控 */}
 
 Rook 可通过 Ceph MGR prometheus module 和 ceph-exporter 提供指标。
 
@@ -896,7 +895,7 @@ kubectl -n rook-ceph get prometheusrule
 
 官方文档提醒：Prometheus 不宜依赖它自己要监控的同一个 Ceph 集群作为唯一存储，否则 Ceph 故障时监控也可能不可用。
 
-## 备份与灾备
+## 34. 备份与灾备 {/* #备份与灾备 */}
 
 必须备份：
 
@@ -913,7 +912,7 @@ Kubernetes etcd 备份不能替代 Ceph 数据备份；Ceph 三副本也不能�
 
 VolumeSnapshot 仍依赖快照源和底层集群，需要独立备份与恢复演练。
 
-## Rook 与 Ceph 升级
+## 35. Rook 与 Ceph 升级 {/* #rook-与-ceph-升级 */}
 
 升级涉及至少三层：
 
@@ -933,7 +932,7 @@ VolumeSnapshot 仍依赖快照源和底层集群，需要独立备份与恢复�
 
 Rook upgrade 和 Ceph upgrade 是不同流程。仅更新 Operator 镜像不一定会升级 Ceph；仅修改 Ceph image 也不会自动更新 CRD/RBAC/CSI。
 
-## GitOps 注意事项
+## 36. GitOps 注意事项 {/* #gitops-注意事项 */}
 
 声明式管理适合审计和回滚，但要避免：
 
@@ -956,7 +955,7 @@ Rook upgrade 和 Ceph upgrade 是不同流程。仅更新 Operator 镜像不一�
 
 Git 回滚 YAML 不代表数据状态会自动回滚。
 
-## 删除集群的最高风险
+## 37. 删除集群的最高风险 {/* #删除集群的最高风险 */}
 
 Rook 支持通过 `cleanupPolicy` 确认销毁，并在删除 CephCluster 后清理主机路径和设备。
 
@@ -980,35 +979,35 @@ spec:
 - 四眼复核集群名、namespace 和 kube-context
 - 不复制粘贴 teardown 文档到生产终端
 
-## 常见误区
+## 38. 常见误区 {/* #常见误区 */}
 
-### 误区一：Pod Running 就代表 Ceph 健康
+### 38.1 误区一：Pod Running 就代表 Ceph 健康 {/* #误区一pod-running-就代表-ceph-健康 */}
 
 错误。还要检查 quorum、OSD、PG、容量和业务 I/O。
 
-### 误区二：Rook 让我们不需要学习 Ceph
+### 38.2 误区二：Rook 让我们不需要学习 Ceph {/* #误区二rook-让我们不需要学习-ceph */}
 
 错误。Operator 自动化生命周期，但事故仍需要理解 CRUSH、PG、OSD 和 Pool。
 
-### 误区三：PVC Bound 就代表应用一定能挂载
+### 38.3 误区三：PVC Bound 就代表应用一定能挂载 {/* #误区三pvc-bound-就代表应用一定能挂载 */}
 
 错误。节点 CSI、网络、内核和 VolumeAttachment 仍可能失败。
 
-### 误区四：删除 OSD Pod 等于删除 OSD
+### 38.4 误区四：删除 OSD Pod 等于删除 OSD {/* #误区四删除-osd-pod-等于删除-osd */}
 
 错误。Ceph map、CRUSH、数据迁移和底层设备仍需处理。
 
-### 误区五：删除 PVC 只是删除 Kubernetes 对象
+### 38.5 误区五：删除 PVC 只是删除 Kubernetes 对象 {/* #误区五删除-pvc-只是删除-kubernetes-对象 */}
 
 在 `reclaimPolicy: Delete` 下可能删除底层 RBD/CephFS 数据。
 
-### 误区六：etcd 备份包含 Ceph 业务数据
+### 38.6 误区六：etcd 备份包含 Ceph 业务数据 {/* #误区六etcd-备份包含-ceph-业务数据 */}
 
 错误。etcd 保存 Kubernetes 对象，不保存 RBD/CephFS 实际数据块。
 
-## 生产上线检查清单
+## 39. 生产上线检查清单 {/* #生产上线检查清单 */}
 
-### 版本与部署
+### 39.1 版本与部署 {/* #版本与部署 */}
 
 - Kubernetes、Rook、Ceph、CSI 兼容
 - 使用固定 tagged release
@@ -1017,7 +1016,7 @@ spec:
 - manifests/Helm values 已版本管理
 - 预生产完成升级和故障演练
 
-### 硬件与故障域
+### 39.2 硬件与故障域 {/* #硬件与故障域 */}
 
 - 至少满足副本所需的独立节点
 - rack/zone 标签与物理一致
@@ -1027,7 +1026,7 @@ spec:
 - 网络、MTU、带宽经过验证
 - 资源 request/limit 与混部策略明确
 
-### 存储接口
+### 39.3 存储接口 {/* #存储接口 */}
 
 - RBD/CephFS 选择符合应用语义
 - Pool size、failureDomain 正确
@@ -1036,7 +1035,7 @@ spec:
 - CSI Secret 和 RBAC 最小权限
 - PVC 删除保护和备份策略明确
 
-### 运维
+### 39.4 运维 {/* #运维 */}
 
 - Toolbox 访问受控
 - Ceph 与 Kubernetes 两层监控
@@ -1046,7 +1045,7 @@ spec:
 - `cleanupPolicy` 和 delete 有策略保护
 - 灾备与恢复演练完成
 
-## 本文小结
+## 40. 本文小结 {/* #本文小结 */}
 
 Rook Ceph 的正确理解是：
 
@@ -1061,12 +1060,11 @@ Rook Ceph 的正确理解是：
 - 删除 CephCluster 和 `cleanupPolicy` 是数据销毁操作
 - etcd、三副本和 VolumeSnapshot 都不能单独替代完整备份
 
-
 下一篇建立 Ceph 日常运维方法：固定巡检顺序、变更观察与恢复验收。
 
 → [第 16 篇：Ceph 日常运维](../05-operations/16-Ceph日常运维.md)
 
-## 课后练习
+## 41. 课后练习 {/* #课后练习 */}
 
 1. Rook Operator 和 Ceph daemon 的职责如何划分？
 2. 内部 Rook Ceph 与外部 Ceph 各有什么故障域特点？
@@ -1079,7 +1077,7 @@ Rook Ceph 的正确理解是：
 9. Rook upgrade 与 Ceph upgrade 为什么要分开？
 10. `cleanupPolicy` 应如何防止误操作？
 
-## 官方资料
+## 42. 官方资料 {/* #官方资料 */}
 
 - [Rook Ceph Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)
 - [CephCluster CRD](https://rook.io/docs/rook/latest/CRDs/Cluster/ceph-cluster-crd/)

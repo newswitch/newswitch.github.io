@@ -1,11 +1,12 @@
 ---
-title: nmcli 命令详解：NetworkManager 配置、路由、DNS 与安全变更
+title: "nmcli 命令详解：NetworkManager 配置、路由、DNS 与安全变更"
+sidebar_label: "21. nmcli 命令详解：NetworkManager 配置、路由、DNS 与安全变更"
 sidebar_position: 21
-description: 以 NetworkManager 1.58 为基线，系统讲解 nmcli 全局参数、device/profile/active connection 模型、静态地址、路由规则、DNS、Bond、Bridge、VLAN、Wi-Fi、LLDP、checkpoint 和自动化。
+description: "以 NetworkManager 1.58 为基线，系统讲解 nmcli 全局参数、device/profile/active connection 模型、静态地址、路由规则、DNS、Bond、Bridge、VLAN、Wi-Fi、LLDP、checkpoint 和自动化。"
 tags: [Linux, nmcli, NetworkManager, IP, 路由, DNS, Bond, VLAN]
 ---
 
-# `nmcli` 命令详解：NetworkManager 配置、路由、DNS 与安全变更
+# nmcli 命令详解：NetworkManager 配置、路由、DNS 与安全变更
 
 `nmcli` 是 NetworkManager 的命令行客户端。它既能查询设备和活动网络状态，也能创建、修改、激活、停用和删除持久连接配置。
 
@@ -195,7 +196,7 @@ nmcli connection up uuid 11111111-2222-3333-4444-555555555555
 | `import` / `export` | 通过插件导入/导出 VPN 等外部配置 |
 | `migrate` | 迁移 settings plugin，例如 keyfile；无 ID 时可能作用全部 profile |
 
-### `up`
+### 7.1 `up` {/* #up */}
 
 ```text
 connection up [id|uuid|path] ID [ifname IFACE] [ap BSSID] [passwd-file FILE]
@@ -203,7 +204,7 @@ connection up [id|uuid|path] ID [ifname IFACE] [ap BSSID] [passwd-file FILE]
 
 `passwd-file` 每行是 `setting.property:secret`。文件应只有 root 可读，不要把密码直接写入 shell history。
 
-### `down` 与 `device down` 的差异
+### 7.2 `down` 与 `device down` 的差异 {/* #down-与-device-down-的差异 */}
 
 `connection down PROFILE` 停用指定 active connection，但设备仍可考虑其他 profile；该 profile 会被阻止自动重连直到重启或显式操作。`device down IFACE` 会让设备不再自动激活 profile，语义更强。
 
@@ -234,7 +235,7 @@ nmcli connection modify static-eth0 connection.autoconnect no
 
 ## 9. 创建 DHCP 和静态 IPv4 profile
 
-### DHCP
+### 9.1 DHCP {/* #dhcp */}
 
 ```bash
 # [W] 创建但不自动激活
@@ -242,7 +243,7 @@ sudo nmcli connection add type ethernet ifname eth0 \
   con-name dhcp-eth0 connection.autoconnect no ipv4.method auto ipv6.method auto
 ```
 
-### 静态 IPv4
+### 9.2 静态 IPv4 {/* #静态-ipv4 */}
 
 ```bash
 # [W] 使用 TEST-NET 地址示意
@@ -306,7 +307,7 @@ PREFIX NEXT-HOP METRIC attribute=value...
 
 例如 table、type、onlink、mtu、src、cwnd 等是否支持取决于 NetworkManager/内核版本。
 
-### policy routing
+### 11.1 policy routing {/* #policy-routing */}
 
 ```bash
 sudo nmcli connection modify static-eth0 ipv4.route-table 100
@@ -401,7 +402,7 @@ ip route show table all
 
 ## 15. Bond、Bridge 与 VLAN
 
-### 802.3ad Bond
+### 15.1 802.3ad Bond {/* #8023ad-bond */}
 
 ```bash
 sudo nmcli connection add type bond ifname bond0 con-name bond0 \
@@ -421,7 +422,7 @@ cat /proc/net/bonding/bond0
 ip -d link show bond0
 ```
 
-### Bridge
+### 15.2 Bridge {/* #bridge */}
 
 ```bash
 sudo nmcli connection add type bridge ifname br0 con-name br0 \
@@ -432,7 +433,7 @@ sudo nmcli connection add type ethernet ifname eth1 \
 
 把物理口加入 bridge 后，三层地址通常配置在 `br0` 而不是 port。
 
-### VLAN
+### 15.3 VLAN {/* #vlan */}
 
 ```bash
 sudo nmcli connection add type vlan ifname eth0.100 con-name vlan100 \
@@ -599,4 +600,3 @@ journalctl -u NetworkManager --since '-10 min' --no-pager
 - [`nmcli(1)` 官方手册](https://networkmanager.dev/docs/api/latest/nmcli.html)
 - [nmcli settings 属性参考](https://networkmanager.dev/docs/api/latest/nm-settings-nmcli.html)
 - [NetworkManager keyfile 格式](https://networkmanager.dev/docs/api/latest/nm-settings-keyfile.html)
-

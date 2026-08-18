@@ -1,11 +1,12 @@
 ---
-title: bpftrace 命令详解：Probe、过滤、聚合、栈与生产安全
+title: "bpftrace 命令详解：Probe、过滤、聚合、栈与生产安全"
+sidebar_label: "10. bpftrace 命令详解：Probe、过滤、聚合、栈与生产安全"
 sidebar_position: 10
-description: 系统讲解 bpftrace CLI、probe provider、BTF、tracepoint/kprobe/uprobe、map 聚合、interval、PID/cgroup 过滤和清理。
+description: "系统讲解 bpftrace CLI、probe provider、BTF、tracepoint/kprobe/uprobe、map 聚合、interval、PID/cgroup 过滤和清理。"
 tags: [Linux, bpftrace, eBPF, 动态追踪, SRE]
 ---
 
-# `bpftrace` 命令详解：让聚合发生在内核侧
+# bpftrace 命令详解：Probe、过滤、聚合、栈与生产安全
 
 `bpftrace` 把高级脚本编译为 eBPF，附着 tracepoint、fentry/kprobe、uprobe、USDT、profile 等 probe，并用 map 在内核侧计数/直方图。优势是不用逐事件输出；错误的高频 probe、字符串打印或高基数 key 仍可造成明显开销。
 

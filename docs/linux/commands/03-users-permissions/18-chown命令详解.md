@@ -1,11 +1,12 @@
 ---
-title: chown 命令详解：所有者迁移、条件变更与符号链接安全
+title: "chown 命令详解：所有者迁移、条件变更与符号链接安全"
+sidebar_label: "18. chown 命令详解：所有者迁移、条件变更与符号链接安全"
 sidebar_position: 18
-description: 完整讲解 GNU coreutils chown 9.11 参数、OWNER:GROUP 语法、--from 条件迁移、递归与 symlink 策略、特殊位和分布式存储风险。
+description: "完整讲解 GNU coreutils chown 9.11 参数、OWNER:GROUP 语法、--from 条件迁移、递归与 symlink 策略、特殊位和分布式存储风险。"
 tags: [Linux, chown, UID, GID, 文件所有权]
 ---
 
-# `chown` 命令详解：所有者迁移、条件变更与符号链接安全
+# chown 命令详解：所有者迁移、条件变更与符号链接安全
 
 `chown` 修改 inode 的数字 owner UID 和/或 group GID。名称只是 NSS 解析入口；共享存储、容器和跨节点迁移必须以数字映射为契约。
 
@@ -90,7 +91,7 @@ findmnt -T file
 
 实验：覆盖全部 OWNER:GROUP 形式、`--from`、reference、symlink 参数、setgid 清除与 NFS/容器映射。掌握标准是能完整列出参数，并完成带旧 ID 扫描、条件变更、文件系统边界和回滚的所有权迁移。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：chown(1)](https://man7.org/linux/man-pages/man1/chown.1.html)
 - [Linux chown(2)](https://man7.org/linux/man-pages/man2/chown.2.html)

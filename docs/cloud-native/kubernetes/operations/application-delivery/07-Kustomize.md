@@ -2,19 +2,19 @@
 title: "使用 Kustomize 配置 Kubernetes 应用"
 sidebar_label: "07. 使用 Kustomize 配置 Kubernetes 应用"
 sidebar_position: 7
-tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Kustomize 是一个强大的 Kubernetes 配置管理工具，支持声明式配置定制、多环境管理和配置复用。本文介绍 Kustomize 的核心功能、最佳实践以及与 kubectl 的集成使用方法。"
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 ---
 
 # 使用 Kustomize 配置 Kubernetes 应用
 
 > Kustomize 是 Kubernetes 原生的声明式配置管理工具，支持多环境分层、配置复用与灵活定制，极大提升了集群配置的可维护性和一致性。本文系统梳理其架构、核心功能、实践用法与最佳实践。
 
-## Kustomize 简介
+## 1. Kustomize 简介 {/* #kustomize-简介 */}
 
 [Kustomize](https://kustomize.io/) 是专为 Kubernetes 设计的声明式配置管理工具，允许用户通过分层和声明式方式定制和管理应用程序配置，无需直接修改原始清单文件。Kustomize 已集成到 kubectl，成为 Kubernetes 原生配置管理方案。
 
-## 核心模块结构
+## 2. 核心模块结构 {/* #核心模块结构 */}
 
 Kustomize 由多个核心模块协同组成，支撑其灵活的配置管理能力。
 
@@ -40,11 +40,11 @@ graph TD
 - **cmd/config**：基于 kyaml 的资源配置管理 CLI
 - **kustomize**：主命令行工具，整合所有功能
 
-## Kustomize 核心功能
+## 3. Kustomize 核心功能 {/* #kustomize-核心功能 */}
 
 Kustomize 提供多种声明式配置管理能力，适用于复杂的 Kubernetes 应用场景。
 
-### 配置合并与分层管理
+### 3.1 配置合并与分层管理 {/* #配置合并与分层管理 */}
 
 Kustomize 采用基础配置（base）和覆盖配置（overlay）的分层架构：
 
@@ -53,7 +53,7 @@ Kustomize 采用基础配置（base）和覆盖配置（overlay）的分层架�
 
 这种分层方式实现了配置继承与灵活定制，提升了管理效率。
 
-### 声明式配置与复用
+### 3.2 声明式配置与复用 {/* #声明式配置与复用 */}
 
 Kustomize 使用 YAML 格式的 `kustomization.yaml` 文件描述定制规则，支持：
 
@@ -65,11 +65,11 @@ Kustomize 使用 YAML 格式的 `kustomization.yaml` 文件描述定制规则，
 
 通过组件与补丁（patches），实现配置的复用与跨项目共享，降低维护成本。
 
-### 多环境配置管理
+### 3.3 多环境配置管理 {/* #多环境配置管理 */}
 
 Kustomize 天然支持多环境部署，可为开发、测试、生产等环境创建专属覆盖配置，实现一套基础配置适配多环境。
 
-### 关键特性
+### 3.4 关键特性 {/* #关键特性 */}
 
 - 无模板定制：无需模板语言即可修改清单
 - 基于覆盖的配置：通过补丁实现变体
@@ -78,11 +78,11 @@ Kustomize 天然支持多环境部署，可为开发、测试、生产等环境�
 - 插件系统：支持多种插件扩展
 - 变量替换：运行时数据注入
 
-## 实践示例
+## 4. 实践示例 {/* #实践示例 */}
 
 以下示例展示如何用 Kustomize 管理名为 "webapp" 的应用配置。
 
-### 基础配置结构
+### 4.1 基础配置结构 {/* #基础配置结构 */}
 
 首先定义基础配置目录结构：
 
@@ -109,7 +109,7 @@ commonLabels:
   app: webapp
 ```
 
-### 环境特定配置
+### 4.2 环境特定配置 {/* #环境特定配置 */}
 
 为不同环境创建覆盖配置：
 
@@ -167,7 +167,7 @@ replicas:
   count: 3
 ```
 
-## 工作流与核心概念
+## 5. 工作流与核心概念 {/* #工作流与核心概念 */}
 
 Kustomize 遵循构建流程，将输入资源转换为定制输出。下图展示了其主要流程：
 
@@ -218,7 +218,7 @@ flowchart TD
 
 ![Kustomize 构建流程](/images/k8s/devops/kustomize/910d311ad4c31c93eb1836a7adae8016.svg)
 
-### 核心概念说明
+### 5.1 核心概念说明 {/* #核心概念说明 */}
 
 - **Base**：原始未修改的通用配置
 - **Overlays**：为特定环境定制的层
@@ -228,7 +228,7 @@ flowchart TD
 - **Kustomization File**：声明资源与定制规则
 - **Components**：可重用的配置单元
 
-## 资源处理与 YAML 操作
+## 6. 资源处理与 YAML 操作 {/* #资源处理与-yaml-操作 */}
 
 Kustomize 提供复杂的资源处理与 YAML 操作能力。下图展示其主要处理流程：
 
@@ -290,7 +290,7 @@ graph TD
 - **转换**：补丁、名称引用、哈希命名等
 - **I/O 系统 (kio)**：YAML 输入输出与流水线处理
 
-## 插件系统
+## 7. 插件系统 {/* #插件系统 */}
 
 Kustomize 支持多种插件类型，扩展资源生成与转换能力。
 
@@ -355,7 +355,7 @@ graph TD
 - **Validators**：资源校验插件
 - **实现方式**：内置、Exec（Shell）、Go、Function（容器化）
 
-## 与 kubectl 集成使用
+## 8. 与 kubectl 集成使用 {/* #与-kubectl-集成使用 */}
 
 自 Kubernetes 1.14 起，Kustomize 已内置于 kubectl，提供原生配置管理能力。kubectl 内置 Kustomize 版本随 Kubernetes 版本变化。
 
@@ -374,7 +374,7 @@ graph TD
 
 > 可通过 `kubectl version --client` 查看当前 kubectl 内置的 Kustomize 版本。
 
-### 常用命令
+### 8.1 常用命令 {/* #常用命令 */}
 
 - **直接应用配置**：
 
@@ -400,7 +400,7 @@ graph TD
   kubectl delete -k overlays/dev
   ```
 
-### 高级功能
+### 8.2 高级功能 {/* #高级功能 */}
 
 - **配置验证**：
 
@@ -416,9 +416,9 @@ graph TD
   kubectl apply -f final-manifest.yaml
   ```
 
-## 使用示例
+## 9. 使用示例 {/* #使用示例 */}
 
-### 基本用法
+### 9.1 基本用法 {/* #基本用法 */}
 
 一个简单的 kustomization 文件如下：
 
@@ -447,7 +447,7 @@ kubectl kustomize /path/to/kustomization/directory
 kubectl apply -k /path/to/kustomization/directory
 ```
 
-### 使用 Overlays
+### 9.2 使用 Overlays {/* #使用-overlays */}
 
 多环境配置目录结构示例：
 
@@ -474,7 +474,7 @@ kubectl apply -k /path/to/kustomization/directory
 kustomize build ~/someApp/overlays/production
 ```
 
-## 最佳实践
+## 10. 最佳实践 {/* #最佳实践 */}
 
 - 目录结构规范，区分 base 与 overlays
 - 配置文件纳入版本控制
@@ -484,11 +484,11 @@ kustomize build ~/someApp/overlays/production
 
 通过 Kustomize，可实现 Kubernetes 配置的标准化管理，提升可维护性与部署一致性。
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 Kustomize 作为 Kubernetes 原生配置管理工具，凭借分层架构、声明式定制与强大插件系统，极大提升了集群配置的灵活性和可维护性。合理运用 Kustomize 能有效支撑多环境、多团队的高效协作与持续交付。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 1. [Kustomize 官方文档 - kustomize.io](https://kustomize.io/)
 2. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/zh-cn/docs/tasks/manage-kubernetes-objects/kustomization/)

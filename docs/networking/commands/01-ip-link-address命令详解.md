@@ -1,11 +1,12 @@
 ---
-title: ip link 与 ip address 命令详解：接口、地址和虚拟设备
+title: "ip link 与 ip address 命令详解：接口、地址和虚拟设备"
+sidebar_label: "01. ip link 与 ip address 命令详解：接口、地址和虚拟设备"
 sidebar_position: 1
-description: 系统讲解 iproute2 的全局选项、ip link、ip address、接口状态、MTU、MAC、主从关系、IPv4/IPv6 地址生命周期、虚拟设备与安全操作方法。
+description: "系统讲解 iproute2 的全局选项、ip link、ip address、接口状态、MTU、MAC、主从关系、IPv4/IPv6 地址生命周期、虚拟设备与安全操作方法。"
 tags: [Linux, iproute2, ip link, ip address, 网卡, 网络命令]
 ---
 
-# `ip link` 与 `ip address` 命令详解：接口、地址和虚拟设备
+# ip link 与 ip address 命令详解：接口、地址和虚拟设备
 
 `ip link` 管理二层网络设备，`ip address` 管理附着在设备上的三层地址。排障时先确认设备，再确认地址；接口显示 `UP` 并不等于物理链路一定可用，地址存在也不等于路由和邻居解析一定正确。
 

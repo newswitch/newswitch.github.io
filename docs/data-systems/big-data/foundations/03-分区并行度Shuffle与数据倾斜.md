@@ -1,9 +1,9 @@
 ---
-title: 分区、并行度、Shuffle 与数据倾斜：理解分布式计算性能
+title: "分区、并行度、Shuffle 与数据倾斜：理解分布式计算性能"
 sidebar_label: "03. 分区、并行度、Shuffle 与数据倾斜：理解分布式计算性能"
 sidebar_position: 3
+description: "从数据分布和任务执行路径理解分区、并行度与 Shuffle，学会用指标识别倾斜、长尾、spill 和网络瓶颈并选择治理方案。"
 tags: [分区, 并行度, Shuffle, 数据倾斜, 性能调优]
-description: 从数据分布和任务执行路径理解分区、并行度与 Shuffle，学会用指标识别倾斜、长尾、spill 和网络瓶颈并选择治理方案。
 ---
 
 # 分区、并行度、Shuffle 与数据倾斜：理解分布式计算性能
@@ -182,15 +182,15 @@ skew_ratio = max_partition_size / median_partition_size
 
 ## 9. 诊断流程
 
-### 第一步：确定长尾 stage/operator
+### 9.1 第一步：确定长尾 stage/operator {/* #第一步确定长尾-stageoperator */}
 
 查看 DAG 或拓扑，找出耗时最长、backpressure 最大或 checkpoint 最慢的节点。记录其输入/输出数据量、并行度和上下游关系。
 
-### 第二步：比较分位数，不看平均值
+### 9.2 第二步：比较分位数，不看平均值 {/* #第二步比较分位数不看平均值 */}
 
 比较 task duration、input bytes、Shuffle read/write、spill、GC 和 state size 的 median/P95/max。若 max 远高于 median，通常存在长尾。
 
-### 第三步：定位分区和 key
+### 9.3 第三步：定位分区和 key {/* #第三步定位分区和-key */}
 
 对 key 进行采样或预聚合：
 
@@ -204,11 +204,11 @@ LIMIT 50;
 
 同时统计记录字节、NULL 比例和 join 后放大倍数。生产数据可能敏感，应输出 hash 后 key 或仅输出分布统计。
 
-### 第四步：排除硬件慢节点
+### 9.4 第四步：排除硬件慢节点 {/* #第四步排除硬件慢节点 */}
 
 如果同一节点上的多个无关 task 都慢，检查磁盘 await、网络重传、CPU throttling、NUMA、GC 和容器限制。数据倾斜与慢节点会产生类似长尾，但治理方式完全不同。
 
-### 第五步：确认是否是下游反压
+### 9.5 第五步：确认是否是下游反压 {/* #第五步确认是否是下游反压 */}
 
 流作业中，上游 busy 或 backpressured 不一定是上游自身慢，可能是 sink 限速逐层传播。沿数据流逆向找到最早出现高利用/低输出的算子。
 
@@ -366,7 +366,7 @@ Shuffle 中间数据通常不是最终权威数据。节点失败后可能发生
 
 下一篇：[数据一致性、幂等、At-Least-Once 与 Exactly-Once](./04-数据一致性幂等与Exactly-Once.md)
 
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [Apache Spark 文档](https://spark.apache.org/docs/latest/)
 - [Apache Flink：DataStream Operators](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/overview/)

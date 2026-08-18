@@ -1,9 +1,9 @@
 ---
-title: Flink DataStream、Operator Chain、分区与并行度
+title: "Flink DataStream、Operator Chain、分区与并行度"
 sidebar_label: "02. Flink DataStream、Operator Chain、分区与并行度"
 sidebar_position: 2
+description: "理解 DataStream 转换、keyBy/rebalance/rescale/broadcast、算子链和端到端并行度匹配。"
 tags: [Flink, DataStream, Operator Chain, Parallelism]
-description: 理解 DataStream 转换、keyBy/rebalance/rescale/broadcast、算子链和端到端并行度匹配。
 ---
 
 # Flink DataStream、Operator Chain、分区与并行度
@@ -64,6 +64,6 @@ Kafka 24 partitions，source 并行 48 时部分 subtask 可能无有效分区�
 
 上一篇：[Flink 架构与 Slot](./01-Flink架构JobManager-TaskManager与Slot.md)　下一篇：[Event Time、Watermark、Window 与迟到数据](./03-Event-Time-Watermark-Window与迟到数据.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Flink DataStream Operators](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/overview/)

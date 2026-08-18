@@ -1,11 +1,12 @@
 ---
-title: rclone 命令详解：多后端 Copy、Sync、Check、Bisync 与 Mount
+title: "rclone 命令详解：多后端 Copy、Sync、Check、Bisync 与 Mount"
+sidebar_label: "27. rclone 命令详解：多后端 Copy、Sync、Check、Bisync 与 Mount"
 sidebar_position: 27
-description: 讲解 rclone remote:path 模型、config/credential、全局参数族、copy/sync/move/check/bisync/mount、过滤、checksum、并发、重试、日志和删除安全。
+description: "讲解 rclone remote:path 模型、config/credential、全局参数族、copy/sync/move/check/bisync/mount、过滤、checksum、并发、重试、日志和删除安全。"
 tags: [rclone, S3, Cloud Storage, 同步, 数据迁移]
 ---
 
-# `rclone` 命令详解：多后端 Copy、Sync、Check、Bisync 与 Mount
+# rclone 命令详解：多后端 Copy、Sync、Check、Bisync 与 Mount
 
 `rclone` 统一操作 S3、对象存储、云盘、SFTP 和本地文件系统。统一 CLI 不代表后端语义相同：mtime、checksum、rename、case、symlink、version、metadata 和 consistency 都可能不同。
 

@@ -1,11 +1,12 @@
 ---
-title: auditctl 命令详解：设计、加载与诊断 Linux Audit 规则
+title: "auditctl 命令详解：设计、加载与诊断 Linux Audit 规则"
+sidebar_label: "16. auditctl 命令详解：设计、加载与诊断 Linux Audit 规则"
 sidebar_position: 16
-description: 完整讲解 auditctl 的配置、状态和规则参数，filter list/action、-F/-C 字段、syscall/文件规则、双架构、性能、不可变模式及安全回滚。
+description: "完整讲解 auditctl 的配置、状态和规则参数，filter list/action、-F/-C 字段、syscall/文件规则、双架构、性能、不可变模式及安全回滚。"
 tags: [Linux, auditctl, Audit, 审计规则, 故障排查]
 ---
 
-# `auditctl` 命令详解：设计、加载与诊断 Linux Audit 规则
+# auditctl 命令详解：设计、加载与诊断 Linux Audit 规则
 
 `auditctl` 控制内核 Audit 子系统、查看状态并管理运行时规则。它直接改变内核审计面：错误规则可能产生海量日志和系统调用开销，`-D` 会清空其他团队规则，`-e 2` 则在重启前不可修改。生产操作必须先读状态、精确添加、按 key 验证，并通过 `/etc/audit/rules.d/*.rules` 持久化。
 
@@ -165,7 +166,7 @@ sudo aureport --log
 
 掌握标准：能列出全部配置/状态/规则参数；能解释 filter list、action、字段与事件；能写双架构高性能规则；能从临时验证走到持久化、容量监控和精确回滚。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [auditctl(8)](https://manpages.debian.org/unstable/auditd/auditctl.8.en.html)
 - [Audit userspace](https://github.com/linux-audit/audit-userspace)

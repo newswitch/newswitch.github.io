@@ -1,11 +1,12 @@
 ---
-title: declare/typeset 命令详解：变量属性、数组、作用域与安全输出
+title: "declare/typeset 命令详解：变量属性、数组、作用域与安全输出"
+sidebar_label: "08. declare/typeset 命令详解：变量属性、数组、作用域与安全输出"
 sidebar_position: 8
-description: 完整讲解 Bash declare/typeset 的 -a/-A/-i/-n/-r/-x/-l/-u/-t/-g/-I/-p/-f/-F 与局部作用域。
+description: "完整讲解 Bash declare/typeset 的 -a/-A/-i/-n/-r/-x/-l/-u/-t/-g/-I/-p/-f/-F 与局部作用域。"
 tags: [Linux, Bash, declare, 数组, 变量]
 ---
 
-# `declare` / `typeset` 命令详解：变量不只有字符串值
+# declare/typeset 命令详解：变量属性、数组、作用域与安全输出
 
 `declare` 设置变量属性并显示变量或函数定义，在函数内默认创建局部变量；`typeset` 是同义词。属性会影响后续赋值，例如 integer 会做算术求值，nameref 会把操作转发给另一个变量。
 

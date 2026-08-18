@@ -1,11 +1,12 @@
 ---
-title: pstree 命令详解：父子树、线程、进程组与 namespace 迁移
+title: "pstree 命令详解：父子树、线程、进程组与 namespace 迁移"
+sidebar_label: "04. pstree 命令详解：父子树、线程、进程组与 namespace 迁移"
 sidebar_position: 4
-description: 完整讲解 psmisc pstree 的参数、树压缩、PID/PGID、父链、线程、UID 与 namespace 变化、安全上下文及 procfs 可见性。
+description: "完整讲解 psmisc pstree 的参数、树压缩、PID/PGID、父链、线程、UID 与 namespace 变化、安全上下文及 procfs 可见性。"
 tags: [Linux, pstree, psmisc, 进程树, namespace]
 ---
 
-# `pstree` 命令详解：父子树、线程、进程组与 namespace 迁移
+# pstree 命令详解：父子树、线程、进程组与 namespace 迁移
 
 `pstree` 把 PPID 关系显示成树。它适合观察 supervisor、worker 和 shell pipeline 的父子关系，但父子树不等于资源/故障边界：进程可 reparent，服务边界通常由 cgroup/unit 定义。
 
@@ -83,7 +84,7 @@ systemctl status UNIT
 
 掌握标准：能列出全部参数；能说明 PPID 树、process group、session、cgroup 与 namespace 是不同关系；不把可视树当稳定机器接口。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [psmisc：pstree(1)](https://man7.org/linux/man-pages/man1/pstree.1.html)
 - [Linux proc_pid_status(5)](https://man7.org/linux/man-pages/man5/proc_pid_status.5.html)

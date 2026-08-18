@@ -1,11 +1,12 @@
 ---
-title: jobs 命令详解：Shell 作业表、jobspec 与进程组
+title: "jobs 命令详解：Shell 作业表、jobspec 与进程组"
+sidebar_label: "05. jobs 命令详解：Shell 作业表、jobspec 与进程组"
 sidebar_position: 5
-description: 完整讲解 Bash jobs 的参数、作业状态、jobspec、当前/前一作业、PID/PGID、仅本 Shell 可见的边界及脚本使用方法。
+description: "完整讲解 Bash jobs 的参数、作业状态、jobspec、当前/前一作业、PID/PGID、仅本 Shell 可见的边界及脚本使用方法。"
 tags: [Linux, Bash, jobs, 作业控制, process group]
 ---
 
-# `jobs` 命令详解：Shell 作业表、jobspec 与进程组
+# jobs 命令详解：Shell 作业表、jobspec 与进程组
 
 `jobs` 是 Bash builtin，显示当前 Shell 自己维护的作业表。作业通常是一条异步/停止的 pipeline，对应一个 process group；另一个终端、父 Shell、systemd 或 `ps` 看不到这张 Shell 内部表。
 
@@ -71,7 +72,7 @@ jobs -x ps -o pid,pgid,sid,stat,comm -g %1
 
 掌握标准：能列出全部参数和 jobspec；能从 PID/PGID/SID/TTY 解释作业；不使用 `jobs` 监控独立服务。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [GNU Bash：Job Control Builtins](https://www.gnu.org/software/bash/manual/html_node/Job-Control-Builtins.html)
 - [Linux credentials(7)：process groups and sessions](https://man7.org/linux/man-pages/man7/credentials.7.html)

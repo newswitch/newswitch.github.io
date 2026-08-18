@@ -2,8 +2,8 @@
 title: "ClickHouse 从零到精通学习路线"
 sidebar_label: "00. ClickHouse 从零到精通学习路线"
 sidebar_position: 0
-tags: [ClickHouse, OLAP, MergeTree, 列式存储, 学习路线]
 description: "从列式存储和 MergeTree 深入 Part、稀疏索引、Merge、查询流水线、复制分片、Keeper、容量性能与生产故障排查。"
+tags: [ClickHouse, OLAP, MergeTree, 列式存储, 学习路线]
 ---
 
 # ClickHouse 从零到精通学习路线
@@ -30,7 +30,7 @@ SELECT
   → result
 ```
 
-## 2. 16 篇文章规划
+## 2. 篇文章规划 {/* #2-16-篇文章规划 */}
 
 | 编号 | 文章 | 优先级 | 状态 |
 | --- | --- | --- | --- |
@@ -55,15 +55,15 @@ SELECT
 
 ## 3. 学习顺序
 
-### 单节点存储
+### 3.1 单节点存储 {/* #单节点存储 */}
 
 完成 C01～C05，能够从一行数据追到不可变 Part、列文件、Mark 和 Granule；理解 `PARTITION BY` 不是普通查询主索引，`ORDER BY` 才决定物理排序和稀疏索引效果。
 
-### 查询执行
+### 3.2 查询执行 {/* #查询执行 */}
 
 完成 C06～C08，使用 `EXPLAIN`、`system.query_log`、读行/字节、峰值内存和 Pipeline 证明优化，而不是只比较一次 wall time。
 
-### 分布式生产
+### 3.3 分布式生产 {/* #分布式生产 */}
 
 完成 C09～C15，分清：
 

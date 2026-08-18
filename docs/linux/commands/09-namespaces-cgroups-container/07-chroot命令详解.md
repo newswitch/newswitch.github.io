@@ -1,11 +1,12 @@
 ---
-title: chroot 命令详解：切换根目录、身份与隔离误区
+title: "chroot 命令详解：切换根目录、身份与隔离误区"
+sidebar_label: "07. chroot 命令详解：切换根目录、身份与隔离误区"
 sidebar_position: 7
-description: 讲清 GNU chroot 的用户组参数、命令查找、动态库、设备与 proc 挂载、逃逸边界和修复环境实践。
+description: "讲清 GNU chroot 的用户组参数、命令查找、动态库、设备与 proc 挂载、逃逸边界和修复环境实践。"
 tags: [Linux, chroot, rootfs, 容器, coreutils]
 ---
 
-# `chroot` 命令详解：切换根目录，但不是安全沙箱
+# chroot 命令详解：切换根目录、身份与隔离误区
 
 `chroot` 调用 `chroot(2)` 后把进程的路径解析根切到 `NEWROOT`，再执行命令。它不会自动创建 mount/PID/network/user Namespace，不限制 capability，也不会自动挂载 `/proc`、`/sys`、`/dev`；拥有足够权限的进程可能逃出，因此不能独立作为不可信代码沙箱。
 

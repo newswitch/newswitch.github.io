@@ -2,15 +2,15 @@
 title: "控制器与 Operator 模式（Controller & Operator Pattern）"
 sidebar_label: "05. 控制器与 Operator 模式（Controller & Operator Pattern）"
 sidebar_position: 5
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "控制器是 Kubernetes 自动化的核心。Operator 模式将领域知识封装为控制循环，使系统能够自动维护期望状态。本文深入讲解控制循环原理、设计模式及其在云原生和 AI 场景中的实践。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # 控制器与 Operator 模式（Controller & Operator Pattern）
 
 > 控制器（Controller）是 Kubernetes 自动化的核心，Operator 模式则让领域知识与控制循环深度融合，实现复杂系统的声明式管理。本文系统梳理控制器与 Operator 的原理、模式与最佳实践，助力云原生与 AI 场景下的自动化治理。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 Kubernetes 是一个声明式系统。用户只需定义期望状态（Desired State），系统会通过控制器（Controller）自动调整实际状态（Actual State）使之保持一致。
 
@@ -18,7 +18,7 @@ Kubernetes 是一个声明式系统。用户只需定义期望状态（Desired S
 
 在此基础上，社区提出了 **Operator 模式**，将特定领域的知识（如数据库、消息队列、AI 训练任务）封装为自定义控制器，从而实现自定义资源的全生命周期管理。
 
-## 控制循环（Control Loop）机制
+## 2. 控制循环（Control Loop）机制 {/* #控制循环control-loop机制 */}
 
 控制器遵循经典的 **控制循环（Control Loop）** 模式，也称为 **Reconcile Loop**。其基本流程如下：
 
@@ -40,7 +40,7 @@ sequenceDiagram
 
 控制器持续监听资源对象的变更事件，通过不断地 **Reconcile（调谐）** 操作，使系统最终达到期望状态。
 
-## Informer 与工作队列（Work Queue）
+## 3. Informer 与工作队列（Work Queue） {/* #informer-与工作队列work-queue */}
 
 控制器并不直接轮询 API Server，而是通过 **Informer** 机制订阅资源事件。
 
@@ -65,7 +65,7 @@ flowchart LR
 
 这种设计使控制器具有高性能与可伸缩性，同时避免了频繁访问 API Server。
 
-## Reconcile 函数核心逻辑
+## 4. Reconcile 函数核心逻辑 {/* #reconcile-函数核心逻辑 */}
 
 Reconcile（调谐）是控制器的核心函数，用于对比“期望状态”和“实际状态”。
 
@@ -104,7 +104,7 @@ func (r *DatabaseReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 这一逻辑本质上体现了 Kubernetes 的“自愈（self-healing）”思想：**如果状态不一致，则自动修复。**
 
-## Operator 模式
+## 5. Operator 模式 {/* #operator-模式 */}
 
 **Operator 模式** 是对控制器思想的领域化封装。它将特定软件或系统的运维知识自动化，使 Kubernetes 能够管理更复杂的业务对象。
 
@@ -130,7 +130,7 @@ flowchart TD
 
 示例：`Database Operator` 通过 CRD 管理 MySQL 集群的创建、备份、恢复和伸缩。
 
-## Operator 与传统控制器的区别
+## 6. Operator 与传统控制器的区别 {/* #operator-与传统控制器的区别 */}
 
 下表对比了原生控制器与 Operator 的主要区别。
 
@@ -142,7 +142,7 @@ flowchart TD
 | 使用语言 | Kubernetes 原生      | 任意（常见为 Go）                 |
 | 典型工具 | client-go          | Kubebuilder / Operator SDK |
 
-## 工具链：Kubebuilder 与 Operator SDK
+## 7. 工具链：Kubebuilder 与 Operator SDK {/* #工具链kubebuilder-与-operator-sdk */}
 
 开发 Operator 时最常用的两种框架如下表所示。
 
@@ -158,7 +158,7 @@ flowchart TD
 - 代码模板与测试框架
 - 集成 controller-runtime
 
-## AI 与 Operator 模式的结合
+## 8. AI 与 Operator 模式的结合 {/* #ai-与-operator-模式的结合 */}
 
 在 AI Native 场景中，Operator 模式正在被广泛采用，用于：
 
@@ -169,7 +169,7 @@ flowchart TD
 
 例如，`KubeRay` 项目使用 CRD 与 Operator 管理分布式 AI 任务，实现了与 Kubernetes 生态无缝集成的“AI 原生调度与控制”。
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 - 控制循环要具备幂等性，避免重复创建资源。
 - 使用 Finalizer 实现自定义清理逻辑。
@@ -178,11 +178,11 @@ flowchart TD
 - 明确错误重试策略，使用 `ctrl.Result{RequeueAfter: duration}` 控制重试间隔。
 - 监控 Reconcile 性能指标，可通过 `controller-runtime/metrics` 导出。
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 控制器是 Kubernetes 自动化的心脏，而 Operator 模式则让这颗心跳拥有“领域智慧”。通过将业务知识封装为控制逻辑，Kubernetes 能够像管理 Pod 一样管理任意系统。在云原生与 AI 原生时代，Operator 已成为连接“基础设施”与“智能应用”的关键中间层。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 1. [Kubernetes Controller Concepts - kubernetes.io](https://kubernetes.io/docs/concepts/architecture/controller/)
 2. [Kubebuilder Book - book.kubebuilder.io](https://book.kubebuilder.io/)

@@ -2,8 +2,8 @@
 title: "PyTorch Profiler 训练与推理分析"
 sidebar_label: "05. PyTorch Profiler 训练与推理分析"
 sidebar_position: 5
-tags: [PyTorch, Profiler, CUDA, Operator, Memory, TensorBoard]
 description: "使用 torch.profiler 分析训练与推理中的 CPU Operator、CUDA Kernel、输入 Shape、调用栈和 Tensor Memory，并控制采集窗口与开销。"
+tags: [PyTorch, Profiler, CUDA, Operator, Memory, TensorBoard]
 ---
 
 # PyTorch Profiler 训练与推理分析
@@ -32,8 +32,6 @@ Python Function
 - Nsight Systems 的系统级多进程/通信时间线。
 - Nsight Compute 的 Kernel 硬件计数器。
 - perf/eBPF 的 Linux 内核分析。
-
----
 
 ## 1. CUDA 是异步的
 
@@ -65,20 +63,16 @@ elapsed = time.perf_counter() - start
 
 端到端基准可在边界同步，但不要在每个 Operator 后同步，因为会破坏真实 Pipeline。
 
----
-
 ## 2. 最小示例
 
 ```python
 import torch
 from torch.profiler import ProfilerActivity, profile
 
-
 def workload():
     x = torch.randn(4096, 4096, device="cuda")
     w = torch.randn(4096, 4096, device="cuda")
     return x @ w
-
 
 for _ in range(5):
     workload()
@@ -110,8 +104,6 @@ Warmup 用于排除：
 - JIT/torch.compile 编译。
 - Autotune。
 
----
-
 ## 3. `activities`
 
 常见：
@@ -127,8 +119,6 @@ activities=[
 
 只分析 CPU 时不要无意义启用 Device Trace；只分析 CUDA 又通常仍应保留 CPU，用于
 Operator 关联。
-
----
 
 ## 4. 使用 Schedule 控制窗口
 
@@ -190,8 +180,6 @@ with profile(
 
 如果忘记 `prof.step()`，Schedule 不会按训练迭代推进。
 
----
-
 ## 5. TensorBoard Trace
 
 ```python
@@ -218,8 +206,6 @@ tensorboard --logdir ./profiler-traces
 
 报告目录可能很大，应使用短窗口并设置保留策略。
 
----
-
 ## 6. `key_averages`
 
 ```python
@@ -243,7 +229,7 @@ CPU/CUDA time avg
 
 具体名称随 PyTorch 版本和设备 Activity 演进。
 
-### Self 与 Total
+### 6.1 Self 与 Total {/* #self-与-total */}
 
 ```text
 Self：当前 Operator 自身，不含子 Operator
@@ -252,7 +238,7 @@ Total：包含子 Operator
 
 与 perf report 的 Self/Children 思路相似。
 
-### 按 Shape 分组
+### 6.2 按 Shape 分组 {/* #按-shape-分组 */}
 
 启用：
 
@@ -269,8 +255,6 @@ prof.key_averages(
 ```
 
 同一个 `aten::mm` 在不同 Shape 下性能完全不同，不能只看聚合平均。
-
----
 
 ## 7. `record_function`
 
@@ -304,8 +288,6 @@ with record_function("DECODE_STEP"):
 
 名称使用低基数，不放用户输入。
 
----
-
 ## 8. Shape 与 Stack
 
 ```python
@@ -328,8 +310,6 @@ with profile(
 
 只在需要定位 Source/Shape 时开启。
 
----
-
 ## 9. FLOPs
 
 ```python
@@ -346,8 +326,6 @@ Profiler 可为部分 Operator（如矩阵乘/卷积）估算 FLOPs。
 - 不能仅用 FLOPs 判断内存受限操作。
 
 Roofline 的硬件流量和峰值分析仍使用 Nsight Compute。
-
----
 
 ## 10. Memory Profiling
 
@@ -382,7 +360,7 @@ vLLM KV Cache Pool
 
 PyTorch Profiler 的 Tensor Memory 不能代表 `nvidia-smi` 的全部显存。
 
-### Memory Timeline
+### 10.1 Memory Timeline {/* #memory-timeline */}
 
 PyTorch 版本支持时可导出：
 
@@ -391,8 +369,6 @@ prof.export_memory_timeline("memory.html")
 ```
 
 所需选项和格式以当前 API 文档为准。
-
----
 
 ## 11. 导出 Chrome Trace
 
@@ -403,8 +379,6 @@ prof.export_chrome_trace("trace.json")
 可在支持 Chrome Trace Format 的查看器中打开。
 
 使用 Schedule 多周期时，通常通过 `on_trace_ready` 为每个周期生成独立文件，避免覆盖。
-
----
 
 ## 12. 训练分析
 
@@ -421,7 +395,7 @@ ZERO_GRAD
 CHECKPOINT
 ```
 
-### DataLoader 瓶颈
+### 12.1 DataLoader 瓶颈 {/* #dataloader-瓶颈 */}
 
 症状：
 
@@ -438,7 +412,7 @@ CHECKPOINT
 - 小文件/共享存储。
 - CPU Affinity/NUMA。
 
-### H2D
+### 12.2 H2D {/* #h2d */}
 
 检查：
 
@@ -447,7 +421,7 @@ CHECKPOINT
 - Copy Stream。
 - Compute/Copy 是否重叠。
 
-### Backward
+### 12.3 Backward {/* #backward */}
 
 关注：
 
@@ -456,8 +430,6 @@ CHECKPOINT
 - NCCL AllReduce。
 - Compute/Communication Overlap。
 - Rank Straggler。
-
----
 
 ## 13. 推理分析
 
@@ -471,7 +443,7 @@ SAMPLE
 OUTPUT_PROCESS
 ```
 
-### Prefill
+### 13.1 Prefill {/* #prefill */}
 
 按 Input Shape 分组：
 
@@ -479,7 +451,7 @@ OUTPUT_PROCESS
 - Batch。
 - Attention Backend。
 
-### Decode
+### 13.2 Decode {/* #decode */}
 
 按：
 
@@ -490,7 +462,7 @@ OUTPUT_PROCESS
 
 对比。
 
-### vLLM
+### 13.3 vLLM {/* #vllm */}
 
 vLLM 使用多进程、定制 CUDA/Triton Kernel 和独立 Engine Loop。
 
@@ -502,8 +474,6 @@ PyTorch Profiler 可以分析部分 Worker/ModelRunner 路径，但完整请求�
 - 每个 Worker Rank。
 
 只在 API Server 进程开启 Profiler，可能采不到 GPU Worker。
-
----
 
 ## 14. 多进程与分布式
 
@@ -532,8 +502,6 @@ clock/time base
 
 大规模任务不要所有 Rank 同时开启重型 Stack/Shape/Memory，先采代表 Rank 和异常 Rank。
 
----
-
 ## 15. `torch.compile`
 
 编译模式会产生：
@@ -561,8 +529,6 @@ Steady-state Phase
 - Compile 成本。
 - 动态 Shape Recompile。
 
----
-
 ## 16. 常见同步陷阱
 
 这些操作可能触发 CPU 等待 GPU：
@@ -576,8 +542,6 @@ Steady-state Phase
 Profiler 时间线上可以看到 CPU Operator 与 CUDA 同步 API 的对应关系。
 
 并不是所有 `.item()` 都应删除；需要重新设计异步依赖和正确性。
-
----
 
 ## 17. Profiler 开销
 
@@ -607,8 +571,6 @@ overhead =
 
 Profiler 结果用于定位，最终性能数字来自无 Profiler 的独立基准。
 
----
-
 ## 18. 分析流程
 
 1. 无 Profiler 建立稳态基线。
@@ -622,39 +584,35 @@ Profiler 结果用于定位，最终性能数字来自无 Profiler 的独立基�
 9. 单变量优化。
 10. 无 Profiler A/B 复测。
 
----
-
 ## 19. 常见错误
 
-### 没有 Warmup
+### 19.1 没有 Warmup {/* #没有-warmup */}
 
 把 CUDA 初始化、编译和 Autotune 当稳态。
 
-### 忘记 `prof.step()`
+### 19.2 忘记 `prof.step()` {/* #忘记-profstep */}
 
 Schedule 不推进。
 
-### 全程开启 Stack/Shape/Memory
+### 19.3 全程开启 Stack/Shape/Memory {/* #全程开启-stackshapememory */}
 
 开销和报告过大。
 
-### CPU 时间当 GPU 时间
+### 19.4 CPU 时间当 GPU 时间 {/* #cpu-时间当-gpu-时间 */}
 
 忽略异步 Launch。
 
-### 为计时每步 synchronize
+### 19.5 为计时每步 synchronize {/* #为计时每步-synchronize */}
 
 破坏重叠和真实执行。
 
-### 只看 Operator 平均
+### 19.6 只看 Operator 平均 {/* #只看-operator-平均 */}
 
 不同 Shape 和阶段被聚合。
 
-### Profiler 下收益当生产收益
+### 19.7 Profiler 下收益当生产收益 {/* #profiler-下收益当生产收益 */}
 
 采集本身改变执行。
-
----
 
 ## 20. 实验
 

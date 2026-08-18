@@ -1,16 +1,16 @@
 ---
-title: PyTorch DDP 在 Kubernetes 中的部署
+title: "PyTorch DDP 在 Kubernetes 中的部署"
 sidebar_label: "02. PyTorch DDP 在 Kubernetes 中的部署"
+sidebar_position: 2
+description: "本文把官方教程 使用 DDP 进行多 GPU 训练 里的改法，落到 单机多卡 Pod 与 多机多卡 + Volcano Gang。前置：分布式训练基础、Gang、Queue。"
+tags: ["Kubernetes", "PyTorch", "DDP", "Volcano", "torchrun", "GPU", "学习路线"]
 date: 2026-07-22 17:35:00
 categories: 云原生
-tags: ["Kubernetes", "PyTorch", "DDP", "Volcano", "torchrun", "GPU", "学习路线"]
 ---
 
 # PyTorch DDP 在 Kubernetes 中的部署
 
 本文把官方教程 [使用 DDP 进行多 GPU 训练](https://docs.pytorch.ac.cn/tutorials/beginner/ddp_series_multigpu.html) 里的改法，落到 **单机多卡 Pod** 与 **多机多卡 + Volcano Gang**。前置：[分布式训练基础](./01-Kubernetes%20分布式训练基础.md)、[Gang](../../../gpu/cluster/scheduling/06-Gang%20Scheduling%20在分布式训练中的作用.md)、[Queue](../../../gpu/cluster/scheduling/05-Volcano%20Queue%20与%20GPU%20配额管理.md)。
-
----
 
 ## 1. 官方单机多卡：脚本要改什么
 
@@ -46,7 +46,7 @@ train_data = torch.utils.data.DataLoader(
 )
 ```
 
-每个进程拿到 `batch_size=32`；4 卡有效 batch ≈ `32 * 4 = 128`。  
+每个进程拿到 `batch_size=32`；4 卡有效 batch ≈ `32 * 4 = 128`。
 **每个 epoch 开头**调用 `sampler.set_epoch(epoch)`，否则多 epoch 洗牌顺序不变。
 
 含 BatchNorm 时：
@@ -80,13 +80,11 @@ if __name__ == "__main__":
 
 完整示例代码见官方仓库链接（教程页「在 GitHub 上查看」）。
 
----
-
 ## 2. 上 Kubernetes：优先用 torchrun
 
 `mp.spawn` 适合「一个容器里起多进程」。集群上更常见：
 
-- **单机多卡**：1 个 Pod 申请 N 卡，入口 `torchrun --nproc_per_node=N ...`  
+- **单机多卡**：1 个 Pod 申请 N 卡，入口 `torchrun --nproc_per_node=N ...`
 - **多机多卡**：N 个 Pod，每 Pod 1（或更多）卡，`torchrun --nnodes=... --node_rank=... --rdzv_endpoint=...`
 
 `torchrun` 会注入 `RANK`、`LOCAL_RANK`、`WORLD_SIZE`、`MASTER_ADDR` 等，脚本里可改为：
@@ -98,8 +96,6 @@ def ddp_setup():
 ```
 
 （由环境变量提供 rank / world_size 时，`init_process_group` 可省略显式参数，视 PyTorch 版本与启动方式而定；不确定时显式传入更清晰。）
-
----
 
 ## 3. 模式 A：单机多卡 Deployment / Job
 
@@ -156,11 +152,9 @@ spec:
 
 要点：
 
-- `nvidia.com/gpu` 与 `--nproc_per_node` 一致  
-- `/dev/shm` 过小会导致 NCCL/多进程异常  
-- 节点要有 ≥4 张空闲卡；可用 nodeSelector / 污点保证落到训练池  
-
----
+- `nvidia.com/gpu` 与 `--nproc_per_node` 一致
+- `/dev/shm` 过小会导致 NCCL/多进程异常
+- 节点要有 ≥4 张空闲卡；可用 nodeSelector / 污点保证落到训练池
 
 ## 4. 模式 B：多机多卡 + Volcano Gang
 
@@ -172,9 +166,9 @@ spec:
 
 实践中常用做法：
 
-1. VolcanoJob 两个 task：或同一 task `replicas: 2`  
-2. 每个 Pod 内 `torchrun --nnodes=2 --nproc_per_node=2 --node_rank=$NODE_RANK --master_addr=$MASTER_ADDR --master_port=29500 train.py`  
-3. `MASTER_ADDR` 由 init 容器或入口脚本解析「第 0 号 Pod」的 IP  
+1. VolcanoJob 两个 task：或同一 task `replicas: 2`
+2. 每个 Pod 内 `torchrun --nnodes=2 --nproc_per_node=2 --node_rank=$NODE_RANK --master_addr=$MASTER_ADDR --master_port=29500 train.py`
+3. `MASTER_ADDR` 由 init 容器或入口脚本解析「第 0 号 Pod」的 IP
 
 伪入口（概念）：
 
@@ -258,8 +252,8 @@ spec:
 
 生产上更省事的选择：
 
-- **Kubeflow Training Operator**（PyTorchJob）自动注入 `MASTER_ADDR` / `WORLD_SIZE` / `RANK`  
-- **torchx**、**Kueue** 等与队列联动  
+- **Kubeflow Training Operator**（PyTorchJob）自动注入 `MASTER_ADDR` / `WORLD_SIZE` / `RANK`
+- **torchx**、**Kueue** 等与队列联动
 
 本系列强调机制：无论用哪个 Operator，**Gang + 共享 Checkpoint + 一致的 world_size** 都不可或缺。
 
@@ -272,8 +266,6 @@ spec:
 | 弹性 rdzv | `torchrun --rdzv_backend=c10d --rdzv_endpoint=<host>:29500` |
 
 防火墙 / NetworkPolicy 需放行 master_port 与 NCCL 使用的端口范围。
-
----
 
 ## 5. 日志与失败处理
 
@@ -304,19 +296,15 @@ TORCH_DISTRIBUTED_DEBUG=DETAIL
 
 详见 [第 33 篇](./05-NCCL%20通信原理与常见问题.md)。
 
----
-
 ## 6. 镜像与代码清单（检查表）
 
-- [ ] CUDA / PyTorch 与节点驱动匹配（第 04 篇）  
-- [ ] 入口用 `torchrun`，不要在多机场景误用 `localhost` 当 MASTER  
-- [ ] `DistributedSampler` + 每 epoch `set_epoch`  
-- [ ] 存盘用 `model.module`，仅 rank0 写文件到 **共享 PVC**  
-- [ ] `nvidia.com/gpu` × replicas = world_size（按你的 nproc 设计验算）  
-- [ ] `minAvailable` = Worker Pod 数  
-- [ ] shm、数据盘、Checkpoint 盘就绪  
-
----
+- [ ] CUDA / PyTorch 与节点驱动匹配（第 04 篇）
+- [ ] 入口用 `torchrun`，不要在多机场景误用 `localhost` 当 MASTER
+- [ ] `DistributedSampler` + 每 epoch `set_epoch`
+- [ ] 存盘用 `model.module`，仅 rank0 写文件到 **共享 PVC**
+- [ ] `nvidia.com/gpu` × replicas = world_size（按你的 nproc 设计验算）
+- [ ] `minAvailable` = Worker Pod 数
+- [ ] shm、数据盘、Checkpoint 盘就绪
 
 ## 7. 小结
 
@@ -328,13 +316,11 @@ TORCH_DISTRIBUTED_DEBUG=DETAIL
 
 下一篇可选读 [ZeRO](./03-DeepSpeed%20ZeRO%20与%20GPU%20显存优化.md)；容错主线见 [Checkpoint](./04-训练任务%20Checkpoint%20与断点恢复.md)。
 
----
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [使用 DDP 进行多 GPU 训练](https://docs.pytorch.ac.cn/tutorials/beginner/ddp_series_multigpu.html)  
-- [Getting Started with Distributed Data Parallel](https://pytorch.org/tutorials/intermediate/ddp_tutorial.html)  
-- [Fault-tolerant Distributed Training with torchrun](https://pytorch.org/tutorials/beginner/ddp_series_fault_tolerance.html)  
-- [Volcano Gang](https://volcano.sh/zh-Hans/docs/Scheduler/Plugins/gang)  
+- [使用 DDP 进行多 GPU 训练](https://docs.pytorch.ac.cn/tutorials/beginner/ddp_series_multigpu.html)
+- [Getting Started with Distributed Data Parallel](https://pytorch.org/tutorials/intermediate/ddp_tutorial.html)
+- [Fault-tolerant Distributed Training with torchrun](https://pytorch.org/tutorials/beginner/ddp_series_fault_tolerance.html)
+- [Volcano Gang](https://volcano.sh/zh-Hans/docs/Scheduler/Plugins/gang)
 
 本文以 PyTorch 官方 DDP 教程为脚本改法权威来源，并补充 Kubernetes / Volcano 落地要点。

@@ -1,10 +1,11 @@
 ---
 title: "生产级 Kubernetes GPU 集群：需求、分层架构与容量设计"
 sidebar_label: "01. 生产级 Kubernetes GPU 集群：需求、分层架构与容量设计"
+sidebar_position: 1
+description: "从训练与推理需求出发，设计控制面、GPU 节点池、调度、网络、存储、模型服务、可观测性、安全和故障域。"
+tags: ["Kubernetes", "GPU", "AI Infra", "架构", "高可用", "容量规划"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "AI Infra", "架构", "高可用", "容量规划"]
-description: "从训练与推理需求出发，设计控制面、GPU 节点池、调度、网络、存储、模型服务、可观测性、安全和故障域。"
 ---
 
 # 生产级 Kubernetes GPU 集群：需求、分层架构与容量设计
@@ -510,28 +511,28 @@ PDB 不能防止节点宕机，只约束部分主动驱逐。高可用来自真�
 
 ## 20. 架构验收
 
-### 基础平台
+### 20.1 基础平台 {/* #基础平台 */}
 
 - [ ] 控制面/etcd 备份和恢复通过；
 - [ ] 系统服务与 GPU 负载隔离；
 - [ ] 节点资产、版本和拓扑可查询；
 - [ ] 驱动/runtime/device plugin 有升级回滚。
 
-### 计算、网络和存储
+### 20.2 计算、网络和存储 {/* #计算网络和存储 */}
 
 - [ ] CUDA、NVLink、PCIe、RDMA 和 NCCL 有基线；
 - [ ] GPU-NIC/NUMA/Rail 放置符合设计；
 - [ ] 模型分发、cache、Checkpointer 有容量和故障策略；
 - [ ] 冷启动与存储风暴经过测试。
 
-### 调度与多租户
+### 20.3 调度与多租户 {/* #调度与多租户 */}
 
 - [ ] 节点池、label/taint、Queue/Quota 明确；
 - [ ] Gang、priority、preemption 有演练；
 - [ ] GPU 共享只在指定池；
 - [ ] 拓扑调度失败有可解释 Event。
 
-### 可靠性
+### 20.4 可靠性 {/* #可靠性 */}
 
 - [ ] 推理 SLO、训练 RPO/RTO 有数据；
 - [ ] rollout/failure/maintenance reserve 已计算；
@@ -540,25 +541,25 @@ PDB 不能防止节点宕机，只约束部分主动驱逐。高可用来自真�
 
 ## 21. 掌握标准
 
-### 入门
+### 21.1 入门 {/* #入门 */}
 
 - 能画出控制面、GPU runtime、调度、网络和存储；
 - 能部署单节点 GPU Pod 和监控；
 - 能解释训练与推理需求差异。
 
-### 进阶
+### 21.2 进阶 {/* #进阶 */}
 
 - 能设计节点池、Gang、RDMA、模型存储和多租户；
 - 能计算副本、TP、升级和故障余量；
 - 能建立端到端指标与故障树。
 
-### 生产级
+### 21.3 生产级 {/* #生产级 */}
 
 - 能从 SLO 和约束做架构取舍；
 - 能交付兼容矩阵、ADR、容量模型、Runbook 与验收报告；
 - 能通过升级、故障和灾备演练证明架构而不是只画图。
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Production Environment](https://kubernetes.io/docs/setup/production-environment/)
 - [Creating Highly Available Clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)

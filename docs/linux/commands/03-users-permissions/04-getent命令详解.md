@@ -1,11 +1,12 @@
 ---
-title: getent 命令详解：通过 NSS 查询用户、组、主机与服务
+title: "getent 命令详解：通过 NSS 查询用户、组、主机与服务"
+sidebar_label: "04. getent 命令详解：通过 NSS 查询用户、组、主机与服务"
 sidebar_position: 4
-description: 完整讲解 glibc getent 的参数、数据库、枚举与按键查询、NSS 服务覆盖、退出码、SSSD LDAP DNS 排障和自动化边界。
+description: "完整讲解 glibc getent 的参数、数据库、枚举与按键查询、NSS 服务覆盖、退出码、SSSD LDAP DNS 排障和自动化边界。"
 tags: [Linux, getent, NSS, SSSD, LDAP, DNS]
 ---
 
-# `getent` 命令详解：通过 NSS 查询用户、组、主机与服务
+# getent 命令详解：通过 NSS 查询用户、组、主机与服务
 
 `getent` 通过系统 C 库的 NSS 接口查询数据库。它能看到应用通常看到的账户、组、主机和服务解析结果，因此比直接读取 `/etc/passwd`、`/etc/group` 或 `/etc/hosts` 更适合生产排障。
 
@@ -125,7 +126,7 @@ fi
 
 掌握标准：能解释 NSS 查询链和退出码；能区分数据库记录、完整组集合与当前进程凭据；能在目录服务故障时保留本地/远端分层证据。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [Linux getent(1)](https://man7.org/linux/man-pages/man1/getent.1.html)
 - [Linux nsswitch.conf(5)](https://man7.org/linux/man-pages/man5/nsswitch.conf.5.html)

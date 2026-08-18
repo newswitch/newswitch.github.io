@@ -1,11 +1,12 @@
 ---
-title: rsync 命令详解：增量同步、元数据、过滤、删除与可恢复传输
+title: "rsync 命令详解：增量同步、元数据、过滤、删除与可恢复传输"
+sidebar_label: "24. rsync 命令详解：增量同步、元数据、过滤、删除与可恢复传输"
 sidebar_position: 24
-description: 系统讲解 rsync archive、ACL/xattr/hardlink、dry-run/itemize、delete、filter、SSH、checksum、partial、bwlimit 与路径斜杠语义。
+description: "系统讲解 rsync archive、ACL/xattr/hardlink、dry-run/itemize、delete、filter、SSH、checksum、partial、bwlimit 与路径斜杠语义。"
 tags: [Linux, rsync, 同步, 备份, SSH]
 ---
 
-# `rsync` 命令详解：源路径末尾斜杠决定结果
+# rsync 命令详解：增量同步、元数据、过滤、删除与可恢复传输
 
 `rsync` 在本地或远端比较文件列表并传输差异，传输后还会校验重建文件。它可以镜像、同步和作为备份组件，但双端即时同步不等于历史备份；`--delete` 会让误删同步到目标。
 

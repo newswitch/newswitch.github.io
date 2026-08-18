@@ -1,11 +1,12 @@
 ---
-title: pwd 命令详解：逻辑路径、物理路径与 Shell Builtin
+title: "pwd 命令详解：逻辑路径、物理路径与 Shell Builtin"
+sidebar_label: "01. pwd 命令详解：逻辑路径、物理路径与 Shell Builtin"
 sidebar_position: 1
-description: 完整讲解 GNU coreutils pwd 的全部长短参数、Shell 内建命令差异、PWD 环境变量、符号链接路径和退出状态。
+description: "完整讲解 GNU coreutils pwd 的全部长短参数、Shell 内建命令差异、PWD 环境变量、符号链接路径和退出状态。"
 tags: [Linux, pwd, GNU coreutils, Shell Builtin, 路径]
 ---
 
-# `pwd` 命令详解：逻辑路径、物理路径与 Shell Builtin
+# pwd 命令详解：逻辑路径、物理路径与 Shell Builtin
 
 `pwd` 是 print working directory 的缩写，用于输出当前进程的工作目录。它看似简单，却包含逻辑路径、物理路径、`PWD` 环境变量和 Shell Builtin 优先级等重要概念。
 
@@ -209,7 +210,7 @@ command -V pwd
 - 能解释 `-L`、`-P` 同时出现时谁生效。
 - 能通过 `/proc/<pid>/cwd` 排查其他进程的工作目录。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：pwd invocation](https://www.gnu.org/software/coreutils/manual/html_node/pwd-invocation.html)
 - [Bash Builtin Commands](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html)
@@ -217,4 +218,3 @@ command -V pwd
 上一篇：[文件与目录命令导读](./00-文件与目录命令导读.md)
 
 下一篇：[`ls` 命令详解](./02-ls命令详解.md)
-

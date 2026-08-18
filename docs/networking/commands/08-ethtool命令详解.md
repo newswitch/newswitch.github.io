@@ -1,11 +1,12 @@
 ---
-title: ethtool 命令详解：链路、驱动、队列、Ring、Offload 与网卡统计
+title: "ethtool 命令详解：链路、驱动、队列、Ring、Offload 与网卡统计"
+sidebar_label: "08. ethtool 命令详解：链路、驱动、队列、Ring、Offload 与网卡统计"
 sidebar_position: 8
-description: 以 ethtool 7.1 为基线，讲解网卡链路、驱动、寄存器、统计、Ring、Channels、Coalesce、RSS、Offload、Pause、FEC、模块 EEPROM、自检与生产排障。
+description: "以 ethtool 7.1 为基线，讲解网卡链路、驱动、寄存器、统计、Ring、Channels、Coalesce、RSS、Offload、Pause、FEC、模块 EEPROM、自检与生产排障。"
 tags: [Linux, ethtool, 网卡, NIC, RSS, Offload, 网络排障]
 ---
 
-# `ethtool` 命令详解：链路、驱动、队列、Ring、Offload 与网卡统计
+# ethtool 命令详解：链路、驱动、队列、Ring、Offload 与网卡统计
 
 `ethtool` 是 Linux 查询和配置 Ethernet 设备、驱动与硬件能力的标准工具。`ip -s link` 更接近通用网络设备统计，`ethtool -S` 则提供驱动/硬件私有计数；两者口径不同，必须联合解释。
 

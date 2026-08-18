@@ -1,11 +1,12 @@
 ---
-title: readlink 命令详解：读取符号链接与规范化路径
+title: "readlink 命令详解：读取符号链接与规范化路径"
+sidebar_label: "13. readlink 命令详解：读取符号链接与规范化路径"
 sidebar_position: 13
-description: 完整讲解 GNU coreutils readlink 的全部长短参数、三种规范化模式、NUL 分隔输出、符号链接边界、退出状态与脚本安全用法。
+description: "完整讲解 GNU coreutils readlink 的全部长短参数、三种规范化模式、NUL 分隔输出、符号链接边界、退出状态与脚本安全用法。"
 tags: [Linux, readlink, GNU coreutils, 符号链接, 路径]
 ---
 
-# `readlink` 命令详解：读取符号链接与规范化路径
+# readlink 命令详解：读取符号链接与规范化路径
 
 `readlink` 有两个容易混淆的用途：默认读取符号链接 inode 中保存的目标字符串；指定 `-f`、`-e` 或 `-m` 后，则逐级解析路径并输出规范化结果。它不等同于“查询文件最终存放位置”，因为挂载、bind mount、overlay 和进程 Mount Namespace 仍会改变路径所见对象。
 
@@ -202,7 +203,7 @@ GNU 手册建议一般路径规范化优先使用功能更完整的 `realpath`�
 - 能使用 NUL 分隔批量结果。
 - 能解释规范化为什么不能消除 TOCTOU 和 Namespace 差异。
 
-## 官方参考
+## 12. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：readlink invocation](https://www.gnu.org/software/coreutils/manual/html_node/readlink-invocation.html)
 - [Linux symlink(7)](https://man7.org/linux/man-pages/man7/symlink.7.html)
@@ -211,4 +212,3 @@ GNU 手册建议一般路径规范化优先使用功能更完整的 `realpath`�
 上一篇：[`stat` 命令详解](./12-stat命令详解.md)
 
 下一篇：[`realpath` 命令详解](./14-realpath命令详解.md)
-

@@ -1,8 +1,9 @@
 ---
-title: VXLAN EVPN 分层故障排查
+title: "VXLAN EVPN 分层故障排查"
+sidebar_label: "09. VXLAN EVPN 分层故障排查"
 sidebar_position: 9
+description: "用接入、Underlay、EVPN 控制面、Overlay 状态和 VXLAN 数据面五层证据定位 Fabric 故障。"
 tags: [VXLAN, EVPN, Troubleshooting, Underlay, Overlay]
-description: 用接入、Underlay、EVPN 控制面、Overlay 状态和 VXLAN 数据面五层证据定位 Fabric 故障。
 ---
 
 # VXLAN EVPN 分层故障排查
@@ -33,7 +34,7 @@ flowchart TD
     D --> E["L5 数据面：封装、UDP 4789、回程、策略"]
 ```
 
-### 第一层：主机与接入
+### 2.1 第一层：主机与接入 {/* #第一层主机与接入 */}
 
 检查：
 
@@ -56,7 +57,7 @@ bridge vlan show
 
 如果同一 Leaf、同一 VLAN 的两台主机都不能通信，暂时不要追查 EVPN。
 
-### 第二层：Underlay
+### 2.2 第二层：Underlay {/* #第二层underlay */}
 
 ```bash
 ip route get <remote-vtep>
@@ -74,7 +75,7 @@ vtysh -c 'show ip route <remote-vtep>'
 - 路径 MTU 容纳内层报文加 VXLAN/UDP/IP 头；
 - BFD 或路由协议没有抖动。
 
-### 第三层：EVPN 控制面
+### 2.3 第三层：EVPN 控制面 {/* #第三层evpn-控制面 */}
 
 ```bash
 vtysh -c 'show bgp l2vpn evpn summary'
@@ -95,7 +96,7 @@ vtysh -c 'show bgp l2vpn evpn route type prefix'
 
 “邻居 Established”只证明 BGP 会话正常，不能证明地址族激活、路由生成和 RT 导入正确。
 
-### 第四层：Overlay 编程状态
+### 2.4 第四层：Overlay 编程状态 {/* #第四层overlay-编程状态 */}
 
 ```bash
 ip -d link show type vxlan
@@ -116,7 +117,7 @@ VRF  ↔ L3VNI
 
 控制面 RIB 有路由但 FDB/内核路由没有，说明问题处在协议进程到硬件/内核的下发链路。
 
-### 第五层：数据面
+### 2.5 第五层：数据面 {/* #第五层数据面 */}
 
 在入口和出口 VTEP 同时抓包：
 
@@ -150,7 +151,7 @@ tcpdump -ni <access-interface> host <host-ip>
 
 ## 4. 三个故障演练
 
-### 演练 A：错误 RT
+### 4.1 演练 A：错误 RT {/* #演练-a错误-rt */}
 
 现象：Leaf2 能收到 EVPN Update，但租户 VNI 没有远端 MAC。
 
@@ -161,7 +162,7 @@ tcpdump -ni <access-interface> host <host-ip>
 - Leaf2 VRF只导入 `target:65000:10200`；
 - 修复 RT 后 FDB 下发并恢复。
 
-### 演练 B：Underlay MTU 不足
+### 4.2 演练 B：Underlay MTU 不足 {/* #演练-bunderlay-mtu-不足 */}
 
 现象：ARP、ping 小包正常，应用传输大响应超时。
 
@@ -171,7 +172,7 @@ tcpdump -ni <access-interface> host <host-ip>
 - 入口 VTEP有 VXLAN 包，路径中间出现丢弃；
 - 调整 Fabric MTU 或端点 MSS 后恢复。
 
-### 演练 C：Anycast Gateway MAC 不一致
+### 4.3 演练 C：Anycast Gateway MAC 不一致 {/* #演练-canycast-gateway-mac-不一致 */}
 
 现象：某个 Leaf下跨子网通信异常，主机迁移后故障位置改变。
 
@@ -201,7 +202,7 @@ tcpdump -ni <access-interface> host <host-ip>
 4. 修复后证明去程、回程、故障前后状态和监控全部恢复；
 5. 给出防复发的检测或变更护栏。
 
-## 参考资料
+## 7. 参考资料 {/* #参考资料 */}
 
 - [FRRouting EVPN 文档](https://docs.frrouting.org/en/latest/evpn.html)
 - [Linux 内核 VXLAN 文档](https://docs.kernel.org/networking/vxlan.html)

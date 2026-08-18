@@ -1,11 +1,12 @@
 ---
-title: vgs 命令详解：Volume Group 容量、属性与元数据诊断
+title: "vgs 命令详解：Volume Group 容量、属性与元数据诊断"
+sidebar_label: "14. vgs 命令详解：Volume Group 容量、属性与元数据诊断"
 sidebar_position: 14
-description: 讲解 LVM2 vgs 的 VG/extent 模型、报告参数、属性位、容量、metadata、cluster/shared/foreign 状态和生产排障。
+description: "讲解 LVM2 vgs 的 VG/extent 模型、报告参数、属性位、容量、metadata、cluster/shared/foreign 状态和生产排障。"
 tags: [Linux, LVM2, vgs, Volume Group, device-mapper]
 ---
 
-# `vgs` 命令详解：Volume Group 容量、属性与元数据诊断
+# vgs 命令详解：Volume Group 容量、属性与元数据诊断
 
 `vgs` 报告 Volume Group。VG 把一个或多个 PV 的 Physical Extent 汇总，再分配给 LV。它回答“卷组还有多少未分配 extent、由几块 PV 组成、元数据和访问属性是否正常”。
 

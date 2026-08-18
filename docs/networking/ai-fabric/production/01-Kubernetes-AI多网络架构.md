@@ -1,9 +1,9 @@
 ---
-title: Kubernetes AI 多网络架构
+title: "Kubernetes AI 多网络架构"
 sidebar_label: "01. Kubernetes AI 多网络架构"
 sidebar_position: 1
+description: "理解默认 Pod 网络、Multus 辅助网络、NetworkAttachmentDefinition、IPAM 和 RDMA 资源的职责边界。"
 tags: [Kubernetes, Multus, CNI, NetworkAttachmentDefinition, RDMA]
-description: 理解默认 Pod 网络、Multus 辅助网络、NetworkAttachmentDefinition、IPAM 和 RDMA 资源的职责边界。
 ---
 
 # Kubernetes AI 多网络架构
@@ -226,7 +226,7 @@ kubectl exec <pod> -- ibv_devices
 能够把 Pod 的每张接口映射到 NAD、CNI、IPAM、Device Plugin、Host NIC 和 Fabric；
 能解释为什么“Pod 有第二张网卡”不等于“Pod 已获得可用 RDMA”。
 
-## 参考资料
+## 14. 参考资料 {/* #参考资料 */}
 
 - [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni)
 - [NVIDIA Network Operator](https://docs.nvidia.com/networking/display/kubernetes2640/)

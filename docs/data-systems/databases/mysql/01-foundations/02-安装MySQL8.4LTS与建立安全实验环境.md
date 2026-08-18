@@ -2,8 +2,8 @@
 title: "安装 MySQL 8.4 LTS 与建立安全实验环境"
 sidebar_label: "02. 安装 MySQL 8.4 LTS 与建立安全实验环境"
 sidebar_position: 2
-tags: [MySQL, 安装, Docker, Linux, 安全]
 description: "以 MySQL 8.4 LTS 为基线，建立可复现、可观测、与生产隔离的 Linux 或容器实验环境。"
+tags: [MySQL, 安装, Docker, Linux, 安全]
 ---
 
 # 安装 MySQL 8.4 LTS 与建立安全实验环境
@@ -18,8 +18,6 @@ description: "以 MySQL 8.4 LTS 为基线，建立可复现、可观测、与生
 > 所有命令只用于独立实验实例。不要把示例密码、目录或配置直接用于生产。
 
 本篇只负责建立后续 SQL 与内核实验环境。需要系统学习 RPM、APT、离线二进制、Docker/Compose、源码、复制、InnoDB Cluster、Kubernetes Operator、Ansible 和生产验收，请进入 [MySQL 部署学习路线与方案选型](../deployment/00-MySQL部署学习路线与方案选型.md)。
-
----
 
 ## 1. 为什么采用 8.4 LTS
 
@@ -38,8 +36,6 @@ MySQL Shell（如果使用）
 
 不要只写“MySQL 8”。同一大版本不同补丁可能修复崩溃、复制、优化器和安全问题。
 
----
-
 ## 2. 环境规划
 
 建议目录和端口：
@@ -55,8 +51,6 @@ network: 仅实验主机或私有网段
 ```
 
 生产识别信息应放在连接提示、监控标签和变更单中。实验与生产尽量使用不同 DNS、端口、账户和凭据来源。
-
----
 
 ## 3. 宿主机前置检查
 
@@ -78,8 +72,6 @@ ss -lntp | grep 3307
 - 容器或软件包是否会使用网络文件系统。
 
 数据库对 fsync 延迟和掉电语义敏感。实验可以使用普通本地磁盘；性能与恢复结论必须记录实际存储，不能把容器 OverlayFS、机械盘和本地 NVMe 的结果直接比较。
-
----
 
 ## 4. 路径 A：使用官方容器镜像
 
@@ -134,8 +126,6 @@ docker inspect mysql84-lab
 
 不要看到容器 `running` 就认为数据库 Ready。初始化需要创建数据字典、系统表、Redo 等结构。应等待日志和真实 SQL 健康检查成功。
 
----
-
 ## 5. 路径 B：Linux 软件包安装
 
 不同发行版的软件源、包名和初始化流程不同。原则是：
@@ -162,8 +152,6 @@ readlink -f "$(command -v mysqld)"
 mysqld --version
 ```
 
----
-
 ## 6. 认识配置加载顺序
 
 MySQL 可以从多个 option file 读取配置。排查“配置为什么没生效”时，不能只看一个 `/etc/my.cnf`。
@@ -180,8 +168,6 @@ my_print_defaults mysqld
 - 修改前后保存实际变量；
 - 区分只读、动态、持久化和需重启变量；
 - 不把旧版本模板整体复制到 8.4。
-
----
 
 ## 7. 最小实验配置的边界
 
@@ -205,8 +191,6 @@ limits: max_connections、文件句柄、包大小
 - 已废弃或已删除的变量；
 - 把所有内存都划给 Buffer Pool 的设置。
 
----
-
 ## 8. 第一次安全连接
 
 容器内连接可用于最初验证：
@@ -228,8 +212,6 @@ SELECT @@transaction_isolation, @@autocommit;
 ```
 
 保存输出，作为后续实验的实例身份基线。
-
----
 
 ## 9. 创建学习账户
 
@@ -257,35 +239,33 @@ SHOW GRANTS FOR 'learner'@'localhost';
 - 用户和权限变化应审计并有回滚计划；
 - 不需要手工执行 `FLUSH PRIVILEGES` 来使正常账户管理语句生效。
 
----
-
 ## 10. 健康检查分层
 
-### 进程存活
+### 10.1 进程存活 {/* #进程存活 */}
 
 ```bash
 docker inspect --format '{{.State.Status}}' mysql84-lab
 ```
 
-### 端口监听
+### 10.2 端口监听 {/* #端口监听 */}
 
 ```bash
 ss -lntp | grep 3307
 ```
 
-### 协议与认证
+### 10.3 协议与认证 {/* #协议与认证 */}
 
 ```bash
 mysqladmin --host=127.0.0.1 --port=3307 --user=learner -p ping
 ```
 
-### SQL 可用
+### 10.4 SQL 可用 {/* #sql-可用 */}
 
 ```sql
 SELECT 1;
 ```
 
-### 业务 Ready
+### 10.5 业务 Ready {/* #业务-ready */}
 
 - 关键 Schema 迁移已经完成；
 - 实例角色符合预期；
@@ -294,8 +274,6 @@ SELECT 1;
 - 没有处于强制恢复或只读异常状态。
 
 “TCP 能连”不是生产 Ready。
-
----
 
 ## 11. 文件与日志导航
 
@@ -325,8 +303,6 @@ TLS 证书与密钥
 
 禁止在运行实例的数据目录中手工移动、删除或覆盖文件。备份和恢复必须使用一致性流程。
 
----
-
 ## 12. 时间、时区与字符集基线
 
 ```sql
@@ -342,8 +318,6 @@ SELECT @@character_set_server, @@collation_server;
 - 不把 MySQL 的 `utf8` 别名当作完整 Unicode 设计；
 - 排序规则变化会改变比较、唯一约束和索引行为，迁移前必须测试。
 
----
-
 ## 13. 重启与持久化验证
 
 在实验实例：
@@ -355,8 +329,6 @@ SELECT @@character_set_server, @@collation_server;
 5. 观察错误日志中的启动与恢复阶段。
 
 正常停止实验不能证明 Crash Recovery。后续会在受控环境专门模拟异常退出，并验证提交/未提交事务边界。
-
----
 
 ## 14. 基线清单
 
@@ -373,8 +345,6 @@ SELECT @@character_set_server, @@collation_server;
 [ ] 未把密码写入仓库、命令行或截图
 ```
 
----
-
 ## 15. 常见错误
 
 | 错误 | 后果 |
@@ -388,8 +358,6 @@ SELECT @@character_set_server, @@collation_server;
 | 只测 `SELECT 1` | 无法证明 Schema、角色、复制和存储健康 |
 | 手工修改数据目录文件 | 破坏一致性和恢复能力 |
 
----
-
 ## 16. 学完后的验收题
 
 1. 为什么实验主线选择 8.4 LTS 而不是永远使用 `latest`？
@@ -402,7 +370,7 @@ SELECT @@character_set_server, @@collation_server;
 
 下一篇学习 `mysql` 客户端、连接参数、会话状态和系统元数据导航。
 
-## 官方参考
+## 17. 官方参考 {/* #官方参考 */}
 
 - [Installing and Upgrading MySQL](https://dev.mysql.com/doc/refman/8.4/en/installing.html)
 - [Using Option Files](https://dev.mysql.com/doc/refman/8.4/en/option-files.html)

@@ -1,11 +1,12 @@
 ---
-title: ibv_devinfo、ibv_devices、ibstat 与 show_gids 命令详解
+title: "ibvdevinfo、ibvdevices、ibstat 与 showgids 命令详解"
+sidebar_label: "28. ibvdevinfo、ibvdevices、ibstat 与 showgids 命令详解"
 sidebar_position: 28
-description: 讲清 RDMA 设备清单、verbs 能力、port state/MTU/link layer、GID index/type/netdev 映射和 RoCE 选错 GID 排障。
+description: "讲清 RDMA 设备清单、verbs 能力、port state/MTU/link layer、GID index/type/netdev 映射和 RoCE 选错 GID 排障。"
 tags: [网络, RDMA, ibv_devinfo, GID, RoCE]
 ---
 
-# RDMA 发现工具：设备存在不等于 GID 选对
+# ibvdevinfo、ibvdevices、ibstat 与 showgids 命令详解
 
 `ibv_devices` 列 verbs device 和 node GUID；`ibv_devinfo` 查询 verbs 能力/port；`ibstat` 以 CA/port 视角显示状态；`show_gids` 把 GID index、地址、版本和 netdev 映射出来。四者组合用于应用前的只读基线。
 

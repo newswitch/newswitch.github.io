@@ -1,5 +1,6 @@
 ---
 title: "vLLM bench 命令详解"
+sidebar_label: "03. vLLM bench 命令详解"
 sidebar_position: 3
 description: "掌握 vLLM bench serve、latency、throughput与startup，构建并发、请求率、Token分布和Goodput容量曲线。"
 tags: [vLLM, Benchmark, TTFT, TPOT, Goodput, 容量规划]
@@ -105,11 +106,11 @@ vllm bench throughput --help
 | 无限请求率且无并发上限 | 形成客户端队列和服务事故 |
 | 压测同时模型下载/编译 | 把冷启动成本混入稳态容量 |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能设计可重复工作负载；能解释开放环和闭环；能用Goodput确定SLO容量；能把冷启动、稳态和故障降级分别测试；能发现客户端成为瓶颈。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [vLLM Benchmark CLI](https://docs.vllm.ai/en/stable/benchmarking/cli/)
 - [vLLM bench serve](https://docs.vllm.ai/en/stable/cli/bench/serve/)

@@ -1,12 +1,14 @@
 ---
-title: Kubernetes CSI 挂载链路与故障排查
+title: "Kubernetes CSI 挂载链路与故障排查"
 sidebar_label: "05. Kubernetes CSI 挂载链路与故障排查"
+sidebar_position: 5
+description: "业务 YAML 中只有一个 PVC："
+tags: [Kubernetes, GPU, CSI, PVC, 调度, 故障排查]
 date: 2026-08-06 17:40:00
 categories: 云原生
-tags: [Kubernetes, GPU, CSI, PVC, 调度, 故障排查]
 ---
 
-# Kubernetes CSI 挂载链路与故障排查：从 PVC 到容器目录
+# Kubernetes CSI 挂载链路与故障排查
 
 业务 YAML 中只有一个 PVC：
 
@@ -21,8 +23,6 @@ volumes:
 
 本篇把这条链路完整拆开。理解它之后，`PVC Pending`、`FailedAttachVolume`、`FailedMount` 和 `ContainerCreating` 就不再是一类模糊的“存储问题”。
 
----
-
 ## 1. 学习目标
 
 完成本文后，你应该能够：
@@ -33,8 +33,6 @@ volumes:
 - 理解 `Immediate` 与 `WaitForFirstConsumer` 的差异。
 - 判断故障发生在供给、调度、Attach、Mount 还是应用访问阶段。
 - 分析存储拓扑与 GPU 拓扑之间的约束冲突。
-
----
 
 ## 2. CSI 解决什么问题
 
@@ -50,8 +48,6 @@ Ceph RBD、CephFS、NFS、云盘、本地存储是后端或驱动实现
 ```
 
 CSI 也不会自动让后端拥有高可用、快照或扩容能力；驱动只能暴露后端实际支持的功能。
-
----
 
 ## 3. 先认识 Kubernetes 对象
 
@@ -102,8 +98,6 @@ PV 是集群级对象。
 
 不是所有驱动都需要 Attach。例如某些共享文件系统只需要在目标节点挂载。
 
----
-
 ## 4. CSI 驱动的两部分
 
 ### 4.1 Controller Plugin
@@ -144,8 +138,6 @@ sidecar 监听 Kubernetes API，再通过 Unix Socket 调用同 Pod 中的 CSI D
 
 如果某台 GPU 节点没有正常运行 Node Plugin，其他节点正常也不能帮助它完成挂载。
 
----
-
 ## 5. 动态供给完整链路
 
 以需要 Attach 的块存储为例：
@@ -178,8 +170,6 @@ sequenceDiagram
 ```
 
 具体驱动可以省略某些阶段，但排障时可用这张图确认当前卡在哪一段。
-
----
 
 ## 6. 五个关键 CSI 调用
 
@@ -220,8 +210,6 @@ Controller 在后端创建卷，并获得唯一 `volumeHandle`。
 
 Pod 删除后解除 Pod 路径和节点全局挂载。如果进程仍占用文件、节点异常或 kubelet 中断，可能残留挂载并影响后续使用。
 
----
-
 ## 7. Immediate 与 WaitForFirstConsumer
 
 ### 7.1 Immediate
@@ -256,8 +244,6 @@ PVC
 
 不要给使用 `WaitForFirstConsumer` 的 PVC 手工设置无消费者 Pod 的 `nodeName` 来绕过调度器，这会破坏正常的绑定决策。
 
----
-
 ## 8. GPU 与存储为什么会发生拓扑冲突
 
 一个 GPU Pod 的可行节点集合可能是：
@@ -280,8 +266,6 @@ PVC
 - GPU 节点缺少 Ceph 内核模块或 NFS 客户端工具。
 
 因此“有空闲 GPU”不等于任务可调度。
-
----
 
 ## 9. 一个完整的 PVC 示例
 
@@ -327,11 +311,9 @@ spec:
 
 `ReadOnlyMany` 是否被支持由驱动和后端决定。不要只修改 AccessMode 字段就假设存储获得了相应能力。
 
----
-
 ## 10. AccessMode 与 VolumeMode
 
-### AccessMode
+### 10.1 AccessMode {/* #accessmode */}
 
 | 模式 | 含义 |
 |------|------|
@@ -342,7 +324,7 @@ spec:
 
 AccessMode 主要用于供给、绑定和挂载能力匹配，不代替 Unix 权限与应用锁。
 
-### VolumeMode
+### 10.2 VolumeMode {/* #volumemode */}
 
 `Filesystem`：
 
@@ -357,8 +339,6 @@ AccessMode 主要用于供给、绑定和挂载能力匹配，不代替 Unix 权
 ```
 
 使用原始块设备时，应用必须理解块设备；它不会自动出现 `/models` 目录。
-
----
 
 ## 11. ReclaimPolicy 与数据安全
 
@@ -377,8 +357,6 @@ AccessMode 主要用于供给、绑定和挂载能力匹配，不代替 Unix 权
 模型缓存可以按自动重建能力选择；训练 Checkpoint 和关键数据通常需要更谨慎的 Retain、快照和备份策略。
 
 重要数据不能只依赖 `Retain`。它不是备份，也不能防止后端故障、管理员误操作或应用写坏数据。
-
----
 
 ## 12. 扩容和快照
 
@@ -399,8 +377,6 @@ VolumeSnapshot 使用额外 CRD、Snapshot Controller 和 CSI Snapshotter。驱�
 
 Checkpoint 快照还要考虑应用一致性：存储层时间点快照不自动保证正在写入的训练状态是可恢复的。
 
----
-
 ## 13. 从现象判断故障阶段
 
 | 现象 | 优先阶段 |
@@ -414,11 +390,9 @@ Checkpoint 快照还要考虑应用一致性：存储层时间点快照不自动
 | Pod Running，读取很慢 | 后端、网络、客户端、缓存、应用 IO |
 | 删除 Pod 后新 Pod 无法挂载 | Detach/Unpublish 残留或多 Attach |
 
----
-
 ## 14. 标准排障流程
 
-### 第一步：确认 PVC
+### 14.1 第一步：确认 PVC {/* #第一步确认-pvc */}
 
 ```bash
 kubectl -n ai get pvc model-pvc -o wide
@@ -433,7 +407,7 @@ kubectl -n ai describe pvc model-pvc
 - AccessMode。
 - Events。
 
-### 第二步：确认 PV
+### 14.2 第二步：确认 PV {/* #第二步确认-pv */}
 
 ```bash
 kubectl get pv <pv-name> -o yaml
@@ -449,7 +423,7 @@ kubectl get pv <pv-name> -o yaml
 
 不要在工单或公开日志中泄露 Secret 内容。
 
-### 第三步：确认 Pod 与调度事件
+### 14.3 第三步：确认 Pod 与调度事件 {/* #第三步确认-pod-与调度事件 */}
 
 ```bash
 kubectl -n ai get pod <pod> -o wide
@@ -458,7 +432,7 @@ kubectl -n ai describe pod <pod>
 
 先看 Events，再决定查调度器还是 CSI。
 
-### 第四步：检查 CSI 对象
+### 14.4 第四步：检查 CSI 对象 {/* #第四步检查-csi-对象 */}
 
 ```bash
 kubectl get csidriver
@@ -468,7 +442,7 @@ kubectl get volumeattachment
 
 检查目标节点是否注册对应驱动，VolumeAttachment 是否有错误。
 
-### 第五步：检查 CSI Controller
+### 14.5 第五步：检查 CSI Controller {/* #第五步检查-csi-controller */}
 
 ```bash
 kubectl -n <csi-namespace> get pods -o wide
@@ -478,7 +452,7 @@ kubectl -n <csi-namespace> logs <controller-pod> -c <driver-container> --since=3
 
 容器名因驱动不同而不同，先用 `kubectl get pod -o yaml` 查看。
 
-### 第六步：检查目标节点 Node Plugin
+### 14.6 第六步：检查目标节点 Node Plugin {/* #第六步检查目标节点-node-plugin */}
 
 ```bash
 kubectl -n <csi-namespace> get pods -o wide
@@ -487,7 +461,7 @@ kubectl -n <csi-namespace> logs <node-pod> -c <driver-container> --since=30m
 
 确认 Node Plugin 正好运行在目标 GPU 节点，而不是只看 DaemonSet 总体 Ready 数。
 
-### 第七步：检查 kubelet 和节点
+### 14.7 第七步：检查 kubelet 和节点 {/* #第七步检查-kubelet-和节点 */}
 
 ```bash
 journalctl -u kubelet --since "30 min ago"
@@ -497,8 +471,6 @@ dmesg -T | tail -n 100
 ```
 
 根据后端继续检查 NFS 2049、Ceph 网络、设备映射和文件系统错误。
-
----
 
 ## 15. 常见故障案例
 
@@ -555,8 +527,6 @@ dmesg -T | tail -n 100
 
 不要在不知道安全影响时简单删除 `fsGroup`。
 
----
-
 ## 16. 可观测性
 
 控制面：
@@ -581,11 +551,9 @@ dmesg -T | tail -n 100
 
 最有价值的是把事件和应用时间线放在一起，而不是只保存一段 CSI 日志。
 
----
-
 ## 17. 生产检查清单
 
-### 驱动
+### 17.1 驱动 {/* #驱动 */}
 
 - 版本与 Kubernetes 兼容。
 - Controller 多副本和 Leader Election 正常。
@@ -593,7 +561,7 @@ dmesg -T | tail -n 100
 - Sidecar 版本符合驱动发布说明。
 - RBAC 最小化。
 
-### StorageClass
+### 17.2 StorageClass {/* #storageclass */}
 
 - provisioner 和参数正确。
 - BindingMode 符合拓扑。
@@ -601,7 +569,7 @@ dmesg -T | tail -n 100
 - 扩容、快照能力经过测试。
 - mountOptions 有压测与故障验证依据。
 
-### 工作负载
+### 17.3 工作负载 {/* #工作负载 */}
 
 - AccessMode 与真实访问方式匹配。
 - 模型只读。
@@ -609,7 +577,7 @@ dmesg -T | tail -n 100
 - Pod 停止和卷卸载有足够宽限期。
 - GPU、网络和卷拓扑共同参与调度设计。
 
-### 故障演练
+### 17.4 故障演练 {/* #故障演练 */}
 
 - Controller 重启。
 - Node Plugin 重启。
@@ -618,8 +586,6 @@ dmesg -T | tail -n 100
 - PVC 扩容。
 - 卷满。
 - 恢复 Checkpoint。
-
----
 
 ## 18. CSI 在完整 GPU 链路中的位置
 
@@ -636,8 +602,6 @@ dmesg -T | tail -n 100
 ```
 
 CSI 决定数据路径能否在 Pod 启动时建立；它不负责 CUDA、NCCL 或应用内部 IO，但这些层最终共享节点 PCIe、网卡和存储资源。
-
----
 
 ## 19. 本篇总结
 
@@ -657,8 +621,6 @@ PVC 请求
 
 上一篇：[对象存储与模型仓库设计](./04-对象存储与模型仓库设计.md)。下一篇：[GPUDirect Storage 原理与实践](./02-GPUDirect-Storage原理与实践.md)，理解兼容存储怎样进一步缩短到 GPU 显存的数据路径。
 
----
-
 ## 20. 课后练习
 
 1. CSI Controller 与 Node Plugin 分别运行在哪里、负责什么？
@@ -669,9 +631,7 @@ PVC 请求
 6. 分别制造 StorageClass 名称错误和挂载权限错误，比较事件差异。
 7. 画出你所在集群从 PVC 到后端存储的真实调用链。
 
----
-
-## 参考与致谢
+## 21. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
 - [Kubernetes Storage Classes](https://kubernetes.io/docs/concepts/storage/storage-classes/)

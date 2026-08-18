@@ -1,9 +1,9 @@
 ---
 title: "GPU Roofline 性能模型：算力、显存带宽与算术强度"
 sidebar_label: "01. GPU Roofline 性能模型：算力、显存带宽与算术强度"
-sidebar_position: 9
-tags: [GPU, Roofline, Arithmetic Intensity, FLOPS, HBM, Nsight Compute]
+sidebar_position: 1
 description: "用 Roofline 的算术强度、内存带宽上限和计算峰值判断 Kernel 是访存受限还是计算受限，并指导优化实验。"
+tags: [GPU, Roofline, Arithmetic Intensity, FLOPS, HBM, Nsight Compute]
 ---
 
 # GPU Roofline 性能模型：算力、显存带宽与算术强度
@@ -137,11 +137,11 @@ AI ≈ 1 / 12 FLOP/B
 
 ## 6. 点在图上的位置如何解释
 
-### 接近斜线
+### 6.1 接近斜线 {/* #接近斜线 */}
 
 HBM 带宽利用较好且 AI 低，优化应提高数据复用/AI，或减少字节，而不是只增计算并发。
 
-### 低于斜线很远
+### 6.2 低于斜线很远 {/* #低于斜线很远 */}
 
 虽位于 memory-bound 区，但没有接近带宽屋顶，可能是：
 
@@ -152,11 +152,11 @@ HBM 带宽利用较好且 AI 低，优化应提高数据复用/AI，或减少字
 - 分支/依赖；
 - 实际带宽屋顶估计不对。
 
-### 接近水平线
+### 6.3 接近水平线 {/* #接近水平线 */}
 
 计算管线利用较高，进一步优化需更高效指令/精度/算法或更多硬件。
 
-### 低于水平线很远
+### 6.4 低于水平线很远 {/* #低于水平线很远 */}
 
 可能 compute-bound 区但未用目标 pipeline：shape 不适合 Tensor Core、occupancy、依赖、发散、指令混合或调度空洞。
 
@@ -237,19 +237,19 @@ Occupancy 是实现接近屋顶的一种条件，不是屋顶本身：
 
 ## 12. Roofline 与模型推理
 
-### Prefill
+### 12.1 Prefill {/* #prefill */}
 
 大矩阵乘、较高 batch/token，通常 AI 较高，更容易接近 Tensor Core compute roof；Attention 其他阶段仍可能带宽受限。
 
-### Decode
+### 12.2 Decode {/* #decode */}
 
 每步少量 token，权重被反复读取，有效矩阵维度小，常更偏 HBM/launch/latency。增大 continuous batch 可提高权重复用和 AI。
 
-### KV Cache
+### 12.3 KV Cache {/* #kv-cache */}
 
 读写大量 KV、计算相对有限，容易内存带宽受限；GQA/MQA、KV 精度和分页布局会改变 bytes。
 
-### Quantization
+### 12.4 Quantization {/* #quantization */}
 
 减少权重字节可提高有效 AI/降低 HBM 流量，但反量化与特殊 Kernel 增加计算。是否更快取决于 GPU、shape、Kernel 和 batch。
 
@@ -284,41 +284,41 @@ Collective time ≈ latency term + message bytes / effective link bandwidth
 
 ## 15. 常见错误结论
 
-### “点在左边，所以 HBM 已跑满”
+### 15.1 “点在左边，所以 HBM 已跑满” {/* #点在左边所以-hbm-已跑满 */}
 
 左边表示模型上 memory roof 更低，不代表实际达到屋顶。看点到斜线距离和实际带宽。
 
-### “计算受限，只能换更快 GPU”
+### 15.2 “计算受限，只能换更快 GPU” {/* #计算受限只能换更快-gpu */}
 
 可能没使用 Tensor Core、shape 不合适、分支/指令低效，离计算屋顶很远。
 
-### “AI 是算法常数”
+### 15.3 “AI 是算法常数” {/* #ai-是算法常数 */}
 
 实际流量受实现、cache、融合和 shape 影响，同一算法不同 Kernel AI 不同。
 
-### “标称 HBM/Tensor 峰值就是屋顶”
+### 15.4 “标称 HBM/Tensor 峰值就是屋顶” {/* #标称-hbmtensor-峰值就是屋顶 */}
 
 可持续屋顶受频率、精度、设备和测试影响。
 
 ## 16. 实验路线
 
-### 实验 A：Vector Add
+### 16.1 实验 A：Vector Add {/* #实验-avector-add */}
 
 低 AI。测有效带宽、实际 HBM 流量，调整 coalescing。预期靠近 memory roof。
 
-### 实验 B：GEMM
+### 16.2 实验 B：GEMM {/* #实验-bgemm */}
 
 扫描 M/N/K、精度和 Tensor Core，观察小 shape 到大 shape 从低效到接近 compute roof。
 
-### 实验 C：Kernel Fusion
+### 16.3 实验 C：Kernel Fusion {/* #实验-ckernel-fusion */}
 
 对两个 elementwise Kernel 与融合版比较：FLOP 相近，HBM bytes 减少，AI 和时间改善。
 
-### 实验 D：Decode batch
+### 16.4 实验 D：Decode batch {/* #实验-ddecode-batch */}
 
 固定模型/序列长度，改变 active sequences，记录 TPOT、HBM、Tensor utilization 和 Roofline，说明 batch 如何改变硬件效率。
 
-### 实验 E：量化
+### 16.5 实验 E：量化 {/* #实验-e量化 */}
 
 固定请求与输出质量标准，比较权重 bytes、反量化计算、TTFT/TPOT 和单位成本。
 
@@ -354,7 +354,7 @@ Collective time ≈ latency term + message bytes / effective link bandwidth
 
 下一篇：[NUMA、PCIe 与中断亲和性实验](../labs/01-NUMA-PCIe与中断亲和性实验.md)。
 
-## 参考资料
+## 20. 参考资料 {/* #参考资料 */}
 
 - [Nsight Compute Roofline Charts](https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline-charts)
 - [Nsight Compute documentation](https://docs.nvidia.com/nsight-compute/)

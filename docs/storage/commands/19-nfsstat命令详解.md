@@ -1,11 +1,12 @@
 ---
-title: nfsstat 命令详解：客户端、服务端、RPC 重传与操作分布
+title: "nfsstat 命令详解：客户端、服务端、RPC 重传与操作分布"
+sidebar_label: "19. nfsstat 命令详解：客户端、服务端、RPC 重传与操作分布"
 sidebar_position: 19
-description: 讲解 nfsstat 的 client/server、NFS/RPC、版本、mount options、增量采样、零计数器、输出字段和 NFS 性能故障证据链。
+description: "讲解 nfsstat 的 client/server、NFS/RPC、版本、mount options、增量采样、零计数器、输出字段和 NFS 性能故障证据链。"
 tags: [Linux, NFS, nfsstat, RPC, 性能]
 ---
 
-# `nfsstat` 命令详解：客户端、服务端、RPC 重传与操作分布
+# nfsstat 命令详解：客户端、服务端、RPC 重传与操作分布
 
 `nfsstat` 读取内核 NFS client/server 的累计计数器。它能说明调用量、RPC retransmission、不同 NFS 版本和 operation 分布，但累计平均会掩盖当前尖峰，必须使用时间窗采样。
 

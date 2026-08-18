@@ -1,11 +1,12 @@
 ---
-title: exportfs 命令详解：NFS 导出表、选项与安全重载
+title: "exportfs 命令详解：NFS 导出表、选项与安全重载"
+sidebar_label: "17. exportfs 命令详解：NFS 导出表、选项与安全重载"
 sidebar_position: 17
-description: 以 nfs-utils 2.9.1 为基线，讲解 exportfs 与 exports、etab、参数、客户端匹配、root_squash、subtree_check、fsid、重载和排障。
+description: "以 nfs-utils 2.9.1 为基线，讲解 exportfs 与 exports、etab、参数、客户端匹配、root_squash、subtree_check、fsid、重载和排障。"
 tags: [Linux, NFS, exportfs, nfs-utils, RPC]
 ---
 
-# `exportfs` 命令详解：NFS 导出表、选项与安全重载
+# exportfs 命令详解：NFS 导出表、选项与安全重载
 
 `exportfs` 维护 NFS server 的有效导出表。`/etc/exports` 和 `/etc/exports.d/*.exports` 是配置输入，内核/nfsd 实际状态由 nfs-utils 处理并记录在运行表中；“文件改了”不等于“导出已生效”。
 

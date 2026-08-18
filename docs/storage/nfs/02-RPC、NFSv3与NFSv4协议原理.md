@@ -2,8 +2,8 @@
 title: "RPC、NFSv3 与 NFSv4 协议原理"
 sidebar_label: "02. RPC、NFSv3 与 NFSv4 协议原理"
 sidebar_position: 2
-tags: [NFS, RPC, NFSv3, NFSv4, Linux, 网络文件系统]
 description: "从 ONC RPC、XDR、文件句柄和客户端调用链理解 NFSv3/NFSv4 的端口、状态、会话、锁与故障恢复差异。"
+tags: [NFS, RPC, NFSv3, NFSv4, Linux, 网络文件系统]
 ---
 
 # RPC、NFSv3 与 NFSv4 协议原理
@@ -263,11 +263,11 @@ cat /proc/net/rpc/nfsd
 
 ## 15. 端口与防火墙设计
 
-### NFSv4
+### 15.1 NFSv4 {/* #nfsv4 */}
 
 核心通常允许客户端到 TCP 2049，同时考虑 Kerberos、DNS、监控和 HA 健康检查。
 
-### NFSv3
+### 15.2 NFSv3 {/* #nfsv3 */}
 
 除了 2049，还可能需要 rpcbind、mountd、lockd/statd 等。生产可固定辅助服务端口，再按最小客户端网段放行。
 
@@ -346,7 +346,7 @@ hard mount 通常持续重试，应用可能阻塞；soft 类行为可能向应�
 
 下一篇：[NFS 缓存、一致性、锁与文件句柄](./03-NFS缓存一致性锁与文件句柄.md)。
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [RFC 1813: NFS Version 3](https://www.rfc-editor.org/rfc/rfc1813)
 - [RFC 7530: NFS Version 4](https://www.rfc-editor.org/rfc/rfc7530)

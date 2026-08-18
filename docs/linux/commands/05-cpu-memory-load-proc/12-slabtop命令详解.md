@@ -1,11 +1,12 @@
 ---
-title: slabtop 命令详解：内核对象缓存、可回收与不可回收内存
+title: "slabtop 命令详解：内核对象缓存、可回收与不可回收内存"
+sidebar_label: "12. slabtop 命令详解：内核对象缓存、可回收与不可回收内存"
 sidebar_position: 12
-description: 完整讲解 procps-ng slabtop 的全部参数、排序键、字段、SLUB 调试差异、SReclaimable/SUnreclaim 和内核内存增长排障。
+description: "完整讲解 procps-ng slabtop 的全部参数、排序键、字段、SLUB 调试差异、SReclaimable/SUnreclaim 和内核内存增长排障。"
 tags: [Linux, slabtop, slab, SLUB, 内核内存, procps-ng]
 ---
 
-# `slabtop` 命令详解：内核对象缓存、可回收与不可回收内存
+# slabtop 命令详解：内核对象缓存、可回收与不可回收内存
 
 Linux slab allocator 缓存 inode、dentry、socket、文件、进程等内核对象。`slabtop` 实时解析 `/proc/slabinfo`，用于解释“内存不在普通进程 RSS 中，却被内核对象大量占用”。
 
@@ -129,7 +130,7 @@ cache 名与 allocator/kernel 配置相关，不能用固定名称写死告警�
 
 掌握标准：能列出全部参数、排序与交互键，解释字段和 SReclaimable/SUnreclaim，能从系统内存缩小到内核子系统且不草率归因。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [procps-ng slabtop(1)](https://man7.org/linux/man-pages/man1/slabtop.1.html)
 - [Linux slabinfo(5)](https://man7.org/linux/man-pages/man5/slabinfo.5.html)

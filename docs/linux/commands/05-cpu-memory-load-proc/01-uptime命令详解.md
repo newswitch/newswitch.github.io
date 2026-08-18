@@ -1,11 +1,12 @@
 ---
-title: uptime 命令详解：运行时间、负载平均与容器时间边界
+title: "uptime 命令详解：运行时间、负载平均与容器时间边界"
+sidebar_label: "01. uptime 命令详解：运行时间、负载平均与容器时间边界"
 sidebar_position: 1
-description: 完整讲解 procps-ng uptime 的参数、load average、启动时间、utmp、time namespace 与容器排障边界。
+description: "完整讲解 procps-ng uptime 的参数、load average、启动时间、utmp、time namespace 与容器排障边界。"
 tags: [Linux, uptime, load average, procps-ng, 容器]
 ---
 
-# `uptime` 命令详解：运行时间、负载平均与容器时间边界
+# uptime 命令详解：运行时间、负载平均与容器时间边界
 
 `uptime` 用一行展示当前时间、运行时长、登录用户数和 1/5/15 分钟 load average。它适合建立现场基线，但不能单独证明 CPU 饱和。
 
@@ -101,7 +102,7 @@ printf 'uptime_seconds=%s\n' "$up_s"
 
 掌握标准：能解释每个字段、全部参数、load 的任务状态与非归一化特性，并能说明为何 `uptime` 只是排障入口。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [procps-ng uptime(1)](https://man7.org/linux/man-pages/man1/uptime.1.html)
 - [Linux proc_loadavg(5)](https://man7.org/linux/man-pages/man5/proc_loadavg.5.html)

@@ -1,11 +1,12 @@
 ---
-title: ip neighbour 与 ip netns 命令详解：邻居缓存和网络命名空间
+title: "ip neighbour 与 ip netns 命令详解：邻居缓存和网络命名空间"
+sidebar_label: "03. ip neighbour 与 ip netns 命令详解：邻居缓存和网络命名空间"
 sidebar_position: 3
-description: 讲解 ARP/IPv6 ND 邻居状态机、邻居表增删查、代理邻居、网络命名空间生命周期、命令全集、veth 实验和容器网络排障方法。
+description: "讲解 ARP/IPv6 ND 邻居状态机、邻居表增删查、代理邻居、网络命名空间生命周期、命令全集、veth 实验和容器网络排障方法。"
 tags: [Linux, iproute2, ip neighbour, ip netns, ARP, IPv6 ND, network namespace]
 ---
 
-# `ip neighbour` 与 `ip netns` 命令详解：邻居缓存和网络命名空间
+# ip neighbour 与 ip netns 命令详解：邻居缓存和网络命名空间
 
 路由回答“下一跳是谁、从哪个接口发”，邻居表回答“这个链路内 IP 对应哪个二层地址”，network namespace 则决定你正在观察哪一套接口、路由、邻居、防火墙和套接字。大量容器网络误判，都来自查对了命令却查错了命名空间。
 

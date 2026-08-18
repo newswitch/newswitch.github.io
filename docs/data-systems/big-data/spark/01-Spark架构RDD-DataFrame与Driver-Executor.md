@@ -1,9 +1,9 @@
 ---
-title: Spark 架构、RDD、DataFrame 与 Driver/Executor
+title: "Spark 架构、RDD、DataFrame 与 Driver/Executor"
 sidebar_label: "01. Spark 架构、RDD、DataFrame 与 Driver/Executor"
 sidebar_position: 1
+description: "建立 Spark Application、Driver、Executor、RDD 与 DataFrame 的执行和容错模型。"
 tags: [Spark, RDD, DataFrame, Driver, Executor]
-description: 建立 Spark Application、Driver、Executor、RDD 与 DataFrame 的执行和容错模型。
 ---
 
 # Spark 架构、RDD、DataFrame 与 Driver/Executor
@@ -82,7 +82,7 @@ RDD checkpoint 将数据物化到可靠存储并截断 lineage；流式 checkpoi
 
 下一篇：[DAG、Job、Stage、Task 与调度过程](./02-DAG-Job-Stage-Task与调度过程.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Spark Cluster Mode Overview](https://spark.apache.org/docs/latest/cluster-overview.html)
 - [Spark RDD Programming Guide](https://spark.apache.org/docs/latest/rdd-programming-guide.html)

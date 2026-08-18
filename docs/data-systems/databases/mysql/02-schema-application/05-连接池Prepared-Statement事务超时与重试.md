@@ -2,15 +2,13 @@
 title: "连接池、Prepared Statement、事务、超时与重试"
 sidebar_label: "05. 连接池、Prepared Statement、事务、超时与重试"
 sidebar_position: 5
-tags: [MySQL, 连接池, Prepared Statement, 事务, 超时, 重试]
 description: "从应用侧建立安全连接池、参数化 SQL、短事务、分层超时、取消、幂等和有限重试的生产边界。"
+tags: [MySQL, 连接池, Prepared Statement, 事务, 超时, 重试]
 ---
 
 # 连接池、Prepared Statement、事务、超时与重试
 
 很多数据库事故不是 SQL 语法造成的，而是应用运行策略：连接池总量超过实例能力、事务跨远程调用、超时后数据库仍执行、所有错误都自动重试，最终形成雪崩。
-
----
 
 ## 1. 一次应用请求的资源路径
 
@@ -28,8 +26,6 @@ HTTP 请求
 
 用户看到的“数据库耗时”可能包含连接池排队，也可能只记录 SQL 网络往返。每一段都要单独计时。
 
----
-
 ## 2. 为什么使用连接池
 
 连接建立包含 TCP、TLS、认证和 Session 初始化。池化可复用连接、限制数据库并发，并吸收短突发。
@@ -46,8 +42,6 @@ HTTP 请求
 
 池大小应基于数据库能承受的**活跃并发**与请求时间，而不是应用线程数。
 
----
-
 ## 3. 连接池必须观测什么
 
 - active/idle/total；
@@ -62,8 +56,6 @@ HTTP 请求
 
 若 SQL 很快但 acquire latency 高，瓶颈在应用池或数据库并发容量，不应把这段误归因到某条 SQL。
 
----
-
 ## 4. Session 污染
 
 连接归还前可能残留：
@@ -77,8 +69,6 @@ HTTP 请求
 - Prepared Statement/游标资源。
 
 使用驱动/连接池提供的 reset 机制，并在 checkout 时设置必要基线。不要仅执行一条 `ROLLBACK` 就假设所有 Session 状态已恢复。
-
----
 
 ## 5. Prepared Statement
 
@@ -98,8 +88,6 @@ WHERE order_no = ?
 它不能参数化表名、列名、关键字和排序方向。动态标识符用白名单映射，不能把用户输入直接拼接。
 
 还要限制单连接 Prepared Statement 数量并正确释放，避免池化长连接持续积累 Server/Client 资源。
-
----
 
 ## 6. 事务边界
 
@@ -124,8 +112,6 @@ BEGIN
 
 这些操作延长持锁和旧版本时间，并把外部抖动传给数据库。
 
----
-
 ## 7. Autocommit 与框架
 
 MySQL 默认常见为 autocommit 开启；每个连接的 Session 状态独立。ORM/驱动可能用 API 控制事务，而不是直接发送 SQL。
@@ -141,8 +127,6 @@ MySQL 默认常见为 autocommit 开启；每个连接的 Session 状态独立�
 
 不要仅凭注解名称推断数据库实际状态，用 Trace、General/Performance Schema 采样和测试验证。
 
----
-
 ## 8. 四类超时
 
 | 超时 | 保护什么 |
@@ -155,8 +139,6 @@ MySQL 默认常见为 autocommit 开启；每个连接的 Session 状态独立�
 还可能有 Socket Read/Write、Lock Wait、Gateway 和客户端超时。
 
 预算应逐层一致：上层 Deadline 要给下层取消和清理留时间，不能客户端 1 秒放弃而数据库继续执行 5 分钟。
-
----
 
 ## 9. 超时不等于数据库已经停止
 
@@ -179,18 +161,16 @@ MySQL 默认常见为 autocommit 开启；每个连接的 Session 状态独立�
 - 幂等键/唯一约束；
 - 最终状态查询。
 
----
-
 ## 10. 哪些错误可以重试
 
-### 可能瞬时且可重试
+### 10.1 可能瞬时且可重试 {/* #可能瞬时且可重试 */}
 
 - Deadlock victim；
 - 短暂连接中断；
 - 故障切换后的连接失败；
 - 明确的锁等待超时（需评估业务）。
 
-### 通常不能盲目重试
+### 10.2 通常不能盲目重试 {/* #通常不能盲目重试 */}
 
 - SQL 语法/列不存在；
 - 权限拒绝；
@@ -201,8 +181,6 @@ MySQL 默认常见为 autocommit 开启；每个连接的 Session 状态独立�
 - 事务结果未知且操作非幂等。
 
 重试必须按错误码/SQLSTATE 分类，而不是捕获 Exception 后统一循环。
-
----
 
 ## 11. 重试策略
 
@@ -219,8 +197,6 @@ MySQL 默认常见为 autocommit 开启；每个连接的 Session 状态独立�
 死锁重试应重放**整个事务**，因为事务已被回滚；不能只重发最后一条 SQL。
 
 重试会放大负载。数据库已经过载时，无退避重试可能把一次失败变成持续雪崩。
-
----
 
 ## 12. 幂等写
 
@@ -245,8 +221,6 @@ CREATE TABLE payment_requests (
 
 幂等记录需要生命周期和容量规划。
 
----
-
 ## 13. 读写分离的一致性
 
 写 Source 后立刻读 Replica 可能因复制延迟读不到刚提交数据。
@@ -260,8 +234,6 @@ CREATE TABLE payment_requests (
 - 故障时不要把延迟 Replica 误提升。
 
 连接池要区分读写角色，故障切换后清理旧连接和 Prepared State。
-
----
 
 ## 14. 连接风暴与过载保护
 
@@ -284,8 +256,6 @@ CREATE TABLE payment_requests (
 - Proxy 也要有有界队列；
 - Readiness 在数据库不可用时避免无限自旋。
 
----
-
 ## 15. 可观测链路
 
 一次请求至少关联：
@@ -303,8 +273,6 @@ retry count and reason
 ```
 
 Metrics 用低基数聚合；Trace 记录抽样路径；日志不要输出完整密码、Token、身份证、SQL 参数和敏感结果。
-
----
 
 ## 16. 容量一致性检查
 
@@ -324,8 +292,6 @@ Metrics 用低基数聚合；Trace 记录抽样路径；日志不要输出完整
 ```
 
 可以让等待发生在应用有界连接池，而不是让数据库接收无限活跃查询后整体失控。
-
----
 
 ## 17. 故障实验
 
@@ -350,7 +316,7 @@ Metrics 用低基数聚合；Trace 记录抽样路径；日志不要输出完整
 
 完成本模块后，下一阶段进入 InnoDB 内核：内存、磁盘、Page、Buffer Pool、Redo、Undo、MVCC、锁和崩溃恢复。
 
-## 官方参考
+## 19. 官方参考 {/* #官方参考 */}
 
 - [Prepared Statements](https://dev.mysql.com/doc/refman/8.4/en/sql-prepared-statements.html)
 - [START TRANSACTION, COMMIT, ROLLBACK](https://dev.mysql.com/doc/refman/8.4/en/commit.html)

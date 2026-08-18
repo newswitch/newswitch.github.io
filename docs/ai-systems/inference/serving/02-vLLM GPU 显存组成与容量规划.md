@@ -1,9 +1,11 @@
 ---
-title: vLLM GPU 显存组成与容量规划
+title: "vLLM GPU 显存组成与容量规划"
 sidebar_label: "02. vLLM GPU 显存组成与容量规划"
+sidebar_position: 2
+description: "版本提示：vLLM 参数与日志字段随版本变化。实践时固定 vLLM 镜像、驱动、GPU Operator 版本，不要使用 latest。示例基于 vLLM OpenAI 兼容服务。"
+tags: ["vLLM", "GPU", "显存", "KV Cache", "容量规划", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["vLLM", "GPU", "显存", "KV Cache", "容量规划", "学习路线"]
 ---
 
 # vLLM GPU 显存组成与容量规划
@@ -14,13 +16,9 @@ tags: ["vLLM", "GPU", "显存", "KV Cache", "容量规划", "学习路线"]
 
 前置：[部署 vLLM](./01-Kubernetes%20部署%20vLLM%20推理服务.md)；指标见 [第 28 篇](./06-大模型推理服务性能指标设计.md)。
 
----
-
 ## 1. 学习目标
 
 理解显存组成；粗算权重；理解 KV Cache 与上下文/并发；使用 `gpu-memory-utilization` / `kv-cache-memory-bytes`；用日志与指标验证；制定上线前压测流程。
-
----
 
 ## 2. 显存总体结构
 
@@ -34,8 +32,6 @@ GPU总显存
 ├── KV Cache（并发与长上下文的核心）
 └── 安全余量
 ```
-
----
 
 ## 3. 模型权重
 
@@ -53,8 +49,6 @@ GPU总显存
 例：32B BF16 ≈ 64GB；TP=4 时主体约每卡 16GB，但仍有 Scale、未切分参数、词表、CUDA、通信、对齐等——只作第一轮筛选。
 
 量化模型还有 Scale / Zero Point / Group 元数据、未量化层、反量化缓冲等，**不能**简单用 `P × 0.5` 当最终需求。最可靠：固定模型 / vLLM / GPU → 启动记真实显存 → 并发与长上下文压测。
-
----
 
 ## 4. KV Cache
 
@@ -76,8 +70,6 @@ Maximum concurrency for ... tokens per request: ...x
 
 前者为可存 KV Token 总量，后者为指定最大请求长度下的并发估算。
 
----
-
 ## 5. 核心参数
 
 ### 5.1 `--gpu-memory-utilization`
@@ -96,8 +88,6 @@ Maximum concurrency for ... tokens per request: ...x
 
 KV 默认 `auto`；FP8/INT8 等可省显存但影响精度与后端。CPU Offload 可略超显存加载，依赖 PCIe/NUMA，适合验证与低吞吐，**不宜**当默认高性能方案。
 
----
-
 ## 6. 其他占用
 
 CUDA Context、CUDA Graph、Prefill 激活、NCCL 缓冲、显存碎片（`nvidia-smi` 有空闲仍可能因无足够连续块而失败）。
@@ -115,8 +105,6 @@ exec vllm serve /models/Qwen \
 
 先固定模型/精度/TP/上下文/利用率，再逐步试量化 KV、Prefix Cache、Offload、更大上下文与更高并发。
 
----
-
 ## 7. 验证
 
 ```bash
@@ -128,19 +116,15 @@ watch -n 1 nvidia-smi   # 启动前 / 加载中 / Ready / 单请求 / 高并发
 
 Prometheus（`/metrics`）关注：`vllm:kv_cache_usage_perc`、`num_requests_running` / `waiting`、延迟与排队直方图。`kv_cache_usage_perc=1` 表示 KV 已满。
 
----
-
 ## 8. 容量规划流程
 
-1. 权重能否加载：`参数量 × 精度 ÷ TP + 运行时开销`  
-2. 业务上下文：平均 / P95 / 最大输入与输出  
-3. 启动读 `GPU KV cache size` 与 `Maximum concurrency`  
-4. 压测并发 1→16，上下文 1K→32K  
-5. 安全区间：极限若 16 并发，生产先 10～12，留长度波动与碎片  
+1. 权重能否加载：`参数量 × 精度 ÷ TP + 运行时开销`
+2. 业务上下文：平均 / P95 / 最大输入与输出
+3. 启动读 `GPU KV cache size` 与 `Maximum concurrency`
+4. 压测并发 1→16，上下文 1K→32K
+5. 安全区间：极限若 16 并发，生产先 10～12，留长度波动与碎片
 
 **误区**：显存未满还能加并发；TP=4 每卡严格四分之一；模型支持 128K 就该部署 128K；显存 90% 等于业务繁忙。
-
----
 
 ## 9. 本篇总结
 
@@ -148,9 +132,7 @@ Prometheus（`/metrics`）关注：`vllm:kv_cache_usage_perc`、`num_requests_ru
 
 下一篇：[Tensor Parallel 多卡部署](./03-vLLM%20Tensor%20Parallel%20多卡部署.md)。
 
----
-
-## 参考与致谢
+## 10. 参考与致谢 {/* #参考与致谢 */}
 
 - [vLLM Engine Arguments](https://docs.vllm.ai/en/latest/configuration/engine_args.html)
 - [vLLM Production Metrics](https://docs.vllm.ai/en/latest/usage/metrics.html)

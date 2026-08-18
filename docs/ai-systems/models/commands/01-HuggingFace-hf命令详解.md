@@ -1,5 +1,6 @@
 ---
 title: "Hugging Face hf 命令详解"
+sidebar_label: "01. Hugging Face hf 命令详解"
 sidebar_position: 1
 description: "掌握 hf CLI 的鉴权、模型与数据集检索、精确版本下载、上传、缓存扫描和离线交付。"
 tags: [Hugging Face, hf, 模型下载, 数据集, 缓存, AI Infra]
@@ -129,11 +130,11 @@ hf cache prune --dry-run
 | 多节点加载不同模型 | revision是否固定、共享目录一致性、缓存是否被更新、启动参数是否相同 |
 | 缓存清理后服务失败 | 在线进程或新Pod依赖被删snapshot，恢复制品并修正发布模型 |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能用不可变revision下载并生成清单；能安全处理私有模型鉴权；能为大规模集群设计一次下载、多次分发；能区分缓存命中与制品完整；能在上传和清理前完成风险评审。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [Hugging Face CLI](https://huggingface.co/docs/huggingface_hub/en/guides/cli)
 - [Download files](https://huggingface.co/docs/huggingface_hub/en/guides/download)

@@ -1,11 +1,12 @@
 ---
-title: renice 命令详解：调整运行中进程、进程组与用户的 niceness
+title: "renice 命令详解：调整运行中进程、进程组与用户的 niceness"
+sidebar_label: "15. renice 命令详解：调整运行中进程、进程组与用户的 niceness"
 sidebar_position: 15
-description: 完整讲解 util-linux renice 参数、绝对/相对优先级、POSIXLY_CORRECT 差异、PID/PGID/用户作用域、权限、线程与 cgroup 边界。
+description: "完整讲解 util-linux renice 参数、绝对/相对优先级、POSIXLY_CORRECT 差异、PID/PGID/用户作用域、权限、线程与 cgroup 边界。"
 tags: [Linux, renice, CPU调度, niceness, util-linux]
 ---
 
-# `renice` 命令详解：调整运行中进程、进程组与用户的 niceness
+# renice 命令详解：调整运行中进程、进程组与用户的 niceness
 
 `renice` 修改已经运行任务的 niceness。默认目标是 PID，亦可选择 PGID 或用户；按用户操作会影响该用户当前的广泛进程集合，生产环境风险很高。
 
@@ -60,7 +61,7 @@ niceness 只在可运行任务竞争普通 CPU 时影响相对权重。cgroup CP
 
 实验：覆盖绝对/相对、POSIXLY_CORRECT、PID/PGID/user、普通用户权限、线程差异和 cgroup 竞争。掌握标准是能列出全部参数，避免 `-n` 环境歧义，并说明 renice 不能替代 CPU quota/affinity/实时调度。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [util-linux：renice(1)](https://man7.org/linux/man-pages/man1/renice.1.html)
 - [Linux getpriority(2)](https://man7.org/linux/man-pages/man2/getpriority.2.html)

@@ -2,8 +2,8 @@
 title: "Shard、Replica、Resource Group、Load/Release 与弹性扩缩"
 sidebar_label: "11. Shard、Replica、Resource Group、Load/Release 与弹性扩缩"
 sidebar_position: 11
-tags: [Milvus, Shard, Replica, Resource Group, Scaling]
 description: "理解写入 Shard、查询 Replica、Resource Group 和 Collection 加载调度。"
+tags: [Milvus, Shard, Replica, Resource Group, Scaling]
 ---
 
 # Shard、Replica、Resource Group、Load/Release 与弹性扩缩
@@ -18,26 +18,37 @@ Collection
 → each Replica placed on Resource Group QueryNodes
 ```
 
-## Load/Release
+## 1. Load/Release {/* #loadrelease */}
 
 Load 将 Collection/Partition 的 Segment 和索引调度到 QueryNode，受对象存储带宽、节点内存和任务队列影响。Release 释放查询资源但不删除持久数据。冷启动 SLO 应包含下载、校验和内存映射/加载。
 
-## 扩容
+## 2. 扩容 {/* #扩容 */}
 
 增加 QueryNode 后要观察 Segment balance 和 Replica placement；增加 Replica 提高读吞吐/可用性，也成倍增加加载内存。写入扩展涉及 Shard/Streaming/Data 组件，不能只扩 QueryNode。
 
-## Resource Group
+## 3. Resource Group {/* #resource-group */}
 
 可按租户、在线/离线、GPU/CPU 划分。为每组设置节点上下限和转移策略，避免一个租户大查询驱逐另一个。隔离仍需在 Proxy/认证层强制租户权限。
 
-## 验收题
+## 4. 扩缩容实验与代价 {/* #扩缩容实验与代价 */}
+
+先记录 collection 数据量、segment/index 大小、replica、resource group、QueryNode 内存和查询 P99，再增加 QueryNode/replica，观察 segment 分配、加载流量和收敛时间。扩 Pod 不会瞬间增加有效容量，加载与对象存储带宽可能先把延迟推高。
+
+```text
+有效查询容量 = 已加载且健康的副本容量
+扩容时间 = 调度 + 启动 + 元数据同步 + segment/index 下载加载 + 预热
+```
+
+Resource Group 用来把 QueryNode 能力分配给 collection/租户，但它不自动提供业务公平性；还要配置接入配额、优先级和容量水位。缩容前确认剩余节点能承载全部 loaded working set，并在峰值外执行；否则会发生 OOM、反复加载或长尾抖动。
+
+## 5. 验收题 {/* #验收题 */}
 
 - Shard 与 Query Replica 有何区别？
 - Release 是否删除对象存储数据？
 - 增加 Replica 为什么增加内存？
 - 扩 QueryNode 后为什么要等 rebalance/load？
 
-## 参考资料
+## 6. 参考资料 {/* #参考资料 */}
 
 - [Resource groups](https://milvus.io/docs/resource_group.md)
 - [Load and release](https://milvus.io/docs/load-and-release.md)

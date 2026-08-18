@@ -1,5 +1,6 @@
 ---
 title: "Cosign 与 ORAS 命令详解"
+sidebar_label: "05. Cosign 与 ORAS 命令详解"
 sidebar_position: 5
 description: "使用Cosign签名和验证镜像/制品，以ORAS推拉模型、SBOM和证明，建立基于OCI Digest的AI供应链。"
 tags: [Cosign, ORAS, OCI, Sigstore, 模型制品, SBOM, 签名]
@@ -137,11 +138,11 @@ ORAS可能支持copy、tag、manifest delete等操作。复制前验证源digest
 | 拉取后模型不完整 | OCI manifest、层解包、文件清单和应用级哈希 |
 | Keyless在CI失败 | OIDC token权限、issuer/audience、时间同步和网络 |
 
-## 掌握标准
+## 11. 掌握标准 {/* #掌握标准 */}
 
 能用ORAS按digest交付模型；能用Cosign验证明确身份；能发布并验证SBOM/评测attestation；能设计Registry复制、保留和GC而不丢签名关系；能阻止Tag竞态。
 
-## 官方资料
+## 12. 官方资料 {/* #官方资料 */}
 
 - [Cosign documentation](https://docs.sigstore.dev/cosign/)
 - [ORAS CLI documentation](https://oras.land/docs/commands/oras/)

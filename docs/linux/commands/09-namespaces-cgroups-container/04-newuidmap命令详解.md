@@ -1,11 +1,12 @@
 ---
-title: newuidmap 命令详解：安全写入 User Namespace 的 UID 映射
+title: "newuidmap 命令详解：安全写入 User Namespace 的 UID 映射"
+sidebar_label: "04. newuidmap 命令详解：安全写入 User Namespace 的 UID 映射"
 sidebar_position: 4
-description: 讲清 newuidmap 三元组、subuid 委派、fd 目标、一次性写入、重叠校验与 Rootless 容器排障。
+description: "讲清 newuidmap 三元组、subuid 委派、fd 目标、一次性写入、重叠校验与 Rootless 容器排障。"
 tags: [Linux, newuidmap, User Namespace, Rootless, shadow-utils]
 ---
 
-# `newuidmap` 命令详解：安全写入 User Namespace 的 UID 映射
+# newuidmap 命令详解：安全写入 User Namespace 的 UID 映射
 
 `newuidmap` 是 `shadow-utils` 提供的最小特权助手。它验证调用者是否拥有目标进程、外层 UID 范围是否已通过 `/etc/subuid` 或 NSS subid 委派，然后一次性写入 `/proc/PID/uid_map`。它不是账户创建工具，也不会让 Namespace 内的 root 成为宿主 root。
 

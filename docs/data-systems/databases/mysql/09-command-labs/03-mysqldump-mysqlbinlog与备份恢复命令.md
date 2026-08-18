@@ -1,8 +1,9 @@
 ---
 title: "mysqldump、mysqlbinlog 与备份恢复命令"
+sidebar_label: "03. mysqldump、mysqlbinlog 与备份恢复命令"
 sidebar_position: 3
-tags: [MySQL, mysqldump, mysqlbinlog, 备份恢复]
 description: "系统整理逻辑备份与 Binary Log 查看、归档、筛选和重放参数，强调一致性点、事务边界与恢复验证。"
+tags: [MySQL, mysqldump, mysqlbinlog, 备份恢复]
 ---
 
 # mysqldump、mysqlbinlog 与备份恢复命令
@@ -120,7 +121,7 @@ mysqlbinlog --start-position=... --stop-position=... \
 
 文件 checksum → 基线 GTID/位置 → 输出范围审查 → 隔离重放 → 错误日志 → Schema/行/业务校验 → 只读验收 → 切流。禁止直接把未经查看的 mysqlbinlog 输出管道到生产。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [mysqldump](https://dev.mysql.com/doc/refman/8.4/en/mysqldump.html)
 - [mysqlbinlog](https://dev.mysql.com/doc/refman/8.4/en/mysqlbinlog.html)

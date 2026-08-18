@@ -1,11 +1,12 @@
 ---
-title: fmt 命令详解：段落重排、目标宽度与前缀格式化
+title: "fmt 命令详解：段落重排、目标宽度与前缀格式化"
+sidebar_label: "17. fmt 命令详解：段落重排、目标宽度与前缀格式化"
 sidebar_position: 17
-description: 完整讲解 GNU coreutils fmt 的全部参数、段落识别、缩进、句子间距、crown/tagged 模式、注释前缀和 Markdown/代码边界。
+description: "完整讲解 GNU coreutils fmt 的全部参数、段落识别、缩进、句子间距、crown/tagged 模式、注释前缀和 Markdown/代码边界。"
 tags: [Linux, fmt, GNU coreutils, 文本排版, 段落]
 ---
 
-# `fmt` 命令详解：段落重排、目标宽度与前缀格式化
+# fmt 命令详解：段落重排、目标宽度与前缀格式化
 
 `fmt` 读取完整段落，合并短行并重新选择换行点，使输出接近目标宽度且不超过最大宽度。它适合纯文本说明、邮件和特定注释，不是 Markdown、代码、日志或 Unicode 排版引擎。
 
@@ -166,7 +167,7 @@ fi
 - 能判断何时应使用 `fold`、代码 Formatter 或结构化 Parser。
 - 能在不截断源文件的情况下安全生成和审阅重排结果。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：fmt invocation](https://www.gnu.org/software/coreutils/manual/html_node/fmt-invocation.html)
 

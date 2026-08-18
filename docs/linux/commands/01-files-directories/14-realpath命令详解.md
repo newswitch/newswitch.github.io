@@ -1,11 +1,12 @@
 ---
-title: realpath 命令详解：规范化、相对路径与符号链接策略
+title: "realpath 命令详解：规范化、相对路径与符号链接策略"
+sidebar_label: "14. realpath 命令详解：规范化、相对路径与符号链接策略"
 sidebar_position: 14
-description: 完整讲解 GNU coreutils realpath 的全部长短参数、存在性模式、逻辑与物理解析、相对路径输出、NUL 分隔和安全边界。
+description: "完整讲解 GNU coreutils realpath 的全部长短参数、存在性模式、逻辑与物理解析、相对路径输出、NUL 分隔和安全边界。"
 tags: [Linux, realpath, GNU coreutils, 路径解析, 符号链接]
 ---
 
-# `realpath` 命令详解：规范化、相对路径与符号链接策略
+# realpath 命令详解：规范化、相对路径与符号链接策略
 
 `realpath` 把路径转换为规范形式，并能控制分量是否必须存在、是否解析符号链接以及输出绝对还是相对路径。它是路径计算工具，不是权限授权工具，也不是并发安全的文件打开操作。
 
@@ -75,7 +76,7 @@ realpath -m -- missing/parents/new-file
 
 ```text
 /lab/link -> /srv/releases/v2
-/lab/link/.. 
+/lab/link/..
 ```
 
 - `-P` 先把 `link` 解析为 `/srv/releases/v2`，再处理 `..`，结果趋向 `/srv/releases`。
@@ -200,7 +201,7 @@ rm -- "$resolved"
 - 能说明规范路径不是授权、隔离或无竞态打开。
 - 能在批量脚本中使用 NUL 分隔。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：realpath invocation](https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html)
 - [Linux path_resolution(7)](https://man7.org/linux/man-pages/man7/path_resolution.7.html)
@@ -209,4 +210,3 @@ rm -- "$resolved"
 上一篇：[`readlink` 命令详解](./13-readlink命令详解.md)
 
 下一篇：[`basename` 命令详解](./15-basename命令详解.md)
-

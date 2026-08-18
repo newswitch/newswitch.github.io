@@ -2,8 +2,8 @@
 title: "Envoy Stats、Access Log、Tracing、Admin、Tap 与请求调试"
 sidebar_label: "09. Envoy Stats、Access Log、Tracing、Admin、Tap 与请求调试"
 sidebar_position: 9
-tags: [Envoy, Observability, Access Log, Tracing, Admin, Tap]
 description: "用低基数指标、结构化访问日志、Trace、Admin 状态和受控 Tap 还原 Envoy 请求与配置事实。"
+tags: [Envoy, Observability, Access Log, Tracing, Admin, Tap]
 ---
 
 # Envoy Stats、Access Log、Tracing、Admin、Tap 与请求调试
@@ -56,7 +56,7 @@ Prompt、Authorization、Cookie 和敏感 Body 默认不记录。日志后端阻
 
 你应能通过 response flags/details 把 503/504 缩小到 Route、健康 Host、连接、reset 或 timeout，并在不泄露数据、不制造指标高基数的前提下构建可操作的看板和告警。
 
-## 参考资料
+## 7. 参考资料 {/* #参考资料 */}
 
 - [Envoy Observability](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/observability/observability)
 - [Access Log Usage](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage)

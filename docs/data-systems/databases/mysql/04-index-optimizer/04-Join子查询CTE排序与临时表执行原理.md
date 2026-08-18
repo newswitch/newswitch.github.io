@@ -2,15 +2,13 @@
 title: "Join、子查询、CTE、排序与临时表的执行原理"
 sidebar_label: "04. Join、子查询、CTE、排序与临时表的执行原理"
 sidebar_position: 4
-tags: [MySQL, Join, 子查询, CTE, Filesort, 临时表]
 description: "从数据流理解 Join 顺序与算法、子查询改写、CTE 合并和物化、排序以及内存与磁盘临时表。"
+tags: [MySQL, Join, 子查询, CTE, Filesort, 临时表]
 ---
 
 # Join、子查询、CTE、排序与临时表的执行原理
 
 复杂 SQL 慢，往往不是因为语法写得长，而是中间数据集在某一步急剧膨胀，又被重复扫描、排序、物化或写入临时空间。真正需要掌握的是“数据怎样在算子之间流动”。
-
----
 
 ## 1. 先画出逻辑关系，再看物理计划
 
@@ -42,8 +40,6 @@ ORDER BY revenue DESC;
 - 中间结果留在内存，还是转到磁盘。
 
 用 `EXPLAIN FORMAT=TREE` 看优化器选了哪条数据路径，用 `EXPLAIN ANALYZE` 验证每层真实行数。
-
----
 
 ## 2. Join 不等于“先写左表，再写右表”
 
@@ -85,8 +81,6 @@ AND o.tenant_id = c.tenant_id
 
 性能修复不能破坏关联语义。
 
----
-
 ## 3. Nested Loop 与 Hash Join
 
 ### 3.1 Nested Loop
@@ -121,8 +115,6 @@ AND o.tenant_id = c.tenant_id
 
 MySQL 的 `EXPLAIN FORMAT=TREE` 能明确显示 Hash Join；不要只用传统 `EXPLAIN` 猜测算法。Hash Join 也不是“不需要索引”的普遍理由，OLTP 高频点查和小结果 Join 通常仍受益于正确索引。
 
----
-
 ## 4. Join 行数爆炸
 
 假设：
@@ -144,7 +136,7 @@ Join 输出：2,000,000
 - 为内层访问设计联合索引；
 - 避免一对多再一对多导致笛卡尔式放大。
 
-### 聚合后再连接
+### 4.1 聚合后再连接 {/* #聚合后再连接 */}
 
 ```sql
 WITH order_summary AS (
@@ -166,8 +158,6 @@ GROUP BY c.segment;
 ```
 
 这可能显著缩小 Join 输入，但是否更快仍取决于物化、聚合和索引，必须比较真实计划。
-
----
 
 ## 5. EXISTS、IN 和相关子查询
 
@@ -210,15 +200,13 @@ WHERE id NOT IN (SELECT customer_id FROM blacklist)
 
 若子查询可能产生 `NULL`，三值逻辑会让结果与很多人的直觉不同。优先明确列是否 `NOT NULL`，并在业务语义允许时使用清晰的 `NOT EXISTS` 关联条件。改写前必须做结果集测试。
 
----
-
 ## 6. 派生表和 CTE：合并还是物化
 
 CTE 首先是表达和复用查询逻辑的方式，不是固定的性能优化或固定的临时表。
 
 优化器对非递归 CTE、视图或派生表可能：
 
-### 合并（Merge）
+### 6.1 合并（Merge） {/* #合并merge */}
 
 把内部查询块合并到外层，让条件下推并联合优化：
 
@@ -228,7 +216,7 @@ outer predicates
 → optimize as one query block
 ```
 
-### 物化（Materialize）
+### 6.2 物化（Materialize） {/* #物化materialize */}
 
 先执行内部查询，把结果写入内部临时表，再由外层读取：
 
@@ -243,8 +231,6 @@ execute CTE
 影响选择的结构包括聚合、`DISTINCT`、`GROUP BY`、`LIMIT`、窗口函数、`UNION` 等。不要通过“CTE 一定只算一次”或“CTE 一定内联”下结论，直接看计划。
 
 递归 CTE 还需要设置清晰的终止条件和结果上界，避免生成远超预期的中间集。
-
----
 
 ## 7. ORDER BY 与 Filesort
 
@@ -286,8 +272,6 @@ ORDER BY created_at DESC, id DESC
 
 只有 `created_at` 时，同一时间戳的行顺序可能不稳定，翻页会重复或遗漏。
 
----
-
 ## 8. GROUP BY、DISTINCT 与窗口函数
 
 它们都可能需要保存中间状态：
@@ -308,8 +292,6 @@ ORDER BY created_at DESC, id DESC
 ```
 
 `DISTINCT` 经常掩盖错误的一对多 Join。删掉它检查结果为何重复，往往比微调临时表更接近根因。
-
----
 
 ## 9. 内部临时表何时出现
 
@@ -333,8 +315,6 @@ SHOW VARIABLES LIKE 'tmpdir';
 ```
 
 不要只因为磁盘临时表计数增加就把所有内存阈值调大。并发查询会竞争总内存，过度放大会从“临时表慢”变成 OOM 或交换分区抖动。
-
----
 
 ## 10. 如何观测排序和临时工作
 
@@ -363,15 +343,13 @@ LIMIT 20;
 
 列名和采集可用性要以目标 MySQL 版本为准。判断时使用速率和每次调用平均值，避免把实例启动以来的累计数直接当成当前故障。
 
----
-
 ## 11. 复杂 SQL 排查方法
 
-### 第一步：确认结果粒度
+### 11.1 第一步：确认结果粒度 {/* #第一步确认结果粒度 */}
 
 最终是一行一个客户、一个订单，还是一个分群？每个 Join 前后的预期唯一键是什么？
 
-### 第二步：给每个查询块单独计数
+### 11.2 第二步：给每个查询块单独计数 {/* #第二步给每个查询块单独计数 */}
 
 在测试或离线环境验证：
 
@@ -383,7 +361,7 @@ base filter rows
 → final rows
 ```
 
-### 第三步：看真实计划
+### 11.3 第三步：看真实计划 {/* #第三步看真实计划 */}
 
 重点记录：
 
@@ -394,7 +372,7 @@ base filter rows
 - 排序/物化前的行数；
 - 首行阻塞时间。
 
-### 第四步：从最大中间集向前优化
+### 11.4 第四步：从最大中间集向前优化 {/* #第四步从最大中间集向前优化 */}
 
 通常优先级是：
 
@@ -404,8 +382,6 @@ base filter rows
 4. 必要时预聚合；
 5. 减少返回列和行宽；
 6. 最后评估内存参数或 Hint。
-
----
 
 ## 12. 改写必须通过语义回归
 
@@ -432,8 +408,6 @@ NULL
 
 性能优化只有在业务结果完全一致时才成立。
 
----
-
 ## 13. 实验建议
 
 构造三组数据：
@@ -451,8 +425,6 @@ EXPLAIN ANALYZE FORMAT=TREE SELECT ...;
 
 记录 Join 算法、顺序、真实行数、loops、首行时间和总时间。再增加/删除候选索引或改变过滤比例，观察成本决策如何改变。
 
----
-
 ## 14. 结论
 
 复杂 SQL 的优化主线不是把语句拆得越短越好，而是控制数据流：
@@ -468,9 +440,7 @@ EXPLAIN ANALYZE FORMAT=TREE SELECT ...;
 
 掌握这些算子后，下一步就是把单条 SQL 分析升级成线上慢 SQL 的发现、归因、修复和回归闭环。
 
----
-
-## 参考资料
+## 15. 参考资料 {/* #参考资料 */}
 
 - [MySQL 8.4 Reference Manual：Join Optimization](https://dev.mysql.com/doc/refman/8.4/en/join-optimization.html)
 - [MySQL 8.4 Reference Manual：Hash Join Optimization](https://dev.mysql.com/doc/refman/8.4/en/hash-joins.html)

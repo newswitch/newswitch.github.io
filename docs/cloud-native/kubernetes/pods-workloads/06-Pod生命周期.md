@@ -2,19 +2,19 @@
 title: "Pod 的生命周期"
 sidebar_label: "06. Pod 的生命周期"
 sidebar_position: 6
-tags: [Kubernetes, Pod, 学习路线]
 description: "详细介绍 Kubernetes Pod 的生命周期管理，包括 Pod 状态阶段、容器探针配置、重启策略以及生命周期的各种实际应用场景。"
+tags: [Kubernetes, Pod, 学习路线]
 ---
 
 # Pod 的生命周期
 
 > Pod 生命周期管理是 Kubernetes 自动化运维和高可用保障的核心，合理配置探针和重启策略可显著提升应用的健壮性和弹性。
 
-## Pod 阶段（Phase）
+## 1. Pod 阶段（Phase） {/* #pod-阶段phase */}
 
 Pod 的 `status` 字段包含一个 PodStatus 对象，其中的 `phase` 字段表示 Pod 在生命周期中的当前状态。Pod 的阶段（phase）是对 Pod 在其生命周期中状态的高层次概括，并非容器或 Pod 状态的详细汇总。
 
-### 阶段类型
+### 1.1 阶段类型 {/* #阶段类型 */}
 
 下表总结了 Pod `phase` 字段的所有可能取值及其含义：
 
@@ -40,7 +40,7 @@ stateDiagram-v2
 
 ![Pod 生命周期状态变化流程](/images/k8s/pod/pod-lifecycle/e3452d9dcb65811ce4d215330d99f6b7.svg)
 
-## Pod 状态（Status）
+## 2. Pod 状态（Status） {/* #pod-状态status */}
 
 Pod 具有 PodStatus 对象，包含 PodCondition 数组。每个 PodCondition 包含：
 
@@ -51,11 +51,11 @@ Pod 具有 PodStatus 对象，包含 PodCondition 数组。每个 PodCondition �
   - `ContainersReady`：Pod 中所有容器是否就绪
 - **`status`**：条件状态，值为 `True`、`False` 或 `Unknown`
 
-## 容器探针（Probes）
+## 3. 容器探针（Probes） {/* #容器探针probes */}
 
 探针（Probe）是 kubelet 对容器执行的定期健康检查。kubelet 通过调用容器实现的处理程序来执行诊断。
 
-### 探针类型
+### 3.1 探针类型 {/* #探针类型 */}
 
 下表总结了三种常见探针类型及其判定标准：
 
@@ -68,24 +68,24 @@ Pod 具有 PodStatus 对象，包含 PodCondition 数组。每个 PodCondition �
 每次探测返回以下结果之一：
 
 - **Success（成功）**：容器通过诊断
-- **Failure（失败）**：容器未通过诊断  
+- **Failure（失败）**：容器未通过诊断
 - **Unknown（未知）**：诊断失败，不采取行动
 
-### 探针种类
+### 3.2 探针种类 {/* #探针种类 */}
 
-#### 存活探针（Liveness Probe）
+#### 3.2.1 存活探针（Liveness Probe） {/* #存活探针liveness-probe */}
 
 - 检测容器是否正在运行
 - 失败时 kubelet 杀死容器，按重启策略处理
 - 未配置时默认为 `Success`
 
-#### 就绪探针（Readiness Probe）
+#### 3.2.2 就绪探针（Readiness Probe） {/* #就绪探针readiness-probe */}
 
 - 检测容器是否准备好接收流量
 - 失败时从 Service 端点中移除 Pod IP
 - 未配置时默认为 `Success`
 
-#### 启动探针（Startup Probe）
+#### 3.2.3 启动探针（Startup Probe） {/* #启动探针startup-probe */}
 
 自 Kubernetes 1.16 起支持，用于慢启动容器：
 
@@ -93,13 +93,13 @@ Pod 具有 PodStatus 对象，包含 PodCondition 数组。每个 PodCondition �
 - 启动探针成功前，其他探针被禁用
 - 适用于启动时间较长的应用
 
-### 探针使用指南
+### 3.3 探针使用指南 {/* #探针使用指南 */}
 
 - **存活探针**：适用于进程无法自愈或需自动重启的场景
 - **就绪探针**：用于控制流量路由，适合需预热或加载数据的应用
 - **启动探针**：为慢启动容器提供更长启动窗口
 
-### 探针配置示例
+### 3.4 探针配置示例 {/* #探针配置示例 */}
 
 以下 YAML 展示了三种探针的典型配置：
 
@@ -140,7 +140,7 @@ spec:
       failureThreshold: 3
 ```
 
-## 就绪门控（Readiness Gates）
+## 4. 就绪门控（Readiness Gates） {/* #就绪门控readiness-gates */}
 
 自 Kubernetes 1.14 起，Pod 支持扩展就绪检测机制。可在 PodSpec 中设置 `readinessGates`，指定额外的就绪条件：
 
@@ -170,7 +170,7 @@ Pod 被认为就绪需满足：
 1. 所有容器状态为 Ready
 2. 所有 `readinessGates` 条件为 True
 
-## 重启策略（Restart Policy）
+## 5. 重启策略（Restart Policy） {/* #重启策略restart-policy */}
 
 PodSpec 的 `restartPolicy` 字段控制容器重启行为。下表总结了三种重启策略及其适用场景：
 
@@ -184,7 +184,7 @@ PodSpec 的 `restartPolicy` 字段控制容器重启行为。下表总结了三�
 - **重置条件**：容器成功运行 10 分钟后重置延迟
 - **节点限制**：容器只能在同一节点重启
 
-## Pod 生命周期管理
+## 6. Pod 生命周期管理 {/* #pod-生命周期管理 */}
 
 Kubernetes 通过控制器实现 Pod 生命周期的自动化管理。下表总结了常见控制器类型及其重启策略要求：
 
@@ -196,7 +196,7 @@ Kubernetes 通过控制器实现 Pod 生命周期的自动化管理。下表总�
 | Job                   | 批处理任务       | OnFailure/Never   |
 | CronJob               | 定时任务         | OnFailure/Never   |
 
-### 生命周期事件
+### 6.1 生命周期事件 {/* #生命周期事件 */}
 
 Pod 生命周期主要包括以下阶段：
 
@@ -213,11 +213,11 @@ Pod 生命周期主要包括以下阶段：
    - 等待优雅终止期（默认 30 秒）
    - 发送 SIGKILL 强制终止
 
-## 实际应用场景
+## 7. 实际应用场景 {/* #实际应用场景 */}
 
 Pod 生命周期管理和重启策略的选择需结合实际业务需求。以下为典型场景示例：
 
-### 场景 1：Web 应用部署
+### 7.1 场景 1：Web 应用部署 {/* #场景-1web-应用部署 */}
 
 适用于 Deployment 控制器，长期运行服务，重启策略为 Always：
 
@@ -262,7 +262,7 @@ spec:
             cpu: "500m"
 ```
 
-### 场景 2：批处理任务
+### 7.2 场景 2：批处理任务 {/* #场景-2批处理任务 */}
 
 适用于 Job 控制器，一次性或有限次数运行的任务，重启策略为 OnFailure：
 
@@ -288,7 +288,7 @@ spec:
             cpu: "2"
 ```
 
-## 故障排查
+## 8. 故障排查 {/* #故障排查 */}
 
 在 Pod 生命周期管理中，常见问题及排查建议如下：
 
@@ -324,18 +324,18 @@ kubectl get events --field-selector involvedObject.name=<pod-name>
 kubectl exec -it <pod-name> -c <container-name> -- /bin/bash
 ```
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 - **合理配置探针**：根据应用特性设置合适的超时和重试参数，避免探针过于频繁或宽松
 - **优化启动时间**：使用启动探针为慢启动应用提供缓冲，优化镜像和启动流程
 - **资源管理**：设置合理的资源请求和限制，监控资源使用
 - **优雅终止**：处理 SIGTERM 信号，设置合适的 `terminationGracePeriodSeconds`
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 Pod 生命周期管理是 Kubernetes 自动化运维和高可用的基础。通过合理配置探针、重启策略和生命周期事件，能够有效提升应用的健壮性和弹性。建议结合实际业务场景，灵活运用生命周期管理机制，保障集群稳定运行。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 - [Pod Lifecycle - kubernetes.io](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 - [Configure Liveness, Readiness and Startup Probes - kubernetes.io](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)

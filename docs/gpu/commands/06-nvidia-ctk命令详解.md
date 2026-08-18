@@ -1,11 +1,12 @@
 ---
-title: nvidia-ctk 命令详解：容器运行时与 CDI 配置
+title: "nvidia-ctk 命令详解：容器运行时与 CDI 配置"
+sidebar_label: "06. nvidia-ctk 命令详解：容器运行时与 CDI 配置"
 sidebar_position: 6
-description: 使用 nvidia-ctk 配置 Docker、containerd、CRI-O 与 CDI，理解配置写入、验证、回滚和 Kubernetes 边界。
+description: "使用 nvidia-ctk 配置 Docker、containerd、CRI-O 与 CDI，理解配置写入、验证、回滚和 Kubernetes 边界。"
 tags: [GPU, NVIDIA Container Toolkit, nvidia-ctk, CDI, containerd]
 ---
 
-# nvidia-ctk 命令详解
+# nvidia-ctk 命令详解：容器运行时与 CDI 配置
 
 `nvidia-ctk` 是 NVIDIA Container Toolkit 的配置与诊断 CLI。它负责生成/修改运行时配置、生成 CDI 设备规范和查看组件信息；真正创建容器的仍是 Docker、containerd、CRI-O、Podman 等运行时。
 
@@ -93,7 +94,7 @@ CDI 将 GPU、MIG 设备及其容器编辑描述为标准 YAML。GPU/MIG 配置�
 
 能在执行前展示配置差异；能说明 Docker 与 Kubernetes/CRI 配置不是一回事；能生成并审阅 CDI spec；能将“容器看不到 GPU”定位到宿主机驱动、设备规范、运行时或编排层。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [NVIDIA Container Toolkit: Container Runtime Configuration](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-containerd-for-kubernetes)
 - [NVIDIA Container Toolkit: CDI Support](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html)

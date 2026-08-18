@@ -2,19 +2,19 @@
 title: "Kiali 服务网格观测面板"
 sidebar_label: "03. Kiali 服务网格观测面板"
 sidebar_position: 3
-tags: [Kubernetes, 可观测性, PartII, 学习路线]
 description: "Kiali 的安装、配置和使用方法，专注于 Istio 服务网格的可观测性。"
+tags: [Kubernetes, 可观测性, PartII, 学习路线]
 ---
 
 # Kiali 服务网格观测面板
 
 > Kiali 是 Istio 服务网格的可视化观测与配置平台，提供服务拓扑、流量监控、配置验证和分布式追踪集成，是微服务架构下运维与故障排查的利器。
 
-## Kiali 简介
+## 1. Kiali 简介 {/* #kiali-简介 */}
 
 Kiali 是专为 Istio 服务网格设计的开源观测控制台，提供服务拓扑图、流量监控、配置验证等功能。作为 Istio 生态的重要组成部分，Kiali 帮助用户理解和监控服务网格的行为，提升可观测性和运维效率。
 
-### 核心特性
+### 1.1 核心特性 {/* #核心特性 */}
 
 Kiali 具备以下核心能力：
 
@@ -25,7 +25,7 @@ Kiali 具备以下核心能力：
 - 安全策略可视化：展示认证和授权策略应用情况
 - 多集群支持：管理多个 Kubernetes 集群
 
-## Kiali 架构
+## 2. Kiali 架构 {/* #kiali-架构 */}
 
 下图展示了 Kiali 的主要架构组件及其交互关系。
 
@@ -71,7 +71,7 @@ graph TD
 
 ![Kiali 架构总览](/images/k8s/observability/kiali/9294a20b6ded2a0d40dd6638c437f8ec.svg)
 
-### 组件说明
+### 2.1 组件说明 {/* #组件说明 */}
 
 - Web UI：基于 React 的用户界面
 - GraphQL API：灵活的数据查询接口
@@ -79,11 +79,11 @@ graph TD
 - 配置验证器：Istio 配置一致性检查
 - 指标适配器：采集 Prometheus、Jaeger 等监控数据
 
-## 安装与配置
+## 3. 安装与配置 {/* #安装与配置 */}
 
 Kiali 可与 Istio 集成安装，也支持独立部署。以下为常见安装方式和配置示例。
 
-### 使用 Istio 集成安装
+### 3.1 使用 Istio 集成安装 {/* #使用-istio-集成安装 */}
 
 推荐通过 Istioctl 或 Helm 一键安装 Kiali：
 
@@ -102,7 +102,7 @@ helm install kiali-server kiali/kiali-server \
   --set external_services.grafana.url=http://grafana.istio-system.svc.cluster.local:3000
 ```
 
-### 独立安装
+### 3.2 独立安装 {/* #独立安装 */}
 
 如需独立部署，可参考以下 RBAC 和配置示例：
 
@@ -145,7 +145,7 @@ subjects:
   namespace: istio-system
 ```
 
-### 配置 Kiali
+### 3.3 配置 Kiali {/* #配置-kiali */}
 
 Kiali 支持通过 ConfigMap 进行灵活配置，集成外部监控与追踪系统：
 
@@ -171,7 +171,7 @@ data:
       web_root: /
 ```
 
-### 部署 Kiali
+### 3.4 部署 Kiali {/* #部署-kiali */}
 
 以下为 Kiali Deployment 典型配置：
 
@@ -212,11 +212,11 @@ spec:
           name: kiali
 ```
 
-## 访问 Kiali
+## 4. 访问 Kiali {/* #访问-kiali */}
 
 Kiali 支持多种服务暴露方式，便于集群内外访问。
 
-### 服务暴露与 Ingress
+### 4.1 服务暴露与 Ingress {/* #服务暴露与-ingress */}
 
 以下为 Service 和 Ingress 配置示例：
 
@@ -255,7 +255,7 @@ spec:
               number: 20001
 ```
 
-### 端口转发访问
+### 4.2 端口转发访问 {/* #端口转发访问 */}
 
 ```bash
 kubectl port-forward -n istio-system svc/kiali 20001:20001
@@ -263,11 +263,11 @@ kubectl port-forward -n istio-system svc/kiali 20001:20001
 # 浏览器访问 http://localhost:20001
 ```
 
-## Kiali 主要功能
+## 5. Kiali 主要功能 {/* #kiali-主要功能 */}
 
 Kiali 提供丰富的服务网格观测与配置能力，核心功能包括：
 
-### 服务网格拓扑图
+### 5.1 服务网格拓扑图 {/* #服务网格拓扑图 */}
 
 Kiali 的核心功能是可视化服务网格的拓扑结构，下图为典型拓扑示意。
 
@@ -315,7 +315,7 @@ graph TD
 - 健康状态与错误率
 - 安全策略应用情况
 
-### 应用详情页面
+### 5.2 应用详情页面 {/* #应用详情页面 */}
 
 每个服务的详情页包含：
 
@@ -325,7 +325,7 @@ graph TD
 - 配置：Istio 相关配置
 - 日志：关联日志条目
 
-### Istio 配置验证
+### 5.3 Istio 配置验证 {/* #istio-配置验证 */}
 
 Kiali 可自动验证 Istio 配置，提升集群稳定性：
 
@@ -334,7 +334,7 @@ Kiali 可自动验证 Istio 配置，提升集群稳定性：
 - 资源引用验证
 - 配置最佳实践建议
 
-### 分布式追踪集成
+### 5.4 分布式追踪集成 {/* #分布式追踪集成 */}
 
 与 Jaeger 集成，支持：
 
@@ -342,11 +342,11 @@ Kiali 可自动验证 Istio 配置，提升集群稳定性：
 - 性能瓶颈识别：高延迟服务突出显示
 - 错误追踪：关联错误请求的完整链路
 
-## 配置和定制
+## 6. 配置和定制 {/* #配置和定制 */}
 
 Kiali 支持丰富的外部服务集成和安全配置，适应多种生产场景。
 
-### 外部服务集成
+### 6.1 外部服务集成 {/* #外部服务集成 */}
 
 ```yaml
 external_services:
@@ -367,7 +367,7 @@ external_services:
     integration: true
 ```
 
-### 安全配置
+### 6.2 安全配置 {/* #安全配置 */}
 
 ```yaml
 auth:
@@ -379,7 +379,7 @@ auth:
     signing_key: "secret"
 ```
 
-### 集群配置
+### 6.3 集群配置 {/* #集群配置 */}
 
 ```yaml
 kiali:
@@ -397,11 +397,11 @@ kiali:
     secret_name: "kiali-kubernetes-secret"
 ```
 
-## 监控与告警
+## 7. 监控与告警 {/* #监控与告警 */}
 
 Kiali 支持健康检查与 Prometheus 指标暴露，便于集成监控系统。
 
-### 健康检查
+### 7.1 健康检查 {/* #健康检查 */}
 
 ```yaml
 livenessProbe:
@@ -421,7 +421,7 @@ readinessProbe:
   periodSeconds: 30
 ```
 
-### 指标暴露
+### 7.2 指标暴露 {/* #指标暴露 */}
 
 Kiali 可通过 ServiceMonitor 暴露 Prometheus 格式指标：
 
@@ -441,11 +441,11 @@ spec:
     interval: 30s
 ```
 
-## 故障排除
+## 8. 故障排除 {/* #故障排除 */}
 
 Kiali 运维过程中常见问题及排查方法如下。
 
-### 常见问题
+### 8.1 常见问题 {/* #常见问题 */}
 
 - 无法访问 Kiali UI：检查 Pod、Service 状态与日志
 
@@ -469,7 +469,7 @@ Kiali 运维过程中常见问题及排查方法如下。
   kubectl get clusterrolebinding kiali
   ```
 
-### 调试技巧
+### 8.2 调试技巧 {/* #调试技巧 */}
 
 - 启用调试日志
 
@@ -496,11 +496,11 @@ Kiali 运维过程中常见问题及排查方法如下。
     -d '{"query": "{namespaces}"}'
   ```
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 为保障生产环境的稳定性和安全性，建议遵循以下最佳实践。
 
-### 生产环境配置
+### 9.1 生产环境配置 {/* #生产环境配置 */}
 
 - 高可用部署
 
@@ -531,19 +531,19 @@ Kiali 运维过程中常见问题及排查方法如下。
     private_key_file: /kiali-cert/tls.key
   ```
 
-### 监控策略
+### 9.2 监控策略 {/* #监控策略 */}
 
 - 关键指标监控：服务网格健康、配置验证错误、性能延迟
 - 告警配置：Istio 组件异常、配置验证失败、性能阈值超限
 
-### 使用建议
+### 9.3 使用建议 {/* #使用建议 */}
 
 - 定期检查配置验证结果
 - 关注拓扑图中的错误和警告
 - 利用链路追踪定位问题
 - 监控服务间流量模式变化
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 Kiali 是 Istio 服务网格的重要观测工具：
 
@@ -554,7 +554,7 @@ Kiali 是 Istio 服务网格的重要观测工具：
 
 通过 Kiali，用户可深入理解服务网格行为，快速识别问题并优化性能，是构建和管理微服务架构不可或缺的工具。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 1. [Kiali 官方文档 - kiali.io](https://kiali.io/documentation/)
 2. [Istio 官方文档 - istio.io](https://istio.io/latest/docs/)

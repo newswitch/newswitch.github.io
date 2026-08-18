@@ -1,11 +1,12 @@
 ---
-title: cat 命令详解：连接文件、显示控制字符与流式复制
+title: "cat 命令详解：连接文件、显示控制字符与流式复制"
+sidebar_label: "01. cat 命令详解：连接文件、显示控制字符与流式复制"
 sidebar_position: 1
-description: 完整讲解 GNU coreutils cat 的全部长短参数、标准输入、行号、空行压缩、不可见字符、二进制复制、SIGPIPE 和生产排障边界。
+description: "完整讲解 GNU coreutils cat 的全部长短参数、标准输入、行号、空行压缩、不可见字符、二进制复制、SIGPIPE 和生产排障边界。"
 tags: [Linux, cat, GNU coreutils, 标准输入, 文本处理]
 ---
 
-# `cat` 命令详解：连接文件、显示控制字符与流式复制
+# cat 命令详解：连接文件、显示控制字符与流式复制
 
 `cat` 按操作数顺序把输入复制到标准输出。它的名字来自 concatenate，但在生产中更重要的是理解：它默认不解析内容，只搬运字节；一旦启用编号或可见化参数，就会转换输出。
 
@@ -207,7 +208,7 @@ Shell glob 排序受 locale 和名称设计影响；分片名应零填充，并�
 - 能说明 Shell 重定向为何可能先截断源文件。
 - 能解释背压、SIGPIPE 和二进制终端风险。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：cat invocation](https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html)
 - [Linux pipe(7)](https://man7.org/linux/man-pages/man7/pipe.7.html)
@@ -215,4 +216,3 @@ Shell glob 排序受 locale 和名称设计影响；分片名应零填充，并�
 上一篇：[文件内容与文本处理命令导读](./00-文件内容与文本处理命令导读.md)
 
 下一篇：[`tac` 命令详解](./02-tac命令详解.md)
-

@@ -1,9 +1,9 @@
 ---
-title: 二层环路、STP、MLAG 与链路聚合
+title: "二层环路、STP、MLAG 与链路聚合"
 sidebar_label: "04. 二层环路、STP、MLAG 与链路聚合"
 sidebar_position: 4
+description: "理解二层环路为什么致命，STP 如何构造无环拓扑，以及 LACP/MLAG 如何提供链路与设备级冗余。"
 tags: [STP, RSTP, LACP, Bonding, MLAG, 二层环路]
-description: 理解二层环路为什么致命，STP 如何构造无环拓扑，以及 LACP/MLAG 如何提供链路与设备级冗余。
 ---
 
 # 二层环路、STP、MLAG 与链路聚合
@@ -40,12 +40,12 @@ Spanning Tree Protocol 通过阻塞部分冗余端口，在逻辑上形成一棵
 3. 每个二层网段选择一个 Designated Port。
 4. 其余冗余端口进入丢弃/阻塞角色。
 
-### Bridge ID
+### 2.1 Bridge ID {/* #bridge-id */}
 
 通常由优先级和 MAC 地址组成。生产环境应显式设置根桥和备根桥，不要把根桥归属
 交给“谁的 MAC 最小”。
 
-### 路径代价
+### 2.2 路径代价 {/* #路径代价 */}
 
 端口速率映射为 STP Cost。链路聚合、速率变化或手工 Cost 会影响根路径选择。
 
@@ -210,10 +210,10 @@ MLAG 是厂商实现，不应把某厂商命令当作通用协议。后续 EVPN 
 
 验收输出应包含拓扑图、Root Bridge、端口角色、聚合成员状态、故障时间线和恢复证据。
 
-## 参考资料
+## 11. 参考资料 {/* #参考资料 */}
 
 - [IEEE 802.1 Working Group](https://1.ieee802.org/)
 - [Linux Ethernet Bonding Driver HOWTO](https://docs.kernel.org/networking/bonding.html)
 - [Linux Ethernet Bridging](https://docs.kernel.org/networking/bridge.html)
 
-[下一篇：ICMP、UDP、TCP 与 DNS →](../fundamentals/05-ICMP-UDP-TCP与DNS.md)
+[下一篇：ICMP、UDP、TCP 与 DNS →](../fundamentals/04-ICMP-UDP-TCP与DNS.md)

@@ -1,9 +1,9 @@
 ---
-title: SGLang 整体架构与请求生命周期
+title: "SGLang 整体架构与请求生命周期"
 sidebar_label: "01. SGLang 整体架构与请求生命周期"
 sidebar_position: 1
+description: "不堆砌代码，沿一个请求分析 SGLang 的 HTTP Server、TokenizerManager、Scheduler、TP Worker、Radix Cache 与 DetokenizerManager。"
 tags: [SGLang, RadixAttention, Scheduler, ModelRunner, 源码分析]
-description: 不堆砌代码，沿一个请求分析 SGLang 的 HTTP Server、TokenizerManager、Scheduler、TP Worker、Radix Cache 与 DetokenizerManager。
 ---
 
 # SGLang 整体架构与请求生命周期
@@ -458,23 +458,23 @@ TTFT 高
 
 ## 17. 常见误区
 
-### 误区一：SGLang 等于 RadixAttention
+### 17.1 误区一：SGLang 等于 RadixAttention {/* #误区一sglang-等于-radixattention */}
 
 Radix Cache 是核心特性之一，但服务性能还取决于进程管线、Scheduler、ModelRunner、Kernel、Graph、通信和请求分布。
 
-### 误区二：前缀命中率越高，业务一定越快
+### 17.2 误区二：前缀命中率越高，业务一定越快 {/* #误区二前缀命中率越高业务一定越快 */}
 
 需要看命中 Token 数和节省的 Prefill 时间。大量极短前缀命中可能统计很好，却几乎不改变 TTFT。
 
-### 误区三：增大静态显存比例只会增加 KV 容量
+### 17.3 误区三：增大静态显存比例只会增加 KV 容量 {/* #误区三增大静态显存比例只会增加-kv-容量 */}
 
 过高会挤压 CUDA Graph、通信、临时 Workspace 和运行时峰值，可能在压测时 OOM。
 
-### 误区四：LPM 永远优于 FCFS
+### 17.4 误区四：LPM 永远优于 FCFS {/* #误区四lpm-永远优于-fcfs */}
 
 LPM 强调缓存局部性；FCFS 更容易解释公平性。最终取决于共享前缀分布和 SLO。
 
-### 误区五：HTTP 返回慢就是 GPU 慢
+### 17.5 误区五：HTTP 返回慢就是 GPU 慢 {/* #误区五http-返回慢就是-gpu-慢 */}
 
 流式路径还经过 Detokenizer、TokenizerManager、ASGI、代理和客户端 Buffer。
 
@@ -497,7 +497,7 @@ SGLang 的完整请求链路是：
 
 真正掌握框架的标志，是能把每一个性能指标和故障证据映射到这条链路中的具体组件，并用参数控制实验验证，而不是只记住“RadixAttention 可以复用前缀”。
 
-## 官方资料与源码
+## 19. 官方资料与源码 {/* #官方资料与源码 */}
 
 - [SGLang Server Arguments](https://docs.sglang.io/docs/advanced_features/server_arguments)
 - [SGLang Hyperparameter Tuning](https://docs.sglang.io/docs/advanced_features/hyperparameter_tuning)

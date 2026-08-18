@@ -1,7 +1,8 @@
 ---
-title: kubectl 配置、API 发现与字段解释
+title: "kubectl 配置、API 发现与字段解释"
+sidebar_label: "01. kubectl 配置、API 发现与字段解释"
 sidebar_position: 1
-description: 掌握 kubectl config、version、cluster-info、api-resources、api-versions 与 explain，先确认身份、集群和资源字段再操作。
+description: "掌握 kubectl config、version、cluster-info、api-resources、api-versions 与 explain，先确认身份、集群和资源字段再操作。"
 tags: [Kubernetes, kubectl, kubeconfig, API Discovery, explain]
 ---
 
@@ -100,7 +101,7 @@ Context 切换和 namespace 修改会改变后续默认目标 `[W]`；`set-crede
 
 能从 kubeconfig 解释 Cluster/User/Context；能证明当前身份与目标；能从 Discovery 找到资源的 Group、作用域和 Verbs；能用 OpenAPI 字段定义写清楚 Manifest，而不是靠复制旧 YAML。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [Organizing Cluster Access Using kubeconfig Files](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
 - [kubectl config](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_config/)

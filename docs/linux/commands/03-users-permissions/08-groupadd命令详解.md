@@ -1,11 +1,12 @@
 ---
-title: groupadd 命令详解：创建组、分配 GID 与成员初始化
+title: "groupadd 命令详解：创建组、分配 GID 与成员初始化"
+sidebar_label: "08. groupadd 命令详解：创建组、分配 GID 与成员初始化"
 sidebar_position: 8
-description: 完整讲解 shadow-utils groupadd 参数、固定与重复 GID、系统组、成员列表、split group、root/prefix 和跨节点一致性。
+description: "完整讲解 shadow-utils groupadd 参数、固定与重复 GID、系统组、成员列表、split group、root/prefix 和跨节点一致性。"
 tags: [Linux, groupadd, 用户组, GID, shadow-utils]
 ---
 
-# `groupadd` 命令详解：创建组、分配 GID 与成员初始化
+# groupadd 命令详解：创建组、分配 GID 与成员初始化
 
 `groupadd` 创建本地组记录。文件权限最终保存数字 GID，因此 GPU 设备、共享目录、NFS/CephFS 和容器卷场景最重要的是各节点数字一致，而不只是组名一致。
 
@@ -82,7 +83,7 @@ sudo grpck -r
 
 掌握标准：能列出全部参数；能说明为什么固定 GID 是共享存储权限契约；能避免 `-f/-o/-p` 掩盖安全问题。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：groupadd(8)](https://shadow-maint.github.io/shadow/man/groupadd.html)
 - [Linux group(5)](https://man7.org/linux/man-pages/man5/group.5.html)

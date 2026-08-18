@@ -1,9 +1,9 @@
 ---
-title: PFC 原理、缓冲阈值与风险
+title: "PFC 原理、缓冲阈值与风险"
 sidebar_label: "04. PFC 原理、缓冲阈值与风险"
 sidebar_position: 4
+description: "理解按优先级暂停、Xoff/Xon、Headroom、Pause 传播、PFC Storm、死锁与 Watchdog。"
 tags: [PFC, IEEE 802.1Qbb, Xoff, Xon, Headroom, Pause Storm]
-description: 理解按优先级暂停、Xoff/Xon、Headroom、Pause 传播、PFC Storm、死锁与 Watchdog。
 ---
 
 # PFC 原理、缓冲阈值与风险
@@ -177,7 +177,7 @@ PFC Tx 持续增长
 能够根据端口速率和反应时间解释 Headroom 需求；看到 PFC 告警时沿下游寻找真正拥塞点；
 能说明为什么持续 Pause 是风险信号，而不是“无损网络工作正常”的证明。
 
-## 参考资料
+## 12. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA Priority Flow Control Documentation](https://docs.nvidia.com/networking/display/nvidiaonyxusermanualv3104606lts/priority%2Bflow%2Bcontrol%2B%28pfc%29)
 - [IEEE 802.1Qbb Priority-based Flow Control](https://1.ieee802.org/dcb/802-1qbb/)

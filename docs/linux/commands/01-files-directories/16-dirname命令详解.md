@@ -1,11 +1,12 @@
 ---
-title: dirname 命令详解：提取路径目录部分
+title: "dirname 命令详解：提取路径目录部分"
+sidebar_label: "16. dirname 命令详解：提取路径目录部分"
 sidebar_position: 16
-description: 完整讲解 GNU coreutils dirname 的全部参数、多操作数、NUL 输出、根目录与末尾斜杠边界，以及 Shell 脚本定位自身目录的陷阱。
+description: "完整讲解 GNU coreutils dirname 的全部参数、多操作数、NUL 输出、根目录与末尾斜杠边界，以及 Shell 脚本定位自身目录的陷阱。"
 tags: [Linux, dirname, GNU coreutils, Shell, 路径]
 ---
 
-# `dirname` 命令详解：提取路径目录部分
+# dirname 命令详解：提取路径目录部分
 
 `dirname` 从路径字符串中删除最后一个非斜杠分量，返回目录部分。它不检查目录是否存在、不解析链接，也不会把相对路径自动变成绝对路径。
 
@@ -185,7 +186,7 @@ printf 'parent=%q\n' "$parent"
 - 能说明脚本自身目录写法的适用边界。
 - 能在任意文件名链路中保持 NUL 分隔。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：dirname invocation](https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html)
 - [POSIX dirname](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/dirname.html)
@@ -193,4 +194,3 @@ printf 'parent=%q\n' "$parent"
 上一篇：[`basename` 命令详解](./15-basename命令详解.md)
 
 下一篇：[`find` 命令详解](./17-find命令详解.md)
-

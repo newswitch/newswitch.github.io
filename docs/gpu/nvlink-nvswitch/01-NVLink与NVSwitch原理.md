@@ -1,10 +1,11 @@
 ---
-title: NVLink 与 NVSwitch 原理：多 GPU 如何交换显存数据
+title: "NVLink 与 NVSwitch 原理：多 GPU 如何交换显存数据"
 sidebar_label: "01. NVLink 与 NVSwitch 原理：多 GPU 如何交换显存数据"
+sidebar_position: 1
+description: "从 PCIe P2P 到 NVLink/NVSwitch，理解多 GPU 显存通信、P2P 能力、Fabric Manager、NCCL 路径、带宽测试、故障表现与调度影响。"
+tags: [GPU, NVLink, NVSwitch, NCCL, 拓扑]
 date: 2026-08-06 18:20:00
 categories: 云原生
-tags: [GPU, NVLink, NVSwitch, NCCL, 拓扑]
-description: 从 PCIe P2P 到 NVLink/NVSwitch，理解多 GPU 显存通信、P2P 能力、Fabric Manager、NCCL 路径、带宽测试、故障表现与调度影响。
 ---
 
 # NVLink 与 NVSwitch 原理：多 GPU 如何交换显存数据
@@ -99,7 +100,7 @@ NVLink 的价值不只是“带宽更高”，还包括：
 - 为 NCCL Collective 提供机内高速路径
 - 减少对 CPU 内存和 PCIe Root 的依赖
 
-### NVLink 不会自动把多块 GPU 变成一块 GPU
+### 4.1 NVLink 不会自动把多块 GPU 变成一块 GPU {/* #nvlink-不会自动把多块-gpu-变成一块-gpu */}
 
 每块 GPU 通常仍有：
 
@@ -175,7 +176,7 @@ NVSwitch 的主要作用：
 - 为 Collective 提供更好的互联基础
 - 在支持的平台上提供 NVLink SHARP 等能力
 
-### NVSwitch 不是以太网交换机
+### 7.1 NVSwitch 不是以太网交换机 {/* #nvswitch-不是以太网交换机 */}
 
 它不转发普通 IP Packet，也不是 Kubernetes CNI 网络。它服务于 NVLink Fabric。
 
@@ -315,7 +316,7 @@ export NCCL_DEBUG_SUBSYS=INIT,GRAPH
 
 不要在生产配置中永久保留大量 Debug 日志。
 
-### NVLS
+### 12.1 NVLS {/* #nvls */}
 
 在支持的 NVSwitch 平台和 NCCL 版本中，NVLink SHARP/NVLS 可以让部分 Collective 利用交换 Fabric 的能力。
 
@@ -381,7 +382,7 @@ NVLink 让 GPU 之间更快通信，但通常不会自动聚合为一个透明�
 
 ## 16. 常见故障
 
-### `topo -m` 没有 NVLink
+### 16.1 `topo -m` 没有 NVLink {/* #topo--m-没有-nvlink */}
 
 检查：
 
@@ -392,7 +393,7 @@ NVLink 让 GPU 之间更快通信，但通常不会自动聚合为一个透明�
 - Fabric Manager
 - 虚拟机或容器是否暴露完整拓扑
 
-### CUDA P2P 不可用
+### 16.2 CUDA P2P 不可用 {/* #cuda-p2p-不可用 */}
 
 检查：
 
@@ -402,7 +403,7 @@ NVLink 让 GPU 之间更快通信，但通常不会自动聚合为一个透明�
 - 虚拟化直通
 - MIG 等运行模式
 
-### NCCL 没有走预期路径
+### 16.3 NCCL 没有走预期路径 {/* #nccl-没有走预期路径 */}
 
 采集：
 
@@ -413,7 +414,7 @@ NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,GRAPH <command>
 
 不要一开始就随机设置大量 NCCL 环境变量。先确认硬件拓扑和日志。
 
-### NVLink Error 增长
+### 16.4 NVLink Error 增长 {/* #nvlink-error-增长 */}
 
 需要结合：
 
@@ -426,7 +427,7 @@ NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,GRAPH <command>
 
 持续错误应升级给硬件和平台团队，不要通过重复重启掩盖。
 
-### 一组 GPU 很快，另一组很慢
+### 16.5 一组 GPU 很快，另一组很慢 {/* #一组-gpu-很快另一组很慢 */}
 
 可能是：
 
@@ -467,18 +468,18 @@ resources:
 
 ## 18. 它与其他模块的关系
 
-### 上游
+### 18.1 上游 {/* #上游 */}
 
 - 模型和 Batch 已经进入各 GPU HBM
 - PyTorch、vLLM 或训练框架产生跨 GPU 通信
 
-### 本层
+### 18.2 本层 {/* #本层 */}
 
 - CUDA P2P 提供 GPU 间访问能力
 - NVLink/NVSwitch 提供机内高速互联
 - NCCL 根据拓扑组织 Collective
 
-### 下游
+### 18.3 下游 {/* #下游 */}
 
 - 跨节点时通信继续进入 NIC、IB/RoCE
 - 调度器应选择正确 GPU 组合和节点
@@ -486,23 +487,23 @@ resources:
 
 ## 19. 常见误区
 
-### 有 NVLink 就不需要 NCCL
+### 19.1 有 NVLink 就不需要 NCCL {/* #有-nvlink-就不需要-nccl */}
 
 NVLink 是硬件互联，NCCL 是 Collective 通信库，层次不同。
 
-### NVSwitch 是普通网络交换机
+### 19.2 NVSwitch 是普通网络交换机 {/* #nvswitch-是普通网络交换机 */}
 
 NVSwitch 服务 NVLink Fabric，不承载普通 TCP/IP。
 
-### 多卡显存会自动合并
+### 19.3 多卡显存会自动合并 {/* #多卡显存会自动合并 */}
 
 应用和框架仍需管理分片与通信。
 
-### `nvidia-smi topo` 显示 NVLink 就一定性能正常
+### 19.4 `nvidia-smi topo` 显示 NVLink 就一定性能正常 {/* #nvidia-smi-topo-显示-nvlink-就一定性能正常 */}
 
 还要做 P2P 和 NCCL 基线，并观察 Error。
 
-### 卡越多越快
+### 19.5 卡越多越快 {/* #卡越多越快 */}
 
 扩展收益取决于计算通信比、消息大小和并行策略。
 
@@ -530,7 +531,7 @@ NVSwitch 服务 NVLink Fabric，不承载普通 TCP/IP。
 6. 运行 `all_reduce_perf`，比较启用和禁用 P2P 的结果。
 7. 设计一个 8 卡 Tensor Parallel Pod 的节点选择与独占策略。
 
-## 参考与致谢
+## 22. 参考与致谢 {/* #参考与致谢 */}
 
 - [NVIDIA Fabric Manager User Guide](https://docs.nvidia.com/hgx-platforms/fabric-manager-user-guide/)
 - [NCCL Documentation](https://docs.nvidia.com/deeplearning/nccl/index.html)

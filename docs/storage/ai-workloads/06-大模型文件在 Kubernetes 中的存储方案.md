@@ -1,9 +1,11 @@
 ---
-title: 大模型文件在 Kubernetes 中的存储方案
+title: "大模型文件在 Kubernetes 中的存储方案"
 sidebar_label: "06. 大模型文件在 Kubernetes 中的存储方案"
+sidebar_position: 6
+description: "版本提示：示例以 Kubernetes、PVC、对象存储、Hugging Face 与 vLLM 为主。实践时替换 StorageClass、模型路径、镜像版本、密钥名；固定 vLLM / Operator 版本，勿用 latest。"
+tags: ["Kubernetes", "存储", "PVC", "大模型", "vLLM", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "存储", "PVC", "大模型", "vLLM", "学习路线"]
 ---
 
 # 大模型文件在 Kubernetes 中的存储方案
@@ -14,13 +16,9 @@ tags: ["Kubernetes", "存储", "PVC", "大模型", "vLLM", "学习路线"]
 
 vLLM 官方 K8s 示例常用 PVC 作模型缓存，也可用 `hostPath` 等；[冷启动优化](./07-大模型冷启动优化.md) 与本篇配套。部署见 [第 23 篇](../../ai-systems/inference/serving/01-Kubernetes%20部署%20vLLM%20推理服务.md)。
 
----
-
 ## 1. 学习目标
 
 了解模型目录内容；理解 PV / PVC / StorageClass 与 AccessMode；对比共享存储、块存储、Local PV、对象存储、镜像内置、hostPath、emptyDir；用 Job 预下载并做版本/校验；排查挂载与读取问题。
-
----
 
 ## 2. 模型目录与评估维度
 
@@ -34,8 +32,6 @@ HF 格式常见：`config.json`、Tokenizer、分片 `*.safetensors` / index、�
 | 故障范围 / 成本 / 运维 / 安全 | 单点 vs 全集群；凭证与自定义代码 |
 
 推理侧最看重：读速、持久性、版本一致、多副本共享。
-
----
 
 ## 3. PV、PVC、AccessMode
 
@@ -67,8 +63,6 @@ spec:
 | `ReadWriteOncePod` | 仅单 Pod 读写 |
 
 只读大模型常见：单节点单副本用 RWO；跨节点多副本用 RWX/ROX；本地高速缓存用 Local PV + RWO。
-
----
 
 ## 4. 方案对比
 
@@ -114,8 +108,6 @@ PVC → Job 下载并校验 → 完成 → vLLM 只读挂载
 
 `hostPath`：简单、快，但强绑节点、生命周期难管、安全风险高——能 Local PV 则优先 Local PV。`emptyDir`：Init 下载后主容器读；**Pod 删除即丢**；大模型勿用 `medium: Memory`。
 
----
-
 ## 5. 对比表与生产架构
 
 | 方案 | 跨节点共享 | 读速 | Pod 重建保留 | 推荐场景 |
@@ -139,8 +131,6 @@ PVC → Job 下载并校验 → 完成 → vLLM 只读挂载
 
 模型少、可接受数分钟启动：对象存储 → RWX → vLLM。模型大、要快启动：对象存储 → 本地 NVMe → Local PV → vLLM。
 
----
-
 ## 6. 完整性、权限与测速
 
 ```text
@@ -151,8 +141,6 @@ PVC → Job 下载并校验 → 完成 → vLLM 只读挂载
 
 上线前在节点测：`df`/`du`/`dd` 顺序读；记录单/多 Pod 同时启动时间。单 Pod 快、多 Pod 慢 → 共享带宽；首次慢二次快 → 注意页缓存假象。
 
----
-
 ## 7. 常见问题
 
 | 现象 | 检查 |
@@ -161,8 +149,6 @@ PVC → Job 下载并校验 → 完成 → vLLM 只读挂载
 | FailedMount | CSI Node、存储网、权限、Secret |
 | vLLM 找不到模型 | mountPath/subPath、目录层级、`config.json`、权限 |
 | 多副本同启极慢 | 本地缓存、分批启动、提前下载、加带宽、Local PV |
-
----
 
 ## 8. 本篇总结
 
@@ -176,9 +162,7 @@ PVC → Job 下载并校验 → 完成 → vLLM 只读挂载
 
 完整存储模块：[AI 工作负载的存储 IO 模型](./01-AI工作负载的存储IO模型.md) → [本地 NVMe 与 Local PV](./03-本地NVMe与Local-PV实践.md) → [NFS](../nfs/01-NFS在AI集群中的使用与性能分析.md) → [Ceph 接口选型](../ceph/08-ai-workloads/30-AI集群中的Ceph接口选型.md) → [对象存储与模型仓库](./04-对象存储与模型仓库设计.md) → [CSI 挂载链路](./05-Kubernetes-CSI挂载链路与故障排查.md) → [GPUDirect Storage](./02-GPUDirect-Storage原理与实践.md)；下一篇：[大模型冷启动优化](./07-大模型冷启动优化.md)。
 
----
-
-## 参考与致谢
+## 9. 参考与致谢 {/* #参考与致谢 */}
 
 - [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
 - [Volumes（含 Local / emptyDir / hostPath）](https://kubernetes.io/docs/concepts/storage/volumes/)

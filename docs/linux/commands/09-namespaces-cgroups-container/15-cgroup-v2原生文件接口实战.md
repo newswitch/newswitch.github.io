@@ -1,11 +1,12 @@
 ---
-title: cgroup v2 原生文件接口：控制器、限制、事件与 PSI 实战
+title: "cgroup v2 原生文件接口：控制器、限制、事件与 PSI 实战"
+sidebar_label: "15. cgroup v2 原生文件接口：控制器、限制、事件与 PSI 实战"
 sidebar_position: 15
-description: 用 cgroupfs 文件完整讲解 v2 委派、subtree_control、cpu.max、memory.max/events、io.max/stat、pids 与 PSI。
+description: "用 cgroupfs 文件完整讲解 v2 委派、subtree_control、cpu.max、memory.max/events、io.max/stat、pids 与 PSI。"
 tags: [Linux, cgroup v2, PSI, CPU, 内存]
 ---
 
-# cgroup v2 原生文件接口：限制配置不是运行证据
+# cgroup v2 原生文件接口：控制器、限制、事件与 PSI 实战
 
 cgroup v2 的稳定管理接口是文件系统：目录代表资源域，控制文件代表配置、计数器、事件和压力。本篇不是某个可执行命令的参数页，而是为 `systemd-cgtop`、libcgroup 和 Kubernetes 排障提供底层读法。
 

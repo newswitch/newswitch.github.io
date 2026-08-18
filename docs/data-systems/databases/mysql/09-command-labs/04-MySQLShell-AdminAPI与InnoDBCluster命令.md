@@ -1,8 +1,9 @@
 ---
 title: "MySQL Shell、AdminAPI 与 InnoDB Cluster 命令"
+sidebar_label: "04. MySQL Shell、AdminAPI 与 InnoDB Cluster 命令"
 sidebar_position: 4
-tags: [MySQL Shell, AdminAPI, InnoDB Cluster, 命令参考]
 description: "掌握 mysqlsh SQL/JavaScript/Python 模式、连接与帮助、Dump/Load、Upgrade Checker 以及集群生命周期命令。"
+tags: [MySQL Shell, AdminAPI, InnoDB Cluster, 命令参考]
 ---
 
 # MySQL Shell、AdminAPI 与 InnoDB Cluster 命令
@@ -125,9 +126,8 @@ Router bootstrap 和元数据升级按 Router/Cluster 版本文档执行。淘�
 
 `mysqlsh` 支持 `--execute`、脚本文件和命令行 API integration。自动化要求幂等、结构化 JSON 输出、超时、退出码、审计、dry-run/预检和单控制器锁。机密不进入参数或日志。
 
-## 参考资料
+## 11. 参考资料 {/* #参考资料 */}
 
 - [MySQL Shell 8.4](https://dev.mysql.com/doc/mysql-shell/8.4/en/)
 - [MySQL AdminAPI](https://dev.mysql.com/doc/mysql-shell/8.4/en/admin-api-userguide.html)
 - [Shell Utilities](https://dev.mysql.com/doc/mysql-shell/8.4/en/mysql-shell-utilities.html)
-

@@ -1,11 +1,12 @@
 ---
-title: lsirq 命令详解：结构化分析硬中断、softirq 与 CPU 分布
+title: "lsirq 命令详解：结构化分析硬中断、softirq 与 CPU 分布"
+sidebar_label: "18. lsirq 命令详解：结构化分析硬中断、softirq 与 CPU 分布"
 sidebar_position: 18
-description: 完整讲解 lsirq 的全部参数、硬中断与 softirq、累计计数与采样差值、CPU 列筛选、JSON/键值输出，以及 GPU/NIC/NVMe IRQ 不均衡排查。
+description: "完整讲解 lsirq 的全部参数、硬中断与 softirq、累计计数与采样差值、CPU 列筛选、JSON/键值输出，以及 GPU/NIC/NVMe IRQ 不均衡排查。"
 tags: [Linux, lsirq, IRQ, softirq, 性能分析]
 ---
 
-# `lsirq` 命令详解：结构化分析硬中断、softirq 与 CPU 分布
+# lsirq 命令详解：结构化分析硬中断、softirq 与 CPU 分布
 
 `lsirq` 是 util-linux 对 `/proc/interrupts` 与 `/proc/softirqs` 的结构化展示工具。它适合做单次快照、排序、过滤和机器输出；要连续观察变化用 `irqtop`。
 

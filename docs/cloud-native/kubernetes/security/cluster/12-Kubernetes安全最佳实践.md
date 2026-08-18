@@ -2,15 +2,15 @@
 title: "Kubernetes 集群安全性配置最佳实践"
 sidebar_label: "12. Kubernetes 集群安全性配置最佳实践"
 sidebar_position: 12
-tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "全面介绍 Kubernetes 集群安全配置的最佳实践，包括端口管理、API 安全设置、RBAC 配置以及安全扫描工具的使用指南。"
+tags: [Kubernetes, 安全, PartII, 学习路线]
 ---
 
 # Kubernetes 集群安全性配置最佳实践
 
 > Kubernetes 集群安全配置是保障云原生基础设施稳定运行的基石，涵盖端口、API、节点、网络、监控等多维度防护，需系统性落地最佳实践。
 
-## 网络端口安全管理
+## 1. 网络端口安全管理 {/* #网络端口安全管理 */}
 
 在 Kubernetes 集群中，合理管理和控制关键端口的访问权限是防止外部攻击和内部越权的第一道防线。
 
@@ -29,46 +29,46 @@ description: "全面介绍 Kubernetes 集群安全配置的最佳实践，包括
 - 禁用已废弃的 10255 只读端口
 - 为敏感端口配置 TLS 加密传输
 
-## API 服务器安全配置
+## 2. API 服务器安全配置 {/* #api-服务器安全配置 */}
 
 API 服务器（kube-apiserver）是集群的核心控制面，安全配置至关重要。
 
-### 身份认证与授权
+### 2.1 身份认证与授权 {/* #身份认证与授权 */}
 
 为防止未授权访问，需合理配置认证与授权机制。
 
-- **启用 RBAC 授权模式**  
+- **启用 RBAC 授权模式**
   避免使用不安全的 `AlwaysAllow` 授权模式，推荐配置：
 
   ```text
   --authorization-mode=Node,RBAC
   ```
 
-- **禁用匿名访问**  
+- **禁用匿名访问**
   通过以下参数禁用匿名身份验证：
 
   ```text
   --anonymous-auth=false
   ```
 
-- **配置准入控制器**  
+- **配置准入控制器**
   建议启用以下准入控制器：
 
   ```text
   --enable-admission-plugins=NodeRestriction,ResourceQuota,LimitRanger
   ```
 
-### TLS 和证书管理
+### 2.2 TLS 和证书管理 {/* #tls-和证书管理 */}
 
 - 为所有 API 通信启用 TLS 加密
 - 定期轮换 API 服务器证书
 - 使用强加密算法和足够长度的密钥
 
-## 节点安全配置
+## 3. 节点安全配置 {/* #节点安全配置 */}
 
 节点安全是集群整体安全的重要一环，需从 kubelet 配置和容器运行时两方面入手。
 
-### Kubelet 安全设置
+### 3.1 Kubelet 安全设置 {/* #kubelet-安全设置 */}
 
 以下为 kubelet 推荐安全配置示例：
 
@@ -82,17 +82,17 @@ authorization:
     mode: Webhook
 ```
 
-### 容器运行时安全
+### 3.2 容器运行时安全 {/* #容器运行时安全 */}
 
 - 使用非特权容器运行工作负载
 - 配置 Pod Security Standards（PSS）替代已废弃的 PSP
 - 启用容器镜像签名验证，确保镜像来源可信
 
-## 安全扫描与审计工具
+## 4. 安全扫描与审计工具 {/* #安全扫描与审计工具 */}
 
 为及时发现安全隐患，建议定期使用自动化工具进行安全扫描和合规性检查。
 
-### kube-bench 集群安全评估
+### 4.1 kube-bench 集群安全评估 {/* #kube-bench-集群安全评估 */}
 
 [kube-bench](https://github.com/aquasecurity/kube-bench) 是基于 CIS Kubernetes Benchmark 的安全扫描工具，可自动检测集群配置风险。
 
@@ -108,17 +108,17 @@ kubectl logs job.batch/kube-bench
 - 评估控制平面组件配置
 - 提供详细的修复建议
 
-### 其他推荐安全工具
+### 4.2 其他推荐安全工具 {/* #其他推荐安全工具 */}
 
 - **Falco**：运行时安全监控
 - **OPA Gatekeeper**：策略即代码管理
 - **Trivy**：容器镜像漏洞扫描
 
-## 网络安全策略
+## 5. 网络安全策略 {/* #网络安全策略 */}
 
 网络安全是 Kubernetes 集群防护体系的重要组成部分，需结合网络策略和服务网格实现多层防护。
 
-### Network Policy 配置
+### 5.1 Network Policy 配置 {/* #network-policy-配置 */}
 
 通过配置 NetworkPolicy，可实现细粒度的流量控制。以下为拒绝所有入站流量的示例：
 
@@ -133,7 +133,7 @@ spec:
     - Ingress
 ```
 
-### 服务网格安全
+### 5.2 服务网格安全 {/* #服务网格安全 */}
 
 采用 Istio、Linkerd 等服务网格方案，可进一步提升集群安全性：
 
@@ -141,11 +141,11 @@ spec:
 - 细粒度访问控制
 - 流量监控和审计
 
-## 监控与日志安全
+## 6. 监控与日志安全 {/* #监控与日志安全 */}
 
 完善的监控与日志体系有助于及时发现安全事件并追溯问题根因。
 
-### 审计日志配置
+### 6.1 审计日志配置 {/* #审计日志配置 */}
 
 启用 Kubernetes 审计功能，记录关键操作：
 
@@ -154,7 +154,7 @@ spec:
 --audit-policy-file=/etc/kubernetes/policies/audit-policy.yaml
 ```
 
-### 安全事件监控
+### 6.2 安全事件监控 {/* #安全事件监控 */}
 
 建立安全事件响应机制，提升安全运营能力：
 
@@ -162,11 +162,11 @@ spec:
 - 建立事件响应流程
 - 定期进行安全演练
 
-## 总结
+## 7. 总结 {/* #总结 */}
 
 Kubernetes 集群安全需覆盖端口、API、节点、网络、监控等多个层面。通过合理配置认证授权、强化节点与容器安全、落地网络策略、引入自动化安全工具和完善日志监控体系，可大幅提升集群整体安全性。建议结合实际业务场景，持续优化安全防护措施，构建可信赖的云原生基础设施。
 
-## 参考文献
+## 8. 参考资料 {/* #参考文献 */}
 
 - [CIS Kubernetes Benchmark - cisecurity.org](https://www.cisecurity.org/benchmark/kubernetes)
 - [Kubernetes Security Best Practices - kubernetes.io](https://kubernetes.io/docs/concepts/security/)

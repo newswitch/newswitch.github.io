@@ -1,9 +1,9 @@
 ---
-title: HDFS 容量规划、性能指标与故障排查
+title: "HDFS 容量规划、性能指标与故障排查"
 sidebar_label: "04. HDFS 容量规划、性能指标与故障排查"
 sidebar_position: 4
+description: "建立 HDFS 容量、吞吐、安全水位和恢复模型，并用分层证据排查读写慢、坏块与空间异常。"
 tags: [HDFS, 容量规划, 性能, 故障排查]
-description: 建立 HDFS 容量、吞吐、安全水位和恢复模型，并用分层证据排查读写慢、坏块与空间异常。
 ---
 
 # HDFS 容量规划、性能指标与故障排查
@@ -33,15 +33,15 @@ HDFS 能启动不代表可承载生产。容量规划必须包含副本/EC、增
 
 ## 3. 指标分层
 
-### NameNode
+### 3.1 NameNode {/* #namenode */}
 
 files/blocks、heap/GC、RPC queue/processing time、safe mode、missing/corrupt/under-replicated block、checkpoint age。
 
-### DataNode
+### 3.2 DataNode {/* #datanode */}
 
 容量与卷差异、读写 bytes/ops/latency、xceiver 数、volume failure、block verification、网络和磁盘 await/queue。
 
-### 客户端/作业
+### 3.3 客户端/作业 {/* #客户端作业 */}
 
 open/create 延迟、local/remote read、失败重试、每 task input bytes、P50/P95/max task duration。集群平均吞吐会掩盖某个慢 DataNode。
 
@@ -57,19 +57,19 @@ open/create 延迟、local/remote read、失败重试、每 task input bytes、P
 
 ## 5. 典型场景
 
-### `No space left` 但报表显示有空间
+### 5.1 `No space left` 但报表显示有空间 {/* #no-space-left-但报表显示有空间 */}
 
 检查单个 DataNode/volume 是否满、reserved space、目录 quota、写入放置约束和非 HDFS 文件占用。总容量有余量不代表每个写 pipeline 都能找到合法目标。
 
-### 小文件导致 NameNode 压力
+### 5.2 小文件导致 NameNode 压力 {/* #小文件导致-namenode-压力 */}
 
 表现为文件数增长远快于字节、RPC queue 和 heap 上升、list/open 慢。治理在 writer 端合并文件、提高 rolling size、批量 compaction 和设置 quota；扩大 NameNode heap 只是争取时间。
 
-### 单个文件读慢
+### 5.3 单个文件读慢 {/* #单个文件读慢 */}
 
 查看 Block 副本位置，尝试其他副本；对比对应 DataNode 磁盘和网络。若只有某个副本慢，应隔离慢盘/节点，而不是全局扩容。
 
-### 大量 under-replicated
+### 5.4 大量 under-replicated {/* #大量-under-replicated */}
 
 确认是否节点故障或机架断链，检查合法目标空间和复制队列。限制恢复流量要兼顾业务 P99 与数据暴露时间。
 
@@ -98,7 +98,7 @@ open/create 延迟、local/remote read、失败重试、每 task input bytes、P
 
 上一篇：[DataNode 复制、机架感知、再平衡与纠删码](./03-DataNode复制机架感知再平衡与纠删码.md)　下一篇：[YARN 资源模型与调度路径](./05-YARN资源模型与调度路径.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [HDFS Commands Guide](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html)
 - [HDFS Metrics](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/Metrics.html)

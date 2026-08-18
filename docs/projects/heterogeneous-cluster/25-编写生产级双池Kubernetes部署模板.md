@@ -1,16 +1,18 @@
 ---
-title: 生产级Kubernetes部署清单——把“能运行”变成“可上线”
-sidebar_label: 25 · 生产级K8s部署清单
+title: "生产级Kubernetes部署清单——把“能运行”变成“可上线”"
+sidebar_label: "25. 25 · 生产级K8s部署清单"
+sidebar_position: 25
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第七阶段——生产服务 本文定位：生产部署基线、YAML 骨架、发布与回滚检查表"
+tags: [Kubernetes, 生产部署, PDB, 探针, 发布回滚, 双资源池]
 date: 2026-08-07 25:00:00
 categories: 云原生
-tags: [Kubernetes, 生产部署, PDB, 探针, 发布回滚, 双资源池]
 ---
 
 # 生产级Kubernetes部署清单——把“能运行”变成“可上线”
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第七阶段——生产服务  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第七阶段——生产服务
 **本文定位**：生产部署基线、YAML 骨架、发布与回滚检查表
 :::
 
@@ -26,15 +28,11 @@ tags: [Kubernetes, 生产部署, PDB, 探针, 发布回滚, 双资源池]
 
 对照：[第 22 篇 NVIDIA 部署](./22-在NVIDIA机器部署原生vLLM.md) · [第 23 篇昇腾部署](./23-在昇腾机器部署vLLM-Ascend.md) · [第 24 篇多机通信](./24-多卡多机NCCL路线与HCCL路线.md)。
 
----
-
-## 一、学完本文应掌握什么
+## 1. 学完本文应掌握什么 {/* #一学完本文应掌握什么 */}
 
 区分「容器存活」「服务就绪」和「业务可用」；为冷启动设计 startup/readiness/liveness；正确选择滚动更新、蓝绿或停机更新；用 PDB 和拓扑分散降低计划内中断风险；配置资源、权限、存储、优雅终止和网络边界；发布前完成合成请求与指标验收；通过 Deployment 历史快速回滚；为两池维护同结构、不同参数的部署模板。
 
----
-
-## 二、什么叫「生产级」
+## 2. 什么叫「生产级」 {/* #二什么叫生产级 */}
 
 | 能力 | 最低要求 | 验收方式 |
 |------|----------|----------|
@@ -51,9 +49,7 @@ tags: [Kubernetes, 生产部署, PDB, 探针, 发布回滚, 双资源池]
 同一个分布式推理实例内部不能混用 NVIDIA GPU 与昇腾 NPU。双资源池的统一发生在 Kubernetes 控制面、网关、存储和运维层，不发生在一个模型进程组内部。
 :::
 
----
-
-## 三、一个生产服务包含哪些对象
+## 3. 一个生产服务包含哪些对象 {/* #三一个生产服务包含哪些对象 */}
 
 ```mermaid
 flowchart TD
@@ -78,9 +74,7 @@ flowchart TD
 
 多机紧耦合实例应使用 LeaderWorkerSet、Ray、MPI Operator 或厂商编排，不要把相互依赖的 Rank 伪装成几个独立 Deployment 副本。
 
----
-
-## 四、上线前必须冻结四类版本
+## 4. 上线前必须冻结四类版本 {/* #四上线前必须冻结四类版本 */}
 
 | 类型 | 应记录 |
 |------|--------|
@@ -91,9 +85,7 @@ flowchart TD
 
 「另一池同版本能运行」不能作为本池兼容性证据。
 
----
-
-## 五、生产 YAML 骨架
+## 5. 生产 YAML 骨架 {/* #五生产-yaml-骨架 */}
 
 下面以 NVIDIA 池单机单卡副本为例，是教学骨架，不是万能可直接上线模板。
 
@@ -261,9 +253,7 @@ spec:
 
 生产推理优先 ClusterIP，由统一网关暴露，不要给每个模型都创建 NodePort 或公网 LoadBalancer。应用不访问 Kubernetes API 时，不要自动挂载 ServiceAccount Token。
 
----
-
-## 六、怎样把模板改成昇腾池
+## 6. 怎样把模板改成昇腾池 {/* #六怎样把模板改成昇腾池 */}
 
 | 项目 | NVIDIA 池 | 昇腾池 |
 |------|-----------|--------|
@@ -281,9 +271,7 @@ kubectl get node -l accelerator.vendor=ascend \
 
 不要从网络文章复制一个昇腾资源名后直接写进生产 YAML。
 
----
-
-## 七、三种探针应该怎样分工
+## 7. 三种探针应该怎样分工 {/* #七三种探针应该怎样分工 */}
 
 | 探针 | 职责 | 注意 |
 |------|------|------|
@@ -293,9 +281,7 @@ kubectl get node -l accelerator.vendor=ascend \
 
 探针不是业务验收。建议：Kubernetes 探针（秒级）+ 外部合成请求（1～5 分钟）。
 
----
-
-## 八、滚动更新为什么经常卡在设备容量上
+## 8. 滚动更新为什么经常卡在设备容量上 {/* #八滚动更新为什么经常卡在设备容量上 */}
 
 `maxUnavailable: 0` + `maxSurge: 1` 要求先额外创建新副本——资源池中还要有一个完整推理副本的空闲资源。若每副本 8 卡且全部已分配：新 Pod Pending → 永不 Ready → 旧 Pod 不删 → 发布停滞。
 
@@ -308,9 +294,7 @@ kubectl get node -l accelerator.vendor=ascend \
 
 `progressDeadlineSeconds` 也要覆盖冷启动和调度时间。
 
----
-
-## 九、PDB 能保护什么，不能保护什么
+## 9. PDB 能保护什么，不能保护什么 {/* #九pdb-能保护什么不能保护什么 */}
 
 ```yaml
 apiVersion: policy/v1
@@ -328,9 +312,7 @@ spec:
 
 两副本时 `minAvailable: 1` 表示自愿中断（如 drain）时至少保留一个健康副本。PDB **不能**保证：掉电、内核崩溃、硬件故障、直接删 Pod、错误滚动策略、两副本同故障域、Ready 但业务不可用。维护前同时检查 PDB、Pod、Deployment。必须配合 `topologySpreadConstraints` 或反亲和分散到不同主机。
 
----
-
-## 十、资源配置与 QoS
+## 10. 资源配置与 QoS {/* #十资源配置与-qos */}
 
 ```text
 单副本设备数 = TP × PP（以实际框架拓扑为准）
@@ -339,9 +321,7 @@ spec:
 
 CPU/内存不能随便写；Guaranteed QoS（requests=limits）利于稳定，但过低 limit 会节流——先压测再留余量。内存型 emptyDir 的 `/dev/shm` 占用仍受 Pod 内存和节点容量约束。
 
----
-
-## 十一、优雅终止不是简单 sleep
+## 11. 优雅终止不是简单 sleep {/* #十一优雅终止不是简单-sleep */}
 
 ```text
 端点进入终止 → preStop → SIGTERM
@@ -355,9 +335,7 @@ kubectl delete pod -n ai-serving POD_NAME
 kubectl get pod -n ai-serving POD_NAME -w
 ```
 
----
-
-## 十二～十三、权限、密钥与 NetworkPolicy
+## 12. 十二～十三、权限、密钥与 NetworkPolicy {/* #十二十三权限密钥与-networkpolicy */}
 
 基线：`allowPrivilegeEscalation: false`、`capabilities.drop: ["ALL"]`；镜像支持时再加 `readOnlyRootFilesystem` / `runAsNonRoot`，但须实测。敏感数据用 Secret 或外部密钥系统；客户端凭证与内部服务凭证分离。
 
@@ -388,17 +366,15 @@ spec:
 
 生效前确认 CNI 支持；若默认拒绝 Egress，须显式放行 DNS、存储、监控等真实依赖。
 
----
+## 13. 发布前的七道门 {/* #十四发布前的七道门 */}
 
-## 十四、发布前的七道门
-
-1. **静态检查**：`kubectl apply --dry-run=server`、`kubectl diff`、CI Schema/策略/扫描  
-2. **调度检查**：正确资源池、设备数、不跨池、副本分散、无意外 hostPath  
-3. **模型完整性**：revision、哈希、Tokenizer、Chat Template  
-4. **健康和日志**：`rollout status`、logs、EndpointSlice  
-5. **非流式合成请求**：状态、JSON、模型别名、输出、时延  
-6. **流式请求**：首 Token、缓冲、断开后任务释放  
-7. **容量和故障**：P50/P95/P99、TTFT、显存/HBM、删 Pod、PDB、回滚  
+1. **静态检查**：`kubectl apply --dry-run=server`、`kubectl diff`、CI Schema/策略/扫描
+2. **调度检查**：正确资源池、设备数、不跨池、副本分散、无意外 hostPath
+3. **模型完整性**：revision、哈希、Tokenizer、Chat Template
+4. **健康和日志**：`rollout status`、logs、EndpointSlice
+5. **非流式合成请求**：状态、JSON、模型别名、输出、时延
+6. **流式请求**：首 Token、缓冲、断开后任务释放
+7. **容量和故障**：P50/P95/P99、TTFT、显存/HBM、删 Pod、PDB、回滚
 
 ```bash
 curl -sS http://model-a-nvidia.ai-serving.svc:8000/v1/chat/completions \
@@ -411,9 +387,7 @@ curl -sS http://model-a-nvidia.ai-serving.svc:8000/v1/chat/completions \
   }'
 ```
 
----
-
-## 十五、标准发布与回滚 SOP
+## 14. 标准发布与回滚 SOP {/* #十五标准发布与回滚-sop */}
 
 **发布前**：变更单含镜像/模型/参数/矩阵；同型号预验证；有额外完整设备组；告警清零或说明；已保存回滚命令；业务确认窗口与停止条件。
 
@@ -431,9 +405,7 @@ kubectl rollout undo deployment/model-a-nvidia -n ai-serving
 
 回滚 Deployment 不一定回滚外部模型目录和网关配置。发布单须把三者视作一个版本集合：工作负载 + 模型 + 路由配置。
 
----
-
-## 十六、常见故障排查
+## 15. 常见故障排查 {/* #十六常见故障排查 */}
 
 | 现象 | 方向 |
 |------|------|
@@ -444,21 +416,17 @@ kubectl rollout undo deployment/model-a-nvidia -n ai-serving
 | 无法 drain | PDB；先确认他节点有完整设备组 |
 | 删 Pod 流式中断 | readiness、网关排空、SIGTERM、宽限期、客户端重试 |
 
----
+## 16. 十七～十八、双池检查表与练习 {/* #十七十八双池检查表与练习 */}
 
-## 十七～十八、双池检查表与练习
-
-**公共层**：Namespace/RBAC 最小化；版本可追溯；探针基于真实冷启动；ClusterIP；跨节点分散；PDB 已演练；NetworkPolicy 已验证；流式/非流式合成；发布与回滚条件明确；可观测已接入。  
-**NVIDIA**：vendor/pool/taint、`nvidia.com/gpu` 与 TP/PP、CUDA/驱动/vLLM 冻结。  
+**公共层**：Namespace/RBAC 最小化；版本可追溯；探针基于真实冷启动；ClusterIP；跨节点分散；PDB 已演练；NetworkPolicy 已验证；流式/非流式合成；发布与回滚条件明确；可观测已接入。
+**NVIDIA**：vendor/pool/taint、`nvidia.com/gpu` 与 TP/PP、CUDA/驱动/vLLM 冻结。
 **昇腾**：vendor/pool/taint、资源名来自当前 Plugin、固件/驱动/CANN/vLLM-Ascend 冻结。
 
-**练习 1**：16 卡池、每副本 4 卡、已跑 3 副本——算 `maxSurge: 1` 能否创建新副本；容忍一台 4 卡维护是否够；不够时选扩容、降副本还是改策略。  
-**练习 2**：人为延长启动，观察探针过短与合理时的行为。  
+**练习 1**：16 卡池、每副本 4 卡、已跑 3 副本——算 `maxSurge: 1` 能否创建新副本；容忍一台 4 卡维护是否够；不够时选扩容、降副本还是改策略。
+**练习 2**：人为延长启动，观察探针过短与合理时的行为。
 **练习 3**：发布不会 Ready 的测试版本，验证进展失败、旧副本仍服务、`rollout undo`、网关与模型目录是否也需回滚。
 
----
-
-## 十九、本篇小结
+## 17. 本篇小结 {/* #十九本篇小结 */}
 
 ```text
 版本冻结 → 正确调度 → 模型启动 → 就绪接流量
@@ -470,9 +438,7 @@ kubectl rollout undo deployment/model-a-nvidia -n ai-serving
 
 下一篇将把两个池的内部 Service 收敛到统一 AI 网关，对外暴露 OpenAI 兼容接口，并处理 TLS、鉴权、限流、流式响应和可观测性。
 
----
-
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [Configure Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 - [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
@@ -483,15 +449,11 @@ kubectl rollout undo deployment/model-a-nvidia -n ai-serving
 - [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 - [vLLM Kubernetes](https://docs.vllm.ai/en/latest/deployment/k8s.html)
 
----
-
-## 相关链接
+## 19. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 24 篇：NCCL 与 HCCL 多卡多机](./24-多卡多机NCCL路线与HCCL路线.md)
 - [第 22 篇：NVIDIA 池部署原生 vLLM](./22-在NVIDIA机器部署原生vLLM.md)
 - [第 23 篇：昇腾池部署 vLLM-Ascend](./23-在昇腾机器部署vLLM-Ascend.md)
-
----
 
 ← [第 24 篇](./24-多卡多机NCCL路线与HCCL路线.md) · → [第 26 篇：统一OpenAI兼容网关](./26-通过网关暴露统一OpenAI兼容接口.md)

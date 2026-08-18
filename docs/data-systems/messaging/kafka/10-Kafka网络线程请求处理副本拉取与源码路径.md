@@ -2,8 +2,8 @@
 title: "Network Thread、Request Handler、Replica Fetch 与源码路径"
 sidebar_label: "10. Network Thread、Request Handler、Replica Fetch 与源码路径"
 sidebar_position: 10
-tags: [Kafka, 源码, Network Thread, Replica Fetch]
 description: "从 SocketServer 到 KafkaApis、日志追加和副本拉取追踪 Kafka Broker 请求。"
+tags: [Kafka, 源码, Network Thread, Replica Fetch]
 ---
 
 # Network Thread、Request Handler、Replica Fetch 与源码路径
@@ -23,26 +23,37 @@ SocketServer acceptor/processor
 
 网络线程负责连接和协议，不应执行长存储逻辑；Request Handler 处理 API，受队列和线程池限制。RequestQueueTime、LocalTime、RemoteTime、ResponseQueueTime、ResponseSendTime 可帮助分段。
 
-## Produce
+## 1. Produce {/* #produce */}
 
 Produce → 分区 leader → append validation/record batch → page cache/log → follower fetch → 根据 acks/min ISR 返回。磁盘写、复制等待和请求队列是不同阶段。
 
-## Fetch
+## 2. Fetch {/* #fetch */}
 
 Consumer Fetch 可 long-poll 等待 min bytes；Replica Fetcher 从 leader 拉日志并推进 LEO/HW。副本落后查 fetch queue、网络、磁盘、单 partition 热点和 GC。
 
-## 源码方法
+## 3. 源码方法 {/* #源码方法 */}
 
 用 API key 搜 handler，再沿 manager/log；通过单元测试和 protocol schema 确认版本。使用 JFR/async-profiler/perf 只在受控环境，关联 request metrics 和线程 dump。
 
-## 验收题
+## 4. 源码阅读与火焰图方法 {/* #源码阅读与火焰图方法 */}
+
+固定 Kafka 4.3.x tag，围绕 Produce 和 Fetch 两条请求从协议生成代码、Acceptor/Processor、request queue、KafkaApis、ReplicaManager、log/record batch 直到响应回写建立调用图。KRaft 控制器请求另画一条路径，不再沿用 ZooKeeper 时代类图。
+
+```bash
+kafka-broker-api-versions.sh --bootstrap-server broker:9092
+jcmd <pid> JFR.start name=kafka settings=profile duration=60s filename=/tmp/kafka.jfr
+```
+
+运行时将 `RequestQueueTimeMs`、`LocalTimeMs`、`RemoteTimeMs`、`ResponseQueueTimeMs`、network/request handler idle 与磁盘/网络指标对应。网络线程忙不一定要增加线程：大请求、TLS、连接风暴、磁盘慢和副本拉取都会反映到不同阶段。一次只改变线程数、batch 或连接参数之一，再用相同负载复测。
+
+## 5. 验收题 {/* #验收题 */}
 
 - Network Processor 与 Request Handler 为什么分离？
 - acks=all 的等待发生在哪条路径？
 - Replica Fetch 与 Consumer Fetch 有何共同/不同？
 - RequestQueueTime 高说明什么？
 
-## 参考资料
+## 6. 参考资料 {/* #参考资料 */}
 
 - [Kafka source](https://github.com/apache/kafka)
 - [Kafka protocol](https://kafka.apache.org/protocol)

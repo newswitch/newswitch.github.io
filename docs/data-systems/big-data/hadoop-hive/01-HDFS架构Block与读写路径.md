@@ -1,9 +1,9 @@
 ---
-title: HDFS 架构、Block 与读写路径
+title: "HDFS 架构、Block 与读写路径"
 sidebar_label: "01. HDFS 架构、Block 与读写路径"
 sidebar_position: 1
+description: "从 NameNode、DataNode、Block 和客户端协议理解 HDFS 的读写、容错与性能边界。"
 tags: [HDFS, Hadoop, Block, 数据路径]
-description: 从 NameNode、DataNode、Block 和客户端协议理解 HDFS 的读写、容错与性能边界。
 ---
 
 # HDFS 架构、Block 与读写路径
@@ -97,7 +97,7 @@ hdfs dfs -cat /lab/hdfs/sample.bin | sha256sum
 
 下一篇：[NameNode 元数据、Checkpoint、HA 与 Federation](./02-NameNode元数据Checkpoint-HA与Federation.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Apache Hadoop HDFS 用户指南](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html)
 - [HDFS Architecture](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html)

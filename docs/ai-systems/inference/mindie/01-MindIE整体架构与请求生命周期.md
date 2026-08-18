@@ -1,9 +1,9 @@
 ---
-title: MindIE 整体架构与请求生命周期
+title: "MindIE 整体架构与请求生命周期"
 sidebar_label: "01. MindIE 整体架构与请求生命周期"
 sidebar_position: 1
+description: "沿一次 OpenAI 请求解释 MindIE Server、LLM Manager、Text Generator、Modeling、CANN 与 910B 的职责和运行过程。"
 tags: [MindIE, MindIE LLM, ATB Models, Scheduler, Ascend 910B]
-description: 沿一次 OpenAI 请求解释 MindIE Server、LLM Manager、Text Generator、Modeling、CANN 与 910B 的职责和运行过程。
 ---
 
 # MindIE 整体架构与请求生命周期
@@ -31,7 +31,7 @@ CANN / HCCL
 Ascend 910B / HBM / HCCS / RoCE
 ```
 
-### 容易混淆的产品边界
+### 1.1 容易混淆的产品边界 {/* #容易混淆的产品边界 */}
 
 | 名称 | 主要定位 |
 |---|---|
@@ -176,7 +176,7 @@ source /usr/local/Ascend/mindie/latest/mindie-service/set_env.sh
 服务与指标端口 Ready
 ```
 
-### 启动卡住的证据映射
+### 4.1 启动卡住的证据映射 {/* #启动卡住的证据映射 */}
 
 | 阶段 | 常见问题 |
 |---|---|
@@ -281,7 +281,7 @@ Executor 下发 Text Generator
 完成/继续/抢占/释放
 ```
 
-### `supportSelectBatch`
+### 8.1 `supportSelectBatch` {/* #supportselectbatch */}
 
 在 Prefill/Decode 混部场景，关闭时更偏向先执行 Prefill；开启后，调度器可结合 Prefill/Decode 请求数及估计时间动态选择下一阶段。估计参数不符合实际硬件和模型时，可能导致 Decode 被长 Prefill 干扰或 GPU/NPU 泡沫增加。
 
@@ -508,7 +508,7 @@ Server/EndPoint
 
 排障的第一步永远是确定最后一个正常层。只有在 Server、Tokenizer、Scheduler 和 Executor 都有任务证据后，才应把问题归因到 NPU 算子或硬件。
 
-## 官方资料
+## 21. 官方资料 {/* #官方资料 */}
 
 - [MindIE LLM 架构介绍](https://www.hiascend.com/document/detail/zh/mindie/230/LLMframe/llmdev/mindie_llm0001.html)
 - [MindIE 服务化配置参数](https://www.hiascend.com/document/detail/zh/mindie/230/LLMframe/llmdev/mindie_service0285.html)

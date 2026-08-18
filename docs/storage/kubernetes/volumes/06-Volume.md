@@ -2,15 +2,15 @@
 title: "Volume"
 sidebar_label: "06. Volume"
 sidebar_position: 6
-tags: [Kubernetes, 存储, 学习路线]
 description: "本文详细介绍 Kubernetes Volume 的概念、类型和使用方法，包括各种存储卷类型的配置示例、挂载传播、subPath 等高级特性，以及最佳实践和使用场景。"
+tags: [Kubernetes, 存储, 学习路线]
 ---
 
 # Volume
 
 > Kubernetes Volume（卷）为容器提供持久化和共享存储能力，是实现数据持久化、配置注入和多容器协作的核心机制。合理选择和使用卷类型，是保障应用高可用与数据安全的关键。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 在容器化环境下，文件默认存储于临时磁盘，这会带来如下挑战：
 
@@ -23,7 +23,7 @@ description: "本文详细介绍 Kubernetes Volume 的概念、类型和使用�
 
 容器进程看到的文件系统由镜像和挂载的卷组成。卷无法相互嵌套挂载，每个容器需独立声明挂载路径。
 
-## 卷的类型
+## 2. 卷的类型 {/* #卷的类型 */}
 
 Kubernetes 支持多种卷类型，适用于不同的存储场景：
 
@@ -35,11 +35,11 @@ Kubernetes 支持多种卷类型，适用于不同的存储场景：
 
 **注意**：部分卷类型（如 `gitRepo`、`flocker`、`quobyte`、`storageos`）已被弃用，建议优先使用 CSI 驱动或主流存储方案。
 
-## 常用卷类型详解
+## 3. 常用卷类型详解 {/* #常用卷类型详解 */}
 
 在实际应用中，以下几类卷最为常见。下面分别介绍其原理、适用场景及配置示例。
 
-### emptyDir
+### 3.1 emptyDir {/* #emptydir */}
 
 `emptyDir` 卷在 Pod 分配到节点时创建，Pod 运行期间一直存在。最初为空，Pod 内所有容器可读写该卷。Pod 从节点移除时，卷数据被删除。
 
@@ -70,7 +70,7 @@ spec:
     emptyDir: {}
 ```
 
-### configMap
+### 3.2 configMap {/* #configmap */}
 
 `configMap` 卷用于将配置信息注入 Pod。ConfigMap 中的数据可作为文件挂载到容器，便于应用读取。
 
@@ -94,7 +94,7 @@ spec:
       name: my-config
 ```
 
-### secret
+### 3.3 secret {/* #secret */}
 
 `secret` 卷用于传递敏感信息（如密码、密钥）。Secret 数据以文件形式挂载，底层由 tmpfs（内存文件系统）支持，避免写入磁盘。
 
@@ -121,7 +121,7 @@ spec:
       secretName: my-secret
 ```
 
-### persistentVolumeClaim
+### 3.4 persistentVolumeClaim {/* #persistentvolumeclaim */}
 
 `persistentVolumeClaim`（PVC）卷用于将 [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 挂载到容器，实现数据持久化。PVC 屏蔽了底层存储细节，便于跨平台迁移。
 
@@ -145,7 +145,7 @@ spec:
       claimName: my-pvc
 ```
 
-### hostPath
+### 3.5 hostPath {/* #hostpath */}
 
 `hostPath` 卷将主机节点的文件或目录挂载到 Pod。适用于需要直接访问主机资源的场景，但存在安全风险。
 
@@ -194,7 +194,7 @@ spec:
       type: Directory
 ```
 
-### nfs
+### 3.6 nfs {/* #nfs */}
 
 `nfs` 卷支持将 NFS（网络文件系统）共享挂载到 Pod，实现多 Pod 共享数据。NFS 卷内容不会因 Pod 删除而丢失。
 
@@ -221,7 +221,7 @@ spec:
       path: /path/to/share
 ```
 
-### csi
+### 3.7 csi {/* #csi */}
 
 CSI（Container Storage Interface）是容器存储接口标准，支持第三方存储插件。通过 CSI 卷，Pod 可使用任意符合规范的存储驱动。
 
@@ -247,7 +247,7 @@ spec:
         storage.kubernetes.io/csiProvisionerIdentity: my-provisioner
 ```
 
-## 使用 subPath
+## 4. 使用 subPath {/* #使用-subpath */}
 
 有时需在同一卷中为不同用途分配子目录。`volumeMounts.subPath` 属性可指定挂载卷的子路径。
 
@@ -264,7 +264,7 @@ spec:
     image: mysql:8.0
     env:
     - name: MYSQL_ROOT_PASSWORD
-      value: "rootpasswd" 
+      value: "rootpasswd"
     volumeMounts:
     - mountPath: /var/lib/mysql
       name: site-data
@@ -281,7 +281,7 @@ spec:
       claimName: my-lamp-site-data
 ```
 
-## 动态子路径
+## 5. 动态子路径 {/* #动态子路径 */}
 
 Kubernetes 支持通过 `subPathExpr` 字段结合环境变量动态生成子路径，适用于按 Pod 名称等属性区分目录的场景。
 
@@ -309,7 +309,7 @@ spec:
       claimName: my-storage
 ```
 
-## projected 卷
+## 6. projected 卷 {/* #projected-卷 */}
 
 `projected` 卷可将多种卷源（如 `secret`、`downwardAPI`、`configMap`、`serviceAccountToken`）合并挂载到同一目录，便于统一管理。
 
@@ -349,7 +349,7 @@ spec:
             path: my-group/my-config
 ```
 
-## 挂载传播
+## 7. 挂载传播 {/* #挂载传播 */}
 
 挂载传播（mount propagation）允许容器间或 Pod 间共享挂载的卷。通过 `volumeMounts.mountPropagation` 字段配置：
 
@@ -380,7 +380,7 @@ spec:
       path: /mnt/shared
 ```
 
-## 资源限制
+## 8. 资源限制 {/* #资源限制 */}
 
 对于 `emptyDir` 卷，可通过 `sizeLimit` 字段限制最大空间，防止资源滥用。
 
@@ -402,7 +402,7 @@ spec:
       sizeLimit: 1Gi
 ```
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 在实际生产环境中，建议遵循以下最佳实践：
 
@@ -422,11 +422,11 @@ spec:
 |                        | 定期测试恢复流程                           | —                       |
 |                        | 利用快照功能（如支持）                     | —                       |
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 Kubernetes Volume 提供了丰富的存储类型和灵活的挂载方式，满足了容器化应用对数据持久化、配置管理和多容器协作的多样需求。合理选择卷类型、规范配置和关注安全性能，是保障云原生应用高可用和数据安全的基础。建议结合实际业务场景，充分利用 Kubernetes 的存储能力，提升系统的可靠性与可维护性。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 - [Volumes - kubernetes.io](https://kubernetes.io/docs/concepts/storage/volumes/)
 - [Persistent Volumes - kubernetes.io](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)

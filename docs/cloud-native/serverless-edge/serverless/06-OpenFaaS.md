@@ -2,19 +2,19 @@
 title: "OpenFaaS"
 sidebar_label: "06. OpenFaaS"
 sidebar_position: 6
-tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "OpenFaaS 的架构、安装和使用方法。"
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 ---
 
 # OpenFaaS
 
 > OpenFaaS 为 Kubernetes 提供了简单易用的 Serverless 平台，支持多语言、自动扩缩容和丰富的监控集成，极大提升了函数开发与运维效率。
 
-## OpenFaaS 简介
+## 1. OpenFaaS 简介 {/* #openfaas-简介 */}
 
 OpenFaaS（Functions as a Service）是一个轻量级 Serverless 框架，使开发者能够将几乎任何程序打包为容器化函数，并通过 HTTP API 调用。它提供了简单易用的 CLI 工具和 Web UI，支持多种编程语言和部署方式。
 
-### 核心特性
+### 1.1 核心特性 {/* #核心特性 */}
 
 OpenFaaS 具备以下主要特性：
 
@@ -25,7 +25,7 @@ OpenFaaS 具备以下主要特性：
 - **CLI 工具**：强大的命令行工具 faas-cli
 - **监控集成**：内置 Prometheus 监控支持
 
-## OpenFaaS 架构
+## 2. OpenFaaS 架构 {/* #openfaas-架构 */}
 
 下图展示了 OpenFaaS 的整体架构及各组件关系。
 
@@ -72,18 +72,18 @@ graph TD
 
 ![OpenFaaS 架构图](/images/k8s/serverless/openfaas/7f4e69e130e13423a66bda0e2f5d2e63.svg)
 
-### 组件说明
+### 2.1 组件说明 {/* #组件说明 */}
 
 - **API Gateway**：处理 HTTP 请求路由、认证和限流
 - **Watchdog**：执行函数的轻量级进程，负责函数生命周期管理
 - **faas-cli**：命令行工具，用于函数开发、构建和部署
 - **Web UI**：图形界面，用于函数管理和监控
 
-## 安装 OpenFaaS
+## 3. 安装 OpenFaaS {/* #安装-openfaas */}
 
 OpenFaaS 支持多种安装方式，推荐使用 Helm 或 arkade 工具。
 
-### 使用 Helm 安装
+### 3.1 使用 Helm 安装 {/* #使用-helm-安装 */}
 
 以下命令演示如何通过 Helm 安装 OpenFaaS：
 
@@ -103,7 +103,7 @@ helm upgrade --install openfaas openfaas/openfaas \
   --set generateBasicAuth=true
 ```
 
-### 获取访问凭据
+### 3.2 获取访问凭据 {/* #获取访问凭据 */}
 
 安装完成后，可通过以下命令获取管理员密码并访问 Web UI：
 
@@ -117,7 +117,7 @@ kubectl port-forward -n openfaas svc/gateway 8080:8080
 # 浏览器访问 http://localhost:8080
 ```
 
-### 使用 arkade 快速安装
+### 3.3 使用 arkade 快速安装 {/* #使用-arkade-快速安装 */}
 
 arkade 提供一键安装体验：
 
@@ -129,11 +129,11 @@ arkade install openfaas
 arkade openfaas password
 ```
 
-## 函数开发和部署
+## 4. 函数开发和部署 {/* #函数开发和部署 */}
 
 OpenFaaS 支持多语言函数开发，提供丰富的模板和便捷的部署流程。
 
-### 创建第一个函数
+### 4.1 创建第一个函数 {/* #创建第一个函数 */}
 
 以下为创建 Python 函数的完整流程：
 
@@ -148,7 +148,7 @@ faas-cli new hello-world --lang python3
 tree hello-world/
 ```
 
-### 函数模板
+### 4.2 函数模板 {/* #函数模板 */}
 
 OpenFaaS 提供多种语言模板，便于快速开发：
 
@@ -163,11 +163,11 @@ faas-cli new my-function --lang node
 faas-cli new my-function --lang python3
 ```
 
-### 函数代码示例
+### 4.3 函数代码示例 {/* #函数代码示例 */}
 
 以下分别为 Python 和 Go 语言的函数示例。
 
-#### Python 函数
+#### 4.3.1 Python 函数 {/* #python-函数 */}
 
 ```python
 import json
@@ -194,7 +194,7 @@ def handle(req):
         })
 ```
 
-#### Go 函数
+#### 4.3.2 Go 函数 {/* #go-函数 */}
 
 ```go
 package function
@@ -227,7 +227,7 @@ func Handle(req []byte) string {
 }
 ```
 
-### 部署函数
+### 4.4 部署函数 {/* #部署函数 */}
 
 函数部署通过 stack.yml 配置文件完成，支持多种参数设置。
 
@@ -261,11 +261,11 @@ faas-cli deploy -f stack.yml
 faas-cli list
 ```
 
-## 函数配置
+## 5. 函数配置 {/* #函数配置 */}
 
 OpenFaaS 支持灵活的扩缩容、环境变量和网络配置。
 
-### 扩缩容配置
+### 5.1 扩缩容配置 {/* #扩缩容配置 */}
 
 通过 labels 字段可灵活配置扩缩容策略：
 
@@ -288,7 +288,7 @@ functions:
       com.openfaas.scale.type: "cpu"
 ```
 
-### 环境变量配置
+### 5.2 环境变量配置 {/* #环境变量配置 */}
 
 可通过 environment 字段注入数据库、缓存、API 等配置信息：
 
@@ -312,7 +312,7 @@ functions:
       - api-secret
 ```
 
-### 网络配置
+### 5.3 网络配置 {/* #网络配置 */}
 
 支持自定义路由、认证和域名等网络参数：
 
@@ -333,11 +333,11 @@ functions:
       faas.net/host: "api.example.com"
 ```
 
-## 监控和日志
+## 6. 监控和日志 {/* #监控和日志 */}
 
 OpenFaaS 默认集成 Prometheus 监控，支持多种日志采集方式。
 
-### Prometheus 集成
+### 6.1 Prometheus 集成 {/* #prometheus-集成 */}
 
 通过端口转发可访问 Prometheus 控制台：
 
@@ -348,7 +348,7 @@ kubectl port-forward -n openfaas svc/prometheus 9090:9090
 # 浏览器访问 http://localhost:9090
 ```
 
-### 关键指标
+### 6.2 关键指标 {/* #关键指标 */}
 
 常用监控指标包括：
 
@@ -357,7 +357,7 @@ kubectl port-forward -n openfaas svc/prometheus 9090:9090
 - **函数实例数**：`gateway_service_count`
 - **队列长度**：`gateway_async_queue_length`
 
-### 日志查看
+### 6.3 日志查看 {/* #日志查看 */}
 
 可通过 faas-cli 或 kubectl 查看函数和网关日志：
 
@@ -372,11 +372,11 @@ kubectl logs -n openfaas deployment/gateway
 kubectl logs -n openfaas-fn deployment/my-function
 ```
 
-## 高级特性
+## 7. 高级特性 {/* #高级特性 */}
 
 OpenFaaS 支持异步函数、函数链式调用和自定义模板等高级能力。
 
-### 异步函数
+### 7.1 异步函数 {/* #异步函数 */}
 
 通过注解可启用异步模式和回调：
 
@@ -393,7 +393,7 @@ functions:
       faas.net/callback: "http://callback.example.com/webhook"
 ```
 
-### 函数链式调用
+### 7.2 函数链式调用 {/* #函数链式调用 */}
 
 可通过 faas-flow 实现函数工作流编排：
 
@@ -421,7 +421,7 @@ functions:
     image: result-store:latest
 ```
 
-### 自定义模板
+### 7.3 自定义模板 {/* #自定义模板 */}
 
 支持自定义函数模板，满足特殊开发需求：
 
@@ -433,11 +433,11 @@ faas-cli template pull https://github.com/myorg/my-templates
 faas-cli new my-custom-function --lang custom-lang
 ```
 
-## 安全配置
+## 8. 安全配置 {/* #安全配置 */}
 
 OpenFaaS 支持多维度安全配置，包括认证、网络安全和密钥管理。
 
-### 认证和授权
+### 8.1 认证和授权 {/* #认证和授权 */}
 
 可通过注解启用基本认证和函数级别权限控制：
 
@@ -457,7 +457,7 @@ functions:
       faas.net/basic-auth: "true"
 ```
 
-### 网络安全
+### 8.2 网络安全 {/* #网络安全 */}
 
 支持 Service Mesh 集成和 mTLS 加密：
 
@@ -475,7 +475,7 @@ functions:
       security.istio.io/tlsMode: "istio"
 ```
 
-### 密钥管理
+### 8.3 密钥管理 {/* #密钥管理 */}
 
 可通过 Kubernetes Secret 管理敏感信息：
 
@@ -491,11 +491,11 @@ functions:
       - api-keys
 ```
 
-## 故障排除
+## 9. 故障排除 {/* #故障排除 */}
 
 常见问题及调试技巧，帮助快速定位和解决问题。
 
-### 常见问题
+### 9.1 常见问题 {/* #常见问题 */}
 
 1. **函数部署失败**
 
@@ -527,12 +527,12 @@ functions:
    ```bash
    # 检查扩缩容配置
    kubectl describe deployment function-name -n openfaas-fn
-   
+
    # 查看监控指标
    kubectl port-forward -n openfaas svc/prometheus 9090:9090
    ```
 
-### 调试技巧
+### 9.2 调试技巧 {/* #调试技巧 */}
 
 1. **启用调试模式**
 
@@ -566,16 +566,16 @@ functions:
    ```bash
    # 检查网络策略
    kubectl get networkpolicies -n openfaas
-   
+
    # 测试服务发现
    kubectl run test-pod --image=busybox -it --rm -- nslookup function-name.openfaas
    ```
 
-## 最佳实践
+## 10. 最佳实践 {/* #最佳实践 */}
 
 合理的函数设计和运维策略有助于提升系统稳定性和开发效率。
 
-### 开发最佳实践
+### 10.1 开发最佳实践 {/* #开发最佳实践 */}
 
 - **函数设计原则**
   - 单一职责：每个函数只做一件事情
@@ -611,7 +611,7 @@ functions:
         memory: 64Mi
   ```
 
-### 运维最佳实践
+### 10.2 运维最佳实践 {/* #运维最佳实践 */}
 
 - **监控告警**
 
@@ -643,12 +643,12 @@ functions:
   ```bash
   # 备份函数配置
   faas-cli list --format json > functions-backup.json
-  
+
   # 备份数据
   kubectl get secrets -n openfaas -o yaml > secrets-backup.yaml
   ```
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 OpenFaaS 为 Kubernetes 提供了一个简单而强大的 Serverless 平台：
 
@@ -659,7 +659,7 @@ OpenFaaS 为 Kubernetes 提供了一个简单而强大的 Serverless 平台：
 
 通过 OpenFaaS，开发者可以专注于业务逻辑的实现，而无需关心底层基础设施的管理。这使得快速原型开发和微服务构建变得更加简单和高效。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 1. [OpenFaaS 官方文档 - openfaas.com](https://www.openfaas.com/)
 2. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/)

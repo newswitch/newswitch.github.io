@@ -2,8 +2,8 @@
 title: "RAID、LVM 与文件系统选型"
 sidebar_label: "02. RAID、LVM 与文件系统选型"
 sidebar_position: 2
-tags: [RAID, LVM, ext4, XFS, 文件系统, NVMe, 容量规划]
 description: "从故障模型、性能、扩容与恢复出发选择 RAID、LVM、ext4/XFS，并设计 AI 节点本地盘布局。"
+tags: [RAID, LVM, ext4, XFS, 文件系统, NVMe, 容量规划]
 ---
 
 # RAID、LVM 与文件系统选型
@@ -399,7 +399,7 @@ Checkpoint 在上传对象存储前不能丢：可用 RAID1/10、同步写和快
 - 给出单盘故障、盘满和文件系统错误的安全恢复流程；
 - 用业务负载验证选型，而不是只引用产品特性。
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [Linux MD documentation](https://docs.kernel.org/admin-guide/md.html)
 - [LVM documentation](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/configuring_and_managing_logical_volumes/)

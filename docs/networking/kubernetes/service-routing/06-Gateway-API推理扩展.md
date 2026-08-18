@@ -2,23 +2,23 @@
 title: "Gateway API 推理扩展"
 sidebar_label: "06. Gateway API 推理扩展"
 sidebar_position: 6
-tags: [Kubernetes, 服务发现, 学习路线]
 description: "Gateway API 推理扩展"
+tags: [Kubernetes, 服务发现, 学习路线]
 ---
 
 # Gateway API 推理扩展
 
 > Gateway API Inference Extension 为 Kubernetes AI/ML 推理工作负载提供了标准化、声明式的流量管理和智能路由能力，极大提升了模型服务的可扩展性与可维护性。
 
-## 引言
+## 1. 引言 {/* #引言 */}
 
 本文系统介绍了 Kubernetes Gateway API Inference Extension 的架构、核心组件、关键资源、请求处理流程、调度算法及最佳实践，帮助读者全面理解其在 AI 推理场景下的应用价值。
 
-## 什么是 Gateway API Inference Extension
+## 2. 什么是 Gateway API Inference Extension {/* #什么是-gateway-api-inference-extension */}
 
 Gateway API Inference Extension 是 Kubernetes Gateway API 的一个扩展，专为 AI/ML 推理工作负载设计。它提供标准化 API，便于管理 AI 模型服务的路由、负载均衡和流量控制。
 
-### 核心特性
+### 2.1 核心特性 {/* #核心特性 */}
 
 - 模型路由：基于模型名称、版本等进行路由
 - 负载均衡：AI 推理服务的智能负载均衡
@@ -26,7 +26,7 @@ Gateway API Inference Extension 是 Kubernetes Gateway API 的一个扩展，专
 - 服务发现：自动发现和注册 AI 服务
 - 安全控制：API 密钥管理和访问控制
 
-## 架构概述
+## 3. 架构概述 {/* #架构概述 */}
 
 下图展示了 Gateway API Inference Extension 的整体架构：
 
@@ -73,26 +73,26 @@ graph TB
 
 ![系统架构总览](/images/k8s/service-discovery/gateway-api-inference/abaa6a57579f530656c7b442710119d1.svg)
 
-### 组件说明
+### 3.1 组件说明 {/* #组件说明 */}
 
 - Gateway：入口网关，处理外部请求
 - InferencePool：推理服务池，管理多个模型服务
 - InferenceExtension：推理扩展，提供 AI 特定功能
 - Model Servers：实际的模型推理服务
 
-## 核心组件详解
+## 4. 核心组件详解 {/* #核心组件详解 */}
 
 Gateway API Inference Extension 由四个主要组件协同工作，提供智能推理路由能力。
 
-### Gateway
+### 4.1 Gateway {/* #gateway */}
 
 Gateway 是支持 Gateway API 且实现 ext-proc 的 Kubernetes 代理。常见实现包括 GKE Gateway、Istio、Kgateway 和 Agentgateway。Gateway 负责 L4-L7 路由，并通过 gRPC 流与扩展组件集成。
 
-### Body-Based Router (BBR)
+### 4.2 Body-Based Router (BBR) {/* #body-based-router-bbr */}
 
 BBR 是可选 ext-proc 服务器，从 OpenAI 格式请求体中提取 `model` 字段，并注入 `X-Gateway-Model-Name` 头部，便于 HTTPRoute 按模型名称路由。
 
-### Endpoint Picker Proxy (EPP)
+### 4.3 Endpoint Picker Proxy (EPP) {/* #endpoint-picker-proxy-epp */}
 
 EPP 是核心智能组件，实现调度和路由逻辑。其主要子模块包括：
 
@@ -102,11 +102,11 @@ EPP 是核心智能组件，实现调度和路由逻辑。其主要子模块包�
 - Datastore：缓存 Kubernetes 资源和 Pod 指标
 - Controllers：协调 InferencePool、InferenceObjective 和 Pod 资源
 
-### Model Servers
+### 4.4 Model Servers {/* #model-servers */}
 
 后端 Pod 运行推理服务器（如 vLLM、Triton、SGLang），需实现协议以公开调度决策指标。
 
-## 核心 Kubernetes 资源
+## 5. 核心 Kubernetes 资源 {/* #核心-kubernetes-资源 */}
 
 下表总结了扩展引入的自定义 Kubernetes 资源及其作用：
 
@@ -145,7 +145,7 @@ graph LR
 
 ![Kubernetes 资源关系图](/images/k8s/service-discovery/gateway-api-inference/3bcf808bd36880367d58e3734d7ffd75.svg)
 
-## 请求处理流程
+## 6. 请求处理流程 {/* #请求处理流程 */}
 
 推理请求的处理流程如下图所示：
 
@@ -205,14 +205,14 @@ sequenceDiagram
 4. Saturation Detection：检查系统是否过载
 5. Scheduling：三阶段调度选择最佳 Pod
 
-## 关键概念和术语
+## 7. 关键概念和术语 {/* #关键概念和术语 */}
 
 - **Inference Gateway (IGW)**：与 Endpoint Picker 耦合的代理/负载均衡器，基于实时指标智能路由。
 - **Endpoint Picker Extension (EPP)**：推理调度器实现，扩展 Envoy 以注入路由决策。
 - **指标和能力**：如队列深度、KV 缓存利用率、前缀缓存、LoRA 适配器等。
 - **饱和检测**：EPP 监控系统负载，丢弃低优先级请求，相关阈值可配置。
 
-## EPP 内部组件
+## 8. EPP 内部组件 {/* #epp-内部组件 */}
 
 下图展示了 EPP 应用的主要子系统及其关系：
 
@@ -283,7 +283,7 @@ graph TB
 - Controllers：同步 CRD 到数据存储
 - Plugins：可扩展评分和选择策略
 
-## 调度算法
+## 9. 调度算法 {/* #调度算法 */}
 
 EPP 采用三阶段调度算法，受 Kubernetes 调度器启发：
 
@@ -326,9 +326,9 @@ graph LR
 - LoRA 亲和：已加载适配器分数高
 - 前缀缓存：命中前缀分数高
 
-## 支持的平台
+## 10. 支持的平台 {/* #支持的平台 */}
 
-### Gateway 提供商
+### 10.1 Gateway 提供商 {/* #gateway-提供商 */}
 
 | 提供商 | 状态 | 备注 |
 | --- | --- | --- |
@@ -337,7 +337,7 @@ graph LR
 | Kgateway | 技术预览 | v2.1.0+ 滚动发布支持 |
 | Agentgateway | 技术预览 | Kgateway 控制平面 AI 优化代理 |
 
-### 模型服务器
+### 10.2 模型服务器 {/* #模型服务器 */}
 
 | 服务器 | 支持级别 | 协议合规性 |
 | --- | --- | --- |
@@ -345,9 +345,9 @@ graph LR
 | Triton Inference Server | 支持 | 需协议合规指标 |
 | SGLang | 支持 | 需协议合规指标 |
 
-## 安装与配置
+## 11. 安装与配置 {/* #安装与配置 */}
 
-### 安装 Gateway API
+### 11.1 安装 Gateway API {/* #安装-gateway-api */}
 
 以下命令用于安装 Gateway API 及 Inference Extension：
 
@@ -356,7 +356,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/v0.1.0/inference-extension.yaml
 ```
 
-### 创建 InferencePool
+### 11.2 创建 InferencePool {/* #创建-inferencepool */}
 
 以下 YAML 示例定义了一个 InferencePool：
 
@@ -374,7 +374,7 @@ spec:
     type: Random
 ```
 
-### 配置 Gateway
+### 11.3 配置 Gateway {/* #配置-gateway */}
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -392,7 +392,7 @@ spec:
     protocol: HTTP
 ```
 
-### 创建 InferenceRoute
+### 11.4 创建 InferenceRoute {/* #创建-inferenceroute */}
 
 ```yaml
 apiVersion: inference.networking.x-k8s.io/v1alpha1
@@ -414,9 +414,9 @@ spec:
       weight: 100
 ```
 
-## 高级路由功能
+## 12. 高级路由功能 {/* #高级路由功能 */}
 
-### 模型版本路由
+### 12.1 模型版本路由 {/* #模型版本路由 */}
 
 通过 headers 匹配实现模型版本路由：
 
@@ -445,7 +445,7 @@ spec:
       weight: 100
 ```
 
-### 流量分割
+### 12.2 流量分割 {/* #流量分割 */}
 
 ```yaml
 spec:
@@ -463,7 +463,7 @@ spec:
       weight: 10
 ```
 
-### 地理位置路由
+### 12.3 地理位置路由 {/* #地理位置路由 */}
 
 ```yaml
 apiVersion: inference.networking.x-k8s.io/v1alpha1
@@ -488,9 +488,9 @@ spec:
       name: eu-central-pool
 ```
 
-## 负载均衡策略
+## 13. 负载均衡策略 {/* #负载均衡策略 */}
 
-### 轮询负载均衡
+### 13.1 轮询负载均衡 {/* #轮询负载均衡 */}
 
 ```yaml
 apiVersion: inference.networking.x-k8s.io/v1alpha1
@@ -502,7 +502,7 @@ spec:
     type: RoundRobin
 ```
 
-### 最小连接数
+### 13.2 最小连接数 {/* #最小连接数 */}
 
 ```yaml
 spec:
@@ -510,7 +510,7 @@ spec:
     type: LeastConnections
 ```
 
-### 基于权重的负载均衡
+### 13.3 基于权重的负载均衡 {/* #基于权重的负载均衡 */}
 
 ```yaml
 spec:
@@ -521,9 +521,9 @@ spec:
       endpoint-2: 30
 ```
 
-## 安全与访问控制
+## 14. 安全与访问控制 {/* #安全与访问控制 */}
 
-### API 密钥验证
+### 14.1 API 密钥验证 {/* #api-密钥验证 */}
 
 ```yaml
 apiVersion: inference.networking.x-k8s.io/v1alpha1
@@ -546,7 +546,7 @@ spec:
           value: Bearer ${API_KEY}
 ```
 
-### 速率限制
+### 14.2 速率限制 {/* #速率限制 */}
 
 ```yaml
 filters:
@@ -557,11 +557,11 @@ filters:
     burst: 20
 ```
 
-## 监控与可观测性
+## 15. 监控与可观测性 {/* #监控与可观测性 */}
 
 Inference Extension 自动收集请求延迟、吞吐量、错误率、推理池健康状态等指标。
 
-### 集成 Prometheus
+### 15.1 集成 Prometheus {/* #集成-prometheus */}
 
 以下为 Prometheus 集成配置示例：
 
@@ -581,7 +581,7 @@ data:
         inference.networking.x-k8s.io/prometheus-port: "9090"
 ```
 
-## 最佳实践
+## 16. 最佳实践 {/* #最佳实践 */}
 
 - 多副本部署，确保高可用
 - 配置健康检查与自动故障转移
@@ -589,7 +589,7 @@ data:
 - 启用 TLS 加密与细粒度访问控制
 - 开启审计日志，便于安全追踪
 
-## 故障排除
+## 17. 故障排除 {/* #故障排除 */}
 
 常见问题及调试命令：
 
@@ -603,7 +603,7 @@ kubectl describe inferenceroute chat-route
 kubectl logs -l app=gateway-api-controller
 ```
 
-## 快速开始
+## 18. 快速开始 {/* #快速开始 */}
 
 1. 部署模型服务器（GPU/CPU/模拟器）
 2. 安装 CRDs
@@ -617,7 +617,7 @@ helm install vllm-llama3-8b-instruct oci://registry.k8s.io/gateway-api-inference
 curl ${IP}:${PORT}/v1/completions -d '{"model": "...", "prompt": "..."}'
 ```
 
-## 项目状态
+## 19. 项目状态 {/* #项目状态 */}
 
 该项目目前处于 alpha 阶段，API 及功能可能有重大变更。最新版本特性包括：
 
@@ -627,10 +627,10 @@ curl ${IP}:${PORT}/v1/completions -d '{"model": "...", "prompt": "..."}'
 - GKE Gateway 稳定支持
 - Istio、Kgateway、Agentgateway 实验性支持
 
-## 总结
+## 20. 总结 {/* #总结 */}
 
 Gateway API Inference Extension 为 AI 推理服务带来了声明式、可扩展的流量管理与智能调度能力。通过标准化的 Kubernetes 资源和灵活的路由策略，极大提升了 AI 服务的可维护性与可观测性，是构建现代 AI 平台的重要基础设施组件。
 
-## 参考
+## 21. 参考资料 {/* #参考 */}
 
 - [Gateway API Inference Extension](https://gateway-api-inference-extension.sigs.k8s.io/)

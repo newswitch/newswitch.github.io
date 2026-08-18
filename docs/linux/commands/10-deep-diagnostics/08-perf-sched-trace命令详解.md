@@ -1,11 +1,12 @@
 ---
-title: perf sched 与 perf trace 命令详解：调度延迟和系统调用时间线
+title: "perf sched 与 perf trace 命令详解：调度延迟和系统调用时间线"
+sidebar_label: "08. perf sched 与 perf trace 命令详解：调度延迟和系统调用时间线"
 sidebar_position: 8
-description: 讲清 perf sched record/timehist/latency/map/replay 与 perf trace 的 syscall、tracepoint、PID/cgroup、summary 和过滤。
+description: "讲清 perf sched record/timehist/latency/map/replay 与 perf trace 的 syscall、tracepoint、PID/cgroup、summary 和过滤。"
 tags: [Linux, perf sched, perf trace, 调度延迟, 系统调用]
 ---
 
-# `perf sched` 与 `perf trace`：分析 off-CPU 与事件时间线
+# perf sched 与 perf trace 命令详解：调度延迟和系统调用时间线
 
 CPU hotspot 只能解释 on-CPU。线程慢可能在 runnable queue 等 CPU，也可能睡眠等待锁、IO 或网络。`perf sched` 分析调度 tracepoint；`perf trace` 提供类似 strace 的事件流和汇总，通常能利用 perf ring buffer 降低逐次 ptrace 开销。
 

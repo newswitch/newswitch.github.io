@@ -2,8 +2,8 @@
 title: "Ansible 自动化批量部署 MySQL"
 sidebar_label: "10. Ansible 自动化批量部署 MySQL"
 sidebar_position: 10
-tags: [MySQL, Ansible, 自动化, 幂等, 批量部署]
 description: "用 Ansible Role 将 MySQL 仓库、软件包、目录、配置、systemd、Secret、滚动变更与验收编码为幂等、可审计的批量部署流程。"
+tags: [MySQL, Ansible, 自动化, 幂等, 批量部署]
 ---
 
 # Ansible 自动化批量部署 MySQL

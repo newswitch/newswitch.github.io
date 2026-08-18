@@ -1,11 +1,12 @@
 ---
-title: traceroute 命令详解：UDP、ICMP、TCP 路径追踪与 ECMP 分析
+title: "traceroute 命令详解：UDP、ICMP、TCP 路径追踪与 ECMP 分析"
+sidebar_label: "11. traceroute 命令详解：UDP、ICMP、TCP 路径追踪与 ECMP 分析"
 sidebar_position: 11
-description: 以 Traceroute for Linux 2.1.6 为基线，讲解 traceroute 全部主要参数、探测方法、TTL、等待策略、并发、端口、MTU、ICMP 扩展和多路径误判。
+description: "以 Traceroute for Linux 2.1.6 为基线，讲解 traceroute 全部主要参数、探测方法、TTL、等待策略、并发、端口、MTU、ICMP 扩展和多路径误判。"
 tags: [Linux, traceroute, ICMP, TCP, UDP, ECMP, 网络排障]
 ---
 
-# `traceroute` 命令详解：UDP、ICMP、TCP 路径追踪与 ECMP 分析
+# traceroute 命令详解：UDP、ICMP、TCP 路径追踪与 ECMP 分析
 
 `traceroute` 发送 TTL/Hop Limit 逐步增加的探测包，让中间路由器返回 ICMP Time Exceeded，从而观察一条探测流量看到的 hop。Linux 实现能使用 UDP、ICMP Echo、TCP SYN、UDPLite、DCCP、SCTP 或 raw protocol，适合按业务协议和端口验证路径策略。
 

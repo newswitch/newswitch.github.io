@@ -2,8 +2,8 @@
 title: "Linux VFS 与一次 read 的完整路径"
 sidebar_label: "01. Linux VFS 与一次 read 的完整路径"
 sidebar_position: 1
-tags: [Linux, VFS, 文件系统, 块设备, eBPF, 存储]
 description: "从文件描述符、系统调用、VFS、页缓存、文件系统、块层到 NVMe，完整解释一次 Linux 文件读取以及分层排查方法。"
+tags: [Linux, VFS, 文件系统, 块设备, eBPF, 存储]
 ---
 
 # Linux VFS 与一次 read 的完整路径
@@ -403,7 +403,7 @@ Safetensors 或其他 loader 使用 `mmap` 时，模型文件打开很快不代�
 
 下一篇：[页缓存、预读、回写与 Direct I/O](./02-页缓存预读回写与Direct%20IO.md)。
 
-## 参考资料
+## 17. 参考资料 {/* #参考资料 */}
 
 - [Linux kernel VFS documentation](https://docs.kernel.org/filesystems/vfs.html)
 - [Linux kernel page cache documentation](https://docs.kernel.org/mm/page_cache.html)

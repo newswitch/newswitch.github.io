@@ -1,11 +1,12 @@
 ---
-title: lsof 命令详解：打开文件、网络端点、挂载占用与已删除文件
+title: "lsof 命令详解：打开文件、网络端点、挂载占用与已删除文件"
+sidebar_label: "01. lsof 命令详解：打开文件、网络端点、挂载占用与已删除文件"
 sidebar_position: 1
-description: 讲清 lsof 的 AND/OR 选择规则、PID/user/command/path/FD/network 过滤、机器输出、repeat 模式和 Namespace 限制。
+description: "讲清 lsof 的 AND/OR 选择规则、PID/user/command/path/FD/network 过滤、机器输出、repeat 模式和 Namespace 限制。"
 tags: [Linux, lsof, 文件描述符, 网络, SRE]
 ---
 
-# `lsof` 命令详解：把打开对象映射到进程
+# lsof 命令详解：打开文件、网络端点、挂载占用与已删除文件
 
 Linux 中 socket、目录、设备、库、cwd 和普通文件都可由进程持有。`lsof` 综合 `/proc` 等来源回答“谁打开了什么”，常用于卸载忙、端口占用、删除后空间不释放和配置文件仍被旧进程使用。
 

@@ -1,9 +1,9 @@
 ---
-title: 模型驱动网络与 gNMI
+title: "模型驱动网络与 gNMI"
 sidebar_label: "04. 模型驱动网络与 gNMI"
 sidebar_position: 4
+description: "分清数据模型与传输协议，掌握 YANG、NETCONF、RESTCONF、gNMI 的能力发现、读写和订阅语义。"
 tags: [YANG, NETCONF, RESTCONF, gNMI, OpenConfig]
-description: 分清数据模型与传输协议，掌握 YANG、NETCONF、RESTCONF、gNMI 的能力发现、读写和订阅语义。
 ---
 
 # 模型驱动网络与 gNMI
@@ -132,7 +132,7 @@ gNMI 基于 gRPC，核心 RPC：
 /network-instances/network-instance[name=default]/protocols/...
 ```
 
-### Subscribe 模式
+### 6.1 Subscribe 模式 {/* #subscribe-模式 */}
 
 | 模式 | 适合场景 |
 |---|---|
@@ -142,7 +142,7 @@ gNMI 基于 gRPC，核心 RPC：
 
 STREAM 订阅中的 Sample、On-Change 等行为取决于服务端支持。采集系统要处理断线重连、重复、时间戳、乱序和初始同步。
 
-### Set 的风险
+### 6.2 Set 的风险 {/* #set-的风险 */}
 
 `replace` 可能覆盖路径下未在请求中声明的子树；`update` 通常合并更新；`delete` 删除路径。实际语义需要通过实验设备和官方实现文档验证。
 
@@ -192,7 +192,7 @@ STREAM 订阅中的 Sample、On-Change 等行为取决于服务端支持。采�
 
 并能解释模型支持不完整、Replace 误覆盖和状态验证缺失会造成什么风险。
 
-## 参考资料
+## 11. 参考资料 {/* #参考资料 */}
 
 - [RFC 7950：YANG 1.1](https://www.rfc-editor.org/rfc/rfc7950)
 - [RFC 6241：NETCONF](https://www.rfc-editor.org/rfc/rfc6241)

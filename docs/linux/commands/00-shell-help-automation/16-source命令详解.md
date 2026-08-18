@@ -1,11 +1,12 @@
 ---
-title: source 与点命令详解：当前 Shell 执行、参数和信任边界
+title: "source 与点命令详解：当前 Shell 执行、参数和信任边界"
+sidebar_label: "16. source 与点命令详解：当前 Shell 执行、参数和信任边界"
 sidebar_position: 16
-description: 讲清 source/. 的 PATH 搜索、-p/-T、位置参数、return/trap、配置加载与代码执行风险。
+description: "讲清 source/. 的 PATH 搜索、-p/-T、位置参数、return/trap、配置加载与代码执行风险。"
 tags: [Linux, Bash, source, Shell, 安全]
 ---
 
-# `source` / `.` 命令详解：加载的是代码，不是数据
+# source 与点命令详解：当前 Shell 执行、参数和信任边界
 
 `source FILE [ARGS]` 和 `. FILE [ARGS]` 在**当前 Shell 环境**读取并执行文件，所以其中的变量、函数、cwd、options、trap 和 FD 可能持续影响调用者。它不是安全的 `.env` 解析器。
 

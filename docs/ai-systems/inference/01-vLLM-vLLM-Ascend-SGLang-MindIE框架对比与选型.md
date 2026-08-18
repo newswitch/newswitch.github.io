@@ -1,9 +1,9 @@
 ---
-title: vLLM、vLLM-Ascend、SGLang、MindIE 框架对比与选型
+title: "vLLM、vLLM-Ascend、SGLang、MindIE 框架对比与选型"
 sidebar_label: "01. vLLM、vLLM-Ascend、SGLang、MindIE 框架对比与选型"
 sidebar_position: 1
+description: "从控制面、执行面、KV Cache、前缀缓存、调度、参数、硬件生态和生产运维对比四大推理框架，并给出公平压测和迁移方法。"
 tags: [vLLM, vLLM-Ascend, SGLang, MindIE, 推理框架, 选型]
-description: 从控制面、执行面、KV Cache、前缀缓存、调度、参数、硬件生态和生产运维对比四大推理框架，并给出公平压测和迁移方法。
 ---
 
 # vLLM、vLLM-Ascend、SGLang、MindIE 框架对比与选型
@@ -152,7 +152,7 @@ Server/EndPoint
 
 由 Block Manager 统一管理 KV 资源，`cacheBlockSize`、`npuMemSize`、`cpuMemSize` 和 ScheduleConfig 共同决定容量。Prefix Cache 是否可用和配置方法取决于 MindIE 版本、模型和特性文档。
 
-### 不能用一个命中率横比
+### 5.5 不能用一个命中率横比 {/* #不能用一个命中率横比 */}
 
 公平比较必须固定：
 
@@ -198,19 +198,19 @@ Server/EndPoint
 
 ## 8. Graph 与 Kernel 生态
 
-### vLLM
+### 8.1 vLLM {/* #vllm */}
 
 典型 CUDA Graph、torch.compile/Inductor、FlashAttention/FlashInfer 和自定义 CUDA/Triton 算子路径，具体由模型、GPU 架构和版本选择。
 
-### vLLM-Ascend
+### 8.2 vLLM-Ascend {/* #vllm-ascend */}
 
 使用 Npugraph_ex、ACLGraph、Ascend Attention 和 CANN/自定义算子。即使配置字段仍叫 `cudagraph_mode`，底层也不是 CUDA Graph。
 
-### SGLang
+### 8.3 SGLang {/* #sglang */}
 
 显式暴露 Attention、Sampling、Grammar、GEMM、MoE 等 Backend，并提供 CUDA Graph、Piecewise/Breakable 等演进能力。灵活度高，也要求更严格的组合验证。
 
-### MindIE
+### 8.4 MindIE {/* #mindie */}
 
 Modeling 通过 ATB 或 MindSpore 模型实现和 CANN 执行，支持的 C++/Python Graph、通信融合和专项优化依模型/版本文档。
 
@@ -218,7 +218,7 @@ Modeling 通过 ATB 或 MindSpore 模型实现和 CANN 执行，支持的 C++/Py
 
 ## 9. 硬件与软件栈
 
-### NVIDIA 路径
+### 9.1 NVIDIA 路径 {/* #nvidia-路径 */}
 
 ```text
 vLLM 或 SGLang
@@ -228,7 +228,7 @@ vLLM 或 SGLang
 → NVIDIA GPU
 ```
 
-### vLLM-Ascend 路径
+### 9.2 vLLM-Ascend 路径 {/* #vllm-ascend-路径 */}
 
 ```text
 vLLM + vLLM-Ascend
@@ -238,7 +238,7 @@ vLLM + vLLM-Ascend
 → Ascend 910B
 ```
 
-### MindIE 路径
+### 9.3 MindIE 路径 {/* #mindie-路径 */}
 
 ```text
 MindIE Server/LLM
@@ -279,7 +279,7 @@ MindIE Server/LLM
 
 ## 12. 可观测性对比
 
-### 可以统一的业务指标
+### 12.1 可以统一的业务指标 {/* #可以统一的业务指标 */}
 
 - 请求率、Token 到达率；
 - Queue、Running/Waiting；
@@ -290,7 +290,7 @@ MindIE Server/LLM
 - KV 使用率、抢占/撤回；
 - 每模型/租户的容量与成本。
 
-### 必须平台化的设备证据
+### 12.2 必须平台化的设备证据 {/* #必须平台化的设备证据 */}
 
 | NVIDIA | Ascend |
 |---|---|
@@ -342,7 +342,7 @@ Token 生成后是否卡在反分词/网络？
 
 ## 15. 公平性能比较方法
 
-### 固定不变项
+### 15.1 固定不变项 {/* #固定不变项 */}
 
 ```text
 模型 Revision/权重哈希
@@ -356,7 +356,7 @@ Sampling/Stop/Tool 参数
 网络、存储和压测机位置
 ```
 
-### 同时报告
+### 15.2 同时报告 {/* #同时报告 */}
 
 | 类别 | 指标 |
 |---|---|
@@ -371,35 +371,35 @@ Sampling/Stop/Tool 参数
 
 ## 16. 选型建议
 
-### 更倾向 vLLM 的场景
+### 16.1 更倾向 vLLM 的场景 {/* #更倾向-vllm-的场景 */}
 
 - 主要使用 NVIDIA GPU；
 - 希望获得广泛 OpenAI 兼容生态和模型支持；
 - 团队已经熟悉 vLLM V1、Kubernetes 与 CUDA/NCCL；
 - 需要较清晰的源码、插件与社区集成路径。
 
-### 更倾向 SGLang 的场景
+### 16.2 更倾向 SGLang 的场景 {/* #更倾向-sglang-的场景 */}
 
 - 共享系统提示词、Agent 工具定义或多轮前缀占比高；
 - 希望深入控制 Radix Cache、调度策略和 Kernel Backend；
 - 需要 SGLang 特定的分离、缓存或服务能力；
 - 团队能够承担更丰富参数组合的基准和回归。
 
-### 更倾向 vLLM-Ascend 的场景
+### 16.3 更倾向 vLLM-Ascend 的场景 {/* #更倾向-vllm-ascend-的场景 */}
 
 - 生产硬件是 Ascend 910B；
 - 希望复用 vLLM API、EngineCore、调度知识和上层生态；
 - 团队愿意同时跟踪 upstream 与插件兼容矩阵；
 - 目标模型/功能在 vLLM-Ascend Feature Matrix 中完成验证。
 
-### 更倾向 MindIE 的场景
+### 16.4 更倾向 MindIE 的场景 {/* #更倾向-mindie-的场景 */}
 
 - 生产硬件是 Ascend，且希望使用 MindIE/ATB/Motor 的完整方案；
 - 目标模型和部署规模已有官方验证配置；
 - 重视服务/管理/指标平面、安全证书和集群能力的一体化；
 - 团队能围绕 MindIE/CANN/HCCL 工具链运维。
 
-### 不能仅凭框架名决定
+### 16.5 不能仅凭框架名决定 {/* #不能仅凭框架名决定 */}
 
 以下条件任一不满足，就应停止拍板并先做 PoC：
 
@@ -430,11 +430,11 @@ CUDA/NCCL              CANN/HCCL
 
 ## 18. 框架迁移方法
 
-### 第一步：冻结源实例
+### 18.1 第一步：冻结源实例 {/* #第一步冻结源实例 */}
 
 保存模型/Tokenizer、请求参数、全部启动配置、环境、硬件、容量曲线和 API 样例。
 
-### 第二步：建立语义映射
+### 18.2 第二步：建立语义映射 {/* #第二步建立语义映射 */}
 
 不要写：
 
@@ -451,19 +451,19 @@ TTFT P95 < X，TPOT P95 < Y，不触发 KV 抢占。
 
 然后在目标框架重新求参数。
 
-### 第三步：功能门禁
+### 18.3 第三步：功能门禁 {/* #第三步功能门禁 */}
 
 逐项验证模型、量化、Prefix、LoRA、Tool、Reasoning、Structured Output、Logprobs、Multimodal、Speculative、PD 和 Graph。
 
-### 第四步：精度与协议
+### 18.4 第四步：精度与协议 {/* #第四步精度与协议 */}
 
 先做 Greedy/固定 Seed 的可比测试，再做真实 Sampling 分布和业务评测；同时跑完整 API 契约。
 
-### 第五步：重新做容量
+### 18.5 第五步：重新做容量 {/* #第五步重新做容量 */}
 
 从单请求、并发阶梯、开环过载、缓存冷热到 N-1 故障，全部重新测。旧框架容量数字不可继承。
 
-### 第六步：灰度
+### 18.6 第六步：灰度 {/* #第六步灰度 */}
 
 按模型/租户/请求特征小流量灰度，监控 SLO、质量、错误和成本，保留一键回滚。
 
@@ -492,7 +492,7 @@ TTFT P95 < X，TPOT P95 < Y，不触发 KV 抢占。
 
 学习上可以先掌握共同的 Prefill、Decode、KV、Batch、Graph 和并行，再分别学习组件名和参数；生产上则必须反过来，把每个框架和硬件栈作为独立发布单元，分别做精度、容量与故障验收。
 
-## 官方资料
+## 21. 官方资料 {/* #官方资料 */}
 
 - [vLLM 官方文档](https://docs.vllm.ai/)
 - [vLLM-Ascend 官方文档](https://docs.vllm.ai/projects/ascend/en/latest/)

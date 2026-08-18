@@ -2,8 +2,8 @@
 title: "使用 kubeconfig 文件配置跨集群认证"
 sidebar_label: "04. 使用 kubeconfig 文件配置跨集群认证"
 sidebar_position: 4
-tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "详细介绍 Kubernetes kubeconfig 文件的结构、组成和使用方法，包括集群、用户、上下文的配置，以及跨集群认证的最佳实践。"
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 ---
 
 # 使用 kubeconfig 文件配置跨集群认证
@@ -17,9 +17,9 @@ description: "详细介绍 Kubernetes kubeconfig 文件的结构、组成和使�
 
 为了简化多集群、多用户环境下的认证管理，Kubernetes 提供了 kubeconfig 文件机制。该文件集中管理集群连接信息、用户认证凭据和上下文配置，让用户能够轻松地在不同集群和身份之间切换。
 
-## kubeconfig 文件组成
+## 1. kubeconfig 文件组成 {/* #kubeconfig-文件组成 */}
 
-### 文件结构示例
+### 1.1 文件结构示例 {/* #文件结构示例 */}
 
 下面是一个完整的 kubeconfig 文件示例：
 
@@ -72,9 +72,9 @@ users:
     password: dev-password
 ```
 
-### 核心组件详解
+### 1.2 核心组件详解 {/* #核心组件详解 */}
 
-#### Cluster 配置
+#### 1.2.1 Cluster 配置 {/* #cluster-配置 */}
 
 集群配置定义了 Kubernetes API 服务器的连接信息：
 
@@ -110,7 +110,7 @@ kubectl config set-cluster production \
   --certificate-authority=/path/to/ca.crt
 ```
 
-#### User 配置
+#### 1.2.2 User 配置 {/* #user-配置 */}
 
 用户配置定义了身份认证凭据：
 
@@ -158,7 +158,7 @@ kubectl config set-credentials admin \
 kubectl config set-credentials developer --token=your-token-here
 ```
 
-#### Context 配置
+#### 1.2.3 Context 配置 {/* #context-配置 */}
 
 上下文将集群、用户和命名空间组合在一起：
 
@@ -185,7 +185,7 @@ kubectl config set-context prod-admin \
   --namespace=kube-system
 ```
 
-#### Current Context
+#### 1.2.4 Current Context {/* #current-context */}
 
 使用 `current-context` 指定默认使用的上下文：
 
@@ -199,9 +199,9 @@ current-context: prod-admin
 kubectl config use-context staging-dev
 ```
 
-## kubeconfig 管理操作
+## 2. kubeconfig 管理操作 {/* #kubeconfig-管理操作 */}
 
-### 查看配置
+### 2.1 查看配置 {/* #查看配置 */}
 
 以下是相关的配置示例：
 
@@ -216,7 +216,7 @@ kubectl config view --minify
 kubectl config view --kubeconfig=/path/to/config
 ```
 
-### 管理集群
+### 2.2 管理集群 {/* #管理集群 */}
 
 以下是相关的代码示例：
 
@@ -230,7 +230,7 @@ kubectl config set-cluster my-cluster \
 kubectl config delete-cluster my-cluster
 ```
 
-### 管理用户
+### 2.3 管理用户 {/* #管理用户 */}
 
 以下是相关的代码示例：
 
@@ -247,7 +247,7 @@ kubectl config set-credentials my-user --token=bearer-token
 kubectl config delete-user my-user
 ```
 
-### 管理上下文
+### 2.4 管理上下文 {/* #管理上下文 */}
 
 以下是相关的代码示例：
 
@@ -271,7 +271,7 @@ kubectl config current-context
 kubectl config get-contexts
 ```
 
-## 配置文件加载机制
+## 3. 配置文件加载机制 {/* #配置文件加载机制 */}
 
 kubectl 按以下优先级加载和合并 kubeconfig 文件：
 
@@ -279,7 +279,7 @@ kubectl 按以下优先级加载和合并 kubeconfig 文件：
 2. **环境变量**: `$KUBECONFIG` 环境变量指定的文件列表（用冒号分隔）
 3. **默认位置**: `~/.kube/config` 文件
 
-### 合并规则
+### 3.1 合并规则 {/* #合并规则 */}
 
 当使用多个 kubeconfig 文件时：
 
@@ -287,7 +287,7 @@ kubectl 按以下优先级加载和合并 kubeconfig 文件：
 - 集群、用户、上下文信息不会覆盖，只会补充
 - `current-context` 使用第一个文件中的设置
 
-### 环境变量示例
+### 3.2 环境变量示例 {/* #环境变量示例 */}
 
 以下是相关的示例代码：
 
@@ -299,9 +299,9 @@ export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/config-cluster2
 kubectl --kubeconfig=/path/to/special-config get pods
 ```
 
-## 最佳实践
+## 4. 最佳实践 {/* #最佳实践 */}
 
-### 文件组织
+### 4.1 文件组织 {/* #文件组织 */}
 
 以下是相关的代码示例：
 
@@ -319,7 +319,7 @@ kubectl --kubeconfig=/path/to/special-config get pods
     └── dev-ca.crt
 ```
 
-### 安全考虑
+### 4.2 安全考虑 {/* #安全考虑 */}
 
 本节将详细介绍安全考虑的相关内容，包括核心概念、实现方式和最佳实践。以下列表总结了主要要点：
 
@@ -334,7 +334,7 @@ chmod 600 ~/.kube/config
 chmod 600 ~/.kube/certificates/*
 ```
 
-### 命名规范
+### 4.3 命名规范 {/* #命名规范 */}
 
 使用清晰的命名约定：
 
@@ -356,7 +356,7 @@ contexts:
 - name: dev-local-testing
 ```
 
-### 自动化脚本示例
+### 4.4 自动化脚本示例 {/* #自动化脚本示例 */}
 
 创建便捷的集群切换脚本：
 
@@ -381,7 +381,7 @@ case $1 in
 esac
 ```
 
-### 验证配置
+### 4.5 验证配置 {/* #验证配置 */}
 
 定期验证配置的有效性：
 

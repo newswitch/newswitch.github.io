@@ -1,11 +1,12 @@
 ---
-title: userdel 命令详解：安全删除账户、home 与残留所有权
+title: "userdel 命令详解：安全删除账户、home 与残留所有权"
+sidebar_label: "07. userdel 命令详解：安全删除账户、home 与残留所有权"
 sidebar_position: 7
-description: 完整讲解 shadow-utils userdel 参数、账户删除与数据删除区别、活动进程、mail spool、SELinux 映射、孤儿 UID 文件和离职审计流程。
+description: "完整讲解 shadow-utils userdel 参数、账户删除与数据删除区别、活动进程、mail spool、SELinux 映射、孤儿 UID 文件和离职审计流程。"
 tags: [Linux, userdel, 用户管理, 数据保留, 审计]
 ---
 
-# `userdel` 命令详解：安全删除账户、home 与残留所有权
+# userdel 命令详解：安全删除账户、home 与残留所有权
 
 `userdel` 删除本地账户记录。账户删除、身份停用、终止现有进程和数据清理是四个不同动作；生产离职流程通常先禁用和归档，经过保留期与审批后才删除。
 
@@ -101,7 +102,7 @@ sudo grpck -r
 
 掌握标准：能完整列出参数；能说明删除账户不等于删除进程/文件；能设计可审计、可恢复、不会误删共享 home 的生命周期流程。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：userdel(8)](https://shadow-maint.github.io/shadow/man/userdel.html)
 - [Linux proc_pid_status(5)](https://man7.org/linux/man-pages/man5/proc_pid_status.5.html)

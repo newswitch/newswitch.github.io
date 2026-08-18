@@ -1,11 +1,12 @@
 ---
-title: systemd-cat 命令详解：向 journal 写入结构化可检索消息
+title: "systemd-cat 命令详解：向 journal 写入结构化可检索消息"
+sidebar_label: "05. systemd-cat 命令详解：向 journal 写入结构化可检索消息"
 sidebar_position: 5
-description: 完整讲解 systemd-cat 的执行与 stdin 模式、identifier、priority、stderr、level-prefix、namespace 参数，以及脚本日志、字段边界和故障验证。
+description: "完整讲解 systemd-cat 的执行与 stdin 模式、identifier、priority、stderr、level-prefix、namespace 参数，以及脚本日志、字段边界和故障验证。"
 tags: [Linux, systemd-cat, journald, 日志, systemd]
 ---
 
-# `systemd-cat` 命令详解：向 journal 写入结构化可检索消息
+# systemd-cat 命令详解：向 journal 写入结构化可检索消息
 
 `systemd-cat` 把自己的标准输入，或一个子进程的 stdout/stderr，连接到 journal。它适合给脚本/临时命令建立可按 identifier、priority、unit、PID 与 boot 查询的记录。
 
@@ -89,7 +90,7 @@ printf 'exit=%s\n' "$rc"
 
 掌握标准：能列出全部参数，选择两种运行模式，解释 identifier 的可信边界、priority 语义和日志持久性边界，并用 `journalctl -o verbose/json` 验证结果。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [systemd-cat(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd-cat.html)
 - [systemd.journal-fields(7)](https://www.freedesktop.org/software/systemd/man/latest/systemd.journal-fields.html)

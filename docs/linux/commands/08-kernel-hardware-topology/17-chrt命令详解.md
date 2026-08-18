@@ -1,11 +1,12 @@
 ---
-title: chrt 命令详解：Linux 调度策略、实时优先级与 Deadline 参数
+title: "chrt 命令详解：Linux 调度策略、实时优先级与 Deadline 参数"
+sidebar_label: "17. chrt 命令详解：Linux 调度策略、实时优先级与 Deadline 参数"
 sidebar_position: 17
-description: 完整讲解 chrt 的全部参数、OTHER/BATCH/IDLE/FIFO/RR/DEADLINE/EXT 策略、runtime-deadline-period 约束、线程语义、权限和实时风险。
+description: "完整讲解 chrt 的全部参数、OTHER/BATCH/IDLE/FIFO/RR/DEADLINE/EXT 策略、runtime-deadline-period 约束、线程语义、权限和实时风险。"
 tags: [Linux, chrt, 实时调度, SCHED_DEADLINE, CPU调度]
 ---
 
-# `chrt` 命令详解：Linux 调度策略、实时优先级与 Deadline 参数
+# chrt 命令详解：Linux 调度策略、实时优先级与 Deadline 参数
 
 `chrt` 查询或修改线程的 scheduling policy 和实时属性。它不设置 CPU affinity、不设置 nice 的所有语义、也不提供 CPU 带宽隔离。`SCHED_FIFO` 配置错误能饿死系统关键线程，必须先在有独立控制台的测试节点验证。
 

@@ -2,8 +2,8 @@
 title: "昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别"
 sidebar_label: "24. 昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别"
 sidebar_position: 24
-tags: [vLLM, vLLM-Ascend, 昇腾910B, CANN, torch-npu, HCCL, 源码分析]
 description: "沿一次请求的源码路径，分析 vLLM-Ascend 如何通过平台插件把 upstream vLLM 的 CUDA 执行面替换为昇腾 910B、CANN、ACLGraph 与 HCCL 执行面。"
+tags: [vLLM, vLLM-Ascend, 昇腾910B, CANN, torch-npu, HCCL, 源码分析]
 ---
 
 # 昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别
@@ -35,8 +35,6 @@ vLLM-Ascend 不是 vLLM 的一个启动参数，
 而是通过 vLLM Platform Plugin 接口接入的一套昇腾硬件后端。
 ```
 
----
-
 ## 1. 本文中的“原生 vLLM”指什么
 
 vLLM upstream 本身正在向多硬件平台演进。本文为了贴近现有生产环境，将两个名词定义为：
@@ -53,8 +51,6 @@ vLLM upstream 本身正在向多硬件平台演进。本文为了贴近现有生
 ```
 
 本文源码概念沿用本模块的 upstream vLLM `v0.23.0` 基线。2026-08-17 查询官方资料时，vLLM-Ascend 已发布与 upstream `v0.23.0` 对齐的 `v0.23.0rc1` 文档。RC 版本信息只用于说明源码演进，生产应选择官方兼容矩阵中已经验证的完整版本组合，不能因为版本号一致就跳过压测与精度测试。
-
----
 
 ## 2. 两套完整软件栈
 
@@ -100,8 +96,6 @@ OpenAI API Server
 | K8s 设备注入 | NVIDIA Runtime/Device Plugin | Ascend Runtime/Device Plugin |
 
 上层接口相似，是因为 vLLM-Ascend 有意复用 vLLM 的框架；底层不能直接互换，是因为每种加速器需要自己的 Kernel、图执行、通信和内存实现。
-
----
 
 ## 3. 哪些组件基本复用，哪些组件发生分叉
 
@@ -169,8 +163,6 @@ vllm_ascend/
 
 它不是只实现一个 `NPUDevice` 类，而是覆盖了从配置检查到热路径执行的多个扩展面。
 
----
-
 ## 4. vLLM 怎样发现昇腾插件
 
 vLLM 使用 Python `entry_points` 发现外部平台插件。vLLM-Ascend 的安装配置注册了：
@@ -213,8 +205,6 @@ ascend -> vllm_ascend:register
 
 vLLM-Ascend 还注册 general plugins，用于扩展 KV Connector、模型加载器、模型和服务 Profiling。由此可以看出，适配范围已经超出单一 Platform 类。
 
----
-
 ## 5. NPUPlatform 到底改了什么
 
 Platform 类是 upstream vLLM 与硬件插件之间的第一层契约。它不是负责执行全部算子，而是回答：
@@ -245,8 +235,6 @@ cudagraph_mode != NONE
 
 参数名是上层公共协议，最终后端是平台实现。阅读日志时不能看到 `cudagraph_mode` 就认定环境执行了 CUDA。
 
----
-
 ## 6. 一句话进入服务后，在哪里开始分叉
 
 假设请求为：
@@ -260,7 +248,7 @@ cudagraph_mode != NONE
 }
 ```
 
-### 阶段一：HTTP 与 Tokenization——基本相同
+### 6.1 阶段一：HTTP 与 Tokenization——基本相同 {/* #阶段一http-与-tokenization基本相同 */}
 
 ```text
 JSON 校验
@@ -272,7 +260,7 @@ JSON 校验
 
 这一阶段通常在 API Server 的 CPU 上完成，与 CUDA/NPU 的差别不大。Tokenizer CPU 慢、事件循环拥塞或网关排队，会同时影响两种平台。
 
-### 阶段二：EngineCore 与 Scheduler——算法主线相同
+### 6.2 阶段二：EngineCore 与 Scheduler——算法主线相同 {/* #阶段二enginecore-与-scheduler算法主线相同 */}
 
 ```text
 请求进入 waiting/running 状态
@@ -286,7 +274,7 @@ JSON 校验
 
 但功能是否完全可用仍要查 vLLM-Ascend Feature Matrix。例如某个模型在特定 910B 型号上的 Prefix Cache、Speculative Decoding、LoRA、PP 或图模式可能只有实验支持。
 
-### 阶段三：Worker 初始化——第一次明显分叉
+### 6.3 阶段三：Worker 初始化——第一次明显分叉 {/* #阶段三worker-初始化第一次明显分叉 */}
 
 NVIDIA 路径：
 
@@ -310,7 +298,7 @@ NPU Worker
 
 所以 CUDA 环境中的 `Xid`、NCCL、CUDA Context 问题，在昇腾上会变成驱动/固件、CANN/ACL、HCCL 和 torch_npu 问题。两边错误堆栈不能按关键字一一翻译。
 
-### 阶段四：输入准备——语义相同，布局与对齐不同
+### 6.4 阶段四：输入准备——语义相同，布局与对齐不同 {/* #阶段四输入准备语义相同布局与对齐不同 */}
 
 两种 Runner 都要准备：
 
@@ -335,7 +323,7 @@ graph capture sizes
 
 复制到 910B，并期待同样的 TTFT/TPOT。
 
-### 阶段五：模型前向与 Attention——热路径核心分叉
+### 6.5 阶段五：模型前向与 Attention——热路径核心分叉 {/* #阶段五模型前向与-attention热路径核心分叉 */}
 
 NVIDIA 常见路径：
 
@@ -373,7 +361,7 @@ EngineCore 中的逻辑 Block 所有权：主要复用
 Worker 中 KV Tensor 的设备、布局和 Kernel：平台特有
 ```
 
-### 阶段六：TP 通信——NCCL 与 HCCL 分叉
+### 6.6 阶段六：TP 通信——NCCL 与 HCCL 分叉 {/* #阶段六tp-通信nccl-与-hccl-分叉 */}
 
 NVIDIA：
 
@@ -402,7 +390,7 @@ Tensor Parallel Linear
 
 不能让 NVIDIA GPU Rank 和 Ascend NPU Rank 组成同一个 TP Group。异构资源池可以共享网关、存储和调度平台，但单个模型副本内部需要使用同构硬件与一致通信后端。
 
-### 阶段七：采样和输出——再次汇合
+### 6.7 阶段七：采样和输出——再次汇合 {/* #阶段七采样和输出再次汇合 */}
 
 Logits/采样中的部分算子可能有 NPU 适配，但采样 Token ID 返回 EngineCore 后，上层路径再次基本汇合：
 
@@ -415,8 +403,6 @@ sampled token IDs
 ```
 
 所以同一网关可以把不同请求路由到 NVIDIA vLLM 或 vLLM-Ascend，并向调用方保持统一 OpenAI API。但内部功能、精度、延迟和容量不能因此视为相同。
-
----
 
 ## 7. GPUModelRunner 与 NPUModelRunner 的差异
 
@@ -443,8 +429,6 @@ sampled token IDs
 - 通过自定义算子而不是 Python 类完成优化。
 
 应该沿对象契约阅读，而不是按文件名机械配对。
-
----
 
 ## 8. CUDA Graph 与 ACLGraph 为什么不是简单改名
 
@@ -497,8 +481,6 @@ Shape、模型特性、Attention Backend 或 Batch 超出覆盖范围，可能�
 
 若 Eager 能稳定运行而 Graph 模式报错或抖动，说明问题范围缩小到编译/捕获/Replay；但生产是否长期 Eager，要用 TTFT、TPOT、吞吐和 CPU 空洞压测决定。
 
----
-
 ## 9. 算子生态差异
 
 ### 9.1 NVIDIA 路径
@@ -536,8 +518,6 @@ Shape、模型特性、Attention Backend 或 Batch 超出覆盖范围，可能�
 ```
 
 功能矩阵中的“支持模型”和“支持功能”应交叉阅读，不能只看到模型名称有勾就上线全部特性。
-
----
 
 ## 10. 权重与量化制品能否直接复用
 
@@ -586,8 +566,6 @@ Kernel 期望布局
 
 网关层可以把二者映射为同一个 `served_model_name`，发布平台仍必须记录不同 Artifact Digest 和精度报告。
 
----
-
 ## 11. KV Cache 的共同点与差异
 
 共同点：
@@ -620,8 +598,6 @@ KV Block 数
 ```
 
 再通过真实长度分布压测校准。
-
----
 
 ## 12. TP、EP 与多机通信差异
 
@@ -660,8 +636,6 @@ CPU/NUMA 绑定
 ```
 
 NVIDIA 用每 Rank Nsight/NCCL/DCGM 分析；昇腾用每 Rank NPU Timeline、HCCL 日志、`npu-smi`、msprof/msMonitor 等分析。
-
----
 
 ## 13. 版本兼容为什么更需要整体冻结
 
@@ -704,11 +678,9 @@ Triton Ascend / Custom Ops
 
 只升级 `pip install -U vllm` 很容易破坏已验证组合。
 
----
-
 ## 14. API 和参数兼容到什么程度
 
-### 可以大体统一
+### 14.1 可以大体统一 {/* #可以大体统一 */}
 
 - `/v1/models`；
 - `/v1/completions`；
@@ -721,7 +693,7 @@ Triton Ascend / Custom Ops
 - `--max-num-batched-tokens`；
 - 大量 vLLM 指标和请求语义。
 
-### 必须分别验证
+### 14.2 必须分别验证 {/* #必须分别验证 */}
 
 - 支持的模型与多模态输入；
 - Structured Output 与 Tool Calling 的具体组合；
@@ -747,8 +719,6 @@ base values
    ├─ nvidia: image, resource key, CUDA/NCCL, quant artifact
    └─ ascend: image, resource key, CANN/HCCL, additional_config, quant artifact
 ```
-
----
 
 ## 15. 可观测性为什么不能只复制 Dashboard
 
@@ -780,8 +750,6 @@ base values
 ### 15.3 指标名称相同也可能口径不同
 
 例如“device utilization”在两种工具中的采样周期、忙定义和聚合方式可能不同。不要直接用 `GPU 60%` 与 `NPU 60%` 判断哪边快；最终比较应落到相同业务输入下的 TTFT、TPOT、吞吐、错误、精度和成本。
-
----
 
 ## 16. 性能调优不能照搬哪些结论
 
@@ -815,8 +783,6 @@ TP 增大都能降低单卡权重，但通信成本由不同互联决定。分�
 
 两边都可能 Host Bound。昇腾还要考虑 NPU、CPU NUMA 和 NIC 亲和性，错误绑定会让 Input Preparation 或 HCCL 建链/通信抖动。
 
----
-
 ## 17. 同一个故障在两套平台上的定位差异
 
 | 现象 | upstream NVIDIA 优先层 | vLLM-Ascend 优先层 |
@@ -841,8 +807,6 @@ TP 增大都能降低单卡权重，但通信成本由不同互联决定。分�
 ```
 
 这样不会因为硬件不同，就重复排查整个 HTTP 和调度层。
-
----
 
 ## 18. 典型问题：NPU 利用率只有 30%，TTFT 却超标
 
@@ -897,8 +861,6 @@ Scheduler waiting time
 
 每次只改变一个变量，记录 TTFT/TPOT/E2E P50/P95/P99、Prompt/Generation tokens/s、NPU Timeline、CPU、HBM、KV、Graph 和 HCCL。
 
----
-
 ## 19. 怎样公平比较 910B 与 NVIDIA vLLM
 
 必须固定：
@@ -932,11 +894,9 @@ TP/PP/DP 目标与副本故障域
 
 “峰值 Token/s 更高”不能代表生产更优。如果 P99、精度、冷启动或故障恢复不满足要求，该配置就不是安全容量。
 
----
-
 ## 20. 一套可执行的对照实验
 
-### 实验 A：确认插件边界
+### 20.1 实验 A：确认插件边界 {/* #实验-a确认插件边界 */}
 
 分别在两个镜像执行：
 
@@ -958,7 +918,7 @@ PY
 
 记录 Image Digest、驱动、CUDA/CANN 和硬件产品。
 
-### 实验 B：同一请求生命周期
+### 20.2 实验 B：同一请求生命周期 {/* #实验-b同一请求生命周期 */}
 
 对两套服务发送固定 Token 的 Greedy 请求，分别记录：
 
@@ -974,27 +934,25 @@ request finished
 
 比较共同层和设备层耗时，不只比较总耗时。
 
-### 实验 C：Eager 与 Graph
+### 20.3 实验 C：Eager 与 Graph {/* #实验-ceager-与-graph */}
 
 在各自平台比较 Eager 与图模式。昇腾额外记录 ACLGraph 的最终有效模式、捕获大小、捕获耗时、Stream 资源错误和 Eager 回退。
 
-### 实验 D：TP 慢 Rank
+### 20.4 实验 D：TP 慢 Rank {/* #实验-dtp-慢-rank */}
 
 固定 TP，逐 Rank 采集计算与 Collective 时间。验证设备顺序、互联拓扑和 NIC 绑定，判断是计算、通信还是 Host 喂数不均。
 
-### 实验 E：容量曲线
+### 20.5 实验 E：容量曲线 {/* #实验-e容量曲线 */}
 
 逐步增加并发和 Prompt 长度，记录 KV Block、Preemption、TTFT/TPOT 和 HBM。分别寻找 NVIDIA 和 910B 的 SLO 拐点。
 
-### 实验 F：精度与量化
+### 20.6 实验 F：精度与量化 {/* #实验-f精度与量化 */}
 
 用同一验证集比较 BF16 基线与各平台量化制品。必须包含长上下文、Tool Call/结构化输出和目标模型的关键任务，不只检查“能生成中文”。
 
----
-
 ## 21. 源码阅读路线
 
-### 第一组：先看插件怎样接入
+### 21.1 第一组：先看插件怎样接入 {/* #第一组先看插件怎样接入 */}
 
 1. upstream `docs/design/plugin_system.md`；
 2. vLLM-Ascend `setup.py` 的 entry points；
@@ -1003,7 +961,7 @@ request finished
 
 回答：vLLM 在何时知道自己运行在 Ascend？Platform 改写了哪些配置？
 
-### 第二组：看 SchedulerOutput 怎样进入 NPU
+### 21.2 第二组：看 SchedulerOutput 怎样进入 NPU {/* #第二组看-scheduleroutput-怎样进入-npu */}
 
 1. upstream Executor 抽象；
 2. `vllm_ascend/worker/worker.py`；
@@ -1013,7 +971,7 @@ request finished
 
 回答：请求状态怎样变成 NPU Tensor、Block Table 和本轮执行 Shape？
 
-### 第三组：看 Attention 热路径
+### 21.3 第三组：看 Attention 热路径 {/* #第三组看-attention-热路径 */}
 
 1. upstream Attention Backend 接口；
 2. `vllm_ascend/attention/attention_v1.py`；
@@ -1023,7 +981,7 @@ request finished
 
 回答：KV 写到哪里、历史 KV 怎样读取、最终调用哪个 NPU 算子？
 
-### 第四组：看图执行
+### 21.4 第四组：看图执行 {/* #第四组看图执行 */}
 
 1. upstream `CompilationConfig`；
 2. vLLM-Ascend Graph Mode 文档；
@@ -1033,7 +991,7 @@ request finished
 
 回答：哪些 Shape 被捕获，哪些 Step 回退 Eager，Graph 参数怎样安全更新？
 
-### 第五组：看通信和量化
+### 21.5 第五组：看通信和量化 {/* #第五组看通信和量化 */}
 
 1. upstream Parallel State；
 2. `vllm_ascend/distributed/device_communicators/`；
@@ -1043,39 +1001,35 @@ request finished
 
 回答：Collective 在哪里发生，量化权重由哪个 Kernel 消费？
 
----
-
 ## 22. 常见误区
 
-### 误区一：API 相同，所以功能完全相同
+### 22.1 误区一：API 相同，所以功能完全相同 {/* #误区一api-相同所以功能完全相同 */}
 
 API 兼容只说明协议一致。模型、量化、图模式、并行和高级功能必须查具体版本矩阵。
 
-### 误区二：给 upstream vLLM 安装 torch_npu 就能运行
+### 22.2 误区二：给 upstream vLLM 安装 torch_npu 就能运行 {/* #误区二给-upstream-vllm-安装-torchnpu-就能运行 */}
 
 torch_npu 只解决 PyTorch 到 NPU 的设备适配。vLLM 仍需要 Platform、Worker、Attention、Graph、通信和算子等 vLLM-Ascend 实现。
 
-### 误区三：版本号相同就一定兼容
+### 22.3 误区三：版本号相同就一定兼容 {/* #误区三版本号相同就一定兼容 */}
 
 还要匹配 PyTorch、torch-npu、CANN、HDK、算子包和模型制品。选择官方 Compatibility Matrix 的完整一行。
 
-### 误区四：同一个 BF16 模型能启动，量化包也能复用
+### 22.4 误区四：同一个 BF16 模型能启动，量化包也能复用 {/* #误区四同一个-bf16-模型能启动量化包也能复用 */}
 
 量化格式与 Kernel 布局强相关。应为不同平台独立构建、校验和发布量化制品。
 
-### 误区五：NPU 低利用率就是 910B 算力不足
+### 22.5 误区五：NPU 低利用率就是 910B 算力不足 {/* #误区五npu-低利用率就是-910b-算力不足 */}
 
 可能是 Tokenizer、EngineCore、NPUModelRunner、ACLGraph 回退、HCCL 等待或 Batch 太小。先看 Timeline。
 
-### 误区六：同一组 TP 可以混用 GPU 和 NPU
+### 22.6 误区六：同一组 TP 可以混用 GPU 和 NPU {/* #误区六同一组-tp-可以混用-gpu-和-npu */}
 
 两者使用不同设备 Tensor、Kernel 和 Collective，不能组成同一个同步模型实例。
 
-### 误区七：所有 `VLLM_ASCEND_*` 环境变量可以永久保留
+### 22.7 误区七：所有 `VLLM_ASCEND_*` 环境变量可以永久保留 {/* #误区七所有-vllmascend-环境变量可以永久保留 */}
 
 官方正在把部分变量迁移至 `--additional-config`。升级前检查迁移表、弃用项和最终生效配置。
-
----
 
 ## 23. 生产发布检查表
 
@@ -1114,8 +1068,6 @@ torch_npu 只解决 PyTorch 到 NPU 的设备适配。vLLM 仍需要 Platform、
 [ ] 与 NVIDIA 资源池禁止跨硬件组成同一副本
 ```
 
----
-
 ## 24. 最终结论
 
 vLLM-Ascend 与 NVIDIA 原生 vLLM 的关系可以概括为：
@@ -1138,9 +1090,7 @@ HTTP、Tokenizer、EngineCore、Scheduler、逻辑 KV 管理
 
 所以学习时不需要把 upstream vLLM 的知识推倒重来。应先掌握共同控制面，再沿 vLLM-Ascend 插件进入 NPU 执行面。部署时则恰好相反：必须把整套昇腾软件栈作为不可拆分的兼容与发布单元，重新验证模型功能、量化精度、图模式、并行通信、容量和故障恢复。
 
----
-
-## 参考资料与源码入口
+## 25. 参考资料与源码入口 {/* #参考资料与源码入口 */}
 
 - [vLLM Plugin System](https://github.com/vllm-project/vllm/blob/main/docs/design/plugin_system.md)
 - [vLLM-Ascend 官方文档](https://docs.vllm.ai/projects/ascend/en/latest/)

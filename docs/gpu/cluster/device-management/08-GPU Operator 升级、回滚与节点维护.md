@@ -1,9 +1,11 @@
 ---
-title: GPU Operator 升级、回滚与节点维护
+title: "GPU Operator 升级、回滚与节点维护"
 sidebar_label: "08. GPU Operator 升级、回滚与节点维护"
+sidebar_position: 8
+description: "升级不只是换一个 Deployment，可能涉及：Operator 控制器、ClusterPolicy CRD、Driver、Toolkit、Device Plugin、GFD、DCGM、Validator、MIG Manager。其中驱动升级风险最高（内核模块卸载/重载）。"
+tags: ["Kubernetes", "GPU Operator", "升级", "回滚", "运维", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU Operator", "升级", "回滚", "运维", "学习路线"]
 ---
 
 # GPU Operator 升级、回滚与节点维护
@@ -12,13 +14,9 @@ tags: ["Kubernetes", "GPU Operator", "升级", "回滚", "运维", "学习路线
 
 Chart 升级与 NVIDIA 驱动升级是**关联但不同**的变更任务。前置：[两种驱动管理模式](./07-GPU%20Operator%20两种驱动管理模式.md)。
 
----
-
 ## 1. 学习目标
 
 制定升级计划；备份 Helm / ClusterPolicy；理解 CRD 升级；单节点灰度；监控驱动升级状态；Helm 回滚；正确维护 GPU 节点；理解回滚边界。
-
----
 
 ## 2. 升级前信息采集
 
@@ -51,8 +49,6 @@ helm history gpu-operator -n gpu-operator
 
 官方采用日历版本，通常只支持同主版本内升级或升到**相邻**下一主版本，勿一次跨多个大版本。核对：K8s / Operator / 驱动 / GPU 型号 / OS / 内核 / containerd / CUDA 镜像 / MIG / Time-Slicing。
 
----
-
 ## 3. 升级 CRD 与配置对比
 
 Helm 默认不自动更新已存在 CRD；较新版本提供升级 Hook（官方：自约 v24.9.0 起默认启用）。
@@ -66,8 +62,6 @@ diff -u gpu-operator-backup/values-current.yaml values-"$TARGET_VERSION".yaml
 ```
 
 重点看：`driver.enabled` / `driver.version`、`toolkit.enabled`、`nfd.enabled`、`devicePlugin.config`、`mig.strategy`、`dcgmExporter`、`upgradePolicy`。
-
----
 
 ## 4. 升级 GPU Operator
 
@@ -87,8 +81,6 @@ kubectl get pods -n gpu-operator -w
 kubectl get events -n gpu-operator --sort-by='.lastTimestamp'
 kubectl describe clusterpolicy cluster-policy
 ```
-
----
 
 ## 5. 驱动升级
 
@@ -128,8 +120,6 @@ kubectl patch clusterpolicy cluster-policy --type=json -p='[
 
 宿主机预装模式下，Operator **不会**管驱动升级，走主机变更流程。
 
----
-
 ## 6. 单节点灰度维护
 
 ```bash
@@ -147,8 +137,6 @@ kubectl drain "$NODE" \
 
 验证：`nvidia-smi`、节点 Capacity/Allocatable、绑节点的 CUDA 测试 Pod，再 `kubectl uncordon "$NODE"`。Pending 排查见：[GPU Pod Pending](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
 
----
-
 ## 7. Helm 回滚与边界
 
 ```bash
@@ -159,13 +147,9 @@ helm status gpu-operator -n gpu-operator
 
 回滚**不能**自动保证恢复：已升的宿主机驱动、已改 MIG 布局、重启后节点状态、外部 Toolkit、CRD 结构变化、已被驱逐的业务。生产应拆成：Chart / ClusterPolicy / 驱动 / MIG 或共享策略 / 业务恢复。
 
----
-
 ## 8. 验收清单
 
 所有 Operator Pod 正常；ClusterPolicy 正常；`nvidia.com/gpu` 正确；驱动版本符合预期；`nvidia-smi` / CUDA 测试 Pod 正常；DCGM 与节点标签正常；Time-Slicing 或 MIG 资源正常；业务加载与推理成功；利用率/显存指标正常。
-
----
 
 ## 9. 本篇总结
 
@@ -178,9 +162,7 @@ helm status gpu-operator -n gpu-operator
 
 下一篇：[GPU 节点标签与调度策略](../scheduling/01-Kubernetes%20GPU%20节点标签与调度策略.md)。
 
----
-
-## 参考与致谢
+## 10. 参考与致谢 {/* #参考与致谢 */}
 
 - [Upgrade NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/upgrade.html)
 - [GPU Driver Upgrades](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-driver-upgrades.html)

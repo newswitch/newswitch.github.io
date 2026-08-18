@@ -1,11 +1,12 @@
 ---
-title: ltrace 命令详解：动态库调用、PLT 与系统调用联合跟踪
+title: "ltrace 命令详解：动态库调用、PLT 与系统调用联合跟踪"
+sidebar_label: "04. ltrace 命令详解：动态库调用、PLT 与系统调用联合跟踪"
 sidebar_position: 4
-description: 讲清 ltrace 的 library/symbol filter、attach、follow-fork、参数类型、时间统计、局限与动态链接故障排查。
+description: "讲清 ltrace 的 library/symbol filter、attach、follow-fork、参数类型、时间统计、局限与动态链接故障排查。"
 tags: [Linux, ltrace, 动态链接, 共享库, 调试]
 ---
 
-# `ltrace` 命令详解：动态库调用边界
+# ltrace 命令详解：动态库调用、PLT 与系统调用联合跟踪
 
 `ltrace` 主要通过断点观察动态链接程序经过 PLT 的 library calls，也可选看 syscall。它适合验证程序调用了哪个库函数和返回值；静态链接、inline、直接绑定、本地隐藏符号、JIT 和优化会让调用不可见。
 

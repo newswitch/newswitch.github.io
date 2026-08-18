@@ -1,11 +1,12 @@
 ---
-title: curl 命令详解：DNS、TCP、TLS、HTTP、超时、重试与指标
+title: "curl 命令详解：DNS、TCP、TLS、HTTP、超时、重试与指标"
+sidebar_label: "25. curl 命令详解：DNS、TCP、TLS、HTTP、超时、重试与指标"
 sidebar_position: 25
-description: 系统讲解 curl URL/请求/头/body/auth/proxy/TLS/resolve/connect-to、超时重试、fail、write-out、trace 与生产安全。
+description: "系统讲解 curl URL/请求/头/body/auth/proxy/TLS/resolve/connect-to、超时重试、fail、write-out、trace 与生产安全。"
 tags: [网络, curl, HTTP, TLS, SRE]
 ---
 
-# `curl` 命令详解：把应用链路拆成可观测阶段
+# curl 命令详解：DNS、TCP、TLS、HTTP、超时、重试与指标
 
 `curl` 支持大量协议，AI Infra/SRE 最常用的是 HTTP(S)：DNS → 建连 → TLS → request upload → server processing → response download。curl 传输成功默认不把 HTTP 404/500 当命令失败，自动化必须明确成功定义。
 

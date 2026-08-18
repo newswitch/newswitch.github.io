@@ -1,11 +1,12 @@
 ---
-title: apparmor_parser 命令详解：编译、验证与加载 AppArmor profile
+title: "apparmorparser 命令详解：编译、验证与加载 AppArmor profile"
+sidebar_label: "10. apparmorparser 命令详解：编译、验证与加载 AppArmor profile"
 sidebar_position: 10
-description: 系统讲解 apparmor_parser 的全部命令与选项族、add/replace/remove、预处理、ABI、缓存、并行编译、只验证、namespace 和安全发布流程。
+description: "系统讲解 apparmor_parser 的全部命令与选项族、add/replace/remove、预处理、ABI、缓存、并行编译、只验证、namespace 和安全发布流程。"
 tags: [Linux, apparmor_parser, AppArmor, profile, LSM]
 ---
 
-# `apparmor_parser` 命令详解：编译、验证与加载 AppArmor profile
+# apparmorparser 命令详解：编译、验证与加载 AppArmor profile
 
 `apparmor_parser` 把 AppArmor 策略源文件预处理、解析、编译为内核 policy，并可 add、replace 或 remove profile。它同时是语法检查器、预处理观察器和缓存管理工具；运行 `-r` 会直接改变内核安全状态，不能把“解析成功”与“发布成功”混为一谈。
 
@@ -159,7 +160,7 @@ apparmor_parser --help=optimize
 
 掌握标准：能解释完整编译链路和全部参数族；能区分 add/replace/remove/只验证；能处理 include、ABI、features 与缓存不一致；能设计可灰度、可验证、可回滚的 profile 发布流程。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [apparmor_parser(8)](https://apparmor-documentation-c38b15.gitlab.io/documentation/manpages/manpage_apparmor_parser.8/)
 - [AppArmor policy reference](https://apparmor-documentation-c38b15.gitlab.io/documentation/in-depth/profiles/)

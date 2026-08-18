@@ -1,9 +1,9 @@
 ---
-title: VXLAN 数据面：VTEP、VNI、封装、MTU 与 Linux 实验
+title: "VXLAN 数据面：VTEP、VNI、封装、MTU 与 Linux 实验"
 sidebar_label: "03. VXLAN 数据面：VTEP、VNI、封装、MTU 与 Linux 实验"
 sidebar_position: 3
+description: "从内外层报文理解 VXLAN 数据面，并用 Linux VXLAN 设备完成跨三层二层互通实验。"
 tags: [VXLAN, VTEP, VNI, Overlay, Linux, MTU]
-description: 从内外层报文理解 VXLAN 数据面，并用 Linux VXLAN 设备完成跨三层二层互通实验。
 ---
 
 # VXLAN 数据面：VTEP、VNI、封装、MTU 与 Linux 实验
@@ -223,7 +223,7 @@ FDB：内层 MAC 对应本地端口还是远端 VTEP
 - Overlay MTU 1500 就要求 Underlay 1500：外层封装需要额外空间。
 - 抓到 UDP 4789 就说明远端已正确解封装：还要看远端 VNI/FDB 和内层转发。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [RFC 7348: Virtual eXtensible Local Area Network](https://www.rfc-editor.org/rfc/rfc7348)
 - [Linux Kernel VXLAN Documentation](https://docs.kernel.org/networking/vxlan.html)

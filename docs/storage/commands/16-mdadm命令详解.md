@@ -1,11 +1,12 @@
 ---
-title: mdadm 命令详解：Linux MD RAID 查询、组装、监控与恢复边界
+title: "mdadm 命令详解：Linux MD RAID 查询、组装、监控与恢复边界"
+sidebar_label: "16. mdadm 命令详解：Linux MD RAID 查询、组装、监控与恢复边界"
 sidebar_position: 16
-description: 讲解 mdadm 的七种模式、核心参数、superblock、阵列状态、成员管理、assemble/create/build/grow/manage/monitor、bitmap、reshape 和安全恢复流程。
+description: "讲解 mdadm 的七种模式、核心参数、superblock、阵列状态、成员管理、assemble/create/build/grow/manage/monitor、bitmap、reshape 和安全恢复流程。"
 tags: [Linux, mdadm, RAID, Linux MD, 数据恢复]
 ---
 
-# `mdadm` 命令详解：Linux MD RAID 查询、组装、监控与恢复边界
+# mdadm 命令详解：Linux MD RAID 查询、组装、监控与恢复边界
 
 `mdadm` 管理 Linux MD 软件 RAID。它同时包含完全只读的查询和会覆盖 superblock、改变阵列布局甚至销毁数据的操作，必须先识别“模式”，再谈参数。
 

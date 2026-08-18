@@ -1,11 +1,12 @@
 ---
-title: systemd-inhibit 命令详解：关机、睡眠与合盖抑制锁
+title: "systemd-inhibit 命令详解：关机、睡眠与合盖抑制锁"
+sidebar_label: "11. systemd-inhibit 命令详解：关机、睡眠与合盖抑制锁"
 sidebar_position: 11
-description: 完整讲解 systemd-inhibit 的 what/who/why/mode/list 与通用参数，理解 block/delay、logind 关机睡眠决策、锁生命周期、超时和生产维护边界。
+description: "完整讲解 systemd-inhibit 的 what/who/why/mode/list 与通用参数，理解 block/delay、logind 关机睡眠决策、锁生命周期、超时和生产维护边界。"
 tags: [Linux, systemd-inhibit, systemd-logind, shutdown, sleep, inhibition lock]
 ---
 
-# `systemd-inhibit` 命令详解：关机、睡眠与合盖抑制锁
+# systemd-inhibit 命令详解：关机、睡眠与合盖抑制锁
 
 `systemd-inhibit` 在执行一个命令期间向 logind 持有 inhibition lock，阻止或延迟关机、睡眠、空闲、合盖/电源键处理。它不是永久策略，也不能对抗所有强制关机、掉电、内核崩溃或管理员绕过。
 
@@ -109,7 +110,7 @@ systemd-inhibit --list
 
 掌握标准：能列出全部参数和 what 值，解释 block/delay 及锁生命周期，识别可绕过边界，并用短锁、明确原因、超时与可恢复应用设计保护维护任务。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [systemd-inhibit(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd-inhibit.html)
 - [org.freedesktop.login1 inhibition locks](https://www.freedesktop.org/software/systemd/man/latest/org.freedesktop.login1.html)

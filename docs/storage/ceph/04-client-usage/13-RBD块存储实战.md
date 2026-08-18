@@ -2,8 +2,8 @@
 title: "Ceph RBD 实战：创建块设备、挂载、快照、克隆与故障排查"
 sidebar_label: "13. Ceph RBD 实战：创建块设备、挂载、快照、克隆与故障排查"
 sidebar_position: 13
-tags: [Ceph, 学习路线, 存储, RBD]
 description: "完整 RBD 实验：创建 Pool、最小权限用户、Image 映射挂载、扩容、快照克隆、Trash 与常见故障排查。"
+tags: [Ceph, 学习路线, 存储, RBD]
 ---
 
 # Ceph RBD 实战：创建块设备、挂载、快照、克隆与故障排查
@@ -49,8 +49,7 @@ RBD 常用于：
 `mkfs`、缩容、快照回滚和删除 Image 都可能破坏数据。本文中的格式化命令只能对新创建、已经核实的实验 Image 执行。
 :::
 
-
-## RBD 到底是什么
+## 1. RBD 到底是什么 {/* #rbd-到底是什么 */}
 
 RBD 把 RADOS 中的对象组织成一个逻辑块设备。
 
@@ -77,13 +76,13 @@ flowchart TD
     E --> F["多个OSD"]
 ```
 
-### 1. RBD 不是单个大文件
+### 1.1 RBD 不是单个大文件 {/* #1-rbd-不是单个大文件 */}
 
 一个 RBD Image 会被切分成多个 RADOS 对象，分散存放在 Pool 对应的 PG 和 OSD 上。客户端根据对象位置直接和 OSD 通信，而不是所有数据都经过 MON 或 MGR。
 
 MON 负责提供集群 Map 和认证信息，MGR 负责管理与监控；它们不承担每次块 IO 的数据转发。
 
-### 2. RBD 是块设备，不是文件系统
+### 1.2 RBD 是块设备，不是文件系统 {/* #2-rbd-是块设备不是文件系统 */}
 
 RBD 只提供类似硬盘的块读写能力。映射后通常还需要：
 
@@ -92,7 +91,7 @@ RBD 只提供类似硬盘的块读写能力。映射后通常还需要：
 - 挂载文件系统
 - 或直接交给支持裸块设备的应用
 
-### 3. 同一个普通文件系统不能随意多机读写
+### 1.3 同一个普通文件系统不能随意多机读写 {/* #3-同一个普通文件系统不能随意多机读写 */}
 
 如果在一个 RBD Image 中创建了 ext4 或 XFS，然后同时映射到两台服务器并以读写方式挂载，两个内核会各自维护文件系统状态，可能导致文件系统损坏。
 
@@ -102,9 +101,9 @@ RBD 只提供类似硬盘的块读写能力。映射后通常还需要：
 
 需要多客户端共享文件目录时，优先考虑 CephFS；确实需要共享块设备时，必须使用经过验证的集群文件系统、锁机制和上层产品方案。
 
-## RBD 的两种主要访问方式
+## 2. RBD 的两种主要访问方式 {/* #rbd-的两种主要访问方式 */}
 
-### 1. krbd：Linux 内核 RBD 客户端
+### 2.1 krbd：Linux 内核 RBD 客户端 {/* #1-krbdlinux-内核-rbd-客户端 */}
 
 使用 `rbd device map` 把 Image 映射为：
 
@@ -126,7 +125,7 @@ RBD 只提供类似硬盘的块读写能力。映射后通常还需要：
 - 内核过旧可能不支持新特性或包含已知问题
 - 升级 Ceph 集群时也要评估客户端内核兼容性
 
-### 2. librbd：应用直接访问 RBD
+### 2.2 librbd：应用直接访问 RBD {/* #2-librbd应用直接访问-rbd */}
 
 QEMU、OpenStack Cinder、部分 Kubernetes CSI 组件可以通过 librbd 直接访问 Image，不需要先在宿主机映射成 `/dev/rbd0`。
 
@@ -138,9 +137,9 @@ QEMU、OpenStack Cinder、部分 Kubernetes CSI 组件可以通过 librbd 直接
 
 生产环境中，虚拟机磁盘通常应由 QEMU/libvirt 或云平台统一管理，而不是运维人员手工执行 `rbd device map` 再交给虚拟机。
 
-## 实验前检查
+## 3. 实验前检查 {/* #实验前检查 */}
 
-### 1. 检查集群健康
+### 3.1 检查集群健康 {/* #1-检查集群健康 */}
 
 ```bash
 ceph -s
@@ -150,7 +149,7 @@ ceph osd tree
 
 建议在 PG 稳定、没有容量红线和重大 OSD 故障时进行创建和测试。
 
-### 2. 检查客户端工具
+### 3.2 检查客户端工具 {/* #2-检查客户端工具 */}
 
 ```bash
 rbd --version
@@ -160,7 +159,7 @@ modinfo rbd
 
 `rbd` 命令通常由 `ceph-common` 软件包提供。
 
-### 3. 本文示例参数
+### 3.3 本文示例参数 {/* #3-本文示例参数 */}
 
 | 项目 | 示例值 |
 | --- | --- |
@@ -172,9 +171,9 @@ modinfo rbd
 
 生产环境应按业务、租户、保护策略和性能需求规划 Pool，不要把所有虚拟机、数据库和测试数据都混到一个默认 Pool 中。
 
-## 创建并初始化 RBD Pool
+## 4. 创建并初始化 RBD Pool {/* #创建并初始化-rbd-pool */}
 
-### 1. 创建 Pool
+### 4.1 创建 Pool {/* #1-创建-pool */}
 
 ```bash
 ceph osd pool create rbd-prod
@@ -182,7 +181,7 @@ ceph osd pool create rbd-prod
 
 现代 Ceph 通常由 PG Autoscaler 管理 PG 数量。不要从旧文章中随意复制固定 PG 数；应根据目标版本、OSD 规模和 Autoscaler 状态规划。
 
-### 2. 初始化 RBD Pool
+### 4.2 初始化 RBD Pool {/* #2-初始化-rbd-pool */}
 
 ```bash
 rbd pool init rbd-prod
@@ -190,7 +189,7 @@ rbd pool init rbd-prod
 
 这一步会为 RBD 功能初始化 Pool 所需的元数据。
 
-### 3. 验证 Pool
+### 4.3 验证 Pool {/* #3-验证-pool */}
 
 ```bash
 ceph osd pool ls detail
@@ -206,7 +205,7 @@ ceph osd pool get rbd-prod min_size
 - CRUSH 规则指向正确设备类和故障域
 - Pool 没有设置意外的配额
 
-## 创建最小权限 RBD 用户
+## 5. 创建最小权限 RBD 用户 {/* #创建最小权限-rbd-用户 */}
 
 日常业务不应使用 `client.admin`。
 
@@ -240,7 +239,7 @@ rbd --id rbdapp --pool rbd-prod ls
 
 再尝试访问一个无权限 Pool，应该被拒绝。权限测试既要验证「应该成功」，也要验证「越权必须失败」。
 
-### 为什么还需要 MON 和 MGR 权限
+### 5.1 为什么还需要 MON 和 MGR 权限 {/* #为什么还需要-mon-和-mgr-权限 */}
 
 - MON Profile 允许客户端获取必要的集群 Map 和认证信息
 - OSD Profile 决定可以访问哪些 RBD 数据
@@ -248,7 +247,7 @@ rbd --id rbdapp --pool rbd-prod ls
 
 应使用官方 Profile，而不是为了省事授予 `allow *`。
 
-## 创建 RBD Image
+## 6. 创建 RBD Image {/* #创建-rbd-image */}
 
 创建 10 GiB Image：
 
@@ -268,7 +267,7 @@ rbd ls rbd-prod --long --id rbdapp
 rbd info rbd-prod/lab-disk --id rbdapp
 ```
 
-### 1. RBD 默认是 Thin Provisioning
+### 6.1 RBD 默认是 Thin Provisioning {/* #1-rbd-默认是-thin-provisioning */}
 
 创建一个 10 GiB Image，并不会立即占用 10 GiB Raw 空间。
 
@@ -279,7 +278,7 @@ rbd info rbd-prod/lab-disk --id rbdapp
 
 随着客户端写入，实际占用才逐渐增加。
 
-### 2. Thin Provisioning 不等于无限超卖
+### 6.2 Thin Provisioning 不等于无限超卖 {/* #2-thin-provisioning-不等于无限超卖 */}
 
 可以创建很多逻辑容量大于集群物理容量的 Image，但如果所有业务同时写满，Ceph 仍会达到 Nearfull 或 Full。
 
@@ -292,7 +291,7 @@ rbd info rbd-prod/lab-disk --id rbdapp
 - 增长趋势
 - 最大故障域恢复空间
 
-## 把 RBD 映射为 Linux 块设备
+## 7. 把 RBD 映射为 Linux 块设备 {/* #把-rbd-映射为-linux-块设备 */}
 
 在客户端安装 `ceph-common`，并准备：
 
@@ -330,7 +329,7 @@ lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS
 
 脚本不要盲目假设设备永远是 `/dev/rbd0`，应读取映射结果或使用稳定路径。
 
-## 格式化并挂载实验 Image
+## 8. 格式化并挂载实验 Image {/* #格式化并挂载实验-image */}
 
 再次确认设备是刚创建的空白实验 Image：
 
@@ -339,7 +338,7 @@ rbd device list
 lsblk -f
 ```
 
-### 1. 创建文件系统
+### 8.1 创建文件系统 {/* #1-创建文件系统 */}
 
 下面假设正确设备是 `/dev/rbd/rbd-prod/lab-disk`：
 
@@ -349,7 +348,7 @@ mkfs.xfs /dev/rbd/rbd-prod/lab-disk
 
 `mkfs` 会覆盖设备上的文件系统信息。生产中执行前必须通过 Image 名称、映射关系、设备大小和变更单多重确认。
 
-### 2. 挂载
+### 8.2 挂载 {/* #2-挂载 */}
 
 ```bash
 mkdir -p /mnt/rbd-lab
@@ -366,7 +365,7 @@ sync
 ls -l /mnt/rbd-lab
 ```
 
-### 3. 卸载并取消映射
+### 8.3 卸载并取消映射 {/* #3-卸载并取消映射 */}
 
 ```bash
 umount /mnt/rbd-lab
@@ -375,7 +374,7 @@ rbd device unmap /dev/rbd/rbd-prod/lab-disk
 
 如果提示设备 Busy，不要使用强制参数直接处理。先检查仍在使用该挂载点或块设备的进程。
 
-## 开机自动映射和挂载怎么设计
+## 9. 开机自动映射和挂载怎么设计 {/* #开机自动映射和挂载怎么设计 */}
 
 生产客户端需要考虑启动顺序：
 
@@ -401,7 +400,7 @@ rbd device unmap /dev/rbd/rbd-prod/lab-disk
 
 如果业务本身支持 librbd，应优先采用产品集成方式，而不是重复实现映射生命周期。
 
-## RBD 扩容
+## 10. RBD 扩容 {/* #rbd-扩容 */}
 
 RBD Image 扩容分两层：
 
@@ -410,7 +409,7 @@ RBD Image 扩容分两层：
 再扩大设备内部的分区和文件系统
 ```
 
-### 1. 扩大 Image
+### 10.1 扩大 Image {/* #1-扩大-image */}
 
 ```bash
 rbd resize --size 20G rbd-prod/lab-disk --id rbdapp
@@ -423,7 +422,7 @@ rbd info rbd-prod/lab-disk --id rbdapp
 lsblk
 ```
 
-### 2. 扩大文件系统
+### 10.2 扩大文件系统 {/* #2-扩大文件系统 */}
 
 如果 XFS 直接创建在整个 RBD 设备上，并已挂载：
 
@@ -433,7 +432,7 @@ xfs_growfs /mnt/rbd-lab
 
 如果设备上还有分区、LVM 或其他文件系统，应按对应层级依次扩容。
 
-### 3. 缩容为什么危险
+### 10.3 缩容为什么危险 {/* #3-缩容为什么危险 */}
 
 RBD 支持使用 `--allow-shrink` 缩小 Image，但块设备缩小不等于文件系统自动缩小。
 
@@ -451,7 +450,7 @@ RBD 支持使用 `--allow-shrink` 缩小 Image，但块设备缩小不等于文�
 
 不要把 `--allow-shrink` 当作普通容量回收命令。
 
-## RBD 快照
+## 11. RBD 快照 {/* #rbd-快照 */}
 
 创建快照：
 
@@ -465,7 +464,7 @@ rbd snap create rbd-prod/lab-disk@before-upgrade --id rbdapp
 rbd snap ls rbd-prod/lab-disk --id rbdapp
 ```
 
-### 1. 快照默认只是 Crash-Consistent
+### 11.1 快照默认只是 Crash-Consistent {/* #1-快照默认只是-crash-consistent */}
 
 RBD 只看到块，不理解 Image 内部的文件系统、数据库事务或应用缓存。
 
@@ -480,7 +479,7 @@ RBD 只看到块，不理解 Image 内部的文件系统、数据库事务或应
 - 多个卷组成一个业务时使用一致性组或编排流程
 - 快照完成后及时恢复业务 IO
 
-### 2. 快照回滚
+### 11.2 快照回滚 {/* #2-快照回滚 */}
 
 ```bash
 rbd snap rollback rbd-prod/lab-disk@before-upgrade --id rbdapp
@@ -498,7 +497,7 @@ rbd snap rollback rbd-prod/lab-disk@before-upgrade --id rbdapp
 
 官方文档建议在很多恢复场景中优先从快照创建 Clone，而不是直接覆盖原 Image。
 
-### 3. 删除快照
+### 11.3 删除快照 {/* #3-删除快照 */}
 
 ```bash
 rbd snap rm rbd-prod/lab-disk@before-upgrade --id rbdapp
@@ -506,7 +505,7 @@ rbd snap rm rbd-prod/lab-disk@before-upgrade --id rbdapp
 
 删除快照后，OSD 通过 Snaptrim 异步释放数据，因此 Raw 空间不一定立即下降。
 
-### 4. 快照不是备份
+### 11.4 快照不是备份 {/* #4-快照不是备份 */}
 
 快照仍在同一个 Ceph 集群中。以下问题可能同时影响 Image 和快照：
 
@@ -518,18 +517,18 @@ rbd snap rm rbd-prod/lab-disk@before-upgrade --id rbdapp
 
 重要数据仍需复制到独立故障域或独立存储系统。
 
-## RBD 克隆与 Flatten
+## 12. RBD 克隆与 Flatten {/* #rbd-克隆与-flatten */}
 
 Clone 使用 Copy-on-Write 快速创建新 Image。
 
-### 1. 创建模板快照
+### 12.1 创建模板快照 {/* #1-创建模板快照 */}
 
 ```bash
 rbd snap create rbd-prod/base-image@golden
 rbd snap protect rbd-prod/base-image@golden
 ```
 
-### 2. 创建 Clone
+### 12.2 创建 Clone {/* #2-创建-clone */}
 
 ```bash
 rbd clone \
@@ -546,14 +545,14 @@ flowchart TD
     A --> D["vm-003：只保存差异"]
 ```
 
-### 3. 查看依赖
+### 12.3 查看依赖 {/* #3-查看依赖 */}
 
 ```bash
 rbd children rbd-prod/base-image@golden
 rbd info rbd-prod/vm-001
 ```
 
-### 4. Flatten
+### 12.4 Flatten {/* #4-flatten */}
 
 ```bash
 rbd flatten rbd-prod/vm-001
@@ -577,7 +576,7 @@ rbd snap rm rbd-prod/base-image@golden
 
 生产平台要记录完整的父子依赖关系，不能只根据 Image 名称判断是否可删除。
 
-## 删除 RBD Image：优先使用 Trash
+## 13. 删除 RBD Image：优先使用 Trash {/* #删除-rbd-image优先使用-trash */}
 
 直接删除：
 
@@ -620,7 +619,7 @@ rbd trash rm rbd-prod/<image-id>
 - 备份和保留周期符合要求
 - 删除后容量释放可能是异步的
 
-## 常见 RBD Feature
+## 14. 常见 RBD Feature {/* #常见-rbd-feature */}
 
 查看 Image Feature：
 
@@ -649,9 +648,9 @@ Feature 之间可能存在依赖。例如 `fast-diff` 通常依赖 `object-map`�
 - 是否需要 RBD Mirror
 - 启停 Feature 对现有 Image 的影响
 
-## RBD 监控
+## 15. RBD 监控 {/* #rbd-监控 */}
 
-### 1. 集群侧
+### 15.1 集群侧 {/* #1-集群侧 */}
 
 ```bash
 ceph -s
@@ -660,7 +659,7 @@ ceph osd perf
 ceph health detail
 ```
 
-### 2. Pool 和 Image 侧
+### 15.2 Pool 和 Image 侧 {/* #2-pool-和-image-侧 */}
 
 ```bash
 rbd ls rbd-prod --long
@@ -671,7 +670,7 @@ rbd info rbd-prod/lab-disk
 
 `rbd status` 可以看到 Watcher 等使用信息。实际使用量统计可能受 Feature、快照和统计方式影响，不要把单个命令当作计费唯一依据。
 
-### 3. Prometheus 按 Image 采集
+### 15.3 Prometheus 按 Image 采集 {/* #3-prometheus-按-image-采集 */}
 
 Ceph Prometheus 模块默认不会为所有 RBD Image 采集详细 IO 统计，因为大规模 Image 扫描和动态性能计数器会产生开销。
 
@@ -683,9 +682,9 @@ ceph config set mgr mgr/prometheus/rbd_stats_pools "rbd-prod"
 
 生产环境不要不加评估就配置 `*` 采集所有 Pool 和 Namespace。
 
-## 常见故障排查
+## 16. 常见故障排查 {/* #常见故障排查 */}
 
-### 1. `rbd device map` 失败
+### 16.1 `rbd device map` 失败 {/* #1-rbd-device-map-失败 */}
 
 依次检查：
 
@@ -707,7 +706,7 @@ dmesg -T | tail -n 100
 - Image 被不兼容方式加密
 - 集群处于严重健康异常
 
-### 2. 取消映射提示 Busy
+### 16.2 取消映射提示 Busy {/* #2-取消映射提示-busy */}
 
 ```bash
 findmnt
@@ -726,7 +725,7 @@ lsof /dev/rbd/rbd-prod/lab-disk
 
 先停止上层使用者，再正常卸载和 Unmap。强制取消映射可能导致未写数据丢失。
 
-### 3. Image 删除失败
+### 16.3 Image 删除失败 {/* #3-image-删除失败 */}
 
 ```bash
 rbd status rbd-prod/lab-disk
@@ -742,7 +741,7 @@ rbd children rbd-prod/lab-disk@<snapshot>
 - 是否有 Clone 依赖
 - Image 是否仍被平台记录为使用中
 
-### 4. 延迟突然升高
+### 16.4 延迟突然升高 {/* #4-延迟突然升高 */}
 
 从四层分析：
 
@@ -766,7 +765,7 @@ ss -s
 
 不要看到 RBD 慢就只调 RBD 缓存。根因可能在故障恢复、最慢 OSD、网络或上层小随机同步写。
 
-### 5. 发现锁或 Watcher 怎么办
+### 16.5 发现锁或 Watcher 怎么办 {/* #5-发现锁或-watcher-怎么办 */}
 
 Watcher 通常表示有客户端正在使用 Image，不是异常本身。
 
@@ -780,7 +779,7 @@ Watcher 通常表示有客户端正在使用 Image，不是异常本身。
 
 不要把「删锁」作为通用解法。
 
-## 生产 RBD 交付检查表
+## 17. 生产 RBD 交付检查表 {/* #生产-rbd-交付检查表 */}
 
 - [ ] Pool 保护策略和 CRUSH 规则符合业务等级
 - [ ] 已计算 Thin Provisioning 超卖比例
@@ -797,7 +796,7 @@ Watcher 通常表示有客户端正在使用 Image，不是异常本身。
 - [ ] 已监控容量、IO 延迟、Watcher 和业务错误
 - [ ] 已演练客户端重启、网络中断和 OSD 恢复
 
-## 常见误区
+## 18. 常见误区 {/* #常见误区 */}
 
 **误区 1：创建 100 GiB Image 立即占用 100 GiB**
 
@@ -823,7 +822,7 @@ RBD 的后端是分布式的，但普通文件系统仍不具备多客户端协�
 
 Watcher 通常说明有客户端连接。关键是确认它是否与业务实际状态一致。
 
-## 本篇总结
+## 19. 本篇总结 {/* #本篇总结 */}
 
 RBD 的数据路径是：
 
@@ -850,8 +849,7 @@ RBD 的数据路径是：
 
 **创建分布式共享文件系统、部署 MDS、挂载客户端、配置 Subvolume、Quota 和快照。**
 
-
-## 自测题
+## 20. 自测题 {/* #自测题 */}
 
 1. RBD Image 在 Ceph 内部如何保存？
 2. krbd 与 librbd 有什么区别？
@@ -864,7 +862,7 @@ RBD 的数据路径是：
 9. Flatten 会带来什么容量和性能影响？
 10. 为什么生产删除更适合先使用 RBD Trash？
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [Basic Block Device Commands](https://docs.ceph.com/en/latest/rbd/rados-rbd-cmds/)
 - [Kernel Module Operations](https://docs.ceph.com/en/latest/rbd/rbd-ko/)

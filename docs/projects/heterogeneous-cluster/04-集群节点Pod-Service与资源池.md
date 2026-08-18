@@ -1,16 +1,18 @@
 ---
-title: 集群、节点、Pod、Service和资源池是什么
-sidebar_label: 04 · 集群、节点、Pod、Service与资源池
+title: "集群、节点、Pod、Service和资源池是什么"
+sidebar_label: "04. 04 · 集群、节点、Pod、Service与资源池"
+sidebar_position: 4
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第一阶段——小白基础 本文定位：Kubernetes 概念入门篇"
+tags: [NVIDIA, 昇腾, Kubernetes, 资源池, Device Plugin, AI推理]
 date: 2026-08-07 11:30:00
 categories: 云原生
-tags: [NVIDIA, 昇腾, Kubernetes, 资源池, Device Plugin, AI推理]
 ---
 
 # 集群、节点、Pod、Service和资源池是什么
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第一阶段——小白基础  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第一阶段——小白基础
 **本文定位**：Kubernetes 概念入门篇
 :::
 
@@ -24,9 +26,7 @@ tags: [NVIDIA, 昇腾, Kubernetes, 资源池, Device Plugin, AI推理]
 
 回答这个问题之前，需要先认识集群、节点、Pod、Deployment、Service、Device Plugin 和资源池。K8s 细节可回看 [Kubernetes 学习路线](../../cloud-native/kubernetes/00-Kubernetes学习路线.md)；本文只建立双资源池语境下的概念地图。
 
----
-
-## 一、为什么需要集群
+## 1. 为什么需要集群 {/* #一为什么需要集群 */}
 
 如果只有一台服务器，可以手动启动一个模型进程：
 
@@ -50,11 +50,9 @@ tags: [NVIDIA, 昇腾, Kubernetes, 资源池, Device Plugin, AI推理]
 
 Kubernetes 把许多服务器组成一个可统一管理的集群，并通过声明式配置维护期望状态。
 
----
+## 2. 控制节点和工作节点 {/* #二控制节点和工作节点 */}
 
-## 二、控制节点和工作节点
-
-### 控制节点
+### 2.1 控制节点 {/* #控制节点 */}
 
 控制节点负责管理集群，包括：
 
@@ -66,7 +64,7 @@ Kubernetes 把许多服务器组成一个可统一管理的集群，并通过声
 
 可以把控制节点理解为「管理中心」。它通常不承担模型计算。生产环境建议把控制节点与昂贵的加速器工作节点分离。
 
-### 工作节点
+### 2.2 工作节点 {/* #工作节点 */}
 
 工作节点真正运行 Pod。在双资源池集群中，工作节点至少分为：
 
@@ -82,9 +80,7 @@ Kubernetes 把许多服务器组成一个可统一管理的集群，并通过声
 kubectl get nodes -o wide
 ```
 
----
-
-## 三、Pod 是什么
+## 3. Pod 是什么 {/* #三pod-是什么 */}
 
 Pod 是 Kubernetes 调度和运行容器的基本单位。
 
@@ -112,9 +108,7 @@ Pod 具有自己的：
 Pod 不是一台永久存在的虚拟机。Pod 被删除、重建或迁移后，名称和 IP 都可能改变。因此业务系统不应该直接依赖某个 Pod IP。
 :::
 
----
-
-## 四、Deployment 是什么
+## 4. Deployment 是什么 {/* #四deployment-是什么 */}
 
 Deployment 用于管理一组相同 Pod 的期望状态。
 
@@ -141,9 +135,7 @@ Deployment 还可以完成：
 
 所以后续生产部署必须合理配置启动探针、就绪探针、优雅终止和升级策略。
 
----
-
-## 五、Service 解决什么问题
+## 5. Service 解决什么问题 {/* #五service-解决什么问题 */}
 
 Pod IP 会变化，但 Service 提供相对稳定的访问入口。
 
@@ -168,9 +160,7 @@ qwen-ascend-service → 昇腾资源池中的模型 Pod
 
 统一 AI 网关再根据路由策略选择这两个 Service 中的一个。
 
----
-
-## 六、Namespace 是什么
+## 6. Namespace 是什么 {/* #六namespace-是什么 */}
 
 Namespace 用于在同一个 Kubernetes 集群中划分逻辑管理空间，例如：
 
@@ -198,9 +188,7 @@ Namespace 回答「谁管理这些工作负载」
 资源池回答「这些工作负载使用哪类机器」
 ```
 
----
-
-## 七、Kubernetes 怎样认识 GPU 和 NPU
+## 7. Kubernetes 怎样认识 GPU 和 NPU {/* #七kubernetes-怎样认识-gpu-和-npu */}
 
 Kubernetes 默认只理解 CPU、内存等通用资源，并不会天然知道节点上有几张 GPU 或 NPU。
 
@@ -231,9 +219,7 @@ kubectl describe node <节点名称>
 
 如果宿主机能看到设备，但 Kubernetes 节点中没有对应扩展资源，问题通常位于容器运行环境、Device Plugin 或 kubelet 对接层，而不是模型本身。
 
----
-
-## 八、什么是资源池
+## 8. 什么是资源池 {/* #八什么是资源池 */}
 
 资源池不是必须安装的一个单独软件，它通常是通过一组规则把同类节点组织起来形成的逻辑概念。
 
@@ -267,9 +253,7 @@ NVIDIA 资源池
 资源池不是只贴一个 Label 就完成了。真正可靠的资源池需要「节点分类＋调度限制＋设备申请＋配额＋监控」共同实现。
 :::
 
----
-
-## 九、调度器如何选择节点
+## 9. 调度器如何选择节点 {/* #九调度器如何选择节点 */}
 
 创建 Pod 以后，Kubernetes 调度器需要为它寻找合适节点。
 
@@ -304,9 +288,7 @@ kubectl describe pod <Pod名称> -n <Namespace>
 
 查看底部 Events，通常能看到调度失败原因。
 
----
-
-## 十、一个模型 Pod 需要声明什么
+## 10. 一个模型 Pod 需要声明什么 {/* #十一个模型-pod-需要声明什么 */}
 
 下面是 NVIDIA 模型 Pod 的概念性片段：
 
@@ -342,9 +324,7 @@ spec:
 
 这些内容会在 [第 25 篇](./25-编写生产级双池Kubernetes部署模板.md) 完整实现。
 
----
-
-## 十一、PV 和 PVC 为什么与模型部署有关
+## 11. PV 和 PVC 为什么与模型部署有关 {/* #十一pv-和-pvc-为什么与模型部署有关 */}
 
 模型权重通常很大，不适合每次都打进容器镜像。
 
@@ -367,9 +347,7 @@ NVIDIA 模型 Pod 和昇腾模型 Pod
 
 共享存储解决模型集中管理问题，本地 NVMe 缓存解决模型加载性能问题。两者不是非此即彼，生产环境经常组合使用。
 
----
-
-## 十二、模型服务为什么需要探针
+## 12. 模型服务为什么需要探针 {/* #十二模型服务为什么需要探针 */}
 
 Pod 处于 Running，只表示容器进程已经启动，不表示模型已经加载完成。
 
@@ -385,9 +363,7 @@ Pod 处于 Running，只表示容器进程已经启动，不表示模型已经�
 
 如果存活探针过于激进，模型还没有启动完成就会被反复重启，形成 CrashLoop 或长时间不可用。
 
----
-
-## 十三、双资源池中最重要的边界
+## 13. 双资源池中最重要的边界 {/* #十三双资源池中最重要的边界 */}
 
 **管理可以统一**
 
@@ -420,11 +396,9 @@ Pod 处于 Running，只表示容器进程已经启动，不表示模型已经�
 
 这就是双资源池架构中「底层分开、上层统一」的基本思想。
 
----
+## 14. 本篇练习 {/* #十四本篇练习 */}
 
-## 十四、本篇练习
-
-### 练习 1：查看集群对象
+### 14.1 练习 1：查看集群对象 {/* #练习-1查看集群对象 */}
 
 如果已有 Kubernetes 环境，执行：
 
@@ -440,7 +414,7 @@ kubectl get pvc -A
 
 尝试解释每类对象的作用。
 
-### 练习 2：查看节点资源
+### 14.2 练习 2：查看节点资源 {/* #练习-2查看节点资源 */}
 
 ```bash
 kubectl describe node <节点名称>
@@ -455,7 +429,7 @@ kubectl describe node <节点名称>
 - 节点 Taint
 - 当前资源分配情况
 
-### 练习 3：分析 Pending Pod
+### 14.3 练习 3：分析 Pending Pod {/* #练习-3分析-pending-pod */}
 
 找一个 Pending Pod 或创建一个无法满足资源条件的测试 Pod，然后执行：
 
@@ -465,9 +439,7 @@ kubectl describe pod <Pod名称> -n <Namespace>
 
 阅读 Events，并判断属于资源不足、标签不匹配、污点不匹配还是存储问题。
 
----
-
-## 十五、本篇小结
+## 15. 本篇小结 {/* #十五本篇小结 */}
 
 本篇需要记住以下关系：
 
@@ -494,15 +466,11 @@ PV/PVC 为 Pod 挂载模型存储
 
 到这里，第一阶段的基础地图已经完成。下一阶段将进入真实架构设计，首先回答为什么要把 NVIDIA 和昇腾放在同一个集群，以及这种设计带来了哪些收益、边界和成本。
 
----
-
-## 相关链接
+## 16. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [Kubernetes 学习路线](../../cloud-native/kubernetes/00-Kubernetes学习路线.md)
 - GPU 侧：Device Plugin / 调度 / Pending：[05](../../gpu/cluster/device-management/01-Kubernetes%20如何识别和管理%20GPU.md) · [13](../../gpu/cluster/scheduling/01-Kubernetes%20GPU%20节点标签与调度策略.md) · [14](../../gpu/cluster/scheduling/02-GPU%20节点%20Taint%20与%20Toleration%20实践.md) · [08](../../gpu/cluster/troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)
 - 探针深化：[大模型服务 Kubernetes 探针设计](../../ai-systems/inference/serving/04-大模型服务%20Kubernetes%20探针设计.md)
-
----
 
 ← [第 3 篇](./03-GPU与NPU显存与HBM及CUDA与CANN.md) · → [第 5 篇：为什么一个集群要划分两个算力资源池](./05-为什么一个集群要划分两个算力资源池.md)

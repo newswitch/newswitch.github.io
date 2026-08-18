@@ -1,9 +1,9 @@
 ---
-title: BGP EVPN 控制面与五类路由
+title: "BGP EVPN 控制面与五类路由"
 sidebar_label: "04. BGP EVPN 控制面与五类路由"
 sidebar_position: 4
+description: "从 RD、RT、VNI 到 EVPN 五类路由，理解控制面如何分发 MAC、IP、前缀和多归属信息。"
 tags: [BGP, EVPN, VXLAN, Route Type, ARP Suppression]
-description: 从 RD、RT、VNI 到 EVPN 五类路由，理解控制面如何分发 MAC、IP、前缀和多归属信息。
 ---
 
 # BGP EVPN 控制面与五类路由
@@ -162,7 +162,7 @@ ip -d link show type vxlan
 
 ## 6. 练习与验收
 
-### 练习一：RT 导入错误
+### 6.1 练习一：RT 导入错误 {/* #练习一rt-导入错误 */}
 
 故意让 Leaf2 的 import RT 与 Leaf1 的 export RT 不同。
 
@@ -173,15 +173,15 @@ ip -d link show type vxlan
 - 证明 Leaf2 的目标 VNI 没有导入；
 - 修复后验证 FDB、ARP 和业务恢复。
 
-### 练习二：观察 ARP Suppression
+### 6.2 练习二：观察 ARP Suppression {/* #练习二观察-arp-suppression */}
 
 在远端已经存在 MAC-IP Type 2 后清空主机 ARP 缓存，再发起访问并抓包。判断 ARP 请求是被本地 VTEP 代理，还是被泛洪到全部 VTEP。
 
-### 掌握标准
+### 6.3 掌握标准 {/* #掌握标准 */}
 
 你应能在白板上从一个本地 MAC 开始，完整画出 Type 2 的生成、发布、导入和数据面转发过程；看到 Type 1～5 时，能够说清每一种在解决什么问题，而不是背编号。
 
-## 参考资料
+## 7. 参考资料 {/* #参考资料 */}
 
 - [RFC 7432：BGP MPLS-Based Ethernet VPN](https://www.rfc-editor.org/rfc/rfc7432)
 - [RFC 8365：Network Virtualization Overlay Solution Using EVPN](https://www.rfc-editor.org/rfc/rfc8365)

@@ -1,9 +1,9 @@
 ---
-title: 静态路由、OSPF、ECMP 与 BFD
+title: "静态路由、OSPF、ECMP 与 BFD"
 sidebar_label: "06. 静态路由、OSPF、ECMP 与 BFD"
 sidebar_position: 6
+description: "从 RIB/FIB 进入动态路由，理解 OSPF 邻居、LSDB、SPF、ECMP 哈希和 BFD 快速故障检测。"
 tags: [Static Route, OSPF, ECMP, BFD, FRRouting]
-description: 从 RIB/FIB 进入动态路由，理解 OSPF 邻居、LSDB、SPF、ECMP 哈希和 BFD 快速故障检测。
 ---
 
 # 静态路由、OSPF、ECMP 与 BFD
@@ -47,7 +47,7 @@ flowchart LR
     F --> G["编程 FIB"]
 ```
 
-### 邻居状态
+### 3.1 邻居状态 {/* #邻居状态 */}
 
 常见状态：
 
@@ -59,17 +59,17 @@ Down → Init → 2-Way → ExStart → Exchange → Loading → Full
 - 停在 ExStart/Exchange：常见 MTU、主从协商或链路质量问题。
 - Full 后反复重建：检查丢包、CPU、定时器、BFD 和接口抖动。
 
-### DR/BDR
+### 3.2 DR/BDR {/* #drbdr */}
 
 广播多访问网络上，若所有路由器两两建立完整邻接，规模会快速增长。DR/BDR 用于
 减少邻接和 LSA 交换复杂度。点到点链路不需要 DR 选举。
 
-### Area
+### 3.3 Area {/* #area */}
 
 Area 0 是骨干区域。多区域用于限制 LSDB 和 SPF 影响范围，但也引入 ABR、汇总、
 Stub/NSSA 和故障排查复杂度。规模不大时不要为了“架构高级”过早分区。
 
-### 常见 LSA
+### 3.4 常见 LSA {/* #常见-lsa */}
 
 | 类型 | 作用 |
 | --- | --- |

@@ -1,15 +1,16 @@
 ---
 title: "Kubectl 命令概览"
+sidebar_label: "01. Kubectl 命令概览"
 sidebar_position: 1
-tags: [Kubernetes, 命令与调试, PartII, 学习路线]
 description: "详细介绍 Kubernetes kubectl 命令的使用方法，包括命令分类、命令行增强工具、身份认证机制和自动补全配置等实用技巧。"
+tags: [Kubernetes, 命令与调试, PartII, 学习路线]
 ---
 
 # Kubectl 命令概览
 
 > kubectl 是 Kubernetes 集群调试与管理的核心工具，掌握其命令体系和增强插件，是高效排障和日常运维的基础。
 
-## kubectl 命令分类
+## 1. kubectl 命令分类 {/* #kubectl-命令分类 */}
 
 kubectl 的子命令按功能主要分为以下几个类别：
 
@@ -24,13 +25,13 @@ kubectl 的子命令按功能主要分为以下几个类别：
 
 熟练掌握这些命令分类有助于提高 Kubernetes 集群的操作效率。
 
-## kubectl 命令行增强工具
+## 2. kubectl 命令行增强工具 {/* #kubectl-命令行增强工具 */}
 
 为提升 kubectl 的调试与管理效率，推荐结合多种开源增强工具。
 
 ![kubectl 增强工具推荐](/images/k8s/cli/using-kubectl/tools-to-supercharge-kubectl.webp)
 
-### 推荐工具清单
+### 2.1 推荐工具清单 {/* #推荐工具清单 */}
 
 - **[kubectx](https://github.com/ahmetb/kubectx)**：快速切换 Kubernetes context 和 namespace
 - **[kube-ps1](https://github.com/jonmosco/kube-ps1)**：在命令行提示符中显示当前的 Kubernetes context 和 namespace
@@ -38,7 +39,7 @@ kubectl 的子命令按功能主要分为以下几个类别：
 - **[kubens](https://github.com/ahmetb/kubectx)**：快速切换 namespace
 - **[stern](https://github.com/stern/stern)**：多 Pod 日志聚合查看工具
 
-### kube-shell 交互式终端
+### 2.2 kube-shell 交互式终端 {/* #kube-shell-交互式终端 */}
 
 [kube-shell](https://github.com/cloudnativelabs/kube-shell) 为 kubectl 提供交互式命令行体验，适合复杂调试和命令探索。
 
@@ -62,11 +63,11 @@ pip install kube-shell --user -U
 pipx install kube-shell
 ```
 
-## kubectl 身份认证机制
+## 3. kubectl 身份认证机制 {/* #kubectl-身份认证机制 */}
 
 kubectl 支持多种身份认证方式，适配不同集群安全策略。
 
-### 认证方式类型
+### 3.1 认证方式类型 {/* #认证方式类型 */}
 
 - **X.509 客户端证书**：通过 CA 签发的客户端证书进行身份验证
 - **Bearer Token**：使用 ServiceAccount 的 token 或静态 token 文件
@@ -74,7 +75,7 @@ kubectl 支持多种身份认证方式，适配不同集群安全策略。
 - **OpenID Connect (OIDC)**：集成外部身份提供商
 - **Webhook Token Authentication**：通过 webhook 验证 token
 
-### kubeconfig 配置
+### 3.2 kubeconfig 配置 {/* #kubeconfig-配置 */}
 
 kubectl 通过读取 kubeconfig 文件获取集群连接和认证信息：
 
@@ -98,11 +99,11 @@ users:
     token: <bearer-token>
 ```
 
-## 命令自动补全配置
+## 4. 命令自动补全配置 {/* #命令自动补全配置 */}
 
 为提升命令输入效率，kubectl 支持多种 shell 的自动补全。
 
-### Bash 环境配置
+### 4.1 Bash 环境配置 {/* #bash-环境配置 */}
 
 ```bash
 # 临时启用
@@ -116,7 +117,7 @@ echo 'alias k=kubectl' >>~/.bashrc
 echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
 ```
 
-### Zsh 环境配置
+### 4.2 Zsh 环境配置 {/* #zsh-环境配置 */}
 
 推荐使用 [oh-my-zsh](https://ohmyz.sh/) 管理 zsh 配置：
 
@@ -131,7 +132,7 @@ source <(kubectl completion zsh)
 kubectl completion zsh > ~/.oh-my-zsh/completions/_kubectl
 ```
 
-### Fish 环境配置
+### 4.3 Fish 环境配置 {/* #fish-环境配置 */}
 
 ```bash
 kubectl completion fish | source
@@ -142,11 +143,11 @@ kubectl completion fish > ~/.config/fish/completions/kubectl.fish
 
 配置完成后重启终端即可享受智能补全功能。
 
-## 总结
+## 5. 总结 {/* #总结 */}
 
 kubectl 是 Kubernetes 集群调试与日常管理的核心工具。通过掌握命令体系、结合增强插件和自动补全配置，可大幅提升集群运维与故障排查效率。建议结合实际场景，持续探索和优化命令行工具链，打造高效的 Kubernetes 运维体验。
 
-## 参考文献
+## 6. 参考资料 {/* #参考文献 */}
 
 - [kubectl 官方文档 - kubernetes.io](https://kubernetes.io/docs/reference/kubectl/)
 - [kubectl 安装和配置 - kubernetes.io](https://kubernetes.io/docs/tasks/tools/install-kubectl/)

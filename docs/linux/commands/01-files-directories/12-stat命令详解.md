@@ -1,11 +1,12 @@
 ---
-title: stat 命令详解：inode、权限、时间戳、设备与文件系统格式化
+title: "stat 命令详解：inode、权限、时间戳、设备与文件系统格式化"
+sidebar_label: "12. stat 命令详解：inode、权限、时间戳、设备与文件系统格式化"
 sidebar_position: 12
-description: 完整讲解 GNU coreutils stat 的全部参数、文件与文件系统输出、所有格式化指令、符号链接、缓存模式、inode、块数与生产脚本用法。
+description: "完整讲解 GNU coreutils stat 的全部参数、文件与文件系统输出、所有格式化指令、符号链接、缓存模式、inode、块数与生产脚本用法。"
 tags: [Linux, stat, GNU coreutils, inode, 文件系统]
 ---
 
-# `stat` 命令详解：inode、权限、时间戳、设备与文件系统格式化
+# stat 命令详解：inode、权限、时间戳、设备与文件系统格式化
 
 `stat` 直接报告文件 inode 元数据或所在文件系统状态。与 `ls -l` 相比，它更适合精确诊断和结构化脚本，但输出仍受实现、文件系统、缓存和时间精度影响。
 
@@ -404,7 +405,7 @@ stat -f -c 'type=%T id=%i block=%S total=%b free=%f avail=%a inodes=%c free_inod
 - 能解释默认与 `-L`、cached 三种模式。
 - 能说明为什么 stat 后再操作仍存在 TOCTOU 竞态。
 
-## 官方参考
+## 20. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：stat invocation](https://www.gnu.org/software/coreutils/manual/html_node/stat-invocation.html)
 - [Linux stat(2)](https://man7.org/linux/man-pages/man2/stat.2.html)

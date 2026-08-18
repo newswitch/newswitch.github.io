@@ -1,5 +1,6 @@
 ---
 title: "Python 与 pip 运行环境诊断"
+sidebar_label: "01. Python 与 pip 运行环境诊断"
 sidebar_position: 1
 description: "系统掌握 Python 解释器发现、模块导入路径、pip 包元数据、依赖一致性、Wheel 兼容性与离线取证。"
 tags: [Python, pip, PyTorch, CUDA, 依赖, 故障排查]
@@ -139,11 +140,11 @@ python -c 'import torch; print(torch.__version__, torch.__file__, torch.version.
 
 采集输出前清理代理URL、索引令牌和环境变量中的凭据。不要把完整 `pip config debug` 或 `/proc/<pid>/environ` 直接贴进工单。
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能在不修改环境的前提下证明解释器、模块来源、包元数据和依赖状态；能通过 `--dry-run --report` 评审安装变化；能为离线镜像准备带哈希的 Wheelhouse；能够把 Python 包问题与动态库、驱动问题分层。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [pip command reference](https://pip.pypa.io/en/stable/cli/)
 - [pip inspect JSON specification](https://pip.pypa.io/en/stable/reference/inspect-report/)

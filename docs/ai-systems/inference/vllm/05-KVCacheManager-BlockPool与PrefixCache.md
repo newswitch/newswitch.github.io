@@ -2,8 +2,8 @@
 title: "KVCacheManager、BlockPool 与 Prefix Cache"
 sidebar_label: "05. KVCacheManager、BlockPool 与 Prefix Cache"
 sidebar_position: 5
-tags: [vLLM, V1, KV Cache, Prefix Cache, 源码分析]
 description: "以 vLLM v0.23.0 为基线，沿一次请求分析 KV Cache 命中、Block 分配、回收、抢占与前缀复用。"
+tags: [vLLM, V1, KV Cache, Prefix Cache, 源码分析]
 ---
 
 # KVCacheManager、BlockPool 与 Prefix Cache
@@ -13,8 +13,6 @@ description: "以 vLLM v0.23.0 为基线，沿一次请求分析 KV Cache 命中
 本篇只回答一件事：**逻辑 token 如何获得、复用并最终释放物理 KV Block？**
 
 > 源码基线：vLLM `v0.23.0`。本文讲清职责和状态变化，只保留少量方法名作为源码路标。
-
----
 
 ## 1. 先建立三个层次
 
@@ -42,8 +40,6 @@ SchedulerOutput 携带 Block 信息进入 ModelExecutor
 
 这里最关键的顺序是：**先查命中，再决定还要算多少，最后分配新槽位**。
 
----
-
 ## 2. KV Block 解决了什么问题
 
 如果为每条请求预留一整段连续 KV Cache，会出现两个问题：
@@ -69,8 +65,6 @@ Request B 的逻辑块:  B0 → B1
 - **CUDA OOM**：权重、激活、临时 Workspace 或其他 CUDA 分配真正失败。
 
 二者可能相关，但不是同一个故障。
-
----
 
 ## 3. BlockPool 的两个核心索引
 
@@ -101,8 +95,6 @@ cached_block_hash_to_block
 
 这个设计把“内存所有权”和“缓存内容是否仍有价值”分开了。
 
----
-
 ## 4. Prefix Cache 如何识别相同前缀
 
 Automatic Prefix Caching 复用的不是自然语言字符串，而是**完整 Block 对应 token 序列的链式哈希**。
@@ -130,8 +122,6 @@ User Prompt:   [B3][不足一个完整 Block]
 为什么常常只缓存完整 Block？因为完整块才能稳定地产生哈希和复用边界。尾部不足一个 Block 的 token 仍要正常计算。
 
 此外，V1 查命中时会为“本次仍需产生日志概率或最后 token 的 logits”保留必要计算，不能简单把整条 Prompt 都视作零计算成本。
-
----
 
 ## 5. `get_computed_blocks()`：命中只改变计算量
 
@@ -161,8 +151,6 @@ Prefix Cache 命中带来的主要收益是避免重复 Prefill。它不会直�
 
 只看“Prefix Cache 已开启”没有意义。
 
----
-
 ## 6. `allocate_slots()`：为本轮执行预留位置
 
 查完命中后，`allocate_slots()` 为新增 token 计算所需 Block，并把命中块与新块拼成请求当前的 Block 表。
@@ -184,7 +172,7 @@ Block 1: 14 / 16
 
 如果本轮再调度 6 个 token，Block 1 先写 2 个，剩下 4 个需要一个新 Block。分配的单位是物理 Block，但调度预算仍以 token 为单位。
 
-### 分配失败意味着什么
+### 6.1 分配失败意味着什么 {/* #分配失败意味着什么 */}
 
 常见结果不是立刻报错，而是：
 
@@ -194,8 +182,6 @@ Block 1: 14 / 16
 - 在无法满足最大序列配置时拒绝请求。
 
 因此排查时要同时看 `waiting`、KV Cache 使用率、抢占次数与 TTFT，不能只盯显存曲线。
-
----
 
 ## 7. 请求状态与 Block 生命周期
 
@@ -215,7 +201,7 @@ RUNNING
 
 释放时通常按反向顺序归还请求 Block，使最近使用过的块与淘汰顺序保持合理关系。Prefix Cache 开启时，释放引用不等于立即删除哈希内容；后续请求仍可能命中，直到它成为需要被复用的淘汰候选。
 
-### 抢占为什么会伤害尾延迟
+### 7.1 抢占为什么会伤害尾延迟 {/* #抢占为什么会伤害尾延迟 */}
 
 如果请求的 KV 被释放，恢复时可能需要重新计算已完成上下文：
 
@@ -228,8 +214,6 @@ RUNNING
 ```
 
 所以抢占次数不是一个“只影响被抢占请求”的指标，它可能形成全局正反馈。
-
----
 
 ## 8. 从指标反推这一层的问题
 
@@ -254,25 +238,23 @@ RUNNING
   先查 GPU Kernel、批大小和通信
 ```
 
----
-
 ## 9. 三组最小实验
 
-### 实验 A：验证前缀命中
+### 9.1 实验 A：验证前缀命中 {/* #实验-a验证前缀命中 */}
 
 1. 固定同一副本、模型 Revision 和采样参数；
 2. 连续发送相同长 System Prompt、不同短问题；
 3. 对比冷请求与热请求的命中 token、TTFT 和 Prefill 时间；
 4. 改动前缀开头一个 token，再验证命中从哪里中断。
 
-### 实验 B：验证 Block 压力
+### 9.2 实验 B：验证 Block 压力 {/* #实验-b验证-block-压力 */}
 
 1. 固定输入/输出 token 分布；
 2. 阶梯增加并发，而不是瞬间打满；
 3. 记录 KV 使用率、running、waiting、preemption、TTFT/TPOT；
 4. 找到第一个 SLO 失守点，而不是只找 OOM 点。
 
-### 实验 C：验证长短请求干扰
+### 9.3 实验 C：验证长短请求干扰 {/* #实验-c验证长短请求干扰 */}
 
 1. 先运行稳定短请求流量；
 2. 注入少量长上下文请求；
@@ -280,8 +262,6 @@ RUNNING
 4. 分别测试长度分池与统一队列。
 
 实验结论必须能回答：瓶颈是**总 Block 不够、分配策略不合适，还是请求根本没有及时进入调度**。
-
----
 
 ## 10. 源码阅读路标
 
@@ -305,8 +285,6 @@ RUNNING
 - [kv_cache_manager.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/kv_cache_manager.py)
 - [block_pool.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/block_pool.py)
 - [Automatic Prefix Caching 文档](https://docs.vllm.ai/en/stable/design/prefix_caching/)
-
----
 
 ## 11. 学完后的验收题
 

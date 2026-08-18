@@ -1,11 +1,12 @@
 ---
-title: chgrp 命令详解：组所有权、共享目录与递归边界
+title: "chgrp 命令详解：组所有权、共享目录与递归边界"
+sidebar_label: "19. chgrp 命令详解：组所有权、共享目录与递归边界"
 sidebar_position: 19
-description: 完整讲解 GNU coreutils chgrp 9.11 参数、组名/GID、条件修改、reference、递归 symlink 策略、setgid 目录与共享存储。
+description: "完整讲解 GNU coreutils chgrp 9.11 参数、组名/GID、条件修改、reference、递归 symlink 策略、setgid 目录与共享存储。"
 tags: [Linux, chgrp, GID, 共享目录, 文件权限]
 ---
 
-# `chgrp` 命令详解：组所有权、共享目录与递归边界
+# chgrp 命令详解：组所有权、共享目录与递归边界
 
 `chgrp` 只修改文件 group owner，等价于 `chown :GROUP`。它常用于团队共享目录和 GID 迁移，但不会自动让当前会话加入该组，也不会给 group 增加 `rwx` 权限。
 
@@ -73,7 +74,7 @@ chgrp --preserve-root -R -P --from=:2001 2101 -- /srv/project
 
 实验：普通用户向所属/非所属组变更；旧会话新增组；setgid 目录继承；`--from` GID 迁移；`-H/-L/-P` 和 reference。掌握标准是能列出全部参数，并说明“组所有权、组成员、group mode、ACL mask”是四个独立变量。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：chgrp(1)](https://man7.org/linux/man-pages/man1/chgrp.1.html)
 - [Linux chown(2)](https://man7.org/linux/man-pages/man2/chown.2.html)

@@ -1,9 +1,9 @@
 ---
-title: Iceberg 并发提交、小文件、Compaction 与快照生命周期
+title: "Iceberg 并发提交、小文件、Compaction 与快照生命周期"
 sidebar_label: "04. Iceberg 并发提交、小文件、Compaction 与快照生命周期"
 sidebar_position: 4
+description: "治理高频提交、文件与 Manifest 膨胀、并发冲突、Delete Files 和安全垃圾回收。"
 tags: [Iceberg, Compaction, 小文件, Snapshot Expiration]
-description: 治理高频提交、文件与 Manifest 膨胀、并发冲突、Delete Files 和安全垃圾回收。
 ---
 
 # Iceberg 并发提交、小文件、Compaction 与快照生命周期
@@ -69,6 +69,6 @@ Append 通常较易合并重试；overwrite/delete/compaction 需校验修改范
 
 上一篇：[Schema/Partition Evolution](./03-Schema-Partition-Evolution与Time-Travel.md)　下一篇：[Iceberg 对接 Spark、Flink、Trino](./05-Iceberg对接Spark-Flink-Trino生产实践.md)
 
-## 参考资料
+## 11. 参考资料 {/* #参考资料 */}
 
 - [Iceberg Maintenance](https://iceberg.apache.org/docs/latest/maintenance/)

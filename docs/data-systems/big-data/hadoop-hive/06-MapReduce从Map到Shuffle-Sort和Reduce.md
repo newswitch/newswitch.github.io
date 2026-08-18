@@ -1,9 +1,9 @@
 ---
-title: MapReduce 从 Map 到 Shuffle、Sort 和 Reduce
+title: "MapReduce 从 Map 到 Shuffle、Sort 和 Reduce"
 sidebar_label: "06. MapReduce 从 Map 到 Shuffle、Sort 和 Reduce"
 sidebar_position: 6
+description: "通过单词计数和 Join 理解 MapReduce 的 split、spill、partition、shuffle、sort、容错和性能瓶颈。"
 tags: [MapReduce, Shuffle, Sort, Reduce]
-description: 通过单词计数和 Join 理解 MapReduce 的 split、spill、partition、shuffle、sort、容错和性能瓶颈。
 ---
 
 # MapReduce 从 Map 到 Shuffle、Sort 和 Reduce
@@ -84,6 +84,6 @@ Map task 失败可重跑；其本地中间输出丢失时 reducer 重新 fetch�
 
 上一篇：[YARN 资源模型与调度路径](./05-YARN资源模型与调度路径.md)　下一篇：[Hive 表、分区、Metastore 与小文件治理](./07-Hive表分区Metastore与小文件治理.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [MapReduce Tutorial](https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html)

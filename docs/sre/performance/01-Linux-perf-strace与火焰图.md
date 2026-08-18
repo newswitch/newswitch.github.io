@@ -2,8 +2,8 @@
 title: "Linux perf、strace 与火焰图"
 sidebar_label: "01. Linux perf、strace 与火焰图"
 sidebar_position: 1
-tags: [Linux, perf, strace, FlameGraph, CPU, 性能分析]
 description: "使用 strace 定位系统调用等待，使用 perf stat/record 分析 CPU 与调用栈，并生成 On-CPU 火焰图完成可验证的 Linux 性能分析。"
+tags: [Linux, perf, strace, FlameGraph, CPU, 性能分析]
 ---
 
 # Linux perf、strace 与火焰图
@@ -27,8 +27,6 @@ perf：CPU 在执行哪些指令和函数？
 FlameGraph：热点调用栈如何组织？
 ```
 
----
-
 ## 1. 采集前先定义问题
 
 不要直接运行命令。先记录：
@@ -48,8 +46,6 @@ hypothesis:
 ```
 
 性能采集必须与请求负载和 SLO 时间窗对齐。
-
----
 
 ## 2. strace 的定位边界
 
@@ -71,8 +67,6 @@ hypothesis:
 - 准确代表未追踪时的原始延迟。
 
 逐次拦截系统调用会带来开销，生产应先用汇总或过滤。
-
----
 
 ## 3. strace 基础命令
 
@@ -138,8 +132,6 @@ strace -f -ttt -T \
 
 运行版本支持的 syscall group 和选项以 `strace --help`/man page 为准。
 
----
-
 ## 4. 先用汇总模式
 
 ```bash
@@ -170,11 +162,9 @@ syscall
 - `strace` 自身开销会影响结果。
 - 多线程汇总会混合不同线程，需要后续缩小对象。
 
----
-
 ## 5. 如何读常见系统调用
 
-### `futex`
+### 5.1 `futex` {/* #futex */}
 
 可能表示：
 
@@ -189,7 +179,7 @@ syscall
 - CPU On/Off-CPU。
 - 应用栈。
 
-### `epoll_wait`
+### 5.2 `epoll_wait` {/* #epollwait */}
 
 事件循环正常空闲时会等待；这通常不是瓶颈。
 
@@ -199,7 +189,7 @@ syscall
 - Event Loop 是否收到事件。
 - 连接是否在其他进程。
 
-### `read/pread64`
+### 5.3 `read/pread64` {/* #readpread64 */}
 
 关注：
 
@@ -211,15 +201,13 @@ syscall
 
 可使用 `-y/-yy` 显示 FD 路径/协议信息，具体输出取决于版本。
 
-### `openat/statx`
+### 5.4 `openat/statx` {/* #openatstatx */}
 
 大量小文件或重复元数据查询可能拖慢 Tokenizer、模型加载和 Python Import。
 
-### `connect`
+### 5.5 `connect` {/* #connect */}
 
 检查目标地址、错误码、超时和重试。DNS 还需关联 resolver 调用与网络。
-
----
 
 ## 6. perf stat：先看全局 CPU 特征
 
@@ -247,11 +235,9 @@ perf stat \
 
 硬件事件是否支持与 CPU/PMU、虚拟化和权限有关。
 
----
-
 ## 7. 关键指标
 
-### IPC
+### 7.1 IPC {/* #ipc */}
 
 ```text
 IPC = instructions / cycles
@@ -267,7 +253,7 @@ IPC = instructions / cycles
 
 不能仅凭 IPC 判断根因。
 
-### Cache Miss Ratio
+### 7.2 Cache Miss Ratio {/* #cache-miss-ratio */}
 
 ```text
 cache_miss_ratio =
@@ -276,7 +262,7 @@ cache_miss_ratio =
 
 通用事件不一定精确对应 LLC；深入分析需使用目标 CPU 的 PMU 事件。
 
-### Context Switch
+### 7.3 Context Switch {/* #context-switch */}
 
 高切换可能来自：
 
@@ -286,18 +272,16 @@ cache_miss_ratio =
 - CPU Cgroup 配额。
 - 频繁唤醒。
 
-### CPU Migration
+### 7.4 CPU Migration {/* #cpu-migration */}
 
 线程跨 CPU 迁移可能损害 Cache/NUMA Locality。
 
-### Page Fault
+### 7.5 Page Fault {/* #page-fault */}
 
 - Minor Fault：页已在内存但映射尚未建立等。
 - Major Fault：通常需要存储 I/O，延迟更大。
 
 模型加载或内存压力下要重点观察。
-
----
 
 ## 8. perf 事件 Multiplex
 
@@ -317,8 +301,6 @@ CPU 硬件计数器数量有限。一次请求太多事件时，perf 会轮换�
 - 将强相关事件分组。
 - 分多次相同负载测量。
 - 保持每次实验可重复。
-
----
 
 ## 9. perf record：采样调用栈
 
@@ -355,8 +337,6 @@ perf record -F 99 -a -g -- sleep 30
 
 生产中应谨慎使用 `-a`，因为范围更大且可能采集敏感符号/栈。
 
----
-
 ## 10. perf report
 
 ```bash
@@ -371,7 +351,7 @@ perf report
 - `Symbol`。
 - Caller/Children。
 
-### Self 与 Children
+### 10.1 Self 与 Children {/* #self-与-children */}
 
 ```text
 Self：采样直接落在该函数本身
@@ -380,7 +360,7 @@ Children：该函数及其后续调用累计
 
 一个入口函数 Self 很低但 Children 很高，说明时间花在它调用的下游。
 
-### 符号缺失
+### 10.2 符号缺失 {/* #符号缺失 */}
 
 `[unknown]` 常见原因：
 
@@ -391,8 +371,6 @@ Children：该函数及其后续调用累计
 - 内核符号权限。
 
 符号不完整时不要对函数排名下结论。
-
----
 
 ## 11. perf annotate
 
@@ -409,8 +387,6 @@ perf annotate
 - CPU Extension。
 
 不适合直接分析 CUDA Kernel；GPU Kernel 使用 Nsight Compute。
-
----
 
 ## 12. 生成 CPU 火焰图
 
@@ -437,7 +413,7 @@ perf script \
   > cpu-flame.svg
 ```
 
-### 火焰图怎么读
+### 12.1 火焰图怎么读 {/* #火焰图怎么读 */}
 
 - X 轴不是时间顺序。
 - 宽度表示采样数占比。
@@ -446,8 +422,6 @@ perf script \
 - 顶部是当前采样到的函数。
 
 宽不等于“代码写得差”，只说明 CPU 时间主要落在那里。
-
----
 
 ## 13. On-CPU 与 Off-CPU
 
@@ -480,8 +454,6 @@ Page Fault
 - eBPF Off-CPU/Block/Network 工具。
 - 存储和网络指标。
 
----
-
 ## 14. 容器与 Kubernetes
 
 容器内 PID 与宿主机 PID 可能不同。
@@ -511,8 +483,6 @@ PID 1 就是宿主 PID。
 - 不长期部署特权工具。
 - 不为方便永久降低全局安全参数。
 
----
-
 ## 15. 权限与敏感数据
 
 `perf_event_open` 受：
@@ -535,11 +505,9 @@ ptrace access rules
 
 要限制访问、保留周期和导出范围。
 
----
-
 ## 16. AI 推理案例
 
-### 症状
+### 16.1 症状 {/* #症状 */}
 
 ```text
 GPU utilization: 30%
@@ -548,7 +516,7 @@ vLLM waiting: 0
 API Server CPU: 1 core 100%
 ```
 
-### 步骤
+### 16.2 步骤 {/* #步骤 */}
 
 1. `strace -f -c`：确认不是文件/网络 syscall 主导。
 2. `perf stat`：观察 instructions、cycles、context-switch。
@@ -560,35 +528,31 @@ API Server CPU: 1 core 100%
 
 如果增加 Worker 后锁等待上升，说明不是简单线性扩展。
 
----
-
 ## 17. 常见错误
 
-### 只看 `top`
+### 17.1 只看 `top` {/* #只看-top */}
 
 只能看到粗粒度 CPU，无法区分用户态热点、系统调用和等待。
 
-### 用 strace 长期追踪所有 syscall
+### 17.2 用 strace 长期追踪所有 syscall {/* #用-strace-长期追踪所有-syscall */}
 
 开销和数据量过大，先汇总、过滤、缩小 PID 和时间。
 
-### 火焰图当时间线
+### 17.3 火焰图当时间线 {/* #火焰图当时间线 */}
 
 火焰图展示聚合栈宽度，不展示事件先后。
 
-### 缺少符号仍下结论
+### 17.4 缺少符号仍下结论 {/* #缺少符号仍下结论 */}
 
 `[unknown]` 会让热点归因失真。
 
-### 只优化最宽函数
+### 17.5 只优化最宽函数 {/* #只优化最宽函数 */}
 
 可能破坏正确性，或该函数本来就是必要工作。
 
-### 采集负载与故障时间不一致
+### 17.6 采集负载与故障时间不一致 {/* #采集负载与故障时间不一致 */}
 
 分析的是正常时间，无法解释异常。
-
----
 
 ## 18. 实验
 

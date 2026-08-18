@@ -1,9 +1,9 @@
 ---
-title: Flink Kubernetes Operator、升级、恢复与生产运维
+title: "Flink Kubernetes Operator、升级、恢复与生产运维"
 sidebar_label: "07. Flink Kubernetes Operator、升级、恢复与生产运维"
 sidebar_position: 7
+description: "理解 Operator 调谐、Application/Session 部署、有状态升级、HA、观测和回滚。"
 tags: [Flink, Kubernetes Operator, 升级, 恢复]
-description: 理解 Operator 调谐、Application/Session 部署、有状态升级、HA、观测和回滚。
 ---
 
 # Flink Kubernetes Operator、升级、恢复与生产运维
@@ -81,7 +81,7 @@ GitOps prune、重命名 CR、修改 ownerReference 可能触发删除。上线�
 
 上一篇：[反压与性能调优](./06-反压数据倾斜状态膨胀与性能调优.md)　下一模块：[数据湖、表格式与 Catalog](../lakehouse/01-数据湖表格式Catalog与存算分离.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Flink Kubernetes Operator](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-release-1.13/)
 - [Flink Production Readiness](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/production_ready/)

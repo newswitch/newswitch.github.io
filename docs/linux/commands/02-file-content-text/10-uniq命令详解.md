@@ -1,11 +1,12 @@
 ---
-title: uniq 命令详解：相邻去重、计数与分组输出
+title: "uniq 命令详解：相邻去重、计数与分组输出"
+sidebar_label: "10. uniq 命令详解：相邻去重、计数与分组输出"
 sidebar_position: 10
-description: 完整讲解 GNU coreutils 9.11 uniq 的全部参数、相邻重复、字段字符跳过、计数、重复与唯一筛选、分组分隔、NUL 记录、locale 和 sort -u 差异。
+description: "完整讲解 GNU coreutils 9.11 uniq 的全部参数、相邻重复、字段字符跳过、计数、重复与唯一筛选、分组分隔、NUL 记录、locale 和 sort -u 差异。"
 tags: [Linux, uniq, GNU coreutils, 去重, 分组]
 ---
 
-# `uniq` 命令详解：相邻去重、计数与分组输出
+# uniq 命令详解：相邻去重、计数与分组输出
 
 `uniq` 只识别相邻的重复记录。它不负责把全文件相同内容聚到一起，因此“全局去重”通常要先用完全相同规则排序，再运行 uniq；或者直接使用能表达所需比较键的 `sort -u`。
 
@@ -200,7 +201,7 @@ sort -n -- input | uniq
 - 能正确组合字段/字符跳过和比较宽度。
 - 能让 sort 与 uniq 使用一致的 locale 和等价关系。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：uniq invocation](https://www.gnu.org/software/coreutils/manual/html_node/uniq-invocation.html)
 - [POSIX uniq](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/uniq.html)
@@ -208,4 +209,3 @@ sort -n -- input | uniq
 上一篇：[`sort` 命令详解](./09-sort命令详解.md)
 
 下一篇：[`comm` 命令详解](./11-comm命令详解.md)
-

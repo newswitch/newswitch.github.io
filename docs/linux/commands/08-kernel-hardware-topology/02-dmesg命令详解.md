@@ -1,11 +1,12 @@
 ---
-title: dmesg 命令详解：读取和控制内核 ring buffer
+title: "dmesg 命令详解：读取和控制内核 ring buffer"
+sidebar_label: "02. dmesg 命令详解：读取和控制内核 ring buffer"
 sidebar_position: 2
-description: 完整讲解 dmesg 的全部读取、筛选、时间、JSON、follow、文件输入和控制参数，内核日志时间线、权限、安全转义与证据保全。
+description: "完整讲解 dmesg 的全部读取、筛选、时间、JSON、follow、文件输入和控制参数，内核日志时间线、权限、安全转义与证据保全。"
 tags: [Linux, dmesg, 内核日志, ring buffer, 故障排查]
 ---
 
-# `dmesg` 命令详解：读取和控制内核 ring buffer
+# dmesg 命令详解：读取和控制内核 ring buffer
 
 `dmesg` 读取或控制 kernel ring buffer。驱动 probe、firmware、PCIe AER、IOMMU、OOM、MCE/EDAC、block timeout 和模块加载失败常先在这里出现。ring buffer 容量有限且会覆盖，`-C/-c` 还能主动清除；取证必须尽早保存，不能把它当永久日志库。
 
@@ -139,7 +140,7 @@ journalctl -k -b --no-pager
 
 掌握标准：能列出全部参数；能解释 ring buffer 与 journal、monotonic 与 wall-clock；能安全筛选/跟随/离线读取；能识别清除、console 和 noescape 风险；能把内核消息关联到 BDF、模块和 boot。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [util-linux dmesg(1)](https://man7.org/linux/man-pages/man1/dmesg.1.html)
 - [Linux printk basics](https://docs.kernel.org/core-api/printk-basics.html)

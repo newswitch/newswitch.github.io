@@ -1,16 +1,18 @@
 ---
-title: 使用kubeadm部署高可用Kubernetes基础集群
-sidebar_label: 10 · kubeadm高可用基础集群
+title: "使用kubeadm部署高可用Kubernetes基础集群"
+sidebar_label: "10. 10 · kubeadm高可用基础集群"
+sidebar_position: 10
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第三阶段——从系统环境到双池就绪 本文定位：Kubernetes 部署与验收篇"
+tags: [Kubernetes, kubeadm, 高可用, containerd, 双资源池]
 date: 2026-08-07 14:30:00
 categories: 云原生
-tags: [Kubernetes, kubeadm, 高可用, containerd, 双资源池]
 ---
 
 # 使用kubeadm部署高可用Kubernetes基础集群
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第三阶段——从系统环境到双池就绪  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第三阶段——从系统环境到双池就绪
 **本文定位**：Kubernetes 部署与验收篇
 :::
 
@@ -22,9 +24,7 @@ tags: [Kubernetes, kubeadm, 高可用, containerd, 双资源池]
 
 由于 Kubernetes 安装命令会随版本和 Linux 发行版变化，本文不把某个时点的软件源地址写成永久答案。真正部署前必须锁定 `K8S_VERSION`，打开对应版本的官方安装文档，并使用 [第 8 篇](./08-软硬件兼容矩阵与容量规划.md) 兼容矩阵验证 CNI、CSI、GPU Operator 和 MindCluster 组件。K8s 细节也可对照本站 [Kubernetes 学习路线](../../cloud-native/kubernetes/00-Kubernetes学习路线.md)。
 
----
-
-## 一、目标拓扑
+## 1. 目标拓扑 {/* #一目标拓扑 */}
 
 推荐的基础拓扑：
 
@@ -48,13 +48,11 @@ API 高可用地址：k8s-api.example.com:6443
 
 控制面节点不承担模型任务；加速器节点在 Kubernetes 基础集群完成后再分别接入设备栈。
 
----
-
-## 二、选择高可用拓扑
+## 2. 选择高可用拓扑 {/* #二选择高可用拓扑 */}
 
 kubeadm 官方给出两种主要高可用方式，见 [Creating Highly Available Clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)。
 
-### 堆叠控制面
+### 2.1 堆叠控制面 {/* #堆叠控制面 */}
 
 每个控制节点同时运行控制面组件和一个 etcd 成员。
 
@@ -63,7 +61,7 @@ kubeadm 官方给出两种主要高可用方式，见 [Creating Highly Available
 | 优点 | 所需服务器较少；架构和部署相对简单；适合多数中小规模私有集群 |
 | 缺点 | 控制面节点故障同时影响一个 etcd 成员；控制面与 etcd 资源相互影响 |
 
-### 外部 etcd
+### 2.2 外部 etcd {/* #外部-etcd */}
 
 etcd 部署在独立节点，控制面节点只运行 Kubernetes 控制组件。
 
@@ -74,9 +72,7 @@ etcd 部署在独立节点，控制面节点只运行 Kubernetes 控制组件。
 
 本文以**堆叠控制面**为主线，外部 etcd 环境应使用官方专门流程。
 
----
-
-## 三、准备 API 高可用入口
+## 3. 准备 API 高可用入口 {/* #三准备-api-高可用入口 */}
 
 所有控制节点和工作节点都应通过同一个稳定地址访问 API Server：
 
@@ -95,9 +91,7 @@ nc -vz k8s-api.example.com 6443
 
 负载均衡健康检查应探测 API Server，而不是只检查节点能否 Ping 通。
 
----
-
-## 四、所有节点安装 CRI 容器运行时
+## 4. 所有节点安装 CRI 容器运行时 {/* #四所有节点安装-cri-容器运行时 */}
 
 Kubernetes 要求每个节点安装符合 CRI 的容器运行时。官方文档列出了 containerd、CRI-O 等方案，并说明 dockershim 已经从 Kubernetes 移除。见 [Container Runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)。
 
@@ -109,7 +103,7 @@ systemctl status containerd
 crictl info
 ```
 
-### cgroup 驱动必须一致
+### 4.1 cgroup 驱动必须一致 {/* #cgroup-驱动必须一致 */}
 
 在使用 systemd 的 Linux 节点上，应确认 containerd 和 kubelet 采用兼容的 cgroup 配置。常见做法是让 containerd 使用 `SystemdCgroup = true`。
 
@@ -122,9 +116,7 @@ sudo systemctl enable containerd
 不要覆盖现有 `config.toml` 而不做备份。昇腾节点后续还要把 Ascend 容器运行时正确集成到 containerd，因此必须保留变更记录。
 :::
 
----
-
-## 五、安装 kubeadm、kubelet 和 kubectl
+## 5. 安装 kubeadm、kubelet 和 kubectl {/* #五安装-kubeadmkubelet-和-kubectl */}
 
 所有节点安装：`kubeadm`、`kubelet`。管理节点或运维终端安装：`kubectl`。
 
@@ -143,9 +135,7 @@ kubectl version --client
 
 官方安装入口：[Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)。
 
----
-
-## 六、部署前检查
+## 6. 部署前检查 {/* #六部署前检查 */}
 
 在每个节点执行：
 
@@ -164,13 +154,11 @@ sudo kubeadm config images list --kubernetes-version <K8S_VERSION>
 
 离线环境要提前把所有控制面镜像、CNI 镜像和后续加速器组件镜像同步到内部仓库，并测试每种 CPU 架构能否拉取。
 
-### 网段检查
+### 6.1 网段检查 {/* #网段检查 */}
 
 确认：Pod CIDR 不与节点网冲突；Service CIDR 不与现有业务网冲突；CNI 插件支持目标 Kubernetes 版本；CNI 镜像支持 amd64 和 arm64；网络 MTU 设计明确。
 
----
-
-## 七、初始化第一个控制节点
+## 7. 初始化第一个控制节点 {/* #七初始化第一个控制节点 */}
 
 生产环境建议使用 kubeadm 配置文件保存完整参数；为了理解流程，核心命令可概括为：
 
@@ -193,9 +181,7 @@ sudo kubeadm init \
 
 执行完成后，保存：工作节点 Join 命令；控制节点 Join 命令；bootstrap token 有效期；certificate key 的安全保存方式；kubeadm 完整输出。
 
----
-
-## 八、配置 kubectl
+## 8. 配置 kubectl {/* #八配置-kubectl */}
 
 在授权的管理用户下：
 
@@ -216,9 +202,7 @@ kubectl get pods -A
 `admin.conf` 具有高权限，不应发送到聊天、邮件或普通代码仓库。
 :::
 
----
-
-## 九、安装 CNI 网络
+## 9. 安装 CNI 网络 {/* #九安装-cni-网络 */}
 
 根据已经评审的 CNI 方案安装，不在本文固定某个产品。
 
@@ -233,9 +217,7 @@ kubectl get nodes -o wide
 集群中只能部署一个负责 Pod 网络的主 CNI 方案，不要把两个默认 CNI 清单同时应用。
 :::
 
----
-
-## 十、加入其余控制节点
+## 10. 加入其余控制节点 {/* #十加入其余控制节点 */}
 
 使用第一个控制节点生成的控制面 Join 命令，核心形式为：
 
@@ -258,9 +240,7 @@ kubectl get pods -n kube-system -o wide
 
 Join 凭据是敏感信息且可能过期，应通过安全渠道管理。
 
----
-
-## 十一、加入普通、NVIDIA 和昇腾工作节点
+## 11. 加入普通、NVIDIA 和昇腾工作节点 {/* #十一加入普通nvidia-和昇腾工作节点 */}
 
 工作节点 Join 核心形式：
 
@@ -280,9 +260,7 @@ kubectl describe node npu-node-01
 
 先不要急于部署模型。下一步分别安装 GPU Operator 或昇腾运行环境和 Device Plugin。
 
----
-
-## 十二、设置基础节点标签和污点
+## 12. 设置基础节点标签和污点 {/* #十二设置基础节点标签和污点 */}
 
 先设置自定义事实标签：
 
@@ -302,29 +280,27 @@ kubectl taint node npu-node-01 accelerator=ascend:NoSchedule
 
 厂商组件自动生成的 Label 不要人工伪造，自定义标签和厂商标签应分开管理。
 
----
+## 13. 基础集群验收 {/* #十三基础集群验收 */}
 
-## 十三、基础集群验收
-
-### 节点和系统 Pod
+### 13.1 节点和系统 Pod {/* #节点和系统-pod */}
 
 ```bash
 kubectl get nodes -o wide
 kubectl get pods -A -o wide
 ```
 
-### 集群信息
+### 13.2 集群信息 {/* #集群信息 */}
 
 ```bash
 kubectl cluster-info
 kubectl get --raw='/readyz?verbose'
 ```
 
-### DNS 测试
+### 13.3 DNS 测试 {/* #dns-测试 */}
 
 创建临时测试 Pod，验证：Service 域名解析；外部域名解析；跨节点通信；内部镜像仓库访问。
 
-### 混合架构检查
+### 13.4 混合架构检查 {/* #混合架构检查 */}
 
 ```bash
 kubectl get nodes -L kubernetes.io/arch,kubernetes.io/os
@@ -332,19 +308,15 @@ kubectl get nodes -L kubernetes.io/arch,kubernetes.io/os
 
 确认公共 DaemonSet 在每种架构都有正确镜像，或者通过 NodeSelector 明确排除不支持节点。
 
----
-
-## 十四、etcd 备份与恢复必须在上线前完成
+## 14. etcd 备份与恢复必须在上线前完成 {/* #十四etcd-备份与恢复必须在上线前完成 */}
 
 高可用不等于不需要备份。至少要建立：etcd 定期快照；快照异机保存；加密和访问控制；恢复流程；恢复演练；Kubernetes 证书和关键配置备份。
 
 外部 etcd 和堆叠 etcd 的备份命令、证书路径及恢复方式不同，应使用对应版本官方文档验证，不要只保存一个未经恢复测试的文件。
 
----
+## 15. 常见故障 {/* #十五常见故障 */}
 
-## 十五、常见故障
-
-### kubelet 反复重启
+### 15.1 kubelet 反复重启 {/* #kubelet-反复重启 */}
 
 ```bash
 systemctl status kubelet
@@ -353,7 +325,7 @@ journalctl -u kubelet -n 200 --no-pager
 
 常见原因：Swap 策略不一致；cgroup 驱动不匹配；containerd 未运行；kubeadm 尚未初始化；配置或证书错误。
 
-### 节点 NotReady
+### 15.2 节点 NotReady {/* #节点-notready */}
 
 ```bash
 kubectl describe node <NODE>
@@ -362,17 +334,15 @@ kubectl get pods -n kube-system -o wide
 
 常见原因：CNI 未就绪、kubelet 异常、运行时异常、磁盘或内存压力。
 
-### CoreDNS Pending 或异常
+### 15.3 CoreDNS Pending 或异常 {/* #coredns-pending-或异常 */}
 
 可能是 CNI 未安装、控制面污点、资源不足或镜像拉取失败。
 
-### Join 失败
+### 15.4 Join 失败 {/* #join-失败 */}
 
 检查 API 地址、负载均衡、防火墙、Token、CA Hash、时间同步和证书。
 
----
-
-## 十六、基础集群验收清单
+## 16. 基础集群验收清单 {/* #十六基础集群验收清单 */}
 
 - [ ] API 高可用地址可以访问
 - [ ] 至少多个控制节点正常
@@ -389,9 +359,7 @@ kubectl get pods -n kube-system -o wide
 - [ ] 离线镜像和版本清单已归档
 - [ ] 尚未安装设备栈时，没有伪造 GPU/NPU Allocatable 资源
 
----
-
-## 十七、本篇小结
+## 17. 本篇小结 {/* #十七本篇小结 */}
 
 高可用 Kubernetes 基础集群完成后，应该具备：
 
@@ -408,23 +376,17 @@ kubectl get pods -n kube-system -o wide
 
 此时 NVIDIA 和昇腾节点只是被 Kubernetes 管理，还不能直接调度加速器。下一篇将为 NVIDIA 节点接入驱动、容器 Toolkit、Device Plugin、GPU Operator 和 DCGM，并完成容器级 GPU 验收。
 
----
-
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [Creating Highly Available Clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
 - [Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 - [Container Runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 - [Creating a cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
 
----
-
-## 相关链接
+## 19. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 9 篇：系统初始化](./09-所有服务器的系统初始化.md)
 - [Kubernetes 学习路线](../../cloud-native/kubernetes/00-Kubernetes学习路线.md)
-
----
 
 ← [第 9 篇](./09-所有服务器的系统初始化.md) · → [第 11 篇：部署 NVIDIA GPU 资源池](./11-部署NVIDIA-GPU资源池.md)

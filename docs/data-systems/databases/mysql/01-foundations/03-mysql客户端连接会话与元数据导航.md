@@ -2,8 +2,8 @@
 title: "mysql 客户端、连接、会话与元数据导航"
 sidebar_label: "03. mysql 客户端、连接、会话与元数据导航"
 sidebar_position: 3
-tags: [MySQL, mysql客户端, 连接, Session, 元数据]
 description: "掌握 mysql 客户端的安全连接、会话边界、交互命令和 information_schema、performance_schema、sys 导航方法。"
+tags: [MySQL, mysql客户端, 连接, Session, 元数据]
 ---
 
 # mysql 客户端、连接、会话与元数据导航
@@ -19,11 +19,9 @@ description: "掌握 mysql 客户端的安全连接、会话边界、交互命�
 
 完整参数会在命令参考模块展开，本篇先建立安全工作流。
 
----
-
 ## 1. TCP 与 Unix Socket
 
-### TCP
+### 1.1 TCP {/* #tcp */}
 
 ```bash
 mysql --host=127.0.0.1 --port=3307 --user=learner -p
@@ -38,7 +36,7 @@ mysql client
 → mysqld listener
 ```
 
-### Unix Socket
+### 1.2 Unix Socket {/* #unix-socket */}
 
 ```bash
 mysql --socket=/path/to/mysql.sock --user=learner -p
@@ -53,8 +51,6 @@ mysql client
 ```
 
 `localhost` 可能让客户端优先使用本地 Socket，而 `127.0.0.1` 明确表示 TCP。排查连接问题时必须写清协议，不要把两者当作完全相同。
-
----
 
 ## 2. 账户匹配不只看用户名
 
@@ -79,8 +75,6 @@ SELECT USER(), CURRENT_USER();
 
 二者不同可能解释“同一个用户名为什么权限不一样”。
 
----
-
 ## 3. 密码与配置文件
 
 不要这样做：
@@ -101,8 +95,6 @@ mysql -ulearner -p明文密码
 
 即使使用环境变量，也要评估它是否会被进程、Crash Dump 或调试工具读取。
 
----
-
 ## 4. TLS 不是“能连上就算开启”
 
 远程生产连接至少验证：
@@ -121,8 +113,6 @@ SHOW STATUS LIKE 'Ssl_version';
 ```
 
 值为空表示当前会话未协商相应 TLS 信息。下一步仍需核对客户端连接选项和 Server 账户要求。不要为了消除证书错误而长期关闭验证。
-
----
 
 ## 5. 连接后先执行身份卡
 
@@ -155,13 +145,11 @@ SELECT
 
 只凭命令提示符或 DNS 名称不够，DNS、VIP 和代理都可能切换后端。
 
----
-
 ## 6. 客户端命令与 SQL 的区别
 
 `mysql` 交互环境中有两类输入：
 
-### 发送给 Server 的 SQL
+### 6.1 发送给 Server 的 SQL {/* #发送给-server-的-sql */}
 
 ```sql
 SELECT NOW();
@@ -170,7 +158,7 @@ SHOW DATABASES;
 
 通常以分隔符结束，由 Server 解析执行。
 
-### 客户端本地命令
+### 6.2 客户端本地命令 {/* #客户端本地命令 */}
 
 ```text
 \s       显示连接与会话状态
@@ -183,8 +171,6 @@ tee      把客户端输出记录到文件
 
 客户端命令由 `mysql` 处理，不等于 Server SQL。脚本、权限和审计时要知道命令实际在哪一侧执行。
 
----
-
 ## 7. 为什么 `\G` 很重要
 
 宽结果用表格显示很难阅读：
@@ -195,8 +181,6 @@ SHOW CREATE TABLE mysql_learning.accounts\G
 ```
 
 `\G` 是语句终止符并使用纵向格式，不要再追加普通分号。它适合错误状态、表定义、长 JSON 与诊断输出。
-
----
 
 ## 8. Session 是有状态的
 
@@ -223,8 +207,6 @@ SET SESSION time_zone = '+00:00';
 ```
 
 连接断开后通常消失。连接池会复用物理连接，所以应用必须定义 Session 初始化和清理逻辑。
-
----
 
 ## 9. 自动提交与未提交事务
 
@@ -253,11 +235,9 @@ WHERE trx_mysql_thread_id = CONNECTION_ID()\G
 
 若当前会话存在事务，先理解业务影响，再决定 `COMMIT` 或 `ROLLBACK`。
 
----
-
 ## 10. Schema 导航
 
-### 查看数据库和当前 Schema
+### 10.1 查看数据库和当前 Schema {/* #查看数据库和当前-schema */}
 
 ```sql
 SHOW DATABASES;
@@ -265,7 +245,7 @@ SELECT DATABASE();
 USE mysql_learning;
 ```
 
-### 查看表和定义
+### 10.2 查看表和定义 {/* #查看表和定义 */}
 
 ```sql
 SHOW TABLES;
@@ -276,8 +256,6 @@ SHOW INDEX FROM accounts;
 ```
 
 `DESCRIBE` 适合快速浏览，`SHOW CREATE TABLE` 更接近对象的完整定义。做 Schema 对比和迁移评审时不能只依赖 `DESCRIBE`。
-
----
 
 ## 11. `information_schema`：对象元数据
 
@@ -307,8 +285,6 @@ ORDER BY table_name;
 - `TABLE_CONSTRAINTS`；
 - `INNODB_TRX`。
 
----
-
 ## 12. `performance_schema`：运行时证据
 
 Performance Schema 保存 Server 内部执行和等待的观测数据。初学阶段认识这些类型：
@@ -334,8 +310,6 @@ FROM performance_schema.threads
 WHERE PROCESSLIST_ID = CONNECTION_ID();
 ```
 
----
-
 ## 13. `sys`：更容易阅读的诊断视图
 
 `sys` 基于 Performance Schema 和元数据提供格式化视图。例如可以查：
@@ -347,8 +321,6 @@ WHERE PROCESSLIST_ID = CONNECTION_ID();
 - 内存和文件 I/O 摘要。
 
 使用前先阅读视图定义和统计时间范围。一个“总耗时最高”查询可能只是调用次数多，单次并不慢；一个“未使用索引”可能只是观测窗口没覆盖关键业务，不能直接删除。
-
----
 
 ## 14. 查看连接与正在执行的语句
 
@@ -382,8 +354,6 @@ WHERE TYPE = 'FOREGROUND';
 
 终止操作会影响业务，必须先确认 Thread ID、实例身份、事务与回滚成本。
 
----
-
 ## 15. 批处理与自动化输出
 
 ```bash
@@ -404,8 +374,6 @@ mysql --batch --skip-column-names \
 
 查询返回空集和命令执行失败是两种状态，不能都当成“没有数据”。
 
----
-
 ## 16. 常见连接故障分层
 
 | 现象 | 优先检查 |
@@ -420,8 +388,6 @@ mysql --batch --skip-column-names \
 
 先判断失败发生在 DNS、TCP、TLS、认证、权限、Schema 还是 SQL 执行层。
 
----
-
 ## 17. 学习实验
 
 1. 分别用 Socket、`localhost` 和 `127.0.0.1` 连接，记录实际协议；
@@ -430,8 +396,6 @@ mysql --batch --skip-column-names \
 4. 使用 `SHOW CREATE TABLE`、`information_schema` 和 `performance_schema` 找同一对象的不同信息；
 5. 用批处理模式执行只读查询并检查退出状态；
 6. 故意使用错误端口、错误账户和错误 Schema，记录错误属于哪一层。
-
----
 
 ## 18. 验收题
 
@@ -445,7 +409,7 @@ mysql --batch --skip-column-names \
 
 下一篇进入数据建模最基本的构件：表、列、类型、字符集和排序规则。
 
-## 官方参考
+## 19. 官方参考 {/* #官方参考 */}
 
 - [mysql Client](https://dev.mysql.com/doc/refman/8.4/en/mysql.html)
 - [Connection Interfaces](https://dev.mysql.com/doc/refman/8.4/en/connectors-apis.html)

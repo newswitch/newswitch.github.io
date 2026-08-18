@@ -1,9 +1,9 @@
 ---
-title: Spark on Kubernetes 部署、监控与故障排查
+title: "Spark on Kubernetes 部署、监控与故障排查"
 sidebar_label: "07. Spark on Kubernetes 部署、监控与故障排查"
 sidebar_position: 7
+description: "理解 Driver/Executor Pod、身份权限、资源、存储、动态分配、日志和生产恢复。"
 tags: [Spark, Kubernetes, 监控, 故障排查]
-description: 理解 Driver/Executor Pod、身份权限、资源、存储、动态分配、日志和生产恢复。
 ---
 
 # Spark on Kubernetes 部署、监控与故障排查
@@ -75,7 +75,7 @@ Driver 需容纳计划、task 元数据和结果，`collect`/大广播仍可能 
 
 上一篇：[Structured Streaming](./06-Structured-Streaming状态Watermark与Checkpoint.md)　下一模块：[Flink 架构与 Slot](../flink/01-Flink架构JobManager-TaskManager与Slot.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Running Spark on Kubernetes](https://spark.apache.org/docs/latest/running-on-kubernetes.html)
 - [Spark Monitoring](https://spark.apache.org/docs/latest/monitoring.html)

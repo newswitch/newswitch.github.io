@@ -1,11 +1,12 @@
 ---
-title: tac 命令详解：按记录逆序输出文件
+title: "tac 命令详解：按记录逆序输出文件"
+sidebar_label: "02. tac 命令详解：按记录逆序输出文件"
 sidebar_position: 2
-description: 完整讲解 GNU coreutils tac 的全部参数、分隔符归属、正则记录、NUL 记录、普通文件与管道缓冲、临时空间和大文件风险。
+description: "完整讲解 GNU coreutils tac 的全部参数、分隔符归属、正则记录、NUL 记录、普通文件与管道缓冲、临时空间和大文件风险。"
 tags: [Linux, tac, GNU coreutils, 记录逆序, 文本处理]
 ---
 
-# `tac` 命令详解：按记录逆序输出文件
+# tac 命令详解：按记录逆序输出文件
 
 `tac` 对每个输入文件分别逆序输出记录，默认记录就是以换行结束的行。它不是逐字符反转，也不会把多个文件先合成一个整体再逆序。
 
@@ -185,7 +186,7 @@ done
 - 能使用 NUL 记录且保持全链路安全。
 - 能预判不可 seek 输入的完整缓冲、空间与无限流问题。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：tac invocation](https://www.gnu.org/software/coreutils/manual/html_node/tac-invocation.html)
 - [Linux lseek(2)](https://man7.org/linux/man-pages/man2/lseek.2.html)
@@ -193,4 +194,3 @@ done
 上一篇：[`cat` 命令详解](./01-cat命令详解.md)
 
 下一篇：[`nl` 命令详解](./03-nl命令详解.md)
-

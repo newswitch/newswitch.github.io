@@ -1,9 +1,9 @@
 ---
-title: Hive、Beeline 与 Metastore 命令手册
+title: "Hive、Beeline 与 Metastore 命令手册"
 sidebar_label: "91. Hive、Beeline 与 Metastore 命令手册"
 sidebar_position: 91
+description: "掌握 Beeline 安全连接、表与分区检查、EXPLAIN、统计信息、批量脚本和 Metastore schema 运维命令。"
 tags: [Hive, Beeline, Metastore, SQL, 命令手册]
-description: 掌握 Beeline 安全连接、表与分区检查、EXPLAIN、统计信息、批量脚本和 Metastore schema 运维命令。
 ---
 
 # Hive、Beeline 与 Metastore 命令手册
@@ -229,7 +229,7 @@ hiveserver2
 
 下一篇：[Kafka 命令手册](../../messaging/kafka/13-Kafka-Topic-Producer-Consumer与Group命令手册.md)
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [HiveServer2 Clients and Beeline](https://hive.apache.org/docs/latest/user/hiveserver2-clients/)
 - [Hive CLI Language Manual](https://hive.apache.org/docs/latest/language/languagemanual-cli/)

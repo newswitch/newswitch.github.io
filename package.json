@@ -12,6 +12,8 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
+    "format:docs": "node scripts/normalize-doc-format.mjs --write",
+    "check:format": "node scripts/normalize-doc-format.mjs --check",
     "validate:docs": "node scripts/validate-doc-links.mjs"
   },
   "dependencies": {
@@ -23,7 +25,8 @@
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "simple-icons": "^16.28.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.0",

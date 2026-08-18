@@ -1,11 +1,12 @@
 ---
-title: split 命令详解：按行、字节、记录和分片数量切分文件
+title: "split 命令详解：按行、字节、记录和分片数量切分文件"
+sidebar_label: "19. split 命令详解：按行、字节、记录和分片数量切分文件"
 sidebar_position: 19
-description: 完整讲解 GNU coreutils split 的全部参数、后缀命名、按行/大小/line-bytes/数量切分、NUL 记录、轮询分发、Filter 与重组校验。
+description: "完整讲解 GNU coreutils split 的全部参数、后缀命名、按行/大小/line-bytes/数量切分、NUL 记录、轮询分发、Filter 与重组校验。"
 tags: [Linux, split, GNU coreutils, 文件切分, 数据分片]
 ---
 
-# `split` 命令详解：按行、字节、记录和分片数量切分文件
+# split 命令详解：按行、字节、记录和分片数量切分文件
 
 `split` 按固定行数、字节数、最大 Line Bytes 或指定分片数量，把输入写成连续或轮询的输出文件。默认每 1000 行一片，文件名为 `xaa`、`xab`……。切分单位决定能否直接拼回原数据。
 
@@ -169,7 +170,7 @@ Filter 由 Shell 执行，`$FILE` 是 split 为当前片生成的名称。风险
 - 能安全处理 NUL 文件名列表、临时空间和后缀排序。
 - 能识别 Filter 是 Shell 代码执行面，并验证部分失败。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：split invocation](https://www.gnu.org/software/coreutils/manual/html_node/split-invocation.html)
 - [POSIX split](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/split.html)

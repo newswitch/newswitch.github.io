@@ -2,15 +2,15 @@
 title: "创建用户认证授权的 kubeconfig 文件"
 sidebar_label: "09. 创建用户认证授权的 kubeconfig 文件"
 sidebar_position: 9
-tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "详细介绍如何为 Kubernetes 集群创建用户认证授权的 kubeconfig 文件，包括 CA 证书生成、kubeconfig 配置和 RBAC 权限绑定的完整流程。"
+tags: [Kubernetes, 安全, PartII, 学习路线]
 ---
 
 # 创建用户认证授权的 kubeconfig 文件
 
 当我们安装好 Kubernetes 集群后，如果想要把 kubectl 命令交给普通用户使用，就需要对用户的身份进行认证并对其权限做出限制。本文将以创建一个 `devuser` 用户并将其绑定到 `dev` 和 `test` 两个 namespace 为例，详细说明整个配置过程。
 
-## 前置准备
+## 1. 前置准备 {/* #前置准备 */}
 
 在开始之前，请确保你已经：
 
@@ -18,9 +18,9 @@ description: "详细介绍如何为 Kubernetes 集群创建用户认证授权的
 - 安装了 `cfssl` 和 `cfssljson` 工具
 - 准备好集群的 CA 证书和配置文件
 
-## 创建用户证书
+## 2. 创建用户证书 {/* #创建用户证书 */}
 
-### 准备证书签名请求文件
+### 2.1 准备证书签名请求文件 {/* #准备证书签名请求文件 */}
 
 创建 `devuser-csr.json` 文件，定义用户的证书信息：
 
@@ -44,7 +44,7 @@ description: "详细介绍如何为 Kubernetes 集群创建用户认证授权的
 }
 ```
 
-### 生成用户证书和私钥
+### 2.2 生成用户证书和私钥 {/* #生成用户证书和私钥 */}
 
 在 master 节点的 `/etc/kubernetes/ssl` 目录下，确保包含以下文件：
 
@@ -64,9 +64,9 @@ cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kube
 devuser.csr  devuser-key.pem  devuser.pem
 ```
 
-## 配置 kubeconfig 文件
+## 3. 配置 kubeconfig 文件 {/* #配置-kubeconfig-文件 */}
 
-### 创建用户的 kubeconfig
+### 3.1 创建用户的 kubeconfig {/* #创建用户的-kubeconfig */}
 
 使用以下命令为 `devuser` 创建专用的 kubeconfig 文件：
 
@@ -97,7 +97,7 @@ kubectl config set-context kubernetes \
 kubectl config use-context kubernetes --kubeconfig=devuser.kubeconfig
 ```
 
-### 应用新的 kubeconfig
+### 3.2 应用新的 kubeconfig {/* #应用新的-kubeconfig */}
 
 将生成的 kubeconfig 文件设置为当前使用的配置：
 
@@ -109,9 +109,9 @@ cp ~/.kube/config ~/.kube/config.backup
 cp ./devuser.kubeconfig ~/.kube/config
 ```
 
-## 配置 RBAC 权限
+## 4. 配置 RBAC 权限 {/* #配置-rbac-权限 */}
 
-### 创建角色绑定
+### 4.1 创建角色绑定 {/* #创建角色绑定 */}
 
 为了限制 `devuser` 用户的权限范围，使用 RBAC 将用户绑定到特定的 namespace：
 
@@ -131,9 +131,9 @@ kubectl create rolebinding devuser-admin-binding-test \
 
 这样配置后，`devuser` 用户将对 `dev` 和 `test` 两个 namespace 具有完全的管理权限。
 
-## 验证配置
+## 5. 验证配置 {/* #验证配置 */}
 
-### 检查当前上下文
+### 5.1 检查当前上下文 {/* #检查当前上下文 */}
 
 验证 kubectl 是否使用了正确的用户身份：
 
@@ -148,7 +148,7 @@ CURRENT   NAME         CLUSTER      AUTHINFO   NAMESPACE
 *         kubernetes   kubernetes   devuser    dev
 ```
 
-### 测试权限限制
+### 5.2 测试权限限制 {/* #测试权限限制 */}
 
 验证用户权限是否按预期工作：
 
@@ -156,7 +156,7 @@ CURRENT   NAME         CLUSTER      AUTHINFO   NAMESPACE
 # 应该能正常访问 dev namespace
 kubectl get pods --namespace=dev
 
-# 应该能正常访问 test namespace  
+# 应该能正常访问 test namespace
 kubectl get pods --namespace=test
 
 # 应该被拒绝访问 default namespace
@@ -169,21 +169,21 @@ kubectl get pods --namespace=default
 Error from server (Forbidden): pods is forbidden: User "devuser" cannot list resource "pods" in API group "" in the namespace "default"
 ```
 
-## 最佳实践建议
+## 6. 最佳实践建议 {/* #最佳实践建议 */}
 
-### 安全考虑
+### 6.1 安全考虑 {/* #安全考虑 */}
 
 1. **证书有效期管理**：定期轮换用户证书，避免长期有效的证书带来的安全风险
 2. **最小权限原则**：根据用户实际需要分配最小必要权限，避免过度授权
 3. **审计日志**：启用 Kubernetes 审计日志以追踪用户操作
 
-### 管理建议
+### 6.2 管理建议 {/* #管理建议 */}
 
 1. **命名规范**：建议使用统一的用户命名规范，如 `<team>-<role>-user`
 2. **namespace 隔离**：为不同团队或项目创建独立的 namespace 进行资源隔离
 3. **配置管理**：将 kubeconfig 文件和 RBAC 配置纳入版本控制系统
 
-## 相关参考
+## 7. 相关参考 {/* #相关参考 */}
 
 - [基于角色的访问控制 (RBAC)](../identity/03-RBAC.md)
 - [网络策略](../../../../networking/kubernetes/security/04-NetworkPolicy.md)

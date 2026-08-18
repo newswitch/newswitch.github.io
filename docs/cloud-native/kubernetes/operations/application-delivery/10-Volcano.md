@@ -2,15 +2,15 @@
 title: "Volcano：Kubernetes 上的批处理和高性能计算调度器"
 sidebar_label: "10. Volcano：Kubernetes 上的批处理和高性能计算调度器"
 sidebar_position: 10
-tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Volcano 是一个专为高性能计算（HPC）和大规模批处理任务设计的 Kubernetes 调度器扩展，提供先进的调度策略和资源管理功能。"
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 ---
 
 # Volcano：Kubernetes 上的批处理和高性能计算调度器
 
 > Volcano 是 Kubernetes 生态中专为批处理和高性能计算（HPC）场景设计的调度器扩展，支持 Gang 调度、资源公平分配和多种插件机制，极大提升了集群在 AI、科研和大数据领域的调度能力。
 
-## 项目背景与设计目标
+## 1. 项目背景与设计目标 {/* #项目背景与设计目标 */}
 
 Kubernetes 默认调度器主要面向服务型负载，存在以下局限：
 
@@ -19,7 +19,7 @@ Kubernetes 默认调度器主要面向服务型负载，存在以下局限：
 
 Volcano 通过自定义资源（CRD）和可插拔调度插件，补齐了这些短板，目标是为 AI/ML 分布式训练、HPC 批处理、大数据计算和科研仿真等场景提供原生支持。
 
-## 架构总览
+## 2. 架构总览 {/* #架构总览 */}
 
 Volcano 控制平面由多个组件构成，负责批量任务调度、资源分配与生命周期管理。下图展示了主要架构组件及其交互关系。
 
@@ -30,7 +30,7 @@ graph TB
         NODES["Worker Nodes"]
         PODS["Application Pods"]
     end
-    
+
     subgraph "Volcano Control Plane"
         subgraph "vc-scheduler"
             SCHED["Scheduler Core"]
@@ -38,31 +38,31 @@ graph TB
             ACTIONS["Actions: Allocate / Preempt / Reclaim"]
             PLUGINS["Scheduling Plugins"]
         end
-        
+
         subgraph "vc-controller-manager"
             JOBCTRL["Job Controller"]
             PGCTRL["PodGroup Controller"]
             QUEUECTRL["Queue Controller"]
             GCCTRL["GC Controller"]
         end
-        
+
         subgraph "vc-webhook-manager"
             JOBWEBHOOK["Job Admission Webhook"]
             QUEUEWEBHOOK["Queue Admission Webhook"]
         end
     end
-    
+
     subgraph "Custom Resources"
         JOBS["Jobs (batch.volcano.sh)"]
         QUEUES["Queues (scheduling.volcano.sh)"]
         PODGROUPS["PodGroups (scheduling.volcano.sh)"]
     end
-    
+
     subgraph "Client Tools"
         CLI["vcctl CLI"]
         HELM["Helm Charts"]
     end
-    
+
     SCHED <--> CACHE
     CACHE <--> KAPI
     ACTIONS --> SCHED
@@ -88,7 +88,7 @@ graph TB
 | vc-webhook-manager    | Admission 校验与变更                  |
 | vc-agent              | 节点级管理（部分版本可选）            |
 
-## 自定义资源（CRD）模型
+## 3. 自定义资源（CRD）模型 {/* #自定义资源crd模型 */}
 
 Volcano 通过自定义资源扩展了 Kubernetes 的原生对象模型。下图展示了各 CRD 之间的关系。
 
@@ -97,17 +97,17 @@ graph TB
     subgraph "batch.volcano.sh/v1alpha1"
         JOBS["Job<br/>- 任务定义<br/>- minAvailable<br/>- queue/schedulerName"]
     end
-    
+
     subgraph "scheduling.volcano.sh/v1beta1"
         QUEUES["Queue<br/>- 资源配额/优先级<br/>- Reclaimable"]
         PODGROUPS["PodGroup<br/>- 成组调度<br/>- minMember<br/>- Gang 语义"]
     end
-    
+
     subgraph "flow.volcano.sh/v1alpha1"
         JOBFLOWS["JobFlow<br/>- 工作流依赖<br/>- Pipeline 调度"]
         JOBTEMPLATES["JobTemplate<br/>- 可复用模板<br/>- 参数化定义"]
     end
-    
+
     JOBS --> PODGROUPS
     PODGROUPS --> QUEUES
     JOBS --> JOBFLOWS
@@ -123,7 +123,7 @@ graph TB
 | JobFlow     | 支持任务依赖与有向执行图（DAG）      |
 | JobTemplate | 模板化任务定义，方便重用             |
 
-## 调度流程与执行机制
+## 4. 调度流程与执行机制 {/* #调度流程与执行机制 */}
 
 Volcano 的调度流程分为多个阶段，确保批量任务高效分配和资源利用。下图展示了调度循环的主要流程。
 
@@ -133,13 +133,13 @@ graph LR
         USER["用户提交 Job YAML"]
         KAPI["Kubernetes API"]
     end
-    
+
     subgraph "Controller Manager"
         JOBCTRL["Job Controller"]
         PODGROUP["PodGroup Controller"]
         QUEUECTRL["Queue Controller"]
     end
-    
+
     subgraph "Scheduler"
         CACHE["Scheduler Cache"]
         SESSION["Scheduling Session"]
@@ -149,12 +149,12 @@ graph LR
         RECLAIM["Reclaim Action"]
         PLUGINS["Plugins"]
     end
-    
+
     subgraph "Output"
         BOUND["Pods Bound to Nodes"]
         RUNNING["Running Workloads"]
     end
-    
+
     USER --> KAPI
     KAPI --> JOBCTRL
     JOBCTRL --> PODGROUP
@@ -176,7 +176,7 @@ graph LR
 - Reclaim：回收闲置资源
 - Bind：分配 Pod 至节点
 
-## 插件体系（Plugin System）
+## 5. 插件体系（Plugin System） {/* #插件体系plugin-system */}
 
 Volcano 的插件系统高度可扩展，支持在调度周期多个阶段注入自定义逻辑。下图展示了插件分类及其与核心框架的关系。
 
@@ -199,20 +199,20 @@ graph TB
             SVC["Service Plugin"]
         end
     end
-    
+
     subgraph "Framework Core"
         REGISTRY["Plugin Registry"]
         SESSION["Session Manager"]
         ENGINE["Action Engine"]
     end
-    
+
     PREDICATES --> REGISTRY
     NODEORDER --> REGISTRY
     GANG --> REGISTRY
     DRF --> REGISTRY
     PROPORTION --> REGISTRY
     SSH --> REGISTRY
-    
+
     REGISTRY --> SESSION
     SESSION --> ENGINE
     ENGINE --> PREDICATES
@@ -232,18 +232,18 @@ graph TB
 | Overcommit   | 超卖调度             |
 | Topology     | NUMA / 网络拓扑感知  |
 
-## 安装与使用
+## 6. 安装与使用 {/* #安装与使用 */}
 
 Volcano 支持 Helm 和原生 YAML 安装方式。安装后会在 volcano-system 命名空间创建核心组件。
 
-### 通过 Helm 安装
+### 6.1 通过 Helm 安装 {/* #通过-helm-安装 */}
 
 ```bash
 helm repo add volcano-sh https://volcano-sh.github.io/helm-charts
 helm install volcano volcano-sh/volcano -n volcano-system --create-namespace
 ```
 
-### 使用原生 YAML 安装
+### 6.2 使用原生 YAML 安装 {/* #使用原生-yaml-安装 */}
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/master/installer/volcano-development.yaml
@@ -255,7 +255,7 @@ kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/master/ins
 - volcano-controllers
 - volcano-admission
 
-## 典型使用场景
+## 7. 典型使用场景 {/* #典型使用场景 */}
 
 Volcano 适用于多种批处理和高性能计算场景。下表列举了典型应用框架及其调度特性。
 
@@ -269,7 +269,7 @@ Volcano 适用于多种批处理和高性能计算场景。下表列举了典型
 
 > 使用时，只需在 Pod 或 Job 中指定 `schedulerName: volcano`，即可启用 Volcano 调度。
 
-## 与原生 Kubernetes 的区别
+## 8. 与原生 Kubernetes 的区别 {/* #与原生-kubernetes-的区别 */}
 
 下表对比了 Volcano 与 kube-scheduler 的主要差异。
 
@@ -282,11 +282,11 @@ Volcano 适用于多种批处理和高性能计算场景。下表列举了典型
 | 插件扩展     | 有限           | 完整可插拔插件系统           |
 | 应用场景     | 长期服务       | 批处理 / HPC / AI 训练       |
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 Volcano 让 Kubernetes 从“服务编排平台”进化为“通用计算平台”，特别适用于分布式训练、资源公平调度、异构硬件感知和大规模批量作业管理。结合 Argo、Kubeflow、Ray 等生态系统，Volcano 使 Kubernetes 成为统一的高性能计算基础设施。
 
-## 参考文献
+## 10. 参考资料 {/* #参考文献 */}
 
 1. [Volcano 官方文档 - volcano.sh](https://volcano.sh/)
 2. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/)

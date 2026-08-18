@@ -1,11 +1,12 @@
 ---
-title: setsebool 命令详解：临时与持久修改 SELinux boolean
+title: "setsebool 命令详解：临时与持久修改 SELinux boolean"
+sidebar_label: "08. setsebool 命令详解：临时与持久修改 SELinux boolean"
 sidebar_position: 8
-description: 完整讲解 setsebool 的 -P/-N/-V 参数、两种赋值语法、current/persistent policy、原子多值变更、性能风险和安全验证。
+description: "完整讲解 setsebool 的 -P/-N/-V 参数、两种赋值语法、current/persistent policy、原子多值变更、性能风险和安全验证。"
 tags: [Linux, setsebool, SELinux, boolean, 安全变更]
 ---
 
-# `setsebool` 命令详解：临时与持久修改 SELinux boolean
+# setsebool 命令详解：临时与持久修改 SELinux boolean
 
 `setsebool` 修改一个或多个 SELinux boolean。默认只改内核当前值；`-P` 把 pending values 写入磁盘 policy 并持久化，可能触发 policy 构建/加载，明显更慢且影响更久。
 
@@ -84,7 +85,7 @@ semanage boolean -l -C
 
 掌握标准：能列出全部参数与两种语法，解释 current/persistent/loaded store、`-N` 一致性和 `-P` 成本，并完成最小权限评审和回滚。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [setsebool(8)](https://manpages.debian.org/unstable/policycoreutils/setsebool.8.en.html)
 - [semanage-boolean(8)](https://manpages.debian.org/unstable/policycoreutils-python-utils/semanage-boolean.8.en.html)

@@ -1,11 +1,12 @@
 ---
-title: showmount 命令详解：mountd 查询与 NFSv3/NFSv4 边界
+title: "showmount 命令详解：mountd 查询与 NFSv3/NFSv4 边界"
+sidebar_label: "18. showmount 命令详解：mountd 查询与 NFSv3/NFSv4 边界"
 sidebar_position: 18
-description: 讲解 showmount 参数、MOUNT protocol、导出与客户端列表、端口可达性、NFSv4 限制、信息泄露和常见错误排查。
+description: "讲解 showmount 参数、MOUNT protocol、导出与客户端列表、端口可达性、NFSv4 限制、信息泄露和常见错误排查。"
 tags: [Linux, NFS, showmount, mountd, RPC]
 ---
 
-# `showmount` 命令详解：mountd 查询与 NFSv3/NFSv4 边界
+# showmount 命令详解：mountd 查询与 NFSv3/NFSv4 边界
 
 `showmount` 查询远端 mount daemon 的 MOUNT protocol。它主要反映 NFSv2/v3 时代的 export/mount 记录，不是 NFSv4 服务是否正常的最终检测器。
 

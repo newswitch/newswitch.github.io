@@ -2,8 +2,8 @@
 title: "按真实 Token 分布完成单副本容量规划"
 sidebar_label: "21. 按真实 Token 分布完成单副本容量规划"
 sidebar_position: 21
-tags: [vLLM, 容量规划, Token, KV Cache, SLO]
 description: "从权重、KV、激活和真实输入输出 token 分布出发，建立满足 TTFT/TPOT SLO 的单副本容量模型。"
+tags: [vLLM, 容量规划, Token, KV Cache, SLO]
 ---
 
 # 按真实 Token 分布完成单副本容量规划
@@ -18,8 +18,6 @@ description: "从权重、KV、激活和真实输入输出 token 分布出发，
 
 最终容量取这些约束中的最小值。
 
----
-
 ## 1. 定义“一个副本”
 
 容量文档先写清：
@@ -32,8 +30,6 @@ description: "从权重、KV、激活和真实输入输出 token 分布出发，
 ```
 
 TP=8 的一个副本不能当作 8 个可独立接请求的副本。
-
----
 
 ## 2. 显存静态预算
 
@@ -62,8 +58,6 @@ M_total
 
 把可见显存全部划给 KV，可能在高 Prefill 批次时 CUDA OOM。
 
----
-
 ## 3. KV Cache 每 token 成本
 
 常见 Transformer 的近似 KV 字节：
@@ -84,8 +78,6 @@ KV_token_capacity
 
 Paged Block 还会有尾块内部碎片。请求长度不是 Block Size 整数倍时，最后一个 Block 的未用 Slot 暂时不能给其他请求使用。
 
----
-
 ## 4. 用“驻留 token”而不是只看并发数
 
 某时刻一条请求的 KV 驻留量近似：
@@ -105,8 +97,6 @@ total_resident_tokens
 ```
 
 100 条 1K 上下文与 10 条 32K 上下文的请求数差十倍，KV 压力却可能相反。因此准入和容量必须以 token 预算为核心。
-
----
 
 ## 5. 真实长度分布怎么取得
 
@@ -129,11 +119,9 @@ P(input_tokens, output_tokens)
 
 没有生产数据时，先让产品给出请求画像和上限，用多场景压测，并在上线后快速校准。
 
----
-
 ## 6. 计算容量拆成 Prefill 和 Decode
 
-### Prefill 需求
+### 6.1 Prefill 需求 {/* #prefill-需求 */}
 
 ```text
 required_prefill_tokens_per_s
@@ -142,7 +130,7 @@ required_prefill_tokens_per_s
 
 其中实际计算 token 应扣除真正命中的前缀，并加上抢占重算。
 
-### Decode 需求
+### 6.2 Decode 需求 {/* #decode-需求 */}
 
 ```text
 required_decode_tokens_per_s
@@ -151,11 +139,9 @@ required_decode_tokens_per_s
 
 若有推测解码，还要考虑 Draft/验证额外工作，不能只用最终输出 token 推算 GPU 成本。
 
-### 混合干扰
+### 6.3 混合干扰 {/* #混合干扰 */}
 
 Prefill 与 Decode 共用 GPU，实际容量不是两者理论峰值简单相加。必须用真实混合比例压测得到 SLO 可用区间。
-
----
 
 ## 7. Little 定律用于一致性检查
 
@@ -170,11 +156,9 @@ Prefill 与 Decode 共用 GPU，实际容量不是两者理论峰值简单相加
 
 可进一步估计平均并发 KV 驻留，但长尾系统不能只用平均值决定容量。P99 输出长度和突发到达会让瞬时驻留远超均值，所以需要 Trace Replay 或随机模拟验证。
 
----
-
 ## 8. SLO 容量测试
 
-### 测试步骤
+### 8.1 测试步骤 {/* #测试步骤 */}
 
 1. 固定单副本配置；
 2. 使用生产联合 token 分布；
@@ -184,7 +168,7 @@ Prefill 与 Decode 共用 GPU，实际容量不是两者理论峰值简单相加
 6. 找第一个持续 SLO 失守点；
 7. 前一安全档再减去容量余量。
 
-### 单副本可售容量
+### 8.2 单副本可售容量 {/* #单副本可售容量 */}
 
 ```text
 C_replica
@@ -198,8 +182,6 @@ C_replica
 ```
 
 不是 `max observed QPS`。
-
----
 
 ## 9. 长短请求分池
 
@@ -226,8 +208,6 @@ C_replica
 
 先用混合干扰实验量化收益，再决定是否分池。
 
----
-
 ## 10. Prefix Cache 如何进入容量模型
 
 不能直接用历史平均命中率打折全部 Prompt：
@@ -247,8 +227,6 @@ E[compute_prompt_tokens]
 
 扩容最需要容量时，新副本反而最冷。只按热态命中率规划会造成扩容后 TTFT 二次恶化。
 
----
-
 ## 11. 输出表
 
 | 项目 | 值 | 证据来源 |
@@ -265,8 +243,6 @@ E[compute_prompt_tokens]
 | 冷缓存容量 |  | 冷启动测试 |
 
 每次模型、硬件、vLLM、量化或主要 token 分布变化，都应重新生成这张表。
-
----
 
 ## 12. 验收题
 

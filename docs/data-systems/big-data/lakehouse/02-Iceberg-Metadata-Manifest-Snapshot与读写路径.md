@@ -1,9 +1,9 @@
 ---
-title: Iceberg Metadata、Manifest、Snapshot 与读写路径
+title: "Iceberg Metadata、Manifest、Snapshot 与读写路径"
 sidebar_label: "02. Iceberg Metadata、Manifest、Snapshot 与读写路径"
 sidebar_position: 2
+description: "读懂 Iceberg 元数据树、文件统计、快照提交、扫描规划和乐观并发。"
 tags: [Iceberg, Metadata, Manifest, Snapshot]
-description: 读懂 Iceberg 元数据树、文件统计、快照提交、扫描规划和乐观并发。
 ---
 
 # Iceberg Metadata、Manifest、Snapshot 与读写路径
@@ -75,7 +75,7 @@ Time travel 固定 snapshot；读“当前”可能在不同查询时刻变化�
 
 上一篇：[数据湖、表格式与 Catalog](./01-数据湖表格式Catalog与存算分离.md)　下一篇：[Schema/Partition Evolution 与 Time Travel](./03-Schema-Partition-Evolution与Time-Travel.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Iceberg Specification](https://iceberg.apache.org/spec/)
 - [Iceberg API](https://iceberg.apache.org/docs/latest/api/)

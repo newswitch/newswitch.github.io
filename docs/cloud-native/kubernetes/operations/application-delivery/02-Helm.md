@@ -2,8 +2,8 @@
 title: "使用 Helm 管理 Kubernetes 应用"
 sidebar_label: "02. 使用 Helm 管理 Kubernetes 应用"
 sidebar_position: 2
-tags: [Kubernetes, 部署应用, PartII, 学习路线]
 description: "Helm 是 Kubernetes 的包管理工具，简化了应用的部署和管理过程。"
+tags: [Kubernetes, 部署应用, PartII, 学习路线]
 ---
 
 # 使用 Helm 管理 Kubernetes 应用
@@ -12,7 +12,7 @@ description: "Helm 是 Kubernetes 的包管理工具，简化了应用的部署�
 
 [Helm](https://helm.sh/) 作为 Kubernetes 生态中最主流的包管理工具，极大简化了应用部署、升级与回滚流程。通过 Chart 模板化机制，开发者能够高效复用和分享可配置的应用包，实现声明式、自动化的集群管理。
 
-## Helm 的历史与定位
+## 1. Helm 的历史与定位 {/* #helm-的历史与定位 */}
 
 Helm 最初由 Deis 公司于 2015 年发布，后捐赠给 CNCF，成为 Kubernetes 生态系统中最早孵化的项目之一。Helm 的出现主要解决了以下痛点：
 
@@ -28,7 +28,7 @@ Helm 提供了如下核心能力：
 
 > Helm 3 版本移除了 Tiller（集群端服务），实现完全客户端化，提升了安全性与易用性。
 
-## Helm 的架构与工作原理
+## 2. Helm 的架构与工作原理 {/* #helm-的架构与工作原理 */}
 
 Helm 主要由三部分组成：Helm CLI、Chart Repository 和 Kubernetes API Server。下图展示了 Helm 的工作流程：
 
@@ -48,7 +48,7 @@ flowchart LR
 
 当执行 `helm install` 时，CLI 会从仓库下载 Chart，使用 values.yaml 参数进行模板渲染，并通过 Kubernetes API 创建资源对象。
 
-## Helm 的基本概念
+## 3. Helm 的基本概念 {/* #helm-的基本概念 */}
 
 下表简要说明 Helm 的核心概念及其作用。
 
@@ -61,7 +61,7 @@ flowchart LR
 | Chart.yaml     | Chart 元信息（名称、版本、依赖等）    |
 | Repository     | 存储和分发 Chart 的仓库               |
 
-## Helm 基本命令示例
+## 4. Helm 基本命令示例 {/* #helm-基本命令示例 */}
 
 以下命令展示了 Helm 的常用操作流程。每条命令前建议先阅读官方文档，确保参数含义准确。
 
@@ -89,7 +89,7 @@ helm rollback mydb 1
 helm uninstall mydb
 ```
 
-## Helm Chart 结构示例
+## 5. Helm Chart 结构示例 {/* #helm-chart-结构示例 */}
 
 下方展示了一个典型 Helm Chart 的目录结构。建议每个 Chart 独立维护，便于版本管理与复用。
 
@@ -106,7 +106,7 @@ mychart/
 
 其中 `_helpers.tpl` 文件可定义通用模板函数，供其他模板复用。
 
-## Helm 模板渲染机制
+## 6. Helm 模板渲染机制 {/* #helm-模板渲染机制 */}
 
 Helm 使用 Go Template 语法，通过 `{{ }}` 表达式实现动态变量替换。如下示例展示了 ConfigMap 的模板写法：
 
@@ -127,38 +127,38 @@ helm template mychart/ --values values.yaml
 
 > `.Values` 代表来自 values.yaml 的配置，`.Release` 则是 Helm 内部的上下文对象。
 
-## Helm 的最佳实践
+## 7. Helm 的最佳实践 {/* #helm-的最佳实践 */}
 
 在实际项目中，建议遵循以下 Helm 使用规范：
 
-### 目录规范化
+### 7.1 目录规范化 {/* #目录规范化 */}
 
 - 使用语义化版本号（如 1.0.0）。
 - 每个 Chart 独立维护 Chart.yaml 和 values.yaml。
 
-### 参数管理
+### 7.2 参数管理 {/* #参数管理 */}
 
 - 避免在模板中硬编码参数。
 - 通过 values.yaml 管理环境变量。
 - 使用 `--set` 或 `--values` 覆盖默认配置。
 
-### 安全与权限
+### 7.3 安全与权限 {/* #安全与权限 */}
 
 - 避免使用 Helm 2 中的 Tiller。
 - 使用 RBAC 控制 Helm 操作权限。
 - 不在 Chart 中包含敏感数据（如密码、Token）。
 
-### 自动化集成
+### 7.4 自动化集成 {/* #自动化集成 */}
 
 - 使用 CI/CD（如 GitHub Actions、Argo CD）自动化发布。
 - 与 GitOps 工作流结合，确保部署过程可追溯。
 
-### 版本与依赖管理
+### 7.5 版本与依赖管理 {/* #版本与依赖管理 */}
 
 - 使用 `helm dependency update` 管理子 Chart。
 - 在 Chart.yaml 中声明依赖项。
 
-## Helm 与 GitOps 的结合
+## 8. Helm 与 GitOps 的结合 {/* #helm-与-gitops-的结合 */}
 
 Helm 常被集成到 GitOps 工具链（如 Argo CD、FluxCD）中，实现声明式部署。下图展示了 Helm 与 GitOps 的协作流程：
 
@@ -174,7 +174,7 @@ flowchart TD
 
 在该模式下，Helm 负责打包与模板化，GitOps 控制器负责同步与回滚，发布过程完全可追溯。
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 Helm 是 Kubernetes 生态中不可或缺的应用管理工具，具备如下优势：
 

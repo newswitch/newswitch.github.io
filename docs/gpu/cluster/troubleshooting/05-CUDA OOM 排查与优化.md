@@ -1,9 +1,11 @@
 ---
 title: "CUDA OOM：从显存模型、峰值、碎片到泄漏的完整排查"
+sidebar_label: "05. CUDA OOM：从显存模型、峰值、碎片到泄漏的完整排查"
+sidebar_position: 5
+description: "区分 GPU OOM、容器 OOMKilled 和节点 OOM，从容量、峰值、碎片、泄漏、外部进程与并发六条路径定位并优化显存。"
+tags: ["CUDA", "OOM", "PyTorch", "vLLM", "显存", "故障排查"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["CUDA", "OOM", "PyTorch", "vLLM", "显存", "故障排查"]
-description: "区分 GPU OOM、容器 OOMKilled 和节点 OOM，从容量、峰值、碎片、泄漏、外部进程与并发六条路径定位并优化显存。"
 ---
 
 # CUDA OOM：从显存模型、峰值、碎片到泄漏的完整排查
@@ -455,25 +457,25 @@ MIG 提供硬件级显存分区，但 profile 容量固定；应用仍可能在�
 
 ## 16. 掌握标准
 
-### 入门
+### 16.1 入门 {/* #入门 */}
 
 - 能区分 CUDA OOM、OOMKilled 和节点 OOM；
 - 能解释推理与训练显存组成；
 - 能读取 GPU 进程和 PyTorch 内存统计。
 
-### 进阶
+### 16.2 进阶 {/* #进阶 */}
 
 - 能根据失败阶段区分容量、峰值、碎片和泄漏；
 - 能使用 memory summary/snapshot 定位分配；
 - 能为 vLLM 和训练选择正确的降显存手段。
 
-### 生产级
+### 16.3 生产级 {/* #生产级 */}
 
 - 能把模型、并发、SLO、GPU 拓扑和成本纳入容量模型；
 - 能处理共享 GPU 中跨 Pod 的 HBM 争用；
 - 能以压测、正确性和长稳数据证明修复，而不是只证明服务重启成功。
 
-## 参考资料
+## 17. 参考资料 {/* #参考资料 */}
 
 - [PyTorch CUDA semantics and memory management](https://docs.pytorch.org/docs/stable/notes/cuda.html)
 - [PyTorch Understanding CUDA Memory Usage](https://docs.pytorch.org/docs/stable/torch_cuda_memory.html)

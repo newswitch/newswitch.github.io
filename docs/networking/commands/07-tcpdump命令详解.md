@@ -1,11 +1,12 @@
 ---
-title: tcpdump 命令详解：安全抓包、BPF 过滤和协议排障
+title: "tcpdump 命令详解：安全抓包、BPF 过滤和协议排障"
+sidebar_label: "07. tcpdump 命令详解：安全抓包、BPF 过滤和协议排障"
 sidebar_position: 7
-description: 系统讲解 tcpdump 的接口、数量、长度、输出、时间戳、文件轮转、权限、方向、协议解析参数，以及 libpcap BPF 过滤表达式与生产抓包方法。
+description: "系统讲解 tcpdump 的接口、数量、长度、输出、时间戳、文件轮转、权限、方向、协议解析参数，以及 libpcap BPF 过滤表达式与生产抓包方法。"
 tags: [Linux, tcpdump, libpcap, BPF, 抓包, 网络排障]
 ---
 
-# `tcpdump` 命令详解：安全抓包、BPF 过滤和协议排障
+# tcpdump 命令详解：安全抓包、BPF 过滤和协议排障
 
 `tcpdump` 用 libpcap 从捕获接口读取报文，并按 capture filter 在捕获阶段筛选。它提供的是观测点看到的包，不是端到端绝对真相：GRO/LRO/TSO、硬件 Offload、隧道、命名空间、交换芯片卸载和抓包丢包都会改变你看到的形态。
 

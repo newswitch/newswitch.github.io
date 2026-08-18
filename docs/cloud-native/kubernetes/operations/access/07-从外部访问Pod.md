@@ -2,15 +2,15 @@
 title: "从外部访问 Kubernetes 中的 Pod"
 sidebar_label: "07. 从外部访问 Kubernetes 中的 Pod"
 sidebar_position: 7
-tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "本文详细介绍了从外部访问 Kubernetes 集群中 Pod 和 Service 的多种方式，包括 hostNetwork、hostPort、NodePort、LoadBalancer 和 Ingress 等方法，并分析了各种方式的优缺点和适用场景。"
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 ---
 
 # 从外部访问 Kubernetes 中的 Pod
 
 在 Kubernetes 集群中，Pod 默认只能在集群内部访问。为了让外部用户能够访问集群中的应用，我们需要采用适当的网络暴露方式。本文将介绍几种主要的外部访问方法，每种方法都有其特定的使用场景和优缺点。
 
-## 访问方式概览
+## 1. 访问方式概览 {/* #访问方式概览 */}
 
 Kubernetes 提供了多种从外部访问 Pod 和 Service 的方式：
 
@@ -22,13 +22,13 @@ Kubernetes 提供了多种从外部访问 Pod 和 Service 的方式：
 
 需要注意的是，暴露 Pod 和暴露 Service 本质上是一回事，因为 Service 就是 Pod 的抽象层。
 
-## hostNetwork 模式
+## 2. hostNetwork 模式 {/* #hostnetwork-模式 */}
 
-### 工作原理
+### 2.1 工作原理 {/* #工作原理 */}
 
 当在 Pod 规格中设置 `hostNetwork: true` 时，Pod 将直接使用宿主机的网络命名空间。这意味着 Pod 中的应用程序可以直接绑定到宿主机的网络接口上。
 
-### 配置示例
+### 2.2 配置示例 {/* #配置示例 */}
 
 以下是相关的示例代码：
 
@@ -46,7 +46,7 @@ spec:
         - containerPort: 8086
 ```
 
-### 使用方法
+### 2.3 使用方法 {/* #使用方法 */}
 
 以下是具体的使用方法：
 
@@ -61,7 +61,7 @@ kubectl get pod influxdb -o wide
 curl -v http://<NODE_IP>:8086/ping
 ```
 
-### 适用场景与注意事项
+### 2.4 适用场景与注意事项 {/* #适用场景与注意事项 */}
 
 **适用场景：**
 
@@ -75,13 +75,13 @@ curl -v http://<NODE_IP>:8086/ping
 - 可能与宿主机端口冲突
 - 安全性较低，应谨慎使用
 
-## hostPort 端口映射
+## 3. hostPort 端口映射 {/* #hostport-端口映射 */}
 
-### 工作原理
+### 3.1 工作原理 {/* #工作原理-1 */}
 
 `hostPort` 将容器端口直接映射到宿主机端口，类似于 Docker 的端口映射功能。
 
-### 配置示例
+### 3.2 配置示例 {/* #配置示例-1 */}
 
 以下是相关的示例代码：
 
@@ -100,7 +100,7 @@ spec:
           protocol: TCP
 ```
 
-### 访问方法
+### 3.3 访问方法 {/* #访问方法 */}
 
 以下是相关的代码示例：
 
@@ -109,19 +109,19 @@ spec:
 curl http://<NODE_IP>:8086/ping
 ```
 
-### 适用场景
+### 3.4 适用场景 {/* #适用场景 */}
 
 - Nginx Ingress Controller 等入口控制器
 - 需要固定端口的应用
 - 开发和测试环境
 
-## NodePort 服务
+## 4. NodePort 服务 {/* #nodeport-服务 */}
 
-### 工作原理
+### 4.1 工作原理 {/* #工作原理-2 */}
 
 NodePort 是 Kubernetes Service 的一种类型，它会在每个节点上开放一个端口（默认范围 30000-32767），将外部流量转发到对应的 Pod。
 
-### 配置示例
+### 4.2 配置示例 {/* #配置示例-2 */}
 
 以下是相关的示例代码：
 
@@ -155,7 +155,7 @@ spec:
     app: influxdb
 ```
 
-### 访问方法
+### 4.3 访问方法 {/* #访问方法-1 */}
 
 以下是相关的代码示例：
 
@@ -167,7 +167,7 @@ curl http://<NODE_IP>:30086/ping
 curl http://<CLUSTER_IP>:8086/ping
 ```
 
-### 优缺点
+### 4.4 优缺点 {/* #优缺点 */}
 
 **优点：**
 
@@ -181,13 +181,13 @@ curl http://<CLUSTER_IP>:8086/ping
 - 每个服务占用一个端口
 - 不适合生产环境的多服务场景
 
-## LoadBalancer 负载均衡器
+## 5. LoadBalancer 负载均衡器 {/* #loadbalancer-负载均衡器 */}
 
-### 工作原理
+### 5.1 工作原理 {/* #工作原理-3 */}
 
 LoadBalancer 类型的 Service 会自动创建云平台提供的负载均衡器，并为 Service 分配一个外部 IP。
 
-### 配置示例
+### 5.2 配置示例 {/* #配置示例-3 */}
 
 以下是相关的示例代码：
 
@@ -205,7 +205,7 @@ spec:
     app: influxdb
 ```
 
-### 查看和访问
+### 5.3 查看和访问 {/* #查看和访问 */}
 
 以下是相关的代码示例：
 
@@ -222,19 +222,19 @@ curl http://203.0.113.123:8086/ping
 curl http://<NODE_IP>:30051/ping
 ```
 
-### 适用场景
+### 5.4 适用场景 {/* #适用场景-1 */}
 
 - 云平台环境（AWS、GCP、Azure 等）
 - 生产环境的关键服务
 - 需要高可用和自动故障转移的应用
 
-## Ingress 入口控制器
+## 6. Ingress 入口控制器 {/* #ingress-入口控制器 */}
 
-### 工作原理
+### 6.1 工作原理 {/* #工作原理-4 */}
 
 Ingress 是 Kubernetes 中用于管理外部访问集群内服务的 API 对象。它提供 HTTP 和 HTTPS 路由功能，支持基于域名和路径的流量分发。
 
-### 前提条件
+### 6.2 前提条件 {/* #前提条件 */}
 
 使用 Ingress 前需要部署 Ingress Controller，常用的有：
 
@@ -243,7 +243,7 @@ Ingress 是 Kubernetes 中用于管理外部访问集群内服务的 API 对象�
 - HAProxy Ingress
 - Istio Gateway
 
-### 配置示例
+### 6.3 配置示例 {/* #配置示例-4 */}
 
 以下是相关的示例代码：
 
@@ -269,7 +269,7 @@ spec:
                   number: 8086
 ```
 
-### 高级配置示例
+### 6.4 高级配置示例 {/* #高级配置示例 */}
 
 以下是相关的示例代码：
 
@@ -307,7 +307,7 @@ spec:
                   number: 3000
 ```
 
-### 访问方法
+### 6.5 访问方法 {/* #访问方法-2 */}
 
 以下是相关的代码示例：
 
@@ -319,7 +319,7 @@ curl http://influxdb.example.com/ping
 curl https://api.example.com/influxdb/ping
 ```
 
-### Ingress 优势
+### 6.6 Ingress 优势 {/* #ingress-优势 */}
 
 - **统一入口**：单一负载均衡器处理多个服务
 - **灵活路由**：支持基于域名、路径的路由规则
@@ -327,7 +327,7 @@ curl https://api.example.com/influxdb/ping
 - **高效转发**：直接转发到 Pod，无需经过 kube-proxy
 - **功能丰富**：支持限流、认证、重写等高级功能
 
-## 方案对比与选择
+## 7. 方案对比与选择 {/* #方案对比与选择 */}
 
 | 方式 | 复杂度 | 性能 | 灵活性 | 适用场景 |
 |------|--------|------|--------|----------|
@@ -337,23 +337,23 @@ curl https://api.example.com/influxdb/ping
 | LoadBalancer | 中 | 高 | 中 | 云环境生产服务 |
 | Ingress | 高 | 高 | 最高 | 生产环境、多服务场景 |
 
-## 最佳实践建议
+## 8. 最佳实践建议 {/* #最佳实践建议 */}
 
-### 生产环境推荐
+### 8.1 生产环境推荐 {/* #生产环境推荐 */}
 
 1. **Web 应用**：优先选择 Ingress + TLS
 2. **API 服务**：使用 Ingress 进行路由和负载均衡
 3. **数据库等有状态服务**：使用 LoadBalancer（云环境）或 NodePort
 4. **监控和日志系统**：根据访问需求选择合适方式
 
-### 安全考虑
+### 8.2 安全考虑 {/* #安全考虑 */}
 
 - 使用 NetworkPolicy 限制 Pod 网络访问
 - 为 Ingress 配置适当的认证和授权
 - 定期更新 TLS 证书
 - 避免在生产环境使用 hostNetwork
 
-### 监控和排错
+### 8.3 监控和排错 {/* #监控和排错 */}
 
 以下是相关的代码示例：
 
@@ -368,7 +368,7 @@ kubectl logs -n ingress-nginx deployment/ingress-nginx-controller
 kubectl run test-pod --rm -it --image=busybox -- sh
 ```
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 选择合适的外部访问方式需要考虑多个因素：
 
@@ -379,7 +379,7 @@ kubectl run test-pod --rm -it --image=busybox -- sh
 
 在现代云原生应用中，Ingress 已成为暴露 HTTP/HTTPS 服务的主流方式，它不仅提供了强大的路由功能，还与服务网格、API 网关等技术很好地集成，是构建可扩展微服务架构的重要组件。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Service 官方文档](https://kubernetes.io/docs/concepts/services-networking/service/)
 - [Kubernetes Ingress 官方文档](https://kubernetes.io/docs/concepts/services-networking/ingress/)

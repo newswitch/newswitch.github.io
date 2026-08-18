@@ -2,8 +2,8 @@
 title: "账户、角色、最小权限、TLS、加密、审计与密钥"
 sidebar_label: "05. 账户、角色、最小权限、TLS、加密、审计与密钥"
 sidebar_position: 5
-tags: [MySQL, 安全, RBAC, TLS, 加密, 审计]
 description: "建立身份、授权、传输与静态加密、审计和密钥生命周期组成的 MySQL 纵深防御。"
+tags: [MySQL, 安全, RBAC, TLS, 加密, 审计]
 ---
 
 # 账户、角色、最小权限、TLS、加密、审计与密钥
@@ -84,7 +84,7 @@ data availability = encrypted files + available correct keys
 
 凭据泄露时先确认范围和活动会话，轮换凭据/证书，撤销权限或账户，终止可疑连接，保存审计和 Binlog，检查数据访问与外传，再恢复最小服务。不要先清日志或直接删账户导致证据消失而应用全面中断。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Access Control and Account Management](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
 - [Using Roles](https://dev.mysql.com/doc/refman/8.4/en/roles.html)

@@ -2,25 +2,25 @@
 title: "使用 Kubebuilder 构建控制器"
 sidebar_label: "06. 使用 Kubebuilder 构建控制器"
 sidebar_position: 6
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "介绍 Kubebuilder 的核心概念、设计原则、工作流程及最佳实践，帮助开发者快速上手使用 Kubebuilder 构建 Kubernetes 扩展。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # 使用 Kubebuilder 构建控制器
 
 Kubebuilder 是 Kubernetes 官方推荐的 Operator 开发框架，具备现代化架构和丰富工具链，能够帮助开发者高效构建、测试和部署自定义 API 及控制器。本文将系统介绍 Kubebuilder 的核心概念、设计原则、工作流程及最佳实践，助力你快速上手并应用于生产环境。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 Kubebuilder 是一个基于 CRD 的现代化 Kubernetes API 构建框架，适用于开发 Operator、Controller 及 Webhook。其 v4.9.0 版本在性能和开发体验方面有显著提升。
 
-### 框架简介与目标
+### 1.1 框架简介与目标 {/* #框架简介与目标 */}
 
 Kubebuilder 是一个用于通过自定义资源定义（CRD）构建 Kubernetes API 的框架。它为开发者提供了一套工具和库，简化了 Operator 和 Controller 的开发流程，减少了样板代码，并遵循 Kubernetes API 的最佳实践。
 
 类似于 Ruby on Rails 或 SpringBoot 等 Web 开发框架，Kubebuilder 通过抽象和标准化实现模式，提升了 Go 语言下 Kubernetes API 的开发效率和一致性。Kubebuilder 基于 [controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) 和 [controller-tools](https://github.com/kubernetes-sigs/controller-tools) 库，负责与 Kubernetes 的底层交互。
 
-### 系统架构与核心组件
+### 1.2 系统架构与核心组件 {/* #系统架构与核心组件 */}
 
 下图展示了 Kubebuilder 的系统架构及其主要组件：
 
@@ -58,7 +58,7 @@ graph TD
 
 ![Kubebuilder 系统架构核心组件](/images/k8s/extend/kubebuilder/f54da153157aca0ef26f26bcd9843b1e.svg)
 
-### 插件系统机制
+### 1.3 插件系统机制 {/* #插件系统机制 */}
 
 Kubebuilder 的插件系统是其可扩展性的核心。插件实现了 CLI 命令所需的各种接口，支持核心功能和可选扩展：
 
@@ -93,7 +93,7 @@ graph LR
 
 Go v4 插件实现了完整的 `plugin.Full` 接口，支持项目初始化、新建 API 资源、新建 Webhook 及编辑资源。可选插件则针对镜像部署、Helm Chart 管理等场景扩展功能。
 
-### 开发流程
+### 1.4 开发流程 {/* #开发流程 */}
 
 Kubebuilder 提供了结构化的开发流程，便于构建高质量的 Controller：
 
@@ -128,7 +128,7 @@ flowchart LR
 3. 安装 CRD（make install）
 4. 本地运行控制器（make run）
 
-### 项目结构说明
+### 1.5 项目结构说明 {/* #项目结构说明 */}
 
 下表为 Kubebuilder 项目的标准目录结构及说明：
 
@@ -148,7 +148,7 @@ flowchart LR
 
 该结构遵循 Kubernetes 控制器开发规范，实现 API 类型与控制器逻辑分离。
 
-### 核心对象模型
+### 1.6 核心对象模型 {/* #核心对象模型 */}
 
 下图展示了 Kubebuilder 的关键对象关系：
 
@@ -198,7 +198,7 @@ classDiagram
 
 ![Kubebuilder 核心对象模型](/images/k8s/extend/kubebuilder/f3877192b99d52bfd4a75cf54c07fde4.svg)
 
-### 控制器运行时机制
+### 1.7 控制器运行时机制 {/* #控制器运行时机制 */}
 
 Kubebuilder 项目基于 controller-runtime 库，核心组件如下：
 
@@ -232,7 +232,7 @@ Manager 是核心，负责：
 
 控制器实现 Reconciler 接口，实现资源期望状态与实际状态的调谐。
 
-### 监控指标与可观测性
+### 1.8 监控指标与可观测性 {/* #监控指标与可观测性 */}
 
 Kubebuilder 项目通过 controller-runtime 默认支持如下指标，可集成 Prometheus：
 
@@ -248,7 +248,7 @@ Kubebuilder 项目通过 controller-runtime 默认支持如下指标，可集成
 
 默认暴露在 8443 端口，可通过 ServiceMonitor 集成 Prometheus。
 
-### 测试体系
+### 1.9 测试体系 {/* #测试体系 */}
 
 Kubebuilder 提供完善的测试能力：
 
@@ -278,11 +278,11 @@ graph TD
 - 集成测试：使用 envtest 启动 API Server
 - 端到端测试：使用真实 kind 集群
 
-## 快速开始
+## 2. 快速开始 {/* #快速开始 */}
 
 本节将介绍如何使用 Kubebuilder v4.9.0 初始化项目并实现核心功能。
 
-### 项目初始化
+### 2.1 项目初始化 {/* #项目初始化 */}
 
 下图为 Kubebuilder 项目初始化流程：
 
@@ -370,7 +370,7 @@ make manifests
 └── go.work
 ```
 
-### 定义 CRD 结构
+### 2.2 定义 CRD 结构 {/* #定义-crd-结构 */}
 
 编辑 `api/v1/guestbook_types.go`，示例代码如下：
 
@@ -456,7 +456,7 @@ type GuestbookList struct {
 }
 ```
 
-### 实现 Controller 逻辑
+### 2.3 实现 Controller 逻辑 {/* #实现-controller-逻辑 */}
 
 编辑 `internal/controller/guestbook_controller.go`，核心逻辑如下：
 
@@ -497,7 +497,7 @@ func (r *GuestbookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 ```
 
-### 测试和部署
+### 2.4 测试和部署 {/* #测试和部署 */}
 
 安装 CRD：
 
@@ -546,9 +546,9 @@ make docker-build docker-push IMG=your-registry/guestbook-operator:latest
 make deploy IMG=your-registry/guestbook-operator:latest
 ```
 
-## 高级特性
+## 3. 高级特性 {/* #高级特性 */}
 
-### Webhook
+### 3.1 Webhook {/* #webhook */}
 
 添加验证和变更 Webhook：
 
@@ -556,7 +556,7 @@ make deploy IMG=your-registry/guestbook-operator:latest
 kubebuilder create webhook --group webapp --version v1 --kind Guestbook --defaulting --programmatic-validation
 ```
 
-### 多版本支持
+### 3.2 多版本支持 {/* #多版本支持 */}
 
 创建多版本 API：
 
@@ -564,7 +564,7 @@ kubebuilder create webhook --group webapp --version v1 --kind Guestbook --defaul
 kubebuilder create api --group webapp --version v2 --kind Guestbook
 ```
 
-### 性能优化
+### 3.3 性能优化 {/* #性能优化 */}
 
 在 `main.go` 中配置 Controller 选项：
 
@@ -580,9 +580,9 @@ if err = (&controller.GuestbookReconciler{
 }
 ```
 
-## 最佳实践
+## 4. 最佳实践 {/* #最佳实践 */}
 
-### 错误处理
+### 4.1 错误处理 {/* #错误处理 */}
 
 ```go
 if apierrors.IsNotFound(err) {
@@ -593,7 +593,7 @@ if apierrors.IsConflict(err) {
 }
 ```
 
-### 状态管理
+### 4.2 状态管理 {/* #状态管理 */}
 
 ```go
 meta.SetStatusCondition(&guestbook.Status.Conditions, metav1.Condition{
@@ -604,16 +604,16 @@ meta.SetStatusCondition(&guestbook.Status.Conditions, metav1.Condition{
 })
 ```
 
-### 日志记录
+### 4.3 日志记录 {/* #日志记录 */}
 
 ```go
-log.Info("Reconciling resource", 
+log.Info("Reconciling resource",
   "guestbook", guestbook.Name,
   "namespace", guestbook.Namespace,
   "generation", guestbook.Generation)
 ```
 
-### 测试
+### 4.4 测试 {/* #测试 */}
 
 ```go
 var _ = Describe("Guestbook Controller", func() {
@@ -625,7 +625,7 @@ var _ = Describe("Guestbook Controller", func() {
 })
 ```
 
-## 故障排查
+## 5. 故障排查 {/* #故障排查 */}
 
 常见问题及调试技巧：
 
@@ -658,7 +658,7 @@ var _ = Describe("Guestbook Controller", func() {
   kubectl get events --sort-by=.metadata.creationTimestamp
   ```
 
-## 总结
+## 6. 总结 {/* #总结 */}
 
 Kubebuilder 提供了完整的 Kubernetes Operator 开发体验，从项目初始化到生产部署。通过本文，你已掌握：
 
@@ -670,7 +670,7 @@ Kubebuilder 提供了完整的 Kubernetes Operator 开发体验，从项目初�
 
 建议进一步探索 Webhook、多版本支持、性能优化等高级特性，提升 Operator 开发能力。
 
-## 参考资料
+## 7. 参考资料 {/* #参考资料 */}
 
 1. [Kubebuilder 官方文档 - book.kubebuilder.io](https://book.kubebuilder.io/)
 2. [Kubernetes API 扩展 - kubernetes.io](./02-API扩展机制.md)

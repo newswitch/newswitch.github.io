@@ -2,8 +2,8 @@
 title: "LLM 压测、容量曲线与成本模型"
 sidebar_label: "06. LLM 压测、容量曲线与成本模型"
 sidebar_position: 6
-tags: [LLM, vLLM, 压测, 容量规划, TTFT, TPOT, 成本]
 description: "设计符合真实 Token 分布和到达模型的 LLM 在线压测，绘制过载曲线，计算 SLO 容量、冗余、副本数和单位 Token 成本。"
+tags: [LLM, vLLM, 压测, 容量规划, TTFT, TPOT, 成本]
 ---
 
 # LLM 压测、容量曲线与成本模型
@@ -23,11 +23,9 @@ description: "设计符合真实 Token 分布和到达模型的 LLM 在线压测
 - 故障后剩余容量。
 - 每百万 token/每请求成本。
 
----
-
 ## 1. 先区分三个基准
 
-### 离线吞吐
+### 1.1 离线吞吐 {/* #离线吞吐 */}
 
 ```text
 所有请求已准备好
@@ -43,7 +41,7 @@ description: "设计符合真实 Token 分布和到达模型的 LLM 在线压测
 
 不能代表在线排队和 TTFT。
 
-### 单请求延迟
+### 1.2 单请求延迟 {/* #单请求延迟 */}
 
 ```text
 concurrency = 1
@@ -56,7 +54,7 @@ concurrency = 1
 
 不能代表高并发 Batch。
 
-### 在线 Serving
+### 1.3 在线 Serving {/* #在线-serving */}
 
 请求按到达过程进入：
 
@@ -69,11 +67,9 @@ request rate / concurrency
 
 生产容量必须以在线基准为主。
 
----
-
 ## 2. Open-loop 与 Closed-loop
 
-### Closed-loop
+### 2.1 Closed-loop {/* #closed-loop */}
 
 每个客户端等待响应完成后再发送：
 
@@ -83,7 +79,7 @@ send → wait → complete → next send
 
 当服务变慢时，客户端自动降低发送速率，可能掩盖过载。
 
-### Open-loop
+### 2.2 Open-loop {/* #open-loop */}
 
 按外部到达率发送：
 
@@ -96,8 +92,6 @@ send → wait → complete → next send
 在线容量测试应主要使用 Open-loop，并设置最大未完成请求，避免压测器本身失控。
 
 Closed-loop 可用于并发用户模型，但必须报告实际到达率。
-
----
 
 ## 3. 工作负载模型
 
@@ -157,8 +151,6 @@ Prefix Cache warm
 
 它们可能改变 CPU/GPU 和输出长度。
 
----
-
 ## 4. 环境记录
 
 ```yaml
@@ -194,8 +186,6 @@ software:
 
 如果环境不可复现，结果不能作为容量基线。
 
----
-
 ## 5. 使用 vLLM Bench
 
 当前 vLLM CLI 提供：
@@ -228,8 +218,6 @@ vllm bench serve --help
 
 生产测试尽量使用脱敏后的真实 Token 长度分布，而不是永远固定长度。
 
----
-
 ## 6. 压测器本身也要监控
 
 压测客户端可能成为瓶颈：
@@ -255,11 +243,9 @@ response parse time
 
 压测器与被测服务最好分开节点，时间同步。
 
----
-
 ## 7. 核心指标
 
-### 请求
+### 7.1 请求 {/* #请求 */}
 
 ```text
 offered_rps
@@ -270,7 +256,7 @@ error_rate
 stream_completion_rate
 ```
 
-### Token
+### 7.2 Token {/* #token */}
 
 ```text
 prompt_tokens_per_second
@@ -280,7 +266,7 @@ total_tokens_per_second
 
 Prompt Token 与 Generation Token 成本不同，不能只加总比较。
 
-### 延迟
+### 7.3 延迟 {/* #延迟 */}
 
 ```text
 queue_time
@@ -291,7 +277,7 @@ E2E
 
 报告 P50/P90/P95/P99，而不是只报平均。
 
-### 资源
+### 7.4 资源 {/* #资源 */}
 
 ```text
 running/waiting
@@ -303,8 +289,6 @@ power
 NCCL
 CPU/network/storage
 ```
-
----
 
 ## 8. 测试阶段
 
@@ -364,8 +348,6 @@ CPU/network/storage
 
 只在隔离测试环境执行故障注入。
 
----
-
 ## 9. 绘制过载曲线
 
 X 轴：
@@ -400,8 +382,6 @@ ____
 
 容量不是吞吐最高点，而是最后一个同时满足全部 SLO 的点。
 
----
-
 ## 10. SLO 容量
 
 定义：
@@ -427,8 +407,6 @@ Queue 在稳态不持续增长
 ```
 
 在不同负载点逐一判断。
-
----
 
 ## 11. 安全水位
 
@@ -456,8 +434,6 @@ Headroom 用于：
 - 单实例故障。
 
 比例必须来自风险和故障演练，不是固定行业常数。
-
----
 
 ## 12. Little 定律
 
@@ -488,8 +464,6 @@ L = 10 × 5 = 50 requests
 
 它不替代详细 Token/KV 容量，因为请求成本不同。
 
----
-
 ## 13. Token 到达率
 
 请求率相同但 Token 成本不同。
@@ -509,8 +483,6 @@ P50/P95/P99 workload classes
 ```
 
 Gateway 准入可使用 Cost Unit，容量规划则使用目标混合流量压测校准。
-
----
 
 ## 14. 副本数
 
@@ -547,8 +519,6 @@ replicas_total =
 
 如果单副本冷启动很慢，还要有预热 Spare。
 
----
-
 ## 15. 模型并行实例
 
 TP=8 的一个 Replica 占 8 GPU：
@@ -570,8 +540,6 @@ DP 内部部署也要明确：
 - Gateway 如何路由。
 - KV Cache 是否独立。
 - 单 Rank/节点故障影响。
-
----
 
 ## 16. 故障容量
 
@@ -605,8 +573,6 @@ Maintenance Capacity
 Disaster Capacity
 ```
 
----
-
 ## 17. Autoscaling 容量
 
 扩容不是瞬时：
@@ -637,11 +603,9 @@ queue_growth ≈
 - 有界拒绝。
 - 降级。
 
----
-
 ## 18. 单位成本
 
-### GPU 成本
+### 18.1 GPU 成本 {/* #gpu-成本 */}
 
 ```text
 test_gpu_cost =
@@ -650,7 +614,7 @@ test_gpu_cost =
   × test_duration_hours
 ```
 
-### 每百万输出 Token
+### 18.2 每百万输出 Token {/* #每百万输出-token */}
 
 ```text
 cost_per_million_output_tokens =
@@ -659,7 +623,7 @@ cost_per_million_output_tokens =
   × 1,000,000
 ```
 
-### 每百万总 Token
+### 18.3 每百万总 Token {/* #每百万总-token */}
 
 ```text
 cost_per_million_total_tokens =
@@ -670,7 +634,7 @@ cost_per_million_total_tokens =
 
 必须明确分母，否则不同报告不可比。
 
-### 每请求
+### 18.4 每请求 {/* #每请求 */}
 
 ```text
 cost_per_request =
@@ -678,8 +642,6 @@ cost_per_request =
 ```
 
 失败和拒绝消耗的资源也应进入总成本。
-
----
 
 ## 19. 完整成本
 
@@ -707,8 +669,6 @@ total_cost =
 - Canary。
 - 故障容量。
 
----
-
 ## 20. 功耗与能效
 
 采集：
@@ -733,8 +693,6 @@ joules_per_output_token =
 ```
 
 单看 Watts 没有意义；更高功耗如果大幅提高有效吞吐，单位 token 能耗可能下降。
-
----
 
 ## 21. 一个计算示例
 
@@ -772,8 +730,6 @@ GPU 成本：
 
 这只是 GPU 直接成本，生产还需加入 Headroom 和其他基础设施。
 
----
-
 ## 22. 参数对比表
 
 | Case | TP | DP/Replicas | Quant | Max Seq | Token Budget | TTFT P99 | TPOT P99 | Output tok/s | 成本/M |
@@ -783,8 +739,6 @@ GPU 成本：
 | C | 4 | 2 | FP8 | 256 | 16384 |  |  |  |  |
 
 只有在相同请求分布、正确性和 SLO 下才可比较成本。
-
----
 
 ## 23. 统计可靠性
 
@@ -811,8 +765,6 @@ result
 backend
 ```
 
----
-
 ## 24. 正确性门禁
 
 性能优化可能改变：
@@ -834,43 +786,39 @@ backend
 
 不能用“输出更短”制造更快 TPOT/E2E。
 
----
-
 ## 25. 常见错误
 
-### 只报最大 tokens/s
+### 25.1 只报最大 tokens/s {/* #只报最大-tokenss */}
 
 可能处于 TTFT 已不可用的崩溃区。
 
-### 固定平均 Token
+### 25.2 固定平均 Token {/* #固定平均-token */}
 
 忽略长尾和调度干扰。
 
-### 只测热 Cache
+### 25.3 只测热 Cache {/* #只测热-cache */}
 
 无法代表发布、故障和新实例。
 
-### Closed-loop 掩盖过载
+### 25.4 Closed-loop 掩盖过载 {/* #closed-loop-掩盖过载 */}
 
 服务越慢，客户端发送越少。
 
-### 不监控压测器
+### 25.5 不监控压测器 {/* #不监控压测器 */}
 
 瓶颈可能在客户端。
 
-### 容量等于最大值
+### 25.6 容量等于最大值 {/* #容量等于最大值 */}
 
 没有 Headroom、N-1 和维护容量。
 
-### 只算 GPU 满载成本
+### 25.7 只算 GPU 满载成本 {/* #只算-gpu-满载成本 */}
 
 忽略 Idle、冗余和平台成本。
 
-### Profiler 与压测同时作为最终结果
+### 25.8 Profiler 与压测同时作为最终结果 {/* #profiler-与压测同时作为最终结果 */}
 
 Profiler 会改变执行。
-
----
 
 ## 26. 实验任务
 

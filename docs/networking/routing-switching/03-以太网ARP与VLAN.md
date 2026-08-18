@@ -1,9 +1,9 @@
 ---
-title: 以太网、MAC、ARP、VLAN 与 Linux Bridge
+title: "以太网、MAC、ARP、VLAN 与 Linux Bridge"
 sidebar_label: "03. 以太网、MAC、ARP、VLAN 与 Linux Bridge"
 sidebar_position: 3
+description: "从以太网帧、MAC 学习和 ARP 开始，理解 VLAN 隔离、Access/Trunk 与 Linux Bridge 实验。"
 tags: [Ethernet, MAC, ARP, VLAN, Trunk, Linux Bridge]
-description: 从以太网帧、MAC 学习和 ARP 开始，理解 VLAN 隔离、Access/Trunk 与 Linux Bridge 实验。
 ---
 
 # 以太网、MAC、ARP、VLAN 与 Linux Bridge
@@ -80,13 +80,13 @@ ip neigh show
 VLAN 将一套物理交换网络拆成多个逻辑广播域。同一个 MAC 可以在不同 VLAN 中出现，
 所以真实 FDB 的键通常是 `VLAN + MAC`。
 
-### Access 端口
+### 4.1 Access 端口 {/* #access-端口 */}
 
 - 接收终端发来的无标签帧。
 - 在内部将帧归入端口的 PVID/VLAN。
 - 发往终端时通常移除 VLAN 标签。
 
-### Trunk 端口
+### 4.2 Trunk 端口 {/* #trunk-端口 */}
 
 - 在同一物理链路承载多个 VLAN。
 - 依赖 802.1Q 标签区分广播域。

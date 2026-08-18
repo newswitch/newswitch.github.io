@@ -1,11 +1,12 @@
 ---
-title: uname 命令详解：固定运行内核、架构与节点身份
+title: "uname 命令详解：固定运行内核、架构与节点身份"
+sidebar_label: "01. uname 命令详解：固定运行内核、架构与节点身份"
 sidebar_position: 1
-description: 完整讲解 GNU uname 的全部长短参数、kernel release/version、machine/processor/platform 区别，以及容器、虚拟机和内核模块排障用法。
+description: "完整讲解 GNU uname 的全部长短参数、kernel release/version、machine/processor/platform 区别，以及容器、虚拟机和内核模块排障用法。"
 tags: [Linux, uname, 内核, 架构, 资产盘点]
 ---
 
-# `uname` 命令详解：固定运行内核、架构与节点身份
+# uname 命令详解：固定运行内核、架构与节点身份
 
 `uname` 读取内核 `uname(2)` 提供的系统标识。它是所有内核、模块和硬件排障的第一条基线：确定当前正在运行哪个 kernel release、以什么 machine architecture 运行、节点名是什么。它不读取发行版名称，也不证明磁盘上最新内核已经启动。
 
@@ -117,7 +118,7 @@ dmesg --level=err,warn --time-format iso --nopager
 
 掌握标准：能列出全部参数；能区分 kernel release/version、machine/processor/platform、nodename/DNS；能解释容器共享内核与独立 UTS；能用 release 定位正确模块树。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [GNU uname invocation](https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html)
 - [uname(2)](https://man7.org/linux/man-pages/man2/uname.2.html)

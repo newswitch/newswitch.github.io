@@ -2,8 +2,8 @@
 title: "ConfigMap"
 sidebar_label: "03. ConfigMap"
 sidebar_position: 3
-tags: [Kubernetes, 存储, 学习路线]
 description: "ConfigMap 是 Kubernetes 用于存储配置数据的 API 资源，支持将配置信息与容器镜像解耦。本文详细介绍 ConfigMap 的概念、创建方法以及在 Pod 中的使用方式。"
+tags: [Kubernetes, 存储, 学习路线]
 ---
 
 # ConfigMap
@@ -12,17 +12,17 @@ description: "ConfigMap 是 Kubernetes 用于存储配置数据的 API 资源，
 
 ConfigMap 是 Kubernetes 提供的配置管理机制，用于将配置信息与容器镜像解耦。应用程序可以从配置文件、命令行参数或环境变量中读取配置信息，而无需在每次配置修改时重新构建镜像。ConfigMap API 提供了向容器注入配置信息的能力，既可以保存单个属性，也可以保存完整的配置文件或 JSON 数据。
 
-## ConfigMap 概览
+## 1. ConfigMap 概览 {/* #configmap-概览 */}
 
 **ConfigMap** 是 Kubernetes 的 API 资源，用于存储**键值对**配置数据。这些数据可以在 **Pod** 中使用，或者为系统组件存储配置信息。
 
-### 主要特点
+### 1.1 主要特点 {/* #主要特点 */}
 
 - **非敏感数据**：ConfigMap 专门处理不包含敏感信息的配置数据（敏感数据请使用 Secret）
 - **配置解耦**：将配置与应用程序代码分离，便于管理和更新
 - **多种用途**：可用作环境变量、命令行参数或配置文件
 
-### 基本结构
+### 1.2 基本结构 {/* #基本结构 */}
 
 以下是相关的代码示例：
 
@@ -41,7 +41,7 @@ data:
     timeout=30s
 ```
 
-### 使用场景
+### 1.3 使用场景 {/* #使用场景 */}
 
 ConfigMap 可以用于：
 
@@ -50,11 +50,11 @@ ConfigMap 可以用于：
 3. **配置文件**：在数据卷中创建配置文件
 4. **应用配置**：存储应用程序的配置信息
 
-## 创建 ConfigMap
+## 2. 创建 ConfigMap {/* #创建-configmap */}
 
 Kubernetes 提供了多种创建 ConfigMap 的方法，可以使用 `kubectl create configmap` 命令。
 
-### 使用目录创建
+### 2.1 使用目录创建 {/* #使用目录创建 */}
 
 当你有多个配置文件时，可以通过目录批量创建：
 
@@ -96,7 +96,7 @@ database.properties:    45 bytes
 logging.properties:     42 bytes
 ```
 
-### 使用单个文件创建
+### 2.2 使用单个文件创建 {/* #使用单个文件创建 */}
 
 也可以从单个文件创建 ConfigMap：
 
@@ -108,7 +108,7 @@ kubectl create configmap database-config --from-file=config/database.properties
 kubectl create configmap database-config --from-file=db-config=config/database.properties
 ```
 
-### 使用字面值创建
+### 2.3 使用字面值创建 {/* #使用字面值创建 */}
 
 直接在命令行中指定键值对：
 
@@ -134,7 +134,7 @@ metadata:
   namespace: default
 ```
 
-### 使用 YAML 文件创建
+### 2.4 使用 YAML 文件创建 {/* #使用-yaml-文件创建 */}
 
 也可以直接编写 YAML 文件创建：
 
@@ -159,11 +159,11 @@ data:
 kubectl apply -f configmap.yaml
 ```
 
-## 在 Pod 中使用 ConfigMap
+## 3. 在 Pod 中使用 ConfigMap {/* #在-pod-中使用-configmap */}
 
-### 作为环境变量使用
+### 3.1 作为环境变量使用 {/* #作为环境变量使用 */}
 
-#### 引用单个键值
+#### 3.1.1 引用单个键值 {/* #引用单个键值 */}
 
 以下是相关的代码示例：
 
@@ -189,7 +189,7 @@ spec:
           key: database.port
 ```
 
-#### 引用整个 ConfigMap
+#### 3.1.2 引用整个 ConfigMap {/* #引用整个-configmap */}
 
 以下是相关的代码示例：
 
@@ -207,7 +207,7 @@ spec:
         name: app-config
 ```
 
-### 作为命令行参数使用
+### 3.2 作为命令行参数使用 {/* #作为命令行参数使用 */}
 
 以下是具体的使用方法：
 
@@ -235,9 +235,9 @@ spec:
           key: database.port
 ```
 
-### 作为数据卷使用
+### 3.3 作为数据卷使用 {/* #作为数据卷使用 */}
 
-#### 挂载所有键值
+#### 3.3.1 挂载所有键值 {/* #挂载所有键值 */}
 
 以下是相关的代码示例：
 
@@ -261,7 +261,7 @@ spec:
 
 此时，ConfigMap 中的每个键都会成为 `/etc/config/` 目录下的一个文件。
 
-#### 挂载特定键值
+#### 3.3.2 挂载特定键值 {/* #挂载特定键值 */}
 
 以下是相关的代码示例：
 
@@ -288,7 +288,7 @@ spec:
         path: app/config.properties
 ```
 
-#### 设置文件权限
+#### 3.3.3 设置文件权限 {/* #设置文件权限 */}
 
 以下是相关的代码示例：
 
@@ -315,7 +315,7 @@ spec:
         mode: 0600
 ```
 
-## 最佳实践
+## 4. 最佳实践 {/* #最佳实践 */}
 
 下表总结了使用 ConfigMap 的一些最佳实践：
 

@@ -1,9 +1,9 @@
 ---
-title: 2 Spine + 4 Leaf AI Fabric 综合项目
+title: "2 Spine + 4 Leaf AI Fabric 综合项目"
 sidebar_label: "10. 2 Spine + 4 Leaf AI Fabric 综合项目"
 sidebar_position: 10
+description: "设计并验收双 Rail、2 Spine + 4 Leaf RoCE Fabric，完成容量、QoS、拥塞控制与故障注入。"
 tags: [Lab, AI Fabric, RoCE, Multi-Rail, PFC, ECN]
-description: 设计并验收双 Rail、2 Spine + 4 Leaf RoCE Fabric，完成容量、QoS、拥塞控制与故障注入。
 ---
 
 # 2 Spine + 4 Leaf AI Fabric 综合项目
@@ -41,7 +41,7 @@ flowchart TB
 
 ## 3. 设计交付
 
-### 地址与路由
+### 3.1 地址与路由 {/* #地址与路由 */}
 
 - Loopback/P2P 地址；
 - BGP/OSPF/IS-IS 方案；
@@ -51,7 +51,7 @@ flowchart TB
 - Rail VRF/路由域；
 - 管理面路径。
 
-### 容量
+### 3.2 容量 {/* #容量 */}
 
 ```text
 每节点下联:
@@ -62,7 +62,7 @@ N-1 收敛比:
 允许 Step Time 降级:
 ```
 
-### QoS
+### 3.3 QoS {/* #qos */}
 
 | 流量 | DSCP/PCP | Priority/TC | Queue | PFC | ECN | 调度 |
 |---|---|---|---|---|---|---|

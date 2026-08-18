@@ -1,9 +1,9 @@
 ---
-title: 数据一致性、幂等、At-Least-Once 与 Exactly-Once
+title: "数据一致性、幂等、At-Least-Once 与 Exactly-Once"
 sidebar_label: "04. 数据一致性、幂等、At-Least-Once 与 Exactly-Once"
 sidebar_position: 4
+description: "从消息投递、状态恢复和下游提交三个边界理解处理语义，设计可重放、可去重和可验证的端到端数据链路。"
 tags: [数据一致性, 幂等, At-Least-Once, Exactly-Once, Checkpoint]
-description: 从消息投递、状态恢复和下游提交三个边界理解处理语义，设计可重放、可去重和可验证的端到端数据链路。
 ---
 
 # 数据一致性、幂等、At-Least-Once 与 Exactly-Once
@@ -347,7 +347,7 @@ Exactly-Once 解决重复效果，事件顺序和业务状态机需要额外设�
 
 下一篇：[Parquet、ORC、Avro 与压缩编码](./05-Parquet-ORC-Avro与压缩编码.md)
 
-## 参考资料
+## 19. 参考资料 {/* #参考资料 */}
 
 - [Apache Kafka 文档](https://kafka.apache.org/documentation/)
 - [Apache Flink：State 与 Fault Tolerance](https://nightlies.apache.org/flink/flink-docs-stable/docs/learn-flink/fault_tolerance/)

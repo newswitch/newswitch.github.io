@@ -1,11 +1,12 @@
 ---
-title: ausearch 命令详解：按完整事件检索 Linux Audit 证据
+title: "ausearch 命令详解：按完整事件检索 Linux Audit 证据"
+sidebar_label: "18. ausearch 命令详解：按完整事件检索 Linux Audit 证据"
 sidebar_position: 18
-description: 完整讲解 ausearch 的全部检索、输入、时间、格式、CSV、checkpoint 参数、AND/OR 语义、event serial、身份字段、退出码和取证流程。
+description: "完整讲解 ausearch 的全部检索、输入、时间、格式、CSV、checkpoint 参数、AND/OR 语义、event serial、身份字段、退出码和取证流程。"
 tags: [Linux, ausearch, Audit, 审计日志, 事件检索]
 ---
 
-# `ausearch` 命令详解：按完整事件检索 Linux Audit 证据
+# ausearch 命令详解：按完整事件检索 Linux Audit 证据
 
 `ausearch` 查询 auditd 日志或原始 audit 输入，并按 `msg=audit(timestamp:serial)` 把同一事件的 `SYSCALL`、`PATH`、`CWD`、`EXECVE`、`AVC` 等多条 record 组装后输出。它比 `grep audit.log` 更适合取证，因为 grep 容易漏 record、混合 serial 或破坏事件边界。
 
@@ -143,7 +144,7 @@ sudo ausearch -a EVENT_ID -i
 
 掌握标准：能列出全部参数；能按 serial 组装并解释完整事件；能区分身份字段和输入视角；能安全处理格式/转义；能用 checkpoint 做有错误恢复的增量消费。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [ausearch(8)](https://manpages.debian.org/unstable/auditd/ausearch.8.en.html)
 - [Linux Audit userspace](https://github.com/linux-audit/audit-userspace)

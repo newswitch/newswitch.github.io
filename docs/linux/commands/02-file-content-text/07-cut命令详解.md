@@ -1,11 +1,12 @@
 ---
-title: cut 命令详解：选择字节、字符与字段
+title: "cut 命令详解：选择字节、字符与字段"
+sidebar_label: "07. cut 命令详解：选择字节、字符与字段"
 sidebar_position: 7
-description: 完整讲解 GNU coreutils 9.11 cut 的全部参数、范围语法、字节与字符、字段/空白分隔、补集、输入输出分隔符、NUL 记录和 CSV 陷阱。
+description: "完整讲解 GNU coreutils 9.11 cut 的全部参数、范围语法、字节与字符、字段/空白分隔、补集、输入输出分隔符、NUL 记录和 CSV 陷阱。"
 tags: [Linux, cut, GNU coreutils, 字段处理, 文本解析]
 ---
 
-# `cut` 命令详解：选择字节、字符与字段
+# cut 命令详解：选择字节、字符与字段
 
 `cut` 从每条输入记录选择指定的字节、字符或字段，并按原输入顺序输出。它是位置选择器，不是正则提取器，也不是完整 CSV、JSON、日志或 Unicode 字形解析器。
 
@@ -220,7 +221,7 @@ alice,"hello,world"
 - 能正确使用补集和独立输出分隔符。
 - 能识别版本差异，并拒绝用 cut 解析通用 CSV/JSON。
 
-## 官方参考
+## 16. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：cut invocation](https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html)
 - [POSIX cut](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/cut.html)
@@ -228,4 +229,3 @@ alice,"hello,world"
 上一篇：[`wc` 命令详解](./06-wc命令详解.md)
 
 下一篇：[`paste` 命令详解](./08-paste命令详解.md)
-

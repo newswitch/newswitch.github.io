@@ -1,11 +1,12 @@
 ---
-title: find 命令详解：遍历、测试、表达式、执行与安全删除
+title: "find 命令详解：遍历、测试、表达式、执行与安全删除"
+sidebar_label: "17. find 命令详解：遍历、测试、表达式、执行与安全删除"
 sidebar_position: 17
-description: 系统讲解 GNU findutils 4.10 find 的命令行选项、全部测试与动作、运算符、printf 指令、符号链接、NUL 安全处理、性能优化和生产删除边界。
+description: "系统讲解 GNU findutils 4.10 find 的命令行选项、全部测试与动作、运算符、printf 指令、符号链接、NUL 安全处理、性能优化和生产删除边界。"
 tags: [Linux, find, GNU findutils, 文件查找, SRE]
 ---
 
-# `find` 命令详解：遍历、测试、表达式、执行与安全删除
+# find 命令详解：遍历、测试、表达式、执行与安全删除
 
 `find` 不是“文件名搜索框”，而是一台遍历目录树、对每个对象计算布尔表达式并执行动作的解释器。掌握它的关键不是背几个例子，而是理解四类元素：全局选项、测试、动作和运算符。
 
@@ -403,7 +404,7 @@ find /srv/cache -xdev -mindepth 1 -type f -mtime +30 -delete
 - 能选择链接策略、挂载边界、深度和时间语义。
 - 能先证明选择集合，再评估 `-exec/-delete` 的竞态和回滚边界。
 
-## 官方参考
+## 19. 官方参考 {/* #官方参考 */}
 
 - [GNU findutils 4.10：find manual](https://www.gnu.org/software/findutils/find)
 - [GNU findutils：Primary Index](https://www.gnu.org/software/findutils/manual/html_node/find_html/Primary-Index.html)

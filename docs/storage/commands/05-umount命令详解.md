@@ -1,11 +1,12 @@
 ---
-title: umount 命令详解：busy、递归卸载、lazy/force 与数据安全
+title: "umount 命令详解：busy、递归卸载、lazy/force 与数据安全"
+sidebar_label: "05. umount 命令详解：busy、递归卸载、lazy/force 与数据安全"
 sidebar_position: 5
-description: 讲解 umount 的 mount namespace 语义、参数、busy 根因、递归卸载、lazy 与 force 的真实边界、网络文件系统和生产排障流程。
+description: "讲解 umount 的 mount namespace 语义、参数、busy 根因、递归卸载、lazy 与 force 的真实边界、网络文件系统和生产排障流程。"
 tags: [Linux, umount, mount, 文件系统, NFS, util-linux]
 ---
 
-# `umount` 命令详解：busy、递归卸载、lazy/force 与数据安全
+# umount 命令详解：busy、递归卸载、lazy/force 与数据安全
 
 `umount` 从当前 mount namespace 分离挂载。它不会删除文件系统数据，但在仍有 I/O、网络服务异常或写回未完成时强制处理，可能导致应用错误、数据未落盘或后续故障被掩盖。
 
@@ -39,11 +40,11 @@ findmnt -R /srv/data
 | `-v, --verbose` | 详细输出 |
 | `-q, --quiet` | 抑制部分消息，脚本仍应检查退出码 |
 
-### Lazy 不是“后台正常卸载”
+### 2.1 Lazy 不是“后台正常卸载” {/* #lazy-不是后台正常卸载 */}
 
 `umount -l` 只是让路径在当前 namespace 不再可达；已有进程仍可能继续使用旧 mount。它可能让监控误以为问题解决，并把清理延迟到无法预测的时刻。
 
-### Force 不是“忽略 busy”
+### 2.2 Force 不是“忽略 busy” {/* #force-不是忽略-busy */}
 
 `-f` 主要用于无法访问的 NFS 等场景，具体支持取决于内核和文件系统。对本地 ext4/xfs 的 busy mount，强制选项通常不是正确解法。
 

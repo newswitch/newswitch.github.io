@@ -1,11 +1,12 @@
 ---
-title: systemd-cgtop 命令详解：按 cgroup 观察 CPU、内存、IO 与任务数
+title: "systemd-cgtop 命令详解：按 cgroup 观察 CPU、内存、IO 与任务数"
+sidebar_label: "12. systemd-cgtop 命令详解：按 cgroup 观察 CPU、内存、IO 与任务数"
 sidebar_position: 12
-description: 讲清 systemd-cgtop 的排序、刷新、深度、递归、批处理、CPU 时间/百分比、内存与 IO 计费限制。
+description: "讲清 systemd-cgtop 的排序、刷新、深度、递归、批处理、CPU 时间/百分比、内存与 IO 计费限制。"
 tags: [Linux, systemd-cgtop, cgroup v2, 性能, systemd]
 ---
 
-# `systemd-cgtop` 命令详解：按 cgroup 观察资源
+# systemd-cgtop 命令详解：按 cgroup 观察 CPU、内存、IO 与任务数
 
 `systemd-cgtop` 周期读取 cgroup 计费文件，按组显示 tasks、CPU、memory 和 IO。它适合发现热点资源域，但短采样无法证明根因；配置是否限流要另外读取 `cpu.max`、`memory.max/events`、`io.max/stat`。
 

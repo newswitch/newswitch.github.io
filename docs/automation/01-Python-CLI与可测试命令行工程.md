@@ -2,8 +2,8 @@
 title: "Python CLI 与可测试命令行工程"
 sidebar_label: "01. Python CLI 与可测试命令行工程"
 sidebar_position: 1
-tags: [Python, CLI, argparse, 测试, 自动化, SRE]
 description: "从命令边界、配置优先级、退出码、依赖注入、结构化输出、超时重试和安全性出发，构建可测试的生产级 Python CLI。"
+tags: [Python, CLI, argparse, 测试, 自动化, SRE]
 ---
 
 # Python CLI 与可测试命令行工程
@@ -101,7 +101,6 @@ from dataclasses import dataclass
 from pathlib import Path
 import os
 
-
 @dataclass(frozen=True)
 class Settings:
     cluster: str
@@ -110,10 +109,8 @@ class Settings:
     output: str
     evidence_dir: Path
 
-
 def first_defined(*values):
     return next((value for value in values if value is not None), None)
-
 
 def build_settings(args, file_config: dict) -> Settings:
     cluster = first_defined(
@@ -183,7 +180,6 @@ ai-diag execute
 ```python
 import argparse
 
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ai-diag",
@@ -233,14 +229,12 @@ from collections.abc import Sequence
 import json
 import sys
 
-
 EXIT_OK = 0
 EXIT_USAGE = 2
 EXIT_PARTIAL = 3
 EXIT_REMOTE = 4
 EXIT_PERMISSION = 5
 EXIT_INTERNAL = 10
-
 
 def run(argv: Sequence[str], service_factory, stdout, stderr) -> int:
     parser = build_parser()
@@ -268,7 +262,6 @@ def run(argv: Sequence[str], service_factory, stdout, stderr) -> int:
     except Exception as exc:
         print(f"内部错误: {type(exc).__name__}", file=stderr)
         return EXIT_INTERNAL
-
 
 def main() -> int:
     return run(
@@ -408,15 +401,12 @@ ai-diag apply plan.json --approval-token ...
 ```python
 from typing import Protocol
 
-
 class ClusterReader(Protocol):
     def get_pod(self, namespace: str, name: str) -> dict: ...
     def list_events(self, namespace: str, uid: str) -> list[dict]: ...
 
-
 class MetricsReader(Protocol):
     def instant_query(self, promql: str, at: float | None) -> list[dict]: ...
-
 
 class DiagnosticService:
     def __init__(
@@ -446,7 +436,6 @@ class FakeCluster:
 
     def list_events(self, namespace, uid):
         return [{"reason": "FailedMount"}]
-
 
 def test_not_ready_pod_contains_mount_finding():
     service = DiagnosticService(FakeCluster(), FakeMetrics())
@@ -534,4 +523,3 @@ python -m ai_diag version
 - [Python unittest](https://docs.python.org/3/library/unittest.html)
 - [Python logging](https://docs.python.org/3/library/logging.html)
 - [Python tempfile](https://docs.python.org/3/library/tempfile.html)
-

@@ -1,11 +1,12 @@
 ---
-title: podman、buildah 与 skopeo 命令详解：Daemonless 与 Rootless 容器工具链
+title: "podman、buildah 与 skopeo 命令详解：Daemonless 与 Rootless 容器工具链"
+sidebar_label: "15. podman、buildah 与 skopeo 命令详解：Daemonless 与 Rootless 容器工具链"
 sidebar_position: 15
-description: 掌握 Podman 的容器与 Pod、Rootless 网络和存储，并用 Buildah 构建、Skopeo 检查复制镜像、Quadlet 管理 systemd 服务。
+description: "掌握 Podman 的容器与 Pod、Rootless 网络和存储，并用 Buildah 构建、Skopeo 检查复制镜像、Quadlet 管理 systemd 服务。"
 tags: [Podman, Buildah, Skopeo, Rootless, OCI, Quadlet]
 ---
 
-# podman、buildah 与 skopeo 命令详解
+# podman、buildah 与 skopeo 命令详解：Daemonless 与 Rootless 容器工具链
 
 Podman 是 Daemonless OCI 容器引擎，容器进程由调用用户拥有；Buildah 专注构建，Skopeo 在不运行容器的情况下检查/复制 Registry 与本地存储中的镜像。三者共享 containers/image、containers/storage 等生态配置。
 
@@ -123,7 +124,7 @@ Prune、Volume Remove、Pod Remove 是 `[D]`。Rootless 降低 Daemon 权限但�
 
 能解释 Daemonless 与 Rootless 不等于无风险；能用 Podman 管理本地 Pod/Container，用 Buildah 构建，用 Skopeo 检查复制；能通过 Quadlet交给 systemd；能处理 UID Mapping、SELinux 和多架构镜像。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [Podman Documentation](https://docs.podman.io/)
 - [Buildah](https://buildah.io/)

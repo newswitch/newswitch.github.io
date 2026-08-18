@@ -2,8 +2,8 @@
 title: "vLLM 生产故障排查 Runbook"
 sidebar_label: "23. vLLM 生产故障排查 Runbook"
 sidebar_position: 23
-tags: [vLLM, SRE, Runbook, 故障排查, 应急响应]
 description: "覆盖 TTFT/TPOT、排队、KV、OOM、Worker、NCCL、输出和冷启动的 vLLM 生产故障处置流程。"
+tags: [vLLM, SRE, Runbook, 故障排查, 应急响应]
 ---
 
 # vLLM 生产故障排查 Runbook
@@ -15,8 +15,6 @@ description: "覆盖 TTFT/TPOT、排队、KV、OOM、Worker、NCCL、输出和�
 3. 先采取什么可逆缓解；
 4. 必须保存哪些证据；
 5. 恢复后怎样证明稳定。
-
----
 
 ## 1. 触发条件
 
@@ -30,8 +28,6 @@ description: "覆盖 TTFT/TPOT、排队、KV、OOM、Worker、NCCL、输出和�
 - 多副本 Ready 不足；
 - 输出流中断、取消不释放；
 - 发布或扩容后性能显著回退。
-
----
 
 ## 2. 前 5 分钟：确认影响并阻止扩大
 
@@ -69,11 +65,9 @@ description: "覆盖 TTFT/TPOT、排队、KV、OOM、Worker、NCCL、输出和�
 - 至少一个慢请求 Trace ID；
 - GPU/DCGM/NCCL/网络计数器。
 
----
-
 ## 3. 5～15 分钟：按症状分流
 
-### 分支 A：错误率高或请求失败
+### 3.1 分支 A：错误率高或请求失败 {/* #分支-a错误率高或请求失败 */}
 
 ```text
 API 4xx 高 → 输入/准入/兼容性
@@ -85,7 +79,7 @@ HTTP 200 但流中断 → SSE/Worker/超时/Drain
 
 先按错误码和 `finish_reason` 分类，不把所有失败合成一个错误率。
 
-### 分支 B：TTFT 高
+### 3.2 分支 B：TTFT 高 {/* #分支-bttft-高 */}
 
 按同一请求拆：
 
@@ -95,7 +89,7 @@ gateway → tokenize → engine queue → prefill → output/network
 
 联看 waiting、KV、抢占、GPU Busy、API/Engine CPU。
 
-### 分支 C：TPOT 高
+### 3.3 分支 C：TPOT 高 {/* #分支-ctpot-高 */}
 
 联看：
 
@@ -106,7 +100,7 @@ gateway → tokenize → engine queue → prefill → output/network
 - Sampling/logprobs/grammar；
 - Server 与 Client token 间隔。
 
-### 分支 D：waiting 持续增长
+### 3.4 分支 D：waiting 持续增长 {/* #分支-dwaiting-持续增长 */}
 
 ```text
 KV 高 + 抢占 → KV/容量/长请求
@@ -114,8 +108,6 @@ KV 低 + GPU 低 → CPU/调度/路由
 GPU 高 + Batch 高 → 真实算力饱和
 仅部分副本高 → 路由不均/热点
 ```
-
----
 
 ## 4. 15～60 分钟：形成证据闭环
 
@@ -158,8 +150,6 @@ GPU 高 + Batch 高 → 真实算力饱和
 - 每 rank compute/NCCL；
 - NVLink/PCIe/NIC/Fabric。
 
----
-
 ## 5. 症状到行动矩阵
 
 | 症状 | 最小证据 | 安全缓解 | 永久方向 |
@@ -174,8 +164,6 @@ GPU 高 + Batch 高 → 真实算力饱和
 | SSE 慢 | Engine 与 Client 首包差 | 绕过缓冲/摘异常代理 | 输出背压与代理配置 |
 | 取消不释放 | request ID、KV 不降 | 限长流/重启泄漏副本 | abort 全链路修复 |
 | 冷启动慢 | 启动阶段计时 | 保持热余量 | 镜像/模型分发/预热优化 |
-
----
 
 ## 6. 专项：CUDA OOM
 
@@ -198,8 +186,6 @@ Decode/动态功能
 - 若权重本身放不下，需要量化、更多 GPU 或改变并行；
 - 若版本升级引入 Workspace/Graph 增长，要做版本差异测试。
 
----
-
 ## 7. 专项：Worker 退出或 NCCL Timeout
 
 1. 立即摘除整个并行副本；
@@ -211,8 +197,6 @@ Decode/动态功能
 7. NCCL Tests 与拓扑基线验证后再恢复容量。
 
 若只有一个 Worker 死亡，其他 rank 的进程存活也不代表服务可继续接流量。
-
----
 
 ## 8. 专项：请求取消后资源不降
 
@@ -230,8 +214,6 @@ client disconnect
 
 若某一步缺失，记录明确边界。临时可缩短无进展长流的写/空闲超时、限制最大输出，并滚动替换已泄漏副本；永久修复必须补取消传播与自动化测试。
 
----
-
 ## 9. 恢复判定
 
 不能因为错误图下降就结束。至少连续两个完整观察窗口满足：
@@ -246,8 +228,6 @@ client disconnect
 - 新请求和存量长流都稳定。
 
 若通过限流恢复，要明确“服务已稳定但容量未恢复”，不能宣告完全解决。
-
----
 
 ## 10. 复盘要求
 
@@ -267,8 +247,6 @@ client disconnect
 
 “重启后恢复”不是根因。至少要回答重启清除了什么状态，以及为什么会再次发生。
 
----
-
 ## 11. 值班命令原则
 
 - 优先只读采集；
@@ -278,8 +256,6 @@ client disconnect
 - 不把 Token、密钥、Prompt 写入公开日志；
 - Profile 控制持续时间和开销；
 - 每个变更只解决一个假设，并保留回滚。
-
----
 
 ## 12. 纸面速查卡
 
@@ -294,8 +270,6 @@ client disconnect
 8. 恢复需 SLO + N-1 + 长流稳定
 9. 复盘补监控、测试、容量和演练
 ```
-
----
 
 ## 13. 验收题
 

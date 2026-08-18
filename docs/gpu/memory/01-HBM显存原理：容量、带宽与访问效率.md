@@ -1,10 +1,11 @@
 ---
-title: HBM 显存原理：容量、带宽与访问效率
+title: "HBM 显存原理：容量、带宽与访问效率"
 sidebar_label: "01. HBM 显存原理：容量、带宽与访问效率"
+sidebar_position: 1
+description: "从 GPU 内存层次出发，理解 HBM 容量、带宽、访问合并、缓存和 AI 工作负载显存组成，并通过实验区分容量不足、带宽瓶颈与计算瓶颈。"
+tags: [GPU, HBM, 显存, CUDA, 性能]
 date: 2026-08-06 18:00:00
 categories: 云原生
-tags: [GPU, HBM, 显存, CUDA, 性能]
-description: 从 GPU 内存层次出发，理解 HBM 容量、带宽、访问合并、缓存和 AI 工作负载显存组成，并通过实验区分容量不足、带宽瓶颈与计算瓶颈。
 ---
 
 # HBM 显存原理：容量、带宽与访问效率
@@ -262,7 +263,7 @@ thread 2 → a[2048]
 
 ## 9. Compute-bound 与 Memory-bound
 
-### Compute-bound
+### 9.1 Compute-bound {/* #compute-bound */}
 
 特征：
 
@@ -276,7 +277,7 @@ thread 2 → a[2048]
 - 计算密度较高的矩阵乘法
 - 大 Batch GEMM
 
-### Memory-bound
+### 9.2 Memory-bound {/* #memory-bound */}
 
 特征：
 
@@ -292,7 +293,7 @@ thread 2 → a[2048]
 - 某些归一化和逐元素算子
 - 小 Batch 推理中的部分操作
 
-### Roofline 的直觉
+### 9.3 Roofline 的直觉 {/* #roofline-的直觉 */}
 
 Arithmetic Intensity 表示：
 
@@ -462,7 +463,7 @@ print(f"effective_bandwidth={effective_gbps:.2f} GB/s")
 - PyTorch 分配器和 Kernel 实现会影响结果
 - 有效带宽不是硬件理论带宽
 
-### 实验记录
+### 12.1 实验记录 {/* #实验记录 */}
 
 | 项目 | 结果 |
 | --- | --- |
@@ -476,41 +477,41 @@ print(f"effective_bandwidth={effective_gbps:.2f} GB/s")
 
 ## 13. 常见误区
 
-### 显存利用率 100% 等于显存满了
+### 13.1 显存利用率 100% 等于显存满了 {/* #显存利用率-100-等于显存满了 */}
 
 错误。显存占用和显存读写活动是两类指标。
 
-### 显存越大，模型一定越快
+### 13.2 显存越大，模型一定越快 {/* #显存越大模型一定越快 */}
 
 容量解决“能否放下”；速度还取决于带宽、计算能力、互联和软件实现。
 
-### 理论 HBM 带宽就是应用带宽
+### 13.3 理论 HBM 带宽就是应用带宽 {/* #理论-hbm-带宽就是应用带宽 */}
 
 应用受访问模式、缓存、同步和 Kernel 实现影响。
 
-### GPU 利用率高就没有内存瓶颈
+### 13.4 GPU 利用率高就没有内存瓶颈 {/* #gpu-利用率高就没有内存瓶颈 */}
 
 采样利用率无法替代 Kernel 级分析。GPU 可以在等待内存时仍显示较高活跃度。
 
-### 只要减少显存占用就会提升速度
+### 13.5 只要减少显存占用就会提升速度 {/* #只要减少显存占用就会提升速度 */}
 
 量化、Offload 和重计算可能降低容量压力，却增加计算或数据传输。
 
 ## 14. 它与其他模块的关系
 
-### 上游
+### 14.1 上游 {/* #上游 */}
 
 - 存储提供模型和数据集
 - CPU 系统内存负责普通加载和预处理
 - PCIe 把数据传入 GPU
 
-### 本层
+### 14.2 本层 {/* #本层 */}
 
 - HBM 保存 GPU 当前工作集
 - Cache、Shared Memory 和 Register 提高复用
 - SM 从内存层次中取得数据执行计算
 
-### 下游
+### 14.3 下游 {/* #下游 */}
 
 - 多 GPU 间通过 PCIe P2P、NVLink 或 NVSwitch交换显存数据
 - 跨节点通过 NIC 和 GPUDirect RDMA
@@ -539,7 +540,7 @@ print(f"effective_bandwidth={effective_gbps:.2f} GB/s")
 6. 选择一个逐元素算子和一个矩阵乘法，比较其 GPU Core 与 DRAM 指标。
 7. 用自己的 GPU 运行带宽实验，记录有效带宽并解释它为什么不等于理论值。
 
-## 参考与致谢
+## 17. 参考与致谢 {/* #参考与致谢 */}
 
 - [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/)
 - [CUDA Programming Model：GPU Memory](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html)

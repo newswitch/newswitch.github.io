@@ -2,8 +2,8 @@
 title: "Envoy Native、Wasm、Dynamic Module 与 Filter 扩展开发"
 sidebar_label: "12. Envoy Native、Wasm、Dynamic Module 与 Filter 扩展开发"
 sidebar_position: 12
-tags: [Envoy, Filter, Wasm, Dynamic Module, Extension]
 description: "比较 Envoy 原生扩展、Wasm 和动态模块的能力、隔离、发布、性能与故障边界。"
+tags: [Envoy, Filter, Wasm, Dynamic Module, Extension]
 ---
 
 # Envoy Native、Wasm、Dynamic Module 与 Filter 扩展开发
@@ -46,11 +46,17 @@ Typed protobuf 配置可在加载前校验并支持版本演进。动态扩展�
 
 从注册的 extension name/type URL 找 Factory，再跟踪配置创建、Filter 实例、回调和统计。遇到问题先确定是配置构建期、初始化/warming、请求回调还是清理阶段，再进入对应源码，而不是通读整个 Envoy 仓库。
 
-## 6. 掌握标准
+## 6. 失效与性能实验
+
+固定 Envoy 版本、扩展 SDK/ABI 和制品摘要，对正常请求、异常输入、超时、panic/trap、配置热更新和模块下载失败执行测试。明确失败时跳过扩展、拒绝请求还是保留旧版本；安全/鉴权扩展通常不能无意 fail-open。
+
+同时压测无扩展与有扩展的 RPS、P99、CPU、RSS、配置收敛和错误率。为每个扩展限制内存、执行时间和外部调用，发布采用签名制品、小流量和一键回滚。任何同进程原生扩展都可能让整个代理崩溃，代码评审、Fuzz 和故障注入边界应高于普通业务插件。
+
+## 7. 掌握标准
 
 你应能用风险与运行模型选择内置、External、Wasm 或原生扩展，设计不阻塞 Worker 的回调，完成配置兼容、供应链固定、灰度与故障注入。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Envoy Extending](https://www.envoyproxy.io/docs/envoy/latest/extending/extending)
 - [Envoy Dynamic Modules](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/advanced/dynamic_modules)

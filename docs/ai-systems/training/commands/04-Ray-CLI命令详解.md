@@ -1,5 +1,6 @@
 ---
 title: "Ray CLI 命令详解"
+sidebar_label: "04. Ray CLI 命令详解"
 sidebar_position: 4
 description: "掌握 Ray 集群状态、任务与Actor查询、日志、对象内存、作业提交和Kubernetes现场排查。"
 tags: [Ray, KubeRay, CLI, 分布式计算, AI Infra]
@@ -115,11 +116,11 @@ RayJob/RayCluster CR
 | Dashboard查不到集群 | head Service、Dashboard进程/日志、地址与NetworkPolicy |
 | 节点反复加入退出 | kubelet/Pod、Raylet日志、心跳、网络与磁盘压力 |
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能在Ray与Kubernetes对象之间建立映射；能用summary缩小范围再list/get；能区分资源不可调度、Task失败和对象存储压力；不会手工破坏Operator管理的集群状态。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [Ray State CLI](https://docs.ray.io/en/latest/ray-observability/reference/cli.html)
 - [Ray CLI monitoring](https://docs.ray.io/en/latest/ray-observability/user-guides/cli-sdk.html)

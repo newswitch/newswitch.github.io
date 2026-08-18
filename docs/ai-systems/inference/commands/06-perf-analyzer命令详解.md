@@ -1,11 +1,12 @@
 ---
-title: "Triton perf_analyzer 命令详解"
+title: "Triton perfanalyzer 命令详解"
+sidebar_label: "06. Triton perfanalyzer 命令详解"
 sidebar_position: 6
 description: "使用 perf_analyzer 构造并发、请求率和自定义到达负载，通过稳定窗口分析客户端与Triton服务端延迟。"
 tags: [Triton, perf_analyzer, Benchmark, 延迟, 吞吐]
 ---
 
-# Triton perf_analyzer 命令详解
+# Triton perfanalyzer 命令详解
 
 `perf_analyzer` 是Triton生态的通用负载发生器，可测试HTTP/gRPC端点，也支持部分非Triton服务类型。它会在测量窗口内反复采样，直到吞吐/延迟达到稳定条件或超过尝试上限。
 
@@ -114,11 +115,11 @@ C API模式绕过HTTP/gRPC，用于测Triton内核路径，不代表生产端到
 | queue时间持续上升 | 到达率超过服务能力，已经进入不稳定区 |
 | CSV缺服务指标 | metrics URL、verbose CSV、访问控制和采样开关 |
 
-## 掌握标准
+## 10. 掌握标准 {/* #掌握标准 */}
 
 能区分并发与请求率模式；能设置稳定窗口和停止边界；能读取客户端/服务端延迟分解；能证明输入数据代表真实路径；能识别压测端瓶颈。
 
-## 官方资料
+## 11. 官方资料 {/* #官方资料 */}
 
 - [Perf Analyzer documentation](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/docs/README.html)
 - [Perf Analyzer CLI](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/docs/cli.html)

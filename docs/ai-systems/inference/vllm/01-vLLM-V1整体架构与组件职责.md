@@ -2,8 +2,8 @@
 title: "vLLM V1 整体架构与组件职责"
 sidebar_label: "01. vLLM V1 整体架构与组件职责"
 sidebar_position: 1
-tags: [vLLM, V1, EngineCore, Scheduler, GPU Worker, 源码分析]
 description: "以 vLLM v0.23.0 为基线，建立 API Server、AsyncLLM、EngineCore、Scheduler、KVCacheManager、Executor、Worker 与 GPUModelRunner 的完整组件地图。"
+tags: [vLLM, V1, EngineCore, Scheduler, GPU Worker, 源码分析]
 ---
 
 # vLLM V1 整体架构与组件职责

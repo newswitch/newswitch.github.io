@@ -1,11 +1,12 @@
 ---
-title: useradd 命令详解：创建本地账户、默认值与初始文件
+title: "useradd 命令详解：创建本地账户、默认值与初始文件"
+sidebar_label: "05. useradd 命令详解：创建本地账户、默认值与初始文件"
 sidebar_position: 5
-description: 完整讲解 shadow-utils useradd 的参数、UID/GID、home、skel、密码老化、system account、subuid、SELinux 映射和账户创建审计。
+description: "完整讲解 shadow-utils useradd 的参数、UID/GID、home、skel、密码老化、system account、subuid、SELinux 映射和账户创建审计。"
 tags: [Linux, useradd, 用户管理, shadow-utils, UID]
 ---
 
-# `useradd` 命令详解：创建本地账户、默认值与初始文件
+# useradd 命令详解：创建本地账户、默认值与初始文件
 
 `useradd` 创建本地账户记录，并按选项创建主组、home、mail spool、初始文件及 subordinate ID 范围。它不是跨节点身份管理系统，也不会替你配置 SSH key、sudo、应用目录、目录服务或运行中的工作负载。
 
@@ -127,7 +128,7 @@ sudo grpck -r
 
 掌握标准：能列出全部参数与默认来源；能解释 `-d/-m`、`-r/-m`、`-U/-N/-g`、`-u/-o` 的组合；能安全创建一个跨节点 UID 一致且默认不可交互登录的服务账户。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：useradd(8)](https://shadow-maint.github.io/shadow/man/useradd.html)
 - [Linux login.defs(5)](https://man7.org/linux/man-pages/man5/login.defs.5.html)

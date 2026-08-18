@@ -1,9 +1,9 @@
 ---
-title: InfiniBand 路由与拥塞治理
+title: "InfiniBand 路由与拥塞治理"
 sidebar_label: "07. InfiniBand 路由与拥塞治理"
 sidebar_position: 7
+description: "理解 IB Fat-Tree 路由、LID Path、SL/VL、Credit 反压、Adaptive Routing 和拥塞定位。"
 tags: [InfiniBand, Fat-Tree, Adaptive Routing, Credit, SL, VL]
-description: 理解 IB Fat-Tree 路由、LID Path、SL/VL、Credit 反压、Adaptive Routing 和拥塞定位。
 ---
 
 # InfiniBand 路由与拥塞治理
@@ -168,7 +168,7 @@ SM、路由算法、Partition、SL/VL 或 AR 变更可能重编程整个 Fabric�
 能够区分 IB Credit 流控与 RoCE PFC；能从 Rank/HCA 找到 LID 路由、SL/VL 和热点端口；
 能解释 Adaptive Routing 的收益、前提和验证方法。
 
-## 参考资料
+## 12. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA Subnet Manager Documentation](https://docs.nvidia.com/networking/display/NVIDIAMLNXOSUserManualv3122002/subnet-manager.pdf)
 - [OpenSM](https://github.com/linux-rdma/opensm)

@@ -2,8 +2,8 @@
 title: "Executor、Worker 与 GPUModelRunner"
 sidebar_label: "06. Executor、Worker 与 GPUModelRunner"
 sidebar_position: 6
-tags: [vLLM, V1, Executor, GPUModelRunner, 源码分析]
 description: "沿 SchedulerOutput 分析 vLLM 多进程 Executor、Worker、GPUModelRunner 的职责、通信和一次执行。"
+tags: [vLLM, V1, Executor, GPUModelRunner, 源码分析]
 ---
 
 # Executor、Worker 与 GPUModelRunner
@@ -13,8 +13,6 @@ description: "沿 SchedulerOutput 分析 vLLM 多进程 Executor、Worker、GPUM
 本篇回答：**这份调度结果如何跨过进程与 rank 边界，变成一次真正的 GPU 执行？**
 
 > 源码基线：vLLM `v0.23.0`。不同执行后端的进程组织可能不同，但 Executor、Worker、ModelRunner 这三个职责边界是阅读主线。
-
----
 
 ## 1. 三层职责不要混淆
 
@@ -33,8 +31,6 @@ GPUModelRunner= 车内真正执行计算的动力系统
 ```
 
 Executor 不应该理解每种 Attention Kernel 的 Tensor 布局；GPUModelRunner 也不应该决定 HTTP 请求的租户限流。
-
----
 
 ## 2. 为什么需要 Executor 抽象
 
@@ -58,8 +54,6 @@ shutdown()
 ```
 
 这也解释了为什么“GPU 没忙”不一定是模型 Kernel 问题：命令可能还没有成功穿过 Executor 边界。
-
----
 
 ## 3. 多进程 Executor 如何发起一次执行
 
@@ -93,8 +87,6 @@ Worker rank 0   Worker rank 1   Worker rank N
 
 它还监控 Worker 进程存活。一旦任意 Worker 异常退出，不能把剩余 rank 当成健康副本继续服务，因为一次 TP 执行需要所有相关 rank 正确参与。
 
----
-
 ## 4. 为什么只从一个 output rank 返回
 
 TP 场景中每个 rank 都参与模型计算，但并不需要让所有 rank 把同一份最终 token 结果传回 EngineCore。
@@ -112,8 +104,6 @@ TP 场景中每个 rank 都参与模型计算，但并不需要让所有 rank �
 2. **结果返回**：只需一个 rank 把 `ModelRunnerOutput` 返回上层。
 
 因此某个非输出 rank 变慢，依然会拖慢整次推理；“它没有返回 HTTP 数据”不代表它不在关键路径上。
-
----
 
 ## 5. Worker 负责设备和进程局部状态
 
@@ -140,8 +130,6 @@ Worker 是进程边界内的执行入口，通常负责：
 ```
 
 这也是 Kubernetes readiness 不能只检查“端口能连接”的原因。API 进程存活时，后端某个 Worker 可能仍未完成初始化，甚至已经死亡。
-
----
 
 ## 6. GPUModelRunner 内部保存什么
 
@@ -183,13 +171,11 @@ Worker 是进程边界内的执行入口，通常负责：
 
 所以 ModelRunner 不是一个无状态 `model(input_ids)` 包装器，而是调度状态到 GPU 执行状态的适配层。
 
----
-
 ## 7. 一次 `execute_model` 的五个阶段
 
 不同模型和特性会插入额外分支，但主干可以稳定地分成五步。
 
-### 阶段一：合并调度增量
+### 7.1 阶段一：合并调度增量 {/* #阶段一合并调度增量 */}
 
 ModelRunner 不会每轮重建全部请求。它消费 SchedulerOutput 中的增量：
 
@@ -202,7 +188,7 @@ ModelRunner 不会每轮重建全部请求。它消费 SchedulerOutput 中的增
 
 如果这一步 CPU 很慢，GPU 会在两次执行之间出现空洞。
 
-### 阶段二：准备输入与 Slot Mapping
+### 7.2 阶段二：准备输入与 Slot Mapping {/* #阶段二准备输入与-slot-mapping */}
 
 为本轮实际 token 准备：
 
@@ -214,7 +200,7 @@ ModelRunner 不会每轮重建全部请求。它消费 SchedulerOutput 中的增
 
 Prefill 和 Decode 可以在同一个调度批次中共存，但每条请求本轮 token 数不同，不能简单把它当作传统等长 Batch。
 
-### 阶段三：选择执行形状
+### 7.3 阶段三：选择执行形状 {/* #阶段三选择执行形状 */}
 
 实际 token 数不一定等于编译或 CUDA Graph 的捕获形状。Runner 可能把输入 Pad 到可复用形状，也可能对不支持的动态情况走 Eager 路径。
 
@@ -225,13 +211,13 @@ Prefill 和 Decode 可以在同一个调度批次中共存，但每条请求本�
 
 频繁落入 Eager 不一定报错，但会表现为 Kernel Launch 空洞、CPU 开销上升和尾延迟抖动。
 
-### 阶段四：模型前向与 Logits
+### 7.4 阶段四：模型前向与 Logits {/* #阶段四模型前向与-logits */}
 
 模型执行读取权重和历史 KV，写入新 token 的 KV，并产生 Hidden States/Logits。Attention Backend 根据模型、GPU、dtype 和配置选择具体 Kernel。
 
 TP 模式下，层间会发生 collective；MoE/EP 还可能加入 All-to-All。慢 rank 会把所有 rank 拖到同步点。
 
-### 阶段五：采样与输出拷贝
+### 7.5 阶段五：采样与输出拷贝 {/* #阶段五采样与输出拷贝 */}
 
 Logits 经过采样约束后得到 token。为了减少同步，Runner 可以把 GPU 到 CPU 的结果复制放到独立 Stream，并在上层真正读取时同步。
 
@@ -241,8 +227,6 @@ Logits 经过采样约束后得到 token。为了减少同步，Runner 可以把
 - CPU 线程等待 CUDA Event；
 - Timeline 出现很多短 Kernel 与空隙；
 - TPOT 尾部抖动。
-
----
 
 ## 8. `execute_model()` 与 `sample_tokens()` 为什么可能分开
 
@@ -261,8 +245,6 @@ execute_model() 返回值 == 最终 token
 ```
 
 更稳妥的理解是：执行阶段产生足够的模型结果，采样阶段再结合 grammar/约束形成最终 token 输出。
-
----
 
 ## 9. 性能问题怎样定位到这一层
 
@@ -283,8 +265,6 @@ execute_model() 返回值 == 最终 token
 4. 多卡某个 rank 变慢，其他 GPU 等待。
 
 必须用时间线区分，不能只改 `max_num_seqs`。
-
----
 
 ## 10. 故障边界与健康检查
 
@@ -310,8 +290,6 @@ execute_model() 返回值 == 最终 token
 
 相同的“timeout”字符串可能来自完全不同层。
 
----
-
 ## 11. 源码阅读路标
 
 建议顺序：
@@ -332,8 +310,6 @@ execute_model() 返回值 == 最终 token
 
 - [Nsight Systems 端到端时间线分析](../../../sre/performance/03-Nsight-Systems端到端时间线分析.md)
 - [TP、PP、DP、EP 与 MoE 推理并行策略](./10-TP-PP-DP-EP与MoE推理并行策略.md)
-
----
 
 ## 12. 学完后的验收题
 

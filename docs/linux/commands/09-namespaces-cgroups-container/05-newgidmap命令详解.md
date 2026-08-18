@@ -1,11 +1,12 @@
 ---
-title: newgidmap 命令详解：GID 映射、subgid 与 setgroups 安全门
+title: "newgidmap 命令详解：GID 映射、subgid 与 setgroups 安全门"
+sidebar_label: "05. newgidmap 命令详解：GID 映射、subgid 与 setgroups 安全门"
 sidebar_position: 5
-description: 讲清 newgidmap 三元组、subgid 委派、setgroups=deny、一次性 gid_map 写入和 Rootless 容器组权限排障。
+description: "讲清 newgidmap 三元组、subgid 委派、setgroups=deny、一次性 gid_map 写入和 Rootless 容器组权限排障。"
 tags: [Linux, newgidmap, User Namespace, subgid, Rootless]
 ---
 
-# `newgidmap` 命令详解：GID 映射、subgid 与 `setgroups` 安全门
+# newgidmap 命令详解：GID 映射、subgid 与 setgroups 安全门
 
 `newgidmap` 验证 `/etc/subgid` 或 NSS subid 委派后写入 `/proc/PID/gid_map`。它与 `newuidmap` 的三元组相同，但多了一条重要安全边界：非特权映射通常要先向 `/proc/PID/setgroups` 写入 `deny`，防止进程通过补充组获得本不应拥有的文件访问权。
 

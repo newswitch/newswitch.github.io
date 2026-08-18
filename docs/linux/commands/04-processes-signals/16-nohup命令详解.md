@@ -1,11 +1,12 @@
 ---
-title: nohup 命令详解：忽略 SIGHUP、重定向终端与后台运行边界
+title: "nohup 命令详解：忽略 SIGHUP、重定向终端与后台运行边界"
+sidebar_label: "16. nohup 命令详解：忽略 SIGHUP、重定向终端与后台运行边界"
 sidebar_position: 16
-description: 完整讲解 GNU coreutils nohup 参数、SIGHUP disposition、stdin/stdout/stderr 自动重定向、nohup.out 权限、后台符号、退出码和服务管理边界。
+description: "完整讲解 GNU coreutils nohup 参数、SIGHUP disposition、stdin/stdout/stderr 自动重定向、nohup.out 权限、后台符号、退出码和服务管理边界。"
 tags: [Linux, nohup, SIGHUP, 后台任务, coreutils]
 ---
 
-# `nohup` 命令详解：忽略 SIGHUP、重定向终端与后台运行边界
+# nohup 命令详解：忽略 SIGHUP、重定向终端与后台运行边界
 
 `nohup` 让命令继承“忽略 SIGHUP”的 disposition，并在标准流连接终端时改向非 TTY。它不会自动在后台运行、创建新 session、关闭所有 fd、重启失败任务或保存状态。
 
@@ -58,7 +59,7 @@ ls -l /proc/$pid/fd
 
 掌握标准：能列出全部参数；能解释 SIGHUP、后台、session、fd 重定向和监督是五个独立维度；不把 nohup 当服务管理器。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：nohup(1)](https://man7.org/linux/man-pages/man1/nohup.1.html)
 - [Linux signal(7)](https://man7.org/linux/man-pages/man7/signal.7.html)

@@ -1,11 +1,12 @@
 ---
-title: runuser 命令详解：root 脚本以低权限用户运行命令
+title: "runuser 命令详解：root 脚本以低权限用户运行命令"
+sidebar_label: "14. runuser 命令详解：root 脚本以低权限用户运行命令"
 sidebar_position: 14
-description: 完整讲解 util-linux runuser 参数、-u 直接执行、su 兼容模式、PAM session、环境、组集合、PTY、setpriv 对比和退出码传播。
+description: "完整讲解 util-linux runuser 参数、-u 直接执行、su 兼容模式、PAM session、环境、组集合、PTY、setpriv 对比和退出码传播。"
 tags: [Linux, runuser, PAM, 最小权限, 自动化]
 ---
 
-# `runuser` 命令详解：root 脚本以低权限用户运行命令
+# runuser 命令详解：root 脚本以低权限用户运行命令
 
 `runuser` 供 root 以替代 UID/GID 运行命令，不询问密码且通常无需 setuid 安装。它仍可使用独立的 PAM session 配置；若完全不需要 PAM，应评估 `setpriv` 或服务管理器原生的 `User=`。
 
@@ -88,7 +89,7 @@ exec runuser --user myagent -- /usr/bin/id
 
 掌握标准：能列出全部参数；能写出不经过 shell 拼接、环境最小、路径绝对且退出码正确传播的降权命令；能说明降 UID 不等于沙箱。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [util-linux：runuser(1)](https://man7.org/linux/man-pages/man1/runuser.1.html)
 - [util-linux：setpriv(1)](https://man7.org/linux/man-pages/man1/setpriv.1.html)

@@ -1,11 +1,12 @@
 ---
-title: resolvectl 命令详解：systemd-resolved、缓存与 Split DNS
+title: "resolvectl 命令详解：systemd-resolved、缓存与 Split DNS"
+sidebar_label: "14. resolvectl 命令详解：systemd-resolved、缓存与 Split DNS"
 sidebar_position: 14
-description: 系统讲解 resolvectl 的 status、query、service、缓存统计、per-link DNS、路由域、DNSSEC、DoT、监控与 Split DNS 故障排查。
+description: "系统讲解 resolvectl 的 status、query、service、缓存统计、per-link DNS、路由域、DNSSEC、DoT、监控与 Split DNS 故障排查。"
 tags: [Linux, resolvectl, systemd-resolved, DNS, Split DNS, DNSSEC, DoT]
 ---
 
-# `resolvectl` 命令详解：systemd-resolved、缓存与 Split DNS
+# resolvectl 命令详解：systemd-resolved、缓存与 Split DNS
 
 `resolvectl` 是 `systemd-resolved` 的查询和控制客户端。它看到的不是单一 `/etc/resolv.conf` 文件，而是全局配置、每链路 DNS、搜索域/路由域、默认路由、缓存、LLMNR、mDNS、DNSSEC 和 DNS over TLS 共同形成的解析决策。
 
@@ -131,7 +132,7 @@ resolvectl query -6 www.example.com
 
 输出通常包含结果、使用的协议/接口/服务器、数据是否经过认证以及查询耗时。具体版式随 systemd 版本变化。
 
-### 和 `dig`、`getent` 的区别
+### 5.1 和 `dig`、`getent` 的区别 {/* #和-diggetent-的区别 */}
 
 | 工具 | 经过的解析路径 | 适合回答的问题 |
 |---|---|---|
@@ -235,7 +236,7 @@ www.example.net     -> eth0 的 192.0.2.53
 
 ## 10. DNSSEC、DoT、LLMNR 与 mDNS
 
-### DNSSEC
+### 10.1 DNSSEC {/* #dnssec */}
 
 ```bash
 resolvectl status
@@ -244,7 +245,7 @@ resolvectl query www.example.com
 
 关注全局与 per-link 的 DNSSEC 策略，以及查询结果是否显示 authenticated。DNSSEC 失败要检查时间同步、信任锚、父区 DS、子区 DNSKEY/RRSIG 和中间设备是否破坏大报文。
 
-### DNS over TLS
+### 10.2 DNS over TLS {/* #dns-over-tls */}
 
 ```bash
 sudo resolvectl dnsovertls eth0 opportunistic
@@ -252,7 +253,7 @@ sudo resolvectl dnsovertls eth0 opportunistic
 
 `opportunistic` 可在加密不可用时回退，不等于“强制加密”；`yes` 的严格行为、服务器名称验证和地址语法取决于 systemd 版本与配置。不要只凭端口 853 连通判断 DoT 安全。
 
-### LLMNR 与 mDNS
+### 10.3 LLMNR 与 mDNS {/* #llmnr-与-mdns */}
 
 LLMNR/mDNS 是本地链路协议，不等同于企业 DNS。它们可能使短名称“偶尔能解析”，掩盖搜索域或 DNS 配置错误。服务器场景应按安全基线决定是否启用。
 
@@ -272,7 +273,7 @@ journalctl -u systemd-resolved --since '-10 min' --no-pager
 
 ## 12. 场景化排障
 
-### 场景一：连 VPN 后内部域名仍走公网 DNS
+### 12.1 场景一：连 VPN 后内部域名仍走公网 DNS {/* #场景一连-vpn-后内部域名仍走公网-dns */}
 
 ```bash
 resolvectl status
@@ -289,7 +290,7 @@ dig -r @10.20.0.53 internal.corp.example.com A
 4. 直接问内部 DNS 是否有正确记录；
 5. VPN 客户端是否在重连时覆盖设置。
 
-### 场景二：应用失败但 `dig @server` 正常
+### 12.2 场景二：应用失败但 `dig @server` 正常 {/* #场景二应用失败但-dig-server-正常 */}
 
 ```bash
 getent ahosts api.example.com
@@ -301,7 +302,7 @@ ls -l /etc/resolv.conf
 
 如果只有 `dig` 正常，问题可能在 NSS 顺序、resolved 路由/缓存、搜索域、应用缓存或应用自带解析器。
 
-### 场景三：偶发 `SERVFAIL`
+### 12.3 场景三：偶发 `SERVFAIL` {/* #场景三偶发-servfail */}
 
 ```bash
 resolvectl statistics
@@ -346,4 +347,3 @@ journalctl -u systemd-resolved --since '-10 min' --no-pager
 - [systemd `resolvectl` 官方手册](https://www.freedesktop.org/software/systemd/man/latest/resolvectl.html)
 - [systemd-resolved 官方手册](https://www.freedesktop.org/software/systemd/man/latest/systemd-resolved.service.html)
 - [systemd.network DNS 路由域说明](https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html)
-

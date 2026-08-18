@@ -1,9 +1,11 @@
 ---
-title: 模型文件从存储加载到 GPU 显存的完整路径
+title: "模型文件从存储加载到 GPU 显存的完整路径"
 sidebar_label: "02. 模型文件从存储加载到 GPU 显存的完整路径"
+sidebar_position: 2
+description: "模型位于 Ceph、NFS 或对象存储中，GPU 不能因为 Kubernetes 挂载了目录就直接计算。文件还要经过读取、解析、Tensor 创建、设备内存分配和数据搬运。"
+tags: [GPU, HBM, 存储, PCIe, GDS, 模型加载]
 date: 2026-08-06 18:10:00
 categories: 云原生
-tags: [GPU, HBM, 存储, PCIe, GDS, 模型加载]
 ---
 
 # 模型文件从存储加载到 GPU 显存的完整路径
@@ -11,8 +13,6 @@ tags: [GPU, HBM, 存储, PCIe, GDS, 模型加载]
 模型位于 Ceph、NFS 或对象存储中，GPU 不能因为 Kubernetes 挂载了目录就直接计算。文件还要经过读取、解析、Tensor 创建、设备内存分配和数据搬运。
 
 本篇追踪一个权重分片从持久存储到 HBM，解释每一段可能出现的性能瓶颈。
-
----
 
 ## 1. 学习目标
 
@@ -23,8 +23,6 @@ tags: [GPU, HBM, 存储, PCIe, GDS, 模型加载]
 - 理解 Page Cache、pinned memory、DMA、PCIe 和 HBM 的作用。
 - 分解冷启动耗时和估算理论下限。
 - 用系统、存储和 GPU 指标定位慢在哪一段。
-
----
 
 ## 2. 一条权重分片的普通路径
 
@@ -47,8 +45,6 @@ flowchart LR
 存储读取 → CPU 处理 → H2D → GPU 初始化
 ```
 
----
-
 ## 3. “挂载完成”只建立了名字空间
 
 CSI 把 PVC 挂到 `/models`，只是让容器能通过路径访问数据：
@@ -65,8 +61,6 @@ CSI 把 PVC 挂到 `/models`，只是让容器能通过路径访问数据：
 - 模型已经可以推理。
 
 因此 CSI 挂载时间和模型加载时间必须分开观测。
-
----
 
 ## 4. 第一段：存储到节点
 
@@ -110,8 +104,6 @@ S3/RGW → HTTP GET → 下载进程 → staging 目录
 
 这比共享文件系统多一个显式分发阶段，但可以把权威仓库与节点热缓存解耦。
 
----
-
 ## 5. Page Cache 为什么让第二次更快
 
 普通 buffered IO 会利用 Linux Page Cache：
@@ -133,8 +125,6 @@ S3/RGW → HTTP GET → 下载进程 → staging 目录
 
 测试报告必须注明冷缓存还是热缓存。不能在生产节点随意清空全局 Page Cache 来做实验。
 
----
-
 ## 6. mmap 不等于数据已经在内存
 
 `mmap()` 建立文件到虚拟地址空间的映射，物理页常在首次访问时按需调入。
@@ -148,8 +138,6 @@ mmap 很快
 ```
 
 所以只测 `mmap()` 调用耗时会低估加载成本。应结合 major page faults、磁盘读取和应用时间线判断。
-
----
 
 ## 7. 第二段：解析与 CPU Tensor
 
@@ -174,8 +162,6 @@ GPU 也空闲
 ```
 
 这时继续升级存储未必有效。
-
----
 
 ## 8. 第三段：分配 GPU HBM
 
@@ -207,8 +193,6 @@ nvidia-smi dmon -s pucm
 ```
 
 以及框架的内存统计。
-
----
 
 ## 9. 第四段：CPU 到 GPU 的 H2D
 
@@ -253,8 +237,6 @@ print(f"H2D GiB/s: {size / dt / 1024**3:.2f}")
 
 `non_blocking=True` 只是允许异步机会；是否真正重叠还取决于 pinned memory、Stream、依赖关系和硬件 copy engine。
 
----
-
 ## 10. PCIe 和 NUMA 的影响
 
 如果负责读取和 H2D 的 CPU 内存位于远端 NUMA：
@@ -286,8 +268,6 @@ cat /sys/bus/pci/devices/<BDF>/numa_node
 
 尽量位于合理拓扑范围内。
 
----
-
 ## 11. GDS 路径
 
 在硬件、驱动、文件系统和应用都受支持时，GPUDirect Storage 可以减少 CPU 主存中转：
@@ -308,8 +288,6 @@ cat /sys/bus/pci/devices/<BDF>/numa_node
 - GDS 不是 CSI 的替代品。
 
 应该用 `gdscheck`、`gdsio` 和真实应用分阶段验证，而不是只确认 `libcufile` 存在。
-
----
 
 ## 12. 权重分片与并行加载
 
@@ -337,13 +315,11 @@ model-00008-of-00008
 
 并发度应通过“单 Pod × 多 Pod × 多节点”矩阵测试。
 
----
-
 ## 13. Tensor Parallel 加载
 
 以 8 卡 TP 为例，每个 rank 最终只持有部分权重，但加载方式取决于框架：
 
-### 低效方式
+### 13.1 低效方式 {/* #低效方式 */}
 
 ```text
 每个 rank 都读取完整模型
@@ -351,7 +327,7 @@ model-00008-of-00008
 → 再丢弃不属于自己的部分
 ```
 
-### 更优方式
+### 13.2 更优方式 {/* #更优方式 */}
 
 ```text
 按 rank 读取对应 shard
@@ -360,8 +336,6 @@ model-00008-of-00008
 ```
 
 还要确认文件分片方式与 TP 切分维度是否匹配，否则会发生额外的跨 GPU 重分发。
-
----
 
 ## 14. 理论下限估算
 
@@ -391,8 +365,6 @@ T ≥ max(M/Bs, M/Bc, M/Bh)
 
 这套估算用于判断数量级，不应冒充精确预测。
 
----
-
 ## 15. 一次 200 GiB 模型加载怎样分析
 
 记录：
@@ -408,11 +380,9 @@ T ≥ max(M/Bs, M/Bc, M/Bh)
 
 如果只看总计 167 秒，很难优化；拆开后可以看到存储读取和 CPU 解析占主要部分。
 
----
-
 ## 16. 分层观测
 
-### 存储
+### 16.1 存储 {/* #存储 */}
 
 ```bash
 iostat -x 1
@@ -422,14 +392,14 @@ nfsiostat 1
 
 Ceph 继续看 OSD/MDS/RGW 指标。
 
-### 网络
+### 16.2 网络 {/* #网络 */}
 
 ```bash
 sar -n DEV 1
 ethtool -S <interface>
 ```
 
-### CPU 与内存
+### 16.3 CPU 与内存 {/* #cpu-与内存 */}
 
 ```bash
 pidstat -u -r 1
@@ -437,7 +407,7 @@ numastat -p <pid>
 vmstat 1
 ```
 
-### GPU
+### 16.4 GPU {/* #gpu */}
 
 ```bash
 nvidia-smi dmon -s pucm
@@ -451,15 +421,13 @@ nsys profile <application>
 - PCIe RX 高、GPU Compute 低：正在 H2D。
 - HBM 已占用但 GPU Util 低：权重已驻留，业务可能还没开始或在等待。
 
----
-
 ## 17. 常见故障
 
-### 文件存在但加载报错
+### 17.1 文件存在但加载报错 {/* #文件存在但加载报错 */}
 
 检查 revision、manifest、分片数量、大小、checksum、索引和权限。
 
-### CPU OOM
+### 17.2 CPU OOM {/* #cpu-oom */}
 
 加载时可能同时存在：
 
@@ -471,7 +439,7 @@ nsys profile <application>
 
 不要只按最终 GPU 权重大小配置主机内存。
 
-### CUDA OOM 出现在加载阶段
+### 17.3 CUDA OOM 出现在加载阶段 {/* #cuda-oom-出现在加载阶段 */}
 
 可能是：
 
@@ -481,11 +449,11 @@ nsys profile <application>
 - KV Cache 预分配。
 - 显存碎片或其他进程占用。
 
-### 多 Pod 同时启动越来越慢
+### 17.4 多 Pod 同时启动越来越慢 {/* #多-pod-同时启动越来越慢 */}
 
 检查共享存储带宽、对象网关、节点缓存命中、下载并发和 H2D 是否共同竞争 PCIe。
 
-### GDS 已安装但没有变快
+### 17.5 GDS 已安装但没有变快 {/* #gds-已安装但没有变快 */}
 
 确认：
 
@@ -494,8 +462,6 @@ nsys profile <application>
 - IO 大小/对齐合理。
 - GPU 与 NVMe/NIC 拓扑。
 - 原瓶颈确实在 CPU staging。
-
----
 
 ## 18. 推荐优化顺序
 
@@ -511,8 +477,6 @@ nsys profile <application>
 ```
 
 不要在没有时间线和基线时直接修改十几个挂载参数、NCCL 变量或 CUDA 配置。
-
----
 
 ## 19. 本篇总结
 
@@ -533,8 +497,6 @@ nsys profile <application>
 
 上一篇：[一个 GPU Pod 从提交到开始计算经历了什么](./01-一个GPU-Pod从提交到开始计算经历了什么.md)。下一篇：[单机八卡训练的完整数据与通信路径](./03-单机八卡训练的完整路径.md)。
 
----
-
 ## 20. 课后练习
 
 1. CSI 挂载完成为什么不等于模型已进入显存？
@@ -545,9 +507,7 @@ nsys profile <application>
 6. 比较 pageable 和 pinned memory 的 H2D。
 7. 计算 200 GiB 模型在 8 GiB/s 存储和 24 GiB/s H2D 下的串行理论下限。
 
----
-
-## 参考与致谢
+## 21. 参考与致谢 {/* #参考与致谢 */}
 
 - [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/)
 - [CUDA Best Practices Guide — Data Transfer](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/)

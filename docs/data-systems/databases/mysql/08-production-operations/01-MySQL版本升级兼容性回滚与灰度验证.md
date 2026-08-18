@@ -2,8 +2,8 @@
 title: "MySQL 版本升级、兼容性、回滚与灰度验证"
 sidebar_label: "01. MySQL 版本升级、兼容性、回滚与灰度验证"
 sidebar_position: 1
-tags: [MySQL, 升级, 兼容性, 灰度, 回滚]
 description: "从支持路径、Upgrade Checker、数据与应用兼容、性能回归到分阶段上线和回退边界设计 MySQL 升级。"
+tags: [MySQL, 升级, 兼容性, 灰度, 回滚]
 ---
 
 # MySQL 版本升级、兼容性、回滚与灰度验证
@@ -45,15 +45,15 @@ Checker 是自动检查，不覆盖全部应用语义和性能测试。
 
 ## 4. 升级策略
 
-### 原地升级
+### 4.1 原地升级 {/* #原地升级 */}
 
 步骤少，但回退最困难；升级后的数据字典通常不能靠降级二进制直接恢复。回退往往意味着恢复旧版本备份并重放兼容日志。
 
-### 新集群迁移
+### 4.2 新集群迁移 {/* #新集群迁移 */}
 
 新版本从备份/复制/CDC 构建，允许并行验证和分批切流，但要处理跨版本复制兼容、最终同步、双写风险和更大资源成本。
 
-### 滚动升级复制拓扑
+### 4.3 滚动升级复制拓扑 {/* #滚动升级复制拓扑 */}
 
 按官方支持的版本顺序先副本后源，逐个验证；不能让不支持的版本组合长期运行。
 
@@ -84,4 +84,3 @@ Checker 是自动检查，不覆盖全部应用语义和性能测试。
 
 - [Upgrade Best Practices](https://dev.mysql.com/doc/refman/8.4/en/upgrade-best-practices.html)
 - [Preparing for Upgrade](https://dev.mysql.com/doc/refman/8.4/en/upgrade-prerequisites.html)
-

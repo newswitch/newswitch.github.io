@@ -2,8 +2,8 @@
 title: "NVMe 队列、Namespace 与性能模型"
 sidebar_label: "01. NVMe 队列、Namespace 与性能模型"
 sidebar_position: 1
-tags: [NVMe, SSD, PCIe, blk-mq, Namespace, 性能]
 description: "从 PCIe、Controller、Submission/Completion Queue、Namespace 到 Linux blk-mq，理解 NVMe 的并行性能、时延与排障方法。"
+tags: [NVMe, SSD, PCIe, blk-mq, Namespace, 性能]
 ---
 
 # NVMe 队列、Namespace 与性能模型
@@ -394,7 +394,7 @@ nvme list-subsys
 
 下一篇：[RAID、LVM 与文件系统选型](./02-RAID%20LVM与文件系统选型.md)。
 
-## 参考资料
+## 19. 参考资料 {/* #参考资料 */}
 
 - [NVM Express specifications](https://nvmexpress.org/specifications/)
 - [Linux NVMe documentation](https://docs.kernel.org/nvme/index.html)

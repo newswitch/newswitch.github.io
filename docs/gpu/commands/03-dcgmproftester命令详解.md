@@ -1,11 +1,12 @@
 ---
-title: dcgmproftester 命令详解：性能字段与主动负载验证
+title: "dcgmproftester 命令详解：性能字段与主动负载验证"
+sidebar_label: "03. dcgmproftester 命令详解：性能字段与主动负载验证"
 sidebar_position: 3
-description: 使用 dcgmproftester 在指定空闲 GPU 上产生受控负载，验证 DCGM Profiling 字段、阈值和监控链路。
+description: "使用 dcgmproftester 在指定空闲 GPU 上产生受控负载，验证 DCGM Profiling 字段、阈值和监控链路。"
 tags: [GPU, DCGM, dcgmproftester, 性能计数器, 压力测试]
 ---
 
-# dcgmproftester 命令详解
+# dcgmproftester 命令详解：性能字段与主动负载验证
 
 `dcgmproftester` 不是通用 GPU 跑分工具，而是 DCGM 的 Profiling Metric 验证器。它主动运行 CUDA/CUBLAS 工作负载，让指定 DCGM 字段达到可观测区间，再判断监控数据是否合理。
 
@@ -91,7 +92,7 @@ dcgmproftester13 -i 0 -t <FIELD_ID> -d 10
 
 能在指定空闲 GPU 上验证一个明确 Field ID；能区分“产生负载”和“验证 DCGM”两件事；能解释 Skip、Unsupported 与 Fail；能证明测试期间没有误伤在线任务。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [dcgmproftester command reference](https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/dcgmproftester.html)
 - [DCGM Profiling metrics](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/feature-overview.html#profiling)

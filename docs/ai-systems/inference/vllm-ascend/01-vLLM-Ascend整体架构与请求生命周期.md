@@ -1,9 +1,9 @@
 ---
-title: vLLM-Ascend 整体架构与请求生命周期
+title: "vLLM-Ascend 整体架构与请求生命周期"
 sidebar_label: "01. vLLM-Ascend 整体架构与请求生命周期"
 sidebar_position: 1
+description: "从平台插件到 NPUModelRunner，沿一次请求解释 vLLM-Ascend 如何复用 vLLM 控制面并替换昇腾执行面。"
 tags: [vLLM-Ascend, Ascend 910B, NPUModelRunner, ACLGraph, HCCL]
-description: 从平台插件到 NPUModelRunner，沿一次请求解释 vLLM-Ascend 如何复用 vLLM 控制面并替换昇腾执行面。
 ---
 
 # vLLM-Ascend 整体架构与请求生命周期
@@ -301,7 +301,7 @@ Graph 是否更快要看 Replay 覆盖率和真实 Batch 分布。捕获大量�
 
 ## 13. KV Cache 的逻辑相同与物理不同
 
-### 共同逻辑
+### 13.1 共同逻辑 {/* #共同逻辑 */}
 
 - 每个 Token 需要保存各层 K/V；
 - Block/页实现离散分配；
@@ -309,7 +309,7 @@ Graph 是否更快要看 Replay 覆盖率和真实 Batch 分布。捕获大量�
 - Prefix Cache 可以复用公共前缀；
 - 缓存不足会限制并发或触发抢占/重算。
 
-### Ascend 物理差异
+### 13.2 Ascend 物理差异 {/* #ascend-物理差异 */}
 
 - NPU Tensor 与内存分配器；
 - Attention Kernel 需要的布局和对齐；
@@ -451,7 +451,7 @@ upstream API/Tokenizer
 
 上半段决定“本轮让哪些请求算什么”，下半段决定“怎样在 910B 上高效地算”。性能排查必须先确定问题位于共同控制面还是 NPU 执行面，再进入对应工具和参数。
 
-## 官方资料与源码
+## 23. 官方资料与源码 {/* #官方资料与源码 */}
 
 - [vLLM-Ascend 官方文档](https://docs.vllm.ai/projects/ascend/en/latest/)
 - [Feature Matrix](https://docs.vllm.ai/projects/ascend/en/latest/user_guide/support_matrix/feature_matrix.html)

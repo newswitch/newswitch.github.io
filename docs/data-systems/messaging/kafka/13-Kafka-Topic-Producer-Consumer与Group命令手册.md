@@ -1,8 +1,8 @@
 ---
-title: Kafka Topic、Producer、Consumer 与 Group 命令手册
+title: "Kafka Topic、Producer、Consumer 与 Group 命令手册"
 sidebar_label: "13. Kafka Topic、Producer、Consumer 与 Group 命令手册"
 sidebar_position: 13
-description: 从连接验证、Topic 管理和消息收发，到消费组积压、Offset 重置、分区迁移与 KRaft 仲裁排查。
+description: "从连接验证、Topic 管理和消息收发，到消费组积压、Offset 重置、分区迁移与 KRaft 仲裁排查。"
 tags: [Kafka, 命令手册, 消息队列, 故障排查]
 ---
 
@@ -252,7 +252,7 @@ $KAFKA_HOME/bin/kafka-metadata-quorum.sh \
 | 频繁 Rebalance | `--state`、`--members --verbose` | 实例重启、心跳、处理时长 |
 | Broker 下线后仍不稳 | `--under-replicated-partitions` | 副本追赶、磁盘和网络 |
 
-## 11. 20 分钟实验
+## 11. 分钟实验 {/* #11-20-分钟实验 */}
 
 1. 创建 3 分区、1 副本的实验 Topic。
 2. 写入 10 条带 key 的消息。
@@ -272,9 +272,8 @@ $KAFKA_HOME/bin/kafka-metadata-quorum.sh \
 - 能安全完成副本迁移并验证结果。
 - 能把 Kafka 现象关联到网络、磁盘、JVM 和下游处理能力。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [Kafka Operations](https://kafka.apache.org/documentation/#operations)
 - [Kafka Quick Start](https://kafka.apache.org/quickstart)
 - [Kafka Configuration](https://kafka.apache.org/documentation/#configuration)
-

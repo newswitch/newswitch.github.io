@@ -1,10 +1,11 @@
 ---
 title: "GPU 节点巡检：从资产基线到隔离、诊断与重新上线"
 sidebar_label: "06. GPU 节点巡检：从资产基线到隔离、诊断与重新上线"
+sidebar_position: 6
+description: "建立覆盖 Kubernetes、驱动、PCIe、NVLink、NIC、存储和业务的 GPU 节点巡检体系，并区分在线被动检查与下线主动诊断。"
+tags: ["GPU", "巡检", "DCGM", "NVIDIA", "Kubernetes", "故障排查"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "巡检", "DCGM", "NVIDIA", "Kubernetes", "故障排查"]
-description: "建立覆盖 Kubernetes、驱动、PCIe、NVLink、NIC、存储和业务的 GPU 节点巡检体系，并区分在线被动检查与下线主动诊断。"
 ---
 
 # GPU 节点巡检：从资产基线到隔离、诊断与重新上线
@@ -525,47 +526,47 @@ GPU SM 低
 
 ## 19. 从零到生产的实验
 
-### 实验一：建立资产映射
+### 19.1 实验一：建立资产映射 {/* #实验一建立资产映射 */}
 
 在测试节点输出 GPU UUID、PCI BDF、NUMA、NVLink 矩阵和 NIC BDF，手工画出一张拓扑图。
 
-### 实验二：Kubernetes 资源一致性
+### 19.2 实验二：Kubernetes 资源一致性 {/* #实验二kubernetes-资源一致性 */}
 
 对比物理 GPU 数、MIG 实例、Node Capacity/Allocatable、Pod request 和设备内实际进程，解释每个数字。
 
-### 实验三：被动 Health Watch
+### 19.3 实验三：被动 Health Watch {/* #实验三被动-health-watch */}
 
 在测试环境启用 DCGM Health，观察一段时间并保存输出；重启 Host Engine 后验证 watch 状态变化。
 
-### 实验四：主动诊断流程
+### 19.4 实验四：主动诊断流程 {/* #实验四主动诊断流程 */}
 
 选择无业务测试节点，实际走完 cordon、空闲确认、DCGM 短测试、报告和 uncordon 审批流程。
 
-### 实验五：故障演练
+### 19.5 实验五：故障演练 {/* #实验五故障演练 */}
 
 不要制造硬件损坏。可以停止测试环境的 device plugin，观察主机 GPU 正常但 Kubernetes 资源注册异常时的证据链，
 恢复后确认资源重新注册。
 
-### 实验六：性能基线
+### 19.6 实验六：性能基线 {/* #实验六性能基线 */}
 
 在维护窗口运行固定版本的 GPU 计算、NCCL 和模型 smoke test，记录拓扑、温度、功耗、带宽和结果分布。
 
 ## 20. 掌握标准
 
-### 入门
+### 20.1 入门 {/* #入门 */}
 
 - 能在不影响业务的前提下完成只读巡检；
 - 能区分物理 GPU、Allocatable、Pod request 和 GPU 进程；
 - 能采集 UUID、BDF、Xid、ECC、温功耗和拓扑。
 
-### 进阶
+### 20.2 进阶 {/* #进阶 */}
 
 - 能从 Pod 故障下钻到 device plugin、驱动、PCIe 和硬件层；
 - 能解释 DCGM Health 与 Diagnostics 的风险差异；
 - 能定位 GPU、NIC、NUMA、NVLink 和存储中的性能瓶颈；
 - 能写出带证据、严重性和 Runbook 的结构化报告。
 
-### 生产级
+### 20.3 生产级 {/* #生产级 */}
 
 - 能设计巡检状态机、分级告警和自动化安全边界；
 - 能完成维修/升级后的计算、通信和模型验收；
@@ -577,7 +578,7 @@ GPU SM 低
 - [DCGM Exporter GPU 监控指标详解](../../../sre/observability/gpu/01-DCGM%20Exporter%20GPU%20监控指标详解.md)
 - [生产级 Kubernetes GPU 集群架构设计](../../../projects/production-gpu-cluster/01-生产级%20Kubernetes%20GPU%20集群架构设计.md)
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA DCGM Diagnostics](https://docs.nvidia.com/datacenter/dcgm/latest/learn/modules/dcgm-diagnostics.html)
 - [dcgmi diag command reference](https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/dcgmi/dcgmi-diag.html)

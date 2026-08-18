@@ -1,11 +1,12 @@
 ---
-title: pvs 命令详解：Physical Volume、设备归属与机器可读报告
+title: "pvs 命令详解：Physical Volume、设备归属与机器可读报告"
+sidebar_label: "13. pvs 命令详解：Physical Volume、设备归属与机器可读报告"
 sidebar_position: 13
-description: 讲解 LVM2 pvs 的 PV/VG/PE 模型、报告字段与通用参数、JSON、选择表达式、devices file、多路径重复设备和缺失 PV 排障。
+description: "讲解 LVM2 pvs 的 PV/VG/PE 模型、报告字段与通用参数、JSON、选择表达式、devices file、多路径重复设备和缺失 PV 排障。"
 tags: [Linux, LVM2, pvs, Physical Volume, device-mapper]
 ---
 
-# `pvs` 命令详解：Physical Volume、设备归属与机器可读报告
+# pvs 命令详解：Physical Volume、设备归属与机器可读报告
 
 `pvs` 是 LVM2 的只读报告命令，用一行表示一个 Physical Volume。PV 是 LVM 写入元数据并划分 Physical Extent 的块设备，底层可能是分区、MD、multipath LUN、加密 mapper 或整盘。
 

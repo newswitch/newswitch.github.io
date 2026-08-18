@@ -1,11 +1,12 @@
 ---
-title: ipcs 命令详解：System V IPC 对象、限制与 Namespace 现场
+title: "ipcs 命令详解：System V IPC 对象、限制与 Namespace 现场"
+sidebar_label: "10. ipcs 命令详解：System V IPC 对象、限制与 Namespace 现场"
 sidebar_position: 10
-description: 完整讲解 ipcs 的消息队列、共享内存、信号量、ID、创建者、限制、时间、字节与 IPC Namespace 排障。
+description: "完整讲解 ipcs 的消息队列、共享内存、信号量、ID、创建者、限制、时间、字节与 IPC Namespace 排障。"
 tags: [Linux, ipcs, IPC Namespace, 共享内存, 信号量]
 ---
 
-# `ipcs` 命令详解：System V IPC 现场
+# ipcs 命令详解：System V IPC 对象、限制与 Namespace 现场
 
 `ipcs` 读取当前 IPC Namespace 中的 System V message queue、shared memory 和 semaphore 状态。容器内外可能看到完全不同的集合；它不显示 POSIX `shm_open` 对象、Unix socket 或匿名共享映射。
 

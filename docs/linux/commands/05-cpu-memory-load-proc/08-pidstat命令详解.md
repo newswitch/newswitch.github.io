@@ -1,11 +1,12 @@
 ---
-title: pidstat 命令详解：进程线程 CPU、等待、缺页、IO 与切换
+title: "pidstat 命令详解：进程线程 CPU、等待、缺页、IO 与切换"
+sidebar_label: "08. pidstat 命令详解：进程线程 CPU、等待、缺页、IO 与切换"
 sidebar_position: 8
-description: 完整讲解 sysstat pidstat 的全部参数、PID/线程筛选、CPU 与调度等待、内存缺页、IO、上下文切换、子进程和 JSON。
+description: "完整讲解 sysstat pidstat 的全部参数、PID/线程筛选、CPU 与调度等待、内存缺页、IO、上下文切换、子进程和 JSON。"
 tags: [Linux, pidstat, CPU, 线程, 内存, IO, sysstat]
 ---
 
-# `pidstat` 命令详解：进程线程 CPU、等待、缺页、IO 与切换
+# pidstat 命令详解：进程线程 CPU、等待、缺页、IO 与切换
 
 `pidstat` 把系统级热点归因到 PID/TID，并对采样窗口做差。它能同时观察 CPU、调度等待、page fault、RSS、IO、stack、fd/thread、上下文切换与实时调度策略。
 
@@ -138,7 +139,7 @@ pidstat -u -r -d -w -t -p ALL 1 10
 
 掌握标准：能列出全部参数，区分 `%wait` 与 IO wait、minor/major fault、RSS/VSZ、voluntary/involuntary switch，并从 PID 缩小到 TID。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [sysstat pidstat(1)](https://man7.org/linux/man-pages/man1/pidstat.1.html)
 - [Linux proc_pid_io(5)](https://man7.org/linux/man-pages/man5/proc_pid_io.5.html)

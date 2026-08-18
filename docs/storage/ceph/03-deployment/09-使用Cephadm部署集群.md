@@ -2,8 +2,8 @@
 title: "Cephadm 部署 Ceph：从主机准备到创建 OSD 的完整流程"
 sidebar_label: "09. Cephadm 部署 Ceph：从主机准备到创建 OSD 的完整流程"
 sidebar_position: 9
-tags: [Ceph, 学习路线, 存储, Cephadm]
 description: "用 cephadm 完成三节点学习集群：主机准备、Bootstrap、添加 Host、ServiceSpec 部署 MON/MGR，以及安全创建 OSD。"
+tags: [Ceph, 学习路线, 存储, Cephadm]
 ---
 
 # Cephadm 部署 Ceph：从主机准备到创建 OSD 的完整流程
@@ -30,8 +30,7 @@ description: "用 cephadm 完成三节点学习集群：主机准备、Bootstrap
 创建 OSD 会初始化匹配到的空白磁盘。请只在实验设备或已经完成数据确认的生产设备上操作。执行任何 `apply osd` 前必须先检查设备并使用 `--dry-run` 预览。
 :::
 
-
-## 实验拓扑
+## 1. 实验拓扑 {/* #实验拓扑 */}
 
 本文使用以下示例。请把主机名、网卡和 IP 替换成自己的环境。
 
@@ -70,7 +69,7 @@ flowchart TD
 
 生产中不应依赖 `/dev/sdb` 永久对应某个槽位，后续应结合型号、大小、序列号或 `/dev/disk/by-id/` 完成设备验收。
 
-## 选择并固定 Ceph 版本
+## 2. 选择并固定 Ceph 版本 {/* #选择并固定-ceph-版本 */}
 
 部署前先选择仍在支持周期内、适合当前操作系统和容器运行时的 Ceph 稳定版本。
 
@@ -92,7 +91,7 @@ Podman 或 Docker 版本：<runtime-version>
 
 学习环境可以选官方当前 Active Release；生产环境应先阅读该版本 Release Notes、已知问题和 cephadm 兼容矩阵，再在测试集群验证。
 
-## 所有节点的基础准备
+## 3. 所有节点的基础准备 {/* #所有节点的基础准备 */}
 
 cephadm 官方当前要求包括：
 
@@ -103,7 +102,7 @@ cephadm 官方当前要求包括：
 - LVM2
 - 可用的 SSH 服务
 
-### 1. 设置唯一且稳定的主机名
+### 3.1 设置唯一且稳定的主机名 {/* #1-设置唯一且稳定的主机名 */}
 
 在三台主机分别设置：
 
@@ -124,7 +123,7 @@ hostname -f
 
 cephadm 使用主机名进行调度。主机名、DNS 解析、`hostname` 返回结果不一致，是添加 Host 失败的常见原因。
 
-### 2. 配置名称解析
+### 3.2 配置名称解析 {/* #2-配置名称解析 */}
 
 生产环境优先使用可靠 DNS。实验环境可以在所有节点的 `/etc/hosts` 中维护：
 
@@ -142,7 +141,7 @@ getent hosts ceph02
 getent hosts ceph03
 ```
 
-### 3. 安装基础依赖
+### 3.3 安装基础依赖 {/* #3-安装基础依赖 */}
 
 以 RHEL 兼容系统为例：
 
@@ -161,7 +160,7 @@ systemctl enable --now chrony ssh
 
 实际选择 Podman 还是 Docker，应根据目标 Ceph 版本的兼容性文档和企业标准决定，不要在同一集群随意混用未经验证的版本。
 
-### 4. 检查时间同步
+### 3.4 检查时间同步 {/* #4-检查时间同步 */}
 
 ```bash
 timedatectl
@@ -178,7 +177,7 @@ chronyc sources -v
 
 MON 时钟不同步可能引发选举、租约和消息处理异常，因此时间同步是集群基础条件，不是可选优化。
 
-### 5. 检查网络连通与 MTU
+### 3.5 检查网络连通与 MTU {/* #5-检查网络连通与-mtu */}
 
 ```bash
 ip -br addr
@@ -200,7 +199,7 @@ ping -c 3 10.20.20.12
 
 防火墙应只允许可信 Public/Cluster 网段访问所需端口。容器运行时与防火墙规则交互因操作系统而异，生产变更应逐台验证，不要简单永久关闭防火墙。
 
-### 6. 核对磁盘
+### 3.6 核对磁盘 {/* #6-核对磁盘 */}
 
 在每台主机执行：
 
@@ -222,13 +221,13 @@ lvs
 
 此时不要为了让设备显示 Available 就直接格式化或 Zap。先查清设备为何被占用。
 
-## 在第一台主机安装 cephadm
+## 4. 在第一台主机安装 cephadm {/* #在第一台主机安装-cephadm */}
 
 在 `ceph01` 操作。
 
 cephadm 可以通过发行版包安装，也可以使用官方 Curl 方式取得初始可执行文件。两种方式二选一，不要混合。
 
-### 方式 1：发行版提供了目标版本
+### 4.1 方式 1：发行版提供了目标版本 {/* #方式-1发行版提供了目标版本 */}
 
 例如 Ubuntu 仓库：
 
@@ -238,7 +237,7 @@ apt install -y cephadm
 
 安装前要确认仓库中的版本正是计划使用的版本，而不是只看包名存在。
 
-### 方式 2：使用官方 Curl 方式
+### 4.2 方式 2：使用官方 Curl 方式 {/* #方式-2使用官方-curl-方式 */}
 
 下面保留版本占位符，执行前必须替换成选定的 Active Release 版本：
 
@@ -261,15 +260,15 @@ cephadm version
 
 不要直接复制文档中的旧示例版本。应从 Ceph Active Releases 页面确认当前受支持版本，并保存下载文件的校验结果和部署记录。
 
-## Bootstrap 第一个节点
+## 5. Bootstrap 第一个节点 {/* #bootstrap-第一个节点 */}
 
-### 1. 只有 Public Network
+### 5.1 只有 Public Network {/* #1-只有-public-network */}
 
 ```bash
 cephadm bootstrap --mon-ip 10.10.10.11
 ```
 
-### 2. Public 与 Cluster Network 分离
+### 5.2 Public 与 Cluster Network 分离 {/* #2-public-与-cluster-network-分离 */}
 
 ```bash
 cephadm bootstrap \
@@ -292,7 +291,7 @@ Bootstrap 主要会：
 
 保存 Bootstrap 输出，但要把 Dashboard 密码和 Admin Keyring 视为敏感信息，不要粘贴到公开文章、工单或聊天群。
 
-### 3. 验证最小集群
+### 5.3 验证最小集群 {/* #3-验证最小集群 */}
 
 ```bash
 cephadm shell -- ceph -s
@@ -302,7 +301,7 @@ cephadm shell -- ceph orch ps
 
 此时只有一个 MON 和一个 MGR。它是可管理的最小集群，不是已经完成高可用的生产集群。
 
-### 4. 启用方便的 Ceph CLI
+### 5.4 启用方便的 Ceph CLI {/* #4-启用方便的-ceph-cli */}
 
 可以一直使用：
 
@@ -325,9 +324,9 @@ ceph status
 cephadm shell -- ceph <subcommand>
 ```
 
-## 添加 ceph02 和 ceph03
+## 6. 添加 ceph02 和 ceph03 {/* #添加-ceph02-和-ceph03 */}
 
-### 1. 分发 cephadm 公钥
+### 6.1 分发 cephadm 公钥 {/* #1-分发-cephadm-公钥 */}
 
 在 `ceph01` 执行：
 
@@ -338,7 +337,7 @@ ssh-copy-id -f -i /etc/ceph/ceph.pub root@ceph03
 
 如果企业禁止 Root SSH，可以在 Bootstrap 时使用 `--ssh-user <user>` 指定具有免密 sudo 能力的专用用户。不要临时绕过安全策略。
 
-### 2. 添加 Host
+### 6.2 添加 Host {/* #2-添加-host */}
 
 ```bash
 ceph orch host add ceph02 10.10.10.12
@@ -357,7 +356,7 @@ ceph cephadm check-host ceph03 10.10.10.13
 
 如果 `check-host` 子命令在目标版本中的输出或参数不同，以该版本 `ceph cephadm -h` 为准；`ceph orch host ls --detail` 仍应确认 Host 已被编排器管理。
 
-### 3. 添加管理入口
+### 6.3 添加管理入口 {/* #3-添加管理入口 */}
 
 让 `ceph02` 也获得 `ceph.conf` 和 Admin Keyring：
 
@@ -367,7 +366,7 @@ ceph orch host label add ceph02 _admin
 
 `_admin` 意味着分发高权限凭据。只应授予受控管理节点，不要给每台普通客户端都添加。
 
-## 部署 MON 和 MGR 高可用
+## 7. 部署 MON 和 MGR 高可用 {/* #部署-mon-和-mgr-高可用 */}
 
 创建 `core-services.yaml`：
 
@@ -406,11 +405,11 @@ ceph orch ps --daemon_type mgr --refresh
 
 为什么用一个 YAML 一次声明三个 MON？因为 `ceph orch apply mon ceph01`、再执行 `apply mon ceph02` 并不是「逐个追加」；新的 Apply 会覆盖前一个服务放置声明，最后可能只剩后一次指定的 Host。
 
-## 安全创建 OSD
+## 8. 安全创建 OSD {/* #安全创建-osd */}
 
 这是整篇最需要谨慎的步骤。
 
-### 1. 先查看 cephadm 发现的设备
+### 8.1 先查看 cephadm 发现的设备 {/* #1-先查看-cephadm-发现的设备 */}
 
 ```bash
 ceph orch device ls --wide --refresh
@@ -430,7 +429,7 @@ ceph orch device ls --wide --refresh
 lsblk -e7 -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS,MODEL,SERIAL
 ```
 
-### 2. 实验环境：匹配所有可用空白设备
+### 8.2 实验环境：匹配所有可用空白设备 {/* #2-实验环境匹配所有可用空白设备 */}
 
 先预览：
 
@@ -446,7 +445,7 @@ ceph orch apply osd --all-available-devices
 
 这条命令会保存为持久化声明。以后新插入或重新 Zap 后变为 Available 的设备，也可能自动被创建为 OSD。生产环境不应在未理解此行为时使用。
 
-### 3. 生产环境：使用明确的 OSD ServiceSpec
+### 8.3 生产环境：使用明确的 OSD ServiceSpec {/* #3-生产环境使用明确的-osd-servicespec */}
 
 先给目标 OSD 主机打标签：
 
@@ -484,7 +483,7 @@ ceph orch apply -i osd-hdd.yaml
 
 对于复杂生产环境，可以进一步使用设备型号、容量范围或独立 DB 设备过滤。例如 HDD 做数据盘、指定型号 SSD 做 DB。但任何过滤都可能匹配未来新增设备，必须先理解持久化声明，并为不同磁盘布局使用唯一 `service_id`。
 
-### 4. 不要把 Zap 当作普通清理命令
+### 8.4 不要把 Zap 当作普通清理命令 {/* #4-不要把-zap-当作普通清理命令 */}
 
 下面命令会擦除设备上的 Ceph/LVM 等元数据，使设备可重新使用：
 
@@ -494,7 +493,7 @@ ceph orch device zap <hostname> <device-path>
 
 它具有破坏性。如果已有 OSD ServiceSpec 会自动匹配该设备，Zap 完成后 cephadm 还可能立即重新创建 OSD。生产中执行前必须确认设备身份、OSD 移除状态、数据已恢复以及 Spec 行为。
 
-### 5. 验证 OSD
+### 8.5 验证 OSD {/* #5-验证-osd */}
 
 ```bash
 ceph orch ps --daemon_type osd --refresh
@@ -512,9 +511,9 @@ ceph -s
 - 是否有设备创建失败
 - 是否出现慢请求、认证或网络告警
 
-## 部署后的完整验收
+## 9. 部署后的完整验收 {/* #部署后的完整验收 */}
 
-### 1. 集群健康
+### 9.1 集群健康 {/* #1-集群健康 */}
 
 ```bash
 ceph -s
@@ -524,7 +523,7 @@ ceph versions
 
 `HEALTH_WARN` 不一定代表部署失败，例如尚未创建 Pool 时可能有相应提示。但每一条告警都要解释清楚，不能为了得到 `HEALTH_OK` 而盲目关闭检查。
 
-### 2. 编排状态
+### 9.2 编排状态 {/* #2-编排状态 */}
 
 ```bash
 ceph orch host ls --detail
@@ -533,7 +532,7 @@ ceph orch ps --refresh
 ceph orch device ls --wide --refresh
 ```
 
-### 3. 核心服务
+### 9.3 核心服务 {/* #3-核心服务 */}
 
 ```bash
 ceph mon stat
@@ -542,7 +541,7 @@ ceph osd stat
 ceph osd tree
 ```
 
-### 4. 网络和时间
+### 9.4 网络和时间 {/* #4-网络和时间 */}
 
 ```bash
 chronyc tracking
@@ -552,7 +551,7 @@ ceph orch ps --refresh
 
 端口检查命令只是辅助，实际端口应结合 `ceph orch ps`、目标版本和防火墙策略确认。
 
-### 5. 保存基线
+### 9.5 保存基线 {/* #5-保存基线 */}
 
 建议在受控配置仓库保存：
 
@@ -565,9 +564,9 @@ ceph versions > ceph-versions.txt
 
 这些文件可能包含内部主机名、网段和配置，不能直接发布到公网。Admin Keyring 和 SSH 私钥更不能提交到 Git。
 
-## 常见失败与排查
+## 10. 常见失败与排查 {/* #常见失败与排查 */}
 
-### 1. Bootstrap 无法拉取镜像
+### 10.1 Bootstrap 无法拉取镜像 {/* #1-bootstrap-无法拉取镜像 */}
 
 检查：
 
@@ -580,7 +579,7 @@ ceph versions > ceph-versions.txt
 
 离线环境应提前同步镜像和软件仓库，并记录镜像 Digest。不要在生产集群临时绕过证书校验。
 
-### 2. 添加 Host 失败
+### 10.2 添加 Host 失败 {/* #2-添加-host-失败 */}
 
 先让 cephadm 执行主机检查：
 
@@ -599,7 +598,7 @@ ceph orch host ls --detail
 
 `/etc/ceph/ceph.pub` 是公钥，只用于分发，不能作为 SSH 私钥传给 `ssh -i`。
 
-### 3. 设备显示不可用
+### 10.3 设备显示不可用 {/* #3-设备显示不可用 */}
 
 ```bash
 ceph orch device ls --wide --refresh
@@ -610,7 +609,7 @@ blkid
 
 根据 REJECT REASONS 查明是否存在分区、文件系统、LVM、挂载或旧 OSD 元数据。只有确认数据不再需要，才进入清理流程。
 
-### 4. OSD 创建后不在正确 Host 或设备类
+### 10.4 OSD 创建后不在正确 Host 或设备类 {/* #4-osd-创建后不在正确-host-或设备类 */}
 
 检查：
 
@@ -623,11 +622,11 @@ ceph orch ls --service_type osd --export
 
 确认 ServiceSpec 的 Placement、设备过滤器和 `crush_device_class` 是否符合设计。
 
-### 5. 集群只有一个 MON
+### 10.5 集群只有一个 MON {/* #5-集群只有一个-mon */}
 
 Bootstrap 只创建初始 MON。需要显式应用 MON ServiceSpec，并确认三个 MON 都进入 Quorum。不要通过重复执行 Bootstrap 添加 MON。
 
-## 部署中的常见误区
+## 11. 部署中的常见误区 {/* #部署中的常见误区 */}
 
 **误区 1：Bootstrap 成功就表示生产部署完成**
 
@@ -649,7 +648,7 @@ Ceph 守护进程由 cephadm 和 systemd 管理。日常操作应通过 `ceph or
 
 它是持久化声明，未来满足条件的磁盘仍可能被自动使用。
 
-## 本篇总结
+## 12. 本篇总结 {/* #本篇总结 */}
 
 cephadm 部署流程可以概括为：
 
@@ -679,8 +678,7 @@ cephadm 部署流程可以概括为：
 
 **Host 标签、Placement、ServiceSpec、守护进程操作、维护模式、日志和配置管理。**
 
-
-## 自测题
+## 13. 自测题 {/* #自测题 */}
 
 1. cephadm 部署依赖哪些基础组件？
 2. Bootstrap 默认创建哪些 Ceph 核心服务？
@@ -691,7 +689,7 @@ cephadm 部署流程可以概括为：
 7. 创建 OSD 前要核对哪些设备信息？
 8. 为什么 Zap 设备后可能自动重新创建 OSD？
 
-## 参考资料
+## 14. 参考资料 {/* #参考资料 */}
 
 - [Using Cephadm to Deploy a New Ceph Cluster](https://docs.ceph.com/en/latest/cephadm/install/)
 - [Host Management](https://docs.ceph.com/en/latest/cephadm/host-management/)

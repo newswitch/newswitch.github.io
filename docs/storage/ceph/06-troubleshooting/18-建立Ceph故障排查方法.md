@@ -2,8 +2,8 @@
 title: "Ceph PG 异常排查：从状态含义到 Inactive、Peering、Inconsistent 与 Unfound"
 sidebar_label: "18. Ceph PG 异常排查：从状态含义到 Inactive、Peering、Inconsistent 与 Unfound"
 sidebar_position: 18
-tags: [Ceph, 学习路线, 存储, PG]
 description: "读懂 PG 组合状态，排查 inactive/peering/degraded/inconsistent/unfound，并建立可执行的 PG Runbook。"
+tags: [Ceph, 学习路线, 存储, PG]
 ---
 
 # Ceph PG 异常排查：从状态含义到 Inactive、Peering、Inconsistent 与 Unfound
@@ -14,8 +14,7 @@ description: "读懂 PG 组合状态，排查 inactive/peering/degraded/inconsis
 
 PG 是 Ceph 数据放置、复制、恢复和一致性检查的核心单位。很多故障最后都会表现为 PG 状态变化，因此看懂 PG，才算真正具备 Ceph 故障分析能力。
 
-
-## 本文目标
+## 1. 本文目标 {/* #本文目标 */}
 
 读完本文后，你应该能够：
 
@@ -33,7 +32,7 @@ PG 是 Ceph 数据放置、复制、恢复和一致性检查的核心单位。�
 PG 修复涉及数据副本选择。`pg repair`、降低 `min_size`、强制恢复、标记 unfound 对象丢失等操作不能按模板盲目执行。生产中必须先保存现场、判断权威副本并确认应用影响。
 :::
 
-## PG 到底解决了什么问题
+## 2. PG 到底解决了什么问题 {/* #pg-到底解决了什么问题 */}
 
 假设集群有数十亿个对象。如果 MON 为每个对象保存「它在哪几块盘上」，映射规模会非常大，数据变化时管理成本也难以接受。
 
@@ -54,7 +53,7 @@ flowchart LR
 3. 故障与恢复主要按 PG 组织
 4. MON 管理有限数量的 PG 状态，而不是逐对象位置
 
-### PG ID 的形式
+### 2.1 PG ID 的形式 {/* #pg-id-的形式 */}
 
 PG ID 通常类似：
 
@@ -74,7 +73,7 @@ ceph osd pool ls detail
 
 知道 Pool 后，才能继续判断受影响的是 RBD、CephFS、RGW 还是其他业务。
 
-## PG 状态为什么经常是组合形式
+## 3. PG 状态为什么经常是组合形式 {/* #pg-状态为什么经常是组合形式 */}
 
 PG 状态可能是：
 
@@ -97,7 +96,7 @@ active+remapped+backfilling
 
 不能只看到一个词就下结论，要读完整组合。
 
-## 最常见 PG 状态速查表
+## 4. 最常见 PG 状态速查表 {/* #最常见-pg-状态速查表 */}
 
 | 状态 | 含义 | 是否一定影响业务 |
 | --- | --- | --- |
@@ -120,7 +119,7 @@ active+remapped+backfilling
 | inconsistent | scrub 发现副本、校验和或元数据不一致 | 需要调查 |
 | recovery_unfound | 恢复所需对象没有找到可用副本 | 可能存在数据丢失 |
 
-### 第一优先级看什么
+### 4.1 第一优先级看什么 {/* #第一优先级看什么 */}
 
 先按业务影响分三层：
 
@@ -132,7 +131,7 @@ active+remapped+backfilling
 
 `active+degraded` 与 `inactive` 不是同一严重程度。前者通常还能服务请求，后者对应数据当前不能正常提供 I/O。
 
-## PG 正常恢复时会经历什么
+## 5. PG 正常恢复时会经历什么 {/* #pg-正常恢复时会经历什么 */}
 
 一个 OSD 短暂故障后，PG 可能经历：
 
@@ -154,11 +153,11 @@ stateDiagram-v2
 - 是否出现 inactive、unfound、backfill_toofull
 - 是否反复在几个状态之间震荡
 
-### 「不是 active+clean」不等于必须人工修复
+### 5.1 「不是 active+clean」不等于必须人工修复 {/* #不是-activeclean不等于必须人工修复 */}
 
 Ceph 的设计目标之一就是自动恢复。恢复正在正常推进时，过早执行 repair、强制 recovery 或反复重启 OSD，反而可能打断正常过程。
 
-## PG 排障的第一轮命令
+## 6. PG 排障的第一轮命令 {/* #pg-排障的第一轮命令 */}
 
 ```bash
 date -Is
@@ -190,11 +189,11 @@ ceph pg dump_stuck unclean
 7. 状态是否持续推进？
 8. 对应业务是否读写失败？
 
-## 从 PG ID 反查业务范围
+## 7. 从 PG ID 反查业务范围 {/* #从-pg-id-反查业务范围 */}
 
 假设异常 PG 为 `3.a7`。
 
-### 找 Pool
+### 7.1 找 Pool {/* #找-pool */}
 
 ```bash
 ceph osd lspools
@@ -203,7 +202,7 @@ ceph osd pool ls detail
 
 找到 ID 为 3 的 Pool。
 
-### 判断 Pool 用途
+### 7.2 判断 Pool 用途 {/* #判断-pool-用途 */}
 
 检查：
 
@@ -217,7 +216,7 @@ ceph osd pool ls detail
 ceph osd pool application get <pool-name>
 ```
 
-### 为什么这一步重要
+### 7.3 为什么这一步重要 {/* #为什么这一步重要 */}
 
 同样是一个 PG inactive：
 
@@ -228,7 +227,7 @@ ceph osd pool application get <pool-name>
 
 没有业务映射，无法正确设置事故级别。
 
-## 使用 `ceph pg query` 深入分析
+## 8. 使用 `ceph pg query` 深入分析 {/* #使用-ceph-pg-query-深入分析 */}
 
 ```bash
 ceph pg 3.a7 query
@@ -248,14 +247,14 @@ ceph pg 3.a7 query
 | might_have_unfound | 哪些 OSD 可能含缺失对象 |
 | peer_info | 各副本知道的 PG 历史 |
 
-### up set 与 acting set
+### 8.1 up set 与 acting set {/* #up-set-与-acting-set */}
 
 - **up**：当前 CRUSH 和 OSDMap 希望 PG 所在的位置
 - **acting**：当前实际承担 PG 的 OSD
 
 两者不同可能出现在恢复、临时映射、upmap 或 OSD 故障期间。不能仅凭不同就判断错误，要结合 remapped 和恢复过程。
 
-### recovery_state
+### 8.2 recovery_state {/* #recoverystate */}
 
 如果 PG 卡在 peering，`recovery_state` 是最重要的证据之一。它可以显示：
 
@@ -267,13 +266,13 @@ ceph pg 3.a7 query
 
 记录最早进入阻塞阶段的时间，并到对应 OSD 和主机检查日志、磁盘和网络。
 
-## Inactive PG 排查
+## 9. Inactive PG 排查 {/* #inactive-pg-排查 */}
 
-### inactive 意味着什么
+### 9.1 inactive 意味着什么 {/* #inactive-意味着什么 */}
 
 inactive 表示 PG 当前不能正常处理客户端读写。它不是单纯的「副本少一份」，而是可用性问题。
 
-### 常见原因
+### 9.2 常见原因 {/* #常见原因 */}
 
 - acting set 中关键 OSD down
 - 可用副本/EC 分片少于 `min_size`
@@ -283,7 +282,7 @@ inactive 表示 PG 当前不能正常处理客户端读写。它不是单纯的�
 - 多重故障导致没有可选权威副本
 - Pool size 大于当前可满足的故障域数量
 
-### 排查顺序
+### 9.3 排查顺序 {/* #排查顺序 */}
 
 ```bash
 ceph health detail
@@ -301,7 +300,7 @@ ceph osd pool get <pool-name> min_size
 ceph osd pool get <pool-name> crush_rule
 ```
 
-### 不要为了恢复写入随便降低 min_size
+### 9.4 不要为了恢复写入随便降低 min_size {/* #不要为了恢复写入随便降低-minsize */}
 
 `min_size` 是允许 PG 处理 I/O 所需的最小副本/分片数。降低它可能让集群在冗余不足时接受新写入。
 
@@ -314,13 +313,13 @@ ceph osd pool get <pool-name> crush_rule
 
 只有在明确数据风险、业务优先级、后续恢复方案和审批后，才可能作为特定灾难场景的临时决策。
 
-## Stale PG 排查
+## 10. Stale PG 排查 {/* #stale-pg-排查 */}
 
-### stale 的含义
+### 10.1 stale 的含义 {/* #stale-的含义 */}
 
 MON 长时间没有收到 PG 的最新状态。常见情况是该 PG 的 primary OSD，以及可能的所有相关 OSD 都不可达。
 
-### 排查步骤
+### 10.2 排查步骤 {/* #排查步骤 */}
 
 ```bash
 ceph pg dump_stuck stale
@@ -340,9 +339,9 @@ ceph pg <pgid> query
 
 stale 常指向「相关 OSD 都没有上报」，因此要优先从共同故障域寻找原因。
 
-## Peering 长时间不结束
+## 11. Peering 长时间不结束 {/* #peering-长时间不结束 */}
 
-### peering 做什么
+### 11.1 peering 做什么 {/* #peering-做什么 */}
 
 OSD 需要交换 PG 历史，确定：
 
@@ -353,7 +352,7 @@ OSD 需要交换 PG 历史，确定：
 
 短时 peering 是正常的，长时间卡住才需要排查。
 
-### 常见阻塞原因
+### 11.2 常见阻塞原因 {/* #常见阻塞原因 */}
 
 - 某个包含关键历史的 OSD down
 - OSD 网络不通或延迟极高
@@ -363,7 +362,7 @@ OSD 需要交换 PG 历史，确定：
 - CRUSH 无法满足放置规则
 - OSDMap 或 PGMap 正在快速变化
 
-### 查看阻塞 OSD
+### 11.3 查看阻塞 OSD {/* #查看阻塞-osd */}
 
 ```bash
 ceph pg <pgid> query
@@ -373,9 +372,9 @@ ceph pg <pgid> query
 
 一个旧 OSD 可能持有完成 peering 所需的唯一 PG 历史。此时「清理掉故障 OSD」可能把可恢复问题变成永久丢失。
 
-## Degraded 与 Undersized
+## 12. Degraded 与 Undersized {/* #degraded-与-undersized */}
 
-### degraded
+### 12.1 degraded {/* #degraded */}
 
 表示部分对象没有达到目标副本数或 EC 分片数。
 
@@ -387,7 +386,7 @@ active+undersized+degraded
 
 active 表示还能服务 I/O，degraded 表示数据保护下降。
 
-### undersized
+### 12.2 undersized {/* #undersized */}
 
 表示 PG 的 acting set 数量少于 Pool 配置的 size。常见原因：
 
@@ -397,7 +396,7 @@ active 表示还能服务 I/O，degraded 表示数据保护下降。
 - 新集群 OSD 数量少于副本要求
 - 某类 device class 可用设备不足
 
-### 什么时候算异常
+### 12.3 什么时候算异常 {/* #什么时候算异常 */}
 
 换盘和恢复期间短暂出现通常正常。但以下情况需要处理：
 
@@ -409,21 +408,21 @@ active 表示还能服务 I/O，degraded 表示数据保护下降。
 - OSD 反复 flapping
 - 集群又出现第二故障
 
-## Recovering、Backfilling 与 Remapped
+## 13. Recovering、Backfilling 与 Remapped {/* #recoveringbackfilling-与-remapped */}
 
-### recovery
+### 13.1 recovery {/* #recovery */}
 
 通常根据缺失对象集合补齐数据，粒度更偏对象恢复。
 
-### backfill
+### 13.2 backfill {/* #backfill */}
 
 当 PG 需要迁移到新 OSD 或数据差异较大时，会扫描和回填较多对象。
 
-### remapped
+### 13.3 remapped {/* #remapped */}
 
 表示 acting set 暂时不同于正常 CRUSH 目标。在 OSD out、新盘加入、CRUSH 修改和 balancer 调整期间常见。
 
-### 如何判断恢复是否推进
+### 13.4 如何判断恢复是否推进 {/* #如何判断恢复是否推进 */}
 
 反复观察：
 
@@ -446,9 +445,9 @@ ceph osd df tree
 
 不要只看某一分钟速度。恢复会受调度、对象大小、PG 分布和客户端负载影响而波动，应看一段时间的趋势。
 
-## Backfill_toofull 与恢复被容量阻塞
+## 14. Backfill_toofull 与恢复被容量阻塞 {/* #backfilltoofull-与恢复被容量阻塞 */}
 
-### 现象
+### 14.1 现象 {/* #现象 */}
 
 PG 可能出现：
 
@@ -458,7 +457,7 @@ active+remapped+backfill_toofull
 
 含义是目标 OSD 已超过或预计会超过 backfillfull 阈值，拒绝继续接收回填。
 
-### 检查
+### 14.2 检查 {/* #检查 */}
 
 ```bash
 ceph health detail
@@ -467,7 +466,7 @@ ceph osd df tree
 ceph osd dump
 ```
 
-### 处理思路
+### 14.3 处理思路 {/* #处理思路 */}
 
 1. 找到最满 OSD 和增长最快 Pool
 2. 停止非必要的大量写入
@@ -478,16 +477,16 @@ ceph osd dump
 
 不要把提高 backfillfull/full 阈值当作常规修复。它不增加物理空间，只会压缩安全余量。
 
-## Scrub 与 Deep Scrub
+## 15. Scrub 与 Deep Scrub {/* #scrub-与-deep-scrub */}
 
-### scrub 做什么
+### 15.1 scrub 做什么 {/* #scrub-做什么 */}
 
 Scrub 类似文件系统的一致性检查，比较 PG 副本的对象和元数据。
 
 - **shallow scrub**：主要检查对象存在性和元数据
 - **deep scrub**：读取对象数据并比较校验和，开销更高
 
-### 正常状态
+### 15.2 正常状态 {/* #正常状态 */}
 
 ```text
 active+clean+scrubbing
@@ -496,7 +495,7 @@ active+clean+scrubbing+deep
 
 这通常是正常后台任务，不应看到 scrubbing 就停止。
 
-### 手工触发前要评估负载
+### 15.3 手工触发前要评估负载 {/* #手工触发前要评估负载 */}
 
 ```bash
 ceph pg deep-scrub <pgid>
@@ -504,9 +503,9 @@ ceph pg deep-scrub <pgid>
 
 深度 scrub 会增加磁盘读取和后台负载。生产高峰、恢复期间或慢盘环境不应批量盲目触发。
 
-## Inconsistent PG 排查
+## 16. Inconsistent PG 排查 {/* #inconsistent-pg-排查 */}
 
-### inconsistent 表示什么
+### 16.1 inconsistent 表示什么 {/* #inconsistent-表示什么 */}
 
 Scrub 发现同一对象的副本之间存在差异，可能包括：
 
@@ -525,7 +524,7 @@ active+clean+inconsistent
 
 它可能仍是 active，但数据一致性已经需要调查。
 
-### 找到不一致 PG 和对象
+### 16.2 找到不一致 PG 和对象 {/* #找到不一致-pg-和对象 */}
 
 ```bash
 ceph health detail
@@ -542,7 +541,7 @@ rados list-inconsistent-snapset <pgid> --format=json-pretty
 - 是否集中到同一个 OSD
 - 是否同时有内核 I/O 或 SMART 错误
 
-### 先查硬件，再 repair
+### 16.3 先查硬件，再 repair {/* #先查硬件再-repair */}
 
 ```bash
 ceph osd perf
@@ -558,7 +557,7 @@ smartctl -x /dev/<confirmed-device>
 
 如果某个设备正在损坏，直接 repair 可能只是重新读取并写入不可靠介质。应先判断是否需要隔离或更换硬件。
 
-### `ceph pg repair` 的边界
+### 16.4 `ceph pg repair` 的边界 {/* #ceph-pg-repair-的边界 */}
 
 ```bash
 ceph pg repair <pgid>
@@ -577,15 +576,15 @@ ceph pg repair <pgid>
 
 「repair 成功」也不等于底层故障消失。必须再次 deep scrub 并检查硬件。
 
-## Unfound 对象
+## 17. Unfound 对象 {/* #unfound-对象 */}
 
-### found、missing 与 unfound
+### 17.1 found、missing 与 unfound {/* #foundmissing-与-unfound */}
 
 - **missing**：Ceph 知道某个对象版本缺失
 - **found**：在某个可用 OSD 找到可恢复副本
 - **unfound**：Ceph 知道对象应存在，但在当前已查询位置找不到所需版本
 
-### 列出 unfound 对象
+### 17.2 列出 unfound 对象 {/* #列出-unfound-对象 */}
 
 ```bash
 ceph pg <pgid> list_unfound
@@ -600,7 +599,7 @@ ceph pg <pgid> list_unfound
 - might_have_unfound
 - 对应 OSD 是 down、already probed 还是尚未查询
 
-### 正确优先级：找回可能的数据源
+### 17.3 正确优先级：找回可能的数据源 {/* #正确优先级找回可能的数据源 */}
 
 如果输出表明 `osd.12` 可能有缺失对象，优先考虑：
 
@@ -612,7 +611,7 @@ ceph pg <pgid> list_unfound
 
 不要先 purge 可能含唯一数据的 OSD。
 
-## mark_unfound_lost 为什么极其危险
+## 18. mark_unfound_lost 为什么极其危险 {/* #markunfoundlost-为什么极其危险 */}
 
 当所有可能位置都已查询，仍找不到对象时，Ceph 提供：
 
@@ -623,15 +622,15 @@ ceph pg <pgid> mark_unfound_lost delete
 
 这不是「找回数据」的命令，而是告诉集群如何接受数据已经丢失的事实。
 
-### revert
+### 18.1 revert {/* #revert */}
 
 尝试回退到旧版本；如果是新对象，可能相当于忘记它。纠删码 Pool 不支持该选择。应用可能看到数据回退或对象消失。
 
-### delete
+### 18.2 delete {/* #delete */}
 
 直接让集群忘记这些对象。对象数据将被视为丢失。
 
-### 执行前必须完成
+### 18.3 执行前必须完成 {/* #执行前必须完成 */}
 
 - [ ] 获取完整 unfound 对象清单
 - [ ] 把 RADOS 对象映射到 RBD/CephFS/RGW 业务
@@ -644,7 +643,7 @@ ceph pg <pgid> mark_unfound_lost delete
 
 任何文章都不应把这条命令描述成普通 PG 修复步骤。
 
-## CRUSH 约束无法满足
+## 19. CRUSH 约束无法满足 {/* #crush-约束无法满足 */}
 
 集群可能有足够 OSD 数量，但 CRUSH 仍无法为 PG 找到足够位置。
 
@@ -676,16 +675,16 @@ ceph osd tree
 
 不应为了让 PG 变 clean 就随意降低故障域保护。
 
-## 恢复速度慢与 PG 卡住的区别
+## 20. 恢复速度慢与 PG 卡住的区别 {/* #恢复速度慢与-pg-卡住的区别 */}
 
-### 恢复慢
+### 20.1 恢复慢 {/* #恢复慢 */}
 
 - recovery 数量和字节持续变化
 - PG 数量逐渐下降
 - 没有固定 blocked_by
 - 只是吞吐较低或业务竞争明显
 
-### 真正卡住
+### 20.2 真正卡住 {/* #真正卡住 */}
 
 - 长时间计数完全不变
 - 同一 PG 反复 peering
@@ -697,33 +696,33 @@ ceph osd tree
 
 两种情况的处理不同。恢复慢需要性能分析和调度；卡住需要解决具体阻塞条件。
 
-## 不要盲目做的操作
+## 21. 不要盲目做的操作 {/* #不要盲目做的操作 */}
 
-### 反复重启所有 OSD
+### 21.1 反复重启所有 OSD {/* #反复重启所有-osd */}
 
 这会使 OSDMap 和 peering 状态继续变化，破坏现场并可能扩大不可用范围。
 
-### 随意降低 size 或 min_size
+### 21.2 随意降低 size 或 min_size {/* #随意降低-size-或-minsize */}
 
 告警可能暂时减少，但数据保护发生实质下降。
 
-### 看到 inconsistent 就立即 repair
+### 21.3 看到 inconsistent 就立即 repair {/* #看到-inconsistent-就立即-repair */}
 
 应先分析 shard、校验和、设备和权威副本。
 
-### 看到 unfound 就 mark lost
+### 21.4 看到 unfound 就 mark lost {/* #看到-unfound-就-mark-lost */}
 
 这会接受对象丢失，必须先尝试找回潜在数据源并完成业务审批。
 
-### 手工修改 acting set 或 upmap
+### 21.5 手工修改 acting set 或 upmap {/* #手工修改-acting-set-或-upmap */}
 
 不了解 PG 历史和 CRUSH 时强行修改映射，可能让问题更复杂。应先解决 OSD、网络、容量或规则根因。
 
-### 同时进行多项大变更
+### 21.6 同时进行多项大变更 {/* #同时进行多项大变更 */}
 
 换盘、升级、CRUSH 调整、Pool 参数修改和恢复限速不应无计划地叠加，否则很难判断哪一步影响了 PG。
 
-## PG 排障决策流程
+## 22. PG 排障决策流程 {/* #pg-排障决策流程 */}
 
 ```mermaid
 flowchart TB
@@ -741,9 +740,9 @@ flowchart TB
 
 无论走哪条路径，都要保留 PG ID、Pool、acting set、时间和业务影响。
 
-## PG Runbook 模板
+## 23. PG Runbook 模板 {/* #pg-runbook-模板 */}
 
-### 告警信息
+### 23.1 告警信息 {/* #告警信息 */}
 
 ```text
 集群：
@@ -759,7 +758,7 @@ acting set：
 近期变更：
 ```
 
-### 第一轮证据
+### 23.2 第一轮证据 {/* #第一轮证据 */}
 
 ```bash
 ceph -s
@@ -771,7 +770,7 @@ ceph osd df tree
 ceph osd perf
 ```
 
-### 分支判断
+### 23.3 分支判断 {/* #分支判断 */}
 
 - **inactive/stale**：恢复可用 OSD、主机和网络
 - **degraded/undersized**：检查故障、CRUSH 和恢复进度
@@ -780,7 +779,7 @@ ceph osd perf
 - **unfound**：寻找潜在副本，进入数据丢失流程
 - **recovery 慢**：进入性能分析
 
-### 恢复完成标准
+### 23.4 恢复完成标准 {/* #恢复完成标准 */}
 
 - PG 恢复 `active+clean`，或达到预先定义的可接受状态
 - 无 inactive/stale/unfound
@@ -791,9 +790,9 @@ ceph osd perf
 - 临时配置和告警静默已恢复
 - 事故原因和改进项已记录
 
-## 生产检查清单
+## 24. 生产检查清单 {/* #生产检查清单 */}
 
-### 发现异常时
+### 24.1 发现异常时 {/* #发现异常时 */}
 
 - [ ] 保存时间和完整 PG 状态
 - [ ] 找到 Pool 和业务
@@ -802,7 +801,7 @@ ceph osd perf
 - [ ] 检查相关 OSD、主机和故障域
 - [ ] 检查容量、网络和近期变更
 
-### 修复前
+### 24.2 修复前 {/* #修复前 */}
 
 - [ ] 已保存 `pg query`
 - [ ] 已确认潜在权威副本
@@ -811,7 +810,7 @@ ceph osd perf
 - [ ] 高风险操作已审批
 - [ ] 有备份或应用恢复方案
 
-### 修复后
+### 24.3 修复后 {/* #修复后 */}
 
 - [ ] PG 状态恢复
 - [ ] 重新 scrub/deep-scrub 验证
@@ -820,7 +819,7 @@ ceph osd perf
 - [ ] 恢复速度与性能正常
 - [ ] 更新告警和 Runbook
 
-## 本文小结
+## 25. 本文小结 {/* #本文小结 */}
 
 PG 排障最重要的是读懂「组合状态」和它代表的数据阶段：
 
@@ -836,12 +835,11 @@ PG 排障最重要的是读懂「组合状态」和它代表的数据阶段：
 
 **Nearfull、Backfillfull 和 Full 容量危机。**
 
-
 下一篇将处理另一个经常让恢复停滞的问题：容量危机与 Nearfull/Backfillfull/Full。
 
 → [第 19 篇：常见故障实战](./19-常见故障实战.md)
 
-## 课后练习
+## 26. 课后练习 {/* #课后练习 */}
 
 1. 为什么 PG ID 的前半部分可以帮助定位 Pool？
 2. `active+degraded` 与 `inactive` 的业务影响有何区别？
@@ -854,7 +852,7 @@ PG 排障最重要的是读懂「组合状态」和它代表的数据阶段：
 9. `mark_unfound_lost delete` 实际上做了什么？
 10. 为什么不能为了恢复写入随便降低 `min_size`？
 
-## 官方资料
+## 27. 官方资料 {/* #官方资料 */}
 
 - [PG 故障排查](https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-pg/)
 - [监控 OSD 与 PG](https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/)

@@ -1,9 +1,11 @@
 ---
-title: HAMi vGPU 原理与实践
+title: "HAMi vGPU 原理与实践"
 sidebar_label: "10. HAMi vGPU 原理与实践"
+sidebar_position: 10
+description: "本文介绍开源 GPU 虚拟化方案 HAMi：安装、配置与使用。相对 Time-Slicing 这类「只共享、不隔离」的方案，HAMi 还能对 GPU core / memory 做限制，让共享同一张卡的多个 Pod 更容易拿到稳定配额。"
+tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "GPU共享", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "GPU共享", "学习路线"]
 ---
 
 # HAMi vGPU 原理与实践
@@ -13,8 +15,6 @@ tags: ["Kubernetes", "GPU", "HAMi", "vGPU", "GPU共享", "学习路线"]
 本文介绍开源 GPU 虚拟化方案 **HAMi**：安装、配置与使用。相对 [Time-Slicing](./08-Kubernetes%20GPU%20Time-Slicing%20配置实践.md) 这类「只共享、不隔离」的方案，HAMi 还能对 **GPU core / memory** 做限制，让共享同一张卡的多个 Pod 更容易拿到稳定配额。
 
 > NVIDIA 也有商业 vGPU，通常需要 license；HAMi 是开源路线。
-
----
 
 ## 1. 为什么需要 GPU 共享、切分？
 
@@ -71,14 +71,12 @@ spec:
 
 默认路径下：
 
-1. Device Plugin 按物理卡数量上报  
-2. Scheduler 按 Pod 的 request/limit **扣减**扩展资源  
+1. Device Plugin 按物理卡数量上报
+2. Scheduler 按 Pod 的 request/limit **扣减**扩展资源
 
 结果是：**一张物理 GPU 被一个 Pod 占住后，在 Kubernetes 账本里就没了**，其它 Pod 即使算力上还能挤，也会因「资源不足」调度失败。
 
 所以才需要共享 / 切分方案。Time-Slicing 能让多 Pod 共享一张卡，但通常**没有显存与算力隔离**，容易互相挤占。HAMi 的目标是：共享之外，再补上更细的 core / memory 限制。
-
----
 
 ## 2. 什么是 HAMi？
 
@@ -133,14 +131,12 @@ spec:
 
 举例：
 
-- 原生 CUDA：物理显存真用尽才 OOM  
-- HAMi：用量超过 Pod Resource 里申请的显存，即可返回 OOM  
+- 原生 CUDA：物理显存真用尽才 OOM
+- HAMi：用量超过 Pod Resource 里申请的显存，即可返回 OOM
 
 执行 `nvidia-smi` 时，也尽量只展示该 Pod 申请到的配额（例如显存总量显示为 3000MiB），而不是整张物理卡。
 
 > 需要对 CUDA、NVML 的部分 API 做拦截；兼容性会随 CUDA / 驱动 / 框架版本变化，生产前建议做回归。
-
----
 
 ## 3. 部署
 
@@ -202,8 +198,6 @@ helm install hami hami-charts/hami \
 
 简单 Demo 可先默认参数安装。
 
----
-
 ## 4. 验证
 
 ### 4.1 查看 Node 上的 GPU 数量
@@ -232,8 +226,8 @@ kubectl get node <node> -o yaml | grep capacity -A7
 
 优先级行为（概念上）：
 
-- **高优先级**：与其它高优先级共享时，算力可不严格按 `gpucores` 卡死；若节点上几乎只有高优任务，可能吃满可用资源  
-- **低优先级**：若它是该 GPU 上唯一任务，也可能不受 `gpucores` 严格限制；有争用时才更体现配额  
+- **高优先级**：与其它高优先级共享时，算力可不严格按 `gpucores` 卡死；若节点上几乎只有高优任务，可能吃满可用资源
+- **低优先级**：若它是该 GPU 上唯一任务，也可能不受 `gpucores` 严格限制；有争用时才更体现配额
 
 测试 Pod：
 
@@ -278,8 +272,6 @@ kubectl exec -it gpu-pod -- nvidia-smi
 
 说明容器侧已挂上 HAMi 的拦截库，并按配额展示 / 限制资源。
 
----
-
 ## 5. 小结
 
 | 问题 | 答案 |
@@ -293,9 +285,7 @@ kubectl exec -it gpu-pod -- nvidia-smi
 
 装完后建议继续做隔离实测：[HAMi Core 与 Memory 隔离测试](./11-HAMi-Core与Memory隔离测试.md)。
 
----
-
-## 参考与致谢
+## 6. 参考与致谢 {/* #参考与致谢 */}
 
 - [Project-HAMi/HAMi](https://github.com/Project-HAMi/HAMi)
 - [HAMi Helm 仓库](https://project-hami.github.io/HAMi/)

@@ -2,15 +2,15 @@
 title: "Namespace"
 sidebar_label: "03. Namespace"
 sidebar_position: 3
-tags: [Kubernetes, 集群资源管理, 学习路线]
 description: "详细介绍 Kubernetes 中 Namespace 的概念、使用场景和管理方法，包括如何创建和管理命名空间以实现资源隔离和环境划分。"
+tags: [Kubernetes, 集群资源管理, 学习路线]
 ---
 
 # Namespace
 
 > Namespace 是 Kubernetes 实现资源隔离、环境划分和多租户管理的基础机制，合理设计有助于提升集群安全性与可维护性。
 
-## 什么是 Namespace
+## 1. 什么是 Namespace {/* #什么是-namespace */}
 
 Namespace（命名空间）是 Kubernetes 中的一个抽象概念，用于在同一个物理集群中创建多个虚拟的集群环境。它为资源对象提供作用域，使得不同 Namespace 中的资源可以使用相同的名称而不会冲突，实现逻辑分组和隔离。
 
@@ -26,7 +26,7 @@ flowchart TD
 
 ![Namespace 资源隔离与作用域](/images/k8s/cluster/namespace/fae0b147237ef7f231660d68ee11594a.svg)
 
-## 使用场景
+## 2. 使用场景 {/* #使用场景 */}
 
 Namespace 适用于以下典型场景：
 
@@ -35,9 +35,9 @@ Namespace 适用于以下典型场景：
 - **资源配额管理**：对不同 Namespace 设置资源使用限制，实现资源公平分配。
 - **权限控制**：基于 Namespace 配合 RBAC 实现细粒度的访问控制和多租户安全。
 
-## 基本操作
+## 3. 基本操作 {/* #基本操作 */}
 
-### 查看 Namespace
+### 3.1 查看 Namespace {/* #查看-namespace */}
 
 使用如下命令查看集群中所有 Namespace：
 
@@ -47,7 +47,7 @@ kubectl get namespaces
 kubectl get ns
 ```
 
-### 创建 Namespace
+### 3.2 创建 Namespace {/* #创建-namespace */}
 
 可以通过命令或 YAML 文件创建新的 Namespace：
 
@@ -59,7 +59,7 @@ kubectl create namespace <namespace-name>
 kubectl apply -f namespace.yaml
 ```
 
-### 指定 Namespace 操作
+### 3.3 指定 Namespace 操作 {/* #指定-namespace-操作 */}
 
 在特定 Namespace 下操作资源，或设置默认 Namespace：
 
@@ -71,7 +71,7 @@ kubectl get pods -n <namespace-name>
 kubectl config set-context --current --namespace=<namespace-name>
 ```
 
-## 默认 Namespace
+## 4. 默认 Namespace {/* #默认-namespace */}
 
 Kubernetes 集群默认包含以下 Namespace：
 
@@ -82,7 +82,7 @@ Kubernetes 集群默认包含以下 Namespace：
 | kube-public       | 所有用户都可访问的公共资源                  |
 | kube-node-lease   | 节点心跳检测的租约对象（提升大规模集群性能） |
 
-## 资源作用域
+## 5. 资源作用域 {/* #资源作用域 */}
 
 并非所有 Kubernetes 资源都属于 Namespace 作用域，需注意区分：
 
@@ -100,7 +100,7 @@ Kubernetes 集群默认包含以下 Namespace：
 | ClusterRole      |                 |     ✔️     |
 | Namespace        |                 |     ✔️     |
 
-## Namespace 生命周期与资源隔离
+## 6. Namespace 生命周期与资源隔离 {/* #namespace-生命周期与资源隔离 */}
 
 下图展示了 Namespace 的创建、资源隔离与删除流程：
 
@@ -121,7 +121,7 @@ sequenceDiagram
 
 ![Namespace 生命周期与资源隔离](/images/k8s/cluster/namespace/89f4d985760f72b525c4d332ef3aa29c.svg)
 
-## 资源配额与限制
+## 7. 资源配额与限制 {/* #资源配额与限制 */}
 
 在多团队或多租户场景下，合理分配和限制每个 Namespace 的资源使用非常关键。Kubernetes 提供了 ResourceQuota 和 LimitRange 两种机制：
 
@@ -138,7 +138,7 @@ flowchart TD
 
 ![Namespace 资源配额与限制](/images/k8s/cluster/namespace/384e5f0d14f55991f335ec894416057e.svg)
 
-### ResourceQuota 示例
+### 7.1 ResourceQuota 示例 {/* #resourcequota-示例 */}
 
 ```yaml
 apiVersion: v1
@@ -161,7 +161,7 @@ spec:
 kubectl -n dev describe resourcequota compute-resources
 ```
 
-### LimitRange 示例
+### 7.2 LimitRange 示例 {/* #limitrange-示例 */}
 
 ```yaml
 apiVersion: v1
@@ -182,7 +182,7 @@ spec:
 
 应用后，未显式声明资源的 Pod/容器会自动继承默认 request/limit。
 
-### 配置与管理建议
+### 7.3 配置与管理建议 {/* #配置与管理建议 */}
 
 - 启用 ResourceQuota 和 LimitRange 准入控制器（现代集群默认已启用）：
 
@@ -193,7 +193,7 @@ spec:
 - 为每个 Namespace 规划合理的配额，避免资源争抢或浪费。
 - 定期监控配额使用情况，及时调整。
 
-## 最佳实践
+## 8. 最佳实践 {/* #最佳实践 */}
 
 - **命名规范**：采用 `项目-环境` 格式（如 `shop-prod`、`shop-dev`），便于识别和管理。
 - **资源配额**：为每个 Namespace 配置合理的 ResourceQuota 和 LimitRange，防止资源争抢。
@@ -202,11 +202,11 @@ spec:
 - **权限控制**：结合 RBAC，实现基于 Namespace 的最小权限访问控制。
 - **定期清理**：定期检查并清理不再使用的 Namespace，保持集群整洁。
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 Namespace 是 Kubernetes 实现多租户、资源隔离和环境划分的核心机制。通过合理设计和管理 Namespace，可提升集群的安全性、可维护性和资源利用率。结合资源配额、网络策略和 RBAC，可实现企业级的多团队协作与治理。
 
-## 参考文献
+## 10. 参考资料 {/* #参考文献 */}
 
 1. [Namespaces - kubernetes.io](https://kubernetes.io/zh-cn/docs/concepts/overview/working-with-objects/namespaces/)
 2. [Resource Quotas - kubernetes.io](https://kubernetes.io/zh-cn/docs/concepts/policy/resource-quotas/)

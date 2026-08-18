@@ -1,9 +1,9 @@
 ---
-title: vLLM Serve 生产参数参考
+title: "vLLM Serve 生产参数参考"
 sidebar_label: "25. vLLM Serve 生产参数参考"
 sidebar_position: 25
+description: "按服务、模型、显存、调度、并行、编译、量化和请求层解释 vLLM 参数的作用、因果关系与生产调优方法。"
 tags: [vLLM, 参数, vllm serve, KV Cache, Scheduler, CUDA Graph]
-description: 按服务、模型、显存、调度、并行、编译、量化和请求层解释 vLLM 参数的作用、因果关系与生产调优方法。
 ---
 
 # vLLM Serve 生产参数参考
@@ -93,7 +93,7 @@ vllm serve /models/Qwen \
 | `--model-impl` | 优先 vLLM 内置或 Transformers 实现 | Transformers 回退的性能/功能可能不同 |
 | `--hf-overrides` | 覆盖模型 Config | 会改变架构解释；仅在明确验证时使用 |
 
-### 身份证据
+### 4.1 身份证据 {/* #身份证据 */}
 
 生产发布记录至少包含：
 
@@ -193,7 +193,7 @@ M_total
  + M_runtime/fragmentation
 ```
 
-### 核心参数
+### 9.1 核心参数 {/* #核心参数 */}
 
 | 参数 | 含义 | 调大/启用后的常见影响 |
 |---|---|---|
@@ -206,7 +206,7 @@ M_total
 | `--kv-offloading-size` 等 | KV Offload 预算 | 仅在支持后端/版本使用；网络/CPU 带宽成为新瓶颈 |
 | `--calculate-kv-scales` | 动态计算 FP8 KV Scale | 无正确 Scale 时改善精度，但增加初始化/执行复杂度 |
 
-### 不应同时做的事情
+### 9.2 不应同时做的事情 {/* #不应同时做的事情 */}
 
 不要在一次调优中同时提高 `gpu_memory_utilization`、`max_model_len`、`max_num_seqs` 和 Graph Capture Size。若 OOM，无法判断是哪项预算造成。
 
@@ -234,7 +234,7 @@ M_total
 | `--scheduler-cls` | 自定义 Scheduler 类 | 高风险扩展点，需要回归、监控和升级测试 |
 | `--enable-preemption`/相关配置 | 抢占策略（依版本） | 缓解 KV 压力但会 Swap/Recompute，增加尾延迟 |
 
-### 两个核心预算
+### 11.1 两个核心预算 {/* #两个核心预算 */}
 
 ```text
 本轮序列数 ≤ max_num_seqs
@@ -261,7 +261,7 @@ M_total
 | `--disable-custom-all-reduce` | 禁用 vLLM 自定义 All-Reduce | 特殊拓扑/问题定位时使用，性能可能下降 |
 | `--all2all-backend` | MoE All-to-All Backend | 硬件、NCCL/Kernel 和模型相关 |
 
-### 并行度选择
+### 12.1 并行度选择 {/* #并行度选择 */}
 
 1. 权重单卡放得下时，优先用单卡基线。
 2. 放不下或吞吐需要时增加 TP，并测通信占比。
@@ -434,7 +434,7 @@ Graph 调优至少记录：
 
 ## 23. 四套基线配置思路
 
-### 在线低延迟
+### 23.1 在线低延迟 {/* #在线低延迟 */}
 
 - 限制最大上下文和最大输出；
 - 保守设置并发，先满足 P95/P99；
@@ -442,21 +442,21 @@ Graph 调优至少记录：
 - Capture 真实常见 Batch；
 - 网关做准入和超时预算。
 
-### 离线高吞吐
+### 23.2 离线高吞吐 {/* #离线高吞吐 */}
 
 - 提高 Batch/Token Budget；
 - 允许更长队列；
 - 按 Prompt 长度分桶；
 - 关注总 Token/s 和单位成本，而非单请求 TTFT。
 
-### 共享前缀业务
+### 23.3 共享前缀业务 {/* #共享前缀业务 */}
 
 - 启用 Prefix Cache；
 - 固定模板 Token；
 - 记录命中 Token，不只命中请求；
 - 多租户使用 Cache Salt/隔离策略。
 
-### 超长上下文
+### 23.4 超长上下文 {/* #超长上下文 */}
 
 - 先计算单请求 KV；
 - 限制并发和输出；
@@ -496,9 +496,9 @@ Graph 调优至少记录：
 
 ## 26. 与旧参数文章的关系
 
-[vLLM 学习笔记（六）：参数使用](./vLLM学习笔记（六）参数使用.md)保留了 vLLM 0.6.3 的历史参数和迁移说明，适合复现旧源码；本文用于当前 V1 生产参数的机制学习。两篇文章的默认值不能混用。
+[vLLM 学习笔记（六）：参数使用](./96-vLLM学习笔记（六）参数使用.md)保留了 vLLM 0.6.3 的历史参数和迁移说明，适合复现旧源码；本文用于当前 V1 生产参数的机制学习。两篇文章的默认值不能混用。
 
-## 官方资料
+## 27. 官方资料 {/* #官方资料 */}
 
 - [vLLM CLI Guide](https://docs.vllm.ai/en/latest/cli/)
 - [vLLM serve 完整参数](https://docs.vllm.ai/en/latest/cli/serve/)

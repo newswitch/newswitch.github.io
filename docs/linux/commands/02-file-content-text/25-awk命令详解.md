@@ -1,11 +1,12 @@
 ---
-title: awk/gawk 命令详解：记录、字段、Pattern-Action、数组与安全变量传递
+title: "awk/gawk 命令详解：记录、字段、Pattern-Action、数组与安全变量传递"
+sidebar_label: "25. awk/gawk 命令详解：记录、字段、Pattern-Action、数组与安全变量传递"
 sidebar_position: 25
-description: 系统讲解 gawk -F/-v/-f/-e/-i/-l、记录字段、BEGIN/END、范围、数组、函数、getline、输出重定向与注入边界。
+description: "系统讲解 gawk -F/-v/-f/-e/-i/-l、记录字段、BEGIN/END、范围、数组、函数、getline、输出重定向与注入边界。"
 tags: [Linux, awk, gawk, 文本处理, 数据分析]
 ---
 
-# `awk` / `gawk` 命令详解：面向记录与字段的语言
+# awk/gawk 命令详解：记录、字段、Pattern-Action、数组与安全变量传递
 
 awk 对每个输入记录依次执行匹配的 `pattern { action }`，天然适合列式日志、报表和小型聚合。GNU `gawk` 扩展了网络、动态扩展、强类型 regexp 等能力；生产脚本要声明依赖的是 POSIX awk 还是 gawk。
 

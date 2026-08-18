@@ -1,11 +1,12 @@
 ---
-title: kubectl kustomize 命令详解：Base、Overlay、Patch 与生成器
+title: "kubectl kustomize 命令详解：Base、Overlay、Patch 与生成器"
+sidebar_label: "08. kubectl kustomize 命令详解：Base、Overlay、Patch 与生成器"
 sidebar_position: 8
-description: 掌握 Kustomize 资源组合、Overlay、Patch、Generator、Name Transform、远程资源和渲染验证，避免字符串替换式 YAML 管理。
+description: "掌握 Kustomize 资源组合、Overlay、Patch、Generator、Name Transform、远程资源和渲染验证，避免字符串替换式 YAML 管理。"
 tags: [Kubernetes, Kustomize, kubectl, YAML, GitOps]
 ---
 
-# Kustomize 命令详解
+# kubectl kustomize 命令详解：Base、Overlay、Patch 与生成器
 
 Kustomize 对结构化 Kubernetes 对象做无模板定制：Base 表达共同资源，Overlay 叠加环境差异，最终输出普通 YAML。`kubectl` 内置 `kustomize`/`apply -k`，独立 `kustomize` CLI 可能版本更快，行为差异必须记录。
 
@@ -126,7 +127,7 @@ Kustomize 可引用 Git/URL 资源，但远程内容会引入网络、可用性�
 
 能设计无循环的 Base/Overlay；能选择精确 Patch；能解释名称哈希与滚动更新；能证明最终渲染结果与工具版本；能识别远程资源、Plugin、Secret 和 CRD Schema 风险。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
 - [Declarative Management with Kustomize](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/)

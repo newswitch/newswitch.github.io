@@ -1,9 +1,9 @@
 ---
-title: 湖仓查询与 OLAP 选型、基准测试和故障排查
+title: "湖仓查询与 OLAP 选型、基准测试和故障排查"
 sidebar_label: "04. 湖仓查询与 OLAP 选型、基准测试和故障排查"
 sidebar_position: 4
+description: "根据数据所有权、新鲜度、并发和查询模式选择 Trino、ClickHouse、Doris 或混合架构。"
 tags: [OLAP, 选型, 基准测试, 故障排查]
-description: 根据数据所有权、新鲜度、并发和查询模式选择 Trino、ClickHouse、Doris 或混合架构。
 ---
 
 # 湖仓查询与 OLAP 选型、基准测试和故障排查
@@ -72,7 +72,7 @@ Ad-hoc 大查询和 dashboard 不应无界共享。使用 resource group/workloa
 
 上一篇：[Doris MPP 与物化视图](./03-Doris-MPP-Tablet物化视图与查询加速.md)　下一模块：[Debezium CDC](../../big-data/engineering-governance/01-Debezium-CDC-Binlog快照与Schema-Change.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Trino Use Cases](https://trino.io/docs/current/overview/use-cases.html)
 - [ClickHouse Documentation](https://clickhouse.com/docs/)

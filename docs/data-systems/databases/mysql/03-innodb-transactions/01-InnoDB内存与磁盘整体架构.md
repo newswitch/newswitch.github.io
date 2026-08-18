@@ -2,15 +2,13 @@
 title: "InnoDB 内存与磁盘整体架构"
 sidebar_label: "01. InnoDB 内存与磁盘整体架构"
 sidebar_position: 1
-tags: [MySQL, InnoDB, Buffer Pool, Tablespace, 架构]
 description: "建立 InnoDB 内存、磁盘、后台线程和一次读写的全局地图，为事务、索引和恢复打基础。"
+tags: [MySQL, InnoDB, Buffer Pool, Tablespace, 架构]
 ---
 
 # InnoDB 内存与磁盘整体架构
 
 InnoDB 是 MySQL 8.4 的默认存储引擎。它负责表和索引、事务、MVCC、行锁、Redo/Undo 与崩溃恢复；SQL 解析、优化、权限和 Binlog 等仍位于 MySQL Server 层。
-
----
 
 ## 1. 总体地图
 
@@ -40,8 +38,6 @@ InnoDB
 
 任何性能或恢复结论都要指出状态位于哪一层。
 
----
-
 ## 2. Buffer Pool
 
 Buffer Pool 以 Page 为单位缓存表和索引数据。读请求先查内存，未命中才从表空间读取；写请求通常先修改内存 Page，成为脏页，随后后台刷盘。
@@ -57,35 +53,29 @@ SELECT
 
 Buffer Pool 大不等于一定快：全表扫描污染、随机工作集大于内存、锁等待和错误执行计划都不能只靠加内存解决。
 
----
-
 ## 3. Log Buffer
 
 数据修改产生 Redo，先进入内存 Log Buffer，再由日志线程写入/刷入 Redo 文件。
 
 大事务可能在提交前产生大量 Redo；Log Buffer 太小会更早写出，但盲目增大只改变缓冲，不消除最终磁盘带宽与提交持久性要求。
 
----
-
 ## 4. Tablespace
 
-### System Tablespace
+### 4.1 System Tablespace {/* #system-tablespace */}
 
 保存实例级 InnoDB 结构，并可能包含 Change Buffer 等状态。它不是简单的某张业务表文件。
 
-### File-per-table Tablespace
+### 4.2 File-per-table Tablespace {/* #file-per-table-tablespace */}
 
 常见默认模式下，每张 InnoDB 表的表和索引数据位于独立 `.ibd` 表空间，便于对象级管理和空间回收操作，但不意味着可直接复制单个文件完成一致备份。
 
-### General Tablespace
+### 4.3 General Tablespace {/* #general-tablespace */}
 
 可由多个表共享，需要明确生命周期、加密和运维边界。
 
-### Undo Tablespace
+### 4.4 Undo Tablespace {/* #undo-tablespace */}
 
 保存 Undo 记录，用于事务回滚和构造历史版本。长事务会阻止旧 Undo 清理。
-
----
 
 ## 5. Redo、Undo、Binlog 的位置
 
@@ -97,15 +87,11 @@ Buffer Pool 大不等于一定快：全表扫描污染、随机工作集大于�
 
 一次提交要协调 InnoDB 与 Server 日志。三者任何一个都不是另外两个的完整替代品。
 
----
-
 ## 6. Doublewrite
 
 数据页比底层原子写单元更大时，断电或进程异常可能留下部分写 Page。InnoDB 先把待刷页写入 Doublewrite 区域，再写最终表空间位置；恢复时可使用完整副本修复 torn page。
 
 它保护 Page 原子性，不替代 Redo、备份或存储副本。为了跑分关闭它会改变数据完整性边界。
-
----
 
 ## 7. 后台刷页
 
@@ -120,8 +106,6 @@ Buffer Pool 大不等于一定快：全表扫描污染、随机工作集大于�
 逐步刷盘。
 
 刷得太慢会在 Redo 接近容量边界时触发前台节流；刷得太猛会抢占业务 I/O。调优要观察脏页、Checkpoint Age、Redo 速率与磁盘 await，而不是只改 I/O 线程数。
-
----
 
 ## 8. Purge
 
@@ -138,8 +122,6 @@ History List 增长
 
 因此“只读大查询”也可能通过长快照影响整个实例。
 
----
-
 ## 9. Change Buffer 与 AHI
 
 Change Buffer 可缓存不在 Buffer Pool 中的部分二级索引页变更，稍后合并，减少随机读；实际默认和适用范围按 8.4.x 变量核对，不能照搬旧版本调优经验。
@@ -147,8 +129,6 @@ Change Buffer 可缓存不在 Buffer Pool 中的部分二级索引页变更，�
 Adaptive Hash Index 根据访问模式为部分热点建立内部哈希加速，但会有内存和并发开销。是否有效必须用指标和代表性负载验证。
 
 这两者都不是业务可以直接定义的普通索引。
-
----
 
 ## 10. 一次读路径
 
@@ -164,8 +144,6 @@ Executor 请求索引范围
 ```
 
 慢可能来自计划扫描多、Page 未命中、磁盘慢、版本链长、锁等待或客户端消费慢。
-
----
 
 ## 11. 一次写路径
 
@@ -183,8 +161,6 @@ Executor 请求索引范围
 
 提交完成不要求所有数据页已经写回；持久性依靠日志和恢复协议。
 
----
-
 ## 12. 观测入口
 
 ```sql
@@ -197,8 +173,6 @@ WHERE NAME LIKE 'buffer%'
 ```
 
 以及 Performance Schema、`SHOW GLOBAL STATUS` 和系统 I/O 指标。不要高频扫描 `INNODB_BUFFER_PAGE` 等重型诊断表，官方明确提示它可能产生显著开销。
-
----
 
 ## 13. 内存不是只有 Buffer Pool
 
@@ -216,8 +190,6 @@ WHERE NAME LIKE 'buffer%'
 ```
 
 容器 Limit 下尤其要为峰值连接和临时内存留余量，避免被 OOM Kill。
-
----
 
 ## 14. 实验与验收
 
@@ -238,7 +210,7 @@ WHERE NAME LIKE 'buffer%'
 
 下一篇进入最小存储单位：Page、Row Format 与两类索引。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [InnoDB Architecture](https://dev.mysql.com/doc/refman/8.4/en/innodb-architecture.html)
 - [InnoDB In-Memory Structures](https://dev.mysql.com/doc/refman/8.4/en/innodb-in-memory-structures.html)

@@ -1,9 +1,9 @@
 ---
-title: 数据中心 Underlay：eBGP、OSPF、ECMP 与收敛设计
+title: "数据中心 Underlay：eBGP、OSPF、ECMP 与收敛设计"
 sidebar_label: "02. 数据中心 Underlay：eBGP、OSPF、ECMP 与收敛设计"
 sidebar_position: 2
+description: "设计 VTEP IP 可达的稳定 Underlay，比较 eBGP 与 IGP，并建立收敛和故障验证方法。"
 tags: [Underlay, eBGP, OSPF, ECMP, BFD, FRRouting]
-description: 设计 VTEP IP 可达的稳定 Underlay，比较 eBGP 与 IGP，并建立收敛和故障验证方法。
 ---
 
 # 数据中心 Underlay：eBGP、OSPF、ECMP 与收敛设计
@@ -33,7 +33,7 @@ Underlay 不应理解租户 MAC、VNI 或业务安全策略。它是 Overlay 的
 
 常见 ASN 模型：
 
-### 每台 Leaf 独立 ASN
+### 3.1 每台 Leaf 独立 ASN {/* #每台-leaf-独立-asn */}
 
 ```text
 Spine AS 65000
@@ -54,7 +54,7 @@ Leaf-2 AS 65102
 - Leaf 从不同 Spine 收到路径时的 AS_PATH。
 - `allowas-in`、`as-override` 等特殊需求应谨慎。
 
-### 每层共享 ASN
+### 3.2 每层共享 ASN {/* #每层共享-asn */}
 
 所有 Leaf 共用一个 ASN、所有 Spine 共用另一个 ASN。配置更统一，但同 ASN 路径接收
 和防环策略需要结合实现设计。
@@ -205,7 +205,7 @@ Graceful Restart 在控制面重启时暂时保留转发表，可降低无谓中
 
 ## 11. 故障验证
 
-### 单链路故障
+### 11.1 单链路故障 {/* #单链路故障 */}
 
 预期：只从 ECMP Group 删除一个成员。
 
@@ -218,17 +218,17 @@ BFD/邻居时间线
 剩余链路队列和利用率
 ```
 
-### 单 Spine 故障
+### 11.2 单 Spine 故障 {/* #单-spine-故障 */}
 
 预期：所有 Leaf 同时减少部分 ECMP 容量，但仍可达。
 
 重点观察控制面并发更新和剩余容量。
 
-### MTU 不一致
+### 11.3 MTU 不一致 {/* #mtu-不一致 */}
 
 VTEP 小 Ping 可能成功，Overlay 大包失败。用 DF 大包、接口 Drop 和双侧抓包证明。
 
-### 错误路由泄漏
+### 11.4 错误路由泄漏 {/* #错误路由泄漏 */}
 
 向 Underlay 注入大量租户前缀，验证 Prefix List/Maximum Prefix 是否阻断。
 

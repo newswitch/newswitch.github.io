@@ -1,11 +1,12 @@
 ---
-title: etcdctl 命令详解：Endpoint 健康、快照与恢复
+title: "etcdctl 命令详解：Endpoint 健康、快照与恢复"
+sidebar_label: "10. etcdctl 命令详解：Endpoint 健康、快照与恢复"
 sidebar_position: 10
-description: 使用 etcdctl v3 检查成员和 Endpoint、读取受控键空间、保存并验证快照，并以 etcdutl 完成现代恢复流程。
+description: "使用 etcdctl v3 检查成员和 Endpoint、读取受控键空间、保存并验证快照，并以 etcdutl 完成现代恢复流程。"
 tags: [Kubernetes, etcd, etcdctl, etcdutl, 备份恢复]
 ---
 
-# etcdctl 命令详解
+# etcdctl 命令详解：Endpoint 健康、快照与恢复
 
 Kubernetes 的 etcd 保存 API 对象与控制面状态。`etcdctl` 是在线客户端，`etcdutl` 是离线数据文件/快照工具。现代 etcd 中应使用 `etcdctl snapshot save` 获取在线快照，用 `etcdutl snapshot status/restore` 验证和恢复；旧文档中的 `etcdctl snapshot restore` 已不应作为新流程基线。
 
@@ -130,7 +131,7 @@ Revision 是集群级逻辑序号，不是时间戳。Watch 从最后成功处�
 
 能解释 Member 与 Endpoint、Leader/Term/Index；能安全生成、验证、加密和演练快照；能说明为何现代恢复使用 etcdutl；不会绕过 API Server 修改 `/registry`；能在不破坏 Quorum 的情况下规划维护。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [etcd Operations Guide](https://etcd.io/docs/latest/ops-guide/)
 - [etcd Disaster Recovery](https://etcd.io/docs/latest/op-guide/recovery/)

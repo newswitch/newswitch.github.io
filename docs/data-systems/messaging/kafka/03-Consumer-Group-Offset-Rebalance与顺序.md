@@ -1,9 +1,9 @@
 ---
-title: Kafka Consumer Group、Offset、Rebalance 与顺序边界
+title: "Kafka Consumer Group、Offset、Rebalance 与顺序边界"
 sidebar_label: "03. Kafka Consumer Group、Offset、Rebalance 与顺序边界"
 sidebar_position: 3
+description: "理解消费者拉取、分区分配、offset 提交、重平衡和消息积压的正确性与性能边界。"
 tags: [Kafka Consumer, Consumer Group, Offset, Rebalance]
-description: 理解消费者拉取、分区分配、offset 提交、重平衡和消息积压的正确性与性能边界。
 ---
 
 # Kafka Consumer Group、Offset、Rebalance 与顺序边界
@@ -79,6 +79,6 @@ catch_up_time = backlog / (consume_rate - produce_rate)
 
 上一篇：[Producer Batching、Acks 与幂等](./02-Producer-Batching-Acks重试与幂等.md)　下一篇：[副本、ISR、Leader 选举与 KRaft](./04-副本ISR-Leader选举与KRaft.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Kafka Consumer Configuration](https://kafka.apache.org/documentation/#consumerconfigs)

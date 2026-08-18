@@ -1,11 +1,12 @@
 ---
-title: rbd 命令详解：Image、Snapshot、Clone、Map、Trash 与 Mirror
+title: "rbd 命令详解：Image、Snapshot、Clone、Map、Trash 与 Mirror"
+sidebar_label: "23. rbd 命令详解：Image、Snapshot、Clone、Map、Trash 与 Mirror"
 sidebar_position: 23
-description: 讲解 rbd image-spec、全局参数、创建/扩容、info/du/status、snapshot/clone/flatten、map/unmap、trash、锁、迁移、加密与镜像安全边界。
+description: "讲解 rbd image-spec、全局参数、创建/扩容、info/du/status、snapshot/clone/flatten、map/unmap、trash、锁、迁移、加密与镜像安全边界。"
 tags: [Ceph, RBD, Block Device, Snapshot, Mirroring]
 ---
 
-# `rbd` 命令详解：Image、Snapshot、Clone、Map、Trash 与 Mirror
+# rbd 命令详解：Image、Snapshot、Clone、Map、Trash 与 Mirror
 
 `rbd` 管理 RADOS Block Device image。RBD 是 thin-provisioned 虚拟块设备；image 内部还可能有分区、LVM、文件系统和数据库。删除或 rollback image 会影响完整上层数据栈。
 

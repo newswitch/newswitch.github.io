@@ -1,11 +1,12 @@
 ---
-title: kubectl diff、apply、patch、edit 与 delete：声明式变更和安全删除
+title: "kubectl diff、apply、patch、edit 与 delete：声明式变更和安全删除"
+sidebar_label: "03. kubectl diff、apply、patch、edit 与 delete：声明式变更和安全删除"
 sidebar_position: 3
-description: 理解客户端与服务端 Apply、Field Manager、Dry Run、Patch 类型、并发冲突、Finalizer 和删除传播策略。
+description: "理解客户端与服务端 Apply、Field Manager、Dry Run、Patch 类型、并发冲突、Finalizer 和删除传播策略。"
 tags: [Kubernetes, kubectl, apply, patch, delete, Server-Side Apply]
 ---
 
-# kubectl 声明式变更与安全删除
+# kubectl diff、apply、patch、edit 与 delete：声明式变更和安全删除
 
 Kubernetes 变更不是“把 YAML 覆盖上去”。API Server 会完成认证、授权、默认值、准入、字段验证、并发控制和持久化；控制器再异步收敛。安全操作必须区分提交成功与业务生效。
 
@@ -88,7 +89,7 @@ kubectl events -n ai-prod --for deployment/inference
 
 能解释 Client Dry Run、Server Dry Run、Diff 的区别；能选择 SSA 和 Patch 类型；能处理字段所有权冲突；能描述 Graceful Deletion、Finalizer、Propagation；所有变更都有预演、回滚和业务验收。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/)
 - [kubectl apply](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/)

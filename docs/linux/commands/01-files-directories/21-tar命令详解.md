@@ -1,11 +1,12 @@
 ---
-title: tar 命令详解：归档、压缩、增量、权限与安全解包
+title: "tar 命令详解：归档、压缩、增量、权限与安全解包"
+sidebar_label: "21. tar 命令详解：归档、压缩、增量、权限与安全解包"
 sidebar_position: 21
-description: 系统讲解 GNU tar 创建/列出/提取/追加/比较、压缩、路径、owner、xattr/ACL、增量、排除和解包安全。
+description: "系统讲解 GNU tar 创建/列出/提取/追加/比较、压缩、路径、owner、xattr/ACL、增量、排除和解包安全。"
 tags: [Linux, tar, 归档, 备份, coreutils]
 ---
 
-# `tar` 命令详解：归档不等于备份
+# tar 命令详解：归档、压缩、增量、权限与安全解包
 
 GNU `tar` 把目录树元数据和内容写入归档，也可通过 gzip/xz/zstd 等过滤压缩。一次 tar 文件不自动具备异地副本、保留策略、不可变性和恢复演练，因此不能仅凭“生成成功”宣称备份完成。
 

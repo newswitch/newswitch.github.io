@@ -2,8 +2,8 @@
 title: "Performance Schema、sys Schema 与关键状态指标"
 sidebar_label: "02. Performance Schema、sys Schema 与关键状态指标"
 sidebar_position: 2
-tags: [MySQL, Performance Schema, sys Schema, 可观测性]
 description: "从累计状态到事件、等待、摘要和 sys 视图，建立低基数、可归因的 MySQL 观测方法。"
+tags: [MySQL, Performance Schema, sys Schema, 可观测性]
 ---
 
 # Performance Schema、sys Schema 与关键状态指标
@@ -130,9 +130,8 @@ ORDER BY rows_selected DESC LIMIT 20;
 
 分别制造一次全表扫描、行锁等待、磁盘临时表和高频点查，使用 digest、sys 视图和 OS 指标定位。验收是能从业务告警追到具体 SQL 和资源，而不是记住表名。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [MySQL Performance Schema](https://dev.mysql.com/doc/refman/8.4/en/performance-schema.html)
 - [sys Schema](https://dev.mysql.com/doc/refman/8.4/en/sys-schema.html)
 - [Statement Summary Tables](https://dev.mysql.com/doc/refman/8.4/en/performance-schema-statement-summary-tables.html)
-

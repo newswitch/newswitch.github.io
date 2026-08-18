@@ -1,15 +1,16 @@
 ---
 title: "Kubectl 命令技巧大全"
+sidebar_label: "02. Kubectl 命令技巧大全"
 sidebar_position: 2
-tags: [Kubernetes, 命令与调试, PartII, 学习路线]
 description: "kubectl 是操作 Kubernetes 集群最直接高效的命令行工具。本文涵盖了 kubectl 的核心功能和实用技巧，包括自动补全、上下文配置、资源管理、调试技巧等，帮助您快速掌握 Kubernetes 集群操作。"
+tags: [Kubernetes, 命令与调试, PartII, 学习路线]
 ---
 
 # Kubectl 命令技巧大全
 
 > kubectl 是 Kubernetes 集群调试与日常管理的核心工具，掌握其命令技巧和调试方法，是高效排障和运维的基础。
 
-## Kubectl 自动补全
+## 1. Kubectl 自动补全 {/* #kubectl-自动补全 */}
 
 为提升命令行操作效率，建议配置 kubectl 的自动补全功能。以下为不同 shell 环境的配置方法：
 
@@ -18,7 +19,7 @@ description: "kubectl 是操作 Kubernetes 集群最直接高效的命令行工�
 source <(kubectl completion bash)
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
-# Zsh  
+# Zsh
 source <(kubectl completion zsh)
 echo "source <(kubectl completion zsh)" >> ~/.zshrc
 
@@ -26,7 +27,7 @@ echo "source <(kubectl completion zsh)" >> ~/.zshrc
 kubectl completion fish | source
 ```
 
-## 上下文和配置管理
+## 2. 上下文和配置管理 {/* #上下文和配置管理 */}
 
 kubectl 通过 kubeconfig 文件管理多个集群的访问配置。常用命令如下：
 
@@ -57,7 +58,7 @@ kubectl config set-context my-context \
   --namespace=my-namespace
 ```
 
-## 资源创建
+## 3. 资源创建 {/* #资源创建 */}
 
 Kubernetes 支持多种方式创建资源，推荐使用声明式配置。以下为常用命令示例：
 
@@ -107,14 +108,14 @@ spec:
 EOF
 ```
 
-## 资源查询和显示
+## 4. 资源查询和显示 {/* #资源查询和显示 */}
 
 kubectl 提供了强大的资源查询功能，便于快速定位和分析集群状态。
 
 ```bash
 # 基本查询
 kubectl get pods                           # 当前命名空间的 pods
-kubectl get pods -A                        # 所有命名空间的 pods  
+kubectl get pods -A                        # 所有命名空间的 pods
 kubectl get pods -o wide                   # 显示更多信息
 kubectl get pods --show-labels             # 显示标签
 
@@ -142,7 +143,7 @@ kubectl describe pod my-pod
 kubectl describe node my-node
 ```
 
-## 资源更新
+## 5. 资源更新 {/* #资源更新 */}
 
 资源更新支持声明式、命令式和补丁等多种方式，适应不同场景需求。
 
@@ -166,7 +167,7 @@ kubectl scale deployment my-deployment --replicas=5
 kubectl autoscale deployment my-deployment --min=2 --max=10 --cpu-percent=80
 ```
 
-## 资源删除
+## 6. 资源删除 {/* #资源删除 */}
 
 资源删除支持单个、批量和强制等多种方式，便于高效清理集群资源。
 
@@ -186,7 +187,7 @@ kubectl delete pod my-pod --force --grace-period=0
 kubectl delete all --all -n my-namespace
 ```
 
-## Pod 交互和调试
+## 7. Pod 交互和调试 {/* #pod-交互和调试 */}
 
 kubectl 提供多种调试与交互命令，助力定位和解决 Pod 运行问题。
 
@@ -217,7 +218,7 @@ kubectl top pod --containers
 kubectl top node
 ```
 
-## 节点和集群管理
+## 8. 节点和集群管理 {/* #节点和集群管理 */}
 
 节点和集群管理命令有助于维护集群健康和资源调度。
 
@@ -241,7 +242,7 @@ kubectl api-resources                       # 查看所有资源类型
 kubectl api-versions                        # 查看API版本
 ```
 
-## 高级查询技巧
+## 9. 高级查询技巧 {/* #高级查询技巧 */}
 
 灵活运用字段选择器、标签、输出格式等高级技巧，可高效筛选和导出资源信息。
 
@@ -262,7 +263,7 @@ kubectl get pods --watch-only
 kubectl get events --watch --field-selector involvedObject.name=my-pod
 ```
 
-## 常用资源类型简写
+## 10. 常用资源类型简写 {/* #常用资源类型简写 */}
 
 | 资源类型 | 简写 | 资源类型 | 简写 |
 |---------|------|---------|------|
@@ -275,7 +276,7 @@ kubectl get events --watch --field-selector involvedObject.name=my-pod
 | statefulsets | sts | cronjobs | cj |
 | horizontalpodautoscalers | hpa | ingresses | ing |
 
-## 输出格式选项
+## 11. 输出格式选项 {/* #输出格式选项 */}
 
 | 格式 | 描述 |
 |------|------|
@@ -287,7 +288,7 @@ kubectl get events --watch --field-selector involvedObject.name=my-pod
 | `-o custom-columns=<spec>` | 自定义列 |
 | `-o go-template=<template>` | Go 模板 |
 
-## 调试和详细输出
+## 12. 调试和详细输出 {/* #调试和详细输出 */}
 
 通过 `-v` 参数可控制日志详细程度，便于调试和问题定位。
 
@@ -300,7 +301,7 @@ kubectl get events --watch --field-selector involvedObject.name=my-pod
 | --v=6 | 显示请求资源 |
 | --v=8 | 显示 HTTP 请求内容 |
 
-## 实用技巧
+## 13. 实用技巧 {/* #实用技巧 */}
 
 结合以下命令可提升调试和日常运维效率。
 
@@ -327,11 +328,11 @@ kubectl get events --sort-by=.metadata.creationTimestamp
 kubectl get events --field-selector involvedObject.name=my-pod
 ```
 
-## 总结
+## 14. 总结 {/* #总结 */}
 
 kubectl 是 Kubernetes 集群调试与管理的核心工具。通过掌握命令技巧、调试方法和高效用法，能够大幅提升集群运维与故障排查效率。建议结合实际场景持续优化命令行操作，打造高效的 Kubernetes 运维体验。
 
-## 参考文献
+## 15. 参考资料 {/* #参考文献 */}
 
 - [Kubectl 官方文档 - kubernetes.io](https://kubernetes.io/docs/reference/kubectl/)
 - [JSONPath 表达式指南 - kubernetes.io](https://kubernetes.io/docs/reference/kubectl/jsonpath/)

@@ -1,11 +1,12 @@
 ---
-title: setfacl 命令详解：修改、继承、备份与恢复 POSIX ACL
+title: "setfacl 命令详解：修改、继承、备份与恢复 POSIX ACL"
+sidebar_label: "22. setfacl 命令详解：修改、继承、备份与恢复 POSIX ACL"
 sidebar_position: 22
-description: 完整讲解 setfacl 的全部参数、ACL entry 语法、mask 自动计算、default ACL、递归 symlink、test、backup/restore 和生产变更流程。
+description: "完整讲解 setfacl 的全部参数、ACL entry 语法、mask 自动计算、default ACL、递归 symlink、test、backup/restore 和生产变更流程。"
 tags: [Linux, setfacl, POSIX ACL, 默认ACL, 权限变更]
 ---
 
-# `setfacl` 命令详解：修改、继承、备份与恢复 POSIX ACL
+# setfacl 命令详解：修改、继承、备份与恢复 POSIX ACL
 
 `setfacl` 修改 access/default POSIX ACL。最常见事故不是语法错误，而是自动重算 mask 改变了多条现有授权，或递归跟随 symlink/跨越大目录导致权限扩散。
 
@@ -130,7 +131,7 @@ POSIX ACL 工具不提供 `-xdev`。网络/分布式文件系统上递归会放�
 
 掌握标准：能列出全部参数与 entry 语法；能预判 mask 对所有受控条目的影响；能执行经过 test、备份、限界、验证和恢复演练的 ACL 变更。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [ACL tools：setfacl(1)](https://man7.org/linux/man-pages/man1/setfacl.1.html)
 - [Linux acl(5)](https://man7.org/linux/man-pages/man5/acl.5.html)

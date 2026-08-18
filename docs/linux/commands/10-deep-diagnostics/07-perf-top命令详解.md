@@ -1,11 +1,12 @@
 ---
-title: perf top 命令详解：实时 CPU 热点、事件与符号观察
+title: "perf top 命令详解：实时 CPU 热点、事件与符号观察"
+sidebar_label: "07. perf top 命令详解：实时 CPU 热点、事件与符号观察"
 sidebar_position: 7
-description: 讲清 perf top 的事件、PID/TID/CPU、频率、call graph、符号过滤、实时界面、零样本和生产开销。
+description: "讲清 perf top 的事件、PID/TID/CPU、频率、call graph、符号过滤、实时界面、零样本和生产开销。"
 tags: [Linux, perf top, CPU 热点, PMU, 性能分析]
 ---
 
-# `perf top` 命令详解：实时热点不是长期证据
+# perf top 命令详解：实时 CPU 热点、事件与符号观察
 
 `perf top` 类似对 perf 样本做实时排行榜，适合在故障窗口快速看到 CPU 正执行哪些符号。它的屏幕会持续变化，难以复盘；需要正式证据时改用 `perf record` 保存原始数据。
 

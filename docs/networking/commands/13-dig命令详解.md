@@ -1,11 +1,12 @@
 ---
-title: dig 命令详解：DNS 递归、权威、DNSSEC 与加密查询
+title: "dig 命令详解：DNS 递归、权威、DNSSEC 与加密查询"
+sidebar_label: "13. dig 命令详解：DNS 递归、权威、DNSSEC 与加密查询"
 sidebar_position: 13
-description: 以 BIND 9.20 为基线，系统讲解 dig 命令行和查询选项、DNS 报文、记录类型、递归与权威定位、DNSSEC、DoT/DoH 及自动化判定。
+description: "以 BIND 9.20 为基线，系统讲解 dig 命令行和查询选项、DNS 报文、记录类型、递归与权威定位、DNSSEC、DoT/DoH 及自动化判定。"
 tags: [Linux, dig, DNS, DNSSEC, DoT, DoH, 网络排障]
 ---
 
-# `dig` 命令详解：DNS 递归、权威、DNSSEC 与加密查询
+# dig 命令详解：DNS 递归、权威、DNSSEC 与加密查询
 
 `dig` 是 BIND 提供的 DNS 查询与诊断工具。它既能查询系统默认递归解析器，也能绕过本机配置直接询问指定服务器；既能看简短地址，也能检查响应头、权威区、附加区、EDNS、DNSSEC 和传输方式。
 
@@ -56,7 +57,7 @@ dig [全局选项] -f 批处理文件
 www.example.com.  300   IN A      192.0.2.10
 ```
 
-### 常见头部标志
+### 2.1 常见头部标志 {/* #常见头部标志 */}
 
 | 标志 | 含义 |
 |---|---|
@@ -68,7 +69,7 @@ www.example.com.  300   IN A      192.0.2.10
 | `ad` | 验证型解析器认为相关数据通过 DNSSEC 验证 |
 | `cd` | 客户端要求服务器关闭 DNSSEC 验证检查 |
 
-### 常见状态码
+### 2.2 常见状态码 {/* #常见状态码 */}
 
 | 状态 | 含义 | 排查方向 |
 |---|---|---|
@@ -170,7 +171,7 @@ dig @192.0.2.53 www.example.com A +noall +answer
 | `+search` / `+nosearch` | 使用/不使用搜索列表 |
 | `+showsearch` | 显示搜索过程中的中间查询结果 |
 
-### 递归解析器与权威服务器对比
+### 6.1 递归解析器与权威服务器对比 {/* #递归解析器与权威服务器对比 */}
 
 ```bash
 # 系统配置的递归解析器
@@ -374,4 +375,3 @@ sudo tcpdump -i any -nn -c 100 'port 53'
 - [IANA DNS 参数注册表](https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml)
 - [RFC 1034：DNS Concepts and Facilities](https://www.rfc-editor.org/rfc/rfc1034)
 - [RFC 1035：DNS Implementation and Specification](https://www.rfc-editor.org/rfc/rfc1035)
-

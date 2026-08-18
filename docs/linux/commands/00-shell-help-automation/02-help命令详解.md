@@ -1,11 +1,12 @@
 ---
-title: help 命令详解：查询 Bash Builtin、关键字与语法
+title: "help 命令详解：查询 Bash Builtin、关键字与语法"
+sidebar_label: "02. help 命令详解：查询 Bash Builtin、关键字与语法"
 sidebar_position: 2
-description: 讲清 Bash help 的 -d/-m/-s、pattern、返回状态，以及 help、man、type、--help 的选择边界。
+description: "讲清 Bash help 的 -d/-m/-s、pattern、返回状态，以及 help、man、type、--help 的选择边界。"
 tags: [Linux, Bash, help, Builtin, 命令帮助]
 ---
 
-# `help` 命令详解：查询 Shell 自己的接口
+# help 命令详解：查询 Bash Builtin、关键字与语法
 
 `help` 是 Bash builtin，用于查询 builtin、reserved word 和部分语法主题。`man cd` 可能打开一组 builtins 的手册，而 `help cd` 能直接显示当前 Bash 版本的真实语法。
 
@@ -25,7 +26,7 @@ help [-dms] [PATTERN ...]
 ```bash
 help
 help -s read mapfile
-help -m '[[‘  # 实际使用 ASCII [[，此处不要复制弯引号
+help -m '[['
 help 'set'
 ```
 

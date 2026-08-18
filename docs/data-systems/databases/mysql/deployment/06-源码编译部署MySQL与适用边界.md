@@ -2,8 +2,8 @@
 title: "源码编译部署 MySQL 与适用边界"
 sidebar_label: "06. 源码编译部署 MySQL 与适用边界"
 sidebar_position: 6
-tags: [MySQL, 源码编译, CMake, 调试, 制品]
 description: "理解 MySQL 8.4 源码构建的依赖、CMake 配置、编译测试、制品化、运行部署以及为什么生产默认不应自行编译。"
+tags: [MySQL, 源码编译, CMake, 调试, 制品]
 ---
 
 # 源码编译部署 MySQL 与适用边界
@@ -103,7 +103,7 @@ cmake --build /build/work/mysql-8.4.x --parallel <jobs>
 
 实际 CMake 选项会随版本变化，必须以当前源码的 `CMakeLists.txt`、CMake 输出和官方配置选项为准。不要从旧博客复制已经删除或改变语义的参数。
 
-### 构建类型建议
+### 5.1 构建类型建议 {/* #构建类型建议 */}
 
 ```text
 Debug：断言多、便于调试、性能差

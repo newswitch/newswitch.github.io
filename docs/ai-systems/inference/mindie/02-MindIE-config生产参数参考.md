@@ -1,9 +1,9 @@
 ---
-title: MindIE config.json 生产参数参考
+title: "MindIE config.json 生产参数参考"
 sidebar_label: "02. MindIE config.json 生产参数参考"
 sidebar_position: 2
+description: "逐层解释 MindIE 2.3 ServerConfig、BackendConfig、ModelDeployConfig、ModelConfig、ScheduleConfig 和模型侧参数。"
 tags: [MindIE, config.json, 参数, KV Cache, ScheduleConfig]
-description: 逐层解释 MindIE 2.3 ServerConfig、BackendConfig、ModelDeployConfig、ModelConfig、ScheduleConfig 和模型侧参数。
 ---
 
 # MindIE config.json 生产参数参考
@@ -121,7 +121,7 @@ config.json
 | `metricsPort` | Prometheus 格式指标端口 | 通过监控网络访问，限制未授权读取 |
 | `allowAllZeroIpListening` | 是否允许绑定全零 IP | 开启会破坏平面隔离假设，需要外围安全能力 |
 
-### 地址覆盖优先级
+### 4.1 地址覆盖优先级 {/* #地址覆盖优先级 */}
 
 容器环境变量可能覆盖配置地址。排障时同时检查：
 
@@ -200,7 +200,7 @@ API 兼容必须通过契约测试：请求字段、默认采样、错误码、�
 | `multiNodesInferEnabled` | 开启多机推理 | 需要 Ranktable/HCCL/网络/证书 |
 | `multiNodesInferPort` | 多机通信端口 | 防火墙、端口冲突和网络平面 |
 
-### `npuDeviceIds` 的逻辑 ID
+### 9.1 `npuDeviceIds` 的逻辑 ID {/* #npudeviceids-的逻辑-id */}
 
 若设置：
 
@@ -352,7 +352,7 @@ maxPrefillTokens ≥ maxInputTokenLen
 | `maxQueueDelayMicroseconds` | 未凑满 Batch 时最多等待多久 | 大值提高 Batch/吞吐但增加低流量延迟 |
 | `maxFirstTokenWaitTime` | 首 Token 最大排队保护时间 | 到达阈值后可允许抢占等动作降低 TTFT；混部场景生效约束按版本 |
 
-### Prefill/Decode 选择思路
+### 18.1 Prefill/Decode 选择思路 {/* #prefilldecode-选择思路 */}
 
 官方调度会使用 Prefill/Decode 请求数与估计时间比较“选择 Prefill 会让 Decode 等多久”和“持续 Decode 浪费多少空槽”。`prefillTimeMsPerReq` 与 `decodeTimeMsPerReq` 应来自目标模型/硬件测量，而不是沿用模板值。
 
@@ -528,7 +528,7 @@ MindIE OpenAI-compatible 或生成接口通常涉及：
 [ ] OOM、慢 Rank、网络、进程、证书和升级已演练
 ```
 
-## 官方资料
+## 29. 官方资料 {/* #官方资料 */}
 
 - [MindIE 2.3 服务化配置参数](https://www.hiascend.com/document/detail/zh/mindie/230/LLMframe/llmdev/mindie_service0285.html)
 - [MindIE 2.3 模型侧配置参数](https://www.hiascend.com/document/detail/zh/mindie/230/LLMframe/llmdev/mindie_llm0503.html)

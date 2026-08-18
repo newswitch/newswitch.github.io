@@ -1,16 +1,18 @@
 ---
-title: 用统一网关暴露OpenAI兼容接口——TLS、鉴权、限流与流式传输
-sidebar_label: 26 · 统一OpenAI兼容网关
+title: "用统一网关暴露OpenAI兼容接口——TLS、鉴权、限流与流式传输"
+sidebar_label: "26. 26 · 统一OpenAI兼容网关"
+sidebar_position: 26
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第七阶段——生产服务 本文定位：统一入口、OpenAI 兼容协议、Higress/NGINX 落地与安全验收篇"
+tags: [AI网关, OpenAI兼容, Higress, NGINX, SSE, 双资源池]
 date: 2026-08-07 26:00:00
 categories: 云原生
-tags: [AI网关, OpenAI兼容, Higress, NGINX, SSE, 双资源池]
 ---
 
 # 用统一网关暴露OpenAI兼容接口——TLS、鉴权、限流与流式传输
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第七阶段——生产服务  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第七阶段——生产服务
 **本文定位**：统一入口、OpenAI 兼容协议、Higress/NGINX 落地与安全验收篇
 :::
 
@@ -31,15 +33,11 @@ model = company-model-a
 
 客户端只认识业务模型别名，不认识 NVIDIA、昇腾、Pod IP 或内部 Service。
 
----
-
-## 一、学完本文应掌握什么
+## 1. 学完本文应掌握什么 {/* #一学完本文应掌握什么 */}
 
 画出客户端到推理 Pod 的完整请求链；解释模型别名为何与硬件解耦；区分 TLS、认证、授权、限流和后端 API Key；正确代理普通响应与 SSE；用 Higress 或 NGINX 建立入口；设置连接、首 Token、流空闲和总请求超时；设计不泄露 Prompt 和密钥的访问日志；验证 401/403/413/429/5xx 和客户端中断。
 
----
-
-## 二、请求经过哪些层
+## 2. 请求经过哪些层 {/* #二请求经过哪些层 */}
 
 ```mermaid
 flowchart LR
@@ -62,9 +60,7 @@ flowchart LR
 
 网关不是设备调度器。GPU/NPU 节点选择仍由 Label、Taint 和扩展资源完成。
 
----
-
-## 三、先统一 API 契约
+## 3. 先统一 API 契约 {/* #三先统一-api-契约 */}
 
 **统一域名和路径**：`POST /v1/chat/completions`、`GET /v1/models`。embeddings、rerank、responses 等需逐个验证后列入契约。
 
@@ -81,9 +77,7 @@ flowchart LR
 
 兼容不等于完全一致。
 
----
-
-## 四、必须分开的两类凭证
+## 4. 必须分开的两类凭证 {/* #四必须分开的两类凭证 */}
 
 ```text
 客户端Key ──验证于──> 网关
@@ -94,9 +88,7 @@ flowchart LR
 
 推荐顺序：TLS → 提取身份 → 验证签名或 API Key → 校验租户与模型权限 → 检查并发/QPS/Token 配额 → 路由后端。
 
----
-
-## 五、为什么 AI 网关不能只做 QPS 限流
+## 5. 为什么 AI 网关不能只做 QPS 限流 {/* #五为什么-ai-网关不能只做-qps-限流 */}
 
 100 Token 与 34000 Token 的请求成本完全不同。只限制「每秒 10 个请求」仍可能被少量超长请求压垮。
 
@@ -109,9 +101,7 @@ flowchart LR
 
 模型服务层还要限制 `max_model_len`、`max_tokens`、`max_num_seqs`、批处理与 KV 容量。入口侧可近似计算输入并对 `max_tokens` 做预算；出口侧再按真实 usage 结算。过载时应尽早返回明确 429，而不是全部等到 504。
 
----
-
-## 六、选择 Higress 还是 NGINX
+## 6. 选择 Higress 还是 NGINX {/* #六选择-higress-还是-nginx */}
 
 | 维度 | Higress AI Gateway | NGINX 基线代理 |
 |------|--------------------|----------------|
@@ -123,9 +113,7 @@ flowchart LR
 
 生产多租户优先评估 Higress 等 AI Gateway；小规模内网单一模型可先用 NGINX。无论选哪种，先定义 API、安全、流式和可观测契约。
 
----
-
-## 七、Higress 落地思路
+## 7. Higress 落地思路 {/* #七higress-落地思路 */}
 
 ```mermaid
 flowchart TD
@@ -155,9 +143,7 @@ ai-api.example.com/v1/* → model-a-nvidia.ai-serving.svc:8000
 
 生产清单应固定 Higress 版本，并以该版本官方文档生成配置。平台配置表至少包含：外部域名、路径、业务模型、默认后端、客户认证、允许租户、请求体上限、单租户并发、Token 配额、连接超时、流空闲超时、日志脱敏。
 
----
-
-## 八、用 Gateway API 表达基础路由
+## 8. 用 Gateway API 表达基础路由 {/* #八用-gateway-api-表达基础路由 */}
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -183,9 +169,7 @@ spec:
 
 跨命名空间挂到 Gateway 时看 Listener 的 `allowedRoutes`；`backendRefs` 跨命名空间引用 Service 时需要 ReferenceGrant。检查 Status 中的 Accepted、ResolvedRefs，不要只看对象已创建。Gateway API 不会自动完成租户认证、Token 计费或模型语义兼容。
 
----
-
-## 九、NGINX 最小可用配置
+## 9. NGINX 最小可用配置 {/* #九nginx-最小可用配置 */}
 
 ```nginx
 upstream model_a_backend {
@@ -234,9 +218,7 @@ server {
 
 `proxy_read_timeout 600s` 不表示整个请求只能跑 600 秒。还缺：客户端认证授权、Token 配额、分布式限流、细粒度审计、自动故障切换、内容安全、密钥轮换。不要把「HTTPS 能访问」当成网关建设完成。
 
----
-
-## 十～十一、流式 SSE 与分层超时
+## 10. 十～十一、流式 SSE 与分层超时 {/* #十十一流式-sse-与分层超时 */}
 
 SSE 典型：`Content-Type: text/event-stream`，`data:` 分块，`data: [DONE]`。链路上任何一层缓冲或过早超时，都可能变成「后端已逐 Token 生成，客户端最后一次性收到」。
 
@@ -265,9 +247,7 @@ curl -N https://ai-api.example.com/v1/chat/completions \
 
 最终受最短那一层限制：客户端 &lt; 外部 LB &lt; 网关 &lt; Mesh &lt; 后端。
 
----
-
-## 十二～十三、访问日志与安全基线
+## 11. 十二～十三、访问日志与安全基线 {/* #十二十三访问日志与安全基线 */}
 
 **推荐字段**：timestamp、request_id/trace_id、tenant_id、user_id_hash、model_alias、backend_pool、backend_service、http_status、stream、时长、TTFT、input/output tokens、queue_time、retry_count、fallback_reason。
 
@@ -279,9 +259,7 @@ curl -N https://ai-api.example.com/v1/chat/completions \
 不要让客户端控制内部路由头。`X-AI-Pool: nvidia|ascend` 只能供可信运维或内部灰度使用；外部同名 Header 应删除、覆盖或拒绝。
 :::
 
----
-
-## 十四、完整验收用例
+## 12. 完整验收用例 {/* #十四完整验收用例 */}
 
 | 用例 | 期望 |
 |------|------|
@@ -293,9 +271,7 @@ curl -N https://ai-api.example.com/v1/chat/completions \
 | 后端不可用 | 状态码与超时符合预期；告警；不误重试非幂等；不泄露内部地址 |
 | 客户端中断 | 后端活动请求与设备利用率及时下降 |
 
----
-
-## 十五、常见故障排查
+## 13. 常见故障排查 {/* #十五常见故障排查 */}
 
 | 现象 | 方向 |
 |------|------|
@@ -312,22 +288,18 @@ kubectl get pod -n ai-serving -o wide
 kubectl logs -n ai-gateway GATEWAY_POD --tail=200
 ```
 
----
+## 14. 十六～十七、上线检查表与练习 {/* #十六十七上线检查表与练习 */}
 
-## 十六～十七、上线检查表与练习
-
-**API 契约**：域名路径别名稳定；流式/非流式通过；错误结构有文档；高级功能逐项验收。  
-**安全**：TLS、认证授权轮换、密钥隔离、后端仅网关、日志不落密钥与 Prompt。  
-**容量保护**：请求体/上下文/输出上限；QPS/并发/Token 已压测；429 与退避已验证；各层超时一致。  
+**API 契约**：域名路径别名稳定；流式/非流式通过；错误结构有文档；高级功能逐项验收。
+**安全**：TLS、认证授权轮换、密钥隔离、后端仅网关、日志不落密钥与 Prompt。
+**容量保护**：请求体/上下文/输出上限；QPS/并发/Token 已压测；429 与退避已验证；各层超时一致。
 **可观测**：request_id 贯穿；状态码/TTFT/总时延/Token；按租户模型资源池聚合；5xx/429/认证失败告警。
 
-**练习 1**：NGINX 最小入口测普通、流式、后端缩 0、客户端中断。  
-**练习 2**：为两个租户设计可用模型、最大并发、每分钟 Token、最大上下文、优先级，解释为何不能只设 QPS。  
+**练习 1**：NGINX 最小入口测普通、流式、后端缩 0、客户端中断。
+**练习 2**：为两个租户设计可用模型、最大并发、每分钟 Token、最大上下文、优先级，解释为何不能只设 QPS。
 **练习 3**：故意打开代理缓冲再用 `curl -N` 观察，关闭后对比首块时间，写入运维手册。
 
----
-
-## 十八、本篇小结
+## 15. 本篇小结 {/* #十八本篇小结 */}
 
 ```text
 客户端
@@ -342,23 +314,17 @@ kubectl logs -n ai-gateway GATEWAY_POD --tail=200
 
 下一篇解决：一个后端有多个副本时怎样均衡流量，以及怎样根据队列、TTFT 等指标安全扩缩容。
 
----
-
-## 参考资料
+## 16. 参考资料 {/* #参考资料 */}
 
 - [Higress](https://higress.io/)
 - [Gateway API HTTP Routing](https://gateway-api.sigs.k8s.io/guides/http-routing/)
 - [NGINX HTTP Proxy](https://nginx.org/en/docs/http/ngx_http_proxy_module.html)
 - [vLLM Security](https://docs.vllm.ai/en/latest/security/)
 
----
-
-## 相关链接
+## 17. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 25 篇：生产级 K8s 部署清单](./25-编写生产级双池Kubernetes部署模板.md)
 - [第 27 篇：多副本负载均衡与自动扩缩容](./27-多副本负载均衡与自动扩缩容.md)
-
----
 
 ← [第 25 篇](./25-编写生产级双池Kubernetes部署模板.md) · → [第 27 篇：多副本负载均衡与扩缩容](./27-多副本负载均衡与自动扩缩容.md)

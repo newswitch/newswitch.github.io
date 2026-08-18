@@ -1,9 +1,11 @@
 ---
 title: "nvidia-smi 失败：从 PCIe、驱动、NVML 到容器的完整排查"
+sidebar_label: "03. nvidia-smi 失败：从 PCIe、驱动、NVML 到容器的完整排查"
+sidebar_position: 3
+description: "按二进制、PCIe、内核驱动、设备节点、NVML 和容器注入六层定位 nvidia-smi 失败，并建立安全恢复与重新上线标准。"
+tags: ["GPU", "nvidia-smi", "NVML", "驱动", "容器", "故障排查"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "nvidia-smi", "NVML", "驱动", "容器", "故障排查"]
-description: "按二进制、PCIe、内核驱动、设备节点、NVML 和容器注入六层定位 nvidia-smi 失败，并建立安全恢复与重新上线标准。"
 ---
 
 # nvidia-smi 失败：从 PCIe、驱动、NVML 到容器的完整排查
@@ -416,46 +418,46 @@ GPU reset 受 GPU 架构、NVLink/NVSwitch、Fabric Manager、虚拟化和是否
 
 ## 10. 可复现实验
 
-### 实验一：认识退出码和不支持字段
+### 10.1 实验一：认识退出码和不支持字段 {/* #实验一认识退出码和不支持字段 */}
 
 在测试节点执行正确与错误参数，记录 stdout、stderr 和退出码。再使用
 `nvidia-smi --help-query-gpu` 核对当前驱动支持的字段。
 
-### 实验二：区分无命令与无设备
+### 10.2 实验二：区分无命令与无设备 {/* #实验二区分无命令与无设备 */}
 
 准备两个测试镜像：一个包含 `nvidia-smi`，另一个只安装 PyTorch。两者都申请一张 GPU，分别用
 管理命令和 `torch.cuda` 证明设备是否可用。
 
-### 实验三：容器注入证据
+### 10.3 实验三：容器注入证据 {/* #实验三容器注入证据 */}
 
 对比宿主机和测试 Pod 的 `/dev/nvidia*`、环境变量、Mount、CDI 列表和 runtime inspect 输出，画出设备如何进入容器。
 
-### 实验四：资源注册故障
+### 10.4 实验四：资源注册故障 {/* #实验四资源注册故障 */}
 
 只在测试集群停止 device plugin，观察：宿主机 GPU、Node Allocatable、已有 Pod 和新 Pod 分别怎样变化。
 恢复插件后验证资源重新注册。不要在生产环境实施该实验。
 
 ## 11. 掌握标准
 
-### 入门
+### 11.1 入门 {/* #入门 */}
 
 - 能解释 `nvidia-smi` 为什么依赖 NVML 和内核驱动；
 - 能读取返回码并区分宿主机与容器故障；
 - 能完成不破坏现场的只读采集。
 
-### 进阶
+### 11.2 进阶 {/* #进阶 */}
 
 - 能定位驱动未加载、版本不一致、NVML 缺失和容器设备缺失；
 - 能把 GPU UUID/BDF 映射到进程和 Pod；
 - 能解释 `Unknown Error` 为什么可能与 cgroup/CDI 相关。
 
-### 生产级
+### 11.3 生产级 {/* #生产级 */}
 
 - 能根据 Xid/Recovery Action 安全隔离和恢复节点；
 - 能设计驱动升级、容器注入和重新上线门禁；
 - 能在不盲目重启的情况下形成可提交给厂商的证据包。
 
-## 参考资料
+## 12. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA System Management Interface](https://docs.nvidia.com/deploy/nvidia-smi/index.html)
 - [NVIDIA Container Toolkit troubleshooting](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/troubleshooting.html)

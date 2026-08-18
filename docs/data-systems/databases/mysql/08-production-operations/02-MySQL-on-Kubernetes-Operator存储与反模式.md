@@ -2,8 +2,8 @@
 title: "MySQL on Kubernetes、Operator、存储与反模式"
 sidebar_label: "02. MySQL on Kubernetes、Operator、存储与反模式"
 sidebar_position: 2
-tags: [MySQL, Kubernetes, Operator, StatefulSet, 存储]
 description: "理解数据库 Pod、PVC、调度、故障域、Operator 调谐、备份与高可用，识别把无状态经验套到 MySQL 的反模式。"
+tags: [MySQL, Kubernetes, Operator, StatefulSet, 存储]
 ---
 
 # MySQL on Kubernetes、Operator、存储与反模式
@@ -70,9 +70,8 @@ sidecar/日志写满共享卷
 
 删除 Pod、drain 节点、断开单 AZ、卷 detach/attach 延迟、Operator 暂停、Router 重启、备份恢复和多数派丢失。记录数据安全、RTO、调度事件、连接恢复和人工步骤。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [MySQL Operator for Kubernetes](https://dev.mysql.com/doc/mysql-operator/en/)
 - [Kubernetes StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
 - [Kubernetes Storage Classes](https://kubernetes.io/docs/concepts/storage/storage-classes/)
-

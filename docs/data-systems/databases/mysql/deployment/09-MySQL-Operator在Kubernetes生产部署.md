@@ -2,8 +2,8 @@
 title: "MySQL Operator 在 Kubernetes 生产部署"
 sidebar_label: "09. MySQL Operator 在 Kubernetes 生产部署"
 sidebar_position: 9
-tags: [MySQL, Kubernetes, Operator, InnoDBCluster, PVC]
 description: "从控制器协调循环、InnoDBCluster CR、Stateful Pod、PVC、Service 和 Router 原理出发，部署并验收 MySQL Operator 管理的生产集群。"
+tags: [MySQL, Kubernetes, Operator, InnoDBCluster, PVC]
 ---
 
 # MySQL Operator 在 Kubernetes 生产部署
@@ -29,7 +29,7 @@ Git/Change Review
         CR status / Events / Logs
 ```
 
-### 协调循环意味着什么
+### 1.1 协调循环意味着什么 {/* #协调循环意味着什么 */}
 
 Operator 不只在安装时运行。它持续比较 Spec 和现实，并尝试把现实收敛到期望状态：
 
@@ -61,7 +61,7 @@ Operator 的价值是标准化生命周期，不是让有状态系统变成无�
 
 ## 3. 生产前置条件
 
-### Kubernetes 层
+### 3.1 Kubernetes 层 {/* #kubernetes-层 */}
 
 - 使用当前受支持的 Kubernetes 版本，而不是只满足文档历史最低值；
 - 至少三个稳定 worker/故障域，调度策略能验证 Pod 实际分散；
@@ -70,7 +70,7 @@ Operator 的价值是标准化生命周期，不是让有状态系统变成无�
 - 有命名空间、RBAC、NetworkPolicy、ResourceQuota 和审计策略；
 - Admission/GitOps 能阻止未审核镜像与高风险变更。
 
-### 存储层
+### 3.2 存储层 {/* #存储层 */}
 
 | 问题 | 必须有答案 |
 | --- | --- |
@@ -356,27 +356,27 @@ Operator 当前 CR 属性还提供 Prometheus 风格 metrics 配置，但是否�
 
 ## 13. 故障演练
 
-### 删除一个非 Primary Pod
+### 13.1 删除一个非 Primary Pod {/* #删除一个非-primary-pod */}
 
 验证 Pod 重建、同一 PVC 重新挂载、MySQL Crash Recovery/重新加入、集群冗余恢复和告警时间线。不要删除 PVC。
 
-### 节点故障
+### 13.2 节点故障 {/* #节点故障 */}
 
 记录 Pod 驱逐判定、Volume detach/attach、调度、恢复和重新加入总时间。数据库 RTO 往往受 CSI 操作而非 Pod 创建速度控制。
 
-### Primary Pod 故障
+### 13.3 Primary Pod 故障 {/* #primary-pod-故障 */}
 
 验证多数派选主、Router 更新、应用连接池重连和首笔成功写入。Kubernetes Ready 恢复时间不等于业务 RTO。
 
-### Zone 故障
+### 13.4 Zone 故障 {/* #zone-故障 */}
 
 确认剩余两个成员是否真的位于两个独立故障域并能保持多数派，同时评估 Router、Operator、DNS 和存储控制面是否也跨 zone。
 
-### Operator 停止
+### 13.5 Operator 停止 {/* #operator-停止 */}
 
 短时 Operator 不可用通常不应让正在运行的 MySQL 立即停服，但无法继续协调、扩缩容和修复。验证数据库数据面与控制面故障的区别。
 
-### 备份恢复
+### 13.6 备份恢复 {/* #备份恢复 */}
 
 在全新 namespace 或独立测试集群恢复，不覆盖原集群；核验数据、账户、GTID、应用兼容和恢复耗时。
 

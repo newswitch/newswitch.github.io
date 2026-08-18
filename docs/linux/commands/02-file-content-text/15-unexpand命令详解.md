@@ -1,11 +1,12 @@
 ---
-title: unexpand 命令详解：按制表位把空白压缩成 TAB
+title: "unexpand 命令详解：按制表位把空白压缩成 TAB"
+sidebar_label: "15. unexpand 命令详解：按制表位把空白压缩成 TAB"
 sidebar_position: 15
-description: 完整讲解 GNU coreutils unexpand 的全部参数、行首与全行转换、自定义制表位、tabs 隐含 all、first-only 覆盖、blank 与 locale、退格和格式语义风险。
+description: "完整讲解 GNU coreutils unexpand 的全部参数、行首与全行转换、自定义制表位、tabs 隐含 all、first-only 覆盖、blank 与 locale、退格和格式语义风险。"
 tags: [Linux, unexpand, GNU coreutils, TAB, 文本格式]
 ---
 
-# `unexpand` 命令详解：按制表位把空白压缩成 TAB
+# unexpand 命令详解：按制表位把空白压缩成 TAB
 
 `unexpand` 把能够到达相同制表位的空白序列改写成尽量多的 TAB。默认只转换每行开头的 blanks；它优化的是表示方式和视觉对齐，不保留“原来是几个空格还是 TAB”的字节信息。
 
@@ -155,7 +156,7 @@ fi
 - 能说明 blank、显示列、退格和 Unicode 边界。
 - 能识别 TAB 对源码和数据 schema 的破坏风险。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：unexpand invocation](https://www.gnu.org/software/coreutils/manual/html_node/unexpand-invocation.html)
 - [POSIX unexpand](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/unexpand.html)
@@ -163,4 +164,3 @@ fi
 上一篇：[`expand` 命令详解](./14-expand命令详解.md)
 
 下一篇：[`fold` 命令详解](./16-fold命令详解.md)
-

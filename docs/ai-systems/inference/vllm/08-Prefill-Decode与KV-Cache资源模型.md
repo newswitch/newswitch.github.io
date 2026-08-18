@@ -2,8 +2,8 @@
 title: "Prefill、Decode 与 KV Cache 资源模型"
 sidebar_label: "08. Prefill、Decode 与 KV Cache 资源模型"
 sidebar_position: 8
-tags: [vLLM, Prefill, Decode, KV Cache, PagedAttention, TTFT, TPOT]
 description: "从计算量、显存带宽和 KV Cache 容量出发，理解 Prefill 与 Decode 的性能差异，并建立可用于容量规划和故障分析的资源模型。"
+tags: [vLLM, Prefill, Decode, KV Cache, PagedAttention, TTFT, TPOT]
 ---
 
 # Prefill、Decode 与 KV Cache 资源模型
@@ -22,8 +22,6 @@ Decode：逐步生成输出 Token
 - 认为显存只由模型权重决定。
 - 把 KV Cache 满和 CUDA OOM 混为一谈。
 - 通过增加 Batch 一味追求吞吐，却让 TTFT 或 TPOT 失控。
-
----
 
 ## 1. 自回归生成
 
@@ -46,8 +44,6 @@ GPU 并行性来自：
 - 多个请求组成 Batch。
 - TP/PP/DP/EP。
 - Prefill 中同时处理多个输入 token。
-
----
 
 ## 2. Prefill 阶段
 
@@ -98,8 +94,6 @@ Chat Template
 
 所以 TTFT 变慢时不能直接断言是 Prefill Kernel 变慢。
 
----
-
 ## 3. Decode 阶段
 
 Decode 每个 Step 通常为每个请求处理一个或少量新 token：
@@ -145,8 +139,6 @@ new token
 - 影响单请求 TPOT。
 - 增加排队。
 
----
-
 ## 4. TTFT、TPOT 与 E2E
 
 ### 4.1 TTFT
@@ -188,8 +180,6 @@ E2E ≈ TTFT + (output_tokens - 1) × TPOT
 
 它是近似式，因为实际 ITL 并不完全相等。
 
----
-
 ## 5. KV Cache 保存了什么
 
 在每一层 Self-Attention 中：
@@ -212,8 +202,6 @@ V = XWv
 ```
 
 有 KV Cache 后，只追加新 token 的 K/V，大幅减少重复计算，但消耗显存。
-
----
 
 ## 6. KV Cache 容量公式
 
@@ -296,8 +284,6 @@ num_kv_heads = 1
 
 KV Cache 与 `num_kv_heads` 成正比，因此 GQA/MQA 对长上下文推理非常重要。
 
----
-
 ## 7. 推理显存组成
 
 ```text
@@ -339,8 +325,6 @@ usable_memory
 
 启动时显存接近设定水位通常是预分配结果，不代表发生泄漏。
 
----
-
 ## 8. PagedAttention 与 Block
 
 连续显存分配有两个问题：
@@ -377,8 +361,6 @@ Block 越大：
 - Prefix Cache 复用粒度更粗。
 
 具体可选值和默认值必须以当前 vLLM/Attention Backend 为准。
-
----
 
 ## 9. Automatic Prefix Caching
 
@@ -434,8 +416,6 @@ Prefix Cache 通常以完整 Block 为复用单位，不完整尾块需要重新
 - 使用安全哈希策略。
 - 不在日志中记录 Prompt。
 
----
-
 ## 10. KV Cache 满时会发生什么
 
 KV Cache 使用率接近 100% 后，可能出现：
@@ -454,8 +434,6 @@ KV Cache 使用率接近 100% 后，可能出现：
 | 常表现为 waiting/preemption | 常导致请求或进程报错 |
 | 可通过准入和调度控制 | 需要检查峰值、碎片和显存预算 |
 | 显存可能仍按预留水位稳定 | 可能出现分配失败栈 |
-
----
 
 ## 11. 容量模型
 
@@ -498,8 +476,6 @@ kv_limited_concurrency ≈
 
 所以“显存能放下”不等于“SLO 能承载”。
 
----
-
 ## 12. 关键指标
 
 | 目标 | 指标 |
@@ -534,8 +510,6 @@ sum(rate(vllm:prefix_cache_queries[5m]))
 
 部署版本可能调整指标名称，先检查 `/metrics`。
 
----
-
 ## 13. 症状判断矩阵
 
 | Queue | Prefill | TPOT | KV | 可能原因 |
@@ -549,11 +523,9 @@ sum(rate(vllm:prefix_cache_queries[5m]))
 
 这只是形成假设的入口，最终需要 Trace、Profiler 和对照实验验证。
 
----
-
 ## 14. 调优方向
 
-### TTFT 优先
+### 14.1 TTFT 优先 {/* #ttft-优先 */}
 
 - 限制输入长度。
 - 启用并验证 Prefix Cache。
@@ -562,7 +534,7 @@ sum(rate(vllm:prefix_cache_queries[5m]))
 - 提高短请求优先级或分池。
 - 增加副本/DP。
 
-### TPOT 优先
+### 14.2 TPOT 优先 {/* #tpot-优先 */}
 
 - 保证 Decode 优先。
 - 控制每轮 Prefill Token。
@@ -570,7 +542,7 @@ sum(rate(vllm:prefix_cache_queries[5m]))
 - 检查显存带宽与 GPU 时钟。
 - 优化 TP/EP 通信。
 
-### 吞吐优先
+### 14.3 吞吐优先 {/* #吞吐优先 */}
 
 - 增大有效 Batch。
 - 增大 Token Budget。
@@ -580,18 +552,16 @@ sum(rate(vllm:prefix_cache_queries[5m]))
 
 任何调优都要同时观察 TTFT、TPOT、吞吐和错误率，不能只优化一个数字。
 
----
-
 ## 15. 实验
 
-### 实验 1：测 KV bytes/token
+### 15.1 实验 1：测 KV bytes/token {/* #实验-1测-kv-bytestoken */}
 
 1. 读取模型 `num_hidden_layers`、`num_key_value_heads`、`head_dim`。
 2. 按公式计算。
 3. 固定模型，逐步增加总驻留 token。
 4. 对照运行时 KV Cache 容量和使用率。
 
-### 实验 2：Prefill 与 Decode 分离测量
+### 15.2 实验 2：Prefill 与 Decode 分离测量 {/* #实验-2prefill-与-decode-分离测量 */}
 
 准备：
 
@@ -603,7 +573,7 @@ B: 16 输入，512 输出
 - A 主要观察 Prefill/TTFT。
 - B 主要观察 Decode/TPOT。
 
-### 实验 3：Prefix Cache
+### 15.3 实验 3：Prefix Cache {/* #实验-3prefix-cache */}
 
 重复相同长 System Prompt：
 
@@ -612,7 +582,7 @@ B: 16 输入，512 输出
 3. 比较 computed prompt tokens、cache hits 和 TTFT。
 4. 修改一个完整 Block 内 token，观察命中边界。
 
-### 实验 4：KV 压力
+### 15.4 实验 4：KV 压力 {/* #实验-4kv-压力 */}
 
 逐步提高并发和上下文，观察：
 
@@ -625,8 +595,6 @@ KV usage
 ```
 
 不要在生产集群直接进行饱和实验。
-
----
 
 ## 16. 验收清单
 

@@ -1,11 +1,12 @@
 ---
-title: GPU 与加速器命令参考库：从设备识别到分布式通信验证
+title: "GPU 与加速器命令参考库：从设备识别到分布式通信验证"
+sidebar_label: "00. GPU 与加速器命令参考库：从设备识别到分布式通信验证"
 sidebar_position: 0
-description: 系统学习 NVIDIA GPU 驱动诊断、DCGM、容器工具链、CUDA 编译调试、性能分析、二进制检查与 NCCL 通信测试命令。
+description: "系统学习 NVIDIA GPU 驱动诊断、DCGM、容器工具链、CUDA 编译调试、性能分析、二进制检查与 NCCL 通信测试命令。"
 tags: [GPU, CUDA, DCGM, NCCL, NVIDIA, 命令参考, SRE]
 ---
 
-# GPU 与加速器命令参考库
+# GPU 与加速器命令参考库：从设备识别到分布式通信验证
 
 这套参考库不把 GPU 故障简单归因于“显卡坏了”。一项 GPU 作业真正经过的是：PCIe 设备被发现、内核驱动绑定、设备节点创建、容器注入设备和库、CUDA 程序装载、Kernel 执行、跨卡通信，最后才是框架层任务。每篇文章都说明命令观察哪一层、输出如何解释、会不会影响在线任务，以及证据不足时下一步查什么。
 
@@ -39,7 +40,7 @@ ncu --version
 
 ## 3. 四阶段学习路线
 
-### 第一阶段：驱动、设备与节点健康
+### 3.1 驱动、设备与节点健康 {/* #第一阶段驱动设备与节点健康 */}
 
 1. [`nvidia-smi`](./01-nvidia-smi常用命令与指标说明.md)：设备清单、利用率、显存、进程、拓扑、ECC 与 Xid 入口。
 2. [`dcgmi`](./02-dcgmi命令详解.md)：主机/集群 GPU 发现、健康策略、字段监控和诊断。
@@ -47,18 +48,18 @@ ncu --version
 4. [`nvidia-bug-report.sh`](./04-nvidia-bug-report命令详解.md)：在驱动异常仍存在时采集完整证据包。
 5. [`nvidia-modprobe`](./05-nvidia-modprobe命令详解.md)：加载模块并创建设备节点，理解权限边界。
 
-### 第二阶段：容器设备注入
+### 3.2 容器设备注入 {/* #第二阶段容器设备注入 */}
 
 6. [`nvidia-ctk`](./06-nvidia-ctk命令详解.md)：配置 Docker/containerd/CRI-O 和 CDI。
 7. [`nvidia-container-cli`](./07-nvidia-container-cli命令详解.md)：检查容器运行时实际发现并挂载了哪些设备和库。
 
-### 第三阶段：CUDA 编译与正确性调试
+### 3.3 CUDA 编译与正确性调试 {/* #第三阶段cuda-编译与正确性调试 */}
 
 8. [`nvcc`](./08-nvcc命令详解.md)：理解 Host/Device 两段编译、架构目标和可执行文件生成。
 9. [`compute-sanitizer`](./09-compute-sanitizer命令详解.md)：定位越界、竞争、未初始化访问和同步错误。
 10. [`cuda-gdb`](./10-cuda-gdb命令详解.md)：在 CPU 线程、CUDA Context、Kernel、Block 和 Thread 间切换调试。
 
-### 第四阶段：性能、二进制与通信
+### 3.4 性能、二进制与通信 {/* #第四阶段性能二进制与通信 */}
 
 11. [`nsys`](../../sre/performance/03-Nsight-Systems端到端时间线分析.md)：先回答时间花在哪里、CPU 与 GPU 是否并行。
 12. [`ncu`](../../sre/performance/04-Nsight-Compute-CUDA-Kernel分析.md)：再回答单个 Kernel 为什么慢。
@@ -92,7 +93,7 @@ flowchart LR
 
 学完后应能独立完成：从 PCI Bus ID/UUID 将应用进程映射到物理 GPU；区分驱动、Toolkit 与容器运行时版本；采集不破坏现场的证据；复现 CUDA 内存错误；解释 Timeline 与 Kernel 指标；用 CUDA Samples 和 NCCL Tests 建立可比较基线；判断故障位于计算、显存、PCIe/NVLink、网络、容器还是应用层。
 
-## 官方入口
+## 7. 官方入口 {/* #官方入口 */}
 
 - [NVIDIA GPU Deployment and Management Documentation](https://docs.nvidia.com/deploy/)
 - [NVIDIA DCGM Documentation](https://docs.nvidia.com/datacenter/dcgm/latest/)

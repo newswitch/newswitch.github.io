@@ -1,11 +1,12 @@
 ---
-title: rados 命令详解：Pool、Namespace、Object、xattr、omap 与基准
+title: "rados 命令详解：Pool、Namespace、Object、xattr、omap 与基准"
+sidebar_label: "22. rados 命令详解：Pool、Namespace、Object、xattr、omap 与基准"
 sidebar_position: 22
-description: 讲解 rados 全局参数、pool/PG/namespace 选择、对象 get/put/rm/stat、xattr/omap、watch/notify/lock、snapshot、bench/load-gen 和数据破坏边界。
+description: "讲解 rados 全局参数、pool/PG/namespace 选择、对象 get/put/rm/stat、xattr/omap、watch/notify/lock、snapshot、bench/load-gen 和数据破坏边界。"
 tags: [Ceph, rados, RADOS, Object, OMAP, 性能测试]
 ---
 
-# `rados` 命令详解：Pool、Namespace、Object、xattr、omap 与基准
+# rados 命令详解：Pool、Namespace、Object、xattr、omap 与基准
 
 `rados` 直接操作 Ceph 底层 object store。它绕过 RBD/CephFS/RGW 的上层语义：手工修改或删除其内部对象可能破坏 image、文件系统或 bucket index。
 

@@ -1,11 +1,12 @@
 ---
-title: lscpu 命令详解：CPU 拓扑、缓存、在线状态与机器输出
+title: "lscpu 命令详解：CPU 拓扑、缓存、在线状态与机器输出"
+sidebar_label: "03. lscpu 命令详解：CPU 拓扑、缓存、在线状态与机器输出"
 sidebar_position: 3
-description: 完整讲解 util-linux lscpu 的全部长短参数、socket/core/thread/NUMA/cache 拓扑、解析输出、虚拟化与容器边界。
+description: "完整讲解 util-linux lscpu 的全部长短参数、socket/core/thread/NUMA/cache 拓扑、解析输出、虚拟化与容器边界。"
 tags: [Linux, lscpu, CPU拓扑, NUMA, cache, util-linux]
 ---
 
-# `lscpu` 命令详解：CPU 拓扑、缓存、在线状态与机器输出
+# lscpu 命令详解：CPU 拓扑、缓存、在线状态与机器输出
 
 `lscpu` 汇总 sysfs、`/proc/cpuinfo` 和架构库中的 CPU 信息。它回答“内核看见怎样的 CPU 拓扑”，不直接回答“当前进程能获得多少 CPU 时间”。
 
@@ -120,7 +121,7 @@ mpstat -P ALL 1 10
 
 掌握标准：能从逐 CPU 表还原拓扑，解释 SMT/cache/NUMA/虚拟化边界，并为脚本选择显式稳定列。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [util-linux lscpu(1)](https://man7.org/linux/man-pages/man1/lscpu.1.html)
 - [Linux CPU hotplug](https://docs.kernel.org/core-api/cpu_hotplug.html)

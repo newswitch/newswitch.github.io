@@ -1,9 +1,9 @@
 ---
 title: "CUDA 执行模型与 Kernel 性能基础"
 sidebar_label: "01. CUDA 执行模型与 Kernel 性能基础"
-sidebar_position: 8
-tags: [CUDA, Kernel, Thread, Warp, Occupancy, Memory Coalescing, GPU]
+sidebar_position: 1
 description: "从 Grid、Block、Thread、Warp、SM 和内存层次理解 CUDA Kernel 的执行、同步、分支、访存与性能分析。"
+tags: [CUDA, Kernel, Thread, Warp, Occupancy, Memory Coalescing, GPU]
 ---
 
 # CUDA 执行模型与 Kernel 性能基础
@@ -55,11 +55,11 @@ Kernel launch 通常对 Host 异步。launch 返回不代表 GPU 已完成；错
 
 ## 3. Grid、Block 与 Thread
 
-### Thread
+### 3.1 Thread {/* #thread */}
 
 执行同一 Kernel 程序的逻辑实例，有自己的 thread index、寄存器状态和局部控制流。
 
-### Block
+### 3.2 Block {/* #block */}
 
 一组线程：
 
@@ -68,7 +68,7 @@ Kernel launch 通常对 Host 异步。launch 返回不代表 GPU 已完成；错
 - 可以使用 block 级同步；
 - 不应依赖不同 Block 的执行顺序。
 
-### Grid
+### 3.3 Grid {/* #grid */}
 
 一次 Kernel launch 的全部 Block。Block 可以按任意顺序并行或串行执行，这是可扩展性的基础。
 
@@ -170,7 +170,7 @@ Shared Memory 位于 SM，Block 内线程共享，常用于：
 - 需要同步；
 - tile 边界与复杂度。
 
-### Bank conflict
+### 9.1 Bank conflict {/* #bank-conflict */}
 
 同一 warp 对 Shared Memory 的地址映射到同一 bank 且不是可广播模式时，访问可能序列化。bank 数和规则随架构，使用 Nsight Compute 指标验证。
 
@@ -210,19 +210,19 @@ Host Memory        经 PCIe/NVLink-C2C 等，通常更远
 
 ## 12. 同步
 
-### Block 内
+### 12.1 Block 内 {/* #block-内 */}
 
 `__syncthreads()` 等同步确保 Block 内线程到达并满足相关内存可见性。若同步位于只有部分线程到达的发散路径，可能死锁或未定义行为。
 
-### Stream 内
+### 12.2 Stream 内 {/* #stream-内 */}
 
 同一 Stream 的操作按 CUDA 规定排序。不同 Stream 可并发，但受依赖、硬件引擎和资源限制。
 
-### Host 与 Device
+### 12.3 Host 与 Device {/* #host-与-device */}
 
 `cudaDeviceSynchronize()` 等等待 GPU，频繁全局同步会破坏 pipeline。正确做法是用 event/stream dependency 表达必要顺序，而不是每个 Kernel 后同步。
 
-### 多 GPU
+### 12.4 多 GPU {/* #多-gpu */}
 
 NCCL Collective 和 peer copy 引入设备间同步；一个慢 rank 会让其他 rank 等待。
 
@@ -291,11 +291,11 @@ GPU 有 Tensor Core 不等于任何 FP16/BF16 Kernel 自动使用它。
 
 ## 17. Nsight Systems 与 Nsight Compute 分工
 
-### Nsight Systems
+### 17.1 Nsight Systems {/* #nsight-systems */}
 
 先看全局时间线：CPU thread、CUDA API、Kernel、Memcpy、NCCL、空洞和同步。回答“时间花在哪个阶段”。
 
-### Nsight Compute
+### 17.2 Nsight Compute {/* #nsight-compute */}
 
 再分析少量关键 Kernel：
 
@@ -323,19 +323,19 @@ GPU 有 Tensor Core 不等于任何 FP16/BF16 Kernel 自动使用它。
 
 ## 19. AI 推理中的映射
 
-### Prefill
+### 19.1 Prefill {/* #prefill */}
 
 矩阵规模大，通常更容易利用 Tensor Core，计算吞吐与 HBM 都重要。
 
-### Decode
+### 19.2 Decode {/* #decode */}
 
 每步 token 数小，可能受 HBM、Kernel launch、batch 和同步影响。continuous batching 增大有效工作量。
 
-### KV Cache
+### 19.3 KV Cache {/* #kv-cache */}
 
 读写模式、分页/块布局和有效 batch 影响 HBM 流量。显存容量够不等于带宽够。
 
-### Tensor Parallel
+### 19.4 Tensor Parallel {/* #tensor-parallel */}
 
 计算 Kernel 间插入 Collective。Kernel 变快后，通信占比可能上升；需要端到端分析。
 
@@ -356,7 +356,7 @@ GPU 有 Tensor Core 不等于任何 FP16/BF16 Kernel 自动使用它。
 
 下一篇：[GPU Roofline 性能模型](../performance/01-GPU-Roofline性能模型.md)。
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/)
 - [CUDA Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html)

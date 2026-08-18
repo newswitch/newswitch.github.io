@@ -1,11 +1,12 @@
 ---
-title: fio 命令详解：可复现 I/O 压测、延迟分位数与数据安全
+title: "fio 命令详解：可复现 I/O 压测、延迟分位数与数据安全"
+sidebar_label: "10. fio 命令详解：可复现 I/O 压测、延迟分位数与数据安全"
 sidebar_position: 10
-description: 以 fio 3.42 文档为基线，讲解 job 生命周期、核心命令行与 job 参数族、ioengine、iodepth、numjobs、direct、fsync、验证、JSON 输出和生产压测边界。
+description: "以 fio 3.42 文档为基线，讲解 job 生命周期、核心命令行与 job 参数族、ioengine、iodepth、numjobs、direct、fsync、验证、JSON 输出和生产压测边界。"
 tags: [Linux, fio, 存储性能, IOPS, 延迟, 压测]
 ---
 
-# `fio` 命令详解：可复现 I/O 压测、延迟分位数与数据安全
+# fio 命令详解：可复现 I/O 压测、延迟分位数与数据安全
 
 `fio`（Flexible I/O Tester）生成可配置 I/O 工作负载。它不是“跑一个数字”的工具：目标、读写模式、块大小、并发、队列深度、缓存、数据集大小、运行时间和持久性语义任何一项不同，结果都不可直接比较。
 

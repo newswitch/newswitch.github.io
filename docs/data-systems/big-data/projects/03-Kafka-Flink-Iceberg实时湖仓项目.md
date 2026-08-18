@@ -1,9 +1,9 @@
 ---
-title: 综合项目：Kafka、Flink、Iceberg 实时湖仓
+title: "综合项目：Kafka、Flink、Iceberg 实时湖仓"
 sidebar_label: "03. 综合项目：Kafka、Flink、Iceberg 实时湖仓"
 sidebar_position: 3
+description: "从事件契约、流计算、Checkpoint、表提交、迟到与小文件治理构建生产级实时湖仓。"
 tags: [Kafka, Flink, Iceberg, 实时湖仓, 项目]
-description: 从事件契约、流计算、Checkpoint、表提交、迟到与小文件治理构建生产级实时湖仓。
 ---
 
 # 综合项目：Kafka、Flink、Iceberg 实时湖仓
@@ -71,15 +71,15 @@ Flink高频写后由 Spark在低峰 rewrite data/delete/manifests。Maintenance�
 
 ## 10. 生产 Runbook
 
-### Lag
+### 10.1 Lag {/* #lag */}
 
 CDC source lag → Kafka partition lag → Flink records/backpressure/watermark → checkpoint → Iceberg commit。沿链路逐段定位。
 
-### Checkpoint失败
+### 10.2 Checkpoint失败 {/* #checkpoint失败 */}
 
 分解 start delay、alignment、state upload和sink commit；禁止只扩大 timeout。
 
-### 小文件
+### 10.3 小文件 {/* #小文件 */}
 
 检查 writer×活跃分区×提交频率，先修源头，再 compaction；清理旧 snapshot前检查 reader/tag。
 

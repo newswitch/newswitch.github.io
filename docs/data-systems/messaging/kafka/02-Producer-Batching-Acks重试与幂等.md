@@ -1,9 +1,9 @@
 ---
-title: Kafka Producer：Batching、Acks、重试与幂等生产
+title: "Kafka Producer：Batching、Acks、重试与幂等生产"
 sidebar_label: "02. Kafka Producer：Batching、Acks、重试与幂等生产"
 sidebar_position: 2
+description: "理解 Producer 从序列化、分区、批处理到确认、重试和幂等的完整发送路径。"
 tags: [Kafka Producer, Acks, Batching, 幂等]
-description: 理解 Producer 从序列化、分区、批处理到确认、重试和幂等的完整发送路径。
 ---
 
 # Kafka Producer：Batching、Acks、重试与幂等生产
@@ -71,6 +71,6 @@ Acks 控制 leader 在什么条件下响应。最强确认通常要求满足 ISR
 
 上一篇：[Kafka 架构与分区日志](./01-Kafka架构分区日志Segment与索引.md)　下一篇：[Consumer Group、Offset、Rebalance 与顺序](./03-Consumer-Group-Offset-Rebalance与顺序.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Kafka Producer Configuration](https://kafka.apache.org/documentation/#producerconfigs)

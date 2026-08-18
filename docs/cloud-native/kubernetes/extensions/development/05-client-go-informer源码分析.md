@@ -2,8 +2,8 @@
 title: "client-go 中的 informer 源码分析"
 sidebar_label: "05. client-go 中的 informer 源码分析"
 sidebar_position: 5
-tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "本文将以图文并茂的方式对 client-go 中的 informer 的源码进行深入分析，揭示其核心实现机制。"
+tags: [Kubernetes, 开发指南, PartII, 学习路线]
 ---
 
 # client-go 中的 informer 源码分析
@@ -14,13 +14,13 @@ description: "本文将以图文并茂的方式对 client-go 中的 informer 的
 
 ![client-go informer](/images/k8s/develop/client-go-informer-sourcecode-analyse/client-go-informer.webp)
 
-## 前言
+## 1. 前言 {/* #前言 */}
 
 Kubernetes 作为云原生时代的操作系统，其声明式 API 和控制器模式是整个生态系统的基石。无论是为了深入理解 Kubernetes 的工作原理，还是基于 client-go 开发自定义控制器，掌握 informer 机制都至关重要。
 
 client-go 是 Kubernetes 官方提供的 Go 语言客户端库，其中的 informer 机制实现了高效的资源监听和本地缓存，是构建控制器的核心组件。
 
-### 基本使用示例
+### 1.1 基本使用示例 {/* #基本使用示例 */}
 
 以下是相关的示例代码：
 
@@ -52,7 +52,7 @@ kubeInformerFactory.Start(stopCh)
 kubeInformerFactory.WaitForCacheSync(stopCh)
 ```
 
-## 核心组件架构
+## 2. 核心组件架构 {/* #核心组件架构 */}
 
 informer 机制由以下几个核心组件构成：
 
@@ -63,9 +63,9 @@ informer 机制由以下几个核心组件构成：
 - **Indexer**: 本地缓存存储，支持索引查询
 - **SharedProcessor**: 事件分发器，将事件分发给注册的处理器
 
-## SharedInformerFactory 详解
+## 3. SharedInformerFactory 详解 {/* #sharedinformerfactory-详解 */}
 
-### 结构定义
+### 3.1 结构定义 {/* #结构定义 */}
 
 以下是相关的定义示例：
 
@@ -82,9 +82,9 @@ type sharedInformerFactory struct {
 }
 ```
 
-### 关键方法
+### 3.2 关键方法 {/* #关键方法 */}
 
-#### 创建 Factory
+#### 3.2.1 创建 Factory {/* #创建-factory */}
 
 以下是相关的定义示例：
 
@@ -98,17 +98,17 @@ func NewSharedInformerFactoryWithOptions(client kubernetes.Interface, defaultRes
         startedInformers: make(map[reflect.Type]bool),
         customResync:     make(map[reflect.Type]time.Duration),
     }
-    
+
     // 应用配置选项
     for _, opt := range options {
         factory = opt(factory)
     }
-    
+
     return factory
 }
 ```
 
-#### 启动所有 Informer
+#### 3.2.2 启动所有 Informer {/* #启动所有-informer */}
 
 以下是相关的代码示例：
 
@@ -126,7 +126,7 @@ func (f *sharedInformerFactory) Start(stopCh <-chan struct{}) {
 }
 ```
 
-#### 等待缓存同步
+#### 3.2.3 等待缓存同步 {/* #等待缓存同步 */}
 
 以下是相关的代码示例：
 
@@ -135,7 +135,7 @@ func (f *sharedInformerFactory) WaitForCacheSync(stopCh <-chan struct{}) map[ref
     informers := func() map[reflect.Type]cache.SharedIndexInformer {
         f.lock.Lock()
         defer f.lock.Unlock()
-        
+
         informers := map[reflect.Type]cache.SharedIndexInformer{}
         for informerType, informer := range f.informers {
             if f.startedInformers[informerType] {
@@ -153,9 +153,9 @@ func (f *sharedInformerFactory) WaitForCacheSync(stopCh <-chan struct{}) map[ref
 }
 ```
 
-## SharedIndexInformer 实现
+## 4. SharedIndexInformer 实现 {/* #sharedindexinformer-实现 */}
 
-### 结构定义
+### 4.1 结构定义 {/* #结构定义-1 */}
 
 以下是相关的定义示例：
 
@@ -176,17 +176,17 @@ type sharedIndexInformer struct {
 }
 ```
 
-### 核心运行逻辑
+### 4.2 核心运行逻辑 {/* #核心运行逻辑 */}
 
 以下是相关的代码示例：
 
 ```go
 func (s *sharedIndexInformer) Run(stopCh <-chan struct{}) {
     defer utilruntime.HandleCrash()
-    
+
     // 创建 DeltaFIFO 队列
     fifo := NewDeltaFIFO(MetaNamespaceKeyFunc, s.indexer)
-    
+
     // 配置控制器
     cfg := &Config{
         Queue:            fifo,
@@ -210,7 +210,7 @@ func (s *sharedIndexInformer) Run(stopCh <-chan struct{}) {
     var wg wait.Group
     defer wg.Wait()
     defer close(processorStopCh)
-    
+
     wg.StartWithChannel(processorStopCh, s.processor.run)
 
     // 启动控制器
@@ -218,11 +218,11 @@ func (s *sharedIndexInformer) Run(stopCh <-chan struct{}) {
 }
 ```
 
-## Reflector 组件
+## 5. Reflector 组件 {/* #reflector-组件 */}
 
 Reflector 负责与 API Server 交互，执行 List & Watch 操作：
 
-### List & Watch 流程
+### 5.1 List & Watch 流程 {/* #list--watch-流程 */}
 
 以下是相关的代码示例：
 
@@ -230,28 +230,28 @@ Reflector 负责与 API Server 交互，执行 List & Watch 操作：
 func (r *Reflector) ListAndWatch(stopCh <-chan struct{}) error {
     // 1. 执行 List 操作获取全量数据
     options := metav1.ListOptions{ResourceVersion: "0"}
-    
+
     list, err := pager.List(context.Background(), options)
     if err != nil {
         return fmt.Errorf("failed to list %v: %v", r.expectedGVK, err)
     }
-    
+
     // 2. 将 List 结果同步到 DeltaFIFO
     listMetaInterface, err := meta.ListAccessor(list)
     resourceVersion = listMetaInterface.GetResourceVersion()
     items, err := meta.ExtractList(list)
-    
+
     if err := r.syncWith(items, resourceVersion); err != nil {
         return fmt.Errorf("unable to sync list result: %v", err)
     }
-    
+
     // 3. 启动 Watch 操作
     for {
         w, err := r.listerWatcher.Watch(options)
         if err != nil {
             return err
         }
-        
+
         if err := r.watchHandler(start, w, &resourceVersion, resyncerrc, stopCh); err != nil {
             return err
         }
@@ -259,7 +259,7 @@ func (r *Reflector) ListAndWatch(stopCh <-chan struct{}) error {
 }
 ```
 
-### 定时重同步机制
+### 5.2 定时重同步机制 {/* #定时重同步机制 */}
 
 以下是相关的代码示例：
 
@@ -268,7 +268,7 @@ func (r *Reflector) ListAndWatch(stopCh <-chan struct{}) error {
 go func() {
     resyncCh, cleanup := r.resyncChan()
     defer cleanup()
-    
+
     for {
         select {
         case <-resyncCh:
@@ -285,11 +285,11 @@ go func() {
 }()
 ```
 
-## DeltaFIFO 队列机制
+## 6. DeltaFIFO 队列机制 {/* #deltafifo-队列机制 */}
 
 DeltaFIFO 是 informer 的核心队列，存储资源的增量变更事件。
 
-### 结构定义
+### 6.1 结构定义 {/* #结构定义-2 */}
 
 以下是相关的定义示例：
 
@@ -297,16 +297,16 @@ DeltaFIFO 是 informer 的核心队列，存储资源的增量变更事件。
 type DeltaFIFO struct {
     lock sync.RWMutex
     cond sync.Cond
-    
+
     items map[string]Deltas          // 增量事件存储
     queue []string                   // FIFO 队列
-    
+
     populated              bool      // 是否已填充数据
     initialPopulationCount int       // 初始数据数量
-    
+
     keyFunc      KeyFunc             // 键值提取函数
     knownObjects KeyListerGetter     // 本地缓存引用
-    
+
     closed     bool
     closedLock sync.Mutex
 }
@@ -319,9 +319,9 @@ type Delta struct {
 type Deltas []Delta // 同一资源的增量事件列表
 ```
 
-### 关键操作
+### 6.2 关键操作 {/* #关键操作 */}
 
-#### 批量替换（Replace）
+#### 6.2.1 批量替换（Replace） {/* #批量替换replace */}
 
 以下是相关的代码示例：
 
@@ -329,9 +329,9 @@ type Deltas []Delta // 同一资源的增量事件列表
 func (f *DeltaFIFO) Replace(list []interface{}, resourceVersion string) error {
     f.lock.Lock()
     defer f.lock.Unlock()
-    
+
     keys := make(sets.String, len(list))
-    
+
     // 添加新对象
     for _, item := range list {
         key, err := f.KeyOf(item)
@@ -339,12 +339,12 @@ func (f *DeltaFIFO) Replace(list []interface{}, resourceVersion string) error {
             return KeyError{item, err}
         }
         keys.Insert(key)
-        
+
         if err := f.queueActionLocked(Sync, item); err != nil {
             return fmt.Errorf("couldn't enqueue object: %v", err)
         }
     }
-    
+
     // 处理已删除的对象
     if f.knownObjects != nil {
         knownKeys := f.knownObjects.ListKeys()
@@ -352,7 +352,7 @@ func (f *DeltaFIFO) Replace(list []interface{}, resourceVersion string) error {
             if keys.Has(k) {
                 continue
             }
-            
+
             deletedObj, exists, err := f.knownObjects.GetByKey(k)
             if err != nil {
                 return err
@@ -360,23 +360,23 @@ func (f *DeltaFIFO) Replace(list []interface{}, resourceVersion string) error {
             if !exists {
                 continue
             }
-            
+
             if err := f.queueActionLocked(Deleted, DeletedFinalStateUnknown{k, deletedObj}); err != nil {
                 return err
             }
         }
     }
-    
+
     if !f.populated {
         f.populated = true
         f.initialPopulationCount = len(list)
     }
-    
+
     return nil
 }
 ```
 
-#### 弹出事件（Pop）
+#### 6.2.2 弹出事件（Pop） {/* #弹出事件pop */}
 
 以下是相关的代码示例：
 
@@ -384,7 +384,7 @@ func (f *DeltaFIFO) Replace(list []interface{}, resourceVersion string) error {
 func (f *DeltaFIFO) Pop(process PopProcessFunc) (interface{}, error) {
     f.lock.Lock()
     defer f.lock.Unlock()
-    
+
     for {
         for len(f.queue) == 0 {
             if f.IsClosed() {
@@ -392,37 +392,37 @@ func (f *DeltaFIFO) Pop(process PopProcessFunc) (interface{}, error) {
             }
             f.cond.Wait()
         }
-        
+
         id := f.queue[0]
         f.queue = f.queue[1:]
-        
+
         if f.initialPopulationCount > 0 {
             f.initialPopulationCount--
         }
-        
+
         item, ok := f.items[id]
         if !ok {
             continue
         }
-        
+
         delete(f.items, id)
         err := process(item)
-        
+
         if e, ok := err.(ErrRequeue); ok {
             f.addIfNotPresent(id, item)
             err = e.Err
         }
-        
+
         return item, err
     }
 }
 ```
 
-## 本地缓存 Indexer
+## 7. 本地缓存 Indexer {/* #本地缓存-indexer */}
 
 Indexer 提供了支持索引的本地缓存实现：
 
-### 核心结构
+### 7.1 核心结构 {/* #核心结构 */}
 
 以下是相关的代码示例：
 
@@ -439,7 +439,7 @@ type Indices map[string]Index       // 索引名称 -> 索引数据
 type Index map[string]sets.String   // 索引值 -> 对象键集合
 ```
 
-### 索引维护
+### 7.2 索引维护 {/* #索引维护 */}
 
 以下是相关的代码示例：
 
@@ -449,20 +449,20 @@ func (c *threadSafeMap) updateIndices(oldObj interface{}, newObj interface{}, ke
     if oldObj != nil {
         c.deleteFromIndices(oldObj, key)
     }
-    
+
     // 为新对象建立索引
     for name, indexFunc := range c.indexers {
         indexValues, err := indexFunc(newObj)
         if err != nil {
             panic(fmt.Errorf("unable to calculate index entry for key %q on index %q: %v", key, name, err))
         }
-        
+
         index := c.indices[name]
         if index == nil {
             index = Index{}
             c.indices[name] = index
         }
-        
+
         for _, indexValue := range indexValues {
             set := index[indexValue]
             if set == nil {
@@ -475,7 +475,7 @@ func (c *threadSafeMap) updateIndices(oldObj interface{}, newObj interface{}, ke
 }
 ```
 
-### 常用索引函数
+### 7.3 常用索引函数 {/* #常用索引函数 */}
 
 以下是相关的代码示例：
 
@@ -496,12 +496,12 @@ func LabelIndexFunc(labelKey string) IndexFunc {
         if err != nil {
             return []string{""}, err
         }
-        
+
         labels := meta.GetLabels()
         if labels == nil {
             return []string{""}, nil
         }
-        
+
         if value, exists := labels[labelKey]; exists {
             return []string{value}, nil
         }
@@ -510,9 +510,9 @@ func LabelIndexFunc(labelKey string) IndexFunc {
 }
 ```
 
-## 事件处理机制
+## 8. 事件处理机制 {/* #事件处理机制 */}
 
-### HandleDeltas 方法
+### 8.1 HandleDeltas 方法 {/* #handledeltas-方法 */}
 
 以下是相关的代码示例：
 
@@ -526,7 +526,7 @@ func (s *sharedIndexInformer) HandleDeltas(obj interface{}) error {
         switch d.Type {
         case Sync, Added, Updated:
             isSync := d.Type == Sync
-            
+
             // 更新本地缓存
             if old, exists, err := s.indexer.Get(d.Object); err == nil && exists {
                 if err := s.indexer.Update(d.Object); err != nil {
@@ -539,7 +539,7 @@ func (s *sharedIndexInformer) HandleDeltas(obj interface{}) error {
                 }
                 s.processor.distribute(addNotification{newObj: d.Object}, isSync)
             }
-            
+
         case Deleted:
             if err := s.indexer.Delete(d.Object); err != nil {
                 return err
@@ -551,7 +551,7 @@ func (s *sharedIndexInformer) HandleDeltas(obj interface{}) error {
 }
 ```
 
-### SharedProcessor 事件分发
+### 8.2 SharedProcessor 事件分发 {/* #sharedprocessor-事件分发 */}
 
 以下是相关的代码示例：
 
@@ -559,7 +559,7 @@ func (s *sharedIndexInformer) HandleDeltas(obj interface{}) error {
 func (p *sharedProcessor) distribute(obj interface{}, sync bool) {
     p.listenersLock.RLock()
     defer p.listenersLock.RUnlock()
-    
+
     if sync {
         // 同步事件只分发给需要重同步的监听器
         for _, listener := range p.syncingListeners {
@@ -574,9 +574,9 @@ func (p *sharedProcessor) distribute(obj interface{}, sync bool) {
 }
 ```
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
-### 合理设置重同步周期
+### 9.1 合理设置重同步周期 {/* #合理设置重同步周期 */}
 
 以下是相关的代码示例：
 
@@ -586,7 +586,7 @@ factory := kubeinformers.NewSharedInformerFactory(client, 30*time.Second)
 
 // 为特定资源设置不同的重同步周期
 factory = kubeinformers.NewSharedInformerFactoryWithOptions(
-    client, 
+    client,
     30*time.Second,
     kubeinformers.WithCustomResyncConfig(map[v1.Object]time.Duration{
         &appsv1.Deployment{}: 10 * time.Minute,
@@ -595,7 +595,7 @@ factory = kubeinformers.NewSharedInformerFactoryWithOptions(
 )
 ```
 
-### 优雅的错误处理
+### 9.2 优雅的错误处理 {/* #优雅的错误处理 */}
 
 以下是相关的代码示例：
 
@@ -619,18 +619,18 @@ deploymentInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
         if !ok {
             return
         }
-        
+
         // 避免处理无意义的更新
         if oldDeployment.ResourceVersion == newDeployment.ResourceVersion {
             return
         }
-        
+
         // 处理逻辑
     },
 })
 ```
 
-### 使用 Lister 进行高效查询
+### 9.3 使用 Lister 进行高效查询 {/* #使用-lister-进行高效查询 */}
 
 以下是具体的使用方法：
 
@@ -646,7 +646,7 @@ selector, _ := labels.Parse("app=nginx")
 deployments, err := deploymentLister.List(selector)
 ```
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 client-go 的 informer 机制通过精巧的设计实现了高效的资源监听和本地缓存：
 

@@ -1,9 +1,11 @@
 ---
-title: NVIDIA GPU Operator 架构与组件说明
+title: "NVIDIA GPU Operator 架构与组件说明"
 sidebar_label: "05. NVIDIA GPU Operator 架构与组件说明"
+sidebar_position: 5
+description: "上一篇 NVIDIA 驱动、CUDA 与容器运行时的关系 讲了裸机 / Docker / Kubernetes 手动用 GPU 的路径。流程不复杂，但节点上要装驱动、Container Toolkit、Device Plugin 等，集群一大就很麻烦。"
+tags: ["Kubernetes", "GPU Operator", "NFD", "GFD", "Device Plugin", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU Operator", "NFD", "GFD", "Device Plugin", "学习路线"]
 ---
 
 # NVIDIA GPU Operator 架构与组件说明
@@ -15,8 +17,6 @@ tags: ["Kubernetes", "GPU Operator", "NFD", "GFD", "Device Plugin", "学习路�
 **GPU Operator** 的目标，就是在 Kubernetes 里把这些步骤自动化：驱动安装、Container Toolkit、Device Plugin、监控等一并管起来。
 
 > 目前主要面向 **NVIDIA GPU**；其他厂商多数仍需手动安装相关组件。
-
----
 
 ## 1. 组件一览
 
@@ -56,8 +56,6 @@ NVIDIA Driver Installer
 - `nvidia.com/gpu.deploy.driver=true`：需要 Operator 安装驱动
 - `nvidia.com/gpu.deploy.driver=pre-installed`：节点已预装驱动，Driver DaemonSet 不在该节点跑安装逻辑
 
----
-
 ## 2. NFD 与 GFD
 
 根据名称即可理解：发现节点 / GPU 信息，并以 Label 写到 Node 上。
@@ -82,8 +80,6 @@ nvidia.com/cuda.driver.minor=161
 nvidia.com/gpu.product=Tesla-T4
 nvidia.com/gpu.memory=15360
 ```
-
----
 
 ## 3. Driver Installer（概念）
 
@@ -121,14 +117,12 @@ kubectl get ds nvidia-driver-daemonset-5.15.0-105-generic-ubuntu22.04 -o yaml | 
 
 不是每种「OS + 内核」都有现成镜像，可提前在 [NVIDIA driver tags](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/driver/tags) 查看。
 
----
-
 ## 4. Container Toolkit Installer（概念）
 
 手动安装通常两步：
 
-1. 安装 NVIDIA Container Toolkit  
-2. 修改 Runtime，使用 `nvidia` runtime  
+1. 安装 NVIDIA Container Toolkit
+2. 修改 Runtime，使用 `nvidia` runtime
 
 调用链中会插入 `nvidia-container-runtime`：
 
@@ -139,17 +133,15 @@ Installer 自动化的大致动作：
 1. 把 Toolkit 相关命令行与库放到如 `/usr/local/nvidia/toolkit`
 2. 生成 `nvidia-container-runtime` 的 `config.toml`，并设置 `nvidia-container-cli.root`（常见为 `/run/nvidia/driver`）
 
----
-
 ## 5. 部署
 
 参考官方：[GPU Operator Getting Started](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html)。
 
 ### 5.1 准备工作
 
-1. **GPU 节点操作系统尽量一致**  
-   - 预装驱动的节点可使用不同 OS  
-   - CPU 节点无此要求  
+1. **GPU 节点操作系统尽量一致**
+   - 预装驱动的节点可使用不同 OS
+   - CPU 节点无此要求
 
 2. **GPU 节点使用相同容器引擎**（都是 containerd 或都是 Docker）
 
@@ -270,8 +262,6 @@ kubectl logs pod/cuda-vectoradd
 # Test PASSED
 ```
 
----
-
 ## 6. 原理：Driver Installer
 
 ### 6.1 安装过程
@@ -366,8 +356,6 @@ _mount_rootfs() {
 
 卸载则大致是相反操作。
 
----
-
 ## 7. 原理：Container Toolkit Installer
 
 ### 7.1 安装过程
@@ -450,22 +438,18 @@ Installer 实现已合并到 [nvidia-container-toolkit](https://github.com/NVIDI
 
 镜像侧主要是编译 `nvidia-toolkit` 二进制，并安装 `libnvidia-container` / `nvidia-container-toolkit` 等 RPM 依赖，入口为 `/work/nvidia-toolkit`。
 
----
-
 ## 8. 小结
 
 GPU Operator 把 Driver、Container Toolkit、Device Plugin、Exporter 等自动化，能快速在 Kubernetes 里用上 GPU；理解 Driver Installer 与 Toolkit Installer 的原理，有助于排障与选型。
 
 但也有约束：
 
-1. **Driver Installer** 镜像由「驱动 + 内核 + OS」拼接，由 Operator 统一装驱动时，通常要求 GPU 节点 OS/内核一致  
-2. **Toolkit Installer** 需对接具体 Runtime，GPU 节点一般也要使用相同容器运行时  
+1. **Driver Installer** 镜像由「驱动 + 内核 + OS」拼接，由 Operator 统一装驱动时，通常要求 GPU 节点 OS/内核一致
+2. **Toolkit Installer** 需对接具体 Runtime，GPU 节点一般也要使用相同容器运行时
 
 预装驱动（`pre-installed`）可在 OS/内核一致性上更灵活，这也是生产里常见的两种驱动管理模式之一。
 
----
-
-## 参考与致谢
+## 9. 参考与致谢 {/* #参考与致谢 */}
 
 - [NVIDIA GPU Operator Getting Started](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html)
 - [About the NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html)

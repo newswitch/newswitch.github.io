@@ -1,11 +1,12 @@
 ---
-title: visudo 命令详解：安全编辑、严格校验与 sudoers 发布
+title: "visudo 命令详解：安全编辑、严格校验与 sudoers 发布"
+sidebar_label: "16. visudo 命令详解：安全编辑、严格校验与 sudoers 发布"
 sidebar_position: 16
-description: 完整讲解 visudo 的全部参数、锁与语法检查、include 全量校验、owner/mode、编辑器安全、CI 检查和可回滚发布流程。
+description: "完整讲解 visudo 的全部参数、锁与语法检查、include 全量校验、owner/mode、编辑器安全、CI 检查和可回滚发布流程。"
 tags: [Linux, visudo, sudoers, 配置校验, 变更安全]
 ---
 
-# `visudo` 命令详解：安全编辑、严格校验与 sudoers 发布
+# visudo 命令详解：安全编辑、严格校验与 sudoers 发布
 
 `visudo` 用锁防止并发编辑，在安装 sudoers 前解析语法，并可检查 owner/mode。它能发现语法和部分引用错误，不能证明规则满足最小权限，也不能替代实际授权测试。
 
@@ -84,7 +85,7 @@ sudo -l -U alice
 
 掌握标准：能列出全部参数；能解释锁、临时文件、全局解析、严格模式和权限检查；能把语法校验、语义评审和运行时测试组成可回滚发布门禁。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [Sudo 1.9.18：visudo(8)](https://man7.org/linux/man-pages/man8/visudo.8.html)
 - [Sudo 1.9.18：sudoers(5)](https://man7.org/linux/man-pages/man5/sudoers.5.html)

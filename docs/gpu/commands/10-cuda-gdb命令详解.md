@@ -1,11 +1,12 @@
 ---
-title: cuda-gdb 命令详解：从 CPU 线程到 CUDA Kernel 断点
+title: "cuda-gdb 命令详解：从 CPU 线程到 CUDA Kernel 断点"
+sidebar_label: "10. cuda-gdb 命令详解：从 CPU 线程到 CUDA Kernel 断点"
 sidebar_position: 10
-description: 掌握 CUDA-GDB 启动、断点、GPU 焦点切换、Kernel/Block/Thread 定位、Core Dump 与远程调试边界。
+description: "掌握 CUDA-GDB 启动、断点、GPU 焦点切换、Kernel/Block/Thread 定位、Core Dump 与远程调试边界。"
 tags: [CUDA, cuda-gdb, GPU, GDB, 调试]
 ---
 
-# cuda-gdb 命令详解
+# cuda-gdb 命令详解：从 CPU 线程到 CUDA Kernel 断点
 
 `cuda-gdb` 扩展了 GNU GDB，使调试器能同时观察 Host 线程、CUDA Context、Stream、Kernel、Block、Thread、Warp 和 Lane。它适合可稳定复现的控制流或状态错误；越界与竞争通常先用 Compute Sanitizer 更高效。
 
@@ -120,7 +121,7 @@ show cuda api_failures
 
 能解释 Host 线程与 CUDA Focus 的区别；能在指定 Kernel 的指定 Block/Thread 停止并查看局部状态；能判断何时应改用 Sanitizer/Core Dump；不会在无维护窗口时附加线上训练进程。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [CUDA-GDB Documentation](https://docs.nvidia.com/cuda/cuda-gdb/)
 - [CUDA-GDB Release Notes](https://docs.nvidia.com/cuda/cuda-gdb/index.html#release-notes)

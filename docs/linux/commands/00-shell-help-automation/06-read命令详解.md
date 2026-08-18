@@ -1,11 +1,12 @@
 ---
-title: read 命令详解：IFS、反斜杠、分隔符、超时与文件描述符
+title: "read 命令详解：IFS、反斜杠、分隔符、超时与文件描述符"
+sidebar_label: "06. read 命令详解：IFS、反斜杠、分隔符、超时与文件描述符"
 sidebar_position: 6
-description: 完整讲解 Bash read 的 -r/-d/-n/-N/-t/-u/-a/-p/-s/-e/-i，以及 IFS 分词、NUL 输入和 pipeline subshell。
+description: "完整讲解 Bash read 的 -r/-d/-n/-N/-t/-u/-a/-p/-s/-e/-i，以及 IFS 分词、NUL 输入和 pipeline subshell。"
 tags: [Linux, Bash, read, IFS, 安全脚本]
 ---
 
-# `read` 命令详解：把输入边界保留下来
+# read 命令详解：IFS、反斜杠、分隔符、超时与文件描述符
 
 `read` 从标准输入或指定 FD 读取记录，经 `IFS` 分词后赋给变量。默认反斜杠是 escape/continuation，所以读取原始路径和配置行几乎总应使用 `-r`。
 

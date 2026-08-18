@@ -2,8 +2,8 @@
 title: "Higress AI Gateway：模型路由、SSE、Token 治理、Fallback 与缓存"
 sidebar_label: "10. Higress AI Gateway：模型路由、SSE、Token 治理、Fallback 与缓存"
 sidebar_position: 10
-tags: [Higress, AI Gateway, SSE, LLM, Token]
 description: "追踪一次 LLM 请求经过 Higress AI Gateway 的完整路径，理解流式代理、模型治理、限额、回退、缓存和可观测性。"
+tags: [Higress, AI Gateway, SSE, LLM, Token]
 ---
 
 # Higress AI Gateway：模型路由、SSE、Token 治理、Fallback 与缓存
@@ -82,7 +82,7 @@ cache key = tenant-scope + model-version + canonical request + policy version
 - 混压短非流式与长 SSE，观察租户公平和连接容量；
 - 验证缓存不会跨租户、跨模型版本或绕过内容安全。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Higress AI Gateway](https://higress.cn/en/ai-gateway)
 - [Higress AI Token Rate Limit](https://higress.cn/docs/latest/plugins/ai/api-consumer/ai-token-ratelimit/)

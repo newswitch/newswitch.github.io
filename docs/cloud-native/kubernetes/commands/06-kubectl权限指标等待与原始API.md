@@ -1,11 +1,12 @@
 ---
-title: kubectl auth、top、wait 与 get --raw：权限、指标和状态收敛
+title: "kubectl auth、top、wait 与 get --raw：权限、指标和状态收敛"
+sidebar_label: "06. kubectl auth、top、wait 与 get --raw：权限、指标和状态收敛"
 sidebar_position: 6
-description: 使用 kubectl auth 验证 RBAC，top 查询 Metrics API，wait 等待 Condition，并通过 get --raw 诊断原始 API 路径。
+description: "使用 kubectl auth 验证 RBAC，top 查询 Metrics API，wait 等待 Condition，并通过 get --raw 诊断原始 API 路径。"
 tags: [Kubernetes, kubectl, RBAC, Metrics API, wait, API]
 ---
 
-# kubectl 权限、指标、等待与原始 API
+# kubectl auth、top、wait 与 get --raw：权限、指标和状态收敛
 
 这组命令回答四个常见问题：身份有没有权限、对象用了多少资源、状态是否已经收敛、API 原始响应是什么。它们适合自动化验收，但必须理解数据来源与边界。
 
@@ -90,7 +91,7 @@ kubectl logs -n kube-system deploy/metrics-server
 
 能按 Verb/Resource/Subresource/Namespace 验证权限；能解释 Metrics API 与监控系统差异；能写有界 `wait` 并在失败时采证；能用原始 API 区分 Aggregation、RBAC 和服务端健康问题。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [kubectl auth can-i](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_can-i/)
 - [kubectl top](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_top/)

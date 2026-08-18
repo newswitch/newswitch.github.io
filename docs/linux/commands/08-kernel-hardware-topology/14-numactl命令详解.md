@@ -1,11 +1,12 @@
 ---
-title: numactl 命令详解：控制 NUMA CPU 与内存放置策略
+title: "numactl 命令详解：控制 NUMA CPU 与内存放置策略"
+sidebar_label: "14. numactl 命令详解：控制 NUMA CPU 与内存放置策略"
 sidebar_position: 14
-description: 完整讲解 numactl 的全部参数、节点表达式、CPU 绑定与内存策略区别、cpuset 相对语义、shared memory 持久策略，以及 GPU/NIC 同 NUMA 优化。
+description: "完整讲解 numactl 的全部参数、节点表达式、CPU 绑定与内存策略区别、cpuset 相对语义、shared memory 持久策略，以及 GPU/NIC 同 NUMA 优化。"
 tags: [Linux, numactl, NUMA, CPU亲和性, 内存性能]
 ---
 
-# `numactl` 命令详解：控制 NUMA CPU 与内存放置策略
+# numactl 命令详解：控制 NUMA CPU 与内存放置策略
 
 `numactl` 为新进程设置 CPU 可运行范围和 NUMA memory policy，或给 SysV shared memory、tmpfs/hugetlbfs 文件设置持久策略。它控制的是 Linux CPU/内存放置，不会改变 GPU 显存归属，也不会替代 cgroup cpuset。
 

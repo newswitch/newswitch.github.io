@@ -2,15 +2,15 @@
 title: "TLS Bootstrap"
 sidebar_label: "07. TLS Bootstrap"
 sidebar_position: 7
-tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "介绍如何为 Kubernetes kubelet 配置 TLS 客户端证书自动引导，包括 kube-apiserver、kube-controller-manager 和 kubelet 的详细配置步骤。"
+tags: [Kubernetes, 安全, PartII, 学习路线]
 ---
 
 # TLS Bootstrap
 
 > TLS Bootstrap 为 Kubernetes 节点自动化证书管理提供了安全、高效的解决方案，是大规模集群安全运维的基础能力。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 本文档详细介绍如何为 kubelet 设置 TLS 客户端证书引导（bootstrap）功能。
 
@@ -18,15 +18,15 @@ TLS Bootstrap 是 Kubernetes 1.4 引入的重要安全特性，它提供了一�
 
 在实际部署中，TLS Bootstrap 涉及 kube-apiserver、kube-controller-manager 和 kubelet 的多组件协同配置。下面将分步骤详细说明。
 
-## kube-apiserver 配置
+## 2. kube-apiserver 配置 {/* #kube-apiserver-配置 */}
 
 在启用 TLS Bootstrap 前，需为 kube-apiserver 配置 Token 认证和客户端证书 CA。
 
-### Token 认证配置
+### 2.1 Token 认证配置 {/* #token-认证配置 */}
 
 首先需要配置 bootstrap token 文件，该文件包含分配给 kubelet 特定 bootstrap 组的认证令牌。
 
-#### 生成 Bootstrap Token
+#### 2.1.1 生成 Bootstrap Token {/* #生成-bootstrap-token */}
 
 Token 应具有足够的随机性（至少 128 位熵）。推荐使用以下命令生成：
 
@@ -36,7 +36,7 @@ head -c 16 /dev/urandom | od -An -t x | tr -d ' '
 
 生成的 token 示例：`02b50b05283e98dd0fd71db496ef01e8`
 
-#### Token 文件格式
+#### 2.1.2 Token 文件格式 {/* #token-文件格式 */}
 
 创建 token 文件，格式如下：
 
@@ -51,7 +51,7 @@ head -c 16 /dev/urandom | od -An -t x | tr -d ' '
 - 第三列：用户 ID
 - 第四列：组名（多个组时需要用引号）
 
-#### 启用 Token 认证
+#### 2.1.3 启用 Token 认证 {/* #启用-token-认证 */}
 
 在 kube-apiserver 启动参数中添加：
 
@@ -59,7 +59,7 @@ head -c 16 /dev/urandom | od -An -t x | tr -d ' '
 --token-auth-file=/path/to/token-file
 ```
 
-### 客户端证书 CA 配置
+### 2.2 客户端证书 CA 配置 {/* #客户端证书-ca-配置 */}
 
 配置客户端证书认证，指定 CA 证书文件：
 
@@ -67,11 +67,11 @@ head -c 16 /dev/urandom | od -An -t x | tr -d ' '
 --client-ca-file=/var/lib/kubernetes/ca.pem
 ```
 
-## kube-controller-manager 配置
+## 3. kube-controller-manager 配置 {/* #kube-controller-manager-配置 */}
 
 kube-controller-manager 负责证书签发和 CSR 审批，需正确配置 CA 证书及相关控制器。
 
-### 证书签名配置
+### 3.1 证书签名配置 {/* #证书签名配置 */}
 
 Controller Manager 负责证书的签发，需要配置 CA 证书和私钥：
 
@@ -80,7 +80,7 @@ Controller Manager 负责证书的签发，需要配置 CA 证书和私钥：
 --cluster-signing-key-file="/etc/kubernetes/pki/ca.key"
 ```
 
-### CSR 审批控制器
+### 3.2 CSR 审批控制器 {/* #csr-审批控制器 */}
 
 从 Kubernetes 1.7 开始，内置的 `csrapproving` 控制器默认启用，替代了实验性的"组自动批准"控制器。
 
@@ -90,7 +90,7 @@ Controller Manager 负责证书的签发，需要配置 CA 证书和私钥：
 2. **selfnodeclient**：节点更新自身客户端证书
 3. **selfnodeserver**：节点更新服务端证书（需要启用 feature gate）
 
-#### 启用服务端证书轮转
+#### 3.2.1 启用服务端证书轮转 {/* #启用服务端证书轮转 */}
 
 如需支持 kubelet 服务端证书自动轮转，需在 controller-manager 启动参数中启用相关特性：
 
@@ -98,11 +98,11 @@ Controller Manager 负责证书的签发，需要配置 CA 证书和私钥：
 --feature-gates=RotateKubeletServerCertificate=true
 ```
 
-### RBAC 权限配置
+### 3.3 RBAC 权限配置 {/* #rbac-权限配置 */}
 
 为保证 CSR 能被自动审批，需配置相应的 ClusterRole 和 ClusterRoleBinding。
 
-#### 创建 ClusterRole
+#### 3.3.1 创建 ClusterRole {/* #创建-clusterrole */}
 
 以下为审批不同类型 CSR 的 ClusterRole 定义示例：
 
@@ -138,7 +138,7 @@ rules:
   verbs: ["create"]
 ```
 
-#### 创建 ClusterRoleBinding
+#### 3.3.2 创建 ClusterRoleBinding {/* #创建-clusterrolebinding */}
 
 为 bootstrap 组和节点组授予自动审批权限：
 
@@ -174,11 +174,11 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-## kubelet 配置
+## 4. kubelet 配置 {/* #kubelet-配置 */}
 
 kubelet 作为节点代理，需要正确配置 bootstrap kubeconfig 及相关启动参数。
 
-### 创建 Bootstrap Kubeconfig
+### 4.1 创建 Bootstrap Kubeconfig {/* #创建-bootstrap-kubeconfig */}
 
 使用 kubectl 创建 bootstrap kubeconfig 文件：
 
@@ -205,7 +205,7 @@ kubectl config set-context default \
 kubectl config use-context default --kubeconfig=bootstrap.kubeconfig
 ```
 
-### kubelet 启动参数
+### 4.2 kubelet 启动参数 {/* #kubelet-启动参数 */}
 
 配置 kubelet 启动参数，启用自动证书轮转：
 
@@ -225,18 +225,18 @@ kubectl config use-context default --kubeconfig=bootstrap.kubeconfig
 - `--rotate-certificates`：启用客户端证书自动轮转
 - `--rotate-server-certificates`：启用服务端证书自动轮转
 
-### 证书轮转功能
+### 4.3 证书轮转功能 {/* #证书轮转功能 */}
 
 现代 Kubernetes 版本中，证书轮转功能已经稳定，不再需要 feature gate：
 
 - **客户端证书轮转**：kubelet 会在证书即将过期时自动创建新的 CSR 请求续期
 - **服务端证书轮转**：kubelet 可以自动更新用于对外提供服务的 TLS 证书
 
-## 手动管理 CSR
+## 5. 手动管理 CSR {/* #手动管理-csr */}
 
 在自动化流程之外，管理员也可以手动管理证书签名请求（CSR）。
 
-### 查看证书请求
+### 5.1 查看证书请求 {/* #查看证书请求 */}
 
 以下命令可用于查看和审查 CSR：
 
@@ -248,7 +248,7 @@ kubectl get csr
 kubectl describe csr <csr-name>
 ```
 
-### 手动审批证书
+### 5.2 手动审批证书 {/* #手动审批证书 */}
 
 如需手动批准或拒绝证书请求，可使用如下命令：
 
@@ -260,7 +260,7 @@ kubectl certificate approve <csr-name>
 kubectl certificate deny <csr-name>
 ```
 
-## 最佳实践
+## 6. 最佳实践 {/* #最佳实践 */}
 
 在生产环境中，建议遵循以下最佳实践以提升安全性和可维护性：
 
@@ -272,11 +272,11 @@ kubectl certificate deny <csr-name>
 | 备份         | 定期备份 CA 证书和私钥                              | etcd、离线存储         |
 | 权限控制     | 严格控制能审批 CSR 的用户和服务账号权限             | RBAC                  |
 
-## 总结
+## 7. 总结 {/* #总结 */}
 
 通过正确配置 TLS Bootstrap，可以大大简化 Kubernetes 集群中 kubelet 证书的管理工作，提高集群的安全性和可维护性。自动化证书签发与轮转机制，配合合理的权限与监控策略，是保障大规模集群安全运行的关键。
 
-## 参考文献
+## 8. 参考资料 {/* #参考文献 */}
 
 - [TLS Bootstrapping for Kubelet - kubernetes.io](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/)
 - [Certificates API - kubernetes.io](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)

@@ -1,11 +1,12 @@
 ---
-title: CUDA Samples 命令详解：deviceQuery 与 bandwidthTest 基线
+title: "CUDA Samples 命令详解：deviceQuery 与 bandwidthTest 基线"
+sidebar_label: "15. CUDA Samples 命令详解：deviceQuery 与 bandwidthTest 基线"
 sidebar_position: 15
-description: 构建和使用 CUDA Samples 的 deviceQuery、bandwidthTest，验证 CUDA Runtime、设备属性与 Host-Device/P2P 带宽。
+description: "构建和使用 CUDA Samples 的 deviceQuery、bandwidthTest，验证 CUDA Runtime、设备属性与 Host-Device/P2P 带宽。"
 tags: [CUDA, CUDA Samples, deviceQuery, bandwidthTest, GPU]
 ---
 
-# CUDA Samples：deviceQuery 与 bandwidthTest
+# CUDA Samples 命令详解：deviceQuery 与 bandwidthTest 基线
 
 CUDA Samples 是示例代码集合，不是一个固定安装在 PATH 的单命令。运维最常用 `deviceQuery` 验证 Runtime/设备属性，用 `bandwidthTest` 建立 Host↔Device 与 Device↔Device 数据搬运基线。它们是连通性与基线工具，不代表真实模型性能。
 
@@ -84,7 +85,7 @@ Device-to-Device 测试也不自动等于 NVLink/P2P 测试；要确认程序选
 
 能构建与 Toolkit 对齐的 Samples；能解释 deviceQuery PASS 的边界；能设计可复现的带宽实验；能从异常结果继续定位 NUMA、PCIe、容器或驱动层。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [NVIDIA CUDA Samples](https://github.com/NVIDIA/cuda-samples)
 - [CUDA Installation Guide for Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)

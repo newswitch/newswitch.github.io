@@ -1,11 +1,12 @@
 ---
-title: xargs 命令详解：NUL 输入、批大小、并发、占位符与退出状态
+title: "xargs 命令详解：NUL 输入、批大小、并发、占位符与退出状态"
+sidebar_label: "19. xargs 命令详解：NUL 输入、批大小、并发、占位符与退出状态"
 sidebar_position: 19
-description: 完整讲解 GNU xargs 的 -0/-d/-a/-n/-L/-s/-P/-I/-x/-r/-E/-p/-t/-o、EOF、并发信号与安全文件名处理。
+description: "完整讲解 GNU xargs 的 -0/-d/-a/-n/-L/-s/-P/-I/-x/-r/-E/-p/-t/-o、EOF、并发信号与安全文件名处理。"
 tags: [Linux, xargs, find, 并发, 自动化]
 ---
 
-# `xargs` 命令详解：把记录安全组装为 argv
+# xargs 命令详解：NUL 输入、批大小、并发、占位符与退出状态
 
 `xargs` 从输入读取 items，在系统 ARG_MAX 等限制内分批构造 command argv。默认按空白和引号解析，不能安全承载任意文件名；文件路径必须使用 NUL 协议。
 

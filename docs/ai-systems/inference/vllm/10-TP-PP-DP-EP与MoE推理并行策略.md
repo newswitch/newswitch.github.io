@@ -2,8 +2,8 @@
 title: "TP、PP、DP、EP 与 MoE 推理并行策略"
 sidebar_label: "10. TP、PP、DP、EP 与 MoE 推理并行策略"
 sidebar_position: 10
-tags: [vLLM, Tensor Parallel, Pipeline Parallel, Data Parallel, Expert Parallel, MoE]
 description: "比较大模型推理中的张量并行、流水线并行、数据并行和专家并行，理解显存切分、通信模式、拓扑约束与生产选型。"
+tags: [vLLM, Tensor Parallel, Pipeline Parallel, Data Parallel, Expert Parallel, MoE]
 ---
 
 # TP、PP、DP、EP 与 MoE 推理并行策略
@@ -25,8 +25,6 @@ EP：切 MoE Expert
 
 它们可以组合，但组合后 GPU 数、显存、网络和故障域必须重新计算。
 
----
-
 ## 1. 先建立单卡基线
 
 优先判断：
@@ -46,8 +44,6 @@ EP：切 MoE Expert
 - 单卡算力或带宽不足。
 - 需要更高吞吐或更多副本。
 - MoE Expert 总权重过大。
-
----
 
 ## 2. Tensor Parallel
 
@@ -120,8 +116,6 @@ vllm serve /models/llama \
 
 参数以当前 `vllm serve --help` 为准。
 
----
-
 ## 3. Pipeline Parallel
 
 PP 按层切分模型：
@@ -183,8 +177,6 @@ vllm serve /models/llama \
 ```text
 model_parallel_gpus = TP × PP
 ```
-
----
 
 ## 4. Data Parallel
 
@@ -265,8 +257,6 @@ vllm serve /models/llama \
 ```
 
 总共通常需要 8 GPU。
-
----
 
 ## 5. Expert Parallel
 
@@ -351,8 +341,6 @@ vllm serve /models/moe \
 
 EP 和 All-to-All Backend 属于版本敏感配置，生产前必须验证。
 
----
-
 ## 6. 四种策略对比
 
 | 维度 | TP | PP | DP | EP |
@@ -365,8 +353,6 @@ EP 和 All-to-All Backend 属于版本敏感配置，生产前必须验证。
 | 网络要求 | 很高 | 中到高 | 外部请求网络 | 很高 |
 | 单 Rank 故障 | 整组失败 | 整组失败 | 其他 Replica 可用 | EP 组失败 |
 | 典型场景 | 单机 NVLink | 跨节点/不均衡切层 | 多副本在线服务 | 大型 MoE |
-
----
 
 ## 7. 拓扑映射
 
@@ -418,8 +404,6 @@ TP 留在单节点高速互联域，PP 跨节点。
 应使用 Pod Anti-Affinity、Topology Spread 和节点池，让可替代 Replica 跨节点/机架/区域
 分布，同时考虑模型数据位置和冷启动成本。
 
----
-
 ## 8. 选型决策树
 
 ```mermaid
@@ -443,11 +427,9 @@ flowchart TD
     M --> N
 ```
 
----
-
 ## 9. 性能模型
 
-### TP
+### 9.1 TP {/* #tp */}
 
 ```text
 step_time ≈
@@ -457,7 +439,7 @@ step_time ≈
 
 TP 增大时，计算下降但通信未必同比下降。
 
-### PP
+### 9.2 PP {/* #pp */}
 
 ```text
 latency ≈
@@ -466,7 +448,7 @@ latency ≈
   + bubble
 ```
 
-### DP
+### 9.3 DP {/* #dp */}
 
 理想吞吐：
 
@@ -482,7 +464,7 @@ throughput ≈ single_replica_throughput × DP
 - 共享存储/网络。
 - GPU 频率和硬件差异。
 
-### EP
+### 9.4 EP {/* #ep */}
 
 ```text
 step_time ≈
@@ -494,11 +476,9 @@ step_time ≈
 
 最热 Expert 和最慢网络 Rank 往往决定尾延迟。
 
----
-
 ## 10. 监控
 
-### 每个实例/DP Rank
+### 10.1 每个实例/DP Rank {/* #每个实例dp-rank */}
 
 - waiting/running。
 - TTFT/TPOT。
@@ -506,7 +486,7 @@ step_time ≈
 - Prefix Cache。
 - Prompt/Generation tokens/s。
 
-### 每个 GPU/TP/PP Rank
+### 10.2 每个 GPU/TP/PP Rank {/* #每个-gputppp-rank */}
 
 - SM/Tensor/Memory Utilization。
 - 显存。
@@ -514,7 +494,7 @@ step_time ≈
 - PCIe/NVLink 带宽和错误。
 - NCCL Collective Duration。
 
-### EP
+### 10.3 EP {/* #ep-1 */}
 
 - Tokens per Expert。
 - Expert Busy Time。
@@ -524,11 +504,9 @@ step_time ≈
 
 不要只看所有 GPU 的平均利用率。一个慢 Rank 会让其他 Rank 在 Collective 中等待。
 
----
-
 ## 11. 故障模式
 
-### TP 单 Rank 变慢
+### 11.1 TP 单 Rank 变慢 {/* #tp-单-rank-变慢 */}
 
 症状：
 
@@ -543,25 +521,23 @@ step_time ≈
 - NUMA/NIC 拓扑。
 - NCCL 日志。
 
-### PP Stage 不均
+### 11.2 PP Stage 不均 {/* #pp-stage-不均 */}
 
 症状：某 Stage 长期忙，其他 Stage 空闲。
 
 处理：重新切层、检查不同层计算量、量化和设备差异。
 
-### DP 路由倾斜
+### 11.3 DP 路由倾斜 {/* #dp-路由倾斜 */}
 
 症状：单 Replica waiting/KV 很高，其他 Replica 空闲。
 
 处理：检查粘性路由、Prefix Cache 策略、连接复用和 Endpoint 权重。
 
-### EP 热点
+### 11.4 EP 热点 {/* #ep-热点 */}
 
 症状：少数 Expert Rank 满载，All-to-All 尾延迟高。
 
 处理：检查输入分布、Expert Token 计数、EPLB 和冗余 Expert 显存。
-
----
 
 ## 12. 压测矩阵
 
@@ -594,8 +570,6 @@ DP + EP
 DP + EP + EPLB
 ```
 
----
-
 ## 13. Kubernetes 部署约束
 
 一个模型并行实例的 Rank 必须作为一个整体调度：
@@ -622,8 +596,6 @@ nic
 ```
 
 任何请求应能追踪到完整 Rank 拓扑。
-
----
 
 ## 14. 验收清单
 

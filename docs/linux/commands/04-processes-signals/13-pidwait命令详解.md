@@ -1,11 +1,12 @@
 ---
-title: pidwait 命令详解：用 pidfd 等待匹配进程退出
+title: "pidwait 命令详解：用 pidfd 等待匹配进程退出"
+sidebar_label: "13. pidwait 命令详解：用 pidfd 等待匹配进程退出"
 sidebar_position: 13
-description: 完整讲解 procps-ng pidwait 的筛选参数、pidfile/stdin、pidfd_open 内核要求、非子进程等待、退出码、无法取得目标退出状态和监督器重启边界。
+description: "完整讲解 procps-ng pidwait 的筛选参数、pidfile/stdin、pidfd_open 内核要求、非子进程等待、退出码、无法取得目标退出状态和监督器重启边界。"
 tags: [Linux, pidwait, pidfd, procps-ng, 进程等待]
 ---
 
-# `pidwait` 命令详解：用 pidfd 等待匹配进程退出
+# pidwait 命令详解：用 pidfd 等待匹配进程退出
 
 `pidwait` 与 pgrep 共用筛选语法，但为匹配进程打开 pidfd 并等待其结束。它可以等待非当前 Shell 子进程，避免仅靠 PID 轮询的部分复用竞态；不能获得非子进程的原始 exit code。
 
@@ -46,7 +47,7 @@ pidwait 要求 Linux 5.3+ 的 `pidfd_open(2)`。打开成功后 pidfd 指向同�
 
 掌握标准：能说明共享/不适用的全部参数；能解释 pidfd 解决什么竞态、为何拿不到非 child 的 exit code，以及何时应使用服务控制面。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [procps-ng：pidwait/pgrep(1)](https://man7.org/linux/man-pages/man1/pgrep.1.html)
 - [Linux pidfd_open(2)](https://man7.org/linux/man-pages/man2/pidfd_open.2.html)

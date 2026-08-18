@@ -1,9 +1,9 @@
 ---
-title: SD-WAN 架构、应用选路与排障
+title: "SD-WAN 架构、应用选路与排障"
 sidebar_label: "09. SD-WAN 架构、应用选路与排障"
 sidebar_position: 9
+description: "用厂商无关模型理解 SD-WAN 管理、控制、数据平面，分析隧道、策略、SLA 和故障切换。"
 tags: [SD-WAN, Overlay, SLA, Application Routing, SASE]
-description: 用厂商无关模型理解 SD-WAN 管理、控制、数据平面，分析隧道、策略、SLA 和故障切换。
 ---
 
 # SD-WAN 架构、应用选路与排障
@@ -63,7 +63,7 @@ SLA 探测指标：
 - 可用性；
 - 某些实现增加 MOS 或应用体验。
 
-### 防止路径振荡
+### 3.1 防止路径振荡 {/* #防止路径振荡 */}
 
 如果阈值为 50 ms，链路在 49～51 ms 波动，可能频繁切换。需要：
 
@@ -103,7 +103,7 @@ Direct Internet Access 可以减少 SaaS 回绕时延，但安全边界也从中
 
 ## 6. 常见故障
 
-### Edge 无法上线
+### 6.1 Edge 无法上线 {/* #edge-无法上线 */}
 
 检查：
 
@@ -114,7 +114,7 @@ Direct Internet Access 可以减少 SaaS 回绕时延，但安全边界也从中
 5. 控制器证书链和授权；
 6. MTU 与分片。
 
-### 隧道 Up 但业务不通
+### 6.2 隧道 Up 但业务不通 {/* #隧道-up-但业务不通 */}
 
 检查：
 
@@ -126,7 +126,7 @@ Direct Internet Access 可以减少 SaaS 回绕时延，但安全边界也从中
 - 隧道内 MTU；
 - LAN 侧 VLAN、路由和 DHCP。
 
-### 没有切换到备线
+### 6.3 没有切换到备线 {/* #没有切换到备线 */}
 
 检查：
 

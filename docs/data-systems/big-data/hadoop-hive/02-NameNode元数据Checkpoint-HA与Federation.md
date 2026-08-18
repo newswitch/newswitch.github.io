@@ -1,9 +1,9 @@
 ---
-title: NameNode 元数据、Checkpoint、HA 与 Federation
+title: "NameNode 元数据、Checkpoint、HA 与 Federation"
 sidebar_label: "02. NameNode 元数据、Checkpoint、HA 与 Federation"
 sidebar_position: 2
+description: "理解 fsimage、edits、JournalNode、主备切换和 Federation，建立 NameNode 容量与恢复模型。"
 tags: [HDFS, NameNode, HA, Federation]
-description: 理解 fsimage、edits、JournalNode、主备切换和 Federation，建立 NameNode 容量与恢复模型。
 ---
 
 # NameNode 元数据、Checkpoint、HA 与 Federation
@@ -94,7 +94,7 @@ hdfs oiv -p Delimited -i fsimage_file -o fsimage.csv
 
 上一篇：[HDFS 架构、Block 与读写路径](./01-HDFS架构Block与读写路径.md)　下一篇：[DataNode 复制、机架感知、再平衡与纠删码](./03-DataNode复制机架感知再平衡与纠删码.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [HDFS High Availability](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html)
 - [HDFS Federation](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/Federation.html)

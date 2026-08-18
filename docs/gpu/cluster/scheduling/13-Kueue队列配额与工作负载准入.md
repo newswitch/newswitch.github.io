@@ -2,8 +2,8 @@
 title: "Kueue 队列、GPU 配额与工作负载准入"
 sidebar_label: "13. Kueue 队列、GPU 配额与工作负载准入"
 sidebar_position: 13
-tags: [Kueue, Kubernetes, GPU, ClusterQueue, LocalQueue, ResourceFlavor, 配额]
 description: "从 ResourceFlavor、ClusterQueue、LocalQueue、Workload 和 AdmissionCheck 理解 Kueue 如何为 GPU 训练、批推理和服务工作负载进行排队与准入。"
+tags: [Kueue, Kubernetes, GPU, ClusterQueue, LocalQueue, ResourceFlavor, 配额]
 ---
 
 # Kueue 队列、GPU 配额与工作负载准入
@@ -43,11 +43,11 @@ ResourceQuota 可作为命名空间防护，Kueue 作为批/工作负载准入�
 
 ## 2. 核心对象
 
-### ResourceFlavor
+### 2.1 ResourceFlavor {/* #resourceflavor */}
 
 描述一类可互换资源及对应节点特征，例如 GPU 型号、按需/Spot、网络池。
 
-### ClusterQueue
+### 2.2 ClusterQueue {/* #clusterqueue */}
 
 集群级配额池，定义：
 
@@ -59,19 +59,19 @@ ResourceQuota 可作为命名空间防护，Kueue 作为批/工作负载准入�
 - AdmissionChecks；
 - fair sharing 等。
 
-### LocalQueue
+### 2.3 LocalQueue {/* #localqueue */}
 
 命名空间内用户入口，指向一个 ClusterQueue。用户只需选择 LocalQueue，不直接修改平台配额。
 
-### Workload
+### 2.4 Workload {/* #workload */}
 
 Kueue 的准入单位，包含一个或多个 PodSet 的资源请求。通常由 Job/JobSet/Kubeflow Job 等集成自动创建，不建议用户手工修改其 status。
 
-### Cohort
+### 2.5 Cohort {/* #cohort */}
 
 一组 ClusterQueue 共享空闲 nominal quota，用于借用与回收。
 
-### AdmissionCheck
+### 2.6 AdmissionCheck {/* #admissioncheck */}
 
 配额预留后由外部/内置控制器进行额外检查，例如节点供给、MultiKueue 或自定义策略。所有要求的检查 Ready 后才最终 admit。
 
@@ -393,7 +393,7 @@ kubectl -n kueue-system get pods
 
 下一篇：[队列感知的大模型推理自动扩缩容](./14-队列感知的大模型推理自动扩缩容.md)。
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [Kueue concepts](https://kueue.sigs.k8s.io/docs/concepts/)
 - [Kueue ClusterQueue](https://kueue.sigs.k8s.io/docs/concepts/cluster_queue/)

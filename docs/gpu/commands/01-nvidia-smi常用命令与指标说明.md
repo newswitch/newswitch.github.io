@@ -1,8 +1,11 @@
 ---
-title: nvidia-smi 常用命令与指标说明
+title: "nvidia-smi 常用命令与指标说明"
+sidebar_label: "01. nvidia-smi 常用命令与指标说明"
+sidebar_position: 1
+description: "nvidia-smi 是 NVIDIA 的 GPU 管理与监控 CLI，底层主要用 NVML。可输出型号、驱动、显存、利用率、温度、功耗、进程、ECC、拓扑、MIG 等。长期自动化程序更建议用稳定的 NVML API，而不是依赖人类可读输出格式。"
+tags: ["GPU", "nvidia-smi", "运维", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "nvidia-smi", "运维", "学习路线"]
 ---
 
 # nvidia-smi 常用命令与指标说明
@@ -11,18 +14,14 @@ tags: ["GPU", "nvidia-smi", "运维", "学习路线"]
 
 前置：[GPU 基础知识](../fundamentals/01-GPU基础知识：从计算核心到显存.md)、[硬件拓扑与 NUMA](../pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)。
 
----
-
 ## 1. 学习目标
 
-1. 查看 GPU、驱动和显存信息；  
-2. 区分 GPU Util、Memory Util 和显存占用；  
-3. 查看 GPU 上运行的进程；  
-4. 持续观察温度、功耗、频率和 PCIe；  
-5. 查看 ECC、Xid、MIG 和拓扑；  
+1. 查看 GPU、驱动和显存信息；
+2. 区分 GPU Util、Memory Util 和显存占用；
+3. 查看 GPU 上运行的进程；
+4. 持续观察温度、功耗、频率和 PCIe；
+5. 查看 ECC、Xid、MIG 和拓扑；
 6. 将结果输出成 CSV 供脚本处理。
-
----
 
 ## 2. 查看基础状态
 
@@ -62,10 +61,10 @@ Thu Jul 23 10:00:00 2026
 
 如何读这张表：
 
-- 顶部 **Driver Version** / **CUDA Version**：驱动版本；CUDA 行为该驱动支持的用户态上限，≠ 已装 Toolkit 版本  
-- **Memory-Usage**：显存容量占用（例：GPU0 约 61GiB / 80GiB）  
-- **GPU-Util**：采样期内是否有 Kernel 在跑（例中 0% 表示当前几乎空闲）  
-- **Processes**：占用显存的计算进程；无进程时可能为空或显示 `-`  
+- 顶部 **Driver Version** / **CUDA Version**：驱动版本；CUDA 行为该驱动支持的用户态上限，≠ 已装 Toolkit 版本
+- **Memory-Usage**：显存容量占用（例：GPU0 约 61GiB / 80GiB）
+- **GPU-Util**：采样期内是否有 Kernel 在跑（例中 0% 表示当前几乎空闲）
+- **Processes**：占用显存的计算进程；无进程时可能为空或显示 `-`
 
 常见字段还包括：Persistence-M、Bus-Id、Disp.A、Temperature、Performance State、Power、Compute Mode。
 
@@ -77,8 +76,6 @@ ls -l /usr/local/cuda
 ```
 
 驱动 / Toolkit 关系见：[NVIDIA 驱动、CUDA 与容器运行时的关系](../driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)。
-
----
 
 ## 3. 查看 GPU 列表
 
@@ -95,8 +92,6 @@ GPU 1: NVIDIA A100-SXM4-80GB (UUID: GPU-b2c3d4e5-f6a7-8901-bcde-f12345678901)
 
 **UUID**（或 PCI Bus ID）比 Index 更适合长期标识；重启后 Index 顺序不保证不变。
 
----
-
 ## 4. 查看详细信息
 
 ```bash
@@ -110,8 +105,6 @@ nvidia-smi -q -d ECC
 
 nvidia-smi -q -d MEMORY,UTILIZATION,TEMPERATURE,POWER,ECC
 ```
-
----
 
 ## 5. query-gpu 输出指定指标
 
@@ -149,8 +142,6 @@ nvidia-smi \
 
 `--format` 须指定 CSV，可附加 `noheader`、`nounits`。
 
----
-
 ## 6. 核心指标说明
 
 | 字段 | 含义 |
@@ -162,8 +153,6 @@ nvidia-smi \
 | `power.draw` / `power.limit` | 当前功耗与上限；受限时可能调频 |
 | P-State（如 P0/P2/P8） | 通常数字越小性能状态越高，不能单靠它判故障 |
 | `clocks.current.*` | graphics / sm / memory 频率；异常低时结合温度、功耗限制、空闲与负载判断是否降频 |
-
----
 
 ## 7. 持续监控
 
@@ -196,8 +185,6 @@ nvidia-smi dmon -s pucmet
 
 默认约每秒一行，适合交互观察。
 
----
-
 ## 8. 查看 GPU 进程
 
 ```bash
@@ -228,8 +215,6 @@ tr '\0' ' ' < /proc/<PID>/cmdline
 cat /proc/<PID>/cgroup    # 是否属于某容器
 ```
 
----
-
 ## 9. 拓扑与 NVLink
 
 ```bash
@@ -250,8 +235,6 @@ GPU1    NV4      X       0-31              0
 
 解读见：[GPU 服务器硬件拓扑与 NUMA](../pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)。
 
----
-
 ## 10. 查看 MIG
 
 ```bash
@@ -261,8 +244,6 @@ nvidia-smi mig -lgip    # 支持的设备上列出 GPU Instance Profile
 ```
 
 不要在生产直接启用/禁用或重建 MIG，会影响在用业务。
-
----
 
 ## 11. 查看错误信息
 
@@ -274,8 +255,6 @@ nvidia-smi -q -d ECC
 nvidia-smi dmon -s e    # ECC / PCIe Replay
 ```
 
----
-
 ## 12. 常见现象
 
 | 现象 | 可能原因 |
@@ -283,8 +262,6 @@ nvidia-smi dmon -s e    # ECC / PCIe Replay
 | 显存很高、GPU Util 很低 | 权重已加载、请求少、等 CPU/网络/磁盘、Batch 太小 |
 | GPU Util 很高、功耗不高 | Kernel 很小、计算强度低、显存瓶颈、被限频、采样窗口差异 |
 | GPU Util 忽高忽低 | 请求突发、数据加载不连续、Batch 不稳、CPU 供数不足、同步等待 |
-
----
 
 ## 13. 巡检命令组合
 
@@ -309,15 +286,11 @@ echo "=== XID ==="
 dmesg -T | grep -i "NVRM: Xid" | tail -20
 ```
 
----
-
 ## 14. 本篇总结
 
 `nvidia-smi` 是日常 GPU 运维入口；写脚本时优先 `--query-gpu` + CSV，并记住 **Memory Util ≠ 显存容量占用**。下一篇：[NVIDIA 驱动、CUDA 与容器运行时的关系](../driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)。
 
----
-
-## 参考与致谢
+## 15. 参考与致谢 {/* #参考与致谢 */}
 
 - [NVIDIA System Management Interface（nvidia-smi）](https://docs.nvidia.com/deploy/nvidia-smi/index.html)
 

@@ -1,11 +1,12 @@
 ---
-title: grep 命令详解：正则、递归、二进制、上下文与 NUL 文件名
+title: "grep 命令详解：正则、递归、二进制、上下文与 NUL 文件名"
+sidebar_label: "23. grep 命令详解：正则、递归、二进制、上下文与 NUL 文件名"
 sidebar_position: 23
-description: 系统讲解 GNU grep BRE/ERE/fixed/PCRE、match/invert、递归 include/exclude、上下文、颜色、binary、NUL 与退出状态。
+description: "系统讲解 GNU grep BRE/ERE/fixed/PCRE、match/invert、递归 include/exclude、上下文、颜色、binary、NUL 与退出状态。"
 tags: [Linux, grep, 正则, 文本处理, GNU]
 ---
 
-# `grep` 命令详解：匹配记录，不是解析结构化语法
+# grep 命令详解：正则、递归、二进制、上下文与 NUL 文件名
 
 `grep` 按行或 NUL record 搜索 pattern，适合日志和纯文本。JSON/YAML/XML/CSV 存在转义和嵌套时，应使用结构化解析器；看到某段文字不等于字段语义匹配。
 

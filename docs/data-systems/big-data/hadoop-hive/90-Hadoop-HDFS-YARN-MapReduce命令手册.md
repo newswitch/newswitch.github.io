@@ -1,9 +1,9 @@
 ---
-title: Hadoop、HDFS、YARN 与 MapReduce 命令手册
+title: "Hadoop、HDFS、YARN 与 MapReduce 命令手册"
 sidebar_label: "90. Hadoop、HDFS、YARN 与 MapReduce 命令手册"
 sidebar_position: 90
+description: "按只读、写入和危险操作分级掌握 HDFS 文件、集群健康、HA、纠删码、YARN 应用和 MapReduce 作业命令。"
 tags: [Hadoop, HDFS, YARN, MapReduce, 命令手册]
-description: 按只读、写入和危险操作分级掌握 HDFS 文件、集群健康、HA、纠删码、YARN 应用和 MapReduce 作业命令。
 ---
 
 # Hadoop、HDFS、YARN 与 MapReduce 命令手册
@@ -249,9 +249,8 @@ mapred job -kill <job_id>
 
 下一篇：[Hive、Beeline 与 Metastore 命令手册](./91-Hive-Beeline与Metastore命令手册.md)
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [Hadoop File System Shell](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html)
 - [HDFS Commands Guide](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html)
 - [YARN Commands](https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YarnCommands.html)
-

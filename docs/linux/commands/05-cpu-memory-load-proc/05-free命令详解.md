@@ -1,11 +1,12 @@
 ---
-title: free 命令详解：MemAvailable、缓存、Swap 与内存承诺
+title: "free 命令详解：MemAvailable、缓存、Swap 与内存承诺"
+sidebar_label: "05. free 命令详解：MemAvailable、缓存、Swap 与内存承诺"
 sidebar_position: 5
-description: 完整讲解 procps-ng free 的全部参数、内存字段、缓存与可回收内存、Swap、commit、容器边界和 OOM 排障。
+description: "完整讲解 procps-ng free 的全部参数、内存字段、缓存与可回收内存、Swap、commit、容器边界和 OOM 排障。"
 tags: [Linux, free, 内存, Swap, MemAvailable, procps-ng]
 ---
 
-# `free` 命令详解：MemAvailable、缓存、Swap 与内存承诺
+# free 命令详解：MemAvailable、缓存、Swap 与内存承诺
 
 `free` 解析 `/proc/meminfo`，展示系统物理内存与 Swap 的容量和当前口径。最重要的不是 `free` 列，而是 `available`、内存压力、回收/换页速率与 cgroup 限制。
 
@@ -136,7 +137,7 @@ free -L -s 0.5 -c 20
 
 掌握标准：能解释全部参数与列、cache/Swap/commit/cgroup 口径，能用速率和压力证据判断内存是否真正饱和。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [procps-ng free(1)](https://man7.org/linux/man-pages/man1/free.1.html)
 - [Linux `/proc/meminfo`](https://docs.kernel.org/filesystems/proc.html#meminfo)

@@ -1,11 +1,12 @@
 ---
-title: switch_root 命令详解：从 initramfs 切换到真实根文件系统
+title: "switchroot 命令详解：从 initramfs 切换到真实根文件系统"
+sidebar_label: "09. switchroot 命令详解：从 initramfs 切换到真实根文件系统"
 sidebar_position: 9
-description: 讲清 switch_root 的启动期用途、rootfs 内存释放、console、init 参数、与 pivot_root/chroot 的区别和救援排障。
+description: "讲清 switch_root 的启动期用途、rootfs 内存释放、console、init 参数、与 pivot_root/chroot 的区别和救援排障。"
 tags: [Linux, switch_root, initramfs, 启动, util-linux]
 ---
 
-# `switch_root` 命令详解：从 initramfs 进入真实根
+# switchroot 命令详解：从 initramfs 切换到真实根文件系统
 
 `switch_root` 用在早期启动：把 `/proc`、`/dev`、`/sys`、`/run` 等挂载移入 `NEW_ROOT`，删除当前 initramfs root 的内容以释放内存，切根并执行真正的 init。它会递归删除旧 root 内容，属于 `[D]`，不是日常 chroot 工具。
 

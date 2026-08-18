@@ -1,11 +1,12 @@
 ---
-title: helm 命令详解：Chart、Release、升级、测试与回滚
+title: "helm 命令详解：Chart、Release、升级、测试与回滚"
+sidebar_label: "07. helm 命令详解：Chart、Release、升级、测试与回滚"
 sidebar_position: 7
-description: 掌握 Helm v4 命令模型、Chart 与 Release、Values 合并、模板验证、OCI Registry、升级回滚和生产安全边界。
+description: "掌握 Helm v4 命令模型、Chart 与 Release、Values 合并、模板验证、OCI Registry、升级回滚和生产安全边界。"
 tags: [Kubernetes, Helm, Chart, Release, OCI, GitOps]
 ---
 
-# helm 命令详解
+# helm 命令详解：Chart、Release、升级、测试与回滚
 
 Helm 把一组模板、默认值、依赖和元数据打包为 Chart，再把一次安装实例记录为 Release。Helm v3/v4 都是客户端架构，通过 kubeconfig 访问 API Server；它不是持续对账控制器，命令结束后不会像 GitOps Controller 那样长期纠偏。
 
@@ -123,7 +124,7 @@ helm push inference-2.4.1.tgz oci://registry.example.com/charts
 
 能区分 Chart、Release、Revision；能证明最终 Values 与渲染 Manifest；能设计原子升级以外的业务回滚；能处理 Hook/CRD/PVC 边界；能把 Release 证据与 Kubernetes 对象状态关联。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [Helm Commands](https://helm.sh/docs/helm/)
 - [Helm Chart Template Guide](https://helm.sh/docs/chart_template_guide/)

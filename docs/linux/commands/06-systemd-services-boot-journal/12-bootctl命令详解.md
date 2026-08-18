@@ -1,11 +1,12 @@
 ---
-title: bootctl 命令详解：UEFI、ESP、systemd-boot 与启动项治理
+title: "bootctl 命令详解：UEFI、ESP、systemd-boot 与启动项治理"
+sidebar_label: "12. bootctl 命令详解：UEFI、ESP、systemd-boot 与启动项治理"
 sidebar_position: 12
-description: 完整讲解 bootctl 的固件、Boot Loader Specification、systemd-boot、kernel image 子命令和全部参数，区分只读诊断、ESP/NVRAM 写入、Secure Boot 与回滚。
+description: "完整讲解 bootctl 的固件、Boot Loader Specification、systemd-boot、kernel image 子命令和全部参数，区分只读诊断、ESP/NVRAM 写入、Secure Boot 与回滚。"
 tags: [Linux, bootctl, systemd-boot, UEFI, ESP, Secure Boot, 引导故障]
 ---
 
-# `bootctl` 命令详解：UEFI、ESP、systemd-boot 与启动项治理
+# bootctl 命令详解：UEFI、ESP、systemd-boot 与启动项治理
 
 `bootctl` 查看 UEFI 固件、EFI System Partition（ESP）、Boot Loader Specification（BLS）、Boot Loader Interface 和 systemd-boot 状态，也能安装/更新/删除 bootloader、改 EFI 变量和签名。后者可能让主机无法启动，必须有控制台、ESP 备份和可验证回滚。
 
@@ -37,14 +38,14 @@ bootctl --print-boot-path
 
 ## 3. 全部子命令
 
-### 通用固件/loader
+### 3.1 通用固件/loader {/* #通用固件loader */}
 
 | 子命令 | 用途 |
 |---|---|
 | `status` | 查看固件、loader 和当前启动信息；默认命令 |
 | `reboot-to-firmware BOOL` | 查询/设置下次进入固件设置的 EFI 标志 |
 
-### BLS 与 Boot Loader Interface
+### 3.2 BLS 与 Boot Loader Interface {/* #bls-与-boot-loader-interface */}
 
 | 子命令 | 用途 |
 |---|---|
@@ -58,7 +59,7 @@ bootctl --print-boot-path
 | `set-timeout TIMEOUT` | 持久菜单超时 |
 | `set-timeout-oneshot TIMEOUT` | 下一次启动菜单超时 |
 
-### systemd-boot 安装维护
+### 3.3 systemd-boot 安装维护 {/* #systemd-boot-安装维护 */}
 
 | 子命令 | 用途 |
 |---|---|
@@ -68,7 +69,7 @@ bootctl --print-boot-path
 | `is-installed` | 判断 systemd-boot 是否安装 |
 | `random-seed` | 更新 ESP random seed |
 
-### kernel image
+### 3.4 kernel image {/* #kernel-image */}
 
 | 子命令 | 用途 |
 |---|---|
@@ -162,7 +163,7 @@ lsblk -o NAME,PATH,FSTYPE,UUID,PARTUUID,MOUNTPOINTS
 
 掌握标准：能列出全部子命令和参数，画出 firmware→ESP→loader→entry→kernel/UKI 链路，区分 BLS/UKI 与 NVRAM，完成只读诊断，并为任何写操作提供可验证回滚和带外恢复。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [bootctl(1)](https://www.freedesktop.org/software/systemd/man/latest/bootctl.html)
 - [systemd-boot(7)](https://www.freedesktop.org/software/systemd/man/latest/systemd-boot.html)

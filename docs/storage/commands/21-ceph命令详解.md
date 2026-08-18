@@ -1,11 +1,12 @@
 ---
-title: ceph 命令详解：集群健康、服务、PG、OSD、配置与认证
+title: "ceph 命令详解：集群健康、服务、PG、OSD、配置与认证"
+sidebar_label: "21. ceph 命令详解：集群健康、服务、PG、OSD、配置与认证"
 sidebar_position: 21
-description: 以 Ceph Tentacle 20.2.2 为基线，讲解 ceph CLI 的动态命令模型、全局参数、健康证据链、服务/PG/OSD/容量/配置/auth/orchestrator 命令和安全变更。
+description: "以 Ceph Tentacle 20.2.2 为基线，讲解 ceph CLI 的动态命令模型、全局参数、健康证据链、服务/PG/OSD/容量/配置/auth/orchestrator 命令和安全变更。"
 tags: [Ceph, ceph CLI, RADOS, OSD, PG, 故障排查]
 ---
 
-# `ceph` 命令详解：集群健康、服务、PG、OSD、配置与认证
+# ceph 命令详解：集群健康、服务、PG、OSD、配置与认证
 
 `ceph` 是向 Monitor/Mgr/daemon 提交集群控制命令的通用 CLI。子命令由当前集群和启用模块动态注册，不存在一张跨版本永久不变的“全部命令表”。
 

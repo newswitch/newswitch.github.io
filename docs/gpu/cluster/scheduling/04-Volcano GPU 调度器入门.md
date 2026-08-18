@@ -1,9 +1,11 @@
 ---
-title: Volcano GPU 调度器入门
+title: "Volcano GPU 调度器入门"
 sidebar_label: "04. Volcano GPU 调度器入门"
+sidebar_position: 4
+description: "Volcano 是基于 Kubernetes 的高性能批处理 / AI 工作负载调度引擎（CNCF 孵化项目）。默认 kube-scheduler 更擅长通用服务；训练、大数据、MPI 等「一组 Pod 要一起跑」的场景，常用 Volcano 补齐 Gang、队列配额、公平共享、异构设备 等能力。"
+tags: ["Kubernetes", "Volcano", "GPU", "调度", "Gang", "学习路线"]
 date: 2026-07-22 16:50:00
 categories: 云原生
-tags: ["Kubernetes", "Volcano", "GPU", "调度", "Gang", "学习路线"]
 ---
 
 # Volcano GPU 调度器入门
@@ -11,8 +13,6 @@ tags: ["Kubernetes", "Volcano", "GPU", "调度", "Gang", "学习路线"]
 [Volcano](https://volcano.sh/zh-hans/) 是基于 Kubernetes 的高性能批处理 / AI 工作负载调度引擎（CNCF 孵化项目）。默认 kube-scheduler 更擅长通用服务；训练、大数据、MPI 等「一组 Pod 要一起跑」的场景，常用 Volcano 补齐 **Gang、队列配额、公平共享、异构设备** 等能力。
 
 本文整理自官方 [调度器介绍](https://volcano.sh/zh-hans/docs/scheduler/overview/) 与 [统一调度](https://volcano.sh/zh-hans/docs/v1.11.0/keyfeatures/unifiedscheduling/)，作为本系列 Volcano 三篇的总览。队列细节见 [Queue 与 GPU 配额](./05-Volcano%20Queue%20与%20GPU%20配额管理.md)，Gang 细节见 [Gang Scheduling](./06-Gang%20Scheduling%20在分布式训练中的作用.md)。
-
----
 
 ## 1. 为什么需要 Volcano
 
@@ -29,14 +29,12 @@ tags: ["Kubernetes", "Volcano", "GPU", "调度", "Gang", "学习路线"]
 
 对 GPU 集群而言：Device Plugin 解决「卡怎么暴露」；Volcano 解决「多租户、训练作业怎么排、怎么整组启动」。
 
----
-
 ## 2. Scheduler 组成：Action + Plugin
 
 Volcano Scheduler 由一系列 **action** 与 **plugin** 组成：
 
-- **action**：调度周期里要执行的步骤（做什么）  
-- **plugin**：各步骤里算法的具体实现（怎么做）  
+- **action**：调度周期里要执行的步骤（做什么）
+- **plugin**：各步骤里算法的具体实现（怎么做）
 
 可扩展：可按需启用 / 自研 action、plugin。
 
@@ -44,11 +42,11 @@ Volcano Scheduler 由一系列 **action** 与 **plugin** 组成：
 
 典型周期：
 
-1. 客户端提交的 Job 被 scheduler 观察并缓存  
-2. 周期性开启会话（一个调度周期）  
-3. 未调度 Job 进入待调度队列  
-4. 按配置顺序执行 `enqueue`、`allocate`、`preempt`、`reclaim`、`backfill` 等，为 Job 找节点并绑定；具体算法由已注册 plugin 提供  
-5. 关闭本次会话  
+1. 客户端提交的 Job 被 scheduler 观察并缓存
+2. 周期性开启会话（一个调度周期）
+3. 未调度 Job 进入待调度队列
+4. 按配置顺序执行 `enqueue`、`allocate`、`preempt`、`reclaim`、`backfill` 等，为 Job 找节点并绑定；具体算法由已注册 plugin 提供
+5. 关闭本次会话
 
 官方工作流示意见文档：[调度器介绍 · 工作流](https://volcano.sh/zh-hans/docs/scheduler/overview/)。
 
@@ -76,8 +74,6 @@ Volcano Scheduler 由一系列 **action** 与 **plugin** 组成：
 | **priority** | 比较 Job / Task 优先级（PriorityClass、创建时间等） |
 | **proportion** / **capacity** | 队列应得资源（二选一，见第 17 篇） |
 | **binpack** | 装箱，减少碎片 |
-
----
 
 ## 3. 配置入口：volcano-scheduler-configmap
 
@@ -116,17 +112,15 @@ data:
 
 要点：
 
-- `actions`：逗号分隔，**顺序即执行顺序**；Volcano 不替你校验顺序是否合理  
-- `tiers`：注册到 scheduler 的 plugin 列表；action 会调用其中实现  
-
----
+- `actions`：逗号分隔，**顺序即执行顺序**；Volcano 不替你校验顺序是否合理
+- `tiers`：注册到 scheduler 的 plugin 列表；action 会调用其中实现
 
 ## 4. 统一调度：原生负载 + VcJob
 
 Volcano 可通过 `predicates` / `nodeorder` 对齐 Kubernetes 的 Filter / Score，从而：
 
-- 调度 **VcJob**（Ray、TF、PyTorch、Spark…）  
-- 也能调度 **Deployment / StatefulSet / Job / DaemonSet** 等  
+- 调度 **VcJob**（Ray、TF、PyTorch、Spark…）
+- 也能调度 **Deployment / StatefulSet / Job / DaemonSet** 等
 
 ### 4.1 指定调度器
 
@@ -160,12 +154,10 @@ spec:
 
 ### 4.2 predicates / nodeorder（简要）
 
-- **predicates**：节点可调度性、亲和性、端口、拓扑分布等；还可开 `predicate.CacheEnable` 缓存静态过滤结果；较新版本可配合 **DRA**（需 feature gate、CDI、DRA driver 等，详见官方统一调度文档）  
-- **nodeorder**：least/most requested、balanced、亲和性、镜像本地性、拓扑分布等，权重可配  
+- **predicates**：节点可调度性、亲和性、端口、拓扑分布等；还可开 `predicate.CacheEnable` 缓存静态过滤结果；较新版本可配合 **DRA**（需 feature gate、CDI、DRA driver 等，详见官方统一调度文档）
+- **nodeorder**：least/most requested、balanced、亲和性、镜像本地性、拓扑分布等，权重可配
 
 GPU 场景常与 Device Plugin 扩展资源一起用：predicates 保证「节点上有足够 `nvidia.com/gpu`」，nodeorder / binpack 决定「堆叠还是打散」。
-
----
 
 ## 5. 和 GPU 集群怎么配合
 
@@ -187,11 +179,9 @@ schedulerName: volcano
 
 生产队列划分示例（细节见第 17 篇）：
 
-- `production`：在线推理，优先级高  
-- `training`：可借用空闲 GPU  
-- `development`：可被抢占  
-
----
+- `production`：在线推理，优先级高
+- `training`：可借用空闲 GPU
+- `development`：可被抢占
 
 ## 6. 小结
 
@@ -205,15 +195,13 @@ schedulerName: volcano
 
 下一步：
 
-- [Volcano Queue 与 GPU 配额管理](./05-Volcano%20Queue%20与%20GPU%20配额管理.md)  
-- [Gang Scheduling 在分布式训练中的作用](./06-Gang%20Scheduling%20在分布式训练中的作用.md)  
+- [Volcano Queue 与 GPU 配额管理](./05-Volcano%20Queue%20与%20GPU%20配额管理.md)
+- [Gang Scheduling 在分布式训练中的作用](./06-Gang%20Scheduling%20在分布式训练中的作用.md)
 
----
+## 7. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [Volcano 官网](https://volcano.sh/zh-hans/)  
-- [调度器介绍](https://volcano.sh/zh-hans/docs/scheduler/overview/)  
-- [统一调度](https://volcano.sh/zh-hans/docs/v1.11.0/keyfeatures/unifiedscheduling/)  
+- [Volcano 官网](https://volcano.sh/zh-hans/)
+- [调度器介绍](https://volcano.sh/zh-hans/docs/scheduler/overview/)
+- [统一调度](https://volcano.sh/zh-hans/docs/v1.11.0/keyfeatures/unifiedscheduling/)
 
 本文基于上述 Volcano 官方文档整理，并按本系列 GPU 集群学习路线做了实践串联。

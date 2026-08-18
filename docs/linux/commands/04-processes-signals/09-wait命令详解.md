@@ -1,11 +1,12 @@
 ---
-title: wait 命令详解：回收子进程、并发完成与退出码
+title: "wait 命令详解：回收子进程、并发完成与退出码"
+sidebar_label: "09. wait 命令详解：回收子进程、并发完成与退出码"
 sidebar_position: 9
-description: 完整讲解 Bash wait 的 -n/-p/-f 参数、PID/jobspec、pipeline、子进程范围、并发池、信号退出状态、set -e 和 zombie 回收。
+description: "完整讲解 Bash wait 的 -n/-p/-f 参数、PID/jobspec、pipeline、子进程范围、并发池、信号退出状态、set -e 和 zombie 回收。"
 tags: [Linux, Bash, wait, 子进程, 并发]
 ---
 
-# `wait` 命令详解：回收子进程、并发完成与退出码
+# wait 命令详解：回收子进程、并发完成与退出码
 
 `wait` 是 Bash builtin，等待当前 Shell 的子进程或作业状态，并取得退出码。它也是父进程回收终止子进程、防止 zombie 的用户接口；不能任意等待一个无亲缘关系 PID。
 
@@ -78,7 +79,7 @@ done
 
 掌握标准：能列出全部参数；能实现有界并发和逐任务状态收集；能解释 wait 如何回收 zombie，以及为什么不能等待任意 PID 的退出码。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [GNU Bash：Job Control Builtins](https://www.gnu.org/software/bash/manual/html_node/Job-Control-Builtins.html)
 - [Linux wait(2)](https://man7.org/linux/man-pages/man2/wait.2.html)

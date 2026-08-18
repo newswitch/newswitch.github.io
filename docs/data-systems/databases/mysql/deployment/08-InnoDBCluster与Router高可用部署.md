@@ -2,8 +2,8 @@
 title: "InnoDB Cluster 与 Router 高可用部署"
 sidebar_label: "08. InnoDB Cluster 与 Router 高可用部署"
 sidebar_position: 8
-tags: [MySQL, InnoDB Cluster, Group Replication, MySQL Router, 高可用]
 description: "从 Group Replication 多数派、事务认证和 Router 元数据路由原理出发，使用 MySQL Shell AdminAPI 部署并验收三节点 InnoDB Cluster。"
+tags: [MySQL, InnoDB Cluster, Group Replication, MySQL Router, 高可用]
 ---
 
 # InnoDB Cluster 与 Router 高可用部署
@@ -48,7 +48,7 @@ Application ── 6446 ──▶│ MySQL Router A │──┐ read-write
 
 ## 3. 部署前清单
 
-### 节点
+### 3.1 节点 {/* #节点 */}
 
 | 节点 | 地址 | `server_id` | 故障域 |
 | --- | --- | --- | --- |
@@ -56,7 +56,7 @@ Application ── 6446 ──▶│ MySQL Router A │──┐ read-write
 | db2 | `db2.example.internal:3306` | 602 | AZ-B |
 | db3 | `db3.example.internal:3306` | 603 | AZ-C |
 
-### 必须确认
+### 3.2 必须确认 {/* #必须确认 */}
 
 - 三个 MySQL Server 使用兼容版本、独立 UUID 和一致关键配置；
 - 主机名从所有成员和 Router 节点都能稳定解析；
@@ -194,7 +194,7 @@ ss -lntp | grep mysqlrouter
 
 ## 10. 部署验收
 
-### 集群状态
+### 10.1 集群状态 {/* #集群状态 */}
 
 ```javascript
 var cluster = dba.getCluster('ordersCluster')
@@ -202,7 +202,7 @@ cluster.status({extended: 2})
 cluster.listRouters()
 ```
 
-### SQL 角色
+### 10.2 SQL 角色 {/* #sql-角色 */}
 
 分别通过 Router 读写和只读端口连接：
 
@@ -213,7 +213,7 @@ SELECT @@hostname, @@port, @@server_uuid,
 
 读写入口必须稳定落到 Primary；只读入口应按策略落到可用 Secondary。再执行带唯一业务键的可回滚测试事务，验证写入、查询和成员复制。
 
-### 监控
+### 10.3 监控 {/* #监控 */}
 
 - 集群可见成员、ONLINE 数、Primary 变化；
 - Group Replication 队列、冲突、流控与应用延迟；
@@ -223,11 +223,11 @@ SELECT @@hostname, @@port, @@server_uuid,
 
 ## 11. 故障演练
 
-### 单个 Secondary 停止
+### 11.1 单个 Secondary 停止 {/* #单个-secondary-停止 */}
 
 预期业务写入继续，但冗余下降。验证告警、成员状态、恢复/重新加入过程，不要因为业务没断就忽略降级。
 
-### Primary 故障
+### 11.2 Primary 故障 {/* #primary-故障 */}
 
 预期多数派选出新 Primary，Router 更新路由。记录：
 
@@ -242,15 +242,15 @@ SELECT @@hostname, @@port, @@server_uuid,
 
 RTO 是业务恢复时间，不是集群状态变化时间。
 
-### 网络分区
+### 11.3 网络分区 {/* #网络分区 */}
 
 验证多数派继续、少数派被隔离，旧 Primary 恢复连接后不会作为独立写节点服务。不要用强制恢复命令跳过对哪一侧数据最完整的判断。
 
-### Router 故障
+### 11.4 Router 故障 {/* #router-故障 */}
 
 停止一个 Router，确认应用能连接另一个。若应用全部失败，说明数据库有三节点，但接入层仍是单点。
 
-### 整组故障
+### 11.5 整组故障 {/* #整组故障 */}
 
 全组停机、失去仲裁和灾难恢复需要专门 Runbook。`dba.rebootClusterFromCompleteOutage()` 等操作会根据成员 GTID 和可达性作关键判断，不能在未比较数据、未 fencing 的情况下直接执行。
 

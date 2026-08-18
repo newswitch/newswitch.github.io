@@ -1,20 +1,20 @@
 ---
-title: 本地 NVMe 与 Local PV 实践
+title: "本地 NVMe 与 Local PV 实践"
 sidebar_label: "03. 本地 NVMe 与 Local PV 实践"
+sidebar_position: 3
+description: "GPU 节点上有高速 NVMe，怎样把它安全地交给 Kubernetes 工作负载，并让调度器知道“数据和磁盘在哪台节点”？"
+tags: [Kubernetes, GPU, NVMe, Local PV, 存储]
 date: 2026-08-06 17:00:00
 categories: 云原生
-tags: [Kubernetes, GPU, NVMe, Local PV, 存储]
 ---
 
-# 本地 NVMe 与 Local PV 实践：给 GPU 任务准备高速缓存盘
+# 本地 NVMe 与 Local PV 实践
 
 本篇解决一个具体问题：
 
 > GPU 节点上有高速 NVMe，怎样把它安全地交给 Kubernetes 工作负载，并让调度器知道“数据和磁盘在哪台节点”？
 
 本地 NVMe 很快，但它不是共享存储，也不会因为 Pod 漂移而自动跟着移动。理解这个限制，比记住一份 YAML 更重要。
-
----
 
 ## 1. 学习目标
 
@@ -26,8 +26,6 @@ tags: [Kubernetes, GPU, NVMe, Local PV, 存储]
 - 创建 StorageClass、PV、PVC 和测试 Pod。
 - 设计“对象存储/共享存储 + 节点 NVMe 缓存”的模型分发方案。
 - 排查 PVC Pending、Pod Pending、挂载失败、磁盘写满和节点故障。
-
----
 
 ## 2. NVMe 到底是什么
 
@@ -54,8 +52,6 @@ NVMe 是主机访问非易失性存储设备的一套协议，常见设备通过
 | 写入寿命 | 高频 Checkpoint、反复淘汰缓存 |
 
 NVMe 快不代表应用一定快。大量小文件仍可能被元数据、目录遍历、反序列化和 CPU 处理限制。
-
----
 
 ## 3. 四种“使用节点磁盘”的方式
 
@@ -89,8 +85,6 @@ Local PV = 本地介质 + PV 生命周期 + 节点拓扑约束
 
 它解决了“让 Kubernetes 看见本地盘”的问题，但不提供跨节点复制和高可用。
 
----
-
 ## 4. 为什么必须使用 WaitForFirstConsumer
 
 假设：
@@ -116,8 +110,6 @@ Local PV = 本地介质 + PV 生命周期 + 节点拓扑约束
   → 选出可行节点
   → PVC 绑定对应节点上的 PV
 ```
-
----
 
 ## 5. 实验前盘点
 
@@ -164,8 +156,6 @@ fio --name=seqread \
 ```
 
 测试文件会占用空间；不要在包含唯一模型副本的目录中随意执行写测试。记录带宽、IOPS、平均延迟和高分位延迟。
-
----
 
 ## 6. 创建 Local PV
 
@@ -291,8 +281,6 @@ kubectl -n ai describe pod model-reader
 kubectl -n ai exec model-reader -- df -hT /models
 ```
 
----
-
 ## 7. RWO 不等于“只允许一个 Pod”
 
 `ReadWriteOnce` 的含义是卷可由一个节点以读写方式挂载。同一节点上的多个 Pod 是否能同时使用，还取决于驱动和挂载方式。
@@ -309,8 +297,6 @@ volumeMounts:
 ```
 
 只读能够降低误改风险，但模型版本管理仍应使用独立目录或不可变 revision。
-
----
 
 ## 8. 推荐的两级缓存架构
 
@@ -341,8 +327,6 @@ Local NVMe 最适合作为缓存层，而不是唯一数据源。
 
 不要先写 `.complete`，也不要让业务读取正在下载的目录。
 
----
-
 ## 9. 调度上的真实代价
 
 Local PV 会把 Pod 约束到特定节点：
@@ -365,8 +349,6 @@ Local PV 会把 Pod 约束到特定节点：
 - 用节点标签表达缓存状态，不要用模糊的人工备注。
 - 缓存标签必须由自动化程序在校验成功后写入。
 - 调度失败时同时检查 GPU 和卷，不要只看 `nvidia.com/gpu`。
-
----
 
 ## 10. 容量与淘汰
 
@@ -394,8 +376,6 @@ Local PV 会把 Pod 约束到特定节点：
 
 不要只用 `rm -rf` 按目录名字猜测是否可删。
 
----
-
 ## 11. 监控指标
 
 节点侧至少采集：
@@ -422,8 +402,6 @@ sudo nvme smart-log /dev/nvme0
 - 设备不忙、应用仍慢：检查小文件、CPU 解码、锁或页缓存。
 - 磁盘读很低、GPU 空闲：应用可能在网络下载或元数据阶段。
 - 第一次慢、第二次快：可能是 Linux 页缓存，不一定是 NVMe 本身变快。
-
----
 
 ## 12. 故障排查
 
@@ -482,8 +460,6 @@ Local PV 数据留在故障节点，Pod 不能简单漂移到其他节点继续�
 - 在其他节点准备相同模型 revision。
 - 对不可重建数据使用共享或复制存储，而不是单机 Local PV。
 
----
-
 ## 13. 什么时候不应该用 Local PV
 
 以下场景通常不合适：
@@ -495,8 +471,6 @@ Local PV 数据留在故障节点，Pod 不能简单漂移到其他节点继续�
 - 工作负载常在节点间漂移，又无法提前缓存。
 
 Local PV 的优势是低延迟和高带宽，代价是位置绑定与运维复杂度。
-
----
 
 ## 14. 与整条 GPU 链路的关系
 
@@ -513,8 +487,6 @@ Local PV 的优势是低延迟和高带宽，代价是位置绑定与运维复�
 
 如果使用受支持的 GPUDirect Storage，部分场景可以缩短 CPU 主存中转路径，但 Local PV、文件系统、驱动和 GPU 拓扑仍需逐层验证。
 
----
-
 ## 15. 本篇总结
 
 记住四句话：
@@ -526,8 +498,6 @@ Local PV 的优势是低延迟和高带宽，代价是位置绑定与运维复�
 
 上一篇：[GPUDirect Storage 原理与实践](./02-GPUDirect-Storage原理与实践.md)。下一篇：[NFS 在 AI 集群中的使用与性能分析](../nfs/01-NFS在AI集群中的使用与性能分析.md)。
 
----
-
 ## 16. 课后练习
 
 1. `hostPath` 和 Local PV 的核心区别是什么？
@@ -538,9 +508,7 @@ Local PV 的优势是低延迟和高带宽，代价是位置绑定与运维复�
 6. 人为修改 Pod 的节点选择器，让它与 PV 冲突，记录调度事件。
 7. 测量共享存储首次加载和 NVMe 缓存命中后的加载时间。
 
----
-
-## 参考与致谢
+## 17. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Volumes](https://kubernetes.io/docs/concepts/storage/volumes/)
 - [Kubernetes Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)

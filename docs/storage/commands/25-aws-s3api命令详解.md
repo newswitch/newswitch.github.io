@@ -1,11 +1,12 @@
 ---
-title: aws s3api 命令详解：S3 API、分页、版本与 Multipart
+title: "aws s3api 命令详解：S3 API、分页、版本与 Multipart"
+sidebar_label: "25. aws s3api 命令详解：S3 API、分页、版本与 Multipart"
 sidebar_position: 25
-description: 以 AWS CLI v2 为基线，讲解 aws s3api 的全局参数、bucket/object/version、分页、条件请求、Multipart、checksum、加密、S3 兼容 endpoint、权限与删除安全。
+description: "以 AWS CLI v2 为基线，讲解 aws s3api 的全局参数、bucket/object/version、分页、条件请求、Multipart、checksum、加密、S3 兼容 endpoint、权限与删除安全。"
 tags: [AWS CLI, S3, s3api, Object Storage, Multipart]
 ---
 
-# `aws s3api` 命令详解：S3 API、分页、版本与 Multipart
+# aws s3api 命令详解：S3 API、分页、版本与 Multipart
 
 `aws s3api` 将 CLI 子命令直接映射到 S3 API。它比 `aws s3 cp/sync` 更底层：请求和响应字段更接近 API，适合精确诊断版本、条件、Multipart、metadata、checksum、生命周期和权限。
 

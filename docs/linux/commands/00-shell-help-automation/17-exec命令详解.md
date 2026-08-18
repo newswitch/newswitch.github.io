@@ -1,11 +1,12 @@
 ---
-title: exec 命令详解：进程替换、argv0、环境和永久重定向
+title: "exec 命令详解：进程替换、argv0、环境和永久重定向"
+sidebar_label: "17. exec 命令详解：进程替换、argv0、环境和永久重定向"
 sidebar_position: 17
-description: 完整讲解 Bash exec 的 -a/-c/-l、失败语义、PID 1、信号、FD 分配与当前 Shell 永久重定向。
+description: "完整讲解 Bash exec 的 -a/-c/-l、失败语义、PID 1、信号、FD 分配与当前 Shell 永久重定向。"
 tags: [Linux, Bash, exec, PID 1, 文件描述符]
 ---
 
-# `exec` 命令详解：用新程序替换当前 Shell
+# exec 命令详解：进程替换、argv0、环境和永久重定向
 
 有 COMMAND 时，`exec` 调用 execve 类接口替换当前 Shell，成功后不会返回，PID 保持但程序映像、地址空间和 signal handler 按规则改变。无 COMMAND 时，重定向永久应用到当前 Shell。
 

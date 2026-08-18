@@ -2,8 +2,8 @@
 title: "Binlog Format、Position、GTID 与复制数据路径"
 sidebar_label: "01. Binlog Format、Position、GTID 与复制数据路径"
 sidebar_position: 1
-tags: [MySQL, Binlog, GTID, Replication]
 description: "从源库提交、Binlog、传输、Relay Log 到副本应用，理解格式、位置、GTID 和一致性边界。"
+tags: [MySQL, Binlog, GTID, Replication]
 ---
 
 # Binlog Format、Position、GTID 与复制数据路径
@@ -102,9 +102,8 @@ SELECT * FROM performance_schema.replication_applier_status_by_worker;
 
 创建三笔可识别事务，使用 `mysqlbinlog` 查看事件和 GTID；暂停 receiver 与 applier 分别观察差异；恢复后验证 executed 集合、数据和延迟归零。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Replication Formats](https://dev.mysql.com/doc/refman/8.4/en/replication-formats.html)
 - [Replication with GTIDs](https://dev.mysql.com/doc/refman/8.4/en/replication-gtids.html)
 - [Replication Threads](https://dev.mysql.com/doc/refman/8.4/en/replication-threads.html)
-

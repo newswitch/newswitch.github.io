@@ -1,11 +1,12 @@
 ---
-title: killall 命令详解：按名称、年龄、namespace 与进程组发信号
+title: "killall 命令详解：按名称、年龄、namespace 与进程组发信号"
+sidebar_label: "12. killall 命令详解：按名称、年龄、namespace 与进程组发信号"
 sidebar_position: 12
-description: 完整讲解 Linux psmisc killall 参数、精确/正则匹配、PGID、用户、PID namespace、进程年龄、等待、SELinux context 和跨平台风险。
+description: "完整讲解 Linux psmisc killall 参数、精确/正则匹配、PGID、用户、PID namespace、进程年龄、等待、SELinux context 和跨平台风险。"
 tags: [Linux, killall, psmisc, signal, namespace]
 ---
 
-# `killall` 命令详解：按名称、年龄、namespace 与进程组发信号
+# killall 命令详解：按名称、年龄、namespace 与进程组发信号
 
 Linux psmisc `killall` 向所有匹配名称的进程发信号，默认 TERM。它的作用域很宽，且在某些非 Linux 系统上 `killall` 语义可能完全不同；root 绝不能凭记忆跨平台使用。
 
@@ -62,7 +63,7 @@ killall -e -u myagent -n 1234 -v -TERM myagent
 
 掌握标准：能列出全部参数；能解释 name/PGID/namespace/context 范围；知道 `-w` 非 pidfd 等待且可能永久阻塞，不在共享主机宽匹配。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [psmisc：killall(1)](https://man7.org/linux/man-pages/man1/killall.1.html)
 - [Linux signal(7)](https://man7.org/linux/man-pages/man7/signal.7.html)

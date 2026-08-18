@@ -1,11 +1,12 @@
 ---
-title: systemd-cgls 命令详解：从 Unit 到 cgroup 进程树
+title: "systemd-cgls 命令详解：从 Unit 到 cgroup 进程树"
+sidebar_label: "11. systemd-cgls 命令详解：从 Unit 到 cgroup 进程树"
 sidebar_position: 11
-description: 讲清 systemd-cgls 的层级、unit/user-unit、machine、kernel thread、xattr、cgroup ID 与容器进程归属排障。
+description: "讲清 systemd-cgls 的层级、unit/user-unit、machine、kernel thread、xattr、cgroup ID 与容器进程归属排障。"
 tags: [Linux, systemd-cgls, cgroup v2, systemd, 容器]
 ---
 
-# `systemd-cgls` 命令详解：从 Unit 到进程树
+# systemd-cgls 命令详解：从 Unit 到 cgroup 进程树
 
 `systemd-cgls` 递归显示 systemd cgroup 层级、子组和成员进程。它回答“某 service/scope/slice 里有哪些 PID”，不显示完整资源限额，也不是瞬时性能采样器。
 

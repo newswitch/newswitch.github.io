@@ -1,11 +1,12 @@
 ---
-title: sleep 命令详解：延迟、信号中断、轮询与指数退避
+title: "sleep 命令详解：延迟、信号中断、轮询与指数退避"
+sidebar_label: "19. sleep 命令详解：延迟、信号中断、轮询与指数退避"
 sidebar_position: 19
-description: 完整讲解 GNU coreutils sleep 参数、多段时长、浮点与 locale、信号、单调时钟边界，以及轮询、重试、退避和抖动的正确设计。
+description: "完整讲解 GNU coreutils sleep 参数、多段时长、浮点与 locale、信号、单调时钟边界，以及轮询、重试、退避和抖动的正确设计。"
 tags: [Linux, sleep, retry, backoff, coreutils]
 ---
 
-# `sleep` 命令详解：延迟、信号中断、轮询与指数退避
+# sleep 命令详解：延迟、信号中断、轮询与指数退避
 
 `sleep` 让当前进程延迟指定时长。它是计时原语，不是就绪检测、锁、超时、调度器或重试策略；固定 sleep 往往让快速路径变慢、慢速路径仍失败。
 
@@ -79,7 +80,7 @@ Shell 不适合复杂随机/高精度并发退避；生产客户端在语言库�
 
 掌握标准：能列出全部参数与后缀；能解释 sleep 只提供延迟；能设计有条件、总期限、可取消、可观测且防惊群的重试。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：sleep(1)](https://man7.org/linux/man-pages/man1/sleep.1.html)
 - [Linux time(7)](https://man7.org/linux/man-pages/man7/time.7.html)

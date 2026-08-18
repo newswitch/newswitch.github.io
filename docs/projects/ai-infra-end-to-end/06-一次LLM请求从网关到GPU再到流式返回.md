@@ -1,10 +1,11 @@
 ---
 title: "一次 LLM 请求从网关到 GPU 再到流式返回"
 sidebar_label: "06. 一次 LLM 请求从网关到 GPU 再到流式返回"
+sidebar_position: 6
+description: "串联网关、Service、推理引擎、Tokenizer、调度器、KV Cache、GPU Kernel、Tensor Parallel 和流式返回的完整请求路径。"
+tags: ["LLM", "vLLM", "Kubernetes", "GPU", "网关", "可观测性"]
 date: 2026-08-10 12:10:00
 categories: AI基础设施
-tags: ["LLM", "vLLM", "Kubernetes", "GPU", "网关", "可观测性"]
-description: "串联网关、Service、推理引擎、Tokenizer、调度器、KV Cache、GPU Kernel、Tensor Parallel 和流式返回的完整请求路径。"
 ---
 
 # 一次 LLM 请求从网关到 GPU 再到流式返回
@@ -439,7 +440,7 @@ tenant_id / request_id / trace_id
 
 下一篇使用这张地图处理[AI 服务性能下降的 GPU、网络、存储与调度联合排查](./07-AI服务性能下降的联合排查.md)。
 
-## 参考资料
+## 19. 参考资料 {/* #参考资料 */}
 
 - [vLLM documentation](https://docs.vllm.ai/en/latest/)
 - [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/)

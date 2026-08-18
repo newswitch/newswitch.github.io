@@ -2,8 +2,8 @@
 title: "Nacos 从零到精通学习路线"
 sidebar_label: "00. Nacos 从零到精通学习路线"
 sidebar_position: 0
-tags: [Nacos, 服务发现, 配置中心, Raft, 学习路线]
 description: "以 Nacos 3.x 为主线，从 Naming 与 Config 深入 gRPC 推送、Distro/Raft、集群部署、安全、容量、升级和故障排查。"
+tags: [Nacos, 服务发现, 配置中心, Raft, 学习路线]
 ---
 
 # Nacos 从零到精通学习路线
@@ -29,25 +29,25 @@ Publisher → Config API → persistence / consistency
   → application refresh
 ```
 
-## 2. 13 篇文章规划
+## 2. 篇文章学习清单 {/* #2-13-篇文章学习清单 */}
 
-| 编号 | 文章 | 优先级 | 核心问题 | 状态 |
+| 编号 | 文章 | 优先级 | 核心问题 | 收录情况 |
 | --- | --- | --- | --- | --- |
-| N00 | Nacos 从零到精通学习路线 | P0 | 建立 Naming、Config 和一致性地图 | 已完成 |
-| N01 | [Nacos 解决什么问题与一次注册/配置发布路径](./01-Nacos解决什么问题与一次注册配置发布路径.md) | P0 | 注册中心、配置中心和 DNS/etcd 的边界 | 已完成 |
-| N02 | [Namespace、Group、Service、Cluster、Instance 与 DataId](./02-Nacos资源模型与隔离.md) | P0 | 资源模型和隔离 | 已完成 |
-| N03 | [服务注册、订阅、健康检查、客户端缓存与负载均衡](./03-服务注册订阅健康检查客户端缓存与负载均衡.md) | P0 | 临时/持久实例和推送 | 已完成 |
-| N04 | [配置发布、监听、灰度、加密、回滚与动态刷新](./04-配置发布监听灰度加密回滚与动态刷新.md) | P0 | 配置一致性和应用风险 | 已完成 |
-| N05 | [Distro、Raft/JRaft、AP/CP 与数据一致性](./05-Distro-Raft-JRaft与数据一致性.md) | P0 | 不同数据为何使用不同协议 | 已完成 |
-| N06 | [Server、Console、gRPC、端口与 3.x 架构](./06-Nacos-Server-Console-gRPC端口与3x架构.md) | P0 | 数据面、管理面和安全边界 | 已完成 |
-| N07 | [Standalone、三节点、外部数据库、Docker 与 K8s 部署](./07-Nacos-Standalone三节点外部数据库Docker与Kubernetes部署.md) | P0 | 多种部署方式及存储依赖 | 已完成 |
-| N08 | [Java/Spring Cloud/Dubbo 客户端、版本兼容与推送故障](./08-Nacos-Java-Spring-Cloud-Dubbo客户端与推送故障.md) | P1 | 客户端才是控制面落地终点 | 已完成 |
-| N09 | [Authentication、Token、TLS、RBAC、Namespace 与内网隔离](./09-Nacos认证Token-TLS-RBAC与内网隔离.md) | P1 | 防止未授权配置和注册 | 已完成 |
-| N10 | [服务数、实例数、配置数、推送连接与容量压测](./10-服务实例配置推送与容量压测.md) | P1 | Server/JVM/DB/网络怎样估算 | 已完成 |
-| N11 | [监控、日志、备份、升级、迁移与多集群](./11-Nacos监控日志备份升级迁移与多集群.md) | P1 | 生命周期和灾备 | 已完成 |
-| N12 | [源码、注册丢失、配置不生效、选主/数据库异常 Runbook](./12-Nacos源码与生产故障Runbook.md) | P2 | 从客户端到协议和存储排障 | 已完成 |
+| N00 | Nacos 从零到精通学习路线 | P0 | 建立 Naming、Config 和一致性地图 | 已收录 |
+| N01 | [Nacos 解决什么问题与一次注册/配置发布路径](./01-Nacos解决什么问题与一次注册配置发布路径.md) | P0 | 注册中心、配置中心和 DNS/etcd 的边界 | 已收录 |
+| N02 | [Namespace、Group、Service、Cluster、Instance 与 DataId](./02-Nacos资源模型与隔离.md) | P0 | 资源模型和隔离 | 已收录 |
+| N03 | [服务注册、订阅、健康检查、客户端缓存与负载均衡](./03-服务注册订阅健康检查客户端缓存与负载均衡.md) | P0 | 临时/持久实例和推送 | 已收录 |
+| N04 | [配置发布、监听、灰度、加密、回滚与动态刷新](./04-配置发布监听灰度加密回滚与动态刷新.md) | P0 | 配置一致性和应用风险 | 已收录 |
+| N05 | [Distro、Raft/JRaft、AP/CP 与数据一致性](./05-Distro-Raft-JRaft与数据一致性.md) | P0 | 不同数据为何使用不同协议 | 已收录 |
+| N06 | [Server、Console、gRPC、端口与 3.x 架构](./06-Nacos-Server-Console-gRPC端口与3x架构.md) | P0 | 数据面、管理面和安全边界 | 已收录 |
+| N07 | [Standalone、三节点、外部数据库、Docker 与 K8s 部署](./07-Nacos-Standalone三节点外部数据库Docker与Kubernetes部署.md) | P0 | 多种部署方式及存储依赖 | 已收录 |
+| N08 | [Java/Spring Cloud/Dubbo 客户端、版本兼容与推送故障](./08-Nacos-Java-Spring-Cloud-Dubbo客户端与推送故障.md) | P1 | 客户端才是控制面落地终点 | 已收录 |
+| N09 | [Authentication、Token、TLS、RBAC、Namespace 与内网隔离](./09-Nacos认证Token-TLS-RBAC与内网隔离.md) | P1 | 防止未授权配置和注册 | 已收录 |
+| N10 | [服务数、实例数、配置数、推送连接与容量压测](./10-服务实例配置推送与容量压测.md) | P1 | Server/JVM/DB/网络怎样估算 | 已收录 |
+| N11 | [监控、日志、备份、升级、迁移与多集群](./11-Nacos监控日志备份升级迁移与多集群.md) | P1 | 生命周期和灾备 | 已收录 |
+| N12 | [源码、注册丢失、配置不生效、选主/数据库异常 Runbook](./12-Nacos源码与生产故障Runbook.md) | P2 | 从客户端到协议和存储排障 | 已收录 |
 
-当前完成 **13/13**，剩余 **0 篇**。
+当前路线收录 13 篇文章。是否掌握应以能追踪注册与配置传播、验证客户端缓存、完成网络分区实验并证明恢复收敛为准。
 
 ## 3. 版本与端口基线
 

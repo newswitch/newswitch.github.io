@@ -1,11 +1,12 @@
 ---
-title: mpstat 命令详解：逐 CPU、NUMA、拓扑与中断采样
+title: "mpstat 命令详解：逐 CPU、NUMA、拓扑与中断采样"
+sidebar_label: "07. mpstat 命令详解：逐 CPU、NUMA、拓扑与中断采样"
 sidebar_position: 7
-description: 完整讲解 sysstat mpstat 的全部参数、逐 CPU 利用率、NUMA 节点、拓扑、硬中断/软中断、JSON 与采样窗口。
+description: "完整讲解 sysstat mpstat 的全部参数、逐 CPU 利用率、NUMA 节点、拓扑、硬中断/软中断、JSON 与采样窗口。"
 tags: [Linux, mpstat, CPU, NUMA, interrupt, sysstat]
 ---
 
-# `mpstat` 命令详解：逐 CPU、NUMA、拓扑与中断采样
+# mpstat 命令详解：逐 CPU、NUMA、拓扑与中断采样
 
 系统平均 CPU 可能掩盖单核热点、IRQ 集中和 NUMA 不均衡。`mpstat` 对 `/proc/stat`、interrupts 和 topology 做差分，按 CPU/node 展示利用率与中断。
 
@@ -105,7 +106,7 @@ S_COLORS=never S_TIME_FORMAT=ISO mpstat -o JSON -P ALL 1 5
 
 掌握标准：能解释全部参数与 CPU 字段，识别单核/SMT/NUMA/IRQ/steal 问题，并知道 `mpstat` 不能归因到具体 PID 和 NUMA 内存。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [sysstat mpstat(1)](https://man7.org/linux/man-pages/man1/mpstat.1.html)
 - [Linux SMP IRQ affinity](https://docs.kernel.org/core-api/irq/irq-affinity.html)

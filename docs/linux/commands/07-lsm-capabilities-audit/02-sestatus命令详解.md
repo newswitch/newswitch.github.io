@@ -1,11 +1,12 @@
 ---
-title: sestatus 命令详解：策略、模式、目录、boolean 与上下文总览
+title: "sestatus 命令详解：策略、模式、目录、boolean 与上下文总览"
+sidebar_label: "02. sestatus 命令详解：策略、模式、目录、boolean 与上下文总览"
 sidebar_position: 2
-description: 完整讲解 sestatus 的 -v/-b 参数、当前与配置模式、策略名、MLS、deny_unknown、sestatus.conf、容器边界和诊断流程。
+description: "完整讲解 sestatus 的 -v/-b 参数、当前与配置模式、策略名、MLS、deny_unknown、sestatus.conf、容器边界和诊断流程。"
 tags: [Linux, sestatus, SELinux, policy, boolean, context]
 ---
 
-# `sestatus` 命令详解：策略、模式、目录、boolean 与上下文总览
+# sestatus 命令详解：策略、模式、目录、boolean 与上下文总览
 
 `sestatus` 比 `getenforce` 展示更多 SELinux 运行与配置状态：selinuxfs、policy root、loaded policy、当前/配置模式、MLS、deny_unknown、最大 policy version，还可列 boolean 和指定对象 context。
 
@@ -86,7 +87,7 @@ getsebool -a
 
 掌握标准：能解释每个核心字段和两个参数，区分运行态、配置态、策略能力与对象标签，知道 sestatus 是概览而非拒绝原因分析器。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [sestatus(8)](https://manpages.debian.org/unstable/policycoreutils/sestatus.8.en.html)
 - [sestatus.conf(5)](https://manpages.debian.org/unstable/policycoreutils/sestatus.conf.5.en.html)

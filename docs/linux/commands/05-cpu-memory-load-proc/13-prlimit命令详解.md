@@ -1,11 +1,12 @@
 ---
-title: prlimit 命令详解：查询修改进程 RLIMIT 与受限启动
+title: "prlimit 命令详解：查询修改进程 RLIMIT 与受限启动"
+sidebar_label: "13. prlimit 命令详解：查询修改进程 RLIMIT 与受限启动"
 sidebar_position: 13
-description: 完整讲解 util-linux prlimit 的全部通用与资源参数、soft/hard limit、PID 身份、权限、systemd/容器边界和资源限制故障排查。
+description: "完整讲解 util-linux prlimit 的全部通用与资源参数、soft/hard limit、PID 身份、权限、systemd/容器边界和资源限制故障排查。"
 tags: [Linux, prlimit, RLIMIT, nofile, nproc, util-linux]
 ---
 
-# `prlimit` 命令详解：查询修改进程 RLIMIT 与受限启动
+# prlimit 命令详解：查询修改进程 RLIMIT 与受限启动
 
 `prlimit` 读取或修改现有进程的 POSIX/Linux resource limits，也可先设置限制再执行命令。RLIMIT 是进程级继承约束，不等于 cgroup 容量控制。
 
@@ -128,7 +129,7 @@ RLIMIT 与 cgroup 互补：前者是进程继承阈值，后者控制进程集�
 
 掌握标准：能列出全部参数和资源，解释 soft/hard/继承/UID 口径，区分 RLIMIT、sysctl、systemd 与 cgroup，并安全设计变更回滚。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [util-linux prlimit(1)](https://man7.org/linux/man-pages/man1/prlimit.1.html)
 - [Linux getrlimit(2)](https://man7.org/linux/man-pages/man2/getrlimit.2.html)

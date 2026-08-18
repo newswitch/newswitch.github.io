@@ -2,86 +2,121 @@
 title: "什么是 Istio?"
 sidebar_label: "02. 什么是 Istio?"
 sidebar_position: 2
+description: "从请求路径理解 Istio 的控制平面、Sidecar 与 Ambient 数据平面，以及流量、安全和可观测能力的真实边界。"
 tags: [Kubernetes, 服务网格, PartII, 学习路线]
-description: "Istio 是一个开源的服务网格平台，提供流量管理、安全性和可观测性功能。本文介绍 Istio 的核心特性、架构组件以及数据平面和控制平面的工作原理。"
 ---
 
 # 什么是 Istio?
 
-> Istio 让服务间通信变得可控、可观、可安全，是云原生微服务治理的关键基石。
+Istio 是服务网格实现：应用仍然处理业务协议，网格的数据平面代理负责承载服务间流量，控制平面把服务发现、路由和安全策略翻译成代理可执行的配置。它解决的是“如何统一治理通信”，不是自动修复应用、数据库或网络的一切问题。
 
-## Istio 简介
+## 1. 为什么需要服务网格 {/* #为什么需要服务网格 */}
 
-Istio 是一个开源的服务网格平台，旨在简化微服务架构中的服务间通信管理。它提供了一个统一的方式来连接、保护、控制和观察服务。
+当数百个服务分别实现重试、证书轮换、鉴权、指标和灰度时，不同语言和团队很难维持一致行为。Istio 把这些横切能力下沉到基础设施：
 
-## 核心功能
+- 流量：路由、超时、重试、熔断、镜像和灰度；
+- 身份：基于工作负载身份签发和轮换证书，建立 mTLS；
+- 授权：按身份、命名空间、端口或 HTTP 属性控制访问；
+- 观测：代理指标、访问日志和分布式追踪上下文；
+- 扩展：Envoy Filter、WasmPlugin 和外部授权服务。
 
-### 流量管理
+这些能力都有边界。例如重试会放大下游压力，mTLS 不等于业务授权，指标也不能替代应用内部埋点。
 
-- **智能路由**：通过配置规则控制服务间的流量分发
-- **故障处理**：设置断路器、超时和重试策略
-- **流量分割**：支持 A/B 测试和金丝雀部署
-- **负载均衡**：提供多种负载均衡算法
+## 2. 一次请求经历什么 {/* #一次请求经历什么 */}
 
-### 安全性
+经典 Sidecar 模式：
 
-- **零信任网络**：默认拒绝所有通信，显式允许授权访问
-- **身份认证**：自动进行服务间的双向 TLS（mTLS）认证
-- **访问控制**：细粒度的授权策略管理
-- **证书管理**：自动化的证书生成、分发和轮换
+```text
+客户端应用
+ -> 本机 iptables/透明拦截
+ -> 客户端 Envoy
+ -> mTLS 网络连接
+ -> 服务端 Envoy
+ -> 服务端应用
+```
 
-### 可观测性
+Ambient 模式：
 
-- **分布式追踪**：端到端的请求追踪能力
-- **指标收集**：自动生成服务和网络层面的指标
-- **访问日志**：记录所有服务间的通信日志
-- **服务拓扑**：可视化服务间的依赖关系
+```text
+客户端工作负载
+ -> 节点 ztunnel（L4 安全隧道）
+ -> 服务端节点 ztunnel
+ -> 服务端工作负载
+             \-> Waypoint（需要 L7 路由/策略时）
+```
 
-## Istio 架构
+控制平面 `istiod` 监听 Kubernetes Service、EndpointSlice、Gateway API 和 Istio CRD，计算服务发现、路由、安全及证书配置，再通过 xDS/CA 接口下发。控制面不在正常数据包转发热路径中；短时失联时，代理通常继续使用最后一次有效配置，但新服务或新策略不会及时生效。
 
-Istio 服务网格采用经典的数据平面和控制平面分离架构。数据平面负责处理实际的网络流量，而控制平面负责管理和配置数据平面组件。
+## 3. Sidecar 与 Ambient {/* #sidecar-与-ambient */}
 
-![Istio 架构](/images/k8s/service-mesh/what-is-istio/istio-arch.webp)
+| 维度 | Sidecar | Ambient |
+|---|---|---|
+| 数据平面 | 每个 Pod 一个 Envoy | 每节点 ztunnel，按需部署 Waypoint |
+| L4 mTLS | Sidecar 执行 | ztunnel 执行 |
+| L7 路由和授权 | Sidecar 执行 | Waypoint 执行 |
+| 应用侵入 | Pod 注入并重启 | 命名空间/工作负载加入网格，不注入 Sidecar |
+| 资源模型 | 随 Pod 数量增长 | 基础 L4 按节点共享，L7 按服务需求配置 |
 
-### 数据平面：Envoy 代理
+二者并非简单的“新模式一定更好”。应基于 L7 能力、隔离边界、性能、迁移成本和团队运维能力选择，并在迁移时验证策略绑定方式。
 
-**Envoy** 是 Istio 数据平面的核心组件，具有以下特点：
+## 4. 安全行为必须说清楚 {/* #安全行为必须说清楚 */}
 
-- **高性能**：使用 C++ 开发，提供出色的性能和资源利用率
-- **Sidecar 部署**：作为边车容器与应用程序一起运行
-- **流量拦截**：透明地拦截所有进出应用的网络流量
-- **丰富功能**：支持负载均衡、健康检查、故障注入等
-- **可扩展性**：基于 WebAssembly（WASM）的插件系统
+Istio 不会在安装后自动拒绝全部通信：
 
-### 控制平面：Istiod
+- 没有 `AuthorizationPolicy` 时，授权默认是允许；
+- mTLS 的服务端默认通常为 `PERMISSIVE`，同时接受 mTLS 与明文；
+- 要求只接受网格 mTLS，需要显式配置 `PeerAuthentication` 的 `STRICT`；
+- “默认拒绝”是推荐的策略设计模式，需要管理员创建 allow-nothing 与精确 ALLOW 策略；
+- Ambient 下 ztunnel 只能执行 L4 条件，HTTP 路径、方法等 L7 策略必须绑定 Waypoint。
 
-**Istiod** 是 Istio 的统一控制平面组件，整合了以下功能：
+最小的命名空间默认拒绝示例：
 
-#### 服务发现
+```yaml
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-nothing
+  namespace: payments
+spec: {}
+```
 
-- 从底层平台（Kubernetes、Consul 等）获取服务信息
-- 将服务发现数据转换为 Envoy 可用的配置格式
-- 实时更新服务注册信息
+该策略会影响业务，必须先盘点真实依赖、DNS、监控、健康检查和网关路径，再逐条建立 ALLOW，并准备回滚。
 
-#### 配置管理
+## 5. 验证而不是只看 CRD {/* #验证而不是只看-crd */}
 
-- 将高级的流量管理规则转换为 Envoy 配置
-- 分发配置到网格中的所有 Envoy 代理
-- 确保配置的一致性和及时更新
+```bash
+istioctl analyze
+istioctl proxy-status
+istioctl proxy-config clusters <pod> -n <namespace>
+istioctl proxy-config routes <pod> -n <namespace>
+kubectl get authorizationpolicy,peerauthentication -A
+```
 
-#### 证书管理
+Ambient 环境进一步检查：
 
-- 作为内置的证书颁发机构（CA）
-- 自动生成和分发 TLS 证书
-- 实现服务间的零信任安全通信
+```bash
+istioctl ztunnel-config workloads -n istio-system
+kubectl get gateway -A
+```
 
-## 部署模式
+一次策略变更至少验证：允许流量成功、禁止流量失败、证书身份正确、超时/重试没有放大请求、代理指标与应用日志可以关联。
 
-Istio 支持多种部署模式以适应不同的使用场景：
+## 6. 常见故障定位 {/* #常见故障定位 */}
 
-- **单集群部署**：在单个 Kubernetes 集群中部署
-- **多集群部署**：跨多个集群的统一服务网格
-- **虚拟机集成**：将传统虚拟机工作负载纳入服务网格
-- **混合云部署**：支持跨云的服务网格管理
+| 现象 | 先看什么 | 常见原因 |
+|---|---|---|
+| 503 UF/UC | Endpoint、cluster、连接日志 | 上游无实例、端口错误、连接失败 |
+| 403 RBAC | AuthorizationPolicy、身份 principal | 策略未命中、ServiceAccount 错误 |
+| mTLS 握手失败 | PeerAuthentication、证书、trust domain | STRICT/PERMISSIVE 不一致或证书问题 |
+| 规则未生效 | `proxy-status`、xDS 同步状态 | 配置拒绝、代理失联、选择器未命中 |
+| 延迟升高 | 代理与应用分段延迟、重试次数 | 重试放大、Waypoint/Sidecar 资源不足 |
 
-通过这些特性和架构设计，Istio 为现代微服务架构提供了完整的服务网格解决方案，帮助开发者和运维人员更好地管理复杂的分布式系统。
+## 7. 学习完成标准 {/* #学习完成标准 */}
+
+完成本篇后，应能画出 Sidecar 和 Ambient 的请求路径，解释 istiod 不在数据热路径中的原因，区分认证与授权，并能通过 `istioctl` 证明配置是否真正到达数据平面。
+
+## 8. 参考资料 {/* #参考 */}
+
+- [Istio Architecture](https://istio.io/latest/docs/ops/deployment/architecture/)
+- [Istio Ambient Mode](https://istio.io/latest/docs/ambient/)
+- [Istio Security Best Practices](https://istio.io/latest/docs/ops/best-practices/security/)

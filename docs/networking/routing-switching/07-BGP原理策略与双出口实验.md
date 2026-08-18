@@ -1,11 +1,11 @@
 ---
-title: BGP 原理、策略与双出口实验
+title: "BGP 原理、策略与双出口实验"
 sidebar_label: "07. BGP 原理、策略与双出口实验"
 sidebar_position: 7
+description: "从 BGP 会话、RIB 与属性开始，学习最佳路径、策略控制、双出口设计和分层故障排查。"
+tags: [BGP, eBGP, iBGP, Route Policy, 双出口, FRRouting]
 date: 2026-02-19 12:00:00
 categories: 网络
-tags: [BGP, eBGP, iBGP, Route Policy, 双出口, FRRouting]
-description: 从 BGP 会话、RIB 与属性开始，学习最佳路径、策略控制、双出口设计和分层故障排查。
 ---
 
 # BGP 原理、策略与双出口实验
@@ -17,50 +17,35 @@ description: 从 BGP 会话、RIB 与属性开始，学习最佳路径、策略�
 - Local Preference、AS_PATH、MED、Community 等属性分别影响哪个范围。
 - 如何用策略实现双出口，而不是只修改一个“优先级数字”。
 
----
-
 ## 1. BGP 核心原理
 
 > 本文原有实验使用华为风格 CLI，保留它用于理解策略语义。命令、默认属性和
 > 最佳路径细节会因实现与版本而异；在生产环境必须以目标设备文档和实际
 > `show/display` 输出为准。
 
-### 一、BGP 的概念
-
-
-
+### 1.1 BGP 的概念 {/* #一bgp-的概念 */}
 
 BGP（边界网关协议）是基于 AS 的**路径矢量**协议，解决 AS 间选路问题，适合互联网。重点掌握：报文与建邻、路由属性、12 条选路原则及汇总/过滤/RR/联盟等。
 
-
-
-#### 01 自治系统（AS）与 AS 号
+#### 1.1.1 自治系统（AS）与 AS 号 {/* #01-自治系统as与-as-号 */}
 
 自治系统（AS）是同一管理机构下、使用统一选路策略的一组路由器。**AS 号**默认 2 字节，可扩展 4 字节，需申请。
 
 - **1～64511**：公有 AS 号，全球唯一
 - **64512～65535**：私有 AS 号，可重用，不出域
 
-
-
-#### 02 动态路由分类
+#### 1.1.2 动态路由分类 {/* #02-动态路由分类 */}
 
 动态路由协议有很多分类方法，按自治系统分类、按协议类型分类是最常用的两种。
-
-
 
 **按自治系统分类：**
 
 - **IGP**（内部网关路由协议）：如 RIP、OSPF、ISIS、EIGRP（思科私有）。运行在 AS 内部，用于发现与计算路由。
 - **EGP**（外部网关路由协议）：通常指 BGP，运行在 AS 之间，用于控制路由传播与最优路由选择。
 
-
-
 一般会先使用IGP协议在自治系统内部计算和发现路由条目，再通过BGP协议将IGP协议产生的路由传递至其他的AS（自治系统）。
 
-
-
-#### 03 BGP 的特征
+#### 1.1.3 BGP 的特征 {/* #03-bgp-的特征 */}
 
 - 外部路由协议，在 AS 之间传递路由信息
 - **路径矢量**（Path-Vector）协议，通过 AS_PATH 防环，区别于距离矢量/链路状态
@@ -72,23 +57,13 @@ BGP（边界网关协议）是基于 AS 的**路径矢量**协议，解决 AS �
 
 **路由算法分类**（便于对比理解）：[距离矢量](https://en.wikipedia.org/wiki/Distance-vector_routing_protocol)（如 RIP，按跳数、Bellman-Ford）、[链路状态](https://en.wikipedia.org/wiki/Link-state_routing_protocol)（如 OSPF/IS-IS，每节点维护拓扑图）、[路径矢量](https://en.wikipedia.org/wiki/Path-vector_routing_protocol)（BGP，维护路径信息、易检测环路）。
 
-
-
-
-### 二、BGP 的工作原理
-
-
-
+### 1.2 BGP 的工作原理 {/* #二bgp-的工作原理 */}
 
 BGP是跨公网、跨AS（自治系统）的路由协议，可以在AS之间学习路由。BGP的动态学习路由也是基于邻居，只有邻居关系正常，BGP才可以正常工作。
 
-
-
-#### 01 BGP 邻居关系
+#### 1.2.1 BGP 邻居关系 {/* #01-bgp-邻居关系 */}
 
 运行 BGP 的路由器通常被称为 BGP Speaker（发言者），相互之间传递报文的speaker之间互称为对等体（peer）。BGP邻居关系的建立、更新和删除是通过对等体之间的5种报文、6种状态机和5个表等信息来完成，最终形成BGP邻居。
-
-
 
 **（1）BGP 报文类型**
 
@@ -97,7 +72,6 @@ BGP是跨公网、跨AS（自治系统）的路由协议，可以在AS之间学�
 - **Update**：传递路由信息，用于通告或撤销路由
 - **Notification**：检测到错误时发送，随后断连
 - **Route-Refresh**：通知对端本端支持路由刷新能力
-
 
 **（2）BGP 状态机**
 
@@ -110,46 +84,32 @@ BGP是跨公网、跨AS（自治系统）的路由协议，可以在AS之间学�
 
 除 Idle 外任一步出错都会回退到 Idle。常见可见状态：Idle、Active、Established。
 
-
-
 **（3）BGP 路由信息处理（RIB）**
 
 对等体发来的 Update 先入 **Adj-RIB-In**，经**输入策略**过滤后参与**路径选择**；最优路径写入 **Loc-RIB** 并提交 **IP RIB**。Loc-RIB 再经**输出策略**，通过者写入 **Adj-RIB-Out** 发给对应对等体。另有邻居表记录 peer 信息。
-
-
 
 **（4）BGP 邻居关系类型**
 
 - **IBGP**：同一 AS 内 BGP 对等体之间的邻居关系。
 - **EBGP**：不同 AS 之间 BGP 对等体的邻居关系。
 
-
-
 **建邻要点**：邻居基于 **TCP 单播**，无自动发现，需在 BGP 进程下手动配置对端地址。通过 IGP 或静态路由保证到对端的 TCP 可达性。
 
 **常见建邻失败原因**：一直 Idle（无到 Peer 路由）、EBGP 多跳未配、源地址错误（对端看到的 IP 非本端配置的 peer 地址）、TCP 认证失败、路由错误或被过滤。华为：若经默认路由到达邻居，该邻居通告的所有路由视为无效。
 
-
-
-#### 02 通告 BGP 路由的方法
+#### 1.2.2 通告 BGP 路由的方法 {/* #02-通告-bgp-路由的方法 */}
 
 BGP 路由是通过 BGP 命令通告而成的，而通告BGP路由的方法有两种：network和Import。
-
-
 
 （1）network方式：
 
 使用network命令可以将当前设备路由表中的路由（非BGP）发布到BGP路由表中并通告给邻居，和OSPF中使用network命令的方式大同小异，只不过在BGP宣告时，只需要宣告网段+掩码数即可，如：network 12.12.0.0 16。
 
-
-
 （2）Import方式：
 
 使用Import命令可以将该路由器学到的路由信息重分发到BGP路由表中，是BGP宣告路由的一种方式，可以引入BGP的路由包括：直连路由、静态路由及动态路由协议学到的路由。其命令格式与在RIP中重分发OSPF差不多。
 
-
-
-#### 03 BGP 路由通告原则
+#### 1.2.3 BGP 路由通告原则 {/* #03-bgp-路由通告原则 */}
 
 - 只把**最优路由**加入路由表并只向对等体通告最优路由；多条路径时只选一条最优
 - **从 EBGP 学到的路由**：向所有 EBGP、IBGP 对等体通告；**通告给 EBGP 时下一跳改为自己**（若通告方与接收方 EBGP 在同一网段可不改）；通告给 IBGP 时**不改下一跳**，避免次优
@@ -158,56 +118,43 @@ BGP 路由是通过 BGP 命令通告而成的，而通告BGP路由的方法有�
 
 **BGP 与 IGP 同步**：同步关（默认）：从 IBGP 学到的路由可传给 eBGP。同步开：只有 IGP 里也有的路由才传给 eBGP，防 AS 内路由黑洞。华为默认关且不支持开启；思科可开。
 
-
-
-#### 04 更新源建立邻居关系
+#### 1.2.4 更新源建立邻居关系 {/* #04-更新源建立邻居关系 */}
 
 这个概念说白了就是在指定对等体时，使用对方的loopback口，因为该接口比任何物理接口都要稳定，只要设备在运行，loopback口就不会关闭，只要有一条链路可以和对方的loopback地址通信，就不会造成BGP状态的改变，若使用物理接口，一旦这个物理接口down掉，那么BGP也就完了，所以这种使用loopback口建立BGP邻居的方法称为更新源建立邻居，通常会在同一个AS内使用冗余链路来确保BGP的稳定性。（若在不同AS内使用对端路由器的loopback地址来建立邻居关系，需要改变两个路由器上的TTL值，具体解释请参考博文末尾的配置总结）
 
 ![BGP](/images/传统组网（一）/BGP-1.png)
 
-
 如在上图中，三个路由器同在AS 100区域中，若R1和R3要使用更新源建立邻居关系，那么配置如下：
 
 R1路由器：
 
-[R1]bgp 100              
+[R1]bgp 100
 
 [R1-bgp]router-id 1.1.1.1
 
-[R1-bgp]peer 3.3.3.3 as-number 100    
+[R1-bgp]peer 3.3.3.3 as-number 100
 
-[R1-bgp]peer 3.3.3.3 connect-interface LoopBack0  
-
-
+[R1-bgp]peer 3.3.3.3 connect-interface LoopBack0
 
 R3路由器（相关命令解释参考R1路由器的配置）：
 
-[R3]bgp 100                    
+[R3]bgp 100
 
-[R3-bgp]router-id 3.3.3.3              
+[R3-bgp]router-id 3.3.3.3
 
-[R3-bgp]peer 1.1.1.1 as-number 100              
+[R3-bgp]peer 1.1.1.1 as-number 100
 
-[R3-bgp]peer 1.1.1.1 connect-interface LoopBack0          
-
-
+[R3-bgp]peer 1.1.1.1 connect-interface LoopBack0
 
 注意：本地loopback接口先要让对等体可达（就是可以ping通对方的loopback地址），需要手动添加对等体环回接口的路由条目或者使用OSPF、RIP等自动学习对方环回接口的路由。
 
-
-
-#### 05 保证 IBGP 下一跳可达
+#### 1.2.5 保证 IBGP 下一跳可达 {/* #05-保证-ibgp-下一跳可达 */}
 
 在 AS 边缘的 BGP 设备，会接收到它的EBGP对等体邻居传递过来的BGP路由信息。上面说过：所有EBGP对等体在传递过程中下一跳改变， 所有IBGP对等体在传递过程中下一跳不变。上个图来直观的说一下：
 
 ![BGP](/images/传统组网（一）/BGP-2.png)
 
-
-
 图中，用A——J分别来代替路由器的接口IP地址，结合所有EBGP对等体在传递过程中下一跳改变， 所有IBGP对等体在传递过程中下一跳不变这个结论，可以看到图中存在什么问题（自己看图理解吧，是在是懒癌晚期，不想解释了），就是图中R3路由器以后的路由器收到的路由条目中的下一跳是错误的，解决办法就是在R3和R5路由器上对R4和R6宣称下一跳为它自己，然后就会发现，R4学到的下一跳地址是E。R6学到的下一跳就是I。这只是解决了R1宣告路由时出现的问题，那么如果现在R6又宣告了一条路由，就还需要在R4和R2路由器上对R3和R1宣称下一跳为它自己。这样才算保证了IBGP的下一跳可达。
-
-
 
 配置如下（就拿一个路由器来举例，前三条配置命令的解释可以参考上面的注释，主要是最后一条命令，来改变路由的下一跳）：
 
@@ -215,19 +162,15 @@ R3路由器（相关命令解释参考R1路由器的配置）：
 
 [R3-bgp]router-id 3.3.3.3
 
-[R3-bgp]peer 34.1.1.4 as-number 200  
+[R3-bgp]peer 34.1.1.4 as-number 200
 
-[R3-bgp]peer 34.1.1.4 next-hop-local              
+[R3-bgp]peer 34.1.1.4 next-hop-local
 
-
-
-#### 06 EBGP 多跳
+#### 1.2.6 EBGP 多跳 {/* #06-ebgp-多跳 */}
 
 这个好理解，由于默认 BGP 中 EBGP 邻居之间的 TTL 值为 1，（TTL，数据包的生命周期值，每经过一个路由器该值会-1，当该值为0后，数据包将会被丢弃）。若EBGP对等体非直连（通信时需要经过一个以上的路由器，TTL值就不够用了），TTL值限制会使非直连的对等体无法正常建立邻居关系，所以需要用EBGP多跳的命令来解决非直连的邻居关系。如下图，若不配置EBGP多跳，那么R1和R3将无法正常建立邻居关系：
 
 ![BGP](/images/传统组网（一）/BGP-3.png)
-
-
 
 配置上图中的R3路由器多跳（R1路由器也需要进行类似的配置，进而改变TTL值，这里只拿R3为例）：
 
@@ -241,13 +184,9 @@ R3 配置如下：
 
 [R3-bgp]peer 12.0.0.1 ebgp-max-hop 2   # 跳数为 2，即 TTL=2
 
-
-
-#### 07 控制 BGP 选路
+#### 1.2.7 控制 BGP 选路 {/* #07-控制-bgp-选路 */}
 
 BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP的选路。
-
-
 
 **属性四类**：公认必遵（Origin、AS_Path、Next_Hop）→ 公认任意（Local_Pref、Atomic-Aggregate 等）→ 可选过渡（Community、Aggregator 等）→ 可选非过渡（MED、Originator-ID、Cluster-List）。不识别时：过渡属性可转给邻居；非过渡属性丢弃不转发。
 
@@ -262,9 +201,7 @@ BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP�
 
 ![BGP](/images/传统组网（一）/BGP-4.png) ![BGP](/images/传统组网（一）/BGP-5.png) ![BGP](/images/传统组网（一）/BGP-6.png) ![BGP](/images/传统组网（一）/BGP-7.png)
 
-
-
-#### 08 BGP 选路规则（12 条顺序）
+#### 1.2.8 BGP 选路规则（12 条顺序） {/* #08-bgp-选路规则12-条顺序 */}
 
 1. 下一跳不可达则忽略
 2. PrefVal 大优先
@@ -279,7 +216,7 @@ BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP�
 11. Originator_ID（无则 Router ID）小优先
 12. 对等体 IP 小优先
 
-#### 09 汇总、过滤与进阶（提要）
+#### 1.2.9 汇总、过滤与进阶（提要） {/* #09-汇总过滤与进阶提要 */}
 
 **路由汇总**：自动汇总仅对重分发进 BGP 的外部路由生效且为主类；手动汇总优先。常用：`detail-suppressed` 抑制明细、`suppress-policy` 指定抑制项、`as-set` 防环、`attribute-policy` 设属性。带 `detail-suppressed` 时汇总路由会带 Atomic-Aggregate，不继承明细的 community。
 
@@ -293,40 +230,33 @@ BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP�
 
 **常用命令**：`active-route-advertise` 只通告活动路由；`bgp-rib-only` 在 IP RIB 侧过滤 BGP（与上一条互斥）；`as-path limit 1` 限制 AS_Path 长度（默认 255）。4 字节 AS 号：能力协商、AS4_Path/AS4_Aggregator 属性、AS_Trans 23456 衔接 2/4 字节。
 
-### 三、BGP 的配置实例
-
-
-
+### 1.3 BGP 的配置实例 {/* #三bgp-的配置实例 */}
 
 上面是 BGP 理论概要，实际配置相对简单。下面按实验拓扑进行配置，网络拓扑如下：
 
 ![BGP](/images/传统组网（一）/BGP-8.png)
 
-#### 01 需求如下
+#### 1.3.1 需求如下 {/* #01-需求如下 */}
 
 1. AS 200 内部使用 OSPF 协议使 AS 200 内部互通，并在AS 200内部各个路由器上都运行BGP协议（R1和R2、R3建立邻居关系，R4和R2、R3及R5建立邻居关系，），各个AS之间运行BGP协议。
-
-
 
 2. 分别在 R1 和 R5 使用 BGP 协议宣告 21.0.0.0/24 和 20.0.0.0/24，使所有路由器学到这两条路由信息
 3. 通过 BGP 的属性控制选路，实现 PC1→R1→R2→R4→R5→PC2→R5→R4→R3→R2→R1→PC1 的路由通信，并测试多种控制选路方法
 4. 在 R2、R3 和 R4 上分别向 BGP 注入本地 OSPF 路由，使全网互通（满足第 3 点选路要求并不代表 PC1 能 ping 通所有设备，如 R2）
 5. 为演示 EBGP 多跳，尝试让 R1 与 R4 直接建立对等体关系
 
-
-
-#### 02 开始配置
+#### 1.3.2 开始配置 {/* #02-开始配置 */}
 
 1. 自行配置各 PC、路由器物理接口及 loopback 的 IP（此处仅给出路由器 IP 配置参考）：
 
 ```text
-<R1>sys                              
+<R1>sys
 
-[R1]in g0/0/0                  
+[R1]in g0/0/0
 
-[R1-GigabitEthernet0/0/0]ip add 12.1.1.1 24              
+[R1-GigabitEthernet0/0/0]ip add 12.1.1.1 24
 
-[R1-GigabitEthernet0/0/0]int loop 0                   
+[R1-GigabitEthernet0/0/0]int loop 0
 
 [R1-LoopBack0]ip add 1.1.1.1 32
 ```
@@ -350,13 +280,13 @@ BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP�
 **R1 配置：**
 
 ```text
-[R1]bgp 100              
+[R1]bgp 100
 
-[R1-bgp]router-id 1.1.1.1              
+[R1-bgp]router-id 1.1.1.1
 
-[R1-bgp]peer 12.1.1.2 as 200              
+[R1-bgp]peer 12.1.1.2 as 200
 
-[R1-bgp]peer 13.1.1.3 as 200              
+[R1-bgp]peer 13.1.1.3 as 200
 
 [R1-bgp]network 21.0.0.0 24
 ```
@@ -368,11 +298,11 @@ BGP 协议包含很多路由属性，这些属性可以非常灵活的控制BGP�
 
 [R2-bgp]router-id 2.2.2.2
 
-[R2-bgp]peer 12.1.1.1 as 100              
+[R2-bgp]peer 12.1.1.1 as 100
 
-[R2-bgp]peer 4.4.4.4 as 200                  
+[R2-bgp]peer 4.4.4.4 as 200
 
-[R2-bgp]peer 4.4.4.4 connect-interface LoopBack 0  
+[R2-bgp]peer 4.4.4.4 connect-interface LoopBack 0
 
 [R2-bgp]peer 4.4.4.4 next-hop-local
 ```
@@ -439,18 +369,14 @@ BGP 邻居建立后可用以下命令查看：
   Peer            V          AS  MsgRcvd  MsgSent  OutQ  Up/Down       State Pre
 fRcv
 
-  12.1.1.2        4         200        5        8     0 00:02:11 Established    
+  12.1.1.2        4         200        5        8     0 00:02:11 Established
    1
   13.1.1.3        4         200        7       10     0 00:04:34 Established    1
 ```
 
 至此 PC1 已可与 PC2 通信，当然是BGP协议做的咯，但是现在除了非直连网段及AS 200内部路由器以外，也只有PC1和PC2可以通信，如PC1并不能ping通R2路由器。
 
-
-
 4. 第三个需求：通过 BGP 属性控制选路，实现 PC1→R1→R2→R4→R5→PC2→R5→R4→R3→R2→R1→PC1 的路径。先用 `tracert` 查看实际经过的路由器。
-
-
 
 **PC1→PC2 路径示例：**
 
@@ -479,30 +405,28 @@ traceroute to 21.0.0.1, 8 hops max (ICMP), press Ctrl+C to stop
 
 下面通过三种方式配置选路：
 
-
-
 **方法 1：修改 Local-Preference，使 R3 优先**
 
 在 R3 上执行：
 
 ```text
-[R3]route-policy lop permit node 10    
+[R3]route-policy lop permit node 10
 
 Info: New Sequence of this List.
 
-[R3-route-policy]apply local-preference 222      
+[R3-route-policy]apply local-preference 222
 
 [R3-route-policy]quit
 
-[R3]bgp 200              
+[R3]bgp 200
 
-[R3-bgp]peer 4.4.4.4 route-policy lop export      
+[R3-bgp]peer 4.4.4.4 route-policy lop export
 
 [R3-bgp]quit
 
-[R3]quit<R3>reset bgp all        
-
-
+[R3]quit
+<R3>reset bgp all
+```
 
 此时从 PC2 再 tracert PC1，路径会经 R3 而非 R2：
 
@@ -521,8 +445,6 @@ traceroute to 21.0.0.1, 8 hops max
 
 **方法 2：使用 AS-PATH 控制选路**
 
-
-
 为还原走 R2 的路径，先在 R3 上取消 Local-Preference 策略：
 
 ```text
@@ -532,22 +454,20 @@ traceroute to 21.0.0.1, 8 hops max
 
 删除后稍等，可再 tracert 确认 PC2→PC1 是否恢复走 R2。
 
-
-
 在 R2 上通过 AS-PATH 拉长路径（向 R4 通告 21.0.0.0 时附加虚造 AS，使 R4 认为经 R2 的路径更长，从而选 R3）：
 
 **R2 配置：**
 
 ```text
-[R2]route-policy as permit node 10  
+[R2]route-policy as permit node 10
 
 Info: New Sequence of this List.
 
-[R2-route-policy]apply as-path 123 123 123 add  
+[R2-route-policy]apply as-path 123 123 123 add
 
 [R2-route-policy]quit
 
-[R2]bgp 200            
+[R2]bgp 200
 
 [R2-bgp]peer 4.4.4.4 route-policy as export
 [R2-bgp]quit
@@ -576,11 +496,11 @@ traceroute to 21.0.0.1, 8 hops max
 初始时 PC1→PC5 经 R2；在 R2 上配置 MED 并向 R1 通告，使 R1 侧选 R3。R2 配置：
 
 ```text
-[R2]route-policy med permit node 10  
+[R2]route-policy med permit node 10
 
 Info: New Sequence of this List.
 
-[R2-route-policy]apply cost + 500    
+[R2-route-policy]apply cost + 500
 
 [R2-route-policy]quit
 
@@ -612,8 +532,6 @@ traceroute to 20.0.0.1, 8 hops max
 
 5. **第四个需求**：在 R2、R3、R4 上向 BGP 注入本地 OSPF 路由，使全网互通。
 
-
-
 ```text
 [R2]bgp 200
 [R2-bgp]import-route ospf 1
@@ -622,8 +540,6 @@ traceroute to 20.0.0.1, 8 hops max
 R3、R4 同样执行 `import-route ospf 1`。可用文末查看命令验证路由表。
 
 6. **第五个需求**：R1 与 R4 直接建立对等体（EBGP 多跳）。
-
-
 
 **R1：**
 
@@ -644,7 +560,7 @@ R3、R4 同样执行 `import-route ospf 1`。可用文末查看命令验证路�
 验证（邻居建立可能需要约 1～2 分钟）：
 
 ```text
-[R1]dis bgp peer      
+[R1]dis bgp peer
 
  BGP local router ID : 1.1.1.1
  Local AS number : 100
@@ -653,22 +569,16 @@ R3、R4 同样执行 `import-route ospf 1`。可用文末查看命令验证路�
   Peer            V          AS  MsgRcvd  MsgSent  OutQ  Up/Down       State Pre
 fRcv
 
-  12.1.1.2        4         200       27       38     0 00:17:49 Established    
+  12.1.1.2        4         200       27       38     0 00:17:49 Established
    8
-  13.1.1.3        4         200       55       70     0 00:45:35 Established    
+  13.1.1.3        4         200       55       70     0 00:45:35 Established
    8
   34.1.1.4        4         200       12       13     0 00:00:02 Established    8
 ```
 
-**常用查看命令：** `dis ip routing-table`、`dis ospf routing`、`dis bgp peer`。      
+**常用查看命令：** `dis ip routing-table`、`dis ospf routing`、`dis bgp peer`。
 
-
-
-
-### 四、配置总结
-
-
-
+### 1.4 配置总结 {/* #四配置总结 */}
 
 在配置过程中需注意：
 
@@ -676,8 +586,6 @@ fRcv
 2. AS 内建立 BGP 邻居时，建议用对端 Loopback，并配置更新源：`peer x.x.x.x connect-interface LoopBack 0`。
 3. AS 内多台设备跑 BGP（IBGP）时，注意「保证 IBGP 下一跳可达」：`peer x.x.x.x next-hop-local`。
 4. 跨 AS 建立邻居时，若用对端 Loopback（非直连网段），需配置 EBGP 多跳，否则 TTL=1 会导致建邻失败。IBGP 默认 TTL=255，无需改。命令示例：`peer x.x.x.x ebgp-max-hop 2`，数值不小于实际跳数即可。
-
----
 
 ## 2. 用 FRRouting 验证同一套原理
 
@@ -733,7 +641,7 @@ show ip route
 
 ## 3. 双出口策略设计
 
-### 出站流量
+### 3.1 出站流量 {/* #出站流量 */}
 
 本 AS 选择出口时常用：
 
@@ -741,7 +649,7 @@ show ip route
 - Weight：部分厂商本地私有属性，只影响单台设备。
 - IGP Cost to Next Hop：前面条件相同后可能影响热土豆出口。
 
-### 入站流量
+### 3.2 入站流量 {/* #入站流量 */}
 
 远端 AS 决定如何进入本 AS，常见影响手段：
 
@@ -793,7 +701,7 @@ router bgp 65000
 | 通告 | 是否发给目标邻居 | Advertised Routes |
 | 数据面 | 实际流量走哪条路径 | FIB、接口计数、Flow/抓包 |
 
-### 常见状态
+### 5.1 常见状态 {/* #常见状态 */}
 
 - `Idle/Active`：底层路由、TCP 179、源地址、TTL、ACL、认证。
 - `OpenSent/OpenConfirm`：ASN、Router ID、能力协商、地址族。

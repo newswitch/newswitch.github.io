@@ -2,8 +2,8 @@
 title: "MySQL 配置分层、内存预算、连接与线程模型"
 sidebar_label: "01. MySQL 配置分层、内存预算、连接与线程模型"
 sidebar_position: 1
-tags: [MySQL, 配置, 内存, 连接池, 线程模型]
 description: "建立配置来源、全局与会话内存、连接和执行线程的容量模型，避免照抄参数与连接数失控。"
+tags: [MySQL, 配置, 内存, 连接池, 线程模型]
 ---
 
 # MySQL 配置分层、内存预算、连接与线程模型
@@ -138,9 +138,8 @@ required concurrency ≈ throughput × average DB time
 
 逐步增加客户端并发，记录 `Threads_running`、QPS、P95/P99、RSS、page faults、磁盘延迟和错误率。找到“吞吐趋平但延迟上翘”的饱和点，生产容量应留余量。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [How MySQL Uses Memory](https://dev.mysql.com/doc/refman/8.4/en/memory-use.html)
 - [Connection Interfaces](https://dev.mysql.com/doc/refman/8.4/en/connection-interfaces.html)
 - [Using System Variables](https://dev.mysql.com/doc/refman/8.4/en/using-system-variables.html)
-

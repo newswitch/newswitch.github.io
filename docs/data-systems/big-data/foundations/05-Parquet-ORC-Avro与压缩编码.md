@@ -1,9 +1,9 @@
 ---
-title: Parquet、ORC、Avro 与压缩编码：从文件布局到查询和训练吞吐
+title: "Parquet、ORC、Avro 与压缩编码：从文件布局到查询和训练吞吐"
 sidebar_label: "05. Parquet、ORC、Avro 与压缩编码：从文件布局到查询和训练吞吐"
 sidebar_position: 5
+description: "理解行式与列式文件、schema、编码、压缩、统计信息和文件大小，学会为消息、分析查询和 AI 数据集选择格式并做基准测试。"
 tags: [Parquet, ORC, Avro, 列式存储, 压缩]
-description: 理解行式与列式文件、schema、编码、压缩、统计信息和文件大小，学会为消息、分析查询和 AI 数据集选择格式并做基准测试。
 ---
 
 # Parquet、ORC、Avro 与压缩编码：从文件布局到查询和训练吞吐
@@ -363,7 +363,7 @@ Parquet 适合特征表的列裁剪和批量扫描，但 GPU 训练吞吐还受�
 
 下一篇：[从 Kafka 到 Flink、Iceberg、Spark 再到 GPU](../projects/01-从Kafka到Flink-Iceberg-Spark再到GPU.md)
 
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [Apache Parquet 文档](https://parquet.apache.org/docs/)
 - [Apache ORC 文档](https://orc.apache.org/docs/)

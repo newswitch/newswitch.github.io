@@ -2,8 +2,8 @@
 title: "ProxySQL、Orchestrator 与读写路由架构"
 sidebar_label: "04. ProxySQL、Orchestrator 与读写路由架构"
 sidebar_position: 4
-tags: [MySQL, ProxySQL, Orchestrator, 读写分离, Failover]
 description: "区分代理路由与拓扑故障编排，设计事务粘性、复制新鲜度、fencing、配置发布和组件自身高可用。"
+tags: [MySQL, ProxySQL, Orchestrator, 读写分离, Failover]
 ---
 
 # ProxySQL、Orchestrator 与读写路由架构
@@ -73,9 +73,8 @@ ProxySQL 多实例通常各自维护配置，需要可靠分发与一致性验�
 
 关闭 reader、让 reader 延迟、writer crash、旧主网络分区、代理重启、规则误发布、控制面失联和切换中 hook 失败。验证事务不跨后端、写不进副本、旧主被隔离、应用有限重试。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [ProxySQL Documentation](https://proxysql.com/documentation/)
 - [ProxySQL Backend Monitoring](https://proxysql.com/documentation/backend-monitoring/)
 - [Orchestrator Topology Recovery（归档）](https://github.com/openark/orchestrator/blob/master/docs/topology-recovery.md)
-

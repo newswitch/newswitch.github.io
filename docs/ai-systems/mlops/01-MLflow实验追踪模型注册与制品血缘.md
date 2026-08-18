@@ -2,8 +2,8 @@
 title: "MLflow 实验追踪、模型注册与制品血缘"
 sidebar_label: "01. MLflow 实验追踪、模型注册与制品血缘"
 sidebar_position: 1
-tags: [MLflow, Experiment Tracking, Model Registry, Artifact, Lineage, MLOps]
 description: "从 Run、Backend Store、Artifact Store、Model Registry、Alias 和不可变版本坐标出发，建立能从生产模型反查代码、数据、环境与评测的血缘链。"
+tags: [MLflow, Experiment Tracking, Model Registry, Artifact, Lineage, MLOps]
 ---
 
 # MLflow 实验追踪、模型注册与制品血缘
@@ -164,14 +164,12 @@ import hashlib
 import json
 import mlflow
 
-
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
-
 
 mlflow.set_tracking_uri("https://mlflow.example.com")
 mlflow.set_experiment("chat-70b-finetune")
@@ -254,7 +252,7 @@ s3://models/chat-70b/model.safetensors
 
 ## 7. Artifact Store 的两种访问模式
 
-### 客户端直连
+### 7.1 客户端直连 {/* #客户端直连 */}
 
 ```text
 Client → Tracking Server（元数据）
@@ -263,7 +261,7 @@ Client → Object Store（Artifact）
 
 客户端需要对象存储凭据。
 
-### Tracking Server 代理
+### 7.2 Tracking Server 代理 {/* #tracking-server-代理 */}
 
 ```text
 Client → Tracking Server → Object Store
@@ -624,4 +622,3 @@ Registry/Alias/Tag
 - [MLflow Artifact Stores](https://mlflow.org/docs/latest/self-hosting/architecture/artifact-store/)
 - [MLflow Model Registry Workflows](https://mlflow.org/docs/latest/ml/model-registry/workflow/)
 - [MLflow Models](https://mlflow.org/docs/latest/ml/model/)
-

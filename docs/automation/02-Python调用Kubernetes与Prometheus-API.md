@@ -2,8 +2,8 @@
 title: "Python 调用 Kubernetes 与 Prometheus API"
 sidebar_label: "02. Python 调用 Kubernetes 与 Prometheus API"
 sidebar_position: 2
-tags: [Python, Kubernetes API, Prometheus, PromQL, List Watch, RBAC]
 description: "正确处理 Kubernetes 认证、分页、List/Watch、resourceVersion 和 RBAC，并通过 Prometheus HTTP API 查询、验证和关联 AI Infra 证据。"
+tags: [Python, Kubernetes API, Prometheus, PromQL, List Watch, RBAC]
 ---
 
 # Python 调用 Kubernetes 与 Prometheus API
@@ -36,11 +36,10 @@ Kubernetes API 表示资源期望和状态；Prometheus 表示一段时间内的
 
 ## 2. Kubernetes 认证
 
-### 集群内
+### 2.1 集群内 {/* #集群内 */}
 
 ```python
 from kubernetes import client, config
-
 
 def build_incluster_client() -> client.ApiClient:
     config.load_incluster_config()
@@ -54,7 +53,7 @@ def build_incluster_client() -> client.ApiClient:
 - 短期 Bound Token。
 - 不把 Token 写入日志或证据包。
 
-### 集群外
+### 2.2 集群外 {/* #集群外 */}
 
 ```python
 def build_kubeconfig_client(
@@ -122,7 +121,6 @@ model revision
 ```python
 from kubernetes import client
 
-
 def list_all_pods(
     api: client.CoreV1Api,
     namespace: str,
@@ -189,7 +187,6 @@ Python SDK 的 `watch.Watch()` 可用于学习和低规模工具：
 ```python
 from kubernetes import watch
 from kubernetes.client.exceptions import ApiException
-
 
 def watch_pods(api, namespace: str, stop, initial_rv: str | None = None):
     resource_version = initial_rv
@@ -314,17 +311,14 @@ from dataclasses import dataclass
 import math
 import requests
 
-
 class PrometheusError(RuntimeError):
     pass
-
 
 @dataclass(frozen=True)
 class Sample:
     labels: dict[str, str]
     timestamp: float
     value: float
-
 
 class PrometheusClient:
     def __init__(self, base_url: str, session=None):
@@ -508,7 +502,6 @@ parameters = {"namespace": "...", "revision": "..."}
 ```python
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-
 def collect_pods(pods, collect_one, max_workers: int = 8):
     results = []
     errors = []
@@ -597,4 +590,3 @@ def collect_pods(pods, collect_one, max_workers: int = 8):
 - [Kubernetes RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 - [Prometheus HTTP API](https://prometheus.io/docs/prometheus/latest/querying/api/)
 - [PromQL Basics](https://prometheus.io/docs/prometheus/latest/querying/basics/)
-

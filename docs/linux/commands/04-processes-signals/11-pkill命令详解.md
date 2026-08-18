@@ -1,11 +1,12 @@
 ---
-title: pkill 命令详解：按属性筛选并安全发送信号
+title: "pkill 命令详解：按属性筛选并安全发送信号"
+sidebar_label: "11. pkill 命令详解：按属性筛选并安全发送信号"
 sidebar_position: 11
-description: 完整讲解 procps-ng pkill 参数、正则、UID/PPID/session/cgroup/namespace、pidfile、handler、queue、mrelease、退出码与宽匹配风险。
+description: "完整讲解 procps-ng pkill 参数、正则、UID/PPID/session/cgroup/namespace、pidfile、handler、queue、mrelease、退出码与宽匹配风险。"
 tags: [Linux, pkill, procps-ng, signal, cgroup]
 ---
 
-# `pkill` 命令详解：按属性筛选并安全发送信号
+# pkill 命令详解：按属性筛选并安全发送信号
 
 `pkill` 与 `pgrep` 共用筛选器，但对匹配进程发送信号，默认 `SIGTERM`。它减少 `pgrep` 输出再传给 `kill` 的窗口，却仍可能宽匹配同名实例；服务/cgroup 控制面通常更安全。
 
@@ -57,7 +58,7 @@ pkill 只发信号，不默认等待退出。用服务管理器 stop/grace，或
 
 掌握标准：能按共同/专属参数列全选项；能解释为何 count 不等于成功数；能避免宽匹配并验证 restart/cgroup/子进程收敛。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [procps-ng：pkill/pgrep(1)](https://man7.org/linux/man-pages/man1/pgrep.1.html)
 - [Linux process_mrelease(2)](https://man7.org/linux/man-pages/man2/process_mrelease.2.html)

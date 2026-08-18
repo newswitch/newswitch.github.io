@@ -1,11 +1,12 @@
 ---
-title: cuobjdump 命令详解：提取 PTX、Cubin 与 CUDA ELF 信息
+title: "cuobjdump 命令详解：提取 PTX、Cubin 与 CUDA ELF 信息"
+sidebar_label: "13. cuobjdump 命令详解：提取 PTX、Cubin 与 CUDA ELF 信息"
 sidebar_position: 13
-description: 使用 cuobjdump 检查 Host Binary、Library 与 Fatbin 中的 CUDA 代码对象、架构、资源和反汇编信息。
+description: "使用 cuobjdump 检查 Host Binary、Library 与 Fatbin 中的 CUDA 代码对象、架构、资源和反汇编信息。"
 tags: [CUDA, cuobjdump, PTX, Cubin, SASS, 二进制分析]
 ---
 
-# cuobjdump 命令详解
+# cuobjdump 命令详解：提取 PTX、Cubin 与 CUDA ELF 信息
 
 `cuobjdump` 类似 CUDA 世界的 `objdump`：它可从可执行文件、对象文件、静态/动态库和 Fatbin 中列出或提取 PTX、Cubin、ELF 段与 SASS。它回答“最终 Binary 里到底打包了哪些 GPU 架构和代码”。
 
@@ -86,6 +87,6 @@ cuobjdump --extract-ptx all ../app
 
 能证明一个发布包包含哪些 Cubin/PTX 架构；能提取目标 Cubin；能解释资源报告只是静态证据；能从运行时报错反向核查实际 Binary，而不是只看构建日志。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [CUDA Binary Utilities](https://docs.nvidia.com/cuda/cuda-binary-utilities/)

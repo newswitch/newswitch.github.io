@@ -1,9 +1,9 @@
 ---
 title: "Toil 量化与安全自动修复"
 sidebar_label: "04. Toil 量化与安全自动修复"
-sidebar_position: 12
-tags: [Kubernetes, SRE, Toil, 自动化, Python, Remediation]
+sidebar_position: 4
 description: "识别和量化 AI Infra 运维中的 Toil，并通过状态机、幂等、锁、限速、审批、验证和回滚构建安全的自动修复系统。"
+tags: [Kubernetes, SRE, Toil, 自动化, Python, Remediation]
 ---
 
 # Toil 量化与安全自动修复
@@ -20,8 +20,6 @@ AI Infra 的高风险操作很多：
 - 重启 RDMA/NCCL 相关组件可能扩大故障域。
 
 因此应先自动化证据采集和低风险动作，再逐步进入受控修复。
-
----
 
 ## 1. 什么是 Toil
 
@@ -42,8 +40,6 @@ Toil 通常具有以下特征：
 | 每次告警手工拼接 Pod/GPU/节点信息 | 是 | 规则明确、重复 |
 | 一次性评估新型 GPU 架构 | 否 | 探索性工程工作 |
 | 重复手工回滚相同发布故障 | 是 | 可由发布系统处理 |
-
----
 
 ## 2. 如何量化 Toil
 
@@ -77,7 +73,7 @@ automation_score =
 
 其中各维度可按 1～5 打分。不要只按“最烦”决定优先级。
 
-### 示例
+### 2.1 示例 {/* #示例 */}
 
 | 任务 | 次/月 | 分钟/次 | 人数 | 月耗时 | 风险 |
 | --- | ---: | ---: | ---: | ---: | --- |
@@ -87,8 +83,6 @@ automation_score =
 | 发布后 SLO 核对 | 40 | 15 | 1 | 10h | 低 |
 
 优先自动化证据采集和发布核对；节点 Drain 即使耗时不低，也需要更严格的安全设计。
-
----
 
 ## 3. 自动化成熟度分级
 
@@ -113,8 +107,6 @@ L0 文档化
 | L4 | 对明确不可恢复类型自动 Cordon 单节点 |
 | L5 | 自动迁移服务、Drain、维修工单、验收后恢复 |
 
----
-
 ## 4. 安全修复状态机
 
 ```mermaid
@@ -136,8 +128,6 @@ stateDiagram-v2
 ```
 
 任何自动修复都应显式保存当前状态，不能只靠一段脚本从头执行到尾。
-
----
 
 ## 5. Detect：检测必须基于用户影响或明确故障
 
@@ -170,8 +160,6 @@ alert_fingerprint
 
 Pod 名称可复用或重建，不能作为唯一幂等键。
 
----
-
 ## 6. Validate：至少使用第二种证据
 
 不要让“告警表达式写错”直接触发生产修复。
@@ -191,8 +179,6 @@ Pod 名称可复用或重建，不能作为唯一幂等键。
 ```text
 now - sample_timestamp < freshness_limit
 ```
-
----
 
 ## 7. Scope：限制故障域
 
@@ -223,8 +209,6 @@ policy:
 
 如果无法证明剩余容量足够，就不能自动摘除实例或节点。
 
----
-
 ## 8. Plan：每个动作必须有前置、后置和回滚
 
 动作定义：
@@ -251,8 +235,6 @@ rollback:
 ```
 
 “重启看看”没有清晰预期，也很难证明根因，不是合格修复计划。
-
----
 
 ## 9. 幂等、锁、限速和冷却
 
@@ -296,8 +278,6 @@ Kubernetes 环境可使用 `coordination.k8s.io/v1 Lease`，但仍要处理持�
 
 动作完成后等待系统稳定，再重新评估。否则扩缩容、调度和指标延迟可能造成振荡。
 
----
-
 ## 10. Dry Run 与审批
 
 Dry Run 输出应包含：
@@ -327,8 +307,6 @@ Dry Run 输出应包含：
 - 清理模型缓存。
 - 修改存储或网络配置。
 
----
-
 ## 11. 一个只读优先的 Python 框架
 
 下面代码演示状态机骨架。默认只生成计划，不执行有状态动作：
@@ -342,7 +320,6 @@ from typing import Protocol
 import json
 import time
 
-
 class State(str, Enum):
     DETECTED = "detected"
     VALIDATED = "validated"
@@ -354,7 +331,6 @@ class State(str, Enum):
     ROLLED_BACK = "rolled_back"
     FAILED = "failed"
 
-
 @dataclass(frozen=True)
 class Target:
     cluster: str
@@ -362,7 +338,6 @@ class Target:
     kind: str
     uid: str
     name: str
-
 
 @dataclass
 class Plan:
@@ -375,13 +350,11 @@ class Plan:
     rollback: str
     requires_approval: bool = True
 
-
 class Action(Protocol):
     def validate(self, plan: Plan) -> bool: ...
     def execute(self, plan: Plan) -> None: ...
     def verify(self, plan: Plan) -> bool: ...
     def rollback(self, plan: Plan) -> None: ...
-
 
 class RemediationEngine:
     def __init__(self, action: Action, dry_run: bool = True):
@@ -455,8 +428,6 @@ class RemediationEngine:
 - 重试上限、超时和熔断。
 - 审计日志写入不可篡改存储。
 
----
-
 ## 12. Kubernetes RBAC 最小权限
 
 把采集器与执行器拆成两个 ServiceAccount：
@@ -493,8 +464,6 @@ rules:
 
 执行器应针对资源、namespace、verb 和 admission policy 进一步限制。
 
----
-
 ## 13. 自动修复如何验证
 
 动作后不能只验证 API 返回成功。
@@ -517,11 +486,9 @@ rules:
 
 验证必须有 deadline。超过 deadline 即触发回滚或升级给人工。
 
----
-
 ## 14. 先自动化哪些场景
 
-### 第一批：只读和低风险
+### 14.1 第一批：只读和低风险 {/* #第一批只读和低风险 */}
 
 - 一键采集事件证据包。
 - 告警自动补充 Pod、Node、GPU UUID、模型 revision。
@@ -529,14 +496,14 @@ rules:
 - SLO 查询与发布门禁。
 - Runbook 推荐。
 
-### 第二批：人工批准执行
+### 14.2 第二批：人工批准执行 {/* #第二批人工批准执行 */}
 
 - 将 Canary 流量降为 0。
 - 对已确认异常实例执行受控摘流。
 - Cordon 单个 GPU 节点。
 - 触发预定义扩容或备用实例预热。
 
-### 第三批：小故障域闭环
+### 14.3 第三批：小故障域闭环 {/* #第三批小故障域闭环 */}
 
 - 明确不可恢复 Xid 自动隔离单节点。
 - 指标采集组件异常且有冗余时自动重建。
@@ -544,11 +511,9 @@ rules:
 
 所有闭环都应保留全局 Kill Switch。
 
----
-
 ## 15. 测试体系
 
-### 单元测试
+### 15.1 单元测试 {/* #单元测试 */}
 
 - 幂等键生成。
 - 策略判定。
@@ -556,14 +521,14 @@ rules:
 - 状态机转换。
 - 验证失败触发回滚。
 
-### 集成测试
+### 15.2 集成测试 {/* #集成测试 */}
 
 - 使用测试 namespace 和假对象。
 - 模拟 Kubernetes API timeout、409 conflict、429 throttling。
 - 模拟 Prometheus 数据过期和查询失败。
 - 验证 Lease 竞争。
 
-### 故障注入
+### 15.3 故障注入 {/* #故障注入 */}
 
 - 同一告警重复投递。
 - 执行器在动作中途崩溃。
@@ -571,7 +536,7 @@ rules:
 - 回滚 API 失败。
 - 多个故障同时出现。
 
-### 生产前 Shadow
+### 15.4 生产前 Shadow {/* #生产前-shadow */}
 
 系统只生成计划，不执行；将建议动作与人工真实动作比较 2～4 周：
 
@@ -581,8 +546,6 @@ recall    = 被建议覆盖的真实动作 / 全部真实动作
 ```
 
 Shadow 结果稳定后，再开放人工批准模式。
-
----
 
 ## 16. 自动化自身的可观测性
 
@@ -611,8 +574,6 @@ remediation_lock_contention_total
 - 最终状态。
 
 自动修复系统是生产控制面，本身也需要 SLO、告警、发布和灾难恢复。
-
----
 
 ## 17. 实验任务
 

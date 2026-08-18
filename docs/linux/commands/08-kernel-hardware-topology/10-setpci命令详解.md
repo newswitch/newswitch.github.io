@@ -1,11 +1,12 @@
 ---
-title: setpci 命令详解：安全读取与受控修改 PCI 配置空间
+title: "setpci 命令详解：安全读取与受控修改 PCI 配置空间"
+sidebar_label: "10. setpci 命令详解：安全读取与受控修改 PCI 配置空间"
 sidebar_position: 10
-description: 完整讲解 setpci 的全部参数、BDF 过滤、寄存器命名、字节宽度、capability 相对地址、掩码写入、演练模式及生产风险。
+description: "完整讲解 setpci 的全部参数、BDF 过滤、寄存器命名、字节宽度、capability 相对地址、掩码写入、演练模式及生产风险。"
 tags: [Linux, setpci, PCIe, 配置空间, 硬件排障]
 ---
 
-# `setpci` 命令详解：安全读取与受控修改 PCI 配置空间
+# setpci 命令详解：安全读取与受控修改 PCI 配置空间
 
 `setpci` 读取或写入 PCI 配置寄存器。读取适合验证 capability；写入可能立即改变总线控制、链路、电源或设备行为，甚至让根盘/网卡消失。本篇默认只读，任何写操作都必须来自芯片手册和经过验证的回滚方案。
 

@@ -1,11 +1,12 @@
 ---
-title: groupmod 命令详解：重命名组、迁移 GID 与成员列表
+title: "groupmod 命令详解：重命名组、迁移 GID 与成员列表"
+sidebar_label: "09. groupmod 命令详解：重命名组、迁移 GID 与成员列表"
 sidebar_position: 9
-description: 完整讲解 shadow-utils groupmod 的参数、组名与 GID 变更、成员替换/追加、文件残留 GID、重复 GID 和集群迁移流程。
+description: "完整讲解 shadow-utils groupmod 的参数、组名与 GID 变更、成员替换/追加、文件残留 GID、重复 GID 和集群迁移流程。"
 tags: [Linux, groupmod, 用户组, GID, 权限迁移]
 ---
 
-# `groupmod` 命令详解：重命名组、迁移 GID 与成员列表
+# groupmod 命令详解：重命名组、迁移 GID 与成员列表
 
 `groupmod` 修改本地组定义。组名重命名不会改变文件上的数字 GID；GID 变更则会改变权限身份，并要求手工迁移所有相关文件和外部引用。
 
@@ -76,7 +77,7 @@ sudo find /srv -xdev -gid "$old_gid" -ls
 
 掌握标准：能列出全部参数；能把名字变更和数字身份迁移分开；能设计跨节点、共享存储、可停写和可回滚的 GID 迁移。
 
-## 官方参考
+## 5. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：groupmod(8)](https://shadow-maint.github.io/shadow/man/groupmod.html)
 - [Linux group(5)](https://man7.org/linux/man-pages/man5/group.5.html)

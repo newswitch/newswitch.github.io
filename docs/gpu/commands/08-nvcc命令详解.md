@@ -1,11 +1,12 @@
 ---
-title: nvcc 命令详解：CUDA 编译流程、架构目标与诊断
+title: "nvcc 命令详解：CUDA 编译流程、架构目标与诊断"
+sidebar_label: "08. nvcc 命令详解：CUDA 编译流程、架构目标与诊断"
 sidebar_position: 8
-description: 从 Host/Device 分离编译理解 nvcc，掌握 GPU 架构目标、编译阶段、调试优化、链接和可重复构建方法。
+description: "从 Host/Device 分离编译理解 nvcc，掌握 GPU 架构目标、编译阶段、调试优化、链接和可重复构建方法。"
 tags: [CUDA, nvcc, GPU, 编译器, C++]
 ---
 
-# nvcc 命令详解
+# nvcc 命令详解：CUDA 编译流程、架构目标与诊断
 
 `nvcc` 是 CUDA 编译驱动，不是一个独立完成所有工作的单体编译器。它拆分 CUDA C++ 源码，把 Host 代码交给 GCC/Clang/MSVC，把 Device 代码编译为 PTX 和/或目标 GPU 的 Cubin，再进行设备链接与主机链接。
 
@@ -138,7 +139,7 @@ g++ a.o b.o device_link.o -L/usr/local/cuda/lib64 -lcudart -o app
 
 能画出 `.cu → Host code + PTX → Cubin/Fatbin → executable`；能为目标 GPU 设计 `-gencode`；能区分 `-g/-G/-lineinfo`；能用资源报告和二进制工具验证实际生成了什么。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [NVIDIA CUDA Compiler Driver NVCC](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/)
 - [CUDA C++ Programming Guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/)

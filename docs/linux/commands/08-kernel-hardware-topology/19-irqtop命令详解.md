@@ -1,11 +1,12 @@
 ---
-title: irqtop 命令详解：实时定位 IRQ 与 softirq 热点
+title: "irqtop 命令详解：实时定位 IRQ 与 softirq 热点"
+sidebar_label: "19. irqtop 命令详解：实时定位 IRQ 与 softirq 热点"
 sidebar_position: 19
-description: 完整讲解 irqtop 的全部参数、交互键、DELTA 与 TOTAL、batch/JSON 自动化、CPU 与阈值过滤，以及中断风暴和 NUMA 偏斜诊断。
+description: "完整讲解 irqtop 的全部参数、交互键、DELTA 与 TOTAL、batch/JSON 自动化、CPU 与阈值过滤，以及中断风暴和 NUMA 偏斜诊断。"
 tags: [Linux, irqtop, IRQ, softirq, 性能分析]
 ---
 
-# `irqtop` 命令详解：实时定位 IRQ 与 softirq 热点
+# irqtop 命令详解：实时定位 IRQ 与 softirq 热点
 
 `irqtop` 以 top 风格周期读取内核中断计数，重点观察窗口内增量。它回答“现在谁在产生中断、落在哪些 CPU”，但不直接测中断 handler 耗时；高计数可能是正常高吞吐，低计数也可能每次处理很慢。
 

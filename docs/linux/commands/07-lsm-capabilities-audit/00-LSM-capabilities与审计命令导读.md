@@ -1,7 +1,8 @@
 ---
-title: LSM、capabilities 与审计命令导读
+title: "LSM、capabilities 与审计命令导读"
+sidebar_label: "00. LSM、capabilities 与审计命令导读"
 sidebar_position: 0
-description: 从 DAC、LSM、SELinux、AppArmor、Linux capabilities 和 Audit 六层建立 Linux 安全授权与拒绝排障模型。
+description: "从 DAC、LSM、SELinux、AppArmor、Linux capabilities 和 Audit 六层建立 Linux 安全授权与拒绝排障模型。"
 tags: [Linux, 安全, SELinux, AppArmor, capabilities, Audit, LSM]
 ---
 
@@ -176,7 +177,7 @@ auditctl -l 2>/dev/null || true
 - 能按 serial 组装 audit event，并区分 auid、uid、euid、ses 与 subj。
 - 能在不全局关闭安全机制的前提下完成“复现 → 定位 → 最小修复 → 验证 → 回滚”。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [SELinux userspace](https://github.com/SELinuxProject/selinux)
 - [AppArmor documentation](https://apparmor-documentation-c38b15.gitlab.io/documentation/)

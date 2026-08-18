@@ -1,11 +1,12 @@
 ---
-title: nsenter 命令详解：安全进入容器 Namespace 与进程现场
+title: "nsenter 命令详解：安全进入容器 Namespace 与进程现场"
+sidebar_label: "02. nsenter 命令详解：安全进入容器 Namespace 与进程现场"
 sidebar_position: 2
-description: 完整讲解 nsenter 全部参数、目标 PID/inode、八类 namespace、root/cwd/env/cgroup/credentials、PID fork 语义和安全排障流程。
+description: "完整讲解 nsenter 全部参数、目标 PID/inode、八类 namespace、root/cwd/env/cgroup/credentials、PID fork 语义和安全排障流程。"
 tags: [Linux, nsenter, Namespace, 容器, 故障排查]
 ---
 
-# `nsenter` 命令详解：安全进入容器 Namespace 与进程现场
+# nsenter 命令详解：安全进入容器 Namespace 与进程现场
 
 `nsenter` 对选定 namespace 调用 `setns(2)`，再执行程序。它比“进入容器”更精确：可以只进入 network 做抓包，或进入 mount+PID 读取同一 `/proc`。选择过多会改变 root、身份和资源作用域，应按最小集合进入。
 

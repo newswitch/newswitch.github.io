@@ -2,15 +2,15 @@
 title: "验证（Validating）Webhook"
 sidebar_label: "03. 验证（Validating）Webhook"
 sidebar_position: 3
-tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "验证（Validating）Webhook 扩展用于在资源创建、更新、删除等操作发生前对请求进行验证，以动态地实现策略控制、安全防护和合规审计。"
+tags: [Kubernetes, 安全, PartII, 学习路线]
 ---
 
 # 验证（Validating）Webhook
 
 > ValidatingWebhook 是 Kubernetes 动态准入控制体系的关键机制，支持在 API 请求路径中灵活注入自定义校验逻辑，实现安全、合规与智能化的集群治理。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 在 Kubernetes 中，**ValidatingWebhook**（验证型 Webhook，参见 data/glossary.yaml）属于 *动态准入控制（Dynamic Admission Control）* 的一部分。它能在资源写入 etcd 之前介入 API Server 的请求处理流程，对对象内容进行**校验（Validation）**，并可以**拒绝不符合策略的请求**。
 
@@ -21,7 +21,7 @@ ValidatingWebhook 常见应用包括：
 - 审计和风控（如禁止删除关键命名空间）
 - 自定义策略扩展（如企业内部的 DevSecOps 检查）
 
-## 工作机制
+## 2. 工作机制 {/* #工作机制 */}
 
 下图展示了 ValidatingWebhook 在 Kubernetes 请求处理流程中的位置：
 
@@ -41,7 +41,7 @@ sequenceDiagram
 
 ValidatingWebhook 作为最终的校验层，在 MutatingWebhook 之后执行。一旦 Webhook 返回拒绝响应，API Server 将直接中止该请求并向用户返回错误信息。
 
-## Webhook 配置结构
+## 3. Webhook 配置结构 {/* #webhook-配置结构 */}
 
 通过定义 ValidatingWebhookConfiguration 对象，可以注册自定义的验证逻辑。以下为典型配置示例：
 
@@ -79,7 +79,7 @@ webhooks:
 | `admissionReviewVersions` | 支持的 AdmissionReview 版本                    |
 | `sideEffects`             | 声明是否会产生副作用（一般为 `None`）                    |
 
-## Webhook 服务实现
+## 4. Webhook 服务实现 {/* #webhook-服务实现 */}
 
 Webhook 服务通常由一个 HTTPS 服务端实现。API Server 会发送 AdmissionReview 请求，Webhook 返回 AdmissionResponse。
 
@@ -133,11 +133,11 @@ func main() {
 - 证书 CA 与 `caBundle` 匹配
 - 与 `ValidatingWebhookConfiguration` 中的 `service` 对应
 
-## 典型场景
+## 5. 典型场景 {/* #典型场景 */}
 
 ValidatingWebhook 可用于多种场景，以下为常见应用示例：
 
-- **合规策略验证**  
+- **合规策略验证**
   禁止在生产命名空间中创建带有 `debug=true` 标签的 Pod：
 
   ```yaml
@@ -156,7 +156,7 @@ ValidatingWebhook 可用于多种场景，以下为常见应用示例：
   }
   ```
 
-- **镜像安全扫描**  
+- **镜像安全扫描**
   在资源创建时验证镜像是否来自受信任仓库：
 
   ```go
@@ -165,10 +165,10 @@ ValidatingWebhook 可用于多种场景，以下为常见应用示例：
   }
   ```
 
-- **动态资源约束**  
+- **动态资源约束**
   动态检查创建的 PVC 大小、Pod 数量是否超出配额范围。
 
-## 动态策略演进与 Gatekeeper 对比
+## 6. 动态策略演进与 Gatekeeper 对比 {/* #动态策略演进与-gatekeeper-对比 */}
 
 下表对比 ValidatingWebhook 与 OPA Gatekeeper 的主要特性：
 
@@ -182,7 +182,7 @@ ValidatingWebhook 可用于多种场景，以下为常见应用示例：
 
 在实际生产环境中，两者常结合使用：**ValidatingWebhook 实现动态逻辑**，**Gatekeeper 管理通用策略模板**。
 
-## 最佳实践
+## 7. 最佳实践 {/* #最佳实践 */}
 
 - 轻量与高可用：部署多副本、使用 readinessProbe。
 - 合理超时：`timeoutSeconds` 建议 ≤ 5 秒。
@@ -190,11 +190,11 @@ ValidatingWebhook 可用于多种场景，以下为常见应用示例：
 - 安全通信：使用 mTLS、最小权限 ServiceAccount。
 - 可观测性：记录审计日志与验证结果。
 
-## 总结
+## 8. 总结 {/* #总结 */}
 
 ValidatingWebhook 是实现 Kubernetes 动态策略控制的关键机制。它将安全与治理逻辑注入到集群 API 流程中，使平台具备动态自适应能力。结合 MutatingWebhook、OPA Gatekeeper 与 Policy Controller，可形成完整的策略闭环，实现“声明即合规”的自动化治理体系。
 
-## 参考文献
+## 9. 参考资料 {/* #参考文献 */}
 
 1. [Kubernetes 官方文档：Validating Admission Webhooks - kubernetes.io](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
 2. [Gatekeeper Policy Controller - github.com](https://github.com/open-policy-agent/gatekeeper)

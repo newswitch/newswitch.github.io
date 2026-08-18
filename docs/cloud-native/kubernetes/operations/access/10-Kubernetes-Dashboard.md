@@ -2,15 +2,15 @@
 title: "Kubernetes Dashboard - 官方 Web UI"
 sidebar_label: "10. Kubernetes Dashboard - 官方 Web UI"
 sidebar_position: 10
-tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "Kubernetes Dashboard 是 Kubernetes 官方提供的基于 Web 的用户界面，用于管理 Kubernetes 集群中的应用和资源，支持资源查看、部署管理、故障排查等功能。"
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 ---
 
 # Kubernetes Dashboard - 官方 Web UI
 
 [Kubernetes Dashboard](https://github.com/kubernetes/dashboard) 是 Kubernetes 官方提供的通用 Web UI，用于管理 Kubernetes 集群中的应用和资源。它提供了直观的可视化界面，帮助用户轻松查看和管理集群中的各种资源。
 
-## 项目结构
+## 1. 项目结构 {/* #项目结构 */}
 
 Kubernetes Dashboard 由一组微服务组成，每个服务服务于特定目的。从版本 7.0.0 开始，Dashboard 仅支持基于 Helm 的安装，因为其多容器设置和对 Kong Gateway 作为中央 API 代理的依赖。
 
@@ -40,7 +40,7 @@ graph TB
 
 ![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/8dfcc1889aac282ff3e95cce8632b88e.svg)
 
-## 系统架构
+## 2. 系统架构 {/* #系统架构 */}
 
 Kubernetes Dashboard 遵循微服务架构，以中央 API 代理（Kong Gateway）路由流量并向用户公开 UI。
 
@@ -64,7 +64,7 @@ graph TD
 
 ![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/7cd6b845ebe426e61f65317978584b97.svg)
 
-## 核心组件
+## 3. 核心组件 {/* #核心组件 */}
 
 Kubernetes Dashboard 由几个核心组件组成，每个组件负责特定功能：
 
@@ -76,7 +76,7 @@ Kubernetes Dashboard 由几个核心组件组成，每个组件负责特定功�
 | Metrics Scraper | Go | 从 Kubernetes Metrics Server 收集性能指标 |
 | Kong Gateway | Kong | 中央 API 代理，在组件之间路由流量 |
 
-### Web UI 模块
+### 3.1 Web UI 模块 {/* #web-ui-模块 */}
 
 Web UI 使用 Angular 构建，为 Dashboard 提供用户界面。它与 API 模块通信以获取和操作 Kubernetes 资源。
 
@@ -88,7 +88,7 @@ Web UI 使用 Angular 构建，为 Dashboard 提供用户界面。它与 API 模
 - NgX-Charts 用于数据可视化
 - XTerm 用于终端仿真
 
-### API 模块
+### 3.2 API 模块 {/* #api-模块 */}
 
 API 模块作为 Dashboard 的后端，提供 REST 和 GraphQL API 以供前端交互。它与 Kubernetes API 通信以管理集群资源。
 
@@ -98,7 +98,7 @@ API 模块作为 Dashboard 的后端，提供 REST 和 GraphQL API 以供前端�
 - REST 和 GraphQL API
 - Kubernetes 客户端库
 
-### 认证模块
+### 3.3 认证模块 {/* #认证模块 */}
 
 认证模块处理 Dashboard 的认证和授权。它根据 Kubernetes API 服务器验证用户令牌。
 
@@ -130,7 +130,7 @@ sequenceDiagram
 
 ![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/5008e455656948e80527644087c6db50.svg)
 
-### Metrics Scraper
+### 3.4 Metrics Scraper {/* #metrics-scraper */}
 
 Metrics Scraper 从 Kubernetes Metrics Server 收集性能指标，并将其存储以在 Dashboard 中进行可视化。
 
@@ -140,7 +140,7 @@ Metrics Scraper 从 Kubernetes Metrics Server 收集性能指标，并将其存�
 - SQLite 用于指标存储
 - Kubernetes Metrics API 客户端
 
-## 部署架构
+## 4. 部署架构 {/* #部署架构 */}
 
 Kubernetes Dashboard 使用 Helm 作为一组容器部署在 Kubernetes 集群中。Helm Chart 在 `kubernetes-dashboard` 命名空间中创建必要的资源。
 
@@ -180,7 +180,7 @@ graph TD
 
 ![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/7165e713019d160b86c1c19463657c05.svg)
 
-## 开发和构建系统
+## 5. 开发和构建系统 {/* #开发和构建系统 */}
 
 Kubernetes Dashboard 使用模块化构建系统，以 Makefile 作为主要的编排工具。这构建各个模块并生成 Docker 镜像，然后打包到 Helm Chart 中。
 
@@ -202,32 +202,32 @@ graph LR
 
 ![Mermaid Diagram](/images/k8s/access/kubernetes-dashboard/ae166e6072a56ca2ee27555fd891c61c.svg)
 
-## 主要特性
+## 6. 主要特性 {/* #主要特性 */}
 
-### 资源管理
+### 6.1 资源管理 {/* #资源管理 */}
 
 - **多集群支持**：支持连接和管理多个 Kubernetes 集群
 - **资源概览**：提供集群、节点、命名空间的整体状态视图
 - **工作负载管理**：支持查看和管理 Deployment、Pod、Service 等资源
 - **存储管理**：查看和管理 PersistentVolume、PersistentVolumeClaim 等存储资源
 
-### 应用部署
+### 6.2 应用部署 {/* #应用部署 */}
 
 - **YAML/JSON 编辑器**：内置的资源配置编辑器，支持直接编辑 YAML 配置
 - **向导式部署**：提供简单的应用部署向导
 - **日志查看**：集成 Pod 日志查看功能
 - **Shell 访问**：提供对 Pod 的终端访问
 
-### 监控与诊断
+### 6.3 监控与诊断 {/* #监控与诊断 */}
 
 - **实时状态监控**：显示资源的使用情况和健康状态
 - **事件查看**：查看集群中的事件和告警信息
 - **配置查看**：查看 ConfigMap 和 Secret 的内容
 - **RBAC 可视化**：显示用户和角色的权限配置
 
-## 安装部署
+## 7. 安装部署 {/* #安装部署 */}
 
-### 使用 Helm 安装
+### 7.1 使用 Helm 安装 {/* #使用-helm-安装 */}
 
 推荐使用 Helm Chart 安装 Kubernetes Dashboard：
 
@@ -255,7 +255,7 @@ kubectl get secret -n kubernetes-dashboard \
   -o jsonpath="{.data.token}" | base64 --decode
 ```
 
-### 手动安装
+### 7.2 手动安装 {/* #手动安装 */}
 
 如果不使用 Helm，可以直接应用官方的 YAML 文件：
 
@@ -286,9 +286,9 @@ subjects:
 EOF
 ```
 
-## 访问 Dashboard
+## 8. 访问 Dashboard {/* #访问-dashboard */}
 
-### 端口转发访问
+### 8.1 端口转发访问 {/* #端口转发访问 */}
 
 ```bash
 # 创建端口转发
@@ -297,7 +297,7 @@ kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard-kong-p
 
 然后访问 `https://localhost:8443`
 
-### Ingress 访问
+### 8.2 Ingress 访问 {/* #ingress-访问 */}
 
 创建 Ingress 资源以提供外部访问：
 
@@ -324,9 +324,9 @@ spec:
               number: 443
 ```
 
-## 认证与授权
+## 9. 认证与授权 {/* #认证与授权 */}
 
-### 令牌认证
+### 9.1 令牌认证 {/* #令牌认证 */}
 
 1. 获取 ServiceAccount 的访问令牌：
 
@@ -339,44 +339,44 @@ spec:
 2. 在 Dashboard 登录页面选择 "Token" 认证方式
 3. 输入获取到的令牌
 
-### Kubeconfig 认证
+### 9.2 Kubeconfig 认证 {/* #kubeconfig-认证 */}
 
 Dashboard 也支持使用 kubeconfig 文件进行认证，需要配置适当的 RBAC 权限。
 
-## 界面功能
+## 10. 界面功能 {/* #界面功能 */}
 
-### 主页面
+### 10.1 主页面 {/* #主页面 */}
 
 - 显示集群概览信息
 - 节点状态和工作负载统计
 - 最近的事件和告警
 
-### 工作负载页面
+### 10.2 工作负载页面 {/* #工作负载页面 */}
 
 - 查看和管理 Deployment、Pod、ReplicaSet 等
 - 执行扩缩容、滚动更新等操作
 - 查看 Pod 日志和事件
 
-### 服务发现页面
+### 10.3 服务发现页面 {/* #服务发现页面 */}
 
 - 管理 Service 和 Ingress 资源
 - 查看端点信息
 
-### 配置页面
+### 10.4 配置页面 {/* #配置页面 */}
 
 - 查看和管理 ConfigMap 和 Secret
 - 查看 PersistentVolume 和 PersistentVolumeClaim
 
-## 安全注意事项
+## 11. 安全注意事项 {/* #安全注意事项 */}
 
 1. **HTTPS 访问**：始终使用 HTTPS 访问 Dashboard
 2. **最小权限原则**：不要为所有用户分配 cluster-admin 权限
 3. **网络隔离**：在生产环境中使用防火墙和网络策略限制访问
 4. **定期更新**：及时更新到最新版本以获取安全补丁
 
-## 故障排查
+## 12. 故障排查 {/* #故障排查 */}
 
-### 常见问题
+### 12.1 常见问题 {/* #常见问题 */}
 
 **无法访问 Dashboard**
 
@@ -395,7 +395,7 @@ Dashboard 也支持使用 kubeconfig 文件进行认证，需要配置适当的 
 - 检查用户角色和权限绑定
 - 确认 ClusterRoleBinding 配置正确
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Dashboard GitHub](https://github.com/kubernetes/dashboard)
 - [官方文档](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)

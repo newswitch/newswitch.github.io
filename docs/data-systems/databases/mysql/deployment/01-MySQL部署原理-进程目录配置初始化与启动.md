@@ -2,8 +2,8 @@
 title: "MySQL 部署原理：进程、目录、配置、初始化与启动"
 sidebar_label: "01. MySQL 部署原理：进程、目录、配置、初始化与启动"
 sidebar_position: 1
-tags: [MySQL, mysqld, systemd, 初始化, 配置]
 description: "从 mysqld 启动路径理解 MySQL 部署：软件目录、配置优先级、数据目录初始化、权限、服务托管、启动与关闭。"
+tags: [MySQL, mysqld, systemd, 初始化, 配置]
 ---
 
 # MySQL 部署原理：进程、目录、配置、初始化与启动
@@ -51,7 +51,7 @@ SHOW VARIABLES WHERE Variable_name IN (
 );
 ```
 
-### 常见目录的职责
+### 2.1 常见目录的职责 {/* #常见目录的职责 */}
 
 | 对象 | 含义 | 可否随意复制 |
 | --- | --- | --- |
@@ -132,7 +132,7 @@ mysqld --initialize --user=mysql --datadir=/srv/mysql/data
 
 `--initialize` 会生成随机且过期的初始管理密码，密码信息进入错误日志；`--initialize-insecure` 创建无密码管理账户，只能用于受到严格隔离的临时实验，生产不应使用。
 
-### 初始化前的五项确认
+### 4.1 初始化前的五项确认 {/* #初始化前的五项确认 */}
 
 1. `datadir` 是专用且为空的目标目录；
 2. 真实路径不是错误挂载、根目录或别的实例目录；
@@ -144,7 +144,7 @@ mysqld --initialize --user=mysql --datadir=/srv/mysql/data
 
 ## 5. 启动控制器只有一个
 
-### systemd 模型
+### 5.1 systemd 模型 {/* #systemd-模型 */}
 
 ```text
 systemctl start mysqld
@@ -175,7 +175,7 @@ TimeoutStopSec=300
 
 之后执行 `systemctl daemon-reload`，并在维护窗口验证启动、停止与超时行为。
 
-### 容器与 Operator 模型
+### 5.2 容器与 Operator 模型 {/* #容器与-operator-模型 */}
 
 容器运行时负责进程，Kubernetes Deployment/StatefulSet 负责 Pod，Operator 再根据 `InnoDBCluster` 自定义资源协调拓扑。层级越多，越不能只看最外层状态：
 

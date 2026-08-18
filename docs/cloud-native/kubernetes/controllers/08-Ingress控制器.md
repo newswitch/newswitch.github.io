@@ -2,8 +2,8 @@
 title: "Ingress 控制器"
 sidebar_label: "08. Ingress 控制器"
 sidebar_position: 8
-tags: [Kubernetes, 控制器, 学习路线]
 description: "深入了解 Kubernetes Ingress 控制器的作用、官方支持的控制器类型、第三方控制器选择，以及如何在集群中部署和管理多个 Ingress 控制器。"
+tags: [Kubernetes, 控制器, 学习路线]
 ---
 
 # Ingress 控制器
@@ -12,7 +12,7 @@ description: "深入了解 Kubernetes Ingress 控制器的作用、官方支持�
 
 在 Kubernetes 集群中，若希望 [Ingress](../../../networking/kubernetes/service-routing/04-Ingress.md) 资源能够正常工作，必须部署至少一个 Ingress 控制器。与作为 `kube-controller-manager` 组件自动启动的其他控制器不同，Ingress 控制器需要用户根据实际需求单独部署和管理。选择合适的 Ingress 控制器对于集群的网络能力和安全性至关重要。
 
-## 官方支持的控制器
+## 1. 官方支持的控制器 {/* #官方支持的控制器 */}
 
 Kubernetes 社区官方维护和支持多种 Ingress 控制器，适用于不同的云平台和场景。下表总结了主流官方控制器及其适用环境。
 
@@ -22,7 +22,7 @@ Kubernetes 社区官方维护和支持多种 Ingress 控制器，适用于不同
 | GCE Ingress Controller          | Google Cloud 原生支持  |
 | NGINX Ingress Controller        | 基于 NGINX 的开源实现  |
 
-## 第三方控制器
+## 2. 第三方控制器 {/* #第三方控制器 */}
 
 除了官方控制器，社区还提供了丰富的第三方 Ingress 控制器选择，满足不同云环境、企业级和开源需求。
 
@@ -143,11 +143,11 @@ Kubernetes 社区官方维护和支持多种 Ingress 控制器，适用于不同
     </tbody>
 </table>
 
-## 多控制器管理
+## 3. 多控制器管理 {/* #多控制器管理 */}
 
 在复杂的生产环境中，往往需要同时运行多个 Ingress 控制器，以满足不同业务或团队的需求。Kubernetes 提供了灵活的机制来实现多控制器共存和精细化流量管理。
 
-### 使用 IngressClass 资源
+### 3.1 使用 IngressClass 资源 {/* #使用-ingressclass-资源 */}
 
 通过 IngressClass 资源，可以在同一集群中部署和管理多个 Ingress 控制器。以下 YAML 示例展示了如何定义一个名为 `nginx` 的 IngressClass：
 
@@ -160,7 +160,7 @@ spec:
   controller: k8s.io/ingress-nginx
 ```
 
-### 指定控制器类型
+### 3.2 指定控制器类型 {/* #指定控制器类型 */}
 
 创建 Ingress 资源时，可以通过 `ingressClassName` 字段明确指定所用控制器类型。以下 YAML 示例演示了如何将 Ingress 资源绑定到特定控制器：
 
@@ -184,7 +184,7 @@ spec:
               number: 80
 ```
 
-### 默认控制器设置
+### 3.3 默认控制器设置 {/* #默认控制器设置 */}
 
 如果未在 Ingress 资源中指定 `ingressClassName`，Kubernetes 会自动应用默认的 IngressClass。可以通过为 IngressClass 资源添加如下注解来设置默认控制器：
 
@@ -194,7 +194,7 @@ metadata:
     ingressclass.kubernetes.io/is-default-class: "true"
 ```
 
-## 选择建议
+## 4. 选择建议 {/* #选择建议 */}
 
 选择合适的 Ingress 控制器时，建议综合考虑以下因素，以确保网络架构的稳定性和可扩展性。
 
@@ -206,10 +206,10 @@ metadata:
 | 社区支持         | 项目活跃度和文档完善性                 |
 | 运维复杂度       | 部署、配置和维护的易用性               |
 
-## 总结
+## 5. 总结 {/* #总结 */}
 
 Ingress 控制器是 Kubernetes 网络流量管理的核心，直接影响集群的可扩展性、安全性和高可用性。合理选择和配置 Ingress 控制器，结合 IngressClass 等机制实现多控制器协同，是构建现代云原生网络架构的关键。建议根据实际业务需求、云平台特性和团队运维能力，选择最适合的 Ingress 控制器方案，并持续关注社区动态和最佳实践。
 
-## 参考文献
+## 6. 参考资料 {/* #参考文献 */}
 
 - [Ingress Controllers - kubernetes.io](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)

@@ -2,8 +2,8 @@
 title: "CephFS 实战：MDS、客户端挂载、Subvolume、Quota 与快照"
 sidebar_label: "12. CephFS 实战：MDS、客户端挂载、Subvolume、Quota 与快照"
 sidebar_position: 12
-tags: [Ceph, 学习路线, 存储, CephFS]
 description: "创建 CephFS、部署 MDS 主备、Subvolume、最小权限客户端挂载、Quota、快照 Clone 与 MDS 故障排查。"
+tags: [Ceph, 学习路线, 存储, CephFS]
 ---
 
 # CephFS 实战：MDS、客户端挂载、Subvolume、Quota 与快照
@@ -43,8 +43,7 @@ CephFS 常见场景包括：
 → 进行 MDS 与客户端故障排查
 ```
 
-
-## CephFS 是什么
+## 1. CephFS 是什么 {/* #cephfs-是什么 */}
 
 CephFS 是构建在 RADOS 之上的 POSIX 分布式文件系统。
 
@@ -80,7 +79,7 @@ flowchart TD
     C --> E["Data Pool"]
 ```
 
-### 客户端数据是否经过 MDS
+### 1.1 客户端数据是否经过 MDS {/* #客户端数据是否经过-mds */}
 
 一般情况下：
 
@@ -90,7 +89,7 @@ flowchart TD
 
 所以 MDS 不是所有文件数据的转发代理，但 MDS 性能会直接影响创建文件、遍历目录、重命名、权限检查等元数据操作。
 
-## CephFS 与 RBD、NFS 有什么区别
+## 2. CephFS 与 RBD、NFS 有什么区别 {/* #cephfs-与-rbdnfs-有什么区别 */}
 
 | 对比项 | RBD | CephFS | NFS |
 | --- | --- | --- | --- |
@@ -105,9 +104,9 @@ CephFS 不等于 NFS。CephFS 客户端需要理解 Ceph 协议并访问 MON、M
 
 如果旧业务只能使用 NFS，可以通过 NFS-Ganesha 导出 CephFS，但会增加一层网关和运维组件。这部分可以放到后续 NFS 专题文章。
 
-## CephFS 的核心组件
+## 3. CephFS 的核心组件 {/* #cephfs-的核心组件 */}
 
-### 1. Metadata Pool
+### 3.1 Metadata Pool {/* #1-metadata-pool */}
 
 保存文件系统元数据和 MDS Journal。
 
@@ -120,7 +119,7 @@ Metadata Pool 的特点：
 - 生产中通常应放在低延迟 SSD/NVMe 设备类上
 - 需要较高保护级别和可靠备份策略
 
-### 2. Data Pool
+### 3.2 Data Pool {/* #2-data-pool */}
 
 保存文件内容对应的 RADOS 对象。
 
@@ -131,7 +130,7 @@ Data Pool 可以根据业务选择：
 
 CephFS 的默认 Data Pool 还会保存 Inode Backtrace 等小对象信息，因此官方建议默认 Data Pool 优先使用性能较好的副本池，再附加 EC Pool 保存特定目录的大文件数据。
 
-### 3. MDS
+### 3.3 MDS {/* #3-mds */}
 
 MDS 是 Metadata Server。
 
@@ -146,9 +145,9 @@ MDS 负责：
 
 MDS 本地磁盘不是元数据的唯一保存位置。MDS 故障后，Standby 可以读取 RADOS 中的 Journal 和 Metadata Pool 接管服务。
 
-## MDS Active、Standby 和 Rank
+## 4. MDS Active、Standby 和 Rank {/* #mds-activestandby-和-rank */}
 
-### 1. 单 Active MDS
+### 4.1 单 Active MDS {/* #1-单-active-mds */}
 
 默认常见形态：
 
@@ -159,7 +158,7 @@ MDS 本地磁盘不是元数据的唯一保存位置。MDS 故障后，Standby �
 
 Active 处理当前文件系统元数据，Standby 等待接管。
 
-### 2. 多 Active MDS
+### 4.2 多 Active MDS {/* #2-多-active-mds */}
 
 CephFS 支持多个 Active Rank，把元数据树动态分区给不同 MDS 处理。
 
@@ -178,7 +177,7 @@ max_mds = 2  → 两个 Active Rank
 
 在没有证明单 Active MDS 是瓶颈前，不要只为了「高可用」提高 `max_mds`。高可用主要依靠 Standby；多 Active 主要用于性能扩展。
 
-### 3. MDS 内存为什么重要
+### 4.3 MDS 内存为什么重要 {/* #3-mds-内存为什么重要 */}
 
 MDS 会在内存中缓存活跃元数据。目录和小文件越多、客户端越多、工作集越大，MDS 内存需求越高。
 
@@ -191,7 +190,7 @@ MDS 会在内存中缓存活跃元数据。目录和小文件越多、客户端�
 
 因此 CephFS 规划不能只看文件数据容量，还要估算文件数量、目录宽度、并发客户端和元数据工作集。
 
-## 创建 CephFS
+## 5. 创建 CephFS {/* #创建-cephfs */}
 
 实验示例：
 
@@ -202,7 +201,7 @@ MDS 主机：ceph01、ceph02
 挂载点：/mnt/team-a
 ```
 
-### 1. 检查集群
+### 5.1 检查集群 {/* #1-检查集群 */}
 
 ```bash
 ceph -s
@@ -210,7 +209,7 @@ ceph orch status
 ceph orch host ls
 ```
 
-### 2. 使用 Volume 命令创建
+### 5.2 使用 Volume 命令创建 {/* #2-使用-volume-命令创建 */}
 
 ```bash
 ceph fs volume create cephfs-prod
@@ -228,7 +227,7 @@ ceph orch ls --service_type mds
 ceph orch ps --daemon_type mds --refresh
 ```
 
-### 3. 显式声明 MDS 主备位置
+### 5.3 显式声明 MDS 主备位置 {/* #3-显式声明-mds-主备位置 */}
 
 为了让 MDS 位置清晰，可以创建 `mds.cephfs-prod.yaml`：
 
@@ -257,7 +256,7 @@ ceph orch ps --service_name mds.cephfs-prod --refresh
 
 两台主机应位于独立故障域，且具备足够 CPU、内存和低延迟网络。
 
-### 4. 检查自动创建的 Pool
+### 5.4 检查自动创建的 Pool {/* #4-检查自动创建的-pool */}
 
 ```bash
 ceph osd pool ls detail
@@ -277,7 +276,7 @@ ceph df detail
 
 `ceph fs volume create` 解决的是创建流程，不会替你完成所有生产 Pool 设计。
 
-## 手工创建方式为什么仍需要了解
+## 6. 手工创建方式为什么仍需要了解 {/* #手工创建方式为什么仍需要了解 */}
 
 某些生产环境需要预先创建带有指定 CRUSH 规则的 Pool。
 
@@ -307,7 +306,7 @@ ceph fs new cephfs-prod cephfs-prod-metadata cephfs-prod-data
 
 学习环境可以使用 Volume 命令，生产环境应明确记录自动创建了什么。
 
-## 创建 Subvolume
+## 7. 创建 Subvolume {/* #创建-subvolume */}
 
 Subvolume 是 CephFS 中的独立目录树抽象，常被 Ceph CSI 和 OpenStack Manila 用作租户卷。
 
@@ -338,17 +337,17 @@ ceph fs subvolume getpath cephfs-prod team-a
 /volumes/_nogroup/team-a/<uuid>
 ```
 
-### 为什么使用 `--namespace-isolated`
+### 7.1 为什么使用 `--namespace-isolated` {/* #为什么使用---namespace-isolated */}
 
 路径限制主要作用于 MDS 管理的目录层级。为了进一步隔离底层 RADOS 数据，可以让 Subvolume 使用独立 RADOS Namespace，并通过 OSD Caps 限制客户端。
 
 这比只限制挂载路径更适合不受信任的多租户环境。
 
-### Subvolume 大小的含义
+### 7.2 Subvolume 大小的含义 {/* #subvolume-大小的含义 */}
 
 `--size 100G` 通过 Quota 限制该目录树，不是提前分配 100 GiB 物理空间。实际 Raw 占用仍由写入量和 Pool 保护策略决定。
 
-## 创建最小权限 CephFS 用户
+## 8. 创建最小权限 CephFS 用户 {/* #创建最小权限-cephfs-用户 */}
 
 使用 Subvolume 专用授权命令，让 Ceph 同时根据 Subvolume 路径和 RADOS Namespace 生成相应 Caps：
 
@@ -390,11 +389,11 @@ ceph auth get client.team-a
 - 没有 Admin 权限
 - 不能修改 Layout 或 Quota，除非明确授予相应能力
 
-## 使用 Kernel Client 挂载 CephFS
+## 9. 使用 Kernel Client 挂载 CephFS {/* #使用-kernel-client-挂载-cephfs */}
 
 Kernel Client 通常是大多数 Linux 场景的首选。
 
-### 1. 准备客户端
+### 9.1 准备客户端 {/* #1-准备客户端 */}
 
 客户端需要：
 
@@ -415,13 +414,13 @@ ceph -s --id team-a
 
 客户端内核中的 CephFS 驱动版本与 Ceph 服务端版本不是同一个概念。旧内核可能缺少新 Feature 或包含已知 Bug，应按操作系统厂商支持矩阵验证。
 
-### 2. 创建挂载点
+### 9.2 创建挂载点 {/* #2-创建挂载点 */}
 
 ```bash
 mkdir -p /mnt/team-a
 ```
 
-### 3. 挂载授权 Subvolume
+### 9.3 挂载授权 Subvolume {/* #3-挂载授权-subvolume */}
 
 使用前面获取的真实 Subvolume 路径：
 
@@ -442,7 +441,7 @@ team-a@.cephfs-prod
 
 如果客户端没有可用的 `ceph.conf`，需要显式提供 MON 地址和 FSID。生产中应使用多个 MON 地址或可靠的配置发现方式，不要只绑定单个 MON。
 
-### 4. 验证挂载
+### 9.4 验证挂载 {/* #4-验证挂载 */}
 
 ```bash
 findmnt /mnt/team-a
@@ -454,7 +453,7 @@ ls -la /mnt/team-a
 
 在第二台授权客户端挂载同一 Subvolume，应能看到相同文件。这正是 CephFS 与普通 RBD 文件系统的关键区别。
 
-### 5. 安全卸载
+### 9.5 安全卸载 {/* #5-安全卸载 */}
 
 ```bash
 sync
@@ -463,9 +462,9 @@ umount /mnt/team-a
 
 卸载 Busy 时使用 `fuser` 和 `lsof` 定位占用，不要把强制或 Lazy Unmount 作为普通流程。
 
-## Kernel Client 与 Ceph-FUSE 怎么选
+## 10. Kernel Client 与 Ceph-FUSE 怎么选 {/* #kernel-client-与-ceph-fuse-怎么选 */}
 
-### Kernel Client
+### 10.1 Kernel Client {/* #kernel-client */}
 
 优点：
 
@@ -480,7 +479,7 @@ umount /mnt/team-a
 - 内核升级需要兼容性验证
 - 故障可能影响内核 IO 路径
 
-### Ceph-FUSE
+### 10.2 Ceph-FUSE {/* #ceph-fuse */}
 
 示例：
 
@@ -506,14 +505,14 @@ ceph-fuse \
 
 应使用真实业务压测决定，而不是只凭「内核一定快」或「FUSE 一定兼容」。
 
-## CephFS Quota
+## 11. CephFS Quota {/* #cephfs-quota */}
 
 CephFS 可以对目录限制：
 
 - 最大字节数：`ceph.quota.max_bytes`
 - 最大文件数：`ceph.quota.max_files`
 
-### 1. 通过 Subvolume 命令管理
+### 11.1 通过 Subvolume 命令管理 {/* #1-通过-subvolume-命令管理 */}
 
 创建时指定：
 
@@ -533,7 +532,7 @@ ceph fs subvolume resize cephfs-prod team-a 200G
 ceph fs subvolume resize cephfs-prod team-a 50G --no_shrink
 ```
 
-### 2. 通过扩展属性管理普通目录
+### 11.2 通过扩展属性管理普通目录 {/* #2-通过扩展属性管理普通目录 */}
 
 在已挂载 CephFS 目录中：
 
@@ -558,7 +557,7 @@ setfattr -x ceph.quota.max_files /mnt/cephfs/project-a
 
 客户端要修改 Quota 扩展属性，需要 CephFS Caps 中的 `p` 权限。普通业务用户不应默认获得此权限。
 
-### 3. Quota 不是强安全边界
+### 11.3 Quota 不是强安全边界 {/* #3-quota-不是强安全边界 */}
 
 CephFS Quota 主要由正常客户端配合执行。它不能替代：
 
@@ -570,9 +569,9 @@ CephFS Quota 主要由正常客户端配合执行。它不能替代：
 
 同时，Quota 值是逻辑使用限制，Raw 消耗还要乘副本或 EC 开销。
 
-## CephFS 快照和 Clone
+## 12. CephFS 快照和 Clone {/* #cephfs-快照和-clone */}
 
-### 1. 创建 Subvolume 快照
+### 12.1 创建 Subvolume 快照 {/* #1-创建-subvolume-快照 */}
 
 ```bash
 ceph fs subvolume snapshot create \
@@ -594,7 +593,7 @@ ceph fs subvolume snapshot getpath \
   cephfs-prod team-a before-upgrade
 ```
 
-### 2. 创建 Clone
+### 12.2 创建 Clone {/* #2-创建-clone */}
 
 ```bash
 ceph fs subvolume snapshot clone \
@@ -619,7 +618,7 @@ failed
 canceled
 ```
 
-### 3. 删除快照
+### 12.3 删除快照 {/* #3-删除快照 */}
 
 ```bash
 ceph fs subvolume snapshot rm \
@@ -628,7 +627,7 @@ ceph fs subvolume snapshot rm \
 
 如果存在进行中的 Clone，删除会失败。不要使用 `--force` 掩盖依赖关系。
 
-### 4. 一致性问题
+### 12.4 一致性问题 {/* #4-一致性问题 */}
 
 CephFS 快照能保存目录树的时间点状态，但业务级一致性仍需要考虑：
 
@@ -640,7 +639,7 @@ CephFS 快照能保存目录树的时间点状态，但业务级一致性仍需�
 
 快照不是异地备份。重要数据仍需 CephFS Mirror、备份软件或其他独立复制方案。
 
-## 增加附加 Data Pool
+## 13. 增加附加 Data Pool {/* #增加附加-data-pool */}
 
 一个 CephFS 可以关联多个 Data Pool。
 
@@ -669,9 +668,9 @@ ceph fs add_data_pool cephfs-prod cephfs-archive-ec
 
 不要在不知道哪些文件使用某 Pool 时执行 `ceph fs rm_data_pool`。仍引用该 Pool 的文件可能变得不可访问。
 
-## MDS 高可用与性能扩展
+## 14. MDS 高可用与性能扩展 {/* #mds-高可用与性能扩展 */}
 
-### 1. 检查 MDS 状态
+### 14.1 检查 MDS 状态 {/* #1-检查-mds-状态 */}
 
 ```bash
 ceph fs status cephfs-prod
@@ -688,7 +687,7 @@ ceph orch ps --daemon_type mds --refresh
 - 是否发生频繁 Failover
 - Daemon 版本和内存是否一致
 
-### 2. 调整 Active MDS 数量
+### 14.2 调整 Active MDS 数量 {/* #2-调整-active-mds-数量 */}
 
 ```bash
 ceph fs set cephfs-prod max_mds 2
@@ -703,7 +702,7 @@ ceph fs set cephfs-prod max_mds 2
 - 故障切换演练
 - 调整后的观察和回滚计划
 
-### 3. 多 MDS 不一定解决慢 IO
+### 14.3 多 MDS 不一定解决慢 IO {/* #3-多-mds-不一定解决慢-io */}
 
 如果慢的是大文件顺序读写，瓶颈更可能在 OSD、网络或 Data Pool；增加 MDS 只会改善元数据部分。
 
@@ -716,9 +715,9 @@ ceph fs set cephfs-prod max_mds 2
 - 深层目录和权限操作
 - 元数据缓存工作集过大
 
-## CephFS 监控重点
+## 15. CephFS 监控重点 {/* #cephfs-监控重点 */}
 
-### 1. 文件系统健康
+### 15.1 文件系统健康 {/* #1-文件系统健康 */}
 
 ```bash
 ceph fs status
@@ -726,7 +725,7 @@ ceph mds stat
 ceph health detail
 ```
 
-### 2. MDS 资源
+### 15.2 MDS 资源 {/* #2-mds-资源 */}
 
 - CPU 使用率
 - RSS 与 Cache 内存
@@ -736,7 +735,7 @@ ceph health detail
 - Session 数量
 - Standby 与 Failover 次数
 
-### 3. Pool 资源
+### 15.3 Pool 资源 {/* #3-pool-资源 */}
 
 ```bash
 ceph df detail
@@ -746,7 +745,7 @@ ceph osd df tree
 
 分别观察 Metadata Pool 和各 Data Pool，不能只看 CephFS 逻辑总量。
 
-### 4. 客户端
+### 15.4 客户端 {/* #4-客户端 */}
 
 - 挂载是否存在
 - IO 延迟和错误
@@ -756,9 +755,9 @@ ceph osd df tree
 - 长期不释放的 Capabilities
 - 被驱逐或 Blocklisted 的客户端
 
-## 常见 CephFS 故障排查
+## 16. 常见 CephFS 故障排查 {/* #常见-cephfs-故障排查 */}
 
-### 1. 客户端挂载失败
+### 16.1 客户端挂载失败 {/* #1-客户端挂载失败 */}
 
 检查：
 
@@ -782,7 +781,7 @@ journalctl -k --since '30 minutes ago'
 - 时钟或 DNS 异常
 - 客户端被 Blocklist
 
-### 2. `df` 显示的容量与集群不同
+### 16.2 `df` 显示的容量与集群不同 {/* #2-df-显示的容量与集群不同 */}
 
 如果挂载根目录或 Subvolume 设置了 Quota，`df` 可能显示：
 
@@ -800,7 +799,7 @@ ceph fs subvolume info cephfs-prod team-a
 ceph df detail
 ```
 
-### 3. MDS Slow Request
+### 16.3 MDS Slow Request {/* #3-mds-slow-request */}
 
 分析方向：
 
@@ -815,7 +814,7 @@ ceph df detail
 
 不要只重启 MDS。重启可能触发 Failover 和 Cache 重建，短期延迟反而更高。
 
-### 4. Active MDS 故障
+### 16.4 Active MDS 故障 {/* #4-active-mds-故障 */}
 
 正常情况下 Standby 会接管。检查：
 
@@ -835,7 +834,7 @@ ceph health detail
 - Metadata Pool 是否健康
 - 是否所有 MDS 都位于同一故障 Host
 
-### 5. 客户端卡死或无法卸载
+### 16.5 客户端卡死或无法卸载 {/* #5-客户端卡死或无法卸载 */}
 
 检查：
 
@@ -856,7 +855,7 @@ dmesg -T | tail -n 200
 
 Lazy Unmount 只是从当前命名空间隐藏挂载关系，不一定终止底层 IO，应谨慎使用。
 
-## 生产 CephFS 检查表
+## 17. 生产 CephFS 检查表 {/* #生产-cephfs-检查表 */}
 
 - [ ] 已确认业务需要共享文件，而不是块或对象接口
 - [ ] Metadata Pool 使用副本池和低延迟设备
@@ -874,7 +873,7 @@ Lazy Unmount 只是从当前命名空间隐藏挂载关系，不一定终止底�
 - [ ] 监控 MDS、Metadata Pool、Data Pool 和客户端
 - [ ] 已演练 MDS 故障、客户端重连和 Host 维护
 
-## 常见误区
+## 18. 常见误区 {/* #常见误区 */}
 
 **误区 1：CephFS 数据全部经过 MDS**
 
@@ -900,7 +899,7 @@ Quota 限制逻辑使用量，不会提前预留 Raw 空间。
 
 快照仍在同一集群中，不能抵抗所有集群级故障和高权限误操作。
 
-## 本篇总结
+## 19. 本篇总结 {/* #本篇总结 */}
 
 CephFS 的数据路径可以概括为：
 
@@ -926,8 +925,7 @@ CephFS 的数据路径可以概括为：
 
 **部署 S3 对象网关、创建用户与 Access Key、使用 AWS CLI 访问 Bucket，并配置 Quota、版本控制和高可用入口。**
 
-
-## 自测题
+## 20. 自测题 {/* #自测题 */}
 
 1. CephFS 为什么需要 Metadata Pool 和 Data Pool？
 2. 文件数据是否必须经过 MDS？
@@ -940,7 +938,7 @@ CephFS 的数据路径可以概括为：
 9. CephFS Subvolume Clone 为什么需要查看异步状态？
 10. MDS Slow Request 应该从哪些层面排查？
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [Ceph File System](https://docs.ceph.com/en/latest/cephfs/)
 - [Create a CephFS File System](https://docs.ceph.com/en/latest/cephfs/createfs/)

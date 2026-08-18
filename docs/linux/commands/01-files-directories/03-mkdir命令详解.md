@@ -1,11 +1,12 @@
 ---
-title: mkdir 命令详解：目录创建、父目录、权限与安全上下文
+title: "mkdir 命令详解：目录创建、父目录、权限与安全上下文"
+sidebar_label: "03. mkdir 命令详解：目录创建、父目录、权限与安全上下文"
 sidebar_position: 3
-description: 完整讲解 GNU coreutils mkdir 的全部长短参数、递归创建、mode 与 umask、SELinux/SMACK 上下文、错误处理和安全实验。
+description: "完整讲解 GNU coreutils mkdir 的全部长短参数、递归创建、mode 与 umask、SELinux/SMACK 上下文、错误处理和安全实验。"
 tags: [Linux, mkdir, GNU coreutils, 文件系统, 权限]
 ---
 
-# `mkdir` 命令详解：目录创建、父目录、权限与安全上下文
+# mkdir 命令详解：目录创建、父目录、权限与安全上下文
 
 `mkdir` 用于创建目录。它改变文件系统目录项，属于 `[W]` 操作。生产脚本中的关键不只是“目录能创建”，还要确保父目录、权限、所有者、安全上下文和并发行为符合预期。
 
@@ -256,11 +257,10 @@ stat -c '%a %U:%G %n' "$target"
 - 能处理以 `-` 开头或含空格的目录名。
 - 能从权限、挂载、inode和安全上下文定位创建失败。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：mkdir invocation](https://www.gnu.org/software/coreutils/manual/html_node/mkdir-invocation.html)
 
 上一篇：[`ls` 命令详解](./02-ls命令详解.md)
 
 下一篇：[`rmdir` 命令详解](./04-rmdir命令详解.md)
-

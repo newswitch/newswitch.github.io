@@ -2,8 +2,8 @@
 title: "多集群 GPU 算力调度：配额、数据位置与故障域"
 sidebar_label: "15. 多集群 GPU 算力调度：配额、数据位置与故障域"
 sidebar_position: 15
-tags: [多集群, GPU, MultiKueue, Karmada, 调度, 数据本地性, 容灾]
 description: "从集群能力、GPU 配额、模型与数据位置、网络成本和故障域出发设计多集群训练与推理放置，并分析 MultiKueue 的职责边界。"
+tags: [多集群, GPU, MultiKueue, Karmada, 调度, 数据本地性, 容灾]
 ---
 
 # 多集群 GPU 算力调度：配额、数据位置与故障域
@@ -86,7 +86,7 @@ health:
 
 ## 4. 硬约束与软评分
 
-### 硬约束
+### 4.1 硬约束 {/* #硬约束 */}
 
 - GPU SKU/显存/数量；
 - 驱动/CUDA/镜像架构；
@@ -100,7 +100,7 @@ health:
 
 不满足即过滤。
 
-### 软评分
+### 4.2 软评分 {/* #软评分 */}
 
 - 本地已有模型缓存；
 - 数据集副本距离；
@@ -115,7 +115,7 @@ health:
 
 ## 5. 训练与推理放置不同
 
-### 训练
+### 5.1 训练 {/* #训练 */}
 
 - Job 可排队；
 - 多 Pod/Gang；
@@ -125,7 +125,7 @@ health:
 - 可考虑 Spot/成本；
 - 通常整个作业只在一个集群运行。
 
-### 在线推理
+### 5.2 在线推理 {/* #在线推理 */}
 
 - 持续服务与 SLO；
 - 模型热副本/缓存关键；
@@ -233,7 +233,7 @@ Job submitted to manager
 
 ## 11. AllAtOnce 与 Incremental
 
-### AllAtOnce
+### 11.1 AllAtOnce {/* #allatonce */}
 
 向多个 worker 创建候选，让它们竞争准入：
 
@@ -241,7 +241,7 @@ Job submitted to manager
 - 对所有集群 API/控制器和 quota 产生候选压力；
 - 需及时清理未选。
 
-### Incremental
+### 11.2 Incremental {/* #incremental */}
 
 按优先顺序分批 nomination：
 
@@ -422,7 +422,7 @@ global workload UID
 
 应能建设集群能力目录，把 GPU/网络/数据/合规分为硬约束与软评分；设计全局与本地配额；解释 MultiKueue manager/worker/AdmissionCheck；处理候选、唯一执行、状态同步与清理；设计训练 Checkpoint 恢复和推理切流；按故障域预留真实容量。
 
-## 参考资料
+## 24. 参考资料 {/* #参考资料 */}
 
 - [Kueue MultiKueue concepts](https://kueue.sigs.k8s.io/docs/concepts/multikueue/)
 - [Set up MultiKueue](https://kueue.sigs.k8s.io/docs/tasks/manage/setup_multikueue/)

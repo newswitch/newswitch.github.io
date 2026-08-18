@@ -2,8 +2,8 @@
 title: "推理请求从 HTTP 到首个 Token 的完整生命周期"
 sidebar_label: "07. 推理请求从 HTTP 到首个 Token 的完整生命周期"
 sidebar_position: 7
-tags: [vLLM, LLM, 推理, HTTP, SSE, Tokenization, TTFT]
 description: "追踪一次 OpenAI 兼容流式请求经过网关、API Server、Tokenizer、EngineCore、Scheduler、Worker、GPU 和 SSE 返回的完整路径。"
+tags: [vLLM, LLM, 推理, HTTP, SSE, Tokenization, TTFT]
 ---
 
 # 推理请求从 HTTP 到首个 Token 的完整生命周期
@@ -19,8 +19,6 @@ KV Cache 分配、Prefill、采样和跨进程通信。
 
 本文以 vLLM V1 的工程结构为主，重点解释稳定的请求阶段，不把内部类名当成永远不变的
 API。
-
----
 
 ## 1. 完整路径
 
@@ -77,8 +75,6 @@ t8  最后 token 产生
 t9  客户端收到结束标记
 ```
 
----
-
 ## 2. 第一段：客户端与 HTTP
 
 一个流式请求示例：
@@ -114,8 +110,6 @@ t9  客户端收到结束标记
 
 只限制请求 QPS 不足以保护 LLM。一个 100 token 请求和一个 100K token 请求的成本完全
 不同。
-
----
 
 ## 3. 第二段：Gateway
 
@@ -158,8 +152,6 @@ release_channel
 ```
 
 `request_id` 放日志和 Trace，不放 Prometheus Label。
-
----
 
 ## 4. 第三段：OpenAI 兼容 API Server
 
@@ -220,8 +212,6 @@ Tokenizer 把文本转成 Token ID：
 
 如果 GPU 利用率低但请求在入口堆积，应检查 Tokenization 和前处理，而不是立即增加 GPU。
 
----
-
 ## 5. 第四段：Engine Client 与进程边界
 
 生产架构通常把 HTTP Frontend 与 EngineCore 解耦：
@@ -250,8 +240,6 @@ EngineCore Process
 - EngineCore 是否存活。
 - Frontend 请求数与 Engine 请求数是否一致。
 
----
-
 ## 6. 第五段：请求进入 Scheduler
 
 Scheduler 接收的不是原始字符串，而是已经处理的请求：
@@ -277,8 +265,6 @@ LoRA / multimodal / structured-output metadata
 
 V1 的核心思想是按“本轮为每个请求调度多少 token”分配统一 Token Budget，而不是把
 Prefill 和 Decode 固化为完全不同的调度器。
-
----
 
 ## 7. 第六段：KV Cache 分配
 
@@ -309,8 +295,6 @@ Physical KV Blocks
 
 KV Cache 不足可能表现为排队或抢占，并不一定触发 CUDA OOM。
 
----
-
 ## 8. 第七段：Prefill
 
 Prefill 一次处理 Prompt 中尚未缓存的多个 token：
@@ -334,7 +318,7 @@ Prompt Tokens
 
 如果 Prefix Cache 命中一部分 Prompt，只需计算未命中的后缀。
 
-### 首 token 何时产生
+### 8.1 首 token 何时产生 {/* #首-token-何时产生 */}
 
 Prefill 得到最后位置的 logits 后，Sampler 根据：
 
@@ -357,8 +341,6 @@ Engine 产生首 token
 ```
 
 三者之间还可能有 IPC、序列化、代理 Buffer 和网络延迟。
-
----
 
 ## 9. 第八段：SSE 首 Token
 
@@ -388,8 +370,6 @@ data: [DONE]
 - API Server Event Loop。
 - SSE 序列化与 Flush。
 
----
-
 ## 10. 第九段：Decode 循环
 
 产生首 token 后进入 Decode：
@@ -416,8 +396,6 @@ data: [DONE]
 
 TPOT/ITL 主要反映 Decode 阶段体验。
 
----
-
 ## 11. 第十段：完成、取消和异常
 
 请求可能因为以下原因结束：
@@ -443,8 +421,6 @@ EOS token
 6. 结束 Trace Span。
 
 客户端取消必须传播到 Engine，否则 GPU 仍会为没人接收的请求生成 token。
-
----
 
 ## 12. 延迟分解
 
@@ -481,8 +457,6 @@ E2E =
 ```text
 decode_duration ≈ output_tokens × average_ITL
 ```
-
----
 
 ## 13. Trace 设计
 
@@ -522,8 +496,6 @@ server.gpu.pool
 - 用户 ID。
 - Request ID Label。
 
----
-
 ## 14. 指标与阶段映射
 
 | 阶段 | 指标 |
@@ -538,8 +510,6 @@ server.gpu.pool
 | 完成 | request success、finish reason、stream completed |
 
 生产指标名称随版本可能变化，应以运行实例 `/metrics` 和官方 Production Metrics 为准。
-
----
 
 ## 15. 五类常见问题
 
@@ -565,11 +535,9 @@ server.gpu.pool
 
 检查：取消传播、反向代理是否感知断连、Engine 是否 abort request。
 
----
-
 ## 16. 实验
 
-### 实验 1：对齐时间点
+### 16.1 实验 1：对齐时间点 {/* #实验-1对齐时间点 */}
 
 同时记录：
 
@@ -580,7 +548,7 @@ server.gpu.pool
 
 确认 `t0～t9` 能在一条请求上对齐。
 
-### 实验 2：代理缓冲
+### 16.2 实验 2：代理缓冲 {/* #实验-2代理缓冲 */}
 
 故意启用和关闭代理 Buffer，比较：
 
@@ -588,17 +556,15 @@ server.gpu.pool
 - Gateway 首字节时间。
 - Client TTFT。
 
-### 实验 3：取消传播
+### 16.3 实验 3：取消传播 {/* #实验-3取消传播 */}
 
 1. 发起长输出流式请求。
 2. 收到若干 token 后关闭客户端。
 3. 观察 Running Request 和 GPU 工作是否快速下降。
 
-### 实验 4：CPU 前处理瓶颈
+### 16.4 实验 4：CPU 前处理瓶颈 {/* #实验-4cpu-前处理瓶颈 */}
 
 增加长 Prompt 并限制 API Server CPU，观察 Tokenize 时间与 GPU 空闲。
-
----
 
 ## 17. 验收清单
 

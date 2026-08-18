@@ -2,15 +2,15 @@
 title: "k0rdent：超级控制平面与平台工程"
 sidebar_label: "04. k0rdent：超级控制平面与平台工程"
 sidebar_position: 4
-tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "k0rdent 是 Mirantis 推出的多集群 Kubernetes 超级控制平面（Super Control Plane），助力平台工程与跨云治理，支持声明式多集群管理、策略模板和集中观测。"
+tags: [Kubernetes, 多集群, PartII, 学习路线]
 ---
 
 # k0rdent：超级控制平面与平台工程
 
 > 平台工程的未来在于统一的超级控制平面，k0rdent 正在重塑多集群 Kubernetes 管理的范式。
 
-## 项目简介与目的
+## 1. 项目简介与目的 {/* #项目简介与目的 */}
 
 [k0rdent](https://github.com/k0rdent/k0rdent) 是 Mirantis 推出的开源“超级控制平面”（Super Control Plane）实现，旨在为企业级平台工程（Platform Engineering）提供一个统一的多集群控制平面。与传统的单集群运维工具不同，k0rdent 更侧重于平台化能力：通过声明式模板、策略引擎与集中化观测来实现跨集群的统一治理与自动化运维。
 
@@ -21,7 +21,7 @@ k0rdent 的主要目标和能力包括：
 - 提供平台层的策略与模板能力（Golden Path / Platform Templates）
 - 集中式的可观测性与 FinOps 支持，便于跨集群监控与成本优化
 
-## k0rdent 核心组件
+## 2. k0rdent 核心组件 {/* #k0rdent-核心组件 */}
 
 k0rdent 的架构由多个模块组成，每个模块对应一个平台职责。下表对各核心组件及其功能进行了总结，便于理解其分工：
 
@@ -35,7 +35,7 @@ k0rdent 的架构由多个模块组成，每个模块对应一个平台职责。
 
 这些模块共同组成了一个分层的“超级控制平面”，可对多云、多集群环境进行集中式治理。
 
-## k0rdent 架构概览
+## 3. k0rdent 架构概览 {/* #k0rdent-架构概览 */}
 
 下图展示了 k0rdent 在多集群体系中的位置与组件关系，有助于理解其整体架构设计：
 
@@ -74,7 +74,7 @@ flowchart TB
 
 实现视角：管理集群（Management Cluster）是控制平面的核心，运行 KCM、KSM、KOF 等控制器。用户通过 GitOps（如 ArgoCD）或 kubectl 将声明式模板应用到管理集群，随后 KCM 与 Cluster API 协同调用云/基础设施 API 完成子集群的创建与配置。
 
-## k0rdent 工作机制
+## 4. k0rdent 工作机制 {/* #k0rdent-工作机制 */}
 
 k0rdent 遵循声明式管理模式（Declarative Management），其工作流程如下：
 
@@ -117,7 +117,7 @@ sequenceDiagram
 
 该流程体现了 k0rdent 的声明式、自动化和闭环治理特性。
 
-## k0rdent 与其他多集群方案对比
+## 5. k0rdent 与其他多集群方案对比 {/* #k0rdent-与其他多集群方案对比 */}
 
 为了帮助读者理解 k0rdent 的定位，下面的表格对比了主流多集群方案的核心差异：
 
@@ -130,7 +130,7 @@ sequenceDiagram
 
 简而言之，Karmada 是“多集群联邦控制面”，Volcano 是“高性能调度器”，而 k0rdent 则是更上层的“超级控制平面”，帮助构建平台工程化的多集群系统。
 
-## k0rdent 典型应用场景
+## 6. k0rdent 典型应用场景 {/* #k0rdent-典型应用场景 */}
 
 k0rdent 适用于多种企业级和创新型场景。以下列表总结了其主要应用方向，并为每个场景提供简要说明：
 
@@ -139,7 +139,7 @@ k0rdent 适用于多种企业级和创新型场景。以下列表总结了其主
 - Internal Developer Platform（IDP）建设：为开发者提供统一的自助式平台入口。
 - AI/ML 基础设施编排：与 Volcano、vLLM 等组件集成，管理计算资源与推理集群。
 
-## 实施架构
+## 7. 实施架构 {/* #实施架构 */}
 
 为了帮助理解 k0rdent 的分层实现方式，下面简要介绍各层职责：
 
@@ -150,7 +150,7 @@ k0rdent 适用于多种企业级和创新型场景。以下列表总结了其主
 
 该分层的关键点在于“控制平面与执行平面分离”，管理集群负责控制与下发，具体的资源创建与运行由 provider 与子集群承担，从而实现跨环境的一致性与可复现性。
 
-## 关键特性与收益
+## 8. 关键特性与收益 {/* #关键特性与收益 */}
 
 下表总结了 k0rdent 的主要特性及其带来的收益：
 
@@ -161,13 +161,13 @@ k0rdent 适用于多种企业级和创新型场景。以下列表总结了其主
 | 集中式观测与 FinOps | 多集群统一可视化，便于资源与成本优化 |
 | 可扩展 Provider 架构 | 支持多云及裸金属，提升跨环境一致性 |
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 k0rdent 代表了 Kubernetes 多集群管理的新阶段：从单纯的集群编排，向平台工程层的“超级控制平面”演进。通过将 Cluster API、平台模板、策略管理与集中观测结合，k0rdent 帮助组织构建可复用、可治理、可观测的多集群平台，实现跨环境的一致性治理与自动化运维。
 
 实践建议：在引入 k0rdent 时，先梳理平台的 Golden Path、模板与策略边界，优先在非生产环境做端到端演练，并将观测/成本数据接入 KOF 层进行持续优化。
 
-## 参考文献
+## 10. 参考资料 {/* #参考文献 */}
 
 - [k0rdent 官方文档 - docs.k0rdent.io](https://docs.k0rdent.io/latest/guide-to-quickstarts/)
 - [Introducing k0rdent — CNCF Blog - cncf.io](https://www.cncf.io/blog/2025/02/24/introducing-k0rdent-design-deploy-and-manage-kubernetes-based-idps/)

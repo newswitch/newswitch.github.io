@@ -2,8 +2,8 @@
 title: "Elasticsearch 从零到精通学习路线"
 sidebar_label: "00. Elasticsearch 从零到精通学习路线"
 sidebar_position: 0
-tags: [Elasticsearch, Lucene, 搜索, 分布式, 学习路线]
 description: "以 Elasticsearch 9.x 为主线，从倒排索引和 Mapping 深入写入搜索路径、分片、集群状态、ILM、向量检索、性能容量与生产故障排查。"
+tags: [Elasticsearch, Lucene, 搜索, 分布式, 学习路线]
 ---
 
 # Elasticsearch 从零到精通学习路线
@@ -34,7 +34,7 @@ Search request
 
 写入 ACK、数据可搜索、Translog 持久、Segment 提交和副本完成不是同一个概念。
 
-## 2. 17 篇文章规划
+## 2. 篇文章规划 {/* #2-17-篇文章规划 */}
 
 | 编号 | 文章 | 优先级 | 核心问题 | 状态 |
 | --- | --- | --- | --- | --- |
@@ -60,7 +60,7 @@ Search request
 
 ## 3. 学习顺序
 
-### 第一阶段：单分片内部
+### 3.1 单分片内部 {/* #第一阶段单分片内部 */}
 
 先学 E01～E05。目标是能从字段文本一路追到 Term、Postings、Doc Values、Segment、Merge，并解释为什么：
 
@@ -69,7 +69,7 @@ Search request
 - 深分页、全量聚合和高亮可能非常昂贵；
 - 更新文档实质上会产生新版本并删除旧文档标记。
 
-### 第二阶段：分布式控制面
+### 3.2 分布式控制面 {/* #第二阶段分布式控制面 */}
 
 学习 E06～E08。要分清：
 
@@ -82,11 +82,11 @@ Ingest node：执行 ingest pipeline
 
 还要理解 `cluster.initial_master_nodes` 只用于首次引导，不能作为普通发现配置永久滥用。
 
-### 第三阶段：数据平台能力
+### 3.3 数据平台能力 {/* #第三阶段数据平台能力 */}
 
 学习 E09～E11：日志/指标 Data Stream、ILM、Bulk 摄取、失败处理、向量和 Hybrid Search。每个方案都必须给出 Mapping、Shard、生命周期和成本估算。
 
-### 第四阶段：生产 SRE
+### 3.4 生产 SRE {/* #第四阶段生产-sre */}
 
 学习 E12～E16。重点从业务查询延迟向下定位到 coordinating、shard fan-out、thread pool、heap/GC、page cache、磁盘、merge、recovery 和网络。
 

@@ -1,11 +1,12 @@
 ---
-title: Compute Sanitizer 命令详解：CUDA 内存、竞争与同步检查
+title: "Compute Sanitizer 命令详解：CUDA 内存、竞争与同步检查"
+sidebar_label: "09. Compute Sanitizer 命令详解：CUDA 内存、竞争与同步检查"
 sidebar_position: 9
-description: 系统使用 memcheck、racecheck、initcheck 和 synccheck 定位 CUDA 正确性问题，并控制过滤、输出和运行开销。
+description: "系统使用 memcheck、racecheck、initcheck 和 synccheck 定位 CUDA 正确性问题，并控制过滤、输出和运行开销。"
 tags: [CUDA, Compute Sanitizer, GPU, 调试, 内存错误]
 ---
 
-# Compute Sanitizer 命令详解
+# Compute Sanitizer 命令详解：CUDA 内存、竞争与同步检查
 
 Compute Sanitizer 是 CUDA 的动态正确性检查框架。它会插桩或监控运行中的 CUDA 程序，定位越界、未对齐访问、数据竞争、未初始化显存读取和同步原语误用。它不是性能 Profiler，运行可能比原程序慢很多。
 
@@ -102,7 +103,7 @@ Hazard 表示线程访问之间缺少可证明的顺序。结合严重度、地�
 
 能为四类错误选择正确工具；能构建带行号但保持优化的程序；能用 Kernel/Launch 过滤得到最小复现；能把报告中的线程坐标映射回索引公式；能在 CI 中可靠使用退出码。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [Compute Sanitizer User Manual](https://docs.nvidia.com/compute-sanitizer/ComputeSanitizer/index.html)
 - [Compute Sanitizer Release Notes](https://docs.nvidia.com/compute-sanitizer/ReleaseNotes/)

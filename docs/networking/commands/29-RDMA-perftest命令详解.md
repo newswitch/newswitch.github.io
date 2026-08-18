@@ -1,11 +1,12 @@
 ---
-title: RDMA perftest 命令详解：带宽、延迟、QP、GID 与 GPU Direct 基线
+title: "RDMA perftest 命令详解：带宽、延迟、QP、GID 与 GPU Direct 基线"
+sidebar_label: "29. RDMA perftest 命令详解：带宽、延迟、QP、GID 与 GPU Direct 基线"
 sidebar_position: 29
-description: 系统讲解 ib_write/read/send/atomic_bw/lat 的 server/client、device/port/GID/MTU、size/iters/duration/QP/depth、rdma_cm 与 CUDA DMA-BUF。
+description: "系统讲解 ib_write/read/send/atomic_bw/lat 的 server/client、device/port/GID/MTU、size/iters/duration/QP/depth、rdma_cm 与 CUDA DMA-BUF。"
 tags: [网络, RDMA, perftest, GPUDirect RDMA, 性能]
 ---
 
-# RDMA perftest：微基准不是生产应用结论
+# RDMA perftest 命令详解：带宽、延迟、QP、GID 与 GPU Direct 基线
 
 linux-rdma/perftest 包含 Send、RDMA Read/Write、Atomic 的 bandwidth/latency 微基准。它用于证明特定 device/port/GID/QP/消息大小/并发下的数据面能力；不能凭单一大包峰值推断 NCCL、训练或存储性能。
 

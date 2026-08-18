@@ -1,11 +1,12 @@
 ---
-title: journalctl 命令详解：结构化日志、启动时间线与证据保全
+title: "journalctl 命令详解：结构化日志、启动时间线与证据保全"
+sidebar_label: "02. journalctl 命令详解：结构化日志、启动时间线与证据保全"
 sidebar_position: 2
-description: 完整讲解 journalctl 的过滤、输出、游标、验证、轮转和 vacuum 参数，建立面向 systemd 服务与启动故障的日志证据链。
+description: "完整讲解 journalctl 的过滤、输出、游标、验证、轮转和 vacuum 参数，建立面向 systemd 服务与启动故障的日志证据链。"
 tags: [Linux, journalctl, journald, systemd, 日志, 故障排查]
 ---
 
-# `journalctl` 命令详解：结构化日志、启动时间线与证据保全
+# journalctl 命令详解：结构化日志、启动时间线与证据保全
 
 `journalctl` 读取 systemd journal。journal entry 是字段集合，不是只能 grep 的文本行；精确过滤应优先使用 boot、unit、priority、identifier、invocation、字段和时间。
 
@@ -176,7 +177,7 @@ journalctl -b -u api.service -o export > api-journal.export
 
 掌握标准：能列出全部参数类别，准确写出时间/unit/boot/invocation/priority 查询，选择稳定机器格式，解释日志缺失路径，并在任何维护删除前保全证据。
 
-## 官方参考
+## 12. 官方参考 {/* #官方参考 */}
 
 - [journalctl(1)](https://www.freedesktop.org/software/systemd/man/latest/journalctl.html)
 - [journald.conf(5)](https://www.freedesktop.org/software/systemd/man/latest/journald.conf.html)

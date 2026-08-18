@@ -2,15 +2,15 @@
 title: "Kubernetes API 扩展机制（API Extension）"
 sidebar_label: "02. Kubernetes API 扩展机制（API Extension）"
 sidebar_position: 2
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "Kubernetes 提供了 API 聚合层（APIService）和自定义资源定义（CRD）两种扩展机制，用于添加新的资源类型或集成外部 API 服务，是整个生态系统可扩展性的基础。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # Kubernetes API 扩展机制（API Extension）
 
 > Kubernetes 的 API 扩展机制是其成为云原生生态核心平台的关键。通过 API 聚合层（APIService）和自定义资源定义（CRD），开发者可以安全、灵活地扩展集群能力，满足多样化业务需求。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 Kubernetes 的一切皆资源（Everything is a Resource）。无论是 Pod、Service、Deployment，还是 Node、Namespace，它们都通过统一的 API 接口暴露出来。
 
@@ -18,7 +18,7 @@ Kubernetes 的一切皆资源（Everything is a Resource）。无论是 Pod、Se
 
 这种可扩展的 API 架构，使 Kubernetes 从一开始就被设计为一个**可编程的控制平面（Programmable Control Plane）**。
 
-## API 扩展的两种方式
+## 2. API 扩展的两种方式 {/* #api-扩展的两种方式 */}
 
 Kubernetes 支持两种扩展 API 的方式，适用于不同的业务场景和复杂度需求。
 
@@ -29,9 +29,9 @@ Kubernetes 支持两种扩展 API 的方式，适用于不同的业务场景和�
 
 两者都属于 *API 扩展机制*（API Extension Mechanism），区别在于前者是“外部聚合”，后者是“内部扩展”。
 
-## API 聚合层（APIService）
+## 3. API 聚合层（APIService） {/* #api-聚合层apiservice */}
 
-### 工作原理
+### 3.1 工作原理 {/* #工作原理 */}
 
 API Aggregation Layer 是 Kubernetes 在 v1.7 引入的机制，允许你注册一个**独立运行的 API Server**，并通过主 API Server 的 `/apis` 路径对外统一暴露。
 
@@ -47,7 +47,7 @@ flowchart LR
 
 当用户访问 `/apis/metrics.k8s.io/v1beta1` 时，主 API Server 会将请求**代理转发**给 `metrics-server` 服务。
 
-### 优势与局限
+### 3.2 优势与局限 {/* #优势与局限 */}
 
 下表总结了 APIService 的主要优缺点：
 
@@ -57,7 +57,7 @@ flowchart LR
 | 可聚合外部系统 API            | 性能略低于内置 API  |
 | 支持完全自定义的 API Server 实现 | 开发门槛高、维护成本大  |
 
-### 示例：Metrics Server
+### 3.3 示例：Metrics Server {/* #示例metrics-server */}
 
 `metrics-server` 是最典型的 APIService 实现：
 
@@ -68,9 +68,9 @@ v1beta1.metrics.k8s.io   kube-system/metrics-server   True   1m
 
 它通过注册 `APIService` 对象，将外部采集的资源指标（CPU/内存）聚合到 Kubernetes API 中，供 `kubectl top` 等命令调用。
 
-## 自定义资源定义（CRD）
+## 4. 自定义资源定义（CRD） {/* #自定义资源定义crd */}
 
-### 工作原理
+### 4.1 工作原理 {/* #工作原理-1 */}
 
 CRD 是 Kubernetes 1.7 起正式支持的另一种扩展方式，通过在集群中定义新的资源类型（Custom Resource），你可以像操作原生对象一样创建、更新和删除自定义对象。
 
@@ -109,21 +109,21 @@ kubectl get databases
 kubectl apply -f mydb.yaml
 ```
 
-### CRD 的优势
+### 4.2 CRD 的优势 {/* #crd-的优势 */}
 
 - 无需独立 API Server
 - 自动支持 RBAC、OpenAPI、kubectl
 - 与 Controller / Operator 配合自然
 - 被 Kubernetes 社区广泛采用
 
-### CRD 的进阶功能
+### 4.3 CRD 的进阶功能 {/* #crd-的进阶功能 */}
 
 - **版本管理（Versioning）**：可定义多个版本（`v1alpha1`, `v1beta1`, `v1`）
 - **Conversion Webhook**：实现多版本转换
 - **Validation Schema**：通过 OpenAPI 校验字段合法性
 - **Subresources**：支持 `/status`、`/scale` 等子资源路径
 
-## APIService 与 CRD 的关系
+## 5. APIService 与 CRD 的关系 {/* #apiservice-与-crd-的关系 */}
 
 在早期版本（1.7 ~ 1.10），CRD 功能尚不完善，许多系统（如 metrics-server、service-catalog）使用 APIService 架构。
 
@@ -138,7 +138,7 @@ kubectl apply -f mydb.yaml
 | 使用场景  | metrics-server、service catalog | Operator、自定义控制器  |
 | 推荐程度  | ⚠️ 仅限特殊场景                       | ✅ 主流方式            |
 
-## 选择建议
+## 6. 选择建议 {/* #选择建议 */}
 
 - **首选 CRD**：如果你的目标是定义新的 Kubernetes 对象类型。
 - **使用 APIService**：仅当你需要运行一个独立的 API Server，或对外暴露非 Kubernetes 原生逻辑时。
@@ -148,7 +148,7 @@ kubectl apply -f mydb.yaml
 - Operator、控制器、自定义工作流 → 使用 **CRD**
 - 监控、审计、外部系统聚合 → 使用 **APIService**
 
-## Kubernetes API 的未来趋势
+## 7. Kubernetes API 的未来趋势 {/* #kubernetes-api-的未来趋势 */}
 
 Kubernetes 的 API 扩展正在向以下方向演进：
 
@@ -159,11 +159,11 @@ Kubernetes 的 API 扩展正在向以下方向演进：
 
 > Kubernetes 已从“可扩展的容器调度器”演化为“可扩展的云原生 API 平台”。
 
-## 总结
+## 8. 总结 {/* #总结 */}
 
 Kubernetes 的强大之处不在于它内置了多少功能，而在于它提供了足够灵活的**扩展接口**。无论是 CRD、APIService，还是未来的 AI Native API Gateway，这些机制共同构成了 Kubernetes 的“第二语言” —— **可扩展 API 体系**。
 
-## 参考文献
+## 9. 参考资料 {/* #参考文献 */}
 
 1. [Kubernetes 官方文档：Extending Kubernetes API - kubernetes.io](https://kubernetes.io/docs/concepts/extend-kubernetes/)
 2. [CustomResourceDefinition API Reference - kubernetes.io](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#customresourcedefinition-v1-apiextensions-k8s-io)

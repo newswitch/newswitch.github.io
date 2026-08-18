@@ -1,11 +1,12 @@
 ---
-title: file 命令详解：文件类型、MIME、magic 与安全检测
+title: "file 命令详解：文件类型、MIME、magic 与安全检测"
+sidebar_label: "20. file 命令详解：文件类型、MIME、magic 与安全检测"
 sidebar_position: 20
-description: 完整讲解 file 5.46 的全部参数、检测阶段、MIME、magic 数据库、压缩内容、特殊设备、NUL 输出、资源限制、退出状态和不可信文件安全边界。
+description: "完整讲解 file 5.46 的全部参数、检测阶段、MIME、magic 数据库、压缩内容、特殊设备、NUL 输出、资源限制、退出状态和不可信文件安全边界。"
 tags: [Linux, file, libmagic, MIME, 文件格式]
 ---
 
-# `file` 命令详解：文件类型、MIME、magic 与安全检测
+# file 命令详解：文件类型、MIME、magic 与安全检测
 
 `file` 根据文件系统元数据、magic 规则和文本/语言启发式判断文件类型。它提供的是“基于当前规则和已读取字节的识别结果”，不是可信身份、扩展名校验、恶意代码扫描或内容安全证明。
 
@@ -309,7 +310,7 @@ file -E -- ./server
 - 能正确处理链接、NUL 输出和默认退出码陷阱。
 - 能说明 `file` 为什么不是安全扫描器，并为不可信输入建立隔离和资源限制。
 
-## 官方参考
+## 16. 官方参考 {/* #官方参考 */}
 
 - [file 5.46 manual page](https://man7.org/linux/man-pages/man1/file.1.html)
 - [file/libmagic project](https://www.darwinsys.com/file/)
@@ -318,4 +319,3 @@ file -E -- ./server
 上一篇：[`unlink` 命令详解](./19-unlink命令详解.md)
 
 返回：[Linux 命令参考库学习路线](../../00-Linux命令参考库学习路线.md)
-

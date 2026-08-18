@@ -1,11 +1,12 @@
 ---
-title: nvidia-bug-report.sh 命令详解：驱动故障证据采集
+title: "nvidia-bug-report.sh 命令详解：驱动故障证据采集"
+sidebar_label: "04. nvidia-bug-report.sh 命令详解：驱动故障证据采集"
 sidebar_position: 4
-description: 在 NVIDIA 驱动、Xid、GPU 掉卡和容器异常现场安全采集 bug report，理解敏感信息、时机与证据链。
+description: "在 NVIDIA 驱动、Xid、GPU 掉卡和容器异常现场安全采集 bug report，理解敏感信息、时机与证据链。"
 tags: [GPU, NVIDIA, nvidia-bug-report, Xid, 故障排查]
 ---
 
-# nvidia-bug-report.sh 命令详解
+# nvidia-bug-report.sh 命令详解：驱动故障证据采集
 
 `nvidia-bug-report.sh` 会收集 NVIDIA 驱动、内核、PCIe、设备节点、配置和日志，生成压缩报告供内部复盘或厂商支持分析。它是“采集现场”，不是修复命令。
 
@@ -80,7 +81,7 @@ dcgmi health -c
 
 能在故障仍存在时快速生成报告；能将其与 Xid、应用和平台时间线关联；能说明报告包含敏感信息；能区分“现场证据不足”和“硬件已证实故障”。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [NVIDIA GPU Debug Guidelines](https://docs.nvidia.com/deploy/gpu-debug-guidelines/)
 - [NVIDIA RMA Process](https://docs.nvidia.com/deploy/rma-process/)

@@ -2,8 +2,8 @@
 title: "Milvus 从零到精通学习路线"
 sidebar_label: "00. Milvus 从零到精通学习路线"
 sidebar_position: 0
-tags: [Milvus, 向量数据库, RAG, ANN, 学习路线]
 description: "以 Milvus 3.x 为主线，从 Embedding 与 ANN 深入 Collection、Segment、Index、Query、Streaming、对象存储、分布式部署、容量和故障排查。"
+tags: [Milvus, 向量数据库, RAG, ANN, 学习路线]
 ---
 
 # Milvus 从零到精通学习路线
@@ -30,7 +30,7 @@ Embedding Model
 
 元数据由 etcd 等强一致存储保存，向量/索引文件主要落对象存储，实时写入与历史查询由不同组件协作。只看一个 Pod 的 CPU 无法解释整条链路。
 
-## 2. 16 篇文章规划
+## 2. 篇文章规划 {/* #2-16-篇文章规划 */}
 
 | 编号 | 文章 | 优先级 | 核心问题 | 状态 |
 | --- | --- | --- | --- | --- |
@@ -55,15 +55,15 @@ Embedding Model
 
 ## 3. 学习阶段
 
-### 阶段一：先学检索数学
+### 3.1 阶段一：先学检索数学 {/* #阶段一先学检索数学 */}
 
 完成 M01。必须用同一组向量手算余弦、内积和 L2，理解归一化怎样改变结果；再比较 Recall@K、MRR/NDCG 与 P99，避免只看 QPS。
 
-### 阶段二：单库数据路径
+### 3.2 阶段二：单库数据路径 {/* #阶段二单库数据路径 */}
 
 完成 M02～M07。目标是能解释一条新写入向量何时可见、为什么索引未必立即存在、Delete 何时物理消失、Scalar Filter 在 ANN 前后对代价有什么影响。
 
-### 阶段三：分布式架构
+### 3.3 阶段三：分布式架构 {/* #阶段三分布式架构 */}
 
 完成 M08～M11：
 
@@ -77,7 +77,7 @@ Storage：metadata + WAL + object storage
 
 要能区分扩 Query Node、Data Node、Streaming Node 和对象存储分别解决什么瓶颈。
 
-### 阶段四：生产 SRE
+### 3.4 阶段四：生产 SRE {/* #阶段四生产-sre */}
 
 完成 M12～M15。建立向量条数×维度×类型、索引系数、副本数、加载比例、查询并发、写入速率、Compaction 和对象存储带宽模型。
 

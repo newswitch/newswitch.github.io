@@ -1,11 +1,12 @@
 ---
-title: setenforce 命令详解：临时切换 SELinux enforcing 与 permissive
+title: "setenforce 命令详解：临时切换 SELinux enforcing 与 permissive"
+sidebar_label: "03. setenforce 命令详解：临时切换 SELinux enforcing 与 permissive"
 sidebar_position: 3
-description: 完整讲解 setenforce 的唯一位置参数、运行态与持久配置、风险控制、拒绝诊断、单域 permissive 和生产回滚。
+description: "完整讲解 setenforce 的唯一位置参数、运行态与持久配置、风险控制、拒绝诊断、单域 permissive 和生产回滚。"
 tags: [Linux, setenforce, SELinux, enforcing, permissive, 安全变更]
 ---
 
-# `setenforce` 命令详解：临时切换 SELinux enforcing 与 permissive
+# setenforce 命令详解：临时切换 SELinux enforcing 与 permissive
 
 `setenforce` 在 SELinux 已启用并加载策略时，临时切换全局 enforcing/permissive。它不能把 Disabled 在线变成 Enabled，也不修改 `/etc/selinux/config`，重启后通常回到配置目标。
 
@@ -81,7 +82,7 @@ permissive 的重要用途是记录 would-be denial，但 dontaudit、audit rate
 
 掌握标准：能说明唯一参数、全局风险和非持久性，设计必达回滚，且不会把关闭 enforcement 当成生产修复。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [setenforce(8)](https://manpages.debian.org/unstable/selinux-utils/setenforce.8.en.html)
 - [SELinux administration guide](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_selinux/)

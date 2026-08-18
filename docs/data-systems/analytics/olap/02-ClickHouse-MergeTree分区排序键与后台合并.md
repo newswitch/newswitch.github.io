@@ -1,9 +1,9 @@
 ---
-title: ClickHouse MergeTree、分区、排序键与后台合并
+title: "ClickHouse MergeTree、分区、排序键与后台合并"
 sidebar_label: "02. ClickHouse MergeTree、分区、排序键与后台合并"
 sidebar_position: 2
+description: "理解 MergeTree 的 Part、稀疏主索引、排序键、分区、后台合并和复制数据路径。"
 tags: [ClickHouse, MergeTree, 排序键, 列式存储]
-description: 理解 MergeTree 的 Part、稀疏主索引、排序键、分区、后台合并和复制数据路径。
 ---
 
 # ClickHouse MergeTree、分区、排序键与后台合并
@@ -66,7 +66,7 @@ Distributed 查询会在 shards 执行并合并，Join/聚合可能产生跨节�
 
 上一篇：[Trino 架构](./01-Trino架构Stage-Split与谓词下推.md)　下一篇：[Doris MPP、Tablet 与物化视图](./03-Doris-MPP-Tablet物化视图与查询加速.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [ClickHouse MergeTree](https://clickhouse.com/docs/engines/table-engines/mergetree-family/mergetree)
 - [ClickHouse Architecture](https://clickhouse.com/docs/development/architecture)

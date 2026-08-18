@@ -1,11 +1,12 @@
 ---
-title: nerdctl 命令详解：面向 containerd 的容器、镜像与 Build 工具
+title: "nerdctl 命令详解：面向 containerd 的容器、镜像与 Build 工具"
+sidebar_label: "13. nerdctl 命令详解：面向 containerd 的容器、镜像与 Build 工具"
 sidebar_position: 13
-description: 使用 nerdctl 管理 containerd 容器、镜像、网络、卷、Compose 与 BuildKit，理解 Namespace、Rootless、Snapshotter 和 Kubernetes 边界。
+description: "使用 nerdctl 管理 containerd 容器、镜像、网络、卷、Compose 与 BuildKit，理解 Namespace、Rootless、Snapshotter 和 Kubernetes 边界。"
 tags: [containerd, nerdctl, BuildKit, Rootless, Compose]
 ---
 
-# nerdctl 命令详解
+# nerdctl 命令详解：面向 containerd 的容器、镜像与 Build 工具
 
 `nerdctl` 为 containerd 提供接近 Docker 的用户体验，并支持 Compose、Rootless、BuildKit、Lazy-Pulling/加密 Snapshotter 等能力。它通过 containerd API 工作，不等同于 CRI；操作 Kubernetes 的 `k8s.io` Namespace 仍可能与 kubelet冲突。
 
@@ -104,7 +105,7 @@ nerdctl info
 
 能选择正确 containerd Namespace；能用 nerdctl 完成本地 Run/Build/Compose；能解释 BuildKit、CNI、Snapshotter 与 Rootless 依赖；不会用 Docker 兼容表象推断所有行为一致，也不会管理 kubelet 对象。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [nerdctl](https://github.com/containerd/nerdctl)
 - [nerdctl command reference](https://github.com/containerd/nerdctl/blob/main/docs/command-reference.md)

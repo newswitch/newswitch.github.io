@@ -1,10 +1,11 @@
 ---
 title: "大模型服务 Kubernetes 探针：启动、存活、就绪与过载语义"
 sidebar_label: "04. 大模型服务 Kubernetes 探针：启动、存活、就绪与过载语义"
+sidebar_position: 4
+description: "为长时间加载、GPU 推理和流式请求设计 startup、liveness、readiness，避免探针误杀、过早接流量和过载重启风暴。"
+tags: ["Kubernetes", "Probe", "vLLM", "Readiness", "Liveness", "SRE"]
 date: 2026-07-22 15:30:00
 categories: 云原生
-tags: ["Kubernetes", "Probe", "vLLM", "Readiness", "Liveness", "SRE"]
-description: "为长时间加载、GPU 推理和流式请求设计 startup、liveness、readiness，避免探针误杀、过早接流量和过载重启风暴。"
 ---
 
 # 大模型服务 Kubernetes 探针：启动、存活、就绪与过载语义
@@ -129,11 +130,11 @@ readiness 应代表“现在可以接收新请求”。通常同时要求：
 
 过载有两种设计：
 
-### 保持 Ready，由应用返回 429
+### 6.1 保持 Ready，由应用返回 429 {/* #保持-ready由应用返回-429 */}
 
 适合网关有 token-aware 准入、重试预算和多副本负载均衡。优点是状态稳定，缺点是客户端必须正确处理 429。
 
-### Readiness 暂时失败
+### 6.2 Readiness 暂时失败 {/* #readiness-暂时失败 */}
 
 适合确实需要把副本从新流量池摘除的场景。必须加入 hysteresis（恢复阈值/连续成功），避免队列在阈值附近导致 endpoint 抖动。
 
@@ -381,27 +382,27 @@ kubectl exec -n <namespace> <pod> -- curl -v --max-time 5 http://127.0.0.1:8000/
 
 ## 19. 安全实验
 
-### 实验一：模拟慢启动
+### 19.1 实验一：模拟慢启动 {/* #实验一模拟慢启动 */}
 
 测试服务启动前 sleep 不同时间，验证 startup 成功前 liveness/readiness 不执行，并观察窗口耗尽后的重启。
 
-### 实验二：readiness 失败
+### 19.2 实验二：readiness 失败 {/* #实验二readiness-失败 */}
 
 让 `/readyz` 返回 503，观察 Pod Running、Ready=False 和 EndpointSlice conditions，同时确认容器不重启。
 
-### 实验三：liveness 失败
+### 19.3 实验三：liveness 失败 {/* #实验三liveness-失败 */}
 
 只在测试环境让 `/livez` 持续失败，观察 terminationGrace、previous logs 和 restart count。
 
-### 实验四：过载
+### 19.4 实验四：过载 {/* #实验四过载 */}
 
 使用受控压测提高队列，验证 readiness/429、autoscaler 和 liveness 不形成级联重启。
 
-### 实验五：TP worker 失败
+### 19.5 实验五：TP worker 失败 {/* #实验五tp-worker-失败 */}
 
 在测试副本终止一个 worker，验证聚合 readiness 失败且整个副本不再接流量。
 
-### 实验六：冷启动发布
+### 19.6 实验六：冷启动发布 {/* #实验六冷启动发布 */}
 
 清理测试节点模型缓存或使用新节点，记录完整冷启动 P99，并验证 Deployment progress deadline 足够且不过长。
 
@@ -420,25 +421,25 @@ kubectl exec -n <namespace> <pod> -- curl -v --max-time 5 http://127.0.0.1:8000/
 
 ## 21. 掌握标准
 
-### 入门
+### 21.1 入门 {/* #入门 */}
 
 - 能解释三种探针失败动作；
 - 能使用 startup 保护长时间模型加载；
 - 能从 Event 定位 probe failure。
 
-### 进阶
+### 21.2 进阶 {/* #进阶 */}
 
 - 能设计独立 `/startupz`、`/livez`、`/readyz`；
 - 能聚合多 GPU worker 状态；
 - 能处理过载、readiness 和 EndpointSlice。
 
-### 生产级
+### 21.3 生产级 {/* #生产级 */}
 
 - 能用启动分布和 SLO计算窗口；
 - 能避免探针造成级联故障；
 - 能把探针、准入、扩缩容、发布和优雅退出设计成同一状态机。
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/concepts/workloads/pods/probes/)
 - [Configure Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)

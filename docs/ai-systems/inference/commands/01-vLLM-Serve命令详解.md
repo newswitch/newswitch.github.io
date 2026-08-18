@@ -1,5 +1,6 @@
 ---
 title: "vLLM serve 命令详解"
+sidebar_label: "01. vLLM serve 命令详解"
 sidebar_position: 1
 description: "掌握 vLLM serve 的模型身份、服务协议、显存、KV Cache、并行策略、调度、可观测性与安全参数。"
 tags: [vLLM, LLM, Serve, KV Cache, Tensor Parallel, 推理]
@@ -29,7 +30,7 @@ vllm serve /models/Qwen \
 
 ## 2. 参数分层
 
-### 模型与Tokenizer
+### 2.1 模型与Tokenizer {/* #模型与tokenizer */}
 
 | 参数族 | 作用与边界 |
 |---|---|
@@ -42,7 +43,7 @@ vllm serve /models/Qwen \
 | `--max-model-len` | 最大上下文，直接影响KV容量和启动分析 |
 | `--generation-config` | 是否应用模型仓库generation配置，避免隐式改变默认采样 |
 
-### 服务与协议
+### 2.2 服务与协议 {/* #服务与协议 */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -55,7 +56,7 @@ vllm serve /models/Qwen \
 | `--disable-frontend-multiprocessing`、`--api-server-count` | API Server进程模型，版本支持与行为需实测 |
 | `--config` | 从YAML加载CLI配置；配置与CLI覆盖优先级以当前版本为准 |
 
-### 显存与调度
+### 2.3 显存与调度 {/* #显存与调度 */}
 
 | 参数族 | 作用与风险 |
 |---|---|
@@ -69,7 +70,7 @@ vllm serve /models/Qwen \
 | `--block-size` | KV块粒度，后端支持范围不同 |
 | `--max-seq-len-to-capture` | CUDA Graph捕获范围相关参数，版本可能变化 |
 
-### 并行与分布式
+### 2.4 并行与分布式 {/* #并行与分布式 */}
 
 | 参数族 | 作用 |
 |---|---|
@@ -119,11 +120,11 @@ curl -fsS http://127.0.0.1:8000/metrics | head
 | 高并发 | waiting和TTFT突增 | KV、调度预算、请求长度、网关限流 |
 | 多卡 | NCCL timeout/利用率不均 | rank日志、NVLink/PCIe、拓扑、进程绑定 |
 
-## 掌握标准
+## 7. 掌握标准 {/* #掌握标准 */}
 
 能把参数分为模型、服务、显存、调度和并行；能从启动日志复算KV与并发；能设计不泄露Prompt的可观测性；能通过固定revision和完整启动清单复现实例。
 
-## 官方资料
+## 8. 官方资料 {/* #官方资料 */}
 
 - [vLLM serve CLI](https://docs.vllm.ai/en/latest/cli/serve/)
 - [vLLM OpenAI-compatible server](https://docs.vllm.ai/en/stable/serving/openai_compatible_server.html)

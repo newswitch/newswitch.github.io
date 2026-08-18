@@ -2,8 +2,8 @@
 title: "S3 Multipart、Range 与大模型分发"
 sidebar_label: "01. S3 Multipart、Range 与大模型分发"
 sidebar_position: 1
-tags: [S3, Multipart Upload, Range GET, Checksum, 模型分发, 对象存储]
 description: "从 S3 对象语义出发，设计可并发、可续传、可校验、可控回源的大模型上传下载与节点分发链路。"
+tags: [S3, Multipart Upload, Range GET, Checksum, 模型分发, 对象存储]
 ---
 
 # S3 Multipart、Range 与大模型分发
@@ -461,7 +461,7 @@ model concurrency
 
 相关学习：[对象存储与模型仓库设计](../ai-workloads/04-对象存储与模型仓库设计.md)、[节点模型缓存与容量水位治理](../ai-workloads/08-节点模型缓存与容量水位治理.md)。
 
-## 参考资料
+## 23. 参考资料 {/* #参考资料 */}
 
 - [Amazon S3 Multipart Upload](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html)
 - [Amazon S3 Range GET](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html)

@@ -2,15 +2,15 @@
 title: "Kubernetes 中的多集群管理架构与 API 的演进"
 sidebar_label: "02. Kubernetes 中的多集群管理架构与 API 的演进"
 sidebar_position: 2
-tags: [Kubernetes, 多集群, PartII, 学习路线]
 description: "本文回顾 Kubernetes 多集群架构与 API 从 Federation 到 MCS API，再到 Multi-Cluster Gateway API 的演进历程，探讨当前业界主流的多集群治理模式与架构趋势。"
+tags: [Kubernetes, 多集群, PartII, 学习路线]
 ---
 
 # Kubernetes 中的多集群管理架构与 API 的演进
 
 > 多集群（Multi-Cluster）管理是 Kubernetes 生态持续演进的核心方向。本文系统梳理了多集群架构与 API 的十年演进脉络，帮助读者理解主流治理模式与未来趋势。
 
-## Kubernetes 多集群架构的演进阶段
+## 1. Kubernetes 多集群架构的演进阶段 {/* #kubernetes-多集群架构的演进阶段 */}
 
 下图展示了 Kubernetes 多集群管理的主要演进阶段：
 
@@ -31,7 +31,7 @@ timeline
 
 ![Kubernetes 多集群管理的演进](/images/k8s/multi-cluster/multi-cluster-services-api/49081f0266eb1df8040742a628b912c3.svg)
 
-## Federation 与 KubeFed：早期的联邦控制平面
+## 2. Federation 与 KubeFed：早期的联邦控制平面 {/* #federation-与-kubefed早期的联邦控制平面 */}
 
 Kubernetes 最早在 1.5 版本引入 Federation v1，希望通过一个上层控制平面对多个集群进行统一管理。它允许在联邦控制平面中创建 `FederatedDeployment`、`FederatedService` 等对象，从而在多个集群中自动同步资源。
 
@@ -43,11 +43,11 @@ Kubernetes 最早在 1.5 版本引入 Federation v1，希望通过一个上层�
 
 随后社区推出了 Federation v2（KubeFed），通过 CRD + Controller 的方式重写了联邦逻辑。但依旧没有在主线 Kubernetes 中进入 GA，逐渐被更灵活的方案取代。
 
-## Multicluster Services API：跨集群服务发现的尝试
+## 3. Multicluster Services API：跨集群服务发现的尝试 {/* #multicluster-services-api跨集群服务发现的尝试 */}
 
 2020 年，SIG-Multicluster 提出了 [KEP-1645: Multi-Cluster Services API](https://github.com/kubernetes/enhancements/tree/master/keps/sig-multicluster/1645-multi-cluster-services-api)，旨在统一跨集群的服务发现与负载均衡标准。
 
-### 核心设计思路
+### 3.1 核心设计思路 {/* #核心设计思路 */}
 
 - **Namespace Sameness**：跨集群同名命名空间视为逻辑相同。
 - **ServiceExport / ServiceImport**：通过声明式导入导出服务。
@@ -56,13 +56,13 @@ Kubernetes 最早在 1.5 版本引入 Federation v1，希望通过一个上层�
 
 MCS API 一度被认为是“官方多集群服务发现标准”，但在 2023 年后，SIG-Multicluster 已不再活跃维护。仓库 [kubernetes-sigs/mcs-api](https://github.com/kubernetes-sigs/mcs-api) 的最后活跃提交停留在 2023 年底，状态为“Frozen / Beta”。
 
-#### 主要原因
+#### 3.1.1 主要原因 {/* #主要原因 */}
 
 - 过于依赖同构集群与固定网络。
 - 缺乏对混合云、Service Mesh 的兼容性。
 - 实际落地主要由 Karmada / OCM 等项目自行实现。
 
-## 控制平面联邦化：Karmada、OCM 与 Fleet
+## 4. 控制平面联邦化：Karmada、OCM 与 Fleet {/* #控制平面联邦化karmadaocm-与-fleet */}
 
 2022 年后，社区与企业厂商转向控制平面联邦化（Control Plane Federation）模型。代表项目包括：
 
@@ -93,7 +93,7 @@ F[Rancher Fleet] -->|GitOps 声明式同步| G[多集群环境]
 
 这些方案在生产实践中逐步取代了早期 Federation 的概念。
 
-## Gateway API 时代：跨集群流量与服务治理的新标准
+## 5. Gateway API 时代：跨集群流量与服务治理的新标准 {/* #gateway-api-时代跨集群流量与服务治理的新标准 */}
 
 Kubernetes 官方的 SIG-Network 在 2024 年提出 Multi-Cluster Gateway API，这是目前社区公认的新一代跨集群服务发现与流量治理标准。
 
@@ -101,19 +101,19 @@ Kubernetes 官方的 SIG-Network 在 2024 年提出 Multi-Cluster Gateway API，
 
 > 不再定义“跨集群服务”，而是以 Gateway + Route 的方式实现跨集群访问控制与流量转发。
 
-### 优势
+### 5.1 优势 {/* #优势 */}
 
 - 完全兼容 Gateway API 标准。
 - 支持跨集群 Service、Failover、Route。
 - 适配 Service Mesh、Cilium、Istio 等实现。
 - 更易于与云厂商 Ingress / LB 融合。
 
-### 官方规范
+### 5.2 官方规范 {/* #官方规范 */}
 
 - [Gateway API Multi-Cluster Extension](https://gateway-api.sigs.k8s.io/concepts/multicluster/)
 - [Kubernetes Enhancement Proposal #2642](https://github.com/kubernetes/enhancements/pull/2642)
 
-## 当前主流方向（2025）
+## 6. 当前主流方向（2025） {/* #当前主流方向2025 */}
 
 Kubernetes 多集群管理已进入“生态整合阶段”，目前主流方向包括：
 
@@ -144,7 +144,7 @@ A --> F["AI-Native 多集群 (KubeEdge / HAMi)"]
 
 > 「Policy 中心化 + Data Plane 去中心化」的多集群治理架构。
 
-## 小结：从 Federation 到 Gateway 的十年演进
+## 7. 小结：从 Federation 到 Gateway 的十年演进 {/* #小结从-federation-到-gateway-的十年演进 */}
 
 多集群技术的演进，是 Kubernetes 社区从“集中控制”走向“分布式自治”的过程。
 
@@ -157,7 +157,7 @@ A --> F["AI-Native 多集群 (KubeEdge / HAMi)"]
 | 控制平面治理 | Karmada / OCM / Fleet         | 策略统一、调度中心         | 主流实践       |
 | 网络层融合   | Multi-Cluster Gateway API      | Gateway + Route 跨集群流量 | 官方推荐方向   |
 
-## 推荐阅读
+## 8. 推荐阅读 {/* #推荐阅读 */}
 
 - [Karmada 官方文档 - karmada.io](https://karmada.io/zh/docs/)
 - [Gateway API Multi-Cluster - gateway-api.sigs.k8s.io](https://gateway-api.sigs.k8s.io/concepts/multicluster/)
@@ -165,7 +165,7 @@ A --> F["AI-Native 多集群 (KubeEdge / HAMi)"]
 - [Cilium Cluster Mesh - docs.cilium.io](https://docs.cilium.io/en/stable/network/clustermesh/)
 - [Istio Multi-Cluster Deployment - istio.io](https://istio.io/latest/docs/setup/install/multicluster/)
 
-## 思考与展望
+## 9. 思考与展望 {/* #思考与展望 */}
 
 随着 AI 原生（AI-Native）工作负载兴起，多集群架构正从“资源调度”扩展到“算力编排”与“智能代理自治”层面。
 
@@ -177,11 +177,11 @@ A --> F["AI-Native 多集群 (KubeEdge / HAMi)"]
 
 多集群管理，不再只是控制 Kubernetes 的集群，而是在控制整个分布式智能计算平面。
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 Kubernetes 多集群管理架构与 API 的演进，体现了社区从集中式联邦到分布式自治的技术路线转变。当前，Gateway API、控制面联邦化、Service Mesh 跨集群、GitOps 联邦与 AI-Native 架构等多种模式正在融合，推动云原生基础设施向更高层次的智能化和自治演进。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 1. [KEP-1645: Multi-Cluster Services API - github.com](https://github.com/kubernetes/enhancements/tree/master/keps/sig-multicluster/1645-multi-cluster-services-api)
 2. [kubernetes-sigs/mcs-api - github.com](https://github.com/kubernetes-sigs/mcs-api)

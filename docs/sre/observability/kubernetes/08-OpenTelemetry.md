@@ -2,21 +2,21 @@
 title: "OpenTelemetry：Kubernetes 可观测性的事实标准"
 sidebar_label: "08. OpenTelemetry：Kubernetes 可观测性的事实标准"
 sidebar_position: 8
-tags: [Kubernetes, 可观测性, PartII, 学习路线]
 description: "OpenTelemetry 已成为 Kubernetes 可观测性领域的事实标准，统一了指标、追踪与日志采集，极大简化了云原生环境下的观测体系建设。"
+tags: [Kubernetes, 可观测性, PartII, 学习路线]
 ---
 
 # OpenTelemetry：Kubernetes 可观测性的事实标准
 
 > 真正的可观测性标准，是让数据流动起来，而不是让工具变多。
 
-## 引言
+## 1. 引言 {/* #引言 */}
 
 在云原生（Cloud Native）环境中，微服务、容器编排与动态基础设施让系统复杂度急剧上升。要有效观察系统行为，仅靠日志或监控已不够。**OpenTelemetry（简称 OTel）** 作为 CNCF 毕业项目，已成为统一指标（Metrics）、追踪（Traces）与日志（Logs）采集与传输的事实标准，是构建现代 **Kubernetes 可观测性体系的核心基石**。
 
 OpenTelemetry 通过一套跨语言、跨平台的 API、SDK、协议和 Collector 组件，极大简化了云原生环境下的观测体系建设，实现了数据模型、采集、传输、处理与导出的全链路标准化。
 
-## OpenTelemetry 概述与核心理念
+## 2. OpenTelemetry 概述与核心理念 {/* #opentelemetry-概述与核心理念 */}
 
 OpenTelemetry（OTel）由 OpenTracing 与 OpenCensus 合并而来，目标是为分布式系统（Distributed System）提供统一、标准化的可观测性数据采集、处理与导出能力。其核心理念包括：
 
@@ -33,7 +33,7 @@ OpenTelemetry 的主要组成部分如下：
 - **协议规范（OTLP）**：统一的传输协议。
 - **语义约定（Semantic Conventions）**：标准化标签与属性。
 
-## OpenTelemetry 架构全景
+## 3. OpenTelemetry 架构全景 {/* #opentelemetry-架构全景 */}
 
 了解 OpenTelemetry 在云原生中的架构有助于理解其数据流转过程。下图展示了 OTel 在云原生环境中的典型数据流转路径：
 
@@ -159,7 +159,7 @@ flowchart TD
 
 ![OpenTelemetry 架构原则](/images/k8s/observability/opentelemetry/a4a9d7698d024f4906c1dca4e4808b30.svg)
 
-## Collector 详解与部署模式
+## 4. Collector 详解与部署模式 {/* #collector-详解与部署模式 */}
 
 Collector 是 OpenTelemetry 的核心组件，主要负责数据的接收、处理与导出。下图为 Collector 内部结构示意：
 
@@ -180,7 +180,7 @@ Collector 主要包含以下模块：
 - **Processor**：批处理、聚合、标签过滤等处理逻辑。
 - **Exporter**：将数据导出到目标后端。
 
-## Kubernetes 中的部署模式
+## 5. Kubernetes 中的部署模式 {/* #kubernetes-中的部署模式 */}
 
 在 Kubernetes 集群中，OpenTelemetry Collector 可灵活部署于不同层级。以下架构图直观展示了各组件在集群内的分布：
 
@@ -203,7 +203,7 @@ flowchart TD
 - **Gateway 模式**：集中聚合与导出，适合统一出口管理。
 - **混合模式**：Agent + Gateway，生产环境首选。
 
-## 信号类型与数据模型
+## 6. 信号类型与数据模型 {/* #信号类型与数据模型 */}
 
 OpenTelemetry 支持多种信号类型（Signal），全面覆盖云原生可观测性的需求：
 
@@ -238,7 +238,7 @@ flowchart LR
 
 ![OpenTelemetry 信号类型](/images/k8s/observability/opentelemetry/4d9ff1e0fd496158cc85dcbfb5d8c018.svg)
 
-### Trace 结构示意
+### 6.1 Trace 结构示意 {/* #trace-结构示意 */}
 
 为了帮助理解 Trace 的层次结构，以下图展示了分布式链路的父子 Span 关系：
 
@@ -255,7 +255,7 @@ flowchart TD
 
 ![Trace 结构示意](/images/k8s/observability/opentelemetry/97f6096a67f31e6ac49d050e4553dcdc.svg)
 
-### Metrics 数据流
+### 6.2 Metrics 数据流 {/* #metrics-数据流 */}
 
 Metrics 的采集、处理与导出流程如下图所示：
 
@@ -272,7 +272,7 @@ flowchart LR
 
 ![Metrics 数据流](/images/k8s/observability/opentelemetry/90509b784c7b713d0c1133e3a54e4431.svg)
 
-### 上下文与跨服务传播
+### 6.3 上下文与跨服务传播 {/* #上下文与跨服务传播 */}
 
 OpenTelemetry 通过 Context 机制实现 Trace、Baggage 等的跨服务传播。下图展示了典型的上下文传递流程：
 
@@ -310,11 +310,11 @@ flowchart LR
 
 ![OpenTelemetry 上下文与跨服务传播](/images/k8s/observability/opentelemetry/081d45e1e81c3883ccbdeb4361c0ae7b.svg)
 
-#### 资源（Resource）
+#### 6.3.1 资源（Resource） {/* #资源resource */}
 
 Resource 用于标识观测数据的来源实体，具备不可变性、可合并、可扩展等特性。
 
-## 与 Kubernetes 及主流生态集成
+## 7. 与 Kubernetes 及主流生态集成 {/* #与-kubernetes-及主流生态集成 */}
 
 OpenTelemetry 与 Kubernetes 深度集成，大大提升了观测数据的自动化与上下文丰富性。主要集成方式包括：
 
@@ -324,7 +324,7 @@ OpenTelemetry 与 Kubernetes 深度集成，大大提升了观测数据的自动
 - 与 Grafana Alloy / Tempo / Loki / Mimir 完全兼容，实现统一观测。
 - 可与 Istio Telemetry v2、Envoy OTel Filter 等集成，支持服务网格场景。
 
-## 生态与标准化现状
+## 8. 生态与标准化现状 {/* #生态与标准化现状 */}
 
 OpenTelemetry 的标准化进展迅速，已成为云原生领域的主流方案。下表汇总了其主要标准版本与里程碑：
 
@@ -339,7 +339,7 @@ OpenTelemetry 的标准化进展迅速，已成为云原生领域的主流方案
 
 目前，OpenTelemetry 已成为 CNCF 毕业项目，被 Kubernetes、Envoy、Istio、Grafana、Prometheus 等广泛集成，并成为 AWS、Google Cloud、Azure 等云厂商的事实标准方案。
 
-## Kubernetes 集群部署示例
+## 9. Kubernetes 集群部署示例 {/* #kubernetes-集群部署示例 */}
 
 以下代码演示了如何在 Kubernetes 集群中快速部署 OpenTelemetry Operator 和 Collector，适用于初学者实践：
 
@@ -375,7 +375,7 @@ spec:
 EOF
 ```
 
-## 最佳实践与架构扩展
+## 10. 最佳实践与架构扩展 {/* #最佳实践与架构扩展 */}
 
 在生产环境中，建议遵循以下最佳实践，以获得更高的可观测性与系统稳定性：
 
@@ -415,13 +415,13 @@ flowchart TD
 
 ![OpenTelemetry 的角色分工与扩展点](/images/k8s/observability/opentelemetry/a0271696e0521b4e82362f8449477207.svg)
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 OpenTelemetry 为 Kubernetes 及云原生可观测性带来了真正的标准化与互操作性。它打通了指标、日志、追踪的边界，成为云原生时代可观测性的统一语言。无论你使用 Prometheus + Grafana，还是 Tempo + Loki + Mimir，OpenTelemetry 都是将数据源与后端解耦的关键基础设施。
 
 通过 API/SDK 分离、信号分层、Collector 架构、协议标准化与丰富的生态集成，OpenTelemetry 让开发者和运维团队能够以最低成本获得高质量、可扩展的观测能力。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 - [OpenTelemetry Specification – github.com](https://github.com/open-telemetry/opentelemetry-specification)
 - [DeepWiki: OpenTelemetry Specification Overview - deepwiki.com](https://deepwiki.com/open-telemetry/opentelemetry-specification)

@@ -1,5 +1,6 @@
 ---
 title: "GenAI-Perf 命令详解"
+sidebar_label: "04. GenAI-Perf 命令详解"
 sidebar_position: 4
 description: "使用 NVIDIA GenAI-Perf 对大模型、嵌入和重排端点生成负载，分析TTFT、ITL、Token吞吐与请求吞吐。"
 tags: [GenAI-Perf, NVIDIA, LLM, Benchmark, TTFT, ITL]
@@ -87,10 +88,10 @@ genai-perf profile \
 | 吞吐增加但Goodput下降 | 进入饱和区，尾延迟已越SLO |
 | 不同工具结果差异大 | 到达模型、Token分布、流式口径、预热和指标定义不同 |
 
-## 掌握标准
+## 7. 掌握标准 {/* #掌握标准 */}
 
 能选择正确endpoint type；能构造输入输出Token分布；能读懂TTFT/ITL/吞吐并与服务指标对齐；能识别客户端瓶颈和不稳定窗口；能输出可复现的结果包。
 
-## 官方资料
+## 8. 官方资料 {/* #官方资料 */}
 
 - [NVIDIA GenAI-Perf](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html)

@@ -1,11 +1,11 @@
 ---
-title: GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存
+title: "GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存"
 sidebar_label: "07. GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存"
 sidebar_position: 7
+description: "理解普通 GPU 网络路径与 GPUDirect RDMA 的差异，掌握 BAR1、Pinned GPU Memory、nvidia-peermem、PCIe 亲和、NCCL GDR 验证和排障方法。"
+tags: [GPU, GPUDirect RDMA, RDMA, InfiniBand, RoCE, NCCL]
 date: 2026-08-06 18:30:00
 categories: 云原生
-tags: [GPU, GPUDirect RDMA, RDMA, InfiniBand, RoCE, NCCL]
-description: 理解普通 GPU 网络路径与 GPUDirect RDMA 的差异，掌握 BAR1、Pinned GPU Memory、nvidia-peermem、PCIe 亲和、NCCL GDR 验证和排障方法。
 ---
 
 # GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存
@@ -187,7 +187,7 @@ sudo modprobe nvidia-peermem
 
 不同安装顺序和版本组合可能影响模块是否正确编译和加载。不要看到模块名称存在就忽略兼容矩阵。
 
-### DMA-BUF 路径
+### 6.1 DMA-BUF 路径 {/* #dma-buf-路径 */}
 
 较新的 CUDA、内核、驱动和 NCCL 组合也可能使用 DMA-BUF 路径。是否支持和默认选择会持续演进。
 
@@ -436,7 +436,7 @@ Pod 同时申请 GPU 和 RDMA 资源并不自动保证它们拓扑就近。还�
 
 ## 14. 常见故障
 
-### NCCL 退回 Socket
+### 14.1 NCCL 退回 Socket {/* #nccl-退回-socket */}
 
 检查：
 
@@ -447,7 +447,7 @@ Pod 同时申请 GPU 和 RDMA 资源并不自动保证它们拓扑就近。还�
 - 防火墙
 - RDMA Device Plugin
 
-### 使用 IB 但没有 GDR
+### 14.2 使用 IB 但没有 GDR {/* #使用-ib-但没有-gdr */}
 
 检查：
 
@@ -459,7 +459,7 @@ Pod 同时申请 GPU 和 RDMA 资源并不自动保证它们拓扑就近。还�
 - 容器权限
 - NCCL 版本
 
-### GDR 工作但性能低
+### 14.3 GDR 工作但性能低 {/* #gdr-工作但性能低 */}
 
 检查：
 
@@ -471,7 +471,7 @@ Pod 同时申请 GPU 和 RDMA 资源并不自动保证它们拓扑就近。还�
 - RoCE 丢包/PFC/ECN
 - Rank/HCA 绑定
 
-### `nvidia-peermem` 无法加载
+### 14.4 `nvidia-peermem` 无法加载 {/* #nvidia-peermem-无法加载 */}
 
 检查：
 
@@ -483,7 +483,7 @@ Pod 同时申请 GPU 和 RDMA 资源并不自动保证它们拓扑就近。还�
 
 不要在生产节点直接卸载关键模块进行试错。先隔离节点并准备回退。
 
-### NCCL Timeout
+### 14.5 NCCL Timeout {/* #nccl-timeout */}
 
 GDR 只是一个可能层次。还要检查：
 
@@ -522,19 +522,19 @@ GPU 正常
 
 ## 16. 它与其他模块的关系
 
-### 上游
+### 16.1 上游 {/* #上游 */}
 
 - NCCL 或通信框架产生跨节点数据
 - 数据位于 GPU HBM
 - NVLink/NVSwitch 已完成机内路径
 
-### 本层
+### 16.2 本层 {/* #本层 */}
 
 - GPU Memory 被注册给 RDMA
 - NIC 通过 PCIe Peer DMA 访问显存
 - IB/RoCE Fabric 传输数据
 
-### 下游
+### 16.3 下游 {/* #下游 */}
 
 - 对端 GPU 继续执行计算
 - 存储也可能通过远端 NIC 使用 GDS
@@ -542,23 +542,23 @@ GPU 正常
 
 ## 17. 常见误区
 
-### RDMA 就等于 GPUDirect RDMA
+### 17.1 RDMA 就等于 GPUDirect RDMA {/* #rdma-就等于-gpudirect-rdma */}
 
 RDMA 可能只访问 CPU Memory。
 
-### 模块已加载就证明 GDR 生效
+### 17.2 模块已加载就证明 GDR 生效 {/* #模块已加载就证明-gdr-生效 */}
 
 必须结合日志和性能对比。
 
-### GDR 可以修复拥塞网络
+### 17.3 GDR 可以修复拥塞网络 {/* #gdr-可以修复拥塞网络 */}
 
 它减少 Host staging，不能消除丢包、拥塞和错误配置。
 
-### GPU 与 NIC 在同一节点就足够
+### 17.4 GPU 与 NIC 在同一节点就足够 {/* #gpu-与-nic-在同一节点就足够 */}
 
 跨 NUMA 和 PCIe Root 仍可能显著影响性能。
 
-### 设置更多 NCCL 变量总能加速
+### 17.5 设置更多 NCCL 变量总能加速 {/* #设置更多-nccl-变量总能加速 */}
 
 错误变量可能禁用自动拓扑优化，应先测量和读日志。
 
@@ -585,7 +585,7 @@ GPUDirect RDMA：GPU HBM ↔ NIC
 6. 使用 NCCL Debug 日志确认实际网络路径。
 7. 设计一个双节点八卡训练的 GPU/HCA 映射表。
 
-## 参考与致谢
+## 20. 参考与致谢 {/* #参考与致谢 */}
 
 - [GPUDirect RDMA Documentation](https://docs.nvidia.com/cuda/gpudirect-rdma/)
 - [NCCL Documentation](https://docs.nvidia.com/deeplearning/nccl/)

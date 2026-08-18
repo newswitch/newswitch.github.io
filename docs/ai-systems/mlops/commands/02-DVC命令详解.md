@@ -1,5 +1,6 @@
 ---
 title: "DVC 命令详解"
+sidebar_label: "02. DVC 命令详解"
 sidebar_position: 2
 description: "掌握DVC数据与模型跟踪、remote、push/pull、repro、实验、状态、缓存和垃圾回收。"
 tags: [DVC, 数据版本, 模型版本, Pipeline, MLOps]
@@ -115,11 +116,11 @@ dvc gc -w -c -r storage
 | cache占满 | 活跃refs、共享cache、link类型；先dry-run再GC |
 | 节点间数据不同 | Git revision、dvc.lock、remote配置和对象hash |
 
-## 掌握标准
+## 10. 掌握标准 {/* #掌握标准 */}
 
 能解释metadata、cache和remote；能固定commit获取制品；能安全运行Pipeline；能将实验推广为可追溯版本；不会在共享remote上无范围执行GC。
 
-## 官方资料
+## 11. 官方资料 {/* #官方资料 */}
 
 - [DVC command reference](https://dvc.org/doc/command-reference)
 - [DVC get](https://dvc.org/doc/command-reference/get)

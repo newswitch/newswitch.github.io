@@ -1,11 +1,12 @@
 ---
-title: passwd 命令详解：密码修改、锁定、状态与老化策略
+title: "passwd 命令详解：密码修改、锁定、状态与老化策略"
+sidebar_label: "11. passwd 命令详解：密码修改、锁定、状态与老化策略"
 sidebar_position: 11
-description: 完整讲解 shadow-utils passwd 的参数、PAM 流程、密码锁定与账户禁用区别、过期策略、stdin 风险、状态字段和退出码。
+description: "完整讲解 shadow-utils passwd 的参数、PAM 流程、密码锁定与账户禁用区别、过期策略、stdin 风险、状态字段和退出码。"
 tags: [Linux, passwd, PAM, shadow, 密码策略]
 ---
 
-# `passwd` 命令详解：密码修改、锁定、状态与老化策略
+# passwd 命令详解：密码修改、锁定、状态与老化策略
 
 `passwd` 修改认证密码和部分 shadow 老化字段。普通用户通常只能修改自己的密码，管理员可操作指定账户；实际认证、复杂度、历史和远端 backend 由 PAM/NSS/目录服务共同决定。
 
@@ -86,7 +87,7 @@ shadow-utils 4.19 定义：`0` 成功，`1` 权限拒绝，`2` 选项组合非�
 
 掌握标准：能列出全部参数与状态字段；能解释锁密码、密码过期、账户过期和无密码的区别；能设计不泄露 secret 的密码初始化/轮换流程。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：passwd(1)](https://shadow-maint.github.io/shadow/man/passwd.html)
 - [Linux shadow(5)](https://man7.org/linux/man-pages/man5/shadow.5.html)

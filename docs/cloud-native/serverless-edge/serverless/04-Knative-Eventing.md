@@ -2,23 +2,23 @@
 title: "Knative Eventing"
 sidebar_label: "04. Knative Eventing"
 sidebar_position: 4
-tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative Eventing 的事件驱动架构和使用方法。"
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 ---
 
 # Knative Eventing
 
 > Knative Eventing 为 Kubernetes 提供了标准化、松耦合的事件驱动架构，支持多种事件源、灵活的事件处理模式和高可扩展性，是构建现代云原生事件系统的关键组件。
 
-## Knative Eventing 概述
+## 1. Knative Eventing 概述 {/* #knative-eventing-概述 */}
 
 Knative Eventing 是 Knative 的核心组件之一，提供事件驱动架构的支持。它允许应用以松耦合的方式进行通信，支持多种事件源和事件处理模式，极大提升了系统的灵活性和可维护性。
 
-## 核心概念
+## 2. 核心概念 {/* #核心概念 */}
 
 在 Knative Eventing 中，事件驱动架构通过标准化事件流转，实现了生产者与消费者的解耦。
 
-### 事件驱动架构
+### 2.1 事件驱动架构 {/* #事件驱动架构 */}
 
 下图展示了 Knative Eventing 的事件流转过程及核心组件。
 
@@ -69,7 +69,7 @@ graph TD
 
 ![事件驱动架构](/images/k8s/serverless/eventing/45add0ddb9c2bb092cc7af8865c1907a.svg)
 
-### CloudEvents 标准
+### 2.2 CloudEvents 标准 {/* #cloudevents-标准 */}
 
 Knative Eventing 完全兼容 CloudEvents 规范，便于事件在不同系统间传递。
 
@@ -90,11 +90,11 @@ Knative Eventing 完全兼容 CloudEvents 规范，便于事件在不同系统�
 }
 ```
 
-## 核心组件
+## 3. 核心组件 {/* #核心组件 */}
 
 Knative Eventing 主要由 Broker、Trigger 和 Source 组成，分别负责事件的接收、分发和采集。
 
-### Broker（事件代理）
+### 3.1 Broker（事件代理） {/* #broker事件代理 */}
 
 Broker 是事件的中央集线器，负责接收和分发事件。
 
@@ -116,7 +116,7 @@ spec:
     backoffPolicy: exponential
 ```
 
-### Trigger（触发器）
+### 3.2 Trigger（触发器） {/* #trigger触发器 */}
 
 Trigger 定义如何过滤和路由事件到订阅者。
 
@@ -144,11 +144,11 @@ spec:
     backoffPolicy: linear
 ```
 
-### Source（事件源）
+### 3.3 Source（事件源） {/* #source事件源 */}
 
 Source 负责从外部系统采集事件，支持多种类型。
 
-#### HTTP Source
+#### 3.3.1 HTTP Source {/* #http-source */}
 
 ```yaml
 apiVersion: sources.knative.dev/v1
@@ -165,7 +165,7 @@ spec:
   path: /webhook
 ```
 
-#### Kafka Source
+#### 3.3.2 Kafka Source {/* #kafka-source */}
 
 ```yaml
 apiVersion: sources.knative.dev/v1
@@ -187,7 +187,7 @@ spec:
       name: default
 ```
 
-#### GitHub Source
+#### 3.3.3 GitHub Source {/* #github-source */}
 
 ```yaml
 apiVersion: sources.knative.dev/v1
@@ -215,7 +215,7 @@ spec:
       name: default
 ```
 
-#### Ping Source（定时器）
+#### 3.3.4 Ping Source（定时器） {/* #ping-source定时器 */}
 
 ```yaml
 apiVersion: sources.knative.dev/v1
@@ -233,11 +233,11 @@ spec:
       name: default
 ```
 
-## 事件处理模式
+## 4. 事件处理模式 {/* #事件处理模式 */}
 
 Knative Eventing 支持多种事件处理模式，满足不同业务场景需求。
 
-### 发布 - 订阅模式
+### 4.1 发布 - 订阅模式 {/* #发布---订阅模式 */}
 
 下图展示了典型的发布 - 订阅事件分发流程。
 
@@ -272,7 +272,7 @@ graph TD
 
 ![发布-订阅模式](/images/k8s/serverless/eventing/e1bb93fe2d680147a9b8bbaa99548728.svg)
 
-### 序列处理
+### 4.2 序列处理 {/* #序列处理 */}
 
 通过 Sequence 资源实现事件的串行处理。
 
@@ -310,7 +310,7 @@ spec:
       name: order-confirmation
 ```
 
-### 并行处理
+### 4.3 并行处理 {/* #并行处理 */}
 
 通过 Parallel 资源实现事件的并行分发和处理。
 
@@ -351,11 +351,11 @@ spec:
         name: analytics-tracking
 ```
 
-## 高级特性
+## 5. 高级特性 {/* #高级特性 */}
 
 Knative Eventing 提供丰富的高级特性，支持复杂事件处理需求。
 
-### 事件过滤
+### 5.1 事件过滤 {/* #事件过滤 */}
 
 通过 Trigger 支持多维度事件过滤和 CEL 表达式。
 
@@ -378,7 +378,7 @@ spec:
       name: premium-order-handler
 ```
 
-### 事件转换
+### 5.2 事件转换 {/* #事件转换 */}
 
 支持事件内容和元数据的转换与增强。
 
@@ -404,7 +404,7 @@ spec:
       source: "/order-transformer"
 ```
 
-### 死信队列
+### 5.3 死信队列 {/* #死信队列 */}
 
 通过 deadLetterSink 配置支持事件投递失败后的兜底处理。
 
@@ -426,11 +426,11 @@ spec:
     backoffPolicy: exponential
 ```
 
-## 与 Knative Serving 集成
+## 6. 与 Knative Serving 集成 {/* #与-knative-serving-集成 */}
 
 Knative Eventing 可与 Knative Serving 无缝集成，实现事件驱动的函数调用和自动扩缩容。
 
-### 事件驱动的函数调用
+### 6.1 事件驱动的函数调用 {/* #事件驱动的函数调用 */}
 
 以下示例展示了事件驱动的函数调用流程。
 
@@ -477,7 +477,7 @@ spec:
       name: event-consumer
 ```
 
-### 自动扩缩容集成
+### 6.2 自动扩缩容集成 {/* #自动扩缩容集成 */}
 
 通过 Serving 注解实现事件驱动的自动扩缩容。
 
@@ -500,11 +500,11 @@ spec:
       - image: event-consumer:latest
 ```
 
-## 监控和调试
+## 7. 监控和调试 {/* #监控和调试 */}
 
 Knative Eventing 提供丰富的监控和调试手段，便于事件流追踪和故障排查。
 
-### 事件流监控
+### 7.1 事件流监控 {/* #事件流监控 */}
 
 可通过以下命令监控事件流和组件状态。
 
@@ -522,7 +522,7 @@ kubectl get source
 kubectl get eventtypes
 ```
 
-### 调试事件
+### 7.2 调试事件 {/* #调试事件 */}
 
 常用调试方法如下：
 
@@ -544,7 +544,7 @@ curl -X POST http://broker-ingress-url \
   }'
 ```
 
-### 指标监控
+### 7.3 指标监控 {/* #指标监控 */}
 
 可通过 Prometheus 集成采集事件相关指标。
 
@@ -565,11 +565,11 @@ spec:
     interval: 30s
 ```
 
-## 故障排除
+## 8. 故障排除 {/* #故障排除 */}
 
 常见问题及调试技巧，帮助快速定位和解决问题。
 
-### 常见问题
+### 8.1 常见问题 {/* #常见问题 */}
 
 1. **事件无法投递**
 
@@ -601,7 +601,7 @@ spec:
    kubectl logs -n knative-eventing -l eventing.knative.dev/source=<source-name>
    ```
 
-### 调试技巧
+### 8.2 调试技巧 {/* #调试技巧 */}
 
 1. **启用事件日志**
 
@@ -634,11 +634,11 @@ spec:
    kubectl get gateway -n istio-system
    ```
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 合理的事件设计和架构模式有助于提升系统的健壮性和可维护性。
 
-### 事件设计
+### 9.1 事件设计 {/* #事件设计 */}
 
 - **标准化事件格式**
 
@@ -669,7 +669,7 @@ spec:
   type: com.company.service.v2.event.updated
   ```
 
-### 架构模式
+### 9.2 架构模式 {/* #架构模式 */}
 
 - **事件溯源（Event Sourcing）**
 
@@ -714,7 +714,7 @@ spec:
         name: ship-order
   ```
 
-### 性能优化
+### 9.3 性能优化 {/* #性能优化 */}
 
 - **事件过滤优化**
 
@@ -748,7 +748,7 @@ spec:
     name: async-channel
   ```
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 Knative Eventing 为 Kubernetes 提供了强大且灵活的事件驱动架构：
 
@@ -759,7 +759,7 @@ Knative Eventing 为 Kubernetes 提供了强大且灵活的事件驱动架构：
 
 通过 Knative Eventing，企业可以构建真正的事件驱动应用，实现微服务间的松耦合通信，提高系统的响应性和可维护性。这对于构建现代化的云原生应用架构至关重要。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 1. [Knative 官方文档 - knative.dev](https://knative.dev/)
 2. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/)

@@ -2,8 +2,8 @@
 title: "Nginx 从零到精通学习路线"
 sidebar_label: "00. Nginx 从零到精通学习路线"
 sidebar_position: 0
-tags: [Nginx, 反向代理, 负载均衡, 源码, 学习路线]
 description: "从配置与反向代理深入 Master/Worker、事件循环、HTTP 阶段、Upstream、TLS、缓存、性能容量、热升级和源码。"
+tags: [Nginx, 反向代理, 负载均衡, 源码, 学习路线]
 ---
 
 # Nginx 从零到精通学习路线
@@ -25,7 +25,7 @@ Client TCP/TLS
   → proxy response / filter / log
 ```
 
-## 2. 15 篇文章规划
+## 2. 篇文章规划 {/* #2-15-篇文章规划 */}
 
 | 编号 | 文章 | 优先级 | 状态 |
 | --- | --- | --- | --- |
@@ -34,30 +34,30 @@ Client TCP/TLS
 | G02 | [Package、源码、Docker 与 Kubernetes 多种部署](./02-Nginx-Package源码Docker与Kubernetes部署.md) | P0 | 已完成 |
 | G03 | [配置上下文、指令继承、变量、Location 与 Reload](./03-Nginx配置上下文指令继承变量Location与Reload.md) | P0 | 已完成 |
 | G04 | [Reverse Proxy、Upstream、负载均衡、健康与重试](./04-Nginx反向代理Upstream负载均衡健康与重试.md) | P0 | 已完成 |
-| G05 | [Nginx HTTPS、TLS 握手、证书与性能](./一文搞懂-Nginx如何配置HTTPS.md) | P0 | 已完成 |
+| G05 | [Nginx HTTPS、TLS 握手、证书与性能](./05-一文搞懂-Nginx如何配置HTTPS.md) | P0 | 已完成 |
 | G06 | [静态文件、Sendfile、Buffer、Compression 与 Cache](./06-Nginx静态文件Sendfile-Buffer压缩与Cache.md) | P0 | 已完成 |
 | G07 | [Master/Worker、Event Loop、Accept、连接与定时器](./07-Nginx-Master-Worker事件循环连接与定时器.md) | P0 | 已完成 |
 | G08 | [HTTP Phase、Module、Subrequest、Filter 与变量源码](./08-Nginx-HTTP-Phase-Module-Subrequest与Filter源码.md) | P2 | 已完成 |
 | G09 | [限流、限连、鉴权、WAF 边界与安全加固](./09-Nginx限流限连鉴权WAF与安全加固.md) | P1 | 已完成 |
-| G10 | [Nginx 大模型网关日志配置与请求观测](./Nginx大模型网关日志配置实践.md) | P1 | 已完成 |
+| G10 | [Nginx 大模型网关日志配置与请求观测](./10-Nginx大模型网关日志配置实践.md) | P1 | 已完成 |
 | G11 | [Worker、连接、CPU、内存、带宽与容量压测](./11-Nginx-Worker连接CPU内存带宽与容量压测.md) | P1 | 已完成 |
 | G12 | [高可用、Keepalived/LB、热升级、灰度与故障 Runbook](./12-Nginx高可用Keepalived热升级灰度与Runbook.md) | P1 | 已完成 |
-| G13 | [Nginx 源码架构与基础数据结构](./nginx源码分析-基础数据结构.md) | P2 | 已完成 |
-| G14 | [Nginx 内存池与基础数据结构实现](./nginx源码解析-基础数据结构（一）.md) | P2 | 已完成 |
+| G13 | [Nginx 源码架构与基础数据结构](./13-nginx源码分析-基础数据结构.md) | P2 | 已完成 |
+| G14 | [Nginx 内存池与基础数据结构实现](./14-nginx源码解析-基础数据结构（一）.md) | P2 | 已完成 |
 
 当前完成 **15/15**，剩余 **0 篇**。
 
 ## 3. 学习阶段
 
-### 配置和数据路径
+### 3.1 配置和数据路径 {/* #配置和数据路径 */}
 
 完成 G01～G06。要能通过 `nginx -T` 还原最终配置，解释 server/location 选择、请求头改写、upstream 重试和响应 Buffer，而不是只会粘贴 location 片段。
 
-### 内核与源码
+### 3.2 内核与源码 {/* #内核与源码 */}
 
 完成 G07～G08、G13～G14。重点理解一个 Worker 通过事件循环服务大量连接，CPU 密集模块或阻塞调用为何仍会卡住该 Worker。
 
-### 生产治理
+### 3.3 生产治理 {/* #生产治理 */}
 
 完成 G09～G12。建立并发连接、请求率、响应大小、上下行带宽、TLS CPU、upstream 延迟、Buffer/Cache 和日志量的容量模型。
 

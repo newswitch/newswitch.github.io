@@ -1,11 +1,12 @@
 ---
-title: rmmod 命令详解：底层卸载模块、引用与风险控制
+title: "rmmod 命令详解：底层卸载模块、引用与风险控制"
+sidebar_label: "07. rmmod 命令详解：底层卸载模块、引用与风险控制"
 sidebar_position: 7
-description: 完整讲解 rmmod 的全部参数、模块引用和 holders、强制卸载风险、卸载失败诊断，以及与 modprobe -r 的区别。
+description: "完整讲解 rmmod 的全部参数、模块引用和 holders、强制卸载风险、卸载失败诊断，以及与 modprobe -r 的区别。"
 tags: [Linux, rmmod, kmod, 内核模块, 故障排查]
 ---
 
-# `rmmod` 命令详解：底层卸载模块、引用与风险控制
+# rmmod 命令详解：底层卸载模块、引用与风险控制
 
 `rmmod` 请求内核直接卸载指定模块。它不做 `modprobe -r` 那样的依赖策略处理；生产运维通常优先 `modprobe -r`，把 `rmmod` 留给明确掌握依赖关系的底层诊断。
 

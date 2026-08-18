@@ -1,7 +1,8 @@
 ---
-title: Namespace、cgroup 与容器现场命令导读
+title: "Namespace、cgroup 与容器现场命令导读"
+sidebar_label: "00. Namespace、cgroup 与容器现场命令导读"
 sidebar_position: 0
-description: 从 namespace 身份、UID/GID 映射、rootfs、IPC、cgroup v2 和 systemd 管理边界，建立容器节点现场分析与安全进入流程。
+description: "从 namespace 身份、UID/GID 映射、rootfs、IPC、cgroup v2 和 systemd 管理边界，建立容器节点现场分析与安全进入流程。"
 tags: [Linux, Namespace, cgroup, 容器, systemd]
 ---
 

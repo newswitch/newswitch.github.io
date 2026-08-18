@@ -2,15 +2,15 @@
 title: "ValidatingWebhook 扩展：实例验证请求的动态策略控制"
 sidebar_label: "09. ValidatingWebhook 扩展：实例验证请求的动态策略控制"
 sidebar_position: 9
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "ValidatingWebhook 扩展用于在资源创建、更新、删除等操作发生前对请求进行验证，以动态地实现策略控制、安全防护和合规审计。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # ValidatingWebhook 扩展：实例验证请求的动态策略控制
 
 > ValidatingWebhook 是 Kubernetes 动态准入控制的核心机制，支持在 API 请求路径中灵活注入自定义校验逻辑，实现安全、合规与智能化的集群治理。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 在 Kubernetes 中，**ValidatingWebhook**（验证型 Webhook）属于 *动态准入控制（Dynamic Admission Control）* 的一部分。它能在资源写入 etcd 之前介入 API Server 的请求处理流程，对对象内容进行**校验（Validation）**，并可以**拒绝不符合策略的请求**。
 
@@ -21,7 +21,7 @@ ValidatingWebhook 常见应用包括：
 - 审计和风控（如禁止删除关键命名空间）
 - 自定义策略扩展（如企业内部的 DevSecOps 检查）
 
-## 工作原理
+## 2. 工作原理 {/* #工作原理 */}
 
 1. 用户通过 `kubectl` 发起请求。
 2. API Server 首先进行身份认证（Authentication）。
@@ -32,7 +32,7 @@ ValidatingWebhook 常见应用包括：
 
 ValidatingWebhook 作为最终的校验层，在 MutatingWebhook 之后执行。一旦 Webhook 返回拒绝响应，API Server 将直接中止该请求并向用户返回错误信息。
 
-## 配置结构
+## 3. 配置结构 {/* #配置结构 */}
 
 通过定义 ValidatingWebhookConfiguration 对象，可以注册自定义的验证逻辑。以下为典型配置示例：
 
@@ -71,7 +71,7 @@ webhooks:
 | `sideEffects`             | 指明 Webhook 是否有副作用                 |
 | `timeoutSeconds`          | 请求超时设置                            |
 
-## Webhook 服务实现
+## 4. Webhook 服务实现 {/* #webhook-服务实现 */}
 
 Webhook 服务通常由一个 HTTPS 服务端实现。API Server 会发送 AdmissionReview 请求，Webhook 返回 AdmissionResponse。
 
@@ -131,7 +131,7 @@ func main() {
 }
 ```
 
-## 部署步骤
+## 5. 部署步骤 {/* #部署步骤 */}
 
 部署 ValidatingWebhook 需完成以下步骤：
 
@@ -186,7 +186,7 @@ func main() {
     kubectl apply -f validating-webhook.yaml
     ```
 
-## 实战示例：阻止特权容器运行
+## 6. 实战示例：阻止特权容器运行 {/* #实战示例阻止特权容器运行 */}
 
 以下命令演示策略效果：
 
@@ -200,21 +200,21 @@ kubectl run test-pod --image=nginx --privileged=true
 Error from server (Privileged containers are not allowed): admission webhook "validate-pods.example.com" denied the request
 ```
 
-## 高级特性
+## 7. 高级特性 {/* #高级特性 */}
 
 ValidatingWebhook 支持多种高级能力，提升策略灵活性和可维护性：
 
-- **多 Webhook 链式执行**  
+- **多 Webhook 链式执行**
   多个 Webhook 可按顺序执行，任一拒绝即中止后续校验。
-- **动态配置更新**  
+- **动态配置更新**
   通过更新 ValidatingWebhookConfiguration，可实时生效，无需重启集群。
-- **与 OPA/Gatekeeper 集成**  
+- **与 OPA/Gatekeeper 集成**
   可结合 OPA/Gatekeeper 等策略引擎，实现复杂策略编排与统一审计。
-- **Fail-Open 与 Fail-Closed 模式**  
+- **Fail-Open 与 Fail-Closed 模式**
   - Fail-Open（Ignore）：Webhook 异常时继续放行（适合非关键逻辑）
   - Fail-Closed（Fail）：Webhook 异常即拒绝请求（适合安全策略）
 
-## 调试与测试
+## 8. 调试与测试 {/* #调试与测试 */}
 
 日常调试和测试可参考以下方法：
 
@@ -236,7 +236,7 @@ ValidatingWebhook 支持多种高级能力，提升策略灵活性和可维护�
   curl -k https://localhost:8443/validate -d @admission-review.json
   ```
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 - 为每个 Webhook 指定明确的 `rules` 范围，避免拦截过多请求。
 - 设置合理的 `timeoutSeconds`（推荐 5s 以内）。
@@ -244,13 +244,13 @@ ValidatingWebhook 支持多种高级能力，提升策略灵活性和可维护�
 - 配置 readiness/liveness 探针，防止 API Server 卡死。
 - 保证幂等性：Webhook 逻辑应可重复执行。
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 ValidatingWebhook 是 Kubernetes 动态策略控制的重要组成部分。通过它，开发者无需修改核心代码即可在 API 请求路径中注入自定义验证逻辑，实现安全、合规和智能化的集群管理。
 
 它代表了云原生系统的一个关键趋势：**策略即代码（Policy as Code）**。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 1. [Kubernetes 官方文档：Validating Admission Webhooks - kubernetes.io](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
 2. [Gatekeeper Policy Controller - github.com](https://github.com/open-policy-agent/gatekeeper)

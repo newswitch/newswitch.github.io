@@ -1,9 +1,9 @@
 ---
-title: Spark SQL、Catalyst、物理计划与代码生成
+title: "Spark SQL、Catalyst、物理计划与代码生成"
 sidebar_label: "03. Spark SQL、Catalyst、物理计划与代码生成"
 sidebar_position: 3
+description: "从 SQL 解析到优化逻辑计划和物理执行，掌握 EXPLAIN、统计、下推和代码生成的调优方法。"
 tags: [Spark SQL, Catalyst, Physical Plan, CBO]
-description: 从 SQL 解析到优化逻辑计划和物理执行，掌握 EXPLAIN、统计、下推和代码生成的调优方法。
 ---
 
 # Spark SQL、Catalyst、物理计划与代码生成
@@ -73,7 +73,7 @@ Spark 使用紧凑二进制表示、列式批处理、向量化 reader 和 whole
 
 上一篇：[DAG、Job、Stage、Task](./02-DAG-Job-Stage-Task与调度过程.md)　下一篇：[Shuffle、内存、缓存、Spill 与序列化](./04-Shuffle内存缓存Spill与序列化.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Spark SQL Guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)
 - [Spark SQL Performance Tuning](https://spark.apache.org/docs/latest/sql-performance-tuning.html)

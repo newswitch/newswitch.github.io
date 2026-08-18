@@ -1,11 +1,12 @@
 ---
-title: unlink 命令详解：删除单个目录项
+title: "unlink 命令详解：删除单个目录项"
+sidebar_label: "19. unlink 命令详解：删除单个目录项"
 sidebar_position: 19
-description: 讲清 GNU coreutils unlink 的完整语法和全部选项，理解目录项、inode、打开文件、硬链接、符号链接与删除恢复边界。
+description: "讲清 GNU coreutils unlink 的完整语法和全部选项，理解目录项、inode、打开文件、硬链接、符号链接与删除恢复边界。"
 tags: [Linux, unlink, GNU coreutils, inode, 文件删除]
 ---
 
-# `unlink` 命令详解：删除单个目录项
+# unlink 命令详解：删除单个目录项
 
 `unlink` 调用删除链接的语义，一次只处理一个名称。它删除的是目录项对 inode 的引用，不是“立刻擦除磁盘数据”。当硬链接计数归零且没有进程继续打开该 inode 时，文件系统才可以回收数据块。
 
@@ -164,7 +165,7 @@ unlink "$target"
 - 能解释删除权限与父目录、sticky bit 的关系。
 - 能定位“文件已删但空间未释放”。
 
-## 官方参考
+## 12. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：unlink invocation](https://www.gnu.org/software/coreutils/manual/html_node/unlink-invocation.html)
 - [Linux unlink(2)](https://man7.org/linux/man-pages/man2/unlink.2.html)
@@ -173,4 +174,3 @@ unlink "$target"
 上一篇：[`install` 命令详解](./18-install命令详解.md)
 
 下一篇：[`file` 命令详解](./20-file命令详解.md)
-

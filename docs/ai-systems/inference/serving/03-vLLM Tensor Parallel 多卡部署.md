@@ -1,10 +1,11 @@
 ---
 title: "vLLM Tensor Parallel：从矩阵切分到 Kubernetes 多卡部署"
 sidebar_label: "03. vLLM Tensor Parallel：从矩阵切分到 Kubernetes 多卡部署"
+sidebar_position: 3
+description: "理解 Transformer 张量并行切分、逐层通信、显存边界与拓扑要求，并完成 vLLM 单机多卡部署、观测和故障排查。"
+tags: ["vLLM", "Tensor Parallel", "NCCL", "NVLink", "Kubernetes", "推理"]
 date: 2026-07-22 15:20:00
 categories: 云原生
-tags: ["vLLM", "Tensor Parallel", "NCCL", "NVLink", "Kubernetes", "推理"]
-description: "理解 Transformer 张量并行切分、逐层通信、显存边界与拓扑要求，并完成 vLLM 单机多卡部署、观测和故障排查。"
 ---
 
 # vLLM Tensor Parallel：从矩阵切分到 Kubernetes 多卡部署
@@ -522,25 +523,25 @@ TP=8 的一个 Pod 是一个 8 GPU 故障域，任何一张 GPU/rank 失败通�
 
 ## 20. 掌握标准
 
-### 入门
+### 20.1 入门 {/* #入门 */}
 
 - 能解释 TP 为什么降低权重占用但增加通信；
 - 能启动单机多卡 vLLM；
 - 能保证 Pod GPU 数与 TP 一致。
 
-### 进阶
+### 20.2 进阶 {/* #进阶 */}
 
 - 能解释列并行、行并行、attention head 与 collective；
 - 能根据 NVLink/NUMA 选择 GPU；
 - 能定位 OOM、rank 缺失和 TP 扩展效率下降。
 
-### 生产级
+### 20.3 生产级 {/* #生产级 */}
 
 - 能设计每副本 TP 与水平副本数量；
 - 能评估跨节点 TP/PP、网络和故障域；
 - 能用 SLO、显存、通信和成本数据证明并行方案。
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [vLLM Parallelism and Scaling](https://docs.vllm.ai/en/latest/serving/parallelism_scaling/)
 - [vLLM serve CLI](https://docs.vllm.ai/en/latest/cli/serve/)

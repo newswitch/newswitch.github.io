@@ -2,15 +2,15 @@
 title: "NetworkPolicy"
 sidebar_label: "04. NetworkPolicy"
 sidebar_position: 4
-tags: [Kubernetes, 安全, PartII, 学习路线]
 description: "Kubernetes NetworkPolicy 是一种声明式的网络安全策略，用于控制 Pod 之间的网络通信。本文详细介绍了 NetworkPolicy 的工作原理、配置方法、使用场景和最佳实践。"
+tags: [Kubernetes, 安全, PartII, 学习路线]
 ---
 
 # NetworkPolicy
 
 > NetworkPolicy 是 Kubernetes 网络安全的基石，通过声明式策略实现微服务间的最小权限通信，有效提升集群安全性和可控性。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 NetworkPolicy 是 Kubernetes 提供的网络安全功能，用于控制 Pod 之间以及 Pod 与外部网络端点之间的通信。它通过标签选择器来选择目标 Pod，并定义允许的入站和出站流量规则。
 
@@ -18,7 +18,7 @@ NetworkPolicy 主要作用于网络层（L3）和传输层（L4），即控制�
 
 在深入配置和应用 NetworkPolicy 之前，需要了解其依赖的网络插件和基本工作原理。
 
-## 前提条件
+## 2. 前提条件 {/* #前提条件 */}
 
 NetworkPolicy 的实现依赖于网络插件（CNI），从 Kubernetes 1.3 版本开始支持。目前支持 NetworkPolicy 的主要网络方案包括：
 
@@ -30,7 +30,7 @@ NetworkPolicy 的实现依赖于网络插件（CNI），从 Kubernetes 1.3 版�
 
 如果使用不支持 NetworkPolicy 的网络插件（如 Flannel 原生模式），创建的 NetworkPolicy 资源将不会生效。在生产环境中，建议选择功能完整的 CNI 插件以获得最佳的安全控制效果。
 
-## Pod 的网络隔离状态
+## 3. Pod 的网络隔离状态 {/* #pod-的网络隔离状态 */}
 
 Kubernetes 中 Pod 的网络隔离状态分为以下两种：
 
@@ -39,11 +39,11 @@ Kubernetes 中 Pod 的网络隔离状态分为以下两种：
 
 需要注意的是，NetworkPolicy 的隔离是单向的。如果一个 NetworkPolicy 只定义了 ingress 规则，那么只会影响入站流量；如果只定义了 egress 规则，则只会影响出站流量。
 
-## NetworkPolicy 资源规范
+## 4. NetworkPolicy 资源规范 {/* #networkpolicy-资源规范 */}
 
 在实际应用中，合理配置 NetworkPolicy 资源是实现网络安全的关键。下面介绍其基本结构和核心字段。
 
-### 基本结构
+### 4.1 基本结构 {/* #基本结构 */}
 
 以下是 NetworkPolicy 的典型 YAML 配置示例：
 
@@ -78,14 +78,14 @@ spec:
       port: 3306
 ```
 
-### 核心字段说明
+### 4.2 核心字段说明 {/* #核心字段说明 */}
 
 - **podSelector**：用于选择应用此策略的目标 Pod。空的 podSelector（`{}`）会选择当前命名空间中的所有 Pod。
 - **policyTypes**：指定策略类型，可选值为 `Ingress`、`Egress` 或两者都有。如果未指定，默认为 `Ingress`。
 - **ingress**：定义入站流量规则，包含 `from`（流量源）和 `ports`（允许的端口）配置。
 - **egress**：定义出站流量规则，包含 `to`（流量目标）和 `ports`（允许的端口）配置。
 
-### 流量源和目标选择器
+### 4.3 流量源和目标选择器 {/* #流量源和目标选择器 */}
 
 NetworkPolicy 支持三种方式来指定流量的源或目标：
 
@@ -110,11 +110,11 @@ ingress:
       - 192.168.1.10/32
 ```
 
-## 实际应用示例
+## 5. 实际应用示例 {/* #实际应用示例 */}
 
 通过具体示例，可以更好地理解 NetworkPolicy 的配置和应用场景。
 
-### 示例 1：数据库访问控制
+### 5.1 示例 1：数据库访问控制 {/* #示例-1数据库访问控制 */}
 
 以下策略仅允许标签为 `app: backend` 的 Pod 通过 TCP 端口 3306 访问数据库：
 
@@ -140,7 +140,7 @@ spec:
       port: 3306
 ```
 
-### 示例 2：跨命名空间通信
+### 5.2 示例 2：跨命名空间通信 {/* #示例-2跨命名空间通信 */}
 
 以下策略允许来自 `frontend` 和 `mobile` 命名空间的流量访问 API 服务器：
 
@@ -169,11 +169,11 @@ spec:
       port: 8080
 ```
 
-## 常用默认策略
+## 6. 常用默认策略 {/* #常用默认策略 */}
 
 在实际生产环境中，建议为命名空间设置默认拒绝或允许策略。以下为常见的默认策略示例。
 
-### 拒绝所有流量
+### 6.1 拒绝所有流量 {/* #拒绝所有流量 */}
 
 该策略拒绝所有入站和出站流量：
 
@@ -189,7 +189,7 @@ spec:
   - Egress
 ```
 
-### 允许所有入站流量
+### 6.2 允许所有入站流量 {/* #允许所有入站流量 */}
 
 该策略允许所有入站流量：
 
@@ -206,7 +206,7 @@ spec:
   - {}
 ```
 
-### 允许所有出站流量
+### 6.3 允许所有出站流量 {/* #允许所有出站流量 */}
 
 该策略允许所有出站流量：
 
@@ -223,7 +223,7 @@ spec:
   - {}
 ```
 
-## 最佳实践
+## 7. 最佳实践 {/* #最佳实践 */}
 
 为了充分发挥 NetworkPolicy 的安全能力，建议遵循以下最佳实践：
 
@@ -238,7 +238,7 @@ spec:
 | 策略管理工具   | 使用策略即代码工具（如 Kyverno）或可视化编辑器管理复杂策略                 | Kyverno、editor.networkpolicy.io |
 | 性能考虑       | 高流量环境下进行性能测试，关注 CNI 插件性能                               | —                       |
 
-## 限制和注意事项
+## 8. 限制和注意事项 {/* #限制和注意事项 */}
 
 在实际使用 NetworkPolicy 时，还需关注以下限制和注意事项：
 
@@ -250,11 +250,11 @@ spec:
 - NetworkPolicy 不影响 Kubernetes 控制平面组件间的通信。
 - 在部分云厂商托管 Kubernetes 服务中，NetworkPolicy 可能有额外限制。
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 Kubernetes NetworkPolicy 通过声明式策略实现了微服务间的最小权限网络访问控制，是提升集群安全性的关键手段。合理配置策略、结合多层安全机制，并定期审查和测试，是保障云原生环境安全的基础。建议结合实际业务需求，充分利用 NetworkPolicy 的能力，构建安全、可控的 Kubernetes 网络环境。
 
-## 参考文献
+## 10. 参考资料 {/* #参考文献 */}
 
 - [Network Policies - Kubernetes 官方文档](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 - [Declare Network Policy - Kubernetes 官方教程](https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/)

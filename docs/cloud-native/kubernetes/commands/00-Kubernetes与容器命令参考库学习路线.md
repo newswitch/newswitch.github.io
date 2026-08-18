@@ -1,11 +1,12 @@
 ---
-title: Kubernetes 与容器命令参考库：从 API 对象到 OCI 进程
+title: "Kubernetes 与容器命令参考库：从 API 对象到 OCI 进程"
+sidebar_label: "00. Kubernetes 与容器命令参考库：从 API 对象到 OCI 进程"
 sidebar_position: 0
-description: 系统学习 kubectl、Helm、Kustomize、kubeadm、etcdctl、crictl、containerd、Docker、Podman 与 runc 的对象、参数、安全边界和排障链路。
+description: "系统学习 kubectl、Helm、Kustomize、kubeadm、etcdctl、crictl、containerd、Docker、Podman 与 runc 的对象、参数、安全边界和排障链路。"
 tags: [Kubernetes, kubectl, containerd, CRI, OCI, 命令参考, SRE]
 ---
 
-# Kubernetes 与容器命令参考库
+# Kubernetes 与容器命令参考库：从 API 对象到 OCI 进程
 
 这套参考库沿着真实控制链路组织命令，而不是按工具名称背速查表：用户通过 `kubectl` 访问 API Server，控制器把期望状态变成 Pod，scheduler 选择节点，kubelet 通过 CRI 调用 containerd/CRI-O，运行时再通过 OCI Runtime 创建 Linux 进程。Helm/Kustomize负责交付对象，kubeadm/etcdctl负责控制面生命周期与状态。
 
@@ -42,7 +43,7 @@ runc --version
 
 ## 3. 十六篇学习顺序
 
-### Kubernetes API 与日常运维
+### 3.1 Kubernetes API 与日常运维 {/* #kubernetes-api-与日常运维 */}
 
 1. [`kubectl config/api-resources/explain`](./01-kubectl配置发现与字段解释.md)：先确认对哪个集群、以什么身份、操作哪些 API。
 2. [`kubectl get/describe/events`](./02-kubectl资源查询与事件诊断.md)：建立对象、状态、条件和事件证据。
@@ -51,14 +52,14 @@ runc --version
 5. [`kubectl rollout/scale/autoscale/cordon/drain`](./05-kubectl工作负载发布与节点维护.md)：完成发布、扩缩容和节点维护。
 6. [`kubectl auth/top/wait/api-raw`](./06-kubectl权限指标等待与原始API.md)：验证权限、资源使用、状态收敛和 API 原始响应。
 
-### 应用交付与控制面
+### 3.2 应用交付与控制面 {/* #应用交付与控制面 */}
 
 7. [`helm`](./07-helm命令详解.md)：Chart、Release、Values、升级、测试与回滚。
 8. [`kubectl kustomize`](./08-kustomize命令详解.md)：Base/Overlay、Patch、Generator 与渲染验证。
 9. [`kubeadm`](./09-kubeadm命令详解.md)：集群初始化、加入、升级、证书与重置。
 10. [`etcdctl`](./10-etcdctl命令详解.md)：Endpoint 健康、快照、恢复与键空间审计。
 
-### 节点、镜像与 OCI
+### 3.3 节点、镜像与 OCI {/* #节点镜像与-oci */}
 
 11. [`crictl`](./11-crictl命令详解.md)：从 kubelet 同一 CRI 视角排查 Pod Sandbox、容器和镜像。
 12. [`ctr`](./12-ctr命令详解.md)：containerd 内部 Namespace、Content、Image、Container 与 Task。
@@ -93,7 +94,7 @@ Docker/nerdctl/Podman适合各自管理的容器，但不能替代 Kubernetes �
 
 学完后应能把 Pod Pending/启动失败/CrashLoop/网络或存储挂载问题定位到 API、调度、kubelet、CRI、镜像、OCI 或 Linux 层；能安全发布和回滚工作负载；能维护节点和控制面；能解释 Image、Container、Task、Pod Sandbox、OCI Bundle 不是同一个对象。
 
-## 官方入口
+## 7. 官方入口 {/* #官方入口 */}
 
 - [Kubernetes kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
 - [Helm Commands](https://helm.sh/docs/helm/)

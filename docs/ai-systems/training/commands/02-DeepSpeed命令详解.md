@@ -1,5 +1,6 @@
 ---
 title: "DeepSpeed 命令详解"
+sidebar_label: "02. DeepSpeed 命令详解"
 sidebar_position: 2
 description: "掌握 DeepSpeed 启动器、hostfile与资源过滤、环境报告、ZeRO配置、日志和多机训练故障排查。"
 tags: [DeepSpeed, ZeRO, 分布式训练, GPU, NCCL]
@@ -130,11 +131,11 @@ ZeRO checkpoint不是普通单文件；保存完成需有全rank成功和完整�
 5. 再加载模型、数据和ZeRO/offload。
 6. 定位第一个失败rank，而不是只看launcher最后一行。
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能解释hostfile与slot；能判断谁负责创建远端进程；能计算全局batch；能用环境报告定位扩展兼容；能分层分析ZeRO显存、CPU内存和存储压力；能保证checkpoint可恢复。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [DeepSpeed getting started](https://www.deepspeed.ai/getting-started/)
 - [DeepSpeed configuration](https://www.deepspeed.ai/docs/config-json/)

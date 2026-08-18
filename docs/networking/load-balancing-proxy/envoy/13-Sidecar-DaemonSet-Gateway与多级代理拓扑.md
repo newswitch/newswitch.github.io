@@ -2,8 +2,8 @@
 title: "Envoy Sidecar、DaemonSet、Gateway、Service Mesh 与多级代理拓扑"
 sidebar_label: "13. Envoy Sidecar、DaemonSet、Gateway、Service Mesh 与多级代理拓扑"
 sidebar_position: 13
-tags: [Envoy, Sidecar, DaemonSet, Gateway, Service Mesh]
 description: "比较 Envoy 部署拓扑、故障域、资源成本、身份边界，并追踪多级代理中的请求与超时。"
+tags: [Envoy, Sidecar, DaemonSet, Gateway, Service Mesh]
 ---
 
 # Envoy Sidecar、DaemonSet、Gateway、Service Mesh 与多级代理拓扑
@@ -55,11 +55,17 @@ iptables/eBPF/透明代理会改变 Original Source/Destination、DNS 和回环�
 - 应用能否感知/配合重试、身份和优雅关闭？
 - 资源成本、连接规模和可观测基数是否可控？
 
-## 7. 掌握标准
+## 7. 拓扑故障实验
+
+为候选拓扑测完整客户端→每级代理→服务路径，记录分段 connect/TLS/queue/upstream 延迟、连接数、CPU/内存、证书身份和故障域。分别停止一个 Sidecar、节点代理和 Gateway 副本，确认影响半径、重路由时间与长连接表现。
+
+执行伪造 `X-Forwarded-For`/身份 Header、错误 SNI、trace context 丢失和某一级重复重试实验。只有受信代理可以追加可信身份，入口必须清理外部伪造值。最终交付拓扑图、容量模型、证书/配置所有者、告警和回滚路径，而不是只比较代理进程数量。
+
+## 8. 掌握标准
 
 你应能画出生产请求经过的每个代理和 TLS/身份边界，指定超时、重试与日志所有者，并根据故障域和容量选择 Sidecar、节点代理或集中 Gateway。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Envoy Deployment Types](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/intro/deployment_types)
 - [Istio Architecture](https://istio.io/latest/docs/ops/deployment/architecture/)

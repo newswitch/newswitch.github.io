@@ -2,19 +2,19 @@
 title: "Knative Serving"
 sidebar_label: "03. Knative Serving"
 sidebar_position: 3
-tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "Knative Serving 的核心概念、配置和使用方法。"
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 ---
 
 # Knative Serving
 
 > Knative Serving 为 Kubernetes 上的 Serverless 应用提供了自动扩缩容、流量管理和版本控制等能力，极大简化了云原生应用的部署与运维。
 
-## Knative Serving 概述
+## 1. Knative Serving 概述 {/* #knative-serving-概述 */}
 
 Knative Serving 是 Knative 的核心组件之一，提供 Serverless 应用的部署、路由和自动扩缩容功能。它构建在 Kubernetes 之上，为容器化应用带来完整的 Serverless 体验。
 
-## 核心架构
+## 2. 核心架构 {/* #核心架构 */}
 
 下图展示了 Knative Serving 的核心架构及各组件关系。
 
@@ -63,11 +63,11 @@ graph TD
 
 ![Knative Serving 核心架构](/images/k8s/serverless/serving/062bf86fcea8c9094ac88933553daf35.svg)
 
-## 核心资源
+## 3. 核心资源 {/* #核心资源 */}
 
 Knative Serving 主要包含 Service、Configuration、Revision 和 Route 四类核心资源，分别负责应用生命周期、配置、版本和流量管理。
 
-### Service（服务）
+### 3.1 Service（服务） {/* #service服务 */}
 
 Service 是最顶层的抽象，封装了应用的完整生命周期。以下为 Service 资源示例：
 
@@ -104,7 +104,7 @@ spec:
             memory: 512Mi
 ```
 
-### Configuration（配置）
+### 3.2 Configuration（配置） {/* #configuration配置 */}
 
 Configuration 定义了应用的期望状态，每次变更都会生成新的 Revision。
 
@@ -126,7 +126,7 @@ spec:
           value: "Version 1"
 ```
 
-### Revision（版本）
+### 3.3 Revision（版本） {/* #revision版本 */}
 
 Revision 是应用的不可变快照，支持版本回滚和多版本并存。
 
@@ -153,7 +153,7 @@ spec:
   concurrency: 100
 ```
 
-### Route（路由）
+### 3.4 Route（路由） {/* #route路由 */}
 
 Route 管理流量路由规则，支持金丝雀部署和标签路由。
 
@@ -180,11 +180,11 @@ spec:
     revisionName: hello-world-v2-fghij
 ```
 
-## 流量管理
+## 4. 流量管理 {/* #流量管理 */}
 
 Knative Serving 支持多种流量管理策略，包括金丝雀部署、标签路由和自定义域名。
 
-### 金丝雀部署
+### 4.1 金丝雀部署 {/* #金丝雀部署 */}
 
 通过 traffic 字段实现多版本流量分配，支持灰度发布。
 
@@ -203,7 +203,7 @@ spec:
     revisionName: hello-world-v2
 ```
 
-### 基于标签的路由
+### 4.2 基于标签的路由 {/* #基于标签的路由 */}
 
 可为不同版本分配标签，实现 A/B 测试或多环境路由。
 
@@ -222,7 +222,7 @@ spec:
     revisionName: hello-world-v2
 ```
 
-### 域名和路径路由
+### 4.3 域名和路径路由 {/* #域名和路径路由 */}
 
 支持自定义域名和路径，灵活适配业务需求。
 
@@ -241,11 +241,11 @@ spec:
       path: /api/v1
 ```
 
-## 自动扩缩容
+## 5. 自动扩缩容 {/* #自动扩缩容 */}
 
 Knative Serving 提供原生自动扩缩容能力，支持多维度配置和多种扩缩容策略。
 
-### KPA (Knative Pod Autoscaler)
+### 5.1 KPA (Knative Pod Autoscaler) {/* #kpa-knative-pod-autoscaler */}
 
 KPA 是 Knative 的原生自动扩缩容器，支持多维度配置。
 
@@ -275,11 +275,11 @@ spec:
       - image: gcr.io/knative-samples/helloworld-go
 ```
 
-### 扩缩容指标
+### 5.2 扩缩容指标 {/* #扩缩容指标 */}
 
 Knative 支持多种扩缩容指标，满足不同业务场景。
 
-#### 并发度（Concurrency）
+#### 5.2.1 并发度（Concurrency） {/* #并发度concurrency */}
 
 基于并发请求数的扩缩容：
 
@@ -290,7 +290,7 @@ metadata:
     autoscaling.knative.dev/target: "100"  # 每个 Pod 处理 100 个并发请求
 ```
 
-#### RPS (Requests Per Second)
+#### 5.2.2 RPS (Requests Per Second) {/* #rps-requests-per-second */}
 
 基于每秒请求数的扩缩容：
 
@@ -301,7 +301,7 @@ metadata:
     autoscaling.knative.dev/target: "100"  # 每个 Pod 处理 100 RPS
 ```
 
-#### CPU 利用率
+#### 5.2.3 CPU 利用率 {/* #cpu-利用率 */}
 
 基于 CPU 使用率的扩缩容：
 
@@ -312,11 +312,11 @@ metadata:
     autoscaling.knative.dev/targetUtilizationPercentage: "70"  # 目标 CPU 利用率 70%
 ```
 
-## 运行时行为
+## 6. 运行时行为 {/* #运行时行为 */}
 
 Knative Serving 的请求处理流程涉及多组件协作，支持冷启动优化。
 
-### 请求处理流程
+### 6.1 请求处理流程 {/* #请求处理流程 */}
 
 下图展示了请求从入口到业务容器的完整流转过程。
 
@@ -347,7 +347,7 @@ sequenceDiagram
 
 ![请求处理流程](/images/k8s/serverless/serving/f549b1b49c9f511178e6e6f5ca6cf746.svg)
 
-### 冷启动优化
+### 6.2 冷启动优化 {/* #冷启动优化 */}
 
 通过合理配置可显著降低冷启动延迟。
 
@@ -372,11 +372,11 @@ sequenceDiagram
      autoscaling.knative.dev/scaleUpDelay: "0s"  # 立即扩容
    ```
 
-## 网络和安全
+## 7. 网络和安全 {/* #网络和安全 */}
 
 Knative Serving 支持灵活的域名配置、TLS 证书和多种网络插件，保障服务安全与可达性。
 
-### 域名配置
+### 7.1 域名配置 {/* #域名配置 */}
 
 通过 ConfigMap 配置自定义域名和通配符域名。
 
@@ -395,7 +395,7 @@ data:
   "*.example.com": ""
 ```
 
-### TLS 证书
+### 7.2 TLS 证书 {/* #tls-证书 */}
 
 支持自动或手动管理 TLS 证书，提升安全性。
 
@@ -411,7 +411,7 @@ spec:
   secretName: hello-world-tls
 ```
 
-### 网络插件
+### 7.3 网络插件 {/* #网络插件 */}
 
 Knative 支持多种网络插件，满足不同场景需求：
 
@@ -420,11 +420,11 @@ Knative 支持多种网络插件，满足不同场景需求：
 - **Kourier**：专为 Knative 设计的轻量级网关
 - **Ambassador**：API 网关集成
 
-## 监控和可观测性
+## 8. 监控和可观测性 {/* #监控和可观测性 */}
 
 Knative Serving 提供丰富的监控和追踪能力，便于运维和故障排查。
 
-### 指标收集
+### 8.1 指标收集 {/* #指标收集 */}
 
 可通过 Prometheus ServiceMonitor 收集关键指标。
 
@@ -445,14 +445,14 @@ spec:
     interval: 30s
 ```
 
-### 关键指标
+### 8.2 关键指标 {/* #关键指标 */}
 
 - `knative.dev/serving/activator/request_count`：激活器请求数
 - `knative.dev/serving/autoscaler/desired_pods`：期望的 Pod 数量
 - `knative.dev/serving/autoscaler/actual_pods`：实际的 Pod 数量
 - `knative.dev/serving/queue/proxy/request_count`：队列代理请求数
 
-### 分布式追踪
+### 8.3 分布式追踪 {/* #分布式追踪 */}
 
 支持 Zipkin 等分布式追踪系统，便于链路分析。
 
@@ -470,11 +470,11 @@ data:
     sample-rate: "0.1"
 ```
 
-## 故障排除
+## 9. 故障排除 {/* #故障排除 */}
 
 常见问题及调试技巧，帮助快速定位和解决问题。
 
-### 常见问题
+### 9.1 常见问题 {/* #常见问题 */}
 
 1. **Service 无法创建**
 
@@ -516,7 +516,7 @@ data:
    kubectl describe pod <pod-name>
    ```
 
-### 调试技巧
+### 9.2 调试技巧 {/* #调试技巧 */}
 
 1. **查看 Revision 状态**
 
@@ -542,11 +542,11 @@ data:
    kubectl logs -n knative-serving -l app=queue-proxy --tail=100
    ```
 
-## 最佳实践
+## 10. 最佳实践 {/* #最佳实践 */}
 
 合理配置资源、优化镜像和流量策略，有助于提升系统稳定性和效率。
 
-### 应用配置优化
+### 10.1 应用配置优化 {/* #应用配置优化 */}
 
 1. **合理设置资源限制**
 
@@ -576,7 +576,7 @@ data:
          command: ["/bin/sh", "-c", "sleep 15"]
    ```
 
-### 流量管理策略
+### 10.2 流量管理策略 {/* #流量管理策略 */}
 
 1. **渐进式部署**
 
@@ -615,7 +615,7 @@ data:
        revisionName: green-version
    ```
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 Knative Serving 为 Kubernetes 应用提供了完整的 Serverless 体验：
 
@@ -626,7 +626,7 @@ Knative Serving 为 Kubernetes 应用提供了完整的 Serverless 体验：
 
 通过 Knative Serving，开发者可以专注于业务逻辑，无需关心底层基础设施管理，极大简化了云原生应用的开发和运维流程。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 1. [Knative 官方文档 - knative.dev](https://knative.dev/)
 2. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/)

@@ -2,8 +2,8 @@
 title: "Envoy TLS、mTLS、SDS、证书轮换、RBAC、JWT 与外部授权"
 sidebar_label: "08. Envoy TLS、mTLS、SDS、证书轮换、RBAC、JWT 与外部授权"
 sidebar_position: 8
-tags: [Envoy, TLS, mTLS, SDS, RBAC, JWT, ext_authz]
 description: "从下游与上游两段 TLS 深入 SDS 动态 Secret、身份验证、授权 Filter、轮换与安全排障。"
+tags: [Envoy, TLS, mTLS, SDS, RBAC, JWT, ext_authz]
 ---
 
 # Envoy TLS、mTLS、SDS、证书轮换、RBAC、JWT 与外部授权
@@ -67,7 +67,7 @@ JWT Filter 验签与提取 Claim，不等于授权。RBAC 适合数据面可快�
 
 你应能画出两段 TLS 的证书和信任方向，完成无中断轮换，区分 JWT 验证与授权，并解释鉴权服务失败时的安全和可用性取舍。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Envoy TLS](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/security/ssl)
 - [Secret Discovery Service](https://www.envoyproxy.io/docs/envoy/latest/configuration/security/secret)

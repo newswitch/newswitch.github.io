@@ -2,8 +2,8 @@
 title: "QPS、数据增长、IOPS、复制与备份容量规划"
 sidebar_label: "05. QPS、数据增长、IOPS、复制与备份容量规划"
 sidebar_position: 5
-tags: [MySQL, 容量规划, QPS, IOPS, 复制, 备份]
 description: "把业务增长转换为数据库流量、存储、日志、复制、备份和恢复需求，建立水位、预测与扩容触发点。"
+tags: [MySQL, 容量规划, QPS, IOPS, 复制, 备份]
 ---
 
 # QPS、数据增长、IOPS、复制与备份容量规划
@@ -106,9 +106,8 @@ Top 表/digest 增长
 扩容/归档/优化行动
 ```
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [MySQL Capacity Planning](https://dev.mysql.com/doc/refman/8.4/en/optimization.html)
 - [Replication Implementation](https://dev.mysql.com/doc/refman/8.4/en/replication-implementation.html)
 - [MySQL Backup and Recovery](https://dev.mysql.com/doc/refman/8.4/en/backup-and-recovery.html)
-

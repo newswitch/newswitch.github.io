@@ -2,8 +2,8 @@
 title: "Envoy Drain、Hot Restart、Runtime、灰度与无损升级"
 sidebar_label: "11. Envoy Drain、Hot Restart、Runtime、灰度与无损升级"
 sidebar_position: 11
-tags: [Envoy, Drain, Hot Restart, Runtime, Upgrade]
 description: "理解配置更新、连接排空、进程热重启、Kubernetes 滚动和版本兼容，建立可回退升级流程。"
+tags: [Envoy, Drain, Hot Restart, Runtime, Upgrade]
 ---
 
 # Envoy Drain、Hot Restart、Runtime、灰度与无损升级
@@ -59,7 +59,7 @@ Envoy Hot Restart 可由新老进程代际协同接管 Listener/统计等，但�
 
 你应能解释配置更新、Runtime、Drain、Hot Restart 和 Pod Rolling Update 的边界，并用连接级证据证明升级对短请求和长流的影响符合约定。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Envoy Hot Restart](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/hot_restart)
 - [Draining](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/draining)

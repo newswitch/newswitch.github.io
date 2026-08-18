@@ -1,9 +1,9 @@
 ---
-title: QoS 分类、队列与流量工程
+title: "QoS 分类、队列与流量工程"
 sidebar_label: "08. QoS 分类、队列与流量工程"
 sidebar_position: 8
+description: "从拥塞发生位置出发，掌握分类、标记、排队、整形、监管和端到端 QoS 验证。"
 tags: [QoS, DSCP, Queuing, Policing, Shaping, Congestion]
-description: 从拥塞发生位置出发，掌握分类、标记、排队、整形、监管和端到端 QoS 验证。
 ---
 
 # QoS 分类、队列与流量工程
@@ -170,7 +170,7 @@ GPU 集群中的 RDMA/RoCE 需要进一步学习 PFC、ECN、DCQCN、无损/近�
 
 你应能从业务 SLO 推导分类和带宽策略，指出真实拥塞点，解释 Policing 与 Shaping 的不同，计算队列积压造成的时延，并通过队列计数器与端到端测试证明策略生效。
 
-## 参考资料
+## 11. 参考资料 {/* #参考资料 */}
 
 - [RFC 4594：Service Classes 配置指南](https://www.rfc-editor.org/rfc/rfc4594)
 - [Linux Traffic Control 文档](https://man7.org/linux/man-pages/man8/tc.8.html)

@@ -2,8 +2,8 @@
 title: "NFS 性能指标、压测与参数调优"
 sidebar_label: "05. NFS 性能指标、压测与参数调优"
 sidebar_position: 5
-tags: [NFS, nfsstat, nfsiostat, fio, rsize, wsize, nconnect, 性能调优]
 description: "按应用、客户端 RPC、网络、服务端和后端五层测量 NFS，并基于证据调整 rsize、wsize、nconnect、缓存和并发。"
+tags: [NFS, nfsstat, nfsiostat, fio, rsize, wsize, nconnect, 性能调优]
 ---
 
 # NFS 性能指标、压测与参数调优
@@ -23,7 +23,7 @@ NFS 性能是端到端结果：
 
 ## 1. 先定义业务指标
 
-### 模型加载
+### 1.1 模型加载 {/* #模型加载 */}
 
 - 单模型冷/热完成时间；
 - 多 Pod P50/P95/P99；
@@ -31,7 +31,7 @@ NFS 性能是端到端结果：
 - 校验、反序列化和 H2D 分段；
 - 源端聚合带宽。
 
-### 训练数据
+### 1.2 训练数据 {/* #训练数据 */}
 
 - samples/s；
 - DataLoader wait；
@@ -39,7 +39,7 @@ NFS 性能是端到端结果：
 - 文件大小分布和 open/stat rate；
 - 多节点公平性。
 
-### Checkpoint
+### 1.3 Checkpoint {/* #checkpoint */}
 
 - 每次完整提交时间；
 - write/fsync/rename/manifest；
@@ -271,45 +271,45 @@ direct/buffered
 
 ## 14. 服务端文件系统和后端
 
-### 大文件读
+### 14.1 大文件读 {/* #大文件读 */}
 
 关注顺序吞吐、readahead、page cache、RAID 条带与 NIC。
 
-### 小文件
+### 14.2 小文件 {/* #小文件 */}
 
 关注 inode、目录布局、metadata locks、日志和 CPU。将百万小文件打包为训练分片可能比 NFS 参数调优收益大。
 
-### Checkpoint 写
+### 14.3 Checkpoint 写 {/* #checkpoint-写 */}
 
 关注 Dirty/Writeback、fsync、设备 cache、RAID/复制和多个 rank 同步。Buffered 写峰值可能只是服务端内存。
 
-### 后台任务
+### 14.4 后台任务 {/* #后台任务 */}
 
 备份、快照、RAID rebuild、Scrub 和其他租户会制造周期性尖峰，必须进入时间线。
 
 ## 15. 性能症状决策树
 
-### 单客户端慢，多客户端也慢
+### 15.1 单客户端慢，多客户端也慢 {/* #单客户端慢多客户端也慢 */}
 
 先查该客户端 CPU/NIC/挂载/缓存，再查服务端与后端。
 
-### 单客户端正常，多客户端聚合不增长
+### 15.2 单客户端正常，多客户端聚合不增长 {/* #单客户端正常多客户端聚合不增长 */}
 
 查服务端 NIC、nfsd CPU、后端带宽、锁、连接数和交换网络。
 
-### RTT 高
+### 15.3 RTT 高 {/* #rtt-高 */}
 
 查网络拥塞/重传、服务端排队、后端 I/O。服务端慢也会体现为 RPC RTT 高。
 
-### execute 高、RTT 相对低
+### 15.4 execute 高、RTT 相对低 {/* #execute-高rtt-相对低 */}
 
 查客户端 RPC queue/slot、并发、CPU 和应用提交。
 
-### 读快写慢
+### 15.5 读快写慢 {/* #读快写慢 */}
 
 查同步语义、服务端 writeback、RAID/复制、设备持续写和剩余空间。
 
-### 大文件快、小文件慢
+### 15.6 大文件快、小文件慢 {/* #大文件快小文件慢 */}
 
 查 LOOKUP/GETATTR/open/stat、目录、服务端元数据和 DataLoader 格式。
 
@@ -376,7 +376,7 @@ NFS 规划要同时保留：
 
 下一篇：[NFS CSI、生产故障排查与 AI 冷启动](./06-NFS%20CSI生产故障排查与AI冷启动.md)。
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [nfsstat(8)](https://man7.org/linux/man-pages/man8/nfsstat.8.html)
 - [nfsiostat(8)](https://man7.org/linux/man-pages/man8/nfsiostat.8.html)

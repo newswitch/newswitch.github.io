@@ -1,9 +1,11 @@
 ---
-title: NFS 在 AI 集群中的使用与性能分析
+title: "NFS 在 AI 集群中的使用与性能分析"
 sidebar_label: "01. NFS 在 AI 集群中的使用与性能分析"
+sidebar_position: 1
+description: "NFS 的优点是简单、POSIX 兼容、多个节点可以看到同一个目录。它很适合中小规模模型共享，但也容易在多 Pod 冷启动和小文件数据集场景形成瓶颈。"
+tags: [Kubernetes, GPU, NFS, CSI, 存储]
 date: 2026-08-06 17:10:00
 categories: 云原生
-tags: [Kubernetes, GPU, NFS, CSI, 存储]
 ---
 
 # NFS 在 AI 集群中的使用与性能分析
@@ -11,8 +13,6 @@ tags: [Kubernetes, GPU, NFS, CSI, 存储]
 NFS 的优点是简单、POSIX 兼容、多个节点可以看到同一个目录。它很适合中小规模模型共享，但也容易在多 Pod 冷启动和小文件数据集场景形成瓶颈。
 
 本文不把 NFS 简化为“一条 mount 命令”，而是从客户端 IO 一直追踪到 Kubernetes Pod。
-
----
 
 ## 1. 学习目标
 
@@ -24,8 +24,6 @@ NFS 的优点是简单、POSIX 兼容、多个节点可以看到同一个目录�
 - 创建支持 RWX 的 NFS PVC。
 - 测量单客户端、多客户端、顺序 IO 和元数据性能。
 - 排查权限、超时、挂载、容量和冷启动风暴。
-
----
 
 ## 2. NFS 的基本架构
 
@@ -51,8 +49,6 @@ Pod 看见的是 POSIX 文件路径，但每次缓存未命中的读取最终可
 - 并发客户端数量。
 - 文件大小、目录规模和访问模式。
 
----
-
 ## 3. NFSv3 与 NFSv4
 
 学习阶段先掌握差异方向，不要死记所有协议字段：
@@ -66,8 +62,6 @@ Pod 看见的是 POSIX 文件路径，但每次缓存未命中的读取最终可
 | 选择 | 兼容旧环境 | 新建环境通常优先评估 4.1+ |
 
 具体版本应根据 NFS 服务端、Linux 内核、网络和厂商支持矩阵确定。不要只因版本数字更高就跳过压测。
-
----
 
 ## 4. AI 工作负载是否适合 NFS
 
@@ -109,8 +103,6 @@ NFS 能提供共享命名空间，但 Checkpoint 常产生集中写流量。
 
 编译缓存、临时解压和可重建中间数据优先放本地 NVMe，避免让 NFS 承担不必要的元数据压力。
 
----
-
 ## 5. 三种 Kubernetes 接入方式
 
 ### 5.1 Pod 直接声明 nfs
@@ -145,8 +137,6 @@ PVC
 ```
 
 CSI 管理的是 Kubernetes 接入过程，不会把单台 NFS Server 自动变成高可用存储。
-
----
 
 ## 6. 使用 NFS CSI
 
@@ -238,8 +228,6 @@ spec:
 
 PVC 可以是 RWX，但模型服务仍应按容器只读挂载。访问模式表示卷能力，不代替目录权限和应用写入控制。
 
----
-
 ## 7. 权限模型
 
 NFS 常见权限问题来自数字 UID/GID 不一致：
@@ -271,8 +259,6 @@ kubectl -n ai exec <pod> -- id
 
 不要用全局 `0777` 掩盖权限设计问题。`root_squash` 是重要保护机制，不应为了方便随意关闭。
 
----
-
 ## 8. 缓存怎样影响测试
 
 第一次读：
@@ -298,8 +284,6 @@ Pod → 客户端 Linux 页缓存
 - 平均延迟与 P95/P99。
 
 清理系统缓存会影响整台机器，只能在隔离测试环境由管理员执行，不应在生产 GPU 节点随意操作。
-
----
 
 ## 9. 分层压测
 
@@ -353,8 +337,6 @@ time find /models/dataset -type f | wc -l
 - 服务端 CPU、磁盘延迟。
 - GPU 空闲等待时间。
 
----
-
 ## 10. 多 Pod 冷启动风暴
 
 单 Pod 加载 100 GiB 模型用了 100 秒，并不代表 20 个 Pod 仍是 100 秒。
@@ -375,8 +357,6 @@ time find /models/dataset -type f | wc -l
 - 保持热副本，减少扩容时的集中读取。
 - 把模型分发流量与业务流量隔离。
 - 对大规模训练评估 CephFS、对象存储分层或并行文件系统。
-
----
 
 ## 11. 可观测性
 
@@ -404,8 +384,6 @@ ss -tan | grep ':2049'
 - DataLoader wait 时间。
 - Checkpoint 持续时间。
 - GPU 利用率中的周期性空洞。
-
----
 
 ## 12. 常见故障
 
@@ -464,8 +442,6 @@ ss -tan | grep ':2049'
 
 基于共享目录的供给方式可能没有真正的后端 quota。需要在 NFS 后端建立配额，或明确将 PVC 容量视为调度/登记信息而非强制限制。
 
----
-
 ## 13. NFS 的高可用边界
 
 NFS 协议支持共享访问，不代表一个 NFS 服务端天然高可用。
@@ -480,8 +456,6 @@ NFS 协议支持共享访问，不代表一个 NFS 服务端天然高可用。
 - 客户端在切换期间如何表现。
 
 如果无法回答这些问题，NFS 仍可作为实验或缓存源，但不应直接承担关键训练数据的唯一副本。
-
----
 
 ## 14. 与 GPU 数据路径的关系
 
@@ -500,8 +474,6 @@ NFS Server
 
 如果启用 GDS，需要具体 NFS 客户端、网络、驱动和文件系统在支持矩阵内，不能因为“使用了 RDMA 网卡”就推断 NFS 数据已经直达 GPU。
 
----
-
 ## 15. 选型结论
 
 适合 NFS：
@@ -518,8 +490,6 @@ NFS Server
 - 高频、大规模 Checkpoint。
 - 对带宽横向扩展要求很高。
 - 服务端是无冗余单机。
-
----
 
 ## 16. 本篇总结
 
@@ -538,8 +508,6 @@ NFS 的核心价值是共享 POSIX 目录；核心风险是所有客户端最终
 
 上一篇：[本地 NVMe 与 Local PV 实践](../ai-workloads/03-本地NVMe与Local-PV实践.md)。下一篇：[Ceph RBD、CephFS 与 RGW 在 AI 集群中的选型](../ceph/08-ai-workloads/30-AI集群中的Ceph接口选型.md)。
 
----
-
 ## 17. 课后练习
 
 1. NFS RWX 和“所有 Pod 都应该写模型目录”是一回事吗？
@@ -550,9 +518,7 @@ NFS 的核心价值是共享 POSIX 目录；核心风险是所有客户端最终
 6. 同时启动 1、2、4 个读取 Pod，记录总吞吐和完成时间。
 7. 制造错误 UID/GID，使用事件、`id` 和 `stat` 定位权限问题。
 
----
-
-## 参考与致谢
+## 18. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Volumes — NFS](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
 - [Kubernetes Persistent Volumes — Access Modes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes)

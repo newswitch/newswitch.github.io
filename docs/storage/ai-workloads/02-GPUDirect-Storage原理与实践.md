@@ -1,10 +1,11 @@
 ---
-title: GPUDirect Storage 原理与实践：存储如何直接进入 GPU 显存
+title: "GPUDirect Storage 原理与实践：存储如何直接进入 GPU 显存"
 sidebar_label: "02. GPUDirect Storage 原理与实践：存储如何直接进入 GPU 显存"
+sidebar_position: 2
+description: "理解传统 POSIX IO 与 GPUDirect Storage 数据路径，掌握 cuFile、O_DIRECT、nvidia-fs、Compatibility Mode、拓扑验证、gdsio 基线和 Kubernetes 部署边界。"
+tags: [GPU, GPUDirect Storage, GDS, cuFile, NVMe, 存储]
 date: 2026-08-06 18:50:00
 categories: 云原生
-tags: [GPU, GPUDirect Storage, GDS, cuFile, NVMe, 存储]
-description: 理解传统 POSIX IO 与 GPUDirect Storage 数据路径，掌握 cuFile、O_DIRECT、nvidia-fs、Compatibility Mode、拓扑验证、gdsio 基线和 Kubernetes 部署边界。
 ---
 
 # GPUDirect Storage 原理与实践：存储如何直接进入 GPU 显存
@@ -100,7 +101,7 @@ flowchart LR
 
 ## 4. Control Path 与 Data Path
 
-### Control Path
+### 4.1 Control Path {/* #control-path */}
 
 CPU 和软件负责：
 
@@ -112,7 +113,7 @@ CPU 和软件负责：
 - IO 提交
 - 完成通知
 
-### Data Path
+### 4.2 Data Path {/* #data-path */}
 
 DMA Engine 负责实际数据：
 
@@ -528,7 +529,7 @@ Pod 可能还需要：
 - 节点标签
 - GPU/NIC/NVMe 拓扑亲和
 
-### 调度问题
+### 20.1 调度问题 {/* #调度问题 */}
 
 一个支持 GDS 的 Pod 不应该只选择“有 GPU 的节点”，还要选择：
 
@@ -550,7 +551,7 @@ Pod 可能还需要：
 
 ## 21. 常见故障
 
-### `gdscheck` 显示不支持
+### 21.1 `gdscheck` 显示不支持 {/* #gdscheck-显示不支持 */}
 
 检查：
 
@@ -562,7 +563,7 @@ Pod 可能还需要：
 - Mount Option
 - 存储厂商插件
 
-### cuFile 工作但性能与 POSIX 相同
+### 21.2 cuFile 工作但性能与 POSIX 相同 {/* #cufile-工作但性能与-posix-相同 */}
 
 可能处于 Compatibility Mode。检查：
 
@@ -572,7 +573,7 @@ Pod 可能还需要：
 - 对齐
 - Mount
 
-### 本地 NVMe 快，远端存储慢
+### 21.3 本地 NVMe 快，远端存储慢 {/* #本地-nvme-快远端存储慢 */}
 
 检查：
 
@@ -582,7 +583,7 @@ Pod 可能还需要：
 - Fabric
 - GPU/NIC 亲和
 
-### 小 IO 性能不稳定
+### 21.4 小 IO 性能不稳定 {/* #小-io-性能不稳定 */}
 
 检查：
 
@@ -592,7 +593,7 @@ Pod 可能还需要：
 - Metadata
 - Compatibility fallback
 
-### 容器内找不到 `libcufile`
+### 21.5 容器内找不到 `libcufile` {/* #容器内找不到-libcufile */}
 
 检查：
 
@@ -601,7 +602,7 @@ Pod 可能还需要：
 - Host Driver 注入
 - Container Toolkit
 
-### 容器功能正常但不是直接路径
+### 21.6 容器功能正常但不是直接路径 {/* #容器功能正常但不是直接路径 */}
 
 兼容回退可能让功能测试通过。需要单独验证数据路径和性能。
 
@@ -635,18 +636,18 @@ GPU 正常
 
 ## 24. 它与其他模块的关系
 
-### 上游
+### 24.1 上游 {/* #上游 */}
 
 - 对象存储、CephFS、NFS、并行文件系统或本地 NVMe 提供数据
 - 应用决定使用 POSIX 还是 cuFile
 
-### 本层
+### 24.2 本层 {/* #本层 */}
 
 - cuFile 建立 Control Path
 - NVMe DMA 或 NIC RDMA 搬运数据
 - GPU HBM 接收数据
 
-### 下游
+### 24.3 下游 {/* #下游 */}
 
 - CUDA Kernel 处理数据
 - 多 GPU 继续通过 NVLink/NCCL 通信
@@ -654,23 +655,23 @@ GPU 正常
 
 ## 25. 常见误区
 
-### GDS 完全不使用 CPU
+### 25.1 GDS 完全不使用 CPU {/* #gds-完全不使用-cpu */}
 
 CPU 仍参与控制面，只是避免 CPU Memory bounce。
 
-### 安装 `nvidia-fs` 就完成 GDS
+### 25.2 安装 `nvidia-fs` 就完成 GDS {/* #安装-nvidia-fs-就完成-gds */}
 
 还需要应用、文件系统、存储、驱动和拓扑支持。
 
-### cuFile 成功就代表 Direct Path
+### 25.3 cuFile 成功就代表 Direct Path {/* #cufile-成功就代表-direct-path */}
 
 可能处于 Compatibility Mode。
 
-### GDS 能自动加速所有模型
+### 25.4 GDS 能自动加速所有模型 {/* #gds-能自动加速所有模型 */}
 
 端到端瓶颈可能在反序列化、CPU、NCCL 或计算。
 
-### GDS 可以替代存储容量和可靠性设计
+### 25.5 GDS 可以替代存储容量和可靠性设计 {/* #gds-可以替代存储容量和可靠性设计 */}
 
 它优化数据路径，不负责副本、备份和生命周期。
 
@@ -701,7 +702,7 @@ Storage DMA/NIC RDMA → GPU HBM
 6. 画出服务器 GPU、NVMe、NIC 和 PCIe Root 拓扑。
 7. 选择一个模型，拆分文件读取、反序列化、H2D/GDS 和初始化时间。
 
-## 参考与致谢
+## 28. 参考与致谢 {/* #参考与致谢 */}
 
 - [GPUDirect Storage Documentation](https://docs.nvidia.com/gpudirect-storage/)
 - [GPUDirect Storage Overview Guide](https://docs.nvidia.com/gpudirect-storage/overview-guide/)

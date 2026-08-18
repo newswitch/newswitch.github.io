@@ -1,8 +1,8 @@
 ---
-title: Spark Submit、SQL、History Server 与排障命令手册
+title: "Spark Submit、SQL、History Server 与排障命令手册"
 sidebar_label: "90. Spark Submit、SQL、History Server 与排障命令手册"
 sidebar_position: 90
-description: 覆盖 Spark 作业提交、交互式验证、SQL 执行、事件日志、REST API，以及 YARN/Kubernetes 环境的故障定位。
+description: "覆盖 Spark 作业提交、交互式验证、SQL 执行、事件日志、REST API，以及 YARN/Kubernetes 环境的故障定位。"
 tags: [Spark, 命令手册, 性能分析, 故障排查]
 ---
 
@@ -240,7 +240,7 @@ kubectl -n data delete pod <driver-pod>
 
 不要从日志最后一行开始猜。保存完整 Driver 日志，搜索第一个 `Caused by`、失败 Stage 和对应 Executor，再与 UI 时间线对齐。
 
-## 12. 30 分钟实验
+## 12. 分钟实验 {/* #12-30-分钟实验 */}
 
 1. 用 local 模式运行 Spark 示例程序。
 2. 用 `spark-sql` 创建小表，执行聚合和 `EXPLAIN FORMATTED`。
@@ -257,9 +257,8 @@ kubectl -n data delete pod <driver-pod>
 - 能把 OOM、长尾和 Fetch Failure 定位到具体 Stage/Task/节点。
 - 能在 YARN 与 Kubernetes 环境完成同一套证据链排查。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [Submitting Applications](https://spark.apache.org/docs/latest/submitting-applications.html)
 - [Monitoring and Instrumentation](https://spark.apache.org/docs/latest/monitoring.html)
 - [Spark SQL](https://spark.apache.org/docs/latest/sql-programming-guide.html)
-

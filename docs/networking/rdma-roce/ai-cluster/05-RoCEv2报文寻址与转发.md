@@ -1,9 +1,9 @@
 ---
-title: RoCEv2 报文、寻址与转发
+title: "RoCEv2 报文、寻址与转发"
 sidebar_label: "05. RoCEv2 报文、寻址与转发"
 sidebar_position: 5
+description: "从 GID、IP、UDP 4791、BTH 和 QP 一路理解 RoCEv2 报文如何跨三层以太网转发。"
 tags: [RoCEv2, UDP 4791, GID, RDMA CM, ECMP, MTU]
-description: 从 GID、IP、UDP 4791、BTH 和 QP 一路理解 RoCEv2 报文如何跨三层以太网转发。
 ---
 
 # RoCEv2 报文、寻址与转发
@@ -214,7 +214,7 @@ udp.port == 4791
 能够从一个 GID 找到 Netdev、IP、VLAN、PCIe 设备和物理端口；能把一条 RoCEv2 Packet
 从 BTH/QP 一直追到三层 ECMP 路径，并解释为何“ping 通”不能证明 RDMA 正常。
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA RDMA Aware Networks Programming User Manual](https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17)
 - [NCCL Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html)

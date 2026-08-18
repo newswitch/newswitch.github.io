@@ -2,8 +2,8 @@
 title: "Envoy 源码、xDS NACK、503/504、内存与生产故障 Runbook"
 sidebar_label: "14. Envoy 源码、xDS NACK、503/504、内存与生产故障 Runbook"
 sidebar_position: 14
-tags: [Envoy, Source Code, Troubleshooting, NACK, 503, 504]
 description: "把请求主路径和配置主路径映射到 Envoy 源码，并给出 xDS、路由、上游、内存、崩溃的生产排障顺序。"
+tags: [Envoy, Source Code, Troubleshooting, NACK, 503, 504]
 ---
 
 # Envoy 源码、xDS NACK、503/504、内存与生产故障 Runbook
@@ -80,7 +80,7 @@ CPU 平均不高但单 Worker 可饱和；内存 limit 未触发不代表没有�
 
 你应能在 503/504、NACK、内存增长和 Crash 中先建立证据链，再定位到 Envoy 对象与源码模块，并给出风险可控、可验证、可回退的处置。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Envoy Source](https://github.com/envoyproxy/envoy)
 - [Response Flags](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage)

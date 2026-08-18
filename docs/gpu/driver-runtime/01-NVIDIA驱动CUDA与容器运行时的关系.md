@@ -1,9 +1,11 @@
 ---
-title: NVIDIA 驱动、CUDA 与容器运行时的关系
+title: "NVIDIA 驱动、CUDA 与容器运行时的关系"
 sidebar_label: "01. NVIDIA 驱动、CUDA 与容器运行时的关系"
+sidebar_position: 1
+description: "本文梳理在物理机、Docker、Kubernetes 中使用 NVIDIA GPU 时，各组件分别做什么、怎么串起来。"
+tags: ["GPU", "CUDA", "驱动", "Container Toolkit", "Device Plugin", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "CUDA", "驱动", "Container Toolkit", "Device Plugin", "学习路线"]
 ---
 
 # NVIDIA 驱动、CUDA 与容器运行时的关系
@@ -23,8 +25,6 @@ tags: ["GPU", "CUDA", "驱动", "Container Toolkit", "Device Plugin", "学习路
 - **Kubernetes**：额外安装 Device Plugin，使 kubelet 能感知节点 GPU，从而由 Kubernetes 管理 GPU
 
 > 说明：生产里在 Kubernetes 中使用，通常直接用 **GPU Operator**。本文为了搞清各组件作用，采用手动安装。下一篇见：[NVIDIA GPU Operator 架构与组件说明](../cluster/device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)。
-
----
 
 ## 2. 物理机环境
 
@@ -204,8 +204,6 @@ PyTorch 版本是: 2.3.0+cu121
 设备 0 的显存最大使用量: 0.00 GB
 ```
 
----
-
 ## 3. Docker 环境
 
 宿主机已有驱动（以及可选的 Toolkit）后，要让 Docker 容器也能用 GPU，大致三步：
@@ -290,8 +288,6 @@ docker run --rm --gpus all \
 ```
 
 正常应能在容器内打印 GPU 信息。
-
----
 
 ## 4. Kubernetes 环境
 
@@ -411,8 +407,6 @@ Test PASSED
 Done
 ```
 
----
-
 ## 5. 小结
 
 | 环境 | 关键组件 | 作用 |
@@ -423,8 +417,6 @@ Done
 
 集群规模一大，手动装驱动、Toolkit、Plugin 会很繁琐。下一篇用 **GPU Operator** 把这些自动化：[NVIDIA GPU Operator 架构与组件说明](../cluster/device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)。
 
----
-
-## 参考与致谢
+## 6. 参考与致谢 {/* #参考与致谢 */}
 
 本文内容整理自 [意琦行 - GPU 环境搭建指南：如何在物理机、Docker、K8s 等环境中使用 GPU](https://www.lixueduan.com/posts/ai/01-how-to-use-gpu/)，并按本系列学习路线做了结构调整与补充。原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可。

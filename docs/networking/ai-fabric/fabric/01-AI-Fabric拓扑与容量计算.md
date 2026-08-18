@@ -1,9 +1,9 @@
 ---
-title: AI Fabric 拓扑与容量计算
+title: "AI Fabric 拓扑与容量计算"
 sidebar_label: "01. AI Fabric 拓扑与容量计算"
 sidebar_position: 1
+description: "从 GPU、NIC、Rail 和 Collective 流量推导 Leaf-Spine 端口、收敛比、二分带宽与故障容量。"
 tags: [AI Fabric, Clos, Fat-Tree, Oversubscription, Bisection Bandwidth]
-description: 从 GPU、NIC、Rail 和 Collective 流量推导 Leaf-Spine 端口、收敛比、二分带宽与故障容量。
 ---
 
 # AI Fabric 拓扑与容量计算

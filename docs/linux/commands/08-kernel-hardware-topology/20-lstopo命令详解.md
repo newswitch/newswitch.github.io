@@ -1,11 +1,12 @@
 ---
-title: lstopo 命令详解：联合 CPU、NUMA、PCIe、GPU 与 NIC 拓扑
+title: "lstopo 命令详解：联合 CPU、NUMA、PCIe、GPU 与 NIC 拓扑"
+sidebar_label: "20. lstopo 命令详解：联合 CPU、NUMA、PCIe、GPU 与 NIC 拓扑"
 sidebar_position: 20
-description: 系统讲解 hwloc lstopo 的完整参数族、逻辑与 OS index、cpuset、I/O 设备、本机和离线 XML、容器 allowed topology，并建立 GPU-NIC-CPU 联合拓扑分析方法。
+description: "系统讲解 hwloc lstopo 的完整参数族、逻辑与 OS index、cpuset、I/O 设备、本机和离线 XML、容器 allowed topology，并建立 GPU-NIC-CPU 联合拓扑分析方法。"
 tags: [Linux, lstopo, hwloc, NUMA, PCIe, GPU]
 ---
 
-# `lstopo` 命令详解：联合 CPU、NUMA、PCIe、GPU 与 NIC 拓扑
+# lstopo 命令详解：联合 CPU、NUMA、PCIe、GPU 与 NIC 拓扑
 
 `lstopo`（也叫 `hwloc-ls`，无图形构建常提供 `lstopo-no-graphics`）把 package、die、core、PU、cache、NUMA memory、PCI bridge 和 OS device 放到一棵 locality 树。它是“GPU 与 NIC 靠近哪个 CPU/内存节点”的总览，最终链路能力仍用 `lspci`/供应商工具验证。
 

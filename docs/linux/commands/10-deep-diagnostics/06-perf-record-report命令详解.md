@@ -1,11 +1,12 @@
 ---
-title: perf record 与 report 命令详解：采样、调用栈、符号与热点归因
+title: "perf record 与 report 命令详解：采样、调用栈、符号与热点归因"
+sidebar_label: "06. perf record 与 report 命令详解：采样、调用栈、符号与热点归因"
 sidebar_position: 6
-description: 讲清 perf record 的事件/频率/周期、PID/CPU/cgroup、call graph、AUX、输出与 perf report 的排序、children、stdio。
+description: "讲清 perf record 的事件/频率/周期、PID/CPU/cgroup、call graph、AUX、输出与 perf report 的排序、children、stdio。"
 tags: [Linux, perf record, perf report, 火焰图, 性能分析]
 ---
 
-# `perf record` 与 `perf report`：采集和解释必须成对
+# perf record 与 report 命令详解：采样、调用栈、符号与热点归因
 
 `perf record` 把事件样本写入 `perf.data`，`perf report` 解析样本并按 DSO、symbol、thread、CPU 等维度聚合。百分比是“已采到样本的占比”，不是函数精确耗时，也不包含没有采样到或无法展开的栈。
 

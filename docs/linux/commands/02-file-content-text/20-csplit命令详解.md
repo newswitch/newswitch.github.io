@@ -1,11 +1,12 @@
 ---
-title: csplit 命令详解：按行号、正则上下文与边界切分文件
+title: "csplit 命令详解：按行号、正则上下文与边界切分文件"
+sidebar_label: "20. csplit 命令详解：按行号、正则上下文与边界切分文件"
 sidebar_position: 20
-description: 完整讲解 GNU coreutils csplit 的全部参数、行号与正则模式、偏移、重复、跳过区间、边界抑制、输出命名和错误清理。
+description: "完整讲解 GNU coreutils csplit 的全部参数、行号与正则模式、偏移、重复、跳过区间、边界抑制、输出命名和错误清理。"
 tags: [Linux, csplit, GNU coreutils, 正则表达式, 文件切分]
 ---
 
-# `csplit` 命令详解：按行号、正则上下文与边界切分文件
+# csplit 命令详解：按行号、正则上下文与边界切分文件
 
 `csplit` 按内容上下文切分输入：边界可以是绝对行号，也可以是下一次匹配基本正则表达式的行，并可加正负偏移、重复规则或跳过区间。它适合按章节、记录头和分隔行切文件，但模式参数是一个有状态的顺序程序。
 
@@ -174,7 +175,7 @@ sha256sum input.txt restored
 - 能安全引用 BRE、重复 Pattern、Prefix 和 Suffix Format。
 - 能证明一组分片完整、可逆或明确说明为何不可逆。
 
-## 官方参考
+## 16. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：csplit invocation](https://www.gnu.org/software/coreutils/manual/html_node/csplit-invocation.html)
 - [POSIX csplit](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/csplit.html)

@@ -1,11 +1,12 @@
 ---
-title: groupdel 命令详解：删除组与孤儿 GID 治理
+title: "groupdel 命令详解：删除组与孤儿 GID 治理"
+sidebar_label: "10. groupdel 命令详解：删除组与孤儿 GID 治理"
 sidebar_position: 10
-description: 完整讲解 shadow-utils groupdel 参数、主组保护、强制删除风险、文件系统残留 GID、活动进程组凭据和安全下线流程。
+description: "完整讲解 shadow-utils groupdel 参数、主组保护、强制删除风险、文件系统残留 GID、活动进程组凭据和安全下线流程。"
 tags: [Linux, groupdel, 用户组, GID, 数据治理]
 ---
 
-# `groupdel` 命令详解：删除组与孤儿 GID 治理
+# groupdel 命令详解：删除组与孤儿 GID 治理
 
 `groupdel` 删除本地组记录，不会从 inode、运行中进程、远端目录、ACL、sudoers 或应用配置中删除这个数字 GID。名称消失后，权限仍可能由原 GID 生效。
 
@@ -65,7 +66,7 @@ shadow-utils 4.19 主要退出码：`0` 成功，`2` 语法错误，`6` 组不�
 
 掌握标准：能完整列出参数和退出码；能证明删除组记录不撤销旧进程/文件权限；能不依赖 `-f` 完成一套带存储扫描与 GID 防复用的下线流程。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：groupdel(8)](https://shadow-maint.github.io/shadow/man/groupdel.html)
 - [Linux inode(7)](https://man7.org/linux/man-pages/man7/inode.7.html)

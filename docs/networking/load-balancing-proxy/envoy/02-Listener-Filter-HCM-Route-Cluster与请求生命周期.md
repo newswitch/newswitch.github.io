@@ -2,8 +2,8 @@
 title: "Envoy Listener、Filter、HCM、Route、Cluster 与请求生命周期"
 sidebar_label: "02. Envoy Listener、Filter、HCM、Route、Cluster 与请求生命周期"
 sidebar_position: 2
-tags: [Envoy, Listener, Filter Chain, HCM, Route, Cluster]
 description: "跟踪一条 HTTP 请求从下游连接进入 Envoy，到选择上游 Endpoint 并返回响应的完整运行时路径。"
+tags: [Envoy, Listener, Filter Chain, HCM, Route, Cluster]
 ---
 
 # Envoy Listener、Filter、HCM、Route、Cluster 与请求生命周期
@@ -77,7 +77,7 @@ Admin 接口含内部拓扑和控制能力，不得暴露给业务网络。
 
 看到一个 Envoy 配置时，你应能画出 Listener→Filter Chain→HCM→Route→Cluster→Endpoint 的对象引用；看到一个失败请求时，能确定它到达了哪一步，而不是笼统归因于“Envoy 转发失败”。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Life of a Request](https://www.envoyproxy.io/docs/envoy/latest/intro/life_of_a_request.html)
 - [Envoy Architecture](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/arch_overview)

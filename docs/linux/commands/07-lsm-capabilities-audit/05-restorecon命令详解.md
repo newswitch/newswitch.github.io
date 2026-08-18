@@ -1,11 +1,12 @@
 ---
-title: restorecon 命令详解：按策略检查与恢复 SELinux 文件标签
+title: "restorecon 命令详解：按策略检查与恢复 SELinux 文件标签"
+sidebar_label: "05. restorecon 命令详解：按策略检查与恢复 SELinux 文件标签"
 sidebar_position: 5
-description: 完整讲解 restorecon 的递归、dry-run、强制字段、exclude、文件列表、NUL、digest、线程、边界和计数参数，以及大规模 relabel 安全流程。
+description: "完整讲解 restorecon 的递归、dry-run、强制字段、exclude、文件列表、NUL、digest、线程、边界和计数参数，以及大规模 relabel 安全流程。"
 tags: [Linux, restorecon, SELinux, relabel, file context]
 ---
 
-# `restorecon` 命令详解：按策略检查与恢复 SELinux 文件标签
+# restorecon 命令详解：按策略检查与恢复 SELinux 文件标签
 
 `restorecon` 根据当前 policy 的 file-context 匹配，检查或修改文件 xattr。默认只改 type；`-F/-U` 可扩大到 user/role/range。它与 `setfiles` 是同一 executable 的不同调用模式。
 
@@ -101,7 +102,7 @@ restorecon -nvv /srv/app/file
 
 掌握标准：能列出全部参数，解释 default type-only 与 `-F/-U`、local rule 优先级、digest/线程和 `-c` 退出语义，设计可控制范围的大规模 relabel。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [restorecon(8)](https://manpages.debian.org/unstable/policycoreutils/restorecon.8.en.html)
 - [selinux_restorecon(3)](https://manpages.debian.org/unstable/libselinux1-dev/selinux_restorecon.3.en.html)

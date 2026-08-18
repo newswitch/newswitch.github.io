@@ -1,11 +1,12 @@
 ---
-title: groups 命令详解：主组、补充组与会话差异
+title: "groups 命令详解：主组、补充组与会话差异"
+sidebar_label: "03. groups 命令详解：主组、补充组与会话差异"
 sidebar_position: 3
-description: 讲解 GNU coreutils groups 的完整参数、当前进程与指定用户查询差异、NSS 补充组计算和自动化解析边界。
+description: "讲解 GNU coreutils groups 的完整参数、当前进程与指定用户查询差异、NSS 补充组计算和自动化解析边界。"
 tags: [Linux, groups, 用户组, GID, NSS]
 ---
 
-# `groups` 命令详解：主组、补充组与会话差异
+# groups 命令详解：主组、补充组与会话差异
 
 `groups` 输出当前进程或指定用户所属的组名。它适合人读；需要数字 GID、稳定分隔符或区分真实/有效主组时，应使用 `id`。
 
@@ -79,7 +80,7 @@ done
 
 实验：创建测试组与用户，在保持旧 shell 的同时修改补充组，比较 `groups`、`groups USER` 和 `/proc/PID/status`。掌握标准是能区分账户数据库中的组成员关系与一个既有进程的真实组凭据。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [GNU Coreutils：groups invocation](https://www.gnu.org/software/coreutils/manual/html_node/groups-invocation.html)
 - [Linux getgroups(2)](https://man7.org/linux/man-pages/man2/getgroups.2.html)

@@ -1,11 +1,12 @@
 ---
-title: iostat 命令详解：IOPS、吞吐、await、队列与利用率
+title: "iostat 命令详解：IOPS、吞吐、await、队列与利用率"
+sidebar_label: "09. iostat 命令详解：IOPS、吞吐、await、队列与利用率"
 sidebar_position: 9
-description: 系统讲解 sysstat iostat 参数、首份累计样本、扩展设备字段、单位、分组、JSON、dm/LVM 与 NVMe 判读，并建立存储性能排障方法。
+description: "系统讲解 sysstat iostat 参数、首份累计样本、扩展设备字段、单位、分组、JSON、dm/LVM 与 NVMe 判读，并建立存储性能排障方法。"
 tags: [Linux, iostat, sysstat, IOPS, 延迟, 性能]
 ---
 
-# `iostat` 命令详解：IOPS、吞吐、await、队列与利用率
+# iostat 命令详解：IOPS、吞吐、await、队列与利用率
 
 `iostat` 从 `/proc/stat`、`/proc/diskstats` 和 sysfs 读取 CPU/块设备计数器，再按采样间隔计算速率与平均值。它观察的是块层完成统计，不直接等价于应用延迟、介质内部延迟或远端 Ceph/NFS 服务时间。
 

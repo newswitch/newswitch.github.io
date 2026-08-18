@@ -1,9 +1,9 @@
 ---
-title: Iceberg 对接 Spark、Flink、Trino 的生产实践
+title: "Iceberg 对接 Spark、Flink、Trino 的生产实践"
 sidebar_label: "05. Iceberg 对接 Spark、Flink、Trino 的生产实践"
 sidebar_position: 5
+description: "设计 Flink 实时写、Spark 维护/批处理、Trino 查询的多引擎兼容、发布与排障链路。"
 tags: [Iceberg, Spark, Flink, Trino, 多引擎]
-description: 设计 Flink 实时写、Spark 维护/批处理、Trino 查询的多引擎兼容、发布与排障链路。
 ---
 
 # Iceberg 对接 Spark、Flink、Trino 的生产实践
@@ -67,7 +67,7 @@ Catalog 权限与对象存储权限必须同时控制。只给 Catalog SELECT �
 
 上一篇：[小文件与生命周期](./04-并发提交小文件Compaction与快照生命周期.md)　下一模块：[Trino 架构与谓词下推](../../analytics/olap/01-Trino架构Stage-Split与谓词下推.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Iceberg Spark](https://iceberg.apache.org/docs/latest/spark/)
 - [Iceberg Flink](https://iceberg.apache.org/docs/latest/flink/)

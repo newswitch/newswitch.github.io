@@ -1,11 +1,12 @@
 ---
-title: env 命令详解：最小环境、PATH 查找、信号与 Shebang -S
+title: "env 命令详解：最小环境、PATH 查找、信号与 Shebang -S"
+sidebar_label: "18. env 命令详解：最小环境、PATH 查找、信号与 Shebang -S"
 sidebar_position: 18
-description: 完整讲解 GNU env 的 -i/-u/-C/-S/-0/-v、signal mask/disposition、argv0 与环境隔离边界。
+description: "完整讲解 GNU env 的 -i/-u/-C/-S/-0/-v、signal mask/disposition、argv0 与环境隔离边界。"
 tags: [Linux, env, coreutils, 环境变量, shebang]
 ---
 
-# `env` 命令详解：为一次命令构造环境
+# env 命令详解：最小环境、PATH 查找、信号与 Shebang -S
 
 无 COMMAND 时，GNU `env` 打印环境；有 COMMAND 时在增加/删除变量后执行它。它适合最小化配置漂移和测试环境依赖，不提供 Namespace、权限或文件系统隔离。
 

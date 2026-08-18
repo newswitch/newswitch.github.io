@@ -1,9 +1,9 @@
 ---
-title: 综合项目：面向 GPU 训练的数据集生产、版本化与吞吐优化
+title: "综合项目：面向 GPU 训练的数据集生产、版本化与吞吐优化"
 sidebar_label: "05. 综合项目：面向 GPU 训练的数据集生产、版本化与吞吐优化"
 sidebar_position: 5
+description: "从 Iceberg Snapshot 构建不可变训练 Manifest 和 Shards，优化远端存储、CPU 解码、PCIe H2D 与分布式采样。"
 tags: [GPU, 训练数据, Dataset Versioning, DataLoader, 项目]
-description: 从 Iceberg Snapshot 构建不可变训练 Manifest 和 Shards，优化远端存储、CPU 解码、PCIe H2D 与分布式采样。
 ---
 
 # 综合项目：面向 GPU 训练的数据集生产、版本化与吞吐优化

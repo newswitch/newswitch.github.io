@@ -1,11 +1,12 @@
 ---
-title: comm 命令详解：比较两个有序集合
+title: "comm 命令详解：比较两个有序集合"
+sidebar_label: "11. comm 命令详解：比较两个有序集合"
 sidebar_position: 11
-description: 完整讲解 GNU coreutils 9.11 comm 的全部参数、三列集合语义、列抑制、顺序校验、locale、输出分隔与计数、NUL 记录和退出码边界。
+description: "完整讲解 GNU coreutils 9.11 comm 的全部参数、三列集合语义、列抑制、顺序校验、locale、输出分隔与计数、NUL 记录和退出码边界。"
 tags: [Linux, comm, GNU coreutils, 集合比较, 排序]
 ---
 
-# `comm` 命令详解：比较两个有序集合
+# comm 命令详解：比较两个有序集合
 
 `comm` 对两个已经按相同规则排序的记录流执行集合式比较：只在文件 1、只在文件 2、两边共有。它保留重复记录的多重性，因此更接近有序 multiset 归并，而不是自动去重后的数学集合。
 
@@ -203,7 +204,7 @@ LC_ALL=C comm -123 --total desired.sorted actual.sorted
 - 能解释重复记录与退出码语义。
 - 能安全比较任意文件名清单。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：comm invocation](https://www.gnu.org/software/coreutils/manual/html_node/comm-invocation.html)
 - [POSIX comm](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/comm.html)
@@ -211,4 +212,3 @@ LC_ALL=C comm -123 --total desired.sorted actual.sorted
 上一篇：[`uniq` 命令详解](./10-uniq命令详解.md)
 
 下一篇：[`join` 命令详解](./12-join命令详解.md)
-

@@ -1,9 +1,9 @@
 ---
-title: NCCL Collective、算法与协议
+title: "NCCL Collective、算法与协议"
 sidebar_label: "02. NCCL Collective、算法与协议"
 sidebar_position: 2
+description: "理解 Rank、Communicator、Collective、Channel、算法、协议和 Transport，正确解读 NCCL 日志与性能。"
 tags: [NCCL, Ring, Tree, Channel, LL, LL128, Simple]
-description: 理解 Rank、Communicator、Collective、Channel、算法、协议和 Transport，正确解读 NCCL 日志与性能。
 ---
 
 # NCCL Collective、算法与协议
@@ -194,7 +194,7 @@ AllGather 和 ReduceScatter 的系数不同。比较结果时必须使用同一 
 看到一份 NCCL 日志时，能说明 Rank、Channel、算法、协议、Transport、HCA 与 GPU/NIC 拓扑；
 看到 `busbw` 时能说出它的计算口径和局限，而不是直接等同于物理线速。
 
-## 参考资料
+## 15. 参考资料 {/* #参考资料 */}
 
 - [NCCL User Guide](https://docs.nvidia.com/deeplearning/nccl/user-guide/)
 - [NCCL Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)

@@ -1,5 +1,6 @@
 ---
 title: "amtool 命令详解"
+sidebar_label: "02. amtool 命令详解"
 sidebar_position: 2
 description: "掌握 Alertmanager 告警查询、Silence创建与审计、路由树测试、配置校验和API连接安全。"
 tags: [Alertmanager, amtool, 告警, Silence, 路由]
@@ -96,11 +97,11 @@ Alertmanager HA副本通过gossip复制Silence和通知状态，但查询单个�
 | check-config通过但通知失败 | 远端凭据、TLS、DNS、限流和模板运行时数据 |
 | 副本查询结果不同 | gossip状态、分区、时间和负载均衡粘性 |
 
-## 掌握标准
+## 7. 掌握标准 {/* #掌握标准 */}
 
 能用labels精确查询；能创建可审计、有限期Silence；能在CI验证route receiver；能区分silence、inhibition和route；能排查HA副本一致性。
 
-## 官方资料
+## 8. 官方资料 {/* #官方资料 */}
 
 - [Alertmanager amtool](https://github.com/prometheus/alertmanager#amtool)
 - [Alertmanager configuration](https://prometheus.io/docs/alerting/latest/configuration/)

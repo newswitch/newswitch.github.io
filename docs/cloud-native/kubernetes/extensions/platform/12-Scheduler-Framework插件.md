@@ -2,23 +2,23 @@
 title: "Kubernetes Scheduler Framework 插件机制"
 sidebar_label: "12. Kubernetes Scheduler Framework 插件机制"
 sidebar_position: 12
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "深入理解并实践 Kubernetes Scheduler Framework 插件开发，掌握自定义调度逻辑的编写、注册、调试与应用，为 AI 原生与 GPU 调度扩展打下基础。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # Kubernetes Scheduler Framework 插件机制
 
 > Scheduler Framework 插件机制让 Kubernetes 调度器具备真正的可编程化扩展能力，是实现 AI 原生、GPU 智能调度的基础，也是云原生架构师必备技能。
 
-## Scheduler Framework 插件开发与应用实践
+## 1. Scheduler Framework 插件开发与应用实践 {/* #scheduler-framework-插件开发与应用实践 */}
 
-**Scheduler Framework**（调度框架）是 Kubernetes 调度系统的可扩展接口框架。  
+**Scheduler Framework**（调度框架）是 Kubernetes 调度系统的可扩展接口框架。
 通过实现一组标准化插件接口，开发者可以定制调度逻辑，无需修改或 fork `kube-scheduler` 源码。
 
-一个 Scheduler 插件就是一个实现了特定接口（如 `FilterPlugin`、`ScorePlugin`、`BindPlugin`）的 Go 模块。  
+一个 Scheduler 插件就是一个实现了特定接口（如 `FilterPlugin`、`ScorePlugin`、`BindPlugin`）的 Go 模块。
 它可以参与 Pod 调度的不同阶段，以扩展或替换默认策略。
 
-## 插件开发的基本流程
+## 2. 插件开发的基本流程 {/* #插件开发的基本流程 */}
 
 插件开发通常遵循以下步骤，流程如下图所示：
 
@@ -35,7 +35,7 @@ flowchart LR
 
 每一步都对应具体的开发和集成环节。
 
-## 定义插件结构体
+## 3. 定义插件结构体 {/* #定义插件结构体 */}
 
 每个插件必须实现 `framework.Plugin` 接口及其对应阶段接口（如 `FilterPlugin`、`ScorePlugin`）。
 
@@ -77,7 +77,7 @@ func (p *AvoidNodePlugin) Filter(
 }
 ```
 
-## 注册插件
+## 4. 注册插件 {/* #注册插件 */}
 
 在 `init()` 函数中通过 `framework.RegisterPlugin` 注册你的插件：
 
@@ -89,7 +89,7 @@ func init() {
 }
 ```
 
-## 编译自定义调度器
+## 5. 编译自定义调度器 {/* #编译自定义调度器 */}
 
 你可以在原 `kube-scheduler` 源码中注册插件后重新编译，也可以创建一个独立模块：
 
@@ -119,7 +119,7 @@ func main() {
 
 > 也可以通过 `scheduler-plugins` 项目或 `out-of-tree` 动态注册方式加载，无需修改官方源码。
 
-## 在调度配置中启用插件
+## 6. 在调度配置中启用插件 {/* #在调度配置中启用插件 */}
 
 在 `KubeSchedulerConfiguration` 文件中添加你的插件定义：
 
@@ -143,7 +143,7 @@ profiles:
 ./custom-scheduler --config ./scheduler-config.yaml
 ```
 
-## 验证与调试
+## 7. 验证与调试 {/* #验证与调试 */}
 
 创建一个被标记为不可调度的节点：
 
@@ -169,7 +169,7 @@ kubectl describe pod test | grep -A2 Events
 Warning  FailedScheduling  AvoidNodePlugin  node node01 is labeled avoid=true
 ```
 
-## 插件类型与接口对照表
+## 8. 插件类型与接口对照表 {/* #插件类型与接口对照表 */}
 
 下表总结了各类插件的关键方法与应用场景：
 
@@ -186,9 +186,9 @@ Warning  FailedScheduling  AvoidNodePlugin  node node01 is labeled avoid=true
 | BindPlugin           | `Bind()`           | 执行绑定操作        | 控制 Pod 与节点绑定 |
 | PostBindPlugin       | `PostBind()`       | 绑定完成后         | 发送通知或更新状态    |
 
-## 实例：GPU 优先调度插件
+## 9. 实例：GPU 优先调度插件 {/* #实例gpu-优先调度插件 */}
 
-以下是一个典型 AI 场景插件示例：  
+以下是一个典型 AI 场景插件示例：
 根据节点 GPU 可用数量进行打分，优先选择 GPU 资源充足的节点。
 
 ```go
@@ -219,7 +219,7 @@ plugins:
       - name: GPUPriorityPlugin
 ```
 
-## 调试技巧
+## 10. 调试技巧 {/* #调试技巧 */}
 
 下表总结了常用调试工具和方法：
 
@@ -230,7 +230,7 @@ plugins:
 | `pprof`        | 性能分析        | `curl localhost:10251/debug/pprof`                 |
 | `trace`        | 调度器跟踪事件     | `kubectl get events -A \| grep Scheduling`          |
 
-## 插件开发最佳实践
+## 11. 插件开发最佳实践 {/* #插件开发最佳实践 */}
 
 为了提升插件的稳定性和可维护性，建议遵循以下最佳实践：
 
@@ -241,7 +241,7 @@ plugins:
 - 插件应考虑错误与超时回退机制；
 - 插件版本应随调度器版本保持兼容。
 
-## AI 原生场景的插件组合示例
+## 12. AI 原生场景的插件组合示例 {/* #ai-原生场景的插件组合示例 */}
 
 下图展示了 AI 原生场景下多插件协作的流程：
 
@@ -259,13 +259,13 @@ flowchart TD
 
 这种组合方式常用于 AI 平台如 KubeRay、Volcano、Kueue 的多作业同步调度，实现任务对齐、GPU 优先级等智能逻辑。
 
-## 总结
+## 13. 总结 {/* #总结 */}
 
-Scheduler Framework 插件机制让 Kubernetes 调度器实现了真正的可编程化扩展，  
-无论是 GPU 调度、AI 训练、分布式推理还是能耗优化，都可以通过插件化方式快速实现，无需修改核心代码。  
+Scheduler Framework 插件机制让 Kubernetes 调度器实现了真正的可编程化扩展，
+无论是 GPU 调度、AI 训练、分布式推理还是能耗优化，都可以通过插件化方式快速实现，无需修改核心代码。
 这正是 AI 原生基础设施架构师必须掌握的关键能力。
 
-## 参考文献
+## 14. 参考资料 {/* #参考文献 */}
 
 - [Kubernetes Scheduler Framework 源码概览 - github.com](https://github.com/kubernetes/kubernetes/tree/master/pkg/scheduler/framework)
 - [scheduler-plugins 项目 (SIG Scheduling) - github.com](https://github.com/kubernetes-sigs/scheduler-plugins)

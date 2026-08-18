@@ -2,8 +2,8 @@
 title: "Nsight Compute CUDA Kernel 分析"
 sidebar_label: "04. Nsight Compute CUDA Kernel 分析"
 sidebar_position: 4
-tags: [NVIDIA, Nsight Compute, CUDA, Kernel, Roofline, Occupancy]
 description: "使用 Nsight Compute CLI 对目标 CUDA Kernel 进行 Roofline、Speed of Light、Occupancy、Memory Workload 和 Warp Stall 分析。"
+tags: [NVIDIA, Nsight Compute, CUDA, Kernel, Roofline, Occupancy]
 ---
 
 # Nsight Compute CUDA Kernel 分析
@@ -24,8 +24,6 @@ Nsight Compute 回答：
 - Launch Configuration。
 
 不要用它分析整个在线服务的全部 Kernel。先通过 Nsight Systems 找到目标。
-
----
 
 ## 1. Systems 与 Compute 的分工
 
@@ -48,8 +46,6 @@ nsys → 锁定 Kernel 名、调用阶段、典型 Invocation
 → ncu 对比
 → 无 Profiler 端到端复测
 ```
-
----
 
 ## 2. Profiling 为什么会改变程序
 
@@ -77,8 +73,6 @@ Range Replay
 - 限制 Kernel/Invocation。
 - 不用 Profile 下的端到端延迟作为生产结果。
 
----
-
 ## 3. 第一次采集
 
 查看版本：
@@ -104,8 +98,6 @@ kernel-baseline.ncu-rep
 
 不要一开始使用 `--set full` 对全部 Kernel 采集。
 
----
-
 ## 4. 列出 Section 与 Set
 
 ```bash
@@ -125,8 +117,6 @@ WarpStateStats
 ```
 
 名称和可用指标可能随版本/GPU 改变，以上以当前 `--list-sections` 为准。
-
----
 
 ## 5. 过滤 Kernel
 
@@ -162,8 +152,6 @@ Kernel Name 可能是模板化、Mangled 或由 TorchInductor/Triton 生成。�
 
 精确选取。
 
----
-
 ## 6. 只采需要的 Section
 
 ```bash
@@ -192,8 +180,6 @@ SpeedOfLight + Roofline
 Memory / Occupancy / Scheduler / WarpState
 ```
 
----
-
 ## 7. Speed of Light
 
 SpeedOfLight 关注：
@@ -214,8 +200,6 @@ Kernel Duration
 | 低 | 低 | 延迟、依赖、Occupancy、Launch 或负载太小 |
 
 百分比接近峰值不等于应用最优；还需比较算法是否做了不必要工作。
-
----
 
 ## 8. Roofline 模型
 
@@ -242,7 +226,7 @@ Attainable Performance =
 - 水平区域：计算限制。
 - 转折点：Ridge Point。
 
-### 如何使用
+### 8.1 如何使用 {/* #如何使用 */}
 
 Kernel 位于斜线下：
 
@@ -269,8 +253,6 @@ Kernel 离任何 Roof 很远：
 
 Nsight Compute 可提供多层次 Roofline，例如 L1/L2/DRAM 层级。
 
----
-
 ## 9. Launch Configuration
 
 关注：
@@ -293,8 +275,6 @@ Waves per SM
 
 不要机械追求最大 Block Size。
 
----
-
 ## 10. Occupancy
 
 ```text
@@ -315,7 +295,7 @@ Occupancy =
 - Blocks/SM。
 - 架构上限。
 
-### 高 Occupancy 不等于高性能
+### 10.1 高 Occupancy 不等于高性能 {/* #高-occupancy-不等于高性能 */}
 
 某些 Kernel：
 
@@ -326,8 +306,6 @@ Occupancy =
 为了提高 Occupancy 而增加 Spilling，可能更慢。
 
 优化必须看 Kernel Duration 和整体吞吐。
-
----
 
 ## 11. Warp Scheduler 与 Eligible Warps
 
@@ -349,8 +327,6 @@ Eligible Warps 低
 - 分支。
 
 这时仅提高 Occupancy 未必解决问题。
-
----
 
 ## 12. Warp Stall Reasons
 
@@ -375,8 +351,6 @@ Branch Resolving    → 控制流
 - 某 Stall 高不代表单独改它就能等比例提速。
 - 要与 Roofline、Memory、Source 和实验共同验证。
 
----
-
 ## 13. Memory Workload
 
 分析层次：
@@ -400,7 +374,7 @@ Registers
 - Local Memory/Spill。
 - Shared Memory Bank Conflict。
 
-### Coalescing
+### 13.1 Coalescing {/* #coalescing */}
 
 同一 Warp 相邻线程访问连续地址，能减少 Memory Transaction。
 
@@ -414,12 +388,10 @@ Thread 2 → addr 8192
 
 可能产生更多 Sector/Transaction。
 
-### Cache Hit 不是越高越好
+### 13.2 Cache Hit 不是越高越好 {/* #cache-hit-不是越高越好 */}
 
 Streaming Workload 本来就可能低命中；强行提高 Cache 使用可能没有收益。最终看总字节、
 带宽和 Duration。
-
----
 
 ## 14. Source/Instruction 分析
 
@@ -444,8 +416,6 @@ Streaming Workload 本来就可能低命中；强行提高 Cache 使用可能没
 - 记录 Shape、dtype、Tile/Warps。
 - 使用 Kernel 名和 NVTX 映射回 Operator。
 
----
-
 ## 15. Attention Kernel 分析
 
 可能受：
@@ -460,21 +430,19 @@ Streaming Workload 本来就可能低命中；强行提高 Cache 使用可能没
 
 Prefill Attention 和 Decode Attention 资源模型不同，应分开采集。
 
-### Prefill
+### 15.1 Prefill {/* #prefill */}
 
 - 更大矩阵。
 - 计算和 Attention 复杂度高。
 - 可能使用 Tensor Core。
 
-### Decode
+### 15.2 Decode {/* #decode */}
 
 - 单步 Query 少。
 - 读取长历史 KV。
 - 更容易带宽/延迟受限。
 
 不能用一个 Shape 的 Kernel 结果代表所有请求。
-
----
 
 ## 16. GEMM/MLP 分析
 
@@ -491,8 +459,6 @@ Prefill Attention 和 Decode Attention 资源模型不同，应分开采集。
 
 优化方向可能在 Scheduler/Batch，而不是 Kernel 源码。
 
----
-
 ## 17. 通信 Kernel
 
 NCCL Kernel 出现在时间线中，但 Collective 的端到端瓶颈还涉及：
@@ -504,8 +470,6 @@ NCCL Kernel 出现在时间线中，但 Collective 的端到端瓶颈还涉及�
 
 Nsight Compute 对单个通信 Kernel 的分析不能替代 Nsight Systems 多 Rank 时间线和网络
 计数器。
-
----
 
 ## 18. A/B 基线
 
@@ -536,35 +500,31 @@ candidate.ncu-rep
 
 最后用无 Profiler 工作负载确认端到端收益。
 
----
-
 ## 19. 常见错误
 
-### `--set full` 采整个服务
+### 19.1 `--set full` 采整个服务 {/* #--set-full-采整个服务 */}
 
 Replay 时间巨大，甚至破坏在线通信和超时。
 
-### 只追求 Occupancy
+### 19.2 只追求 Occupancy {/* #只追求-occupancy */}
 
 可能导致 Register Spill，性能反而下降。
 
-### 只看 DRAM %
+### 19.3 只看 DRAM % {/* #只看-dram- */}
 
 Kernel 可能受 L2、依赖、调度或指令限制。
 
-### 用一个 Shape 代表全部请求
+### 19.4 用一个 Shape 代表全部请求 {/* #用一个-shape-代表全部请求 */}
 
 LLM Kernel 随 Batch、Context、Head、dtype 变化。
 
-### 优化单 Kernel 但端到端没变化
+### 19.5 优化单 Kernel 但端到端没变化 {/* #优化单-kernel-但端到端没变化 */}
 
 它可能不在关键路径，或 Amdahl 上限很小。
 
-### 比较不同采集配置
+### 19.6 比较不同采集配置 {/* #比较不同采集配置 */}
 
 Replay/Cache Control/Section 不同，指标不可直接对比。
-
----
 
 ## 20. Amdahl 定律
 
@@ -580,8 +540,6 @@ speedup =
 端到端理论提升约 11%。
 
 因此先用 Nsight Systems确认 Kernel 在关键路径中的占比。
-
----
 
 ## 21. 实验
 

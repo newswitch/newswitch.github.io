@@ -1,11 +1,12 @@
 ---
-title: aa-complain 命令详解：受控观察 AppArmor 策略缺口
+title: "aa-complain 命令详解：受控观察 AppArmor 策略缺口"
+sidebar_label: "12. aa-complain 命令详解：受控观察 AppArmor 策略缺口"
 sidebar_position: 12
-description: 完整讲解 aa-complain 的参数、complain 语义、显式 deny 例外、日志学习边界、--no-reload、生产风险及恢复 enforce 流程。
+description: "完整讲解 aa-complain 的参数、complain 语义、显式 deny 例外、日志学习边界、--no-reload、生产风险及恢复 enforce 流程。"
 tags: [Linux, aa-complain, AppArmor, complain, 安全排障]
 ---
 
-# `aa-complain` 命令详解：受控观察 AppArmor 策略缺口
+# aa-complain 命令详解：受控观察 AppArmor 策略缺口
 
 `aa-complain` 把一个或多个 AppArmor profile 设为 complain 模式。该模式通常不阻断策略本会拒绝的访问，而是记录它们，适合在隔离测试环境观察真实行为；它会扩大访问面，不能作为生产故障的默认修复。
 
@@ -94,7 +95,7 @@ sudo journalctl -k --since '-5 min' | grep -i apparmor
 
 掌握标准：能列出全部参数；能解释 complain、disabled、unconfined 和显式 deny；能设计安全学习窗口；能从日志提炼最小规则并恢复、验证 enforce。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [aa-complain(8)](https://apparmor-documentation-c38b15.gitlab.io/documentation/manpages/manpage_aa-complain.8/)
 - [AppArmor debugging and troubleshooting](https://apparmor-documentation-c38b15.gitlab.io/documentation/getting-started/debugging-and-troubleshooting/)

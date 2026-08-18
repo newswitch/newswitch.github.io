@@ -1,7 +1,8 @@
 ---
-title: CPU、内存、负载与 procfs 命令导读
+title: "CPU、内存、负载与 procfs 命令导读"
+sidebar_label: "00. CPU、内存、负载与 procfs 命令导读"
 sidebar_position: 0
-description: 从容量、需求、饱和、消费者、内存压力和历史证据六个维度，系统学习 CPU、内存、负载与 procfs 排障。
+description: "从容量、需求、饱和、消费者、内存压力和历史证据六个维度，系统学习 CPU、内存、负载与 procfs 排障。"
 tags: [Linux, CPU, 内存, 负载, procfs, sysstat, 性能排障]
 ---
 
@@ -142,7 +143,7 @@ cat /proc/pressure/cpu /proc/pressure/memory /proc/pressure/io
 - 能从 sar 找回故障窗口，并与日志、发布和监控时间线对齐。
 - 能说明 soft/hard RLIMIT、sysctl 持久化顺序与容器 namespace 边界。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [Linux procfs 文档](https://docs.kernel.org/filesystems/proc.html)
 - [Linux PSI 文档](https://docs.kernel.org/accounting/psi.html)

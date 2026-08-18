@@ -1,11 +1,12 @@
 ---
-title: systemd-delta 命令详解：发现覆盖、drop-in 与配置漂移
+title: "systemd-delta 命令详解：发现覆盖、drop-in 与配置漂移"
+sidebar_label: "08. systemd-delta 命令详解：发现覆盖、drop-in 与配置漂移"
 sidebar_position: 8
-description: 完整讲解 systemd-delta 的 masked、equivalent、redirected、overridden、extended、unchanged 类型与全部参数，用于升级审计、配置漂移和故障定位。
+description: "完整讲解 systemd-delta 的 masked、equivalent、redirected、overridden、extended、unchanged 类型与全部参数，用于升级审计、配置漂移和故障定位。"
 tags: [Linux, systemd-delta, systemd, 配置漂移, drop-in, 故障排查]
 ---
 
-# `systemd-delta` 命令详解：发现覆盖、drop-in 与配置漂移
+# systemd-delta 命令详解：发现覆盖、drop-in 与配置漂移
 
 systemd 从 `/usr/lib`、`/run`、`/etc` 等多级目录加载 unit 和其他配置。同名高优先级文件、symlink 或 drop-in 会改变 vendor 默认。`systemd-delta` 找出这些差异，是升级前后和“另一台机器正常”排障的重要入口。
 
@@ -97,7 +98,7 @@ systemd-analyze verify /etc/systemd/system/api.service
 
 掌握标准：能列出全部参数和六类差异，解释 `/etc`、`/run`、`/usr` 的优先级与持久性，识别完整覆盖遮挡升级，并形成可审计的最小 drop-in 治理流程。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [systemd-delta(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd-delta.html)
 - [systemd.unit(5)](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html)

@@ -2,8 +2,8 @@
 title: "Ceph 数据组织原理：Object、Pool、PG 与 OSD 到底是什么关系"
 sidebar_label: "04. Ceph 数据组织原理：Object、Pool、PG 与 OSD 到底是什么关系"
 sidebar_position: 4
-tags: [Ceph, 学习路线, 存储, PG, Pool, OSD]
 description: "讲清业务数据 → Object → Pool → PG → OSD 的定位链路，以及 PG 状态、osd map 查询与常见误区。"
+tags: [Ceph, 学习路线, 存储, PG, Pool, OSD]
 ---
 
 # Ceph 数据组织原理：Object、Pool、PG 与 OSD 到底是什么关系
@@ -33,8 +33,7 @@ Ceph 不是把业务文件名直接记录成「位于 osd.3」。它在业务数
 
 理解这条链路后，后续学习 PG 故障、OSD 恢复、CRUSH 规则和性能分析才会真正连贯起来。
 
-
-## 先看整体关系
+## 1. 先看整体关系 {/* #先看整体关系 */}
 
 ```mermaid
 flowchart TD
@@ -55,11 +54,11 @@ flowchart TD
 
 这个比喻只用于建立第一印象。PG 不是磁盘分区，Pool 也不是服务器目录，后面会给出准确解释。
 
-## Object：RADOS 实际管理的数据单位
+## 2. Object：RADOS 实际管理的数据单位 {/* #objectrados-实际管理的数据单位 */}
 
 Ceph 底层不是直接以「虚拟磁盘」「Linux 文件」或「S3 对象」的形式统一管理数据，而是把上层数据转换为 **RADOS Object**。
 
-### 不同业务数据如何变成 Object
+### 2.1 不同业务数据如何变成 Object {/* #不同业务数据如何变成-object */}
 
 **RBD**
 
@@ -77,7 +76,7 @@ CephFS 文件的数据会映射成一个或多个 RADOS 对象；目录结构、
 
 > 用户看到的文件、RBD 镜像或 S3 Object，并不总是与一个 RADOS Object 一一对应。
 
-### Object 包含什么
+### 2.2 Object 包含什么 {/* #object-包含什么 */}
 
 从数据定位角度看，一个 RADOS 对象至少需要关注：
 
@@ -89,7 +88,7 @@ CephFS 文件的数据会映射成一个或多个 RADOS 对象；目录结构、
 
 对象名称和 Pool 共同参与后续的数据定位。同名对象可以存在于不同 Pool 中，因为 Pool 提供了逻辑隔离。
 
-## Pool：对象所属的逻辑存储池
+## 3. Pool：对象所属的逻辑存储池 {/* #pool对象所属的逻辑存储池 */}
 
 Ceph 官方文档把 Pool 定义为存放 RADOS 对象的逻辑分区。
 
@@ -102,7 +101,7 @@ cephfs-metadata   CephFS元数据
 rgw-data          RGW对象数据
 ```
 
-### Pool 决定哪些策略
+### 3.1 Pool 决定哪些策略 {/* #pool-决定哪些策略 */}
 
 Pool 通常关联以下配置：
 
@@ -116,7 +115,7 @@ Pool 通常关联以下配置：
 | Quota | 限制 Pool 容量或对象数 |
 | Application Tag | 标记 Pool 供 RBD、CephFS、RGW 等应用使用 |
 
-### Pool 是不是一组固定磁盘
+### 3.2 Pool 是不是一组固定磁盘 {/* #pool-是不是一组固定磁盘 */}
 
 默认情况下不一定。
 
@@ -124,13 +123,13 @@ Pool 通常关联以下配置：
 
 如果希望某个 Pool 只使用 SSD，另一个 Pool 只使用 HDD，需要通过 Device Class 和 CRUSH Rule 实现，而不是仅仅创建两个不同名称的 Pool。
 
-### Pool 是不是目录
+### 3.3 Pool 是不是目录 {/* #pool-是不是目录 */}
 
 不是。
 
 Pool 是 RADOS 逻辑层概念，不是 Linux 文件系统目录。客户端通常通过 RBD、CephFS、RGW 或 librados 访问 Pool 中的对象。
 
-### 查看 Pool
+### 3.4 查看 Pool {/* #查看-pool */}
 
 ```bash
 ceph osd lspools
@@ -140,7 +139,7 @@ ceph osd pool autoscale-status
 
 这些命令分别用于查看 Pool 列表、详细配置和 PG 自动伸缩建议。
 
-## PG：Object 与 OSD 之间的逻辑中间层
+## 4. PG：Object 与 OSD 之间的逻辑中间层 {/* #pgobject-与-osd-之间的逻辑中间层 */}
 
 PG 是 Placement Group 的缩写，中文通常称为归置组或放置组。
 
@@ -154,7 +153,7 @@ flowchart TD
     B --> C["多组 OSD Acting Set"]
 ```
 
-### 为什么不让 Object 直接映射 OSD
+### 4.1 为什么不让 Object 直接映射 OSD {/* #为什么不让-object-直接映射-osd */}
 
 假设集群中有十亿个对象。如果 Ceph 需要逐个记录每个对象的放置位置、历史状态和恢复过程，管理成本会非常高。
 
@@ -169,7 +168,7 @@ flowchart TD
 
 官方 PG 设计说明指出，使用 PG 这一层间接映射，可以减少逐对象跟踪放置历史带来的元数据和处理开销。
 
-### PG 属于谁
+### 4.2 PG 属于谁 {/* #pg-属于谁 */}
 
 每个 PG 只属于一个 Pool。
 
@@ -186,7 +185,7 @@ Pool ID：3
 该 Pool 中的 PG 编号：a（十六进制）
 ```
 
-### PG 会保存在哪些 OSD 上
+### 4.3 PG 会保存在哪些 OSD 上 {/* #pg-会保存在哪些-osd-上 */}
 
 一个 PG 会通过 CRUSH 映射到一组 OSD。这组当前负责该 PG 的 OSD 称为 **Acting Set**。
 
@@ -206,7 +205,7 @@ osd.8：Replica OSD
 
 Acting Set 中的第一个 OSD 通常是 Primary，负责协调该 PG 的客户端请求和副本操作。
 
-### PG 是不是越多越好
+### 4.4 PG 是不是越多越好 {/* #pg-是不是越多越好 */}
 
 不是。
 
@@ -225,11 +224,11 @@ PG 太多也会增加：
 
 现代 Ceph 通常建议使用 **PG Autoscaler** 结合 Pool 目标容量和业务情况管理 PG 数量，而不是新人直接套用一个固定公式。
 
-## OSD：PG 最终映射到的存储单元
+## 5. OSD：PG 最终映射到的存储单元 {/* #osdpg-最终映射到的存储单元 */}
 
 OSD 真正保存 PG 中的对象，并处理数据读写、副本和恢复。
 
-### 一个 OSD 会包含多少 PG
+### 5.1 一个 OSD 会包含多少 PG {/* #一个-osd-会包含多少-pg */}
 
 一个 OSD 通常同时承载多个 Pool 的多个 PG 副本。例如：
 
@@ -243,7 +242,7 @@ osd.2
 
 这不表示 OSD 本地存在对应的普通 Linux 目录，而是表示这些 PG 的对象由该 OSD 负责保存和管理。
 
-### 一个 PG 会对应多少 OSD
+### 5.2 一个 PG 会对应多少 OSD {/* #一个-pg-会对应多少-osd */}
 
 由 Pool 的数据保护策略决定：
 
@@ -253,7 +252,7 @@ osd.2
 
 所以，三副本表示一个 PG 的对象在三份 OSD 位置上保存，不是说一个对象会属于三个不同 PG。
 
-### Up Set 与 Acting Set
+### 5.3 Up Set 与 Acting Set {/* #up-set-与-acting-set */}
 
 排障时可能看到两组 OSD：
 
@@ -262,23 +261,23 @@ osd.2
 
 集群健康稳定时，两者通常一致。在故障、恢复、临时映射或迁移期间，它们可能不同。
 
-## 对象是如何找到 OSD 的
+## 6. 对象是如何找到 OSD 的 {/* #对象是如何找到-osd-的 */}
 
 下面把完整定位过程串起来。
 
-### 第一步：确定 Object 属于哪个 Pool
+### 6.1 第一步：确定 Object 属于哪个 Pool {/* #第一步确定-object-属于哪个-pool */}
 
 业务使用 RBD、CephFS、RGW 或 librados 访问数据时，首先已经确定了目标 Pool。
 
 不同 Pool 可以采用不同副本数、纠删码配置和 CRUSH 规则。
 
-### 第二步：Object 映射到 PG
+### 6.2 第二步：Object 映射到 PG {/* #第二步object-映射到-pg */}
 
 Ceph 根据对象名称的哈希结果和 Pool 的 PG 配置，把 Object 稳定映射到某个 PG。
 
 这里使用「稳定映射」很重要：同一个对象在集群地图不变时，会计算到相同 PG，而不是每次随机选择。
 
-### 第三步：PG 通过 CRUSH 映射到 OSD 集合
+### 6.3 第三步：PG 通过 CRUSH 映射到 OSD 集合 {/* #第三步pg-通过-crush-映射到-osd-集合 */}
 
 客户端结合：
 
@@ -290,7 +289,7 @@ Ceph 根据对象名称的哈希结果和 Pool 的 PG 配置，把 Object 稳定
 
 计算出该 PG 的目标 OSD 集合。
 
-### 第四步：客户端访问 Primary OSD
+### 6.4 第四步：客户端访问 Primary OSD {/* #第四步客户端访问-primary-osd */}
 
 客户端向 Primary OSD 发送请求。Primary 负责协调 Replica OSD 完成所需的副本操作。
 
@@ -307,7 +306,7 @@ flowchart TD
 1. 客户端不需要向中心服务器查询每个对象的位置
 2. 集群扩容或 OSD 变化后，可以通过新的地图重新计算数据位置
 
-## 一次三副本写入过程
+## 7. 一次三副本写入过程 {/* #一次三副本写入过程 */}
 
 假设对象 `object-a` 属于 `pool-a`，最终映射到 PG `3.a`，Acting Set 为 `[2,5,8]`。
 
@@ -335,11 +334,11 @@ sequenceDiagram
 
 实际 Ceph 写入还涉及日志、事务、对象版本和一致性等机制，但入门阶段先掌握 Primary 协调副本这一主线。
 
-### 读取时访问谁
+### 7.1 读取时访问谁 {/* #读取时访问谁 */}
 
 在普通副本池的常规读取路径中，客户端通常向 Primary OSD 请求数据。Ceph 也存在副本读取和读取均衡相关能力，但不能简单理解成客户端每次随意读取任意一个副本。
 
-## OSD 故障后 PG 会发生什么
+## 8. OSD 故障后 PG 会发生什么 {/* #osd-故障后-pg-会发生什么 */}
 
 假设 PG `3.a` 原来的 Acting Set 为：
 
@@ -358,27 +357,27 @@ stateDiagram-v2
     Recovering --> ActiveClean: 恢复完成
 ```
 
-### 1. OSD 被检测为 Down
+### 8.1 OSD 被检测为 Down {/* #1-osd-被检测为-down */}
 
 其他 OSD 和 MON 发现 `osd.5` 无法正常通信，新的 OSD Map 反映其状态变化。
 
-### 2. PG 执行 Peering
+### 8.2 PG 执行 Peering {/* #2-pg-执行-peering */}
 
 PG 相关 OSD 交换状态和日志，确认谁拥有权威、完整的数据版本，并决定当前是否能够继续提供 IO。
 
-### 3. PG 进入降级状态
+### 8.3 PG 进入降级状态 {/* #3-pg-进入降级状态 */}
 
 如果仍有足够副本满足 Pool 的最低 IO 条件，PG 可能继续提供服务，但会显示 `degraded` 或 `undersized` 等状态。
 
-### 4. 开始 Recovery 或 Backfill
+### 8.4 开始 Recovery 或 Backfill {/* #4-开始-recovery-或-backfill */}
 
 Ceph 选择新的 OSD 补充副本，并从健康副本复制缺失数据。
 
-### 5. 恢复 Active+Clean
+### 8.5 恢复 Active+Clean {/* #5-恢复-activeclean */}
 
 当目标副本数恢复、对象状态一致后，PG 重新回到理想状态 `active+clean`。
 
-## 常见 PG 状态怎么理解
+## 9. 常见 PG 状态怎么理解 {/* #常见-pg-状态怎么理解 */}
 
 `ceph -s` 会汇总 PG 状态。一个 PG 可以同时包含多个状态，例如 `active+undersized+degraded`。
 
@@ -404,7 +403,7 @@ Ceph 选择新的 OSD 补充副本，并从健康副本复制缺失数据。
 
 详细处理方法会放到后面的 PG 故障实战文章中。
 
-## 如何从 Object 定位到 OSD
+## 10. 如何从 Object 定位到 OSD {/* #如何从-object-定位到-osd */}
 
 Ceph 提供了一个非常实用的只读查询命令：
 
@@ -450,7 +449,7 @@ ceph osd pool autoscale-status
 
 生产集群排查时应优先使用只读命令确认状态，再决定是否执行修改、Repair、Out 或删除操作。
 
-## 为什么 OSD 数量和 PG 分布会影响均衡
+## 11. 为什么 OSD 数量和 PG 分布会影响均衡 {/* #为什么-osd-数量和-pg-分布会影响均衡 */}
 
 Ceph 通过哈希和 CRUSH 实现近似均匀的数据分布，但不是把每个 OSD 精确写到完全相同的字节数。
 
@@ -469,7 +468,7 @@ Ceph 通过哈希和 CRUSH 实现近似均匀的数据分布，但不是把每�
 
 因此，判断集群是否均衡不能只看 OSD 数量，还需要结合 Pool、PG、CRUSH 和实际数据量分析。
 
-## 常见误区
+## 12. 常见误区 {/* #常见误区 */}
 
 **误区一：PG 就是磁盘分区**
 
@@ -495,7 +494,7 @@ PG 太多会增加内存、Peering 和管理开销。应结合 Autoscaler 和集
 
 不同 Pool 默认可能共用同一组 OSD。要实现 SSD、HDD 或业务级物理隔离，需要设计 CRUSH Rule 和 Device Class。
 
-## 本篇总结
+## 13. 本篇总结 {/* #本篇总结 */}
 
 这一篇最重要的是记住下面这条链路：
 
@@ -517,8 +516,7 @@ PG 太多会增加内存、Peering 和管理开销。应结合 Autoscaler 和集
 
 **CRUSH 为什么不需要一张「每个对象位于哪块磁盘」的中心索引表，又如何保证副本分散在不同服务器和机架？**
 
-
-## 自测题
+## 14. 自测题 {/* #自测题 */}
 
 1. Object、Pool、PG 和 OSD 之间是什么关系？
 2. 为什么 Ceph 不直接逐个记录所有 Object 所在的 OSD？
@@ -529,7 +527,7 @@ PG 太多会增加内存、Peering 和管理开销。应结合 Autoscaler 和集
 7. Pool 不同是否代表底层一定使用不同物理磁盘？
 8. 如何查询某个对象映射到哪个 PG 和哪些 OSD？
 
-## 参考资料
+## 15. 参考资料 {/* #参考资料 */}
 
 - [Ceph 官方架构文档](https://docs.ceph.com/en/latest/architecture/)
 - [Ceph Pools 文档](https://docs.ceph.com/en/latest/rados/operations/pools/)

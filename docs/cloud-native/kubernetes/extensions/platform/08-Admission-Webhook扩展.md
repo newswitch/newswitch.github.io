@@ -2,17 +2,17 @@
 title: "Admission Webhook 扩展：可拔插策略控制"
 sidebar_label: "08. Admission Webhook 扩展：可拔插策略控制"
 sidebar_position: 8
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "通过准入 Webhook 扩展 Kubernetes API 的请求处理逻辑，实现策略验证、默认值注入与动态审计。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # Admission Webhook 扩展：可拔插策略控制
 
 > 准入 Webhook（Admission Webhook）是 Kubernetes 最灵活的 API 扩展机制之一，支持在 API Server 请求处理链中插入自定义校验、变更和策略逻辑，实现安全、合规与自动化治理。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
-准入 Webhook（Admission Webhook）是 Kubernetes API 扩展体系的重要组成部分。  
+准入 Webhook（Admission Webhook）是 Kubernetes API 扩展体系的重要组成部分。
 它允许开发者在 API Server 处理对象创建、修改、删除等请求的过程中插入自定义逻辑，常见用途包括：
 
 - 动态校验（Validation）
@@ -22,7 +22,7 @@ description: "通过准入 Webhook 扩展 Kubernetes API 的请求处理逻辑�
 
 通过 Webhook，Kubernetes 提供了“可插拔的策略控制能力”，而无需修改核心代码。
 
-## Kubernetes API 请求生命周期
+## 2. Kubernetes API 请求生命周期 {/* #kubernetes-api-请求生命周期 */}
 
 理解 Admission Webhook 前，需了解请求在 API Server 的完整处理流程。下图展示了请求生命周期及 Webhook 的作用位置。
 
@@ -46,7 +46,7 @@ sequenceDiagram
 
 > Mutating Webhook 在验证之前执行，可用于注入默认字段或修改配置；Validating Webhook 仅用于验证，不能修改对象。
 
-## Webhook 类型与执行顺序
+## 3. Webhook 类型与执行顺序 {/* #webhook-类型与执行顺序 */}
 
 Kubernetes 定义了两类 Webhook，分别用于不同的扩展场景。下表总结了两类 Webhook 的功能与典型用途。
 
@@ -62,7 +62,7 @@ Kubernetes 定义了两类 Webhook，分别用于不同的扩展场景。下表�
 3. 执行所有 ValidatingAdmissionWebhook
 4. 最终提交到 etcd
 
-## Webhook 配置对象结构
+## 4. Webhook 配置对象结构 {/* #webhook-配置对象结构 */}
 
 Webhook 的配置由两种资源对象定义：
 
@@ -106,7 +106,7 @@ webhooks:
 | admissionReviewVersions   | 与 API Server 通信的版本                      |
 | sideEffects               | 声明 Webhook 是否会产生副作用                 |
 
-## Webhook 服务实现示例
+## 5. Webhook 服务实现示例 {/* #webhook-服务实现示例 */}
 
 一个最小可运行的准入 Webhook 服务通常包含以下核心逻辑：
 
@@ -156,7 +156,7 @@ func handleMutate(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-## TLS 与认证机制
+## 6. TLS 与认证机制 {/* #tls-与认证机制 */}
 
 Webhook 服务必须使用 HTTPS，并由 API Server 信任其 CA。推荐使用 cert-manager 自动生成证书。
 
@@ -180,7 +180,7 @@ spec:
     kind: Issuer
 ```
 
-## Webhook 与控制器的协同
+## 7. Webhook 与控制器的协同 {/* #webhook-与控制器的协同 */}
 
 Webhook 与 Controller/Operator 的区别与联系如下表所示。
 
@@ -196,7 +196,7 @@ Webhook 与 Controller/Operator 的区别与联系如下表所示。
 - Webhook 负责策略把关
 - Controller 实现资源收敛
 
-## 调试与测试
+## 8. 调试与测试 {/* #调试与测试 */}
 
 本地调试 Webhook 服务流程如下：
 
@@ -214,7 +214,7 @@ kubectl describe pod pod-test
 
 查看日志确认是否被注入或拒绝。
 
-## 常见场景与最佳实践
+## 9. 常见场景与最佳实践 {/* #常见场景与最佳实践 */}
 
 下方列举了典型场景及最佳实践建议。
 
@@ -230,7 +230,7 @@ kubectl describe pod pod-test
 - 结合缓存与限流机制，保证 API Server 性能
 - 多 Webhook 顺序依赖需明确定义 `failurePolicy`
 
-## failurePolicy 与超时控制
+## 10. failurePolicy 与超时控制 {/* #failurepolicy-与超时控制 */}
 
 Webhook 失败时的处理策略如下表所示。
 
@@ -241,7 +241,7 @@ Webhook 失败时的处理策略如下表所示。
 
 可通过 `timeoutSeconds` 限制 Webhook 最大响应时间（默认 10 秒）。
 
-## 示意架构图
+## 11. 示意架构图 {/* #示意架构图 */}
 
 下图展示了 Webhook 在请求生命周期中的“前置守卫”作用。
 
@@ -256,11 +256,11 @@ flowchart LR
 
 ![Admission Webhook 架构](/images/k8s/extend/admission-webhook/f11b27b6bb4a377fa203905a76aedf1f.svg)
 
-## 总结
+## 12. 总结 {/* #总结 */}
 
 Admission Webhook 是 Kubernetes 最灵活的 API 扩展机制之一。它允许开发者在集群请求路径上注入领域逻辑，实现策略治理、动态配置和安全审计。结合 CRD、Controller、Operator，可构建完整的“策略 + 自动化 + 编排”生态。
 
-## 参考文献
+## 13. 参考资料 {/* #参考文献 */}
 
 1. [Admission Webhooks 官方文档 - kubernetes.io](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
 2. [ValidatingAdmissionWebhook 示例 - github.com](./09-Validating-Webhook扩展.md)

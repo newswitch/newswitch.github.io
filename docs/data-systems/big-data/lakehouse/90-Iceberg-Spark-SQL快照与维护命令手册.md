@@ -1,8 +1,8 @@
 ---
-title: Iceberg Spark SQL 快照、时间旅行与维护命令手册
+title: "Iceberg Spark SQL 快照、时间旅行与维护命令手册"
 sidebar_label: "90. Iceberg Spark SQL 快照、时间旅行与维护命令手册"
 sidebar_position: 90
-description: 使用 Spark SQL 查询 Iceberg 元数据表、执行时间旅行、演进 Schema 与分区，并安全完成小文件合并和快照清理。
+description: "使用 Spark SQL 查询 Iceberg 元数据表、执行时间旅行、演进 Schema 与分区，并安全完成小文件合并和快照清理。"
 tags: [Iceberg, Spark SQL, 湖仓, 快照, 命令手册]
 ---
 
@@ -253,7 +253,7 @@ CALL lake.system.rollback_to_snapshot(
   → 最后再考虑快照/孤儿文件清理
 ```
 
-## 13. 30 分钟实验
+## 13. 分钟实验 {/* #13-30-分钟实验 */}
 
 1. 创建 Iceberg 实验表并写入三批数据。
 2. 查询 `history`、`snapshots`、`files`，画出提交链。
@@ -270,9 +270,8 @@ CALL lake.system.rollback_to_snapshot(
 - 能安全执行文件重写、快照过期和孤儿文件清理。
 - 能设计带停止写入、留证、验证与回滚的表事故流程。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [Iceberg Spark Queries](https://iceberg.apache.org/docs/latest/spark-queries/)
 - [Iceberg Spark Procedures](https://iceberg.apache.org/docs/latest/spark-procedures/)
 - [Iceberg Spark DDL](https://iceberg.apache.org/docs/latest/spark-ddl/)
-

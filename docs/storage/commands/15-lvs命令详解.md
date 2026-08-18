@@ -1,11 +1,12 @@
 ---
-title: lvs 命令详解：Logical Volume、Thin、Snapshot 与 RAID 状态
+title: "lvs 命令详解：Logical Volume、Thin、Snapshot 与 RAID 状态"
+sidebar_label: "15. lvs 命令详解：Logical Volume、Thin、Snapshot 与 RAID 状态"
 sidebar_position: 15
-description: 讲解 LVM2 lvs 报告参数、lv_attr、segment、origin/pool、thin data/meta 水位、snapshot、RAID sync/health、设备映射和故障排查。
+description: "讲解 LVM2 lvs 报告参数、lv_attr、segment、origin/pool、thin data/meta 水位、snapshot、RAID sync/health、设备映射和故障排查。"
 tags: [Linux, LVM2, lvs, Thin Pool, Snapshot, RAID]
 ---
 
-# `lvs` 命令详解：Logical Volume、Thin、Snapshot 与 RAID 状态
+# lvs 命令详解：Logical Volume、Thin、Snapshot 与 RAID 状态
 
 `lvs` 是 LVM 排障最重要的报告命令。一个“LV 已 active”并不代表 thin metadata 有空间、snapshot 未溢出、RAID 已同步或文件系统正常。
 

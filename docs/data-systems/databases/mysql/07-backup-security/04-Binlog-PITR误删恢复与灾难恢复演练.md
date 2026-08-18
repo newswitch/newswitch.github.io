@@ -2,8 +2,8 @@
 title: "Binlog PITR、误删恢复与灾难恢复演练"
 sidebar_label: "04. Binlog PITR、误删恢复与灾难恢复演练"
 sidebar_position: 4
-tags: [MySQL, Binlog, PITR, 误删恢复, 灾难恢复]
 description: "从基线备份和连续 Binlog 恢复到目标事务之前，掌握误删隔离、事件定位、重放与业务校验。"
+tags: [MySQL, Binlog, PITR, 误删恢复, 灾难恢复]
 ---
 
 # Binlog PITR、误删恢复与灾难恢复演练
@@ -65,11 +65,11 @@ mysqlbinlog --start-position=START --stop-position=STOP \
 
 ## 5. 两种恢复策略
 
-### 整库回到目标点
+### 5.1 整库回到目标点 {/* #整库回到目标点 */}
 
 适合大范围破坏，切换到恢复实例。要处理事故后合法写入的取舍。
 
-### 从恢复实例提取受损对象/行
+### 5.2 从恢复实例提取受损对象/行 {/* #从恢复实例提取受损对象行 */}
 
 适合局部误删：在恢复实例得到旧数据，经过主键、版本和业务冲突校验后回灌现网。不能直接覆盖事故后已被合法修改的行。
 
@@ -85,8 +85,7 @@ mysqlbinlog --start-position=START --stop-position=STOP \
 
 最小 DML 权限、生产写审批、无 WHERE 拦截、延迟副本、连续异地 Binlog 归档、不可变备份和定期 PITR 演练。延迟副本是额外恢复源，不替代备份。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Point-in-Time Recovery Using Binary Log](https://dev.mysql.com/doc/refman/8.4/en/point-in-time-recovery-binlog.html)
 - [mysqlbinlog](https://dev.mysql.com/doc/refman/8.4/en/mysqlbinlog.html)
-

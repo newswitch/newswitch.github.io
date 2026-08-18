@@ -2,15 +2,15 @@
 title: "client-go 示例"
 sidebar_label: "04. client-go 示例"
 sidebar_position: 4
-tags: [Kubernetes, 开发指南, PartII, 学习路线]
 description: "通过一个实战示例，介绍如何使用 client-go 库实现对 Kubernetes 集群中 Deployment 资源的镜像更新操作，涵盖代码实现、编译使用及监控排查等内容。"
+tags: [Kubernetes, 开发指南, PartII, 学习路线]
 ---
 
 # client-go 示例
 
 > 通过 client-go 可以实现对 Kubernetes 资源的自动化管理和精细控制，是开发自定义运维工具和平台集成的基础能力。本文以 Deployment 镜像更新为例，系统讲解 client-go 的实战用法与最佳实践。
 
-## Kubernetes 集群访问方式对比
+## 1. Kubernetes 集群访问方式对比 {/* #kubernetes-集群访问方式对比 */}
 
 在开发或运维 Kubernetes 集群时，常见的访问方式如下表所示：
 
@@ -22,11 +22,11 @@ description: "通过一个实战示例，介绍如何使用 client-go 库实现�
 | [client-python](https://github.com/kubernetes-client/python) | Python 客户端库，易于集成 | 官方支持 | Python 生态应用 |
 | [Java client](https://github.com/kubernetes-client/java) | Java 客户端库，企业级应用 | 官方支持 | Java 企业应用 |
 
-## client-go 实战示例
+## 2. client-go 实战示例 {/* #client-go-实战示例 */}
 
 下面以 [client-go](https://github.com/kubernetes/client-go) 实现 Deployment 镜像更新工具为例，介绍如何通过命令行参数指定 Deployment 名称、容器名和新镜像进行滚动更新。
 
-### 完整代码实现
+### 2.1 完整代码实现 {/* #完整代码实现 */}
 
 以下为 `kubernetes-client-go-sample` 项目的 `main.go` 关键代码：
 
@@ -49,19 +49,19 @@ import (
 func main() {
   var kubeconfig *string
   if home := homeDir(); home != "" {
-    kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), 
+    kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"),
       "(可选) kubeconfig 文件的绝对路径")
   } else {
     kubeconfig = flag.String("kubeconfig", "", "kubeconfig 文件的绝对路径")
   }
-  
+
   deploymentName := flag.String("deployment", "", "Deployment 名称")
   imageName := flag.String("image", "", "新镜像名称")
   appName := flag.String("app", "app", "应用容器名称")
   namespace := flag.String("namespace", "default", "命名空间")
 
   flag.Parse()
-  
+
   // 参数验证
   if *deploymentName == "" {
     fmt.Println("错误：必须指定 Deployment 名称")
@@ -85,7 +85,7 @@ func main() {
   }
 
   ctx := context.TODO()
-  
+
   // 获取 Deployment
   deployment, err := clientset.AppsV1().Deployments(*namespace).Get(ctx, *deploymentName, metav1.GetOptions{})
   if err != nil {
@@ -97,11 +97,11 @@ func main() {
   }
 
   fmt.Printf("✓ 找到 Deployment: %s\n", deployment.GetName())
-  
+
   // 更新容器镜像
   containers := &deployment.Spec.Template.Spec.Containers
   found := false
-  
+
   for i := range *containers {
     c := *containers
     if c[i].Name == *appName {
@@ -112,7 +112,7 @@ func main() {
       break
     }
   }
-  
+
   if !found {
     fmt.Printf("错误：在 Deployment 中未找到名为 '%s' 的容器\n", *appName)
     os.Exit(1)
@@ -123,7 +123,7 @@ func main() {
   if err != nil {
     panic(fmt.Sprintf("更新 Deployment 失败: %v", err))
   }
-  
+
   fmt.Println("✓ Deployment 更新成功")
 }
 
@@ -135,7 +135,7 @@ func homeDir() string {
 }
 ```
 
-### 关键改进说明
+### 2.2 关键改进说明 {/* #关键改进说明 */}
 
 | 改进点         | 说明                                                         |
 |----------------|--------------------------------------------------------------|
@@ -145,7 +145,7 @@ func homeDir() string {
 | 参数扩展       | 支持指定命名空间参数                                         |
 | 代码结构优化   | 提高可读性和维护性                                           |
 
-## 编译和使用
+## 3. 编译和使用 {/* #编译和使用 */}
 
 通过以下步骤可快速编译并运行该工具：
 
@@ -162,7 +162,7 @@ go mod tidy
 go build -o update-deployment main.go
 ```
 
-### 使用方法
+### 3.1 使用方法 {/* #使用方法 */}
 
 ```bash
 # 查看帮助
@@ -184,11 +184,11 @@ go build -o update-deployment main.go
 - `-namespace`：命名空间（默认："default"）
 - `-kubeconfig`：kubeconfig 文件路径（默认：`~/.kube/config`）
 
-## 实际演示
+## 4. 实际演示 {/* #实际演示 */}
 
 以下为常见场景的实际操作演示，便于理解工具的使用效果。
 
-### 场景 1：正常镜像更新
+### 4.1 场景 1：正常镜像更新 {/* #场景-1正常镜像更新 */}
 
 ```bash
 $ ./update-deployment -deployment nginx-app -image nginx:1.21 -app nginx
@@ -198,7 +198,7 @@ $ ./update-deployment -deployment nginx-app -image nginx:1.21 -app nginx
 ✓ Deployment 更新成功
 ```
 
-### 场景 2：使用不存在的镜像
+### 4.2 场景 2：使用不存在的镜像 {/* #场景-2使用不存在的镜像 */}
 
 ```bash
 $ ./update-deployment -deployment nginx-app -image nginx:nonexistent -app nginx
@@ -215,7 +215,7 @@ kubectl get pods -l app=nginx-app
 # 可能出现 ImagePullBackOff 等异常状态
 ```
 
-### 场景 3：回滚到正常镜像
+### 4.3 场景 3：回滚到正常镜像 {/* #场景-3回滚到正常镜像 */}
 
 ```bash
 $ ./update-deployment -deployment nginx-app -image nginx:1.21 -app nginx
@@ -225,11 +225,11 @@ $ ./update-deployment -deployment nginx-app -image nginx:1.21 -app nginx
 ✓ Deployment 更新成功
 ```
 
-## 监控和故障排查
+## 5. 监控和故障排查 {/* #监控和故障排查 */}
 
 为确保更新过程顺利，建议结合 kubectl 和 Dashboard 进行实时监控与排障。
 
-### 使用 kubectl 监控更新过程
+### 5.1 使用 kubectl 监控更新过程 {/* #使用-kubectl-监控更新过程 */}
 
 ```bash
 # 实时查看 Deployment 状态
@@ -242,13 +242,13 @@ kubectl describe deployment nginx-app
 kubectl get pods -l app=nginx-app -w
 ```
 
-### 使用 Kubernetes Dashboard
+### 5.2 使用 Kubernetes Dashboard {/* #使用-kubernetes-dashboard */}
 
 通过 Dashboard 可直观查看 Deployment 状态、Pod 状态、事件日志和滚动更新历史。
 
 ![Kubernetes Dashboard 监控界面](/images/k8s/develop/client-go-sample/kubernetes-client-go-sample-update.webp)
 
-## 最佳实践
+## 6. 最佳实践 {/* #最佳实践 */}
 
 | 类别         | 建议与说明                                         |
 |--------------|----------------------------------------------------|
@@ -258,11 +258,11 @@ kubectl get pods -l app=nginx-app -w
 | 回滚准备     | 保留历史版本，便于快速回滚                         |
 | 监控告警     | 配置监控与告警机制，及时发现异常                   |
 
-## 总结
+## 7. 总结 {/* #总结 */}
 
 client-go 为 Go 语言开发者提供了强大的 Kubernetes API 编程能力。通过本示例，你可以掌握 Deployment 资源的自动化管理方法，并为构建更复杂的集群运维工具和平台集成打下基础。
 
-## 参考文献
+## 8. 参考资料 {/* #参考文献 */}
 
 - [client-go 官方文档 - github.com](https://github.com/kubernetes/client-go)
 - [Kubernetes Go 客户端示例 - github.com](https://github.com/rootsongjc/kubernetes-client-go-sample)

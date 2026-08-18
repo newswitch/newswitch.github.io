@@ -1,9 +1,9 @@
 ---
-title: perftest 与 nccl-tests 基准测试方法
+title: "perftest 与 nccl-tests 基准测试方法"
 sidebar_label: "09. perftest 与 nccl-tests 基准测试方法"
 sidebar_position: 9
+description: "建立从链路、CPU Memory RDMA、GPU Memory RDMA 到 NCCL Collective 的可重复性能基线。"
 tags: [perftest, nccl-tests, Benchmark, algbw, busbw]
-description: 建立从链路、CPU Memory RDMA、GPU Memory RDMA 到 NCCL Collective 的可重复性能基线。
 ---
 
 # perftest 与 nccl-tests 基准测试方法
@@ -265,7 +265,7 @@ algbw/busbw:
 能够设计一组让别人复现的测试，而不是提供一张峰值截图；能说明性能瓶颈可能位于
 NVLink、PCIe、NIC、Fabric 还是 Collective 算法，并用计数器支持判断。
 
-## 参考资料
+## 15. 参考资料 {/* #参考资料 */}
 
 - [linux-rdma/perftest](https://github.com/linux-rdma/perftest)
 - [NVIDIA nccl-tests](https://github.com/NVIDIA/nccl-tests)

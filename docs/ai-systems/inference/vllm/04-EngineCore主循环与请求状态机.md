@@ -2,8 +2,8 @@
 title: "EngineCore 主循环：Schedule、Execute、Update 与请求状态机"
 sidebar_label: "04. EngineCore 主循环：Schedule、Execute、Update 与请求状态机"
 sidebar_position: 4
-tags: [vLLM, EngineCore, Scheduler, Continuous Batching, Request, 源码分析]
 description: "以 vLLM v0.23.0 为基线，从请求进入 waiting 队列开始，分析 EngineCore 的 schedule-execute-update 主循环、统一 Token 调度和请求完成过程。"
+tags: [vLLM, EngineCore, Scheduler, Continuous Batching, Request, 源码分析]
 ---
 
 # EngineCore 主循环：Schedule、Execute、Update 与请求状态机
@@ -261,7 +261,7 @@ engine_outputs = self.scheduler.update_from_output(
 
 假设本轮 Token Budget 为 6。
 
-### Step 1
+### 10.1 Step 1 {/* #step-1 */}
 
 一种可能的计划：
 
@@ -277,7 +277,7 @@ C: 0 Token
 - A 还剩 1 个 Prompt Token 未计算；
 - C 仍在 waiting。
 
-### Step 2
+### 10.2 Step 2 {/* #step-2 */}
 
 一种可能的计划：
 

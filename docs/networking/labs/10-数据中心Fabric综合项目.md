@@ -1,9 +1,9 @@
 ---
-title: 数据中心 Fabric 综合项目
+title: "数据中心 Fabric 综合项目"
 sidebar_label: "10. 数据中心 Fabric 综合项目"
 sidebar_position: 10
+description: "用 2 Spine、4 Leaf 和 3 个租户完成从需求、地址规划、Underlay、Overlay 到故障演练的综合项目。"
 tags: [Lab, Clos, eBGP, VXLAN, EVPN, Fabric]
-description: 用 2 Spine、4 Leaf 和 3 个租户完成从需求、地址规划、Underlay、Overlay 到故障演练的综合项目。
 ---
 
 # 数据中心 Fabric 综合项目
@@ -71,7 +71,7 @@ flowchart TB
 
 ## 4. 实施顺序
 
-### 阶段 A：先让 Underlay 完全可用
+### 4.1 阶段 A：先让 Underlay 完全可用 {/* #阶段-a先让-underlay-完全可用 */}
 
 验收：
 
@@ -83,7 +83,7 @@ flowchart TB
 无意外默认路由
 ```
 
-### 阶段 B：建立 EVPN 控制面
+### 4.2 阶段 B：建立 EVPN 控制面 {/* #阶段-b建立-evpn-控制面 */}
 
 验收：
 
@@ -92,7 +92,7 @@ flowchart TB
 - 空业务时不应出现未知租户路由；
 - 每个 VNI 的 RD/RT 符合设计表。
 
-### 阶段 C：接入租户
+### 4.3 阶段 C：接入租户 {/* #阶段-c接入租户 */}
 
 按 Tenant-B 二层、Tenant-A 三层、Tenant-C 外部路由的顺序逐个增加复杂度。
 
@@ -106,7 +106,7 @@ flowchart TB
 → 实际数据包
 ```
 
-### 阶段 D：多归属
+### 4.4 阶段 D：多归属 {/* #阶段-d多归属 */}
 
 为 Server-A 配置 Bond/LACP 和同一 ESI，验证：
 

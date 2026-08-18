@@ -1,9 +1,9 @@
 ---
-title: Trino Coordinator、Worker、Stage、Split 与谓词下推
+title: "Trino Coordinator、Worker、Stage、Split 与谓词下推"
 sidebar_label: "01. Trino Coordinator、Worker、Stage、Split 与谓词下推"
 sidebar_position: 1
+description: "从 SQL 计划、Stage、Task、Split、Exchange 和 Connector 理解 Trino 分布式查询与性能边界。"
 tags: [Trino, MPP, Stage, Split, Pushdown]
-description: 从 SQL 计划、Stage、Task、Split、Exchange 和 Connector 理解 Trino 分布式查询与性能边界。
 ---
 
 # Trino Coordinator、Worker、Stage、Split 与谓词下推
@@ -72,7 +72,7 @@ Hash Join、aggregation、sort消耗 query memory。资源组限制并发与队�
 
 下一篇：[ClickHouse MergeTree、分区、排序键与合并](./02-ClickHouse-MergeTree分区排序键与后台合并.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Trino Documentation](https://trino.io/docs/current/)
 - [Trino Query Optimizer](https://trino.io/docs/current/optimizer.html)

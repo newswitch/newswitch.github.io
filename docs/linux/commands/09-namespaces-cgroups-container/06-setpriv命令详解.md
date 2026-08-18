@@ -1,11 +1,12 @@
 ---
-title: setpriv 命令详解：UID、Capability、no_new_privs 与最小权限执行
+title: "setpriv 命令详解：UID、Capability、nonewprivs 与最小权限执行"
+sidebar_label: "06. setpriv 命令详解：UID、Capability、nonewprivs 与最小权限执行"
 sidebar_position: 6
-description: 系统讲解 setpriv 的身份、补充组、capability、securebits、no_new_privs、LSM、Landlock、seccomp 和环境选项。
+description: "系统讲解 setpriv 的身份、补充组、capability、securebits、no_new_privs、LSM、Landlock、seccomp 和环境选项。"
 tags: [Linux, setpriv, Capability, no_new_privs, 最小权限]
 ---
 
-# `setpriv` 命令详解：最小权限执行与安全边界
+# setpriv 命令详解：UID、Capability、nonewprivs 与最小权限执行
 
 `setpriv` 是 util-linux 的非 setuid `execve` 包装器：不经过 PAM、不读取密码，直接调整可跨 `execve` 继承的 Linux 凭据和安全属性，再执行目标程序。它适合服务启动和实验，不替代登录会话管理。
 

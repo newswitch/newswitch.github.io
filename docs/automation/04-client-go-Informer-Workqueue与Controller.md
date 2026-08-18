@@ -2,8 +2,8 @@
 title: "client-go Informer、Workqueue 与 Controller"
 sidebar_label: "04. client-go Informer、Workqueue 与 Controller"
 sidebar_position: 4
-tags: [Kubernetes, client-go, Informer, Workqueue, Controller, Operator]
 description: "从 List/Watch、Reflector、DeltaFIFO 和 Indexer 到 Rate-Limited Workqueue 与幂等 Reconcile，构建可恢复、低写放大的 Kubernetes Controller。"
+tags: [Kubernetes, client-go, Informer, Workqueue, Controller, Operator]
 ---
 
 # client-go Informer、Workqueue 与 Controller
@@ -57,7 +57,7 @@ flowchart LR
     I -->|"必要时写"| A
 ```
 
-### Reflector
+### 2.1 Reflector {/* #reflector */}
 
 - 初始 List。
 - 保存 ResourceVersion。
@@ -65,25 +65,25 @@ flowchart LR
 - Watch 中断后恢复。
 - ResourceVersion 过旧时重新 List。
 
-### DeltaFIFO
+### 2.2 DeltaFIFO {/* #deltafifo */}
 
 - 以对象 Key 聚合 Added、Updated、Deleted、Sync 等 Delta。
 - 连接 Reflector 与本地缓存处理。
 - 不等同于业务 Workqueue。
 
-### Indexer
+### 2.3 Indexer {/* #indexer */}
 
 - 保存本地对象缓存。
 - 支持 namespace/name 和自定义 Index。
 - Lister 从它读取，而不是每次访问 API Server。
 
-### Event Handler
+### 2.4 Event Handler {/* #event-handler */}
 
 - 接收 Add/Update/Delete 通知。
 - 只计算并入队业务 Key。
 - 不执行慢 I/O 和复杂业务。
 
-### Workqueue
+### 2.5 Workqueue {/* #workqueue */}
 
 - 去重同一 Key。
 - Worker 并发消费。
@@ -596,7 +596,7 @@ Condition 供用户和自动化消费；日志用于调试，不能互相替代�
 
 ## 20. 测试层次
 
-### 纯函数单测
+### 20.1 纯函数单测 {/* #纯函数单测 */}
 
 - Desired 计算。
 - 差异比较。
@@ -604,7 +604,7 @@ Condition 供用户和自动化消费；日志用于调试，不能互相替代�
 - Key/Index 生成。
 - 错误分类。
 
-### Fake Client
+### 20.2 Fake Client {/* #fake-client */}
 
 适合验证客户端动作，但注意：
 
@@ -612,7 +612,7 @@ Condition 供用户和自动化消费；日志用于调试，不能互相替代�
 - 不完整模拟 ResourceVersion、Watch、Admission 和冲突。
 - 不能只靠 Fake 证明生产语义。
 
-### Informer/Queue 测试
+### 20.3 Informer/Queue 测试 {/* #informerqueue-测试 */}
 
 - Add/Update/Delete/Tombstone。
 - 同 Key 多次入队。
@@ -621,7 +621,7 @@ Condition 供用户和自动化消费；日志用于调试，不能互相替代�
 - 永久错误不重试。
 - Shutdown 能退出。
 
-### API Server 集成测试
+### 20.4 API Server 集成测试 {/* #api-server-集成测试 */}
 
 使用真实测试 API Server/测试集群验证：
 
@@ -699,4 +699,3 @@ Leader 切换
 - [Kubernetes Controllers](https://kubernetes.io/docs/concepts/architecture/controller/)
 - [Kubernetes Finalizers](https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/)
 - [Kubernetes Leases](https://kubernetes.io/docs/concepts/architecture/leases/)
-

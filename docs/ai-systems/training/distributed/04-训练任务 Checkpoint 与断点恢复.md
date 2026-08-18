@@ -1,10 +1,11 @@
 ---
 title: "分布式训练 Checkpoint：一致性、原子发布与跨拓扑恢复"
 sidebar_label: "04. 分布式训练 Checkpoint：一致性、原子发布与跨拓扑恢复"
+sidebar_position: 4
+description: "从训练状态、DDP/FSDP/ZeRO 保存语义，到原子发布、对象存储、弹性恢复、故障演练和 RPO/RTO 设计。"
+tags: ["PyTorch", "Checkpoint", "DCP", "DeepSpeed", "Kubernetes", "容灾"]
 date: 2026-07-22 17:50:00
 categories: 云原生
-tags: ["PyTorch", "Checkpoint", "DCP", "DeepSpeed", "Kubernetes", "容灾"]
-description: "从训练状态、DDP/FSDP/ZeRO 保存语义，到原子发布、对象存储、弹性恢复、故障演练和 RPO/RTO 设计。"
 ---
 
 # 分布式训练 Checkpoint：一致性、原子发布与跨拓扑恢复
@@ -272,15 +273,15 @@ s3://bucket/run-001/checkpoints/LATEST
 
 应明确选择：
 
-### 精确恢复
+### 6.1 精确恢复 {/* #精确恢复 */}
 
 保存 sampler RNG、epoch、样本游标、shard offset 和数据版本，恢复后尽量不重复/跳过。
 
-### 至少一次语义
+### 6.2 至少一次语义 {/* #至少一次语义 */}
 
 允许少量样本重复，但不能跳过；训练代码和评估必须接受。
 
-### epoch 重启
+### 6.3 epoch 重启 {/* #epoch-重启 */}
 
 回到 epoch 起点，简单但重算量大，随机轨迹变化。
 
@@ -485,27 +486,27 @@ GC 规则：
 
 ## 15. 故障演练
 
-### 实验一：DDP rank 失败
+### 15.1 实验一：DDP rank 失败 {/* #实验一ddp-rank-失败 */}
 
 在测试作业保存前后终止一个非零 rank，观察其他 rank、临时目录和控制器重启。验证只选择最后完整版本。
 
-### 实验二：分片缺失
+### 15.2 实验二：分片缺失 {/* #实验二分片缺失 */}
 
 复制一个测试 checkpoint，在副本中移走一个分片，确认 manifest/checksum 在 load 前阻止恢复。
 
-### 实验三：保存期间存储变慢
+### 15.3 实验三：保存期间存储变慢 {/* #实验三保存期间存储变慢 */}
 
 使用测试存储和受控限速，观察最慢 rank、GPU 空转、timeout 与作业行为。不要对生产共享存储注入延迟。
 
-### 实验四：跨 world size
+### 15.4 实验四：跨 world size {/* #实验四跨-world-size */}
 
 使用 DCP/FSDP 在小规模拓扑保存，再用不同 DP world size 加载，验证模型、optimizer、global batch 和 loss。
 
-### 实验五：新 Pod 恢复
+### 15.5 实验五：新 Pod 恢复 {/* #实验五新-pod-恢复 */}
 
 不是在原进程立即 load，而是删除测试作业、创建全新 Pod，从远端完成版本恢复并继续多个 step。
 
-### 实验六：对象存储半成品
+### 15.6 实验六：对象存储半成品 {/* #实验六对象存储半成品 */}
 
 构造没有 `_SUCCESS` 的测试 prefix，验证恢复器忽略；再发布 manifest/完成标记并验证可选中。
 
@@ -526,25 +527,25 @@ GC 规则：
 
 ## 17. 掌握标准
 
-### 入门
+### 17.1 入门 {/* #入门 */}
 
 - 能保存和恢复模型、optimizer、scheduler 与 step；
 - 能解释 DDP 为什么通常 rank 0 写；
 - 能从全新 Pod 恢复训练。
 
-### 进阶
+### 17.2 进阶 {/* #进阶 */}
 
 - 能使用 DCP/FSDP/ZeRO 分片 Checkpoint；
 - 能设计 manifest、checksum 和完成标记；
 - 能定位保存挂起、分片缺失和恢复 loss 跳变。
 
-### 生产级
+### 17.3 生产级 {/* #生产级 */}
 
 - 能基于 RPO/RTO、故障率和 I/O 成本设计频率；
 - 能支持对象存储、异步保存与跨拓扑恢复；
 - 能通过故障注入证明抢占、节点故障和坏版本时仍可恢复。
 
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [PyTorch Distributed Checkpoint](https://docs.pytorch.org/docs/stable/distributed.checkpoint.html)
 - [Getting Started with Distributed Checkpoint](https://docs.pytorch.org/tutorials/recipes/distributed_checkpoint_recipe.html)

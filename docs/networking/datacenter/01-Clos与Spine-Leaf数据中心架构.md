@@ -1,9 +1,9 @@
 ---
-title: Clos 与 Spine-Leaf 数据中心架构
+title: "Clos 与 Spine-Leaf 数据中心架构"
 sidebar_label: "01. Clos 与 Spine-Leaf 数据中心架构"
 sidebar_position: 1
+description: "从东西向流量、可扩展性和故障域出发，理解 Clos/Spine-Leaf 拓扑与容量规划。"
 tags: [Clos, Spine-Leaf, ECMP, Oversubscription, 数据中心网络]
-description: 从东西向流量、可扩展性和故障域出发，理解 Clos/Spine-Leaf 拓扑与容量规划。
 ---
 
 # Clos 与 Spine-Leaf 数据中心架构
@@ -152,7 +152,7 @@ Spine 故障看似“所有机架都受影响”，但只要容量规划正确�
 
 在画拓扑前收集：
 
-### 业务
+### 9.1 业务 {/* #业务 */}
 
 - 服务器数、NIC 数和速率。
 - East-West/North-South 比例。
@@ -160,14 +160,14 @@ Spine 故障看似“所有机架都受影响”，但只要容量规划正确�
 - 单机架与跨机架流量。
 - 延迟、丢包和恢复目标。
 
-### 物理
+### 9.2 物理 {/* #物理 */}
 
 - 端口 Radix、Breakout 能力。
 - 光模块、光纤类型、距离和预算。
 - FEC 模式、速率协商和兼容矩阵。
 - 机柜、电力、散热和布线。
 
-### 运维
+### 9.3 运维 {/* #运维 */}
 
 - 设备升级故障域。
 - 配置自动化和回滚。
@@ -213,7 +213,7 @@ N-1 Spine 后仍不超过 2:1
 - 设备冗余等于业务高可用：服务器、路由、负载均衡和应用也要冗余。
 - 只按正常状态规划：维护和故障状态的剩余容量才决定生产可靠性。
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [RFC 7938: Use of BGP for Routing in Large-Scale Data Centers](https://www.rfc-editor.org/rfc/rfc7938)
 - [RFC 7690: Close Encounters of the ICMP Type 2 Kind](https://www.rfc-editor.org/rfc/rfc7690)

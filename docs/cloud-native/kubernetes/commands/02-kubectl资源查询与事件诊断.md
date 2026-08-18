@@ -1,11 +1,12 @@
 ---
-title: kubectl get、describe 与 events：资源查询和状态诊断
+title: "kubectl get、describe 与 events：资源查询和状态诊断"
+sidebar_label: "02. kubectl get、describe 与 events：资源查询和状态诊断"
 sidebar_position: 2
-description: 掌握 kubectl get 的选择器、排序、Watch 和结构化输出，并用 describe、events 建立对象状态证据链。
+description: "掌握 kubectl get 的选择器、排序、Watch 和结构化输出，并用 describe、events 建立对象状态证据链。"
 tags: [Kubernetes, kubectl, get, describe, events, 故障排查]
 ---
 
-# kubectl 资源查询与事件诊断
+# kubectl get、describe 与 events：资源查询和状态诊断
 
 `get` 读取 API 对象，`describe` 把相关字段、Condition 和 Event 组织成人类可读诊断，`events` 按对象和时间查询事件。三者都不是日志，也不会直接进入节点运行时。
 
@@ -88,7 +89,7 @@ Event 有限期保留、可能聚合重复次数，也可能在故障后已经�
 
 能为一次故障保存对象 JSON、UID/ResourceVersion、Condition 与 Event 时间线；能区分期望状态、当前状态和最近事件；能写不依赖默认表格的查询；能说明事件缺失不等于事件从未发生。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [kubectl get](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/)
 - [kubectl describe](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_describe/)

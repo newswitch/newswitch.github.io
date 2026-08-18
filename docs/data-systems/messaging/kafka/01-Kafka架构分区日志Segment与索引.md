@@ -1,9 +1,9 @@
 ---
-title: Kafka 架构、分区日志、Segment 与索引
+title: "Kafka 架构、分区日志、Segment 与索引"
 sidebar_label: "01. Kafka 架构、分区日志、Segment 与索引"
 sidebar_position: 1
+description: "从 broker、topic、partition、offset、segment 和 page cache 理解 Kafka 的存储与读写路径。"
 tags: [Kafka, Partition, Log Segment, Index]
-description: 从 broker、topic、partition、offset、segment 和 page cache 理解 Kafka 的存储与读写路径。
 ---
 
 # Kafka 架构、分区日志、Segment 与索引
@@ -82,7 +82,7 @@ Retention 必须长于最大停机、重放和灾备窗口；磁盘水位还要�
 
 下一篇：[Producer batching、acks、重试与幂等生产](./02-Producer-Batching-Acks重试与幂等.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
 - [Kafka Design](https://kafka.apache.org/documentation/#design)

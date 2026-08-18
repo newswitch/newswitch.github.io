@@ -1,16 +1,18 @@
 ---
-title: CephFS、对象存储与CSI——为双资源池构建可扩展模型存储
-sidebar_label: 19 · CephFS、对象存储与CSI
+title: "CephFS、对象存储与CSI——为双资源池构建可扩展模型存储"
+sidebar_label: "19. 19 · CephFS、对象存储与CSI"
+sidebar_position: 19
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第五阶段——模型存储 本文定位：Ceph 三种接口选型、Kubernetes CSI 接入与排障篇"
+tags: [Ceph, CephFS, RGW, CSI, 模型存储, 双资源池]
 date: 2026-08-07 19:00:00
 categories: 云原生
-tags: [Ceph, CephFS, RGW, CSI, 模型存储, 双资源池]
 ---
 
 # CephFS、对象存储与CSI——为双资源池构建可扩展模型存储
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第五阶段——模型存储  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第五阶段——模型存储
 **本文定位**：Ceph 三种接口选型、Kubernetes CSI 接入与排障篇
 :::
 
@@ -30,9 +32,7 @@ tags: [Ceph, CephFS, RGW, CSI, 模型存储, 双资源池]
 
 本篇不重复完整 Ceph 集群部署。MON、MGR、OSD、MDS、RGW 和 CRUSH 原理应结合本站 [Ceph 学习路线](../../storage/ceph/00-Ceph学习路线.md) 深入学习。对照：[Ceph 三种接口选型](../../storage/ceph/08-ai-workloads/30-AI集群中的Ceph接口选型.md) · [CSI 挂载链路](../../storage/ai-workloads/05-Kubernetes-CSI挂载链路与故障排查.md) · [对象存储与模型仓库](../../storage/ai-workloads/04-对象存储与模型仓库设计.md) · [Ceph 接入 Kubernetes](../../storage/ceph/04-client-usage/15-Ceph接入Kubernetes.md)。
 
----
-
-## 一、先看三种接口的区别
+## 1. 先看三种接口的区别 {/* #一先看三种接口的区别 */}
 
 | 接口 | 应用看到什么 | 常见 K8s 访问 | 多节点共享 | 模型场景定位 |
 |------|--------------|---------------|------------|--------------|
@@ -42,9 +42,7 @@ tags: [Ceph, CephFS, RGW, CSI, 模型存储, 双资源池]
 
 Rook 官方存储架构文档也将 Ceph RBD 描述为常见 RWO 块卷、CephFS 描述为可供多节点应用使用的 RWX 共享文件系统，RGW 通过 S3 兼容接口访问 Bucket。
 
----
-
-## 二、模型存储推荐组合
+## 2. 模型存储推荐组合 {/* #二模型存储推荐组合 */}
 
 ```mermaid
 flowchart TD
@@ -63,9 +61,7 @@ flowchart TD
 
 **RBD 的位置**：每个推理 Pod 独立缓存；构建/转换任务工作盘；模型发布流水线临时空间；需要块设备语义的数据库或制品服务。它通常不是「几十个节点共同挂载同一个模型目录」的首选。
 
----
-
-## 三、CephFS 为什么适合共享模型目录
+## 3. CephFS 为什么适合共享模型目录 {/* #三cephfs-为什么适合共享模型目录 */}
 
 CephFS 提供目录和文件语义，应用可以直接使用：
 
@@ -86,9 +82,7 @@ vllm serve /models/company-model-a/nvidia/3.0.0
 
 **需要付出的复杂度**：Ceph 集群自身运维；MDS 元数据性能；OSD 容量与恢复；MON 网络连通；Ceph-CSI 控制器和节点插件；CephX 密钥与 Secret；网络和故障域规划。
 
----
-
-## 四～五、CephFS 并不自动比 NFS 更快；元数据压力
+## 4. 四～五、CephFS 并不自动比 NFS 更快；元数据压力 {/* #四五cephfs-并不自动比-nfs-更快元数据压力 */}
 
 CephFS 有横向扩展能力，但实际性能取决于：OSD 数量与介质；副本或纠删码；MDS 数量和缓存；Ceph 公共/集群网络；客户端内核；文件数量和目录布局；并发读取；集群是否处于恢复、回填或 Scrub；CSI 挂载方式；数据是否命中客户端 Page Cache。
 
@@ -98,9 +92,7 @@ CephFS 有横向扩展能力，但实际性能取决于：OSD 数量与介质；
 
 建议：正式制品目录不可变；缓存和临时文件不写入正式 CephFS 模型目录；避免每次启动递归扫描整个仓库；模型目录按逻辑模型和版本分层；监控 MDS 请求、缓存和延迟；大量小文件缓存放本地盘；发布过程使用 Manifest 直接定位文件。
 
----
-
-## 六、RBD 为什么更像一块远程硬盘
+## 5. RBD 为什么更像一块远程硬盘 {/* #六rbd-为什么更像一块远程硬盘 */}
 
 RBD 把 Ceph 中的对象映射成块设备，Kubernetes 通常将其格式化后挂载为文件系统。
 
@@ -124,9 +116,7 @@ spec:
 
 **不适合直接解决**：20 台 NVIDIA/昇腾节点同时读取同一个共享 POSIX 模型目录。共享文件系统场景应使用 CephFS。
 
----
-
-## 七～八、RGW 对象存储；不要默认把 S3 FUSE 当 CephFS
+## 6. 七～八、RGW 对象存储；不要默认把 S3 FUSE 当 CephFS {/* #七八rgw-对象存储不要默认把-s3-fuse-当-cephfs */}
 
 RGW 提供 S3 兼容对象接口，模型制品可以按 Bucket 和 Key 组织：
 
@@ -162,9 +152,7 @@ RGW 下载到节点临时目录
 需要单卷块设备 → RBD
 ```
 
----
-
-## 九、Kubernetes CSI 在中间做什么
+## 7. Kubernetes CSI 在中间做什么 {/* #九kubernetes-csi-在中间做什么 */}
 
 ```text
 PVC 创建
@@ -175,7 +163,7 @@ PVC 创建
 → 容器看到目录
 ```
 
-**Controller 侧**：Provision、Delete、Attach/Detach（取决于卷类型）、扩容、快照等。  
+**Controller 侧**：Provision、Delete、Attach/Detach（取决于卷类型）、扩容、快照等。
 **Node 侧**：在目标节点执行 Stage/Publish；调用内核或用户态客户端挂载；将卷提供给 kubelet 和 Pod。
 
 排查必须区分：
@@ -186,14 +174,12 @@ PVC 创建
 | PVC 已 Bound 但 Pod 挂载失败 | Node 插件 / 网络 / 客户端问题 |
 | 已挂载但读取慢 | CephFS / MDS / OSD / 网络 / 应用问题 |
 
----
+## 8. 十～十一、Rook 内置 vs 外部 Ceph；不要让加速器节点承担 OSD {/* #十十一rook-内置-vs-外部-ceph不要让加速器节点承担-osd */}
 
-## 十～十一、Rook 内置 vs 外部 Ceph；不要让加速器节点承担 OSD
-
-**模式 A：Rook 在 Kubernetes 中管理 Ceph**  
+**模式 A：Rook 在 Kubernetes 中管理 Ceph**
 优点：Kubernetes 原生管理、自动化程度高、CSI 集成方便。风险：K8s 和 Ceph 故障域耦合；运维需同时理解两套系统；节点、磁盘和网络设计要求高。
 
-**模式 B：使用外部 Ceph 集群**  
+**模式 B：使用外部 Ceph 集群**
 Ceph 由独立存储团队或独立节点管理，Kubernetes 只部署 CSI 并导入连接信息。优点：计算与存储生命周期分离；存储故障域更清晰；多个 K8s 集群可共享后端。风险：网络和权限配置更复杂；跨团队排障；CSI 与外部 Ceph 版本兼容需要治理。
 
 双资源池推理集群通常更推荐独立存储故障域，特别是不要在没有评估的情况下把 Ceph OSD 和关键 GPU/NPU 工作负载混在同一批节点。
@@ -211,9 +197,7 @@ Ceph 存储节点独立
 
 资源有限时若必须混部，要做资源预留、优先级、网络隔离、维护演练和故障域评估。
 
----
-
-## 十二～十三、部署前检查；不要盲抄 StorageClass
+## 9. 十二～十三、部署前检查；不要盲抄 StorageClass {/* #十二十三部署前检查不要盲抄-storageclass */}
 
 ```bash
 ceph -s
@@ -237,9 +221,7 @@ CephFS StorageClass 通常包含：CSI Provisioner 名称、clusterID、fsName�
 
 正确流程：从当前 Rook/Ceph 版本官方示例开始 → 替换真实 clusterID、fsName 和 Secret → 设置 Retain/Delete 策略 → 检查内外部集群路径 → 测试创建、挂载、扩容和删除 → 归档最终 YAML。
 
----
-
-## 十四～十五、CephFS 模型 PVC 与只读推理挂载
+## 10. 十四～十五、CephFS 模型 PVC 与只读推理挂载 {/* #十四十五cephfs-模型-pvc-与只读推理挂载 */}
 
 假设平台已经提供 `StorageClass: cephfs-models-retain`：
 
@@ -303,14 +285,12 @@ spec:
 
 不要把厂商目录选择交给容器内自动猜测，Deployment 参数应明确模型路径。
 
----
+## 11. 十六～十七、对象存储接入与 Key 规范 {/* #十六十七对象存储接入与-key-规范 */}
 
-## 十六～十七、对象存储接入与 Key 规范
-
-**方式 A：已有企业 S3/RGW**  
+**方式 A：已有企业 S3/RGW**
 平台提供 Endpoint、Bucket、Access Key/Secret Key 或临时凭证、CA 证书、网络策略、只读权限。Pod 通过 SDK、CLI 或分发组件下载。
 
-**方式 B：Rook ObjectBucketClaim**  
+**方式 B：Rook ObjectBucketClaim**
 Rook 可通过 ObjectBucketClaim 创建 Bucket，并把连接信息和凭证放入 ConfigMap/Secret。具体 API 和 StorageClass 以目标 Rook 版本为准。
 
 ```yaml
@@ -335,9 +315,7 @@ models/<逻辑模型>/<vendor>/<artifact-version>/files/...
 
 不要覆盖 `models/company-model/nvidia/latest/model.safetensors`。推荐新版本新 Key；`latest` 只作为小型指针或模型注册平台映射。上传完成标记：先上传所有分片 → 上传 Manifest → 完成校验 → 最后写入 READY 对象或更新注册状态。消费者只有看到完整 Manifest 和 READY 后才允许下载。
 
----
-
-## 十八、Ceph 数据保护如何影响容量
+## 12. Ceph 数据保护如何影响容量 {/* #十八ceph-数据保护如何影响容量 */}
 
 **三副本示例**：近似理解 `100TB 原始容量 ÷ 3 ≈ 33TB` 理论数据容量；还要保留系统、元数据、恢复和安全水位，实际可安全使用容量更低。
 
@@ -345,9 +323,7 @@ models/<逻辑模型>/<vendor>/<artifact-version>/files/...
 
 不要只用 `ceph df` 的原始容量直接承诺模型可用空间。
 
----
-
-## 十九～二十、CephFS 性能测试与监控分层
+## 13. 十九～二十、CephFS 性能测试与监控分层 {/* #十九二十cephfs-性能测试与监控分层 */}
 
 ```bash
 fio --name=cephfs-model-read \
@@ -373,9 +349,7 @@ time find /models/<测试模型目录> -type f -printf '%p\n' >/dev/null
 | CSI 层 | Provision/Mount 失败、Controller/Node Pod、操作时延、Secret、节点插件覆盖率 |
 | 模型业务层 | PVC 绑定时间、Volume Mount、权重吞吐、加载时间、并发冷启动成功率、缓存命中率 |
 
----
-
-## 二十一、PVC Pending 排查
+## 14. PVC Pending 排查 {/* #二十一pvc-pending-排查 */}
 
 ```bash
 kubectl describe pvc <PVC> -n <NS>
@@ -390,9 +364,7 @@ kubectl logs -n <CSI_NAMESPACE> <CSI_CONTROLLER_POD> \
 
 不要只看 Rook Operator 日志；真正 Provision 请求可能发生在 Ceph-CSI Controller。
 
----
-
-## 二十二、PVC Bound 但 Pod FailedMount
+## 15. PVC Bound 但 Pod FailedMount {/* #二十二pvc-bound-但-pod-failedmount */}
 
 ```bash
 kubectl describe pod <POD> -n <NS>
@@ -404,9 +376,7 @@ kubectl logs -n <CSI_NAMESPACE> <CSI_NODE_POD> \
 
 常见原因：CSI Node DaemonSet 没有容忍 GPU/NPU Taint；节点无法连接 Ceph MON；内核 Ceph 模块或 ceph-fuse 客户端问题；CephX 认证失败；Secret 轮换不一致；DNS、MTU 或路由问题；节点时间偏差；挂载参数不支持。RBD 和 CephFS 问题应分别沿对应 CSI 链路检查，并确认客户端能访问 MON 端点。
 
----
-
-## 二十三、已挂载但模型加载慢
+## 16. 已挂载但模型加载慢 {/* #二十三已挂载但模型加载慢 */}
 
 按顺序检查：
 
@@ -419,9 +389,7 @@ kubectl logs -n <CSI_NAMESPACE> <CSI_NODE_POD> \
 不要看到模型慢就直接增加 MDS 数量。大文件数据吞吐主要还依赖 OSD 和网络；MDS 主要处理元数据。
 :::
 
----
-
-## 二十四、Ceph 故障对双池的影响
+## 17. Ceph 故障对双池的影响 {/* #二十四ceph-故障对双池的影响 */}
 
 | 故障 | 影响 |
 |------|------|
@@ -433,9 +401,7 @@ kubectl logs -n <CSI_NAMESPACE> <CSI_NODE_POD> \
 
 因此网络设计要区分：管理网络、业务请求网络、计算互联网络、存储访问/复制网络。是否物理隔离取决于规模，但带宽和故障域必须明确。
 
----
-
-## 二十五～二十六、安全、Secret、ReclaimPolicy 与备份
+## 18. 二十五～二十六、安全、Secret、ReclaimPolicy 与备份 {/* #二十五二十六安全secretreclaimpolicy-与备份 */}
 
 **CephX 最小权限**：推理客户端只需要读取指定 CephFS 路径，不应拥有整个 Ceph 集群管理权限。
 
@@ -457,28 +423,24 @@ kubectl get storageclass <SC> -o yaml
 
 不要凭 StorageClass 名字中的 retain 判断。
 
----
+## 19. NFS 迁移到 CephFS 的步骤 {/* #二十七nfs-迁移到-cephfs-的步骤 */}
 
-## 二十七、NFS 迁移到 CephFS 的步骤
-
-1. 创建 CephFS 测试 StorageClass/PVC  
-2. 从 NFS 全量复制到 CephFS Staging  
-3. 校验文件数、大小和 SHA256  
-4. 在两池测试节点挂载 CephFS  
-5. 启动 NVIDIA 与昇腾测试模型  
-6. 执行业务回归和并发冷启动测试  
-7. 暂停旧仓库发布  
-8. 最终增量同步  
-9. 新 PVC 灰度发布少量副本  
-10. 分批切换所有模型  
-11. 保留 NFS 只读回退期  
-12. 验证备份后再下线旧路径  
+1. 创建 CephFS 测试 StorageClass/PVC
+2. 从 NFS 全量复制到 CephFS Staging
+3. 校验文件数、大小和 SHA256
+4. 在两池测试节点挂载 CephFS
+5. 启动 NVIDIA 与昇腾测试模型
+6. 执行业务回归和并发冷启动测试
+7. 暂停旧仓库发布
+8. 最终增量同步
+9. 新 PVC 灰度发布少量副本
+10. 分批切换所有模型
+11. 保留 NFS 只读回退期
+12. 验证备份后再下线旧路径
 
 复制工具必须保留或重新设置 UID、GID、权限、软链接和时间信息，并对最终内容做哈希校验。
 
----
-
-## 二十八、选型结论表
+## 20. 选型结论表 {/* #二十八选型结论表 */}
 
 | 需求 | 推荐起点 |
 |------|----------|
@@ -490,9 +452,7 @@ kubectl get storageclass <SC> -o yaml
 | 两池共用源权重但厂商产物不同 | 统一注册表 + 分 vendor 目录 |
 | 高可用要求 | 存储独立故障域 + 缓存 + 备份恢复 |
 
----
-
-## 二十九～三十、生产验收清单与练习
+## 21. 二十九～三十、生产验收清单与练习 {/* #二十九三十生产验收清单与练习 */}
 
 **Ceph 集群**：版本和支持周期明确；MON、MGR、OSD、MDS 满足高可用；故障域和 CRUSH 规则经过检查；容量水位和恢复余量充足；健康告警接入统一平台；完成 OSD、MDS 和存储节点故障演练；模型数据有独立备份。
 
@@ -502,9 +462,7 @@ kubectl get storageclass <SC> -o yaml
 
 **练习**：列出当前 Ceph 的 MON、MGR、OSD、MDS 和 RGW；执行 `ceph -s`、`ceph df` 和 `ceph fs status` 并解释结果；创建测试 CephFS PVC；在 NVIDIA 和昇腾节点分别挂载；验证多节点读取和只读限制；创建测试 RBD PVC 并比较访问模式；通过测试 Bucket 上传小型模型制品并下载校验；模拟 CSI Node Pod 缺少 Toleration，观察 FailedMount；设计 NFS 到 CephFS 的灰度迁移；画出 Ceph 故障会同时影响两个算力池的公共依赖图。
 
----
-
-## 三十一、本篇小结
+## 22. 本篇小结 {/* #三十一本篇小结 */}
 
 ```text
 CephFS：给多个节点共享 POSIX 模型目录
@@ -522,9 +480,7 @@ RGW 或受控 CephFS 保存正式制品
 
 下一篇将实现最后一段链路：怎样把模型从 NFS/CephFS/RGW 安全分发到节点本地缓存，避免大量 Pod 同时启动打爆共享存储，并完成版本校验、预热和垃圾回收。
 
----
-
-## 参考资料
+## 23. 参考资料 {/* #参考资料 */}
 
 - [Ceph Architecture](https://docs.ceph.com/en/latest/architecture/)
 - [Ceph File System](https://docs.ceph.com/en/latest/cephfs/)
@@ -534,9 +490,7 @@ RGW 或受控 CephFS 保存正式制品
 - [Rook CSI Common Issues](https://rook.io/docs/rook/latest/Troubleshooting/ceph-csi-common-issues/)
 - [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
 
----
-
-## 相关链接
+## 24. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 18 篇：使用 NFS 搭建双资源池共享模型存储](./18-使用NFS构建双池共享模型存储.md)
@@ -544,7 +498,5 @@ RGW 或受控 CephFS 保存正式制品
 - [Ceph 学习路线](../../storage/ceph/00-Ceph学习路线.md)
 - [Ceph 三种接口选型](../../storage/ceph/08-ai-workloads/30-AI集群中的Ceph接口选型.md)
 - [CSI 挂载链路与故障排查](../../storage/ai-workloads/05-Kubernetes-CSI挂载链路与故障排查.md)
-
----
 
 ← [第 18 篇](./18-使用NFS构建双池共享模型存储.md) · → [第 20 篇：模型分发、节点缓存与预热](./20-模型分发镜像管理缓存与预热.md)

@@ -1,11 +1,12 @@
 ---
-title: sar 命令详解：系统活动采集、历史回放与故障时间线
+title: "sar 命令详解：系统活动采集、历史回放与故障时间线"
+sidebar_label: "09. sar 命令详解：系统活动采集、历史回放与故障时间线"
 sidebar_position: 9
-description: 完整讲解 sysstat sar 的全部参数族、实时采样、日文件、CPU、负载与 PSI、内存、换页、IO、网络、时间范围和历史排障。
+description: "完整讲解 sysstat sar 的全部参数族、实时采样、日文件、CPU、负载与 PSI、内存、换页、IO、网络、时间范围和历史排障。"
 tags: [Linux, sar, sysstat, 性能, 历史监控, PSI]
 ---
 
-# `sar` 命令详解：系统活动采集、历史回放与故障时间线
+# sar 命令详解：系统活动采集、历史回放与故障时间线
 
 `sar` 既可实时采样，也可读取 `sadc` 保存的二进制 system activity 文件。它最大的价值是：事故结束后还能回到故障窗口，而不是只看恢复后的 `top`。
 
@@ -145,7 +146,7 @@ rm -- "$lab_file"
 
 掌握标准：能列出所有参数族与关键字，配置/验证采集，按时间回放并组合 CPU/load/PSI/memory/IO/network 证据，不把低分辨率平均当作完整真相。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [sysstat sar(1)](https://man7.org/linux/man-pages/man1/sar.1.html)
 - [sysstat 项目与 collector 说明](https://github.com/sysstat/sysstat)

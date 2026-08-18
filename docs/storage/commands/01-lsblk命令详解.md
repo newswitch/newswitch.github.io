@@ -1,11 +1,12 @@
 ---
-title: lsblk 命令详解：块设备拓扑、文件系统与机器可读输出
+title: "lsblk 命令详解：块设备拓扑、文件系统与机器可读输出"
+sidebar_label: "01. lsblk 命令详解：块设备拓扑、文件系统与机器可读输出"
 sidebar_position: 1
-description: 讲解 lsblk 的 sysfs/udev 数据来源、树形关系、全部常用参数族、列选择、JSON、去重、过滤，以及 LVM、RAID、NVMe 和容器场景排查。
+description: "讲解 lsblk 的 sysfs/udev 数据来源、树形关系、全部常用参数族、列选择、JSON、去重、过滤，以及 LVM、RAID、NVMe 和容器场景排查。"
 tags: [Linux, lsblk, 块设备, util-linux, NVMe, LVM]
 ---
 
-# `lsblk` 命令详解：块设备拓扑、文件系统与机器可读输出
+# lsblk 命令详解：块设备拓扑、文件系统与机器可读输出
 
 `lsblk` 读取 sysfs、udev database 和文件系统探测信息，把内核块设备表示成“磁盘 → 分区 → MD/LVM/加密 → 文件系统 → 挂载点”的关系树。它是只读命令，但输出不是持久配置，也不保证 udev 刚收到设备事件时已经完全收敛。
 

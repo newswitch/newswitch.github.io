@@ -1,11 +1,12 @@
 ---
-title: tracepath 命令详解：无特权路径追踪与 Path MTU 发现
+title: "tracepath 命令详解：无特权路径追踪与 Path MTU 发现"
+sidebar_label: "10. tracepath 命令详解：无特权路径追踪与 Path MTU 发现"
 sidebar_position: 10
-description: 完整讲解 iputils tracepath 的全部参数、Linux error queue、TTL、Path MTU、asymm 输出、错误码、与 traceroute 的差异及 PMTU 黑洞排障。
+description: "完整讲解 iputils tracepath 的全部参数、Linux error queue、TTL、Path MTU、asymm 输出、错误码、与 traceroute 的差异及 PMTU 黑洞排障。"
 tags: [Linux, tracepath, iputils, traceroute, PMTU, 网络排障]
 ---
 
-# `tracepath` 命令详解：无特权路径追踪与 Path MTU 发现
+# tracepath 命令详解：无特权路径追踪与 Path MTU 发现
 
 `tracepath` 使用 UDP 探测、逐步增加 TTL，并通过 Linux Socket error queue 接收 ICMP 错误。它的特点是普通用户可运行、参数少，而且会在路径中 MTU 发生变化时显示 `pmtu`。
 

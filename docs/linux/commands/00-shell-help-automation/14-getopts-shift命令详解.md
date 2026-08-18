@@ -1,11 +1,12 @@
 ---
-title: getopts 与 shift 命令详解：脚本短选项、位置参数与错误契约
+title: "getopts 与 shift 命令详解：脚本短选项、位置参数与错误契约"
+sidebar_label: "14. getopts 与 shift 命令详解：脚本短选项、位置参数与错误契约"
 sidebar_position: 14
-description: 完整讲解 Bash getopts 的 optstring、OPTIND/OPTARG/OPTERR、静默模式、-- 与 shift 边界。
+description: "完整讲解 Bash getopts 的 optstring、OPTIND/OPTARG/OPTERR、静默模式、-- 与 shift 边界。"
 tags: [Linux, Bash, getopts, shift, CLI]
 ---
 
-# `getopts` 与 `shift`：构建脚本命令行接口
+# getopts 与 shift 命令详解：脚本短选项、位置参数与错误契约
 
 `getopts` 每次解析一个短选项并更新 `OPTIND/OPTARG`；`shift` 删除已处理的位置参数。二者一起形成 POSIX 风格脚本 CLI。Bash builtin `getopts` 不原生解析 GNU 长选项。
 

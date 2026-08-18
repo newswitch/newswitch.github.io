@@ -2,8 +2,8 @@
 title: "Pipeline、GitOps、Canary、Shadow 与回滚"
 sidebar_label: "03. Pipeline、GitOps、Canary、Shadow 与回滚"
 sidebar_position: 3
-tags: [Argo Workflows, Argo CD, Argo Rollouts, GitOps, Canary, Shadow, MLOps]
 description: "把模型构建、评测、注册、GitOps 变更、Shadow、Canary、在线分析和回滚设计成幂等、可审计的渐进式发布状态机。"
+tags: [Argo Workflows, Argo CD, Argo Rollouts, GitOps, Canary, Shadow, MLOps]
 ---
 
 # Pipeline、GitOps、Canary、Shadow 与回滚
@@ -431,7 +431,7 @@ Client
 - 资源与性能。
 - 未见过的边界输入。
 
-### Shadow 安全边界
+### 13.1 Shadow 安全边界 {/* #shadow-安全边界 */}
 
 - 用户数据是否允许复制？
 - 是否需要脱敏/采样？
@@ -442,7 +442,7 @@ Client
 
 工具调用、支付、发信等有副作用请求必须禁用或使用模拟环境。
 
-### Shadow 不是 Canary
+### 13.2 Shadow 不是 Canary {/* #shadow-不是-canary */}
 
 | | Shadow | Canary |
 | --- | --- | --- |
@@ -605,7 +605,7 @@ spec:
 
 按版本区分：
 
-### 用户结果
+### 19.1 用户结果 {/* #用户结果 */}
 
 - 可用性。
 - 流式完成率。
@@ -613,7 +613,7 @@ spec:
 - TTFT/TPOT/E2E。
 - 拒绝/降级比例。
 
-### 服务状态
+### 19.2 服务状态 {/* #服务状态 */}
 
 - waiting/running。
 - KV Cache。
@@ -621,7 +621,7 @@ spec:
 - Request Abort。
 - 实例 Ready Capacity。
 
-### 资源
+### 19.3 资源 {/* #资源 */}
 
 - HBM。
 - GPU 利用率、功耗、Xid。
@@ -629,7 +629,7 @@ spec:
 - NIC 丢包/重传。
 - Storage 读取/加载时间。
 
-### 质量
+### 19.4 质量 {/* #质量 */}
 
 - 业务规则。
 - 抽样 Judge。
@@ -861,4 +861,3 @@ Pipeline 在创建 PR 后崩溃并重试
 - [Argo Rollout](../../cloud-native/kubernetes/operations/application-delivery/09-Argo-Rollout.md)
 
 本文重点是把它们放进模型发布协议，并补齐 LLM 流量、证据、门禁和回滚边界。
-

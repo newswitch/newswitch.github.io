@@ -1,11 +1,12 @@
 ---
-title: nvidia-modprobe 命令详解：内核模块与设备节点创建
+title: "nvidia-modprobe 命令详解：内核模块与设备节点创建"
+sidebar_label: "05. nvidia-modprobe 命令详解：内核模块与设备节点创建"
 sidebar_position: 5
-description: 理解 nvidia-modprobe 为什么存在，如何按需加载 NVIDIA 模块、创建设备节点，并安全排查权限和容器问题。
+description: "理解 nvidia-modprobe 为什么存在，如何按需加载 NVIDIA 模块、创建设备节点，并安全排查权限和容器问题。"
 tags: [GPU, NVIDIA, nvidia-modprobe, 内核模块, 设备节点]
 ---
 
-# nvidia-modprobe 命令详解
+# nvidia-modprobe 命令详解：内核模块与设备节点创建
 
 `nvidia-modprobe` 是一个小型特权辅助程序，用于按需加载 NVIDIA 内核模块并创建字符设备节点。正常的 systemd/udev 驱动安装通常已经完成这些工作；它不是安装驱动，也不能修复 ABI 不匹配或硬件掉卡。
 
@@ -81,7 +82,7 @@ rpm -qf "$(command -v nvidia-modprobe)"
 
 能解释模块、字符设备节点、用户态驱动库三者的关系；能判断问题在模块未加载、节点未创建、权限还是驱动本身；不会用特权容器掩盖宿主机配置错误。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [nvidia-modprobe README and source](https://github.com/NVIDIA/nvidia-modprobe)
 - [NVIDIA Driver Installation Guide](https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/)

@@ -1,11 +1,12 @@
 ---
-title: kubectl rollout、scale、autoscale、cordon 与 drain：发布和节点维护
+title: "kubectl rollout、scale、autoscale、cordon 与 drain：发布和节点维护"
+sidebar_label: "05. kubectl rollout、scale、autoscale、cordon 与 drain：发布和节点维护"
 sidebar_position: 5
-description: 掌握 Deployment 发布历史与回滚、手动和自动扩缩容，以及 Cordon、Drain、Uncordon 的驱逐语义和维护验收。
+description: "掌握 Deployment 发布历史与回滚、手动和自动扩缩容，以及 Cordon、Drain、Uncordon 的驱逐语义和维护验收。"
 tags: [Kubernetes, kubectl, rollout, drain, 发布, 节点维护]
 ---
 
-# kubectl 工作负载发布与节点维护
+# kubectl rollout、scale、autoscale、cordon 与 drain：发布和节点维护
 
 发布操作改变工作负载，节点维护则改变调度与驱逐。两者都需要同时观察控制器、Pod、PDB、容量和业务 SLI，不能只以命令退出码为成功标准。
 
@@ -97,7 +98,7 @@ kubectl auth can-i create pods/eviction -A
 
 能从 Revision 和 Pod Template 解释一次发布；能安全回滚并验证业务；能说明 Scale 与 HPA 的所有权；能在节点维护前识别 PDB、Local Data、单副本和 GPU 分布式任务风险。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [kubectl rollout](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)
 - [kubectl scale](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_scale/)

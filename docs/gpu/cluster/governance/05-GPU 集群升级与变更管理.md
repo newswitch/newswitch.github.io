@@ -1,9 +1,11 @@
 ---
-title: GPU 集群升级与变更管理
+title: "GPU 集群升级与变更管理"
 sidebar_label: "05. GPU 集群升级与变更管理"
+sidebar_position: 5
+description: "版本号、节点名、执行结果请换成真实数据。驱动/Operator 细节见 第 11、12 篇。"
+tags: ["Kubernetes", "GPU Operator", "变更管理", "升级", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU Operator", "变更管理", "升级", "学习路线"]
 ---
 
 # GPU 集群升级与变更管理
@@ -11,8 +13,6 @@ tags: ["Kubernetes", "GPU Operator", "变更管理", "升级", "学习路线"]
 > 版本号、节点名、执行结果请换成真实数据。驱动/Operator 细节见 [第 11](../device-management/07-GPU%20Operator%20两种驱动管理模式.md)、[12](../device-management/08-GPU%20Operator%20升级、回滚与节点维护.md) 篇。
 
 变更不止 K8s，还包括 OS/内核、驱动、Toolkit、containerd、Operator、MIG/Time-Slicing、Volcano、vLLM、模型、网络存储。驱动升级要停客户端、换模块，**必须当节点维护任务**。目标不是「命令成功」，而是集群/GPU/业务正常、性能无明显回退、异常可恢复。
-
----
 
 ## 1. 原则与分类
 
@@ -29,8 +29,6 @@ tags: ["Kubernetes", "GPU Operator", "变更管理", "升级", "学习路线"]
 
 变更前建**版本矩阵**（K8s、containerd、内核、驱动、CUDA、Operator、DCGM、Volcano、vLLM、模型…）。kubelet 小版本升级前应安全腾空并遵守 skew 策略。
 
----
-
 ## 2. 变更前：检查与备份
 
 `kubectl get nodes/pods/events/pdb`；gpu-operator；`nvidia-smi`/`topo`；Xid；Allocatable；业务基线（QPS、错误率、TTFT/TPOT、P95、等待、利用率、显存）。
@@ -38,8 +36,6 @@ tags: ["Kubernetes", "GPU Operator", "变更管理", "升级", "学习路线"]
 备份：`helm get values/manifest`、ClusterPolicy、nodes YAML、业务 Deployment 等；生产应有 **etcd 定期备份与恢复方案**。
 
 变更单含：原因、版本、节点/业务、窗口、风险、验证、暂停/回滚条件与步骤、负责人。
-
----
 
 ## 3. 节点与组件变更
 
@@ -51,8 +47,6 @@ kubectl drain "$NODE" --ignore-daemonsets --delete-emptydir-data \
 
 Operator：`helm history` → diff values → `helm upgrade ... --disable-openapi-validation`。驱动：`upgradePolicy` 限制 `maxParallelUpgrades/maxUnavailable=1`；看 `gpu-driver-upgrade-state`。宿主机预装驱动不由 Operator 管。
 
----
-
 ## 4. 验证、回滚、暂停条件
 
 验证：节点 Ready → `nvidia-smi` → Capacity/Allocatable → Operator Pod → CUDA 测试 Pod → 业务（加载/健康/普通与流式/长上下文/并发）。通过后再 `uncordon`。
@@ -60,8 +54,6 @@ Operator：`helm history` → diff values → `helm upgrade ... --disable-openap
 回滚：`helm rollback`、`rollout undo`、`apply` 备份；**Helm 回滚不一定恢复宿主机已加载的旧驱动**。
 
 暂停扩大范围：节点 NotReady、`nvidia-smi` 失败、GPU 数减少、新 Xid、CUDA/模型失败、错误率或 P95 明显恶化、DCGM 断采。
-
----
 
 ## 5. 本篇总结
 
@@ -72,9 +64,7 @@ Operator：`helm history` → diff values → `helm upgrade ... --disable-openap
 
 下一篇：[GPU 节点巡检体系设计](./06-GPU%20节点巡检体系设计.md)。
 
----
-
-## 参考与致谢
+## 6. 参考与致谢 {/* #参考与致谢 */}
 
 - [GPU Driver Upgrades](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-driver-upgrades.html)
 - [Upgrade GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/upgrade.html)

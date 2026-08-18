@@ -2,8 +2,8 @@
 title: "GPUModelRunner、CUDA Graph 与 Kernel 空洞分析"
 sidebar_label: "19. GPUModelRunner、CUDA Graph 与 Kernel 空洞分析"
 sidebar_position: 19
-tags: [vLLM, GPUModelRunner, CUDA Graph, Nsight Systems, 性能分析]
 description: "用 CPU-GPU 时间线定位 vLLM 执行间空洞、Graph Replay、Eager 路径、同步和 Kernel 瓶颈。"
+tags: [vLLM, GPUModelRunner, CUDA Graph, Nsight Systems, 性能分析]
 ---
 
 # GPUModelRunner、CUDA Graph 与 Kernel 空洞分析
@@ -17,11 +17,9 @@ GPU 是一直在忙但每步太慢，
 
 这两种问题需要完全不同的工具和修复。
 
----
-
 ## 1. 三种典型时间线
 
-### A：GPU 被上游饿住
+### 1.1 A：GPU 被上游饿住 {/* #agpu-被上游饿住 */}
 
 ```text
 CPU: [prepare/schedule────────] [prepare/schedule────────]
@@ -30,7 +28,7 @@ GPU:                         [K]                         [K]
 
 Kernel 短、空洞长。优先查 EngineCore、ModelRunner 输入准备、IPC 和同步。
 
-### B：GPU 持续计算
+### 1.2 B：GPU 持续计算 {/* #bgpu-持续计算 */}
 
 ```text
 CPU: [submit][submit][submit]
@@ -39,7 +37,7 @@ GPU:     [Kernel████][Kernel████][Kernel████]
 
 空洞少，若延迟仍高，再用 Kernel 指标分析计算/带宽。
 
-### C：多卡同步等待
+### 1.3 C：多卡同步等待 {/* #c多卡同步等待 */}
 
 ```text
 rank0 GPU: [compute][NCCL wait────][compute]
@@ -49,8 +47,6 @@ rank1 GPU: [compute──────][NCCL][compute────]
 慢 rank 或拓扑决定整体速度。
 
 第一步只需把每次 Scheduler/Execute 与 CUDA/NCCL 对齐。
-
----
 
 ## 2. ModelRunner 在 Kernel 前做什么
 
@@ -78,8 +74,6 @@ prepare_time
 execute_time
 ```
 
----
-
 ## 3. CUDA Graph 解决什么
 
 普通 Eager 执行每轮需要 CPU 发起大量 CUDA API/Kernel Launch。Decode 工作较小、Step 频繁时，Launch 开销占比可能很高。
@@ -104,8 +98,6 @@ CUDA Graph 先捕获一组固定执行操作，后续 Replay：
 - 需要额外预热时间和显存；
 - 捕获集合不能无限覆盖所有 Shape。
 
----
-
 ## 4. Graph 未命中的表现
 
 Graph 未命中不一定有错误日志。可能表现为：
@@ -126,8 +118,6 @@ Graph 未命中不一定有错误日志。可能表现为：
 
 不要为了命中 Graph 把输入 Pad 得过大：减少 Launch 的收益可能被多算 token/无效计算抵消。
 
----
-
 ## 5. 隐式同步怎样制造空洞
 
 常见同步点：
@@ -143,8 +133,6 @@ Graph 未命中不一定有错误日志。可能表现为：
 时间线中表现为 CPU 卡在 CUDA API，同时 GPU 没有后续工作。
 
 分析时查看调用栈与 CUDA API duration，不要只看 Kernel 名。一次很慢的同步 API 可能只是“替前面所有异步 Kernel 买单”，需沿 Stream 依赖回溯。
-
----
 
 ## 6. H2D/D2H 与 Pinned Memory
 
@@ -165,8 +153,6 @@ Graph 未命中不一定有错误日志。可能表现为：
 5. 查 NUMA 与 PCIe 拓扑。
 
 小拷贝的主要问题常是固定开销和同步，不一定是 PCIe 带宽跑满。
-
----
 
 ## 7. 什么时候再用 Kernel Profiler
 
@@ -189,8 +175,6 @@ GPU 执行已经连续
 
 Kernel Profile 开销很大，应在可控复现环境采样，不直接长时间挂生产。
 
----
-
 ## 8. NVTX 与请求关联
 
 理想 Trace 应标出：
@@ -209,8 +193,6 @@ output_copy
 
 若源码已有 NVTX/Profiler 钩子，优先使用；新增标记时避免在热路径构造大字符串。
 
----
-
 ## 9. 实验顺序
 
 1. 取 30～60 秒可复现异常窗口；
@@ -221,7 +203,7 @@ output_copy
 6. 只有 GPU 连续时才选 Top Kernel；
 7. 改一个变量复验 TTFT/TPOT/吞吐和成本。
 
-### Gap 指标
+### 9.1 Gap 指标 {/* #gap-指标 */}
 
 可以定义：
 
@@ -232,8 +214,6 @@ gpu_gap_ratio
 ```
 
 “存在 waiting 请求”很重要。无流量时 GPU 空闲不是性能故障。
-
----
 
 ## 10. 常见误区
 
@@ -246,8 +226,6 @@ gpu_gap_ratio
 | 合成固定 Batch 很快就代表生产快 | 真实 Shape 波动可能频繁走 Eager |
 | Profile 结果可直接代表生产 | Profiler 会改变时序，需要低侵入复验 |
 
----
-
 ## 11. 证据结论模板
 
 ```text
@@ -258,8 +236,6 @@ CPU Profile 显示 Sampling Metadata 重建占 ModelRunner on-CPU 的 41%；
 扩大常见 Shape 覆盖并复用 Metadata Buffer 后，Gap 降至 24%，
 TTFT P99 下降 38%，TPOT P99 下降 21%，Padding 计算增加 3%，显存余量仍满足基线。
 ```
-
----
 
 ## 12. 延伸阅读与验收
 

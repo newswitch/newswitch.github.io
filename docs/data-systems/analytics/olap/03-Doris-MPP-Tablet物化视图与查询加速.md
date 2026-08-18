@@ -1,9 +1,9 @@
 ---
-title: Doris MPP、Tablet、物化视图与查询加速
+title: "Doris MPP、Tablet、物化视图与查询加速"
 sidebar_label: "03. Doris MPP、Tablet、物化视图与查询加速"
 sidebar_position: 3
+description: "理解 FE/BE、PlanFragment、Tablet、数据模型、导入和同步/异步物化视图。"
 tags: [Doris, MPP, Tablet, 物化视图]
-description: 理解 FE/BE、PlanFragment、Tablet、数据模型、导入和同步/异步物化视图。
 ---
 
 # Doris MPP、Tablet、物化视图与查询加速
@@ -73,7 +73,7 @@ FE 将计划在 exchange边界切 fragments，选择 broadcast、shuffle、bucke
 
 上一篇：[ClickHouse MergeTree](./02-ClickHouse-MergeTree分区排序键与后台合并.md)　下一篇：[湖仓查询与 OLAP 选型、基准和故障排查](./04-湖仓查询与OLAP选型基准测试和故障排查.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Apache Doris MPP Architecture](https://doris.apache.org/docs/dev/key-features/mpp/)
 - [Apache Doris Materialized View](https://doris.apache.org/docs/dev/query-acceleration/materialized-view/overview/)

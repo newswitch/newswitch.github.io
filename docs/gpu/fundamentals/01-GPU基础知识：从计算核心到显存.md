@@ -1,9 +1,11 @@
 ---
-title: GPU 基础知识：从计算核心到显存
+title: "GPU 基础知识：从计算核心到显存"
 sidebar_label: "01. GPU 基础知识：从计算核心到显存"
+sidebar_position: 1
+description: "在学习 Kubernetes GPU 集群之前，首先需要理解 GPU 本身是如何工作的。很多运维问题最终都会回到几个基础概念："
+tags: ["GPU", "CUDA", "显存", "Tensor Core", "nvidia-smi", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "CUDA", "显存", "Tensor Core", "nvidia-smi", "学习路线"]
 ---
 
 # GPU 基础知识：从计算核心到显存
@@ -20,8 +22,6 @@ tags: ["GPU", "CUDA", "显存", "Tensor Core", "nvidia-smi", "学习路线"]
 
 本文以 **NVIDIA GPU** 和 **CUDA** 体系为主，介绍计算结构、线程执行模型和存储层次，为后续 [nvidia-smi](../commands/01-nvidia-smi常用命令与指标说明.md)、[驱动与 CUDA](../driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)、Device Plugin、GPU Operator 和大模型部署打下基础。
 
----
-
 ## 1. 学习目标
 
 完成本文后，应能：
@@ -33,8 +33,6 @@ tags: ["GPU", "CUDA", "显存", "Tensor Core", "nvidia-smi", "学习路线"]
 5. 区分显存容量、显存带宽和显存利用率；
 6. 看懂 `nvidia-smi` 中的基础指标；
 7. 初步判断工作负载是计算瓶颈还是内存瓶颈。
-
----
 
 ## 2. CPU 与 GPU 的区别
 
@@ -52,8 +50,6 @@ GPU：大量并行工人，擅长同时处理相似任务
 ```
 
 对一百万个数字做相同乘法，可以把不同数据分给大量 GPU 线程并行计算。但强依赖、复杂分支的逻辑不一定适合 GPU——前后依赖会降低并行效率。
-
----
 
 ## 3. GPU 的基本硬件结构
 
@@ -86,8 +82,6 @@ SM 是 GPU 执行和调度线程的核心单元。Kernel 启动后，大量线�
 
 注意：**SM 数量 ≠ GPU「核心数」**。一个 SM 还包含多个 CUDA Core、Tensor Core、寄存器、调度器和缓存。
 
----
-
 ## 4. CUDA Core 是什么
 
 CUDA Core 是执行普通算术指令的硬件计算单元，主要处理浮点/整数运算、逻辑运算、地址计算等。
@@ -102,8 +96,6 @@ CUDA Core 是执行普通算术指令的硬件计算单元，主要处理浮点/
 
 Thread 是软件执行上下文，CUDA Core 是硬件执行单元；GPU 在大量线程之间调度硬件资源。因此只比 CUDA Core 数量不够，还要看架构、频率、Tensor Core、显存带宽、数据类型、功耗限制和实际负载。
 
----
-
 ## 5. Tensor Core 是什么
 
 Tensor Core 专为矩阵运算加速，深度学习里的全连接、Attention、卷积、训练与推理等，很多都能落到矩阵乘加。它支持混合精度，具体格式取决于架构，常见包括 FP32、TF32、FP16、BF16、FP8、INT8、INT4 等。
@@ -115,8 +107,6 @@ Tensor Core 专为矩阵运算加速，深度学习里的全连接、Attention�
 | RT Core | 光线追踪（图形渲染） |
 
 大模型性能不能只看 CUDA Core，还要看目标精度下 Tensor Core 是否可用。同一模型用 FP32 / FP16 / BF16 / INT8 / INT4，吞吐、显存和精度可能完全不同。
-
----
 
 ## 6. Thread、Block、Grid 和 Warp
 
@@ -162,8 +152,6 @@ if (thread_id % 2 == 0) {
 
 GPU 需分别执行两分支，并暂时屏蔽不属于当前分支的线程，并行效率下降。Warp 内控制路径一致时利用率更高。
 
----
-
 ## 7. GPU 的存储层次
 
 性能既取决于算力，也取决于数据能否及时送到计算单元：
@@ -202,8 +190,6 @@ Block 内共享，用于线程间交换、缓存复用数据、矩阵分块、�
 
 名字易误解：逻辑上属单线程，物理上常落在设备内存。寄存器不足时可能「溢出」到 Local Memory，性能可能明显下降。
 
----
-
 ## 8. 显存容量、带宽和利用率
 
 ### 8.1 显存容量
@@ -230,8 +216,8 @@ CUDA 与临时缓冲：2 GiB
 
 两类典型瓶颈：
 
-- **Compute Bound**：计算单元长期忙碌  
-- **Memory Bound**：计算单元经常等数据  
+- **Compute Bound**：计算单元长期忙碌
+- **Memory Bound**：计算单元经常等数据
 
 ### 8.3 显存占用与 Memory Utilization
 
@@ -246,8 +232,6 @@ CUDA 与临时缓冲：2 GiB
 因此可能出现：显存占用 90%、Memory Util 10%、GPU Util 5%——权重已加载，但当前请求少，算力和显存总线并不忙。
 
 更细的命令与指标见：[nvidia-smi 常用命令与指标说明](../commands/01-nvidia-smi常用命令与指标说明.md)。
-
----
 
 ## 9. 常见数据精度
 
@@ -271,8 +255,6 @@ INT4：P × 0.5 Byte
 ```
 
 7B 模型仅原始权重约：FP32 ~28 GB、FP16 ~14 GB、INT8 ~7 GB、INT4 ~3.5 GB。实际还有 Context、KV Cache、激活和临时缓冲，不能只按权重大小选卡。
-
----
 
 ## 10. 使用 nvidia-smi 查看 GPU
 
@@ -336,8 +318,6 @@ nvidia-smi topo -m
 
 可看 GPU–GPU（含 NVLink）、与 CPU NUMA、与网卡的距离。后续见：[GPU 服务器硬件拓扑与 NUMA](../pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)。
 
----
-
 ## 11. 实验记录
 
 在 GPU 服务器上执行：
@@ -352,17 +332,13 @@ nvidia-smi \
 
 若有大模型服务，用 `watch -n 1 nvidia-smi` 分别记录：加载前 / 加载后 / 无请求 / 单请求 / 高并发，对比显存占用、GPU Util、Memory Util、功耗、温度。
 
----
-
 ## 12. 常见误区
 
-1. **GPU Util 100% ≠ 性能最优**：只表示采样期内在跑 Kernel，不代表 Tensor Core 用满、访存高效、延迟最优或未降频。  
-2. **显存未满 ≠ 还能加并发**：还受 KV Cache、碎片、临时空间、上下文长度、CUDA Graph、框架预留等限制。  
-3. **显存占用高 ≠ GPU 忙**：权重可长期驻留，可能出现「显存 95%、GPU Util 0%」。  
-4. **不能跨架构只比 CUDA Core**：还要看架构、Tensor Core、频率、带宽、精度、功耗、软件与模型。  
+1. **GPU Util 100% ≠ 性能最优**：只表示采样期内在跑 Kernel，不代表 Tensor Core 用满、访存高效、延迟最优或未降频。
+2. **显存未满 ≠ 还能加并发**：还受 KV Cache、碎片、临时空间、上下文长度、CUDA Graph、框架预留等限制。
+3. **显存占用高 ≠ GPU 忙**：权重可长期驻留，可能出现「显存 95%、GPU Util 0%」。
+4. **不能跨架构只比 CUDA Core**：还要看架构、Tensor Core、频率、带宽、精度、功耗、软件与模型。
 5. **Memory Util ≠ 显存容量使用率**：前者是总线忙闲，后者是占了多少容量。
-
----
 
 ## 13. 本篇总结
 
@@ -377,24 +353,20 @@ CUDA Core：通用算术；Tensor Core：矩阵与混合精度
 
 显存原理补充：[HBM 显存原理：容量、带宽与访问效率](../memory/01-HBM显存原理：容量、带宽与访问效率.md)；下一篇：[GPU 服务器硬件拓扑与 NUMA](../pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)；动手命令优先：[nvidia-smi 常用命令与指标说明](../commands/01-nvidia-smi常用命令与指标说明.md)；组件链路：[NVIDIA 驱动、CUDA 与容器运行时的关系](../driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)。
 
----
-
 ## 14. 课后练习
 
-1. CUDA Core、Tensor Core 和 CUDA Thread 有什么区别？  
-2. 为什么一个 Thread Block 必须运行在同一个 SM 上？  
-3. 一个含 256 线程的 Block 会分成多少个 Warp？  
-4. Warp Divergence 为什么会降低执行效率？  
-5. Shared Memory 和 Global Memory 有什么区别？  
-6. `Memory-Usage` 与 `Memory Util` 有什么区别？  
-7. 为什么模型没有请求时，显存仍可能占用 90%？  
-8. 为什么不能只根据 CUDA Core 数量比较两张 GPU？  
-9. 显存容量和显存带宽分别决定什么？  
+1. CUDA Core、Tensor Core 和 CUDA Thread 有什么区别？
+2. 为什么一个 Thread Block 必须运行在同一个 SM 上？
+3. 一个含 256 线程的 Block 会分成多少个 Warp？
+4. Warp Divergence 为什么会降低执行效率？
+5. Shared Memory 和 Global Memory 有什么区别？
+6. `Memory-Usage` 与 `Memory Util` 有什么区别？
+7. 为什么模型没有请求时，显存仍可能占用 90%？
+8. 为什么不能只根据 CUDA Core 数量比较两张 GPU？
+9. 显存容量和显存带宽分别决定什么？
 10. 用 `nvidia-smi` 记录一张实际 GPU 的型号、显存、利用率、温度和功耗。
 
----
-
-## 参考与致谢
+## 15. 参考与致谢 {/* #参考与致谢 */}
 
 - [CUDA Programming Guide — Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html)（异构系统、SM、Thread Block、Warp、内存模型）
 - [CUDA Programming Guide — Writing SIMT Kernels](https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html)（Global / Shared / Local / Register 等内存空间）

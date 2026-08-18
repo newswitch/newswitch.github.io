@@ -2,21 +2,21 @@
 title: "自定义资源定义（CustomResourceDefinition, CRD）"
 sidebar_label: "04. 自定义资源定义（CustomResourceDefinition, CRD）"
 sidebar_position: 4
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "CRD 是 Kubernetes 最常用的扩展机制。通过定义自定义资源类型（Custom Resource），用户无需修改核心代码即可扩展 Kubernetes 的 API，实现领域特定的控制逻辑。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # 自定义资源定义（CustomResourceDefinition, CRD）
 
 > CRD（CustomResourceDefinition，自定义资源定义）是 Kubernetes 最主流的 API 扩展机制。它让开发者无需修改核心代码，即可声明新资源类型，结合控制器实现领域自动化，是云原生生态的基石。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 **CustomResourceDefinition（CRD）** 是 Kubernetes 提供的一种“内部扩展”机制。通过它，用户可以在集群中注册新的资源类型，使 Kubernetes 原生支持这些对象的 CRUD 操作。
 
 CRD 的出现，使得 Kubernetes 从一个固定功能的调度系统，演化为一个“可编程的控制平面（Programmable Control Plane）”。
 
-## CRD 的工作原理
+## 2. CRD 的工作原理 {/* #crd-的工作原理 */}
 
 Kubernetes 的核心思想是“声明式 API”。当你创建一个 CRD 时，本质上是告诉 API Server：
 
@@ -43,7 +43,7 @@ flowchart LR
 
 ![CRD 工作原理](/images/k8s/extend/crd/09b8d8acc744b3243b08beb32f77a4e3.svg)
 
-## CRD 的定义结构
+## 3. CRD 的定义结构 {/* #crd-的定义结构 */}
 
 下方是一个典型的 CRD 对象示例：
 
@@ -99,7 +99,7 @@ kubectl get databases
 kubectl apply -f mydb.yaml
 ```
 
-## 自定义资源对象（Custom Resource）
+## 4. 自定义资源对象（Custom Resource） {/* #自定义资源对象custom-resource */}
 
 CRD 定义的是“类型”，而自定义资源（CR）是“实例”。
 
@@ -124,7 +124,7 @@ kubectl describe database user-db
 
 这就是 Kubernetes 的“声明式扩展”：**新增一种资源类型，而无需修改控制面。**
 
-## CRD 与控制器（Controller）
+## 5. CRD 与控制器（Controller） {/* #crd-与控制器controller */}
 
 CRD 通常与 **控制器（Controller）** 搭配使用。
 
@@ -147,7 +147,7 @@ sequenceDiagram
 
 这种模式被称为 **Operator 模式**，是构建云原生自动化系统的标准做法。
 
-## Schema 与验证
+## 6. Schema 与验证 {/* #schema-与验证 */}
 
 CRD 使用 OpenAPI v3 Schema 来约束资源字段，保证集群中自定义资源的结构化一致性。
 
@@ -174,7 +174,7 @@ schema:
 - `default`：设定默认值
 - `nullable`：允许空值
 
-## 版本管理与转换（Versioning & Conversion）
+## 7. 版本管理与转换（Versioning & Conversion） {/* #版本管理与转换versioning--conversion */}
 
 CRD 支持同时声明多个版本：
 
@@ -203,7 +203,7 @@ conversion:
 
 这种机制允许开发者在升级 API 时保持向后兼容。
 
-## 子资源（Subresources）
+## 8. 子资源（Subresources） {/* #子资源subresources */}
 
 CRD 还可以声明子资源，用于支持 `/status` 和 `/scale` 路径：
 
@@ -221,7 +221,7 @@ subresources:
 kubectl scale database user-db --replicas=3
 ```
 
-## 最佳实践
+## 9. 最佳实践 {/* #最佳实践 */}
 
 - **始终定义 Schema**：防止结构漂移。
 - **启用版本管理**：方便后续 API 升级。
@@ -229,7 +229,7 @@ kubectl scale database user-db --replicas=3
 - **结合 Controller/Operator 使用**：让资源具备行为。
 - **明确命名空间范围**：避免全局资源污染。
 
-## 适用场景
+## 10. 适用场景 {/* #适用场景 */}
 
 CRD 适用于以下典型场景：
 
@@ -240,11 +240,11 @@ CRD 适用于以下典型场景：
 
 CRD 已成为几乎所有 Kubernetes 扩展项目的基础。
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 CRD 是 Kubernetes 可扩展性的核心机制。通过简单的 YAML 定义，就能让集群支持新的资源类型。与控制器结合后，CRD 让开发者可以将领域知识转化为 Kubernetes 原生 API，从而实现“让一切皆可声明”的云原生编程模型。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 1. [CustomResourceDefinition 官方文档 - kubernetes.io](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
 2. [Kubernetes API 设计指南 - github.com](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md)

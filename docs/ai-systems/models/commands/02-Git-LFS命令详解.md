@@ -1,5 +1,6 @@
 ---
 title: "Git LFS 命令详解"
+sidebar_label: "02. Git LFS 命令详解"
 sidebar_position: 2
 description: "理解 Git LFS 指针、对象存储、fetch/checkout/pull、迁移、锁和缓存清理，排查权重文件未真正下载问题。"
 tags: [Git LFS, Git, 模型权重, 大文件, 缓存]
@@ -121,11 +122,11 @@ git lfs prune --verify-remote
 | LFS占满磁盘 | 先按revision物化交付，再使用prune dry-run评估 |
 | `.gitattributes`新增后旧文件仍非LFS | track只影响后续加入索引，历史迁移需单独审批 |
 
-## 掌握标准
+## 10. 掌握标准 {/* #掌握标准 */}
 
 能解释四层对象；能证明远端对象可下载；能用commit固定并物化模型目录；能区分fetch、checkout和pull；不会在日常修复中随意重写历史或清空LFS缓存。
 
-## 官方资料
+## 11. 官方资料 {/* #官方资料 */}
 
 - [Git LFS manual](https://github.com/git-lfs/git-lfs/tree/main/docs/man)
 - [Git LFS specification](https://github.com/git-lfs/git-lfs/tree/main/docs/spec)

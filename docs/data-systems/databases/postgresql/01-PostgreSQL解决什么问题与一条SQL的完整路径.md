@@ -2,8 +2,8 @@
 title: "PostgreSQL 解决什么问题与一条 SQL 的完整路径"
 sidebar_label: "01. PostgreSQL 解决什么问题与一条 SQL 的完整路径"
 sidebar_position: 1
-tags: [PostgreSQL, SQL, MVCC, WAL, 查询执行]
 description: "从进程模型、解析优化、Buffer Cache、MVCC、WAL 与提交时间点拆解 PostgreSQL 一条 SQL 的完整路径。"
+tags: [PostgreSQL, SQL, MVCC, WAL, 查询执行]
 ---
 
 # PostgreSQL 解决什么问题与一条 SQL 的完整路径

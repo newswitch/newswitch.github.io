@@ -1,11 +1,12 @@
 ---
-title: kubeadm 命令详解：初始化、加入、升级、证书与重置
+title: "kubeadm 命令详解：初始化、加入、升级、证书与重置"
+sidebar_label: "09. kubeadm 命令详解：初始化、加入、升级、证书与重置"
 sidebar_position: 9
-description: 掌握 kubeadm init/join/upgrade/token/cert/config/reset 的阶段、配置 API、HA 控制面和生产变更安全边界。
+description: "掌握 kubeadm init/join/upgrade/token/cert/config/reset 的阶段、配置 API、HA 控制面和生产变更安全边界。"
 tags: [Kubernetes, kubeadm, 集群部署, 升级, 证书]
 ---
 
-# kubeadm 命令详解
+# kubeadm 命令详解：初始化、加入、升级、证书与重置
 
 `kubeadm` 引导符合社区最佳实践的 Kubernetes 控制面和节点，但不负责云资源、CNI、CSI、Ingress、监控、操作系统加固和长期集群生命周期。它按 Phase 写静态 Pod Manifest、证书、kubeconfig 与 kubelet 配置。
 
@@ -103,7 +104,7 @@ Reset 尽力回滚本机 kubeadm 管理状态，但不会自动清理所有 CNI 
 
 能解释 init 的每个 Phase；能设计短期、安全的 Join；能执行逐 Minor、逐节点升级；能证明 etcd 可恢复和控制面保持 Quorum；能明确 reset 不清理什么。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [kubeadm Reference](https://kubernetes.io/docs/reference/setup-tools/kubeadm/)
 - [Creating a Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)

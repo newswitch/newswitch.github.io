@@ -1,5 +1,6 @@
 ---
 title: "tritonserver 命令详解"
+sidebar_label: "05. tritonserver 命令详解"
 sidebar_position: 5
 description: "掌握 Triton Inference Server 模型仓库、控制模式、HTTP/gRPC、指标、Trace、后端和生产安全配置。"
 tags: [Triton, tritonserver, NVIDIA, 模型仓库, 推理服务]
@@ -116,11 +117,11 @@ Trace参数族通常包含 `--trace-config`，旧版本也可能提供 `--trace-
 | HTTP正常、gRPC失败 | 端口、TLS、HTTP/2、Service协议和客户端版本 |
 | 指标缺GPU | GPU metrics开关、DCGM/NVML/权限和容器设备 |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能解释三种模型控制模式；能设计不可变仓库发布；能区分live、ready和模型业务验证；能收紧协议与动态加载边界；能将模型配置、实例数和内存池映射到GPU容量。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [Triton documentation](https://docs.nvidia.com/deeplearning/triton-inference-server/)
 - [Secure deployment considerations](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/customization_guide/deploy.html)

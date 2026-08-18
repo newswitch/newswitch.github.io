@@ -1,9 +1,9 @@
 ---
-title: 网络 GitOps 与变更验证
+title: "网络 GitOps 与变更验证"
 sidebar_label: "06. 网络 GitOps 与变更验证"
 sidebar_position: 6
+description: "把网络意图、配置和测试纳入 Pull Request，构建从静态检查、语义验证到灰度发布的变更流水线。"
 tags: [GitOps, Batfish, CI, Validation, Canary]
-description: 把网络意图、配置和测试纳入 Pull Request，构建从静态检查、语义验证到灰度发布的变更流水线。
 ---
 
 # 网络 GitOps 与变更验证
@@ -207,7 +207,7 @@ Git Revert 只回滚仓库意图，不会自动回滚设备。完整回滚需要
 - 能从 Commit 找到设备命令、执行日志和验证结果；
 - 回滚后 SoT、Git、配置和实时状态重新一致。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Batfish 官方文档](https://batfish.readthedocs.io/en/latest/)
 - [Batfish Configuration Analysis Queries](https://batfish.readthedocs.io/en/latest/notebooks/linked/configProperties.html)

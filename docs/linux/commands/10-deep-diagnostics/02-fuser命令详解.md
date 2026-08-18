@@ -1,11 +1,12 @@
 ---
-title: fuser 命令详解：按文件、挂载点与端口定位进程
+title: "fuser 命令详解：按文件、挂载点与端口定位进程"
+sidebar_label: "02. fuser 命令详解：按文件、挂载点与端口定位进程"
 sidebar_position: 2
-description: 讲清 psmisc fuser 的 namespace、mount、IPv4/IPv6、交互 kill、信号、用户与访问类型输出。
+description: "讲清 psmisc fuser 的 namespace、mount、IPv4/IPv6、交互 kill、信号、用户与访问类型输出。"
 tags: [Linux, fuser, 挂载, 端口, 进程]
 ---
 
-# `fuser` 命令详解：从对象快速找到 PID
+# fuser 命令详解：按文件、挂载点与端口定位进程
 
 `fuser` 按文件、文件系统或网络端点列出正在使用它们的进程。它比 `lsof` 更适合“这个 mount/端口被谁占用”的快速判断，也能发信号；因此同一命令既是 `[R]` 也可能是 `[D]`。
 

@@ -1,9 +1,9 @@
 ---
-title: 云 VPC 网络与全链路分析
+title: "云 VPC 网络与全链路分析"
 sidebar_label: "06. 云 VPC 网络与全链路分析"
 sidebar_position: 6
+description: "用通用网络原理拆解 VPC、子网、路由、安全组、NAT、负载均衡和跨 VPC 访问路径。"
 tags: [VPC, Route Table, Security Group, NAT Gateway, Load Balancer]
-description: 用通用网络原理拆解 VPC、子网、路由、安全组、NAT、负载均衡和跨 VPC 访问路径。
 ---
 
 # 云 VPC 网络与全链路分析
@@ -146,7 +146,7 @@ Client
 
 ## 6. 云网络排障模板
 
-### 第一步：固定五元组和时间
+### 6.1 第一步：固定五元组和时间 {/* #第一步固定五元组和时间 */}
 
 ```text
 源 IP:
@@ -157,14 +157,14 @@ Client
 期望路径:
 ```
 
-### 第二步：从两端同时证明
+### 6.2 第二步：从两端同时证明 {/* #第二步从两端同时证明 */}
 
 - 源端 DNS、路由、连接尝试；
 - 目标端监听、应用日志、抓包；
 - 云侧 Flow Logs、LB Access Logs、NAT 指标；
 - 中间路由表和策略的配置快照。
 
-### 第三步：按层定位
+### 6.3 第三步：按层定位 {/* #第三步按层定位 */}
 
 | 现象 | 优先检查 |
 |---|---|
@@ -198,7 +198,7 @@ Internet → Public LB → Web Subnet → App Subnet → DB Subnet
 
 验收时不仅证明“该通的通”，还要证明“不该通的确实被拒绝”。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [AWS VPC 路由表文档](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html)
 - [AWS Security Groups 文档](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html)

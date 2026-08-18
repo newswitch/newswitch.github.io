@@ -1,11 +1,12 @@
 ---
-title: top 命令详解：CPU、内存、线程、排序与批处理快照
+title: "top 命令详解：CPU、内存、线程、排序与批处理快照"
+sidebar_label: "04. top 命令详解：CPU、内存、线程、排序与批处理快照"
 sidebar_position: 4
-description: 完整讲解 procps-ng top 的命令行参数、交互命令、CPU/内存/进程字段、线程模式、批处理、过滤和生产排障边界。
+description: "完整讲解 procps-ng top 的命令行参数、交互命令、CPU/内存/进程字段、线程模式、批处理、过滤和生产排障边界。"
 tags: [Linux, top, CPU, 内存, 线程, procps-ng]
 ---
 
-# `top` 命令详解：CPU、内存、线程、排序与批处理快照
+# top 命令详解：CPU、内存、线程、排序与批处理快照
 
 `top` 周期读取 procfs，将系统汇总和任务差分放在同一屏。它特别适合交互式发现热点；长期监控、稳定机器解析和历史回看应使用 sysstat/监控系统。
 
@@ -136,7 +137,7 @@ PID namespace 决定可见任务，procfs 挂载与 hidepid/LSM 决定字段权�
 
 掌握标准：能列出全部 CLI 参数，解释汇总与关键任务字段，安全使用过滤/线程/排序/批处理，并知道何时切换到 pidstat、sar、perf 或应用 profiler。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [procps-ng top(1)](https://man7.org/linux/man-pages/man1/top.1.html)
 - [Linux proc_pid_stat(5)](https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html)

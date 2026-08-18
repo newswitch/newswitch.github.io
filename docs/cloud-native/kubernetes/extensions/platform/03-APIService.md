@@ -2,22 +2,22 @@
 title: "API 聚合层（APIService）"
 sidebar_label: "03. API 聚合层（APIService）"
 sidebar_position: 3
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "APIService 是 Kubernetes 的 API 聚合层机制，允许外部 API Server 注册到主 API Server 下，实现统一的 API 接口暴露。本文介绍其架构原理、注册方式与典型应用。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # API 聚合层（APIService）
 
 > APIService（API 聚合层）是 Kubernetes 早期的官方扩展机制，允许外部 API Server 注册到主 API Server，实现统一 API 入口和系统级能力扩展。本文梳理其架构原理、注册流程、典型场景与局限性，帮助理解其在现代云原生体系中的定位。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
-在 Kubernetes 的可扩展体系中，**APIService（API 聚合层）** 是一种早期设计的扩展机制。  
+在 Kubernetes 的可扩展体系中，**APIService（API 聚合层）** 是一种早期设计的扩展机制。
 它允许开发者通过注册独立运行的 API Server，将外部系统的 API 聚合到 Kubernetes 主 API Server 下的统一路径中。
 
 这种机制通常被称为 **Aggregation Layer**，是 Kubernetes API Server 的一个“可插拔入口点”。
 
-## 设计目标
+## 2. 设计目标 {/* #设计目标 */}
 
 API 聚合层的设计目标如下：
 
@@ -27,7 +27,7 @@ API 聚合层的设计目标如下：
 
 这让 Kubernetes 成为可扩展的控制平面，而不仅仅是编排器。
 
-## 架构原理
+## 3. 架构原理 {/* #架构原理 */}
 
 API 聚合层由两个关键组件构成：
 
@@ -46,7 +46,7 @@ flowchart LR
 
 ![API 聚合层架构](/images/k8s/extend/apiservice/a0b7be7f710488c91a7be4c26c7cf752.svg)
 
-## 注册机制
+## 4. 注册机制 {/* #注册机制 */}
 
 扩展 API Server 通过创建 `APIService` 对象注册到 Kubernetes：
 
@@ -67,7 +67,7 @@ spec:
 
 该对象描述了外部服务的访问地址（通常为 Kubernetes Service）及通信安全策略。主 API Server 会根据此配置将请求反向代理到扩展服务。
 
-## 示例：Metrics Server
+## 5. 示例：Metrics Server {/* #示例metrics-server */}
 
 `metrics-server` 是典型的 APIService 实现，用于聚合节点与 Pod 的 CPU、内存指标。
 
@@ -86,7 +86,7 @@ kubectl get --raw /apis/metrics.k8s.io/v1beta1/nodes
 
 主 API Server 会将该请求代理至 metrics-server，实现统一访问入口。
 
-## 证书与安全配置
+## 6. 证书与安全配置 {/* #证书与安全配置 */}
 
 聚合层涉及主从 API Server 之间的通信，必须通过 HTTPS 进行安全认证：
 
@@ -108,24 +108,24 @@ sequenceDiagram
 
 ![APIService 证书与安全通信流程](/images/k8s/extend/apiservice/d406fe1a2be7373762413c2de408722f.svg)
 
-## 开发与部署流程
+## 7. 开发与部署流程 {/* #开发与部署流程 */}
 
 实现新的 APIService 通常包括以下步骤：
 
-1. **实现扩展 API Server**  
-   使用 `k8s.io/apiserver` 库编写支持 Kubernetes API 规范的独立服务。  
+1. **实现扩展 API Server**
+   使用 `k8s.io/apiserver` 库编写支持 Kubernetes API 规范的独立服务。
    参考：[sample-apiserver](https://github.com/kubernetes/sample-apiserver)
 
-2. **部署 Service 与 Deployment**  
+2. **部署 Service 与 Deployment**
    将扩展 API Server 部署到集群，并通过 ClusterIP Service 暴露。
 
-3. **注册 APIService 对象**  
+3. **注册 APIService 对象**
    创建 `APIService` 资源，绑定 group/version 与对应服务。
 
-4. **验证通信**  
+4. **验证通信**
    使用 `kubectl get --raw` 验证代理路径是否正常工作。
 
-## 适用场景
+## 8. 适用场景 {/* #适用场景 */}
 
 APIService 适用于以下典型场景：
 
@@ -140,7 +140,7 @@ APIService 适用于以下典型场景：
 - Operator 模式（应使用 CRD）
 - 需要与 Kubernetes 深度集成的控制循环逻辑
 
-## 局限性与演进
+## 9. 局限性与演进 {/* #局限性与演进 */}
 
 虽然 APIService 是早期重要扩展机制，但随着 CRD 的成熟，它逐渐被边缘化。
 
@@ -153,11 +153,11 @@ APIService 适用于以下典型场景：
 
 目前社区主要将 APIService 用于系统组件，如 metrics-server、apiextensions-apiserver、kube-aggregator。
 
-## 总结
+## 10. 总结 {/* #总结 */}
 
 APIService 是 Kubernetes 的早期扩展机制，代表了“聚合式 API 扩展”的设计理念，让 Kubernetes 成为统一 API 网关。但在实际生产中，APIService 更适合系统级组件，对于业务系统或 Operator 类应用，应优先选择 CRD 方式。
 
-## 参考文献
+## 11. 参考资料 {/* #参考文献 */}
 
 1. [Kubernetes 官方文档：Aggregation Layer - kubernetes.io](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/)
 2. [APIService API Reference - kubernetes.io](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#apiservice-v1-apiregistration-k8s-io)

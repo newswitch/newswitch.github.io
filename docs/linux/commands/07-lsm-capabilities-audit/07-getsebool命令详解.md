@@ -1,11 +1,12 @@
 ---
-title: getsebool 命令详解：查询 SELinux boolean 当前值
+title: "getsebool 命令详解：查询 SELinux boolean 当前值"
+sidebar_label: "07. getsebool 命令详解：查询 SELinux boolean 当前值"
 sidebar_position: 7
-description: 完整讲解 getsebool 的指定名称与 -a 参数、current/persistent 区别、条件策略语义、查询失败和 boolean 安全评审。
+description: "完整讲解 getsebool 的指定名称与 -a 参数、current/persistent 区别、条件策略语义、查询失败和 boolean 安全评审。"
 tags: [Linux, getsebool, SELinux, boolean, policy]
 ---
 
-# `getsebool` 命令详解：查询 SELinux boolean 当前值
+# getsebool 命令详解：查询 SELinux boolean 当前值
 
 SELinux boolean 是 policy 预先设计的条件开关，用来启停一组 allow 规则。`getsebool` 查询内核当前值，不直接解释这些规则的全部访问面，也不保证值重启后保持。
 
@@ -71,7 +72,7 @@ semanage boolean -l | grep -F httpd_can_network_connect
 
 掌握标准：能说明唯一 `-a` 参数、current/persistent 分离和条件 allow 的扩大面，不基于名称猜测做生产放宽。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [getsebool(8)](https://manpages.debian.org/unstable/policycoreutils/getsebool.8.en.html)
 - [booleans(8)](https://manpages.debian.org/unstable/policycoreutils/booleans.8.en.html)

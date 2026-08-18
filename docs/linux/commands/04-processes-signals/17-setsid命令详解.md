@@ -1,11 +1,12 @@
 ---
-title: setsid 命令详解：创建新 session 与控制终端边界
+title: "setsid 命令详解：创建新 session 与控制终端边界"
+sidebar_label: "17. setsid 命令详解：创建新 session 与控制终端边界"
 sidebar_position: 17
-description: 完整讲解 util-linux setsid 的 -c/-f/-w 参数、session leader、process group、控制终端、fork 行为、退出码传播与守护化误区。
+description: "完整讲解 util-linux setsid 的 -c/-f/-w 参数、session leader、process group、控制终端、fork 行为、退出码传播与守护化误区。"
 tags: [Linux, setsid, session, TTY, util-linux]
 ---
 
-# `setsid` 命令详解：创建新 session 与控制终端边界
+# setsid 命令详解：创建新 session 与控制终端边界
 
 `setsid` 在新 session 中运行程序。新 session leader 同时成为新 process group leader，默认没有控制终端；但这只是 daemonization 的一个步骤，不处理日志、cwd、umask、fd、监督和资源限制。
 
@@ -58,7 +59,7 @@ printf 'rc=%d\n' "$?"
 
 掌握标准：能列出全部参数；能解释为什么 group leader 需 fork、`-c` 重新取得 TTY、`-w` 传播状态；不把新 session 等同完整守护化。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [util-linux：setsid(1)](https://man7.org/linux/man-pages/man1/setsid.1.html)
 - [Linux setsid(2)](https://man7.org/linux/man-pages/man2/setsid.2.html)

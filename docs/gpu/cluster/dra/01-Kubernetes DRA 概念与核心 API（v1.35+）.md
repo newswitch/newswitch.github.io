@@ -1,9 +1,11 @@
 ---
-title: Kubernetes DRA 概念与核心 API（v1.35+）
+title: "Kubernetes DRA 概念与核心 API（v1.35+）"
 sidebar_label: "01. Kubernetes DRA 概念与核心 API（v1.35+）"
+sidebar_position: 1
+description: "版本说明：动态资源分配（DRA）在官方概念文档中标注为 Kubernetes v1.35 [stable]（默认启用）。安装与任务文档常要求集群 ≥ v1.34。部分能力在 v1.36 仍为 Beta/Alpha（按优先级列表、可切分设备、设备污点、面向 PodGroup 的 Claim 等）……"
+tags: ["Kubernetes", "DRA", "DeviceClass", "ResourceClaim", "ResourceSlice", "GPU", "学习路线"]
 date: 2026-07-22 19:40:00
 categories: 云原生
-tags: ["Kubernetes", "DRA", "DeviceClass", "ResourceClaim", "ResourceSlice", "GPU", "学习路线"]
 ---
 
 # Kubernetes DRA 概念与核心 API（v1.35+）
@@ -11,8 +13,6 @@ tags: ["Kubernetes", "DRA", "DeviceClass", "ResourceClaim", "ResourceSlice", "GP
 > **版本说明**：动态资源分配（DRA）在官方概念文档中标注为 **Kubernetes v1.35 [stable]**（默认启用）。安装与任务文档常要求集群 **≥ v1.34**。部分能力在 **v1.36** 仍为 Beta/Alpha（按优先级列表、可切分设备、设备污点、面向 PodGroup 的 Claim 等）。**API 与特性门控仍在演进**，请以你集群小版本对应的 [官方文档](https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/dynamic-resource-allocation/) 为准，升级后复查驱动与清单。
 
 本篇放在系列**最后学**：先掌握 [Device Plugin](../device-management/01-Kubernetes%20如何识别和管理%20GPU.md) 与整卡 `nvidia.com/gpu`，再理解 DRA 如何用 **Claim + 属性筛选** 做更细的设备分配。实践见 [第 62 篇](./02-DRA%20集群安装与设备分配实践（v1.34+）.md)。
-
----
 
 ## 1. DRA 要解决什么
 
@@ -30,11 +30,9 @@ DRA 让你在多个 Pod/容器之间 **请求并（可选）共享** 挂接设�
 
 角色分工：
 
-1. **设备所有者 / 驱动**：发布并更新 ResourceSlice，可选提供 DeviceClass  
-2. **集群管理员**：挂设备、装 DRA 驱动、建 DeviceClass、开特性  
-3. **工作负载运维**：建 ResourceClaim(Template)、在 Pod 里引用  
-
----
+1. **设备所有者 / 驱动**：发布并更新 ResourceSlice，可选提供 DeviceClass
+2. **集群管理员**：挂设备、装 DRA 驱动、建 DeviceClass、开特性
+3. **工作负载运维**：建 ResourceClaim(Template)、在 Pod 里引用
 
 ## 2. 四个核心对象
 
@@ -48,8 +46,8 @@ DRA 让你在多个 Pod/容器之间 **请求并（可选）共享** 挂接设�
 
 描述对已挂接资源的分配请求。内含一个或多个 **request**（引用 DeviceClass），可用 **selectors / constraints** 再筛。
 
-- **手动创建的 Claim**：适合多个 Pod **共享** 同一设备；生命周期自己管  
-- 必须与 Pod **同命名空间**，否则类似缺 PVC，Pod 调不起来  
+- **手动创建的 Claim**：适合多个 Pod **共享** 同一设备；生命周期自己管
+- 必须与 Pod **同命名空间**，否则类似缺 PVC，Pod 调不起来
 
 ### 2.3 ResourceClaimTemplate
 
@@ -62,8 +60,6 @@ DRA 让你在多个 Pod/容器之间 **请求并（可选）共享** 挂接设�
 驱动创建并维护，表示资源池中一台或多台设备的 **属性、容量、版本** 等。调度器用它找「哪台节点上还有满足 Claim 的设备」。
 
 池可跨多个 Slice；驱动必须在容量变化时同步所有相关 Slice。
-
----
 
 ## 3. 端到端流程（概念）
 
@@ -86,8 +82,6 @@ Pod 结束：释放（Unprepare）→ Template 生成的 Claim 被回收
 **准备与释放**：分配完成后，节点上的 DRA kubelet 插件负责把设备真正交给容器（常通过 CDI），并在 Pod 结束后清理。应用侧通常不直接调 Prepare API，但排障要看驱动日志与 Claim `status`。
 
 绕过调度器（手动写 `nodeName`）时：若 Claim 未分配/未为该 Pod 预留，kubelet 会反复重试直至满足。
-
----
 
 ## 4. 设备属性筛选（CEL）
 
@@ -114,15 +108,11 @@ requests:
 
 **按优先级排序的子请求**（v1.36 博客称已 Stable）：Claim 可列多个备选——先试 H100，没有再试 A100——调度器按序尝试，提高异构集群利用率。详见 [v1.36 DRA 更新](https://kubernetes.io/zh-cn/blog/2026/05/07/kubernetes-v1-36-dra-136-updates/)。
 
----
-
 ## 5. 与扩展资源 / Device Plugin 的过渡
 
 v1.36 等版本推进 **扩展资源支持（Beta）**：DeviceClass 可关联扩展资源名，或用 `deviceclass.resource.kubernetes.io/<Class名>` 让旧式 `resources.limits` 逐步迁到 DRA。同一节点上同一扩展资源名勿混用 Device Plugin 与 DRA。
 
 本系列 GPU 生产路径仍以 Device Plugin + Operator 为主；DRA 适合需要 **属性级选型、共享、切分、设备污点** 的下一代方案（如 NVIDIA k8s-dra-driver-gpu 等，以厂商文档为准）。
-
----
 
 ## 6. v1.36 值得知道的演进（摘要）
 
@@ -139,8 +129,6 @@ v1.36 等版本推进 **扩展资源支持（Beta）**：DeviceClass 可关联�
 
 学完概念后做实验时，核对集群 `kubectl version` 与已启用的 **feature gates / API groups**。
 
----
-
 ## 7. 小结
 
 | 对象 | 一句话 |
@@ -153,11 +141,9 @@ v1.36 等版本推进 **扩展资源支持（Beta）**：DeviceClass 可关联�
 
 下一篇：[DRA 集群安装与设备分配实践](./02-DRA%20集群安装与设备分配实践（v1.34+）.md)。
 
----
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [动态资源分配](https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/dynamic-resource-allocation/)  
-- [Kubernetes v1.36：更多驱动程序、新特性以及下一代 DRA](https://kubernetes.io/zh-cn/blog/2026/05/07/kubernetes-v1-36-dra-136-updates/)  
+- [动态资源分配](https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/dynamic-resource-allocation/)
+- [Kubernetes v1.36：更多驱动程序、新特性以及下一代 DRA](https://kubernetes.io/zh-cn/blog/2026/05/07/kubernetes-v1-36-dra-136-updates/)
 
 本文按官方概念页整理，并强调版本与演进风险。

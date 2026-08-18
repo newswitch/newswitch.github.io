@@ -1,9 +1,9 @@
 ---
-title: Hive 表、分区、Metastore、执行引擎与小文件治理
+title: "Hive 表、分区、Metastore、执行引擎与小文件治理"
 sidebar_label: "07. Hive 表、分区、Metastore、执行引擎与小文件治理"
 sidebar_position: 7
+description: "理解 Hive 如何把文件组织成表、Metastore 保存什么、SQL 如何执行，以及分区和小文件的生产治理。"
 tags: [Hive, Metastore, 分区, 小文件]
-description: 理解 Hive 如何把文件组织成表、Metastore 保存什么、SQL 如何执行，以及分区和小文件的生产治理。
 ---
 
 # Hive 表、分区、Metastore、执行引擎与小文件治理
@@ -84,7 +84,7 @@ ODS 保留可追溯源记录，DWD 清洗去重并统一粒度，DWS 沉淀公�
 
 上一篇：[MapReduce 从 Map 到 Shuffle、Sort 和 Reduce](./06-MapReduce从Map到Shuffle-Sort和Reduce.md)　下一模块：[Kafka 架构与分区日志](../../messaging/kafka/01-Kafka架构分区日志Segment与索引.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Apache Hive 文档](https://hive.apache.org/docs/latest/)
 - [Hive Language Manual](https://cwiki.apache.org/confluence/display/Hive/LanguageManual)

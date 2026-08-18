@@ -1,9 +1,9 @@
 ---
 title: "AI 平台事件响应、证据链与 RCA"
 sidebar_label: "03. AI 平台事件响应、证据链与 RCA"
-sidebar_position: 11
-tags: [Kubernetes, SRE, Incident, RCA, LLM, GPU, 故障排查]
+sidebar_position: 3
 description: "以 LLM 推理服务为对象，建立从 SLO 告警到请求、Pod、Node、GPU、网络和存储的技术证据链，并使用故障树和时间线完成可验证 RCA。"
+tags: [Kubernetes, SRE, Incident, RCA, LLM, GPU, 故障排查]
 ---
 
 # AI 平台事件响应、证据链与 RCA
@@ -16,8 +16,6 @@ description: "以 LLM 推理服务为对象，建立从 SLO 告警到请求、Po
 
 AI 平台比普通 Web 服务多了 GPU、显存、NCCL/RDMA、模型文件和推理调度器等层次。
 如果没有统一证据链，很容易在 Kubernetes、网络、存储和算法团队之间反复转交。
-
----
 
 ## 1. 从症状出发，不从组件告警出发
 
@@ -43,8 +41,6 @@ TPOT 抖动
 | Pod 重启 | 请求失败 | 已被优雅摘流且容量充足 |
 
 事件应以 SLO、业务流量和受影响范围定级，再使用组件证据定位。
-
----
 
 ## 2. 事件开始后的前 15 分钟
 
@@ -106,8 +102,6 @@ T5 指标恢复
 
 如果动作后关键指标没有按预期变化，这条假设就需要降权。
 
----
-
 ## 3. AI 平台六层证据链
 
 ```mermaid
@@ -121,11 +115,9 @@ flowchart TD
 
 排查不是固定从上到下执行全部命令，而是先用请求层确定症状，再沿证据指向下钻。
 
----
-
 ## 4. 请求层证据
 
-### 必采数据
+### 4.1 必采数据 {/* #必采数据 */}
 
 - SLO 的 good、bad、valid event 数。
 - 错误按 `result_reason` 分类。
@@ -159,7 +151,7 @@ max by (model_family, pod) (
 )
 ```
 
-### 关键判断
+### 4.2 关键判断 {/* #关键判断 */}
 
 | 现象 | 下一步 |
 | --- | --- |
@@ -168,8 +160,6 @@ max by (model_family, pod) (
 | TPOT 上升但 TTFT 正常 | 查 Decode 调度、GPU 降频、通信 |
 | 只有冷启动慢 | 查存储、镜像、模型下载和反序列化 |
 | 单 Pod 异常 | 比较同模型健康 Pod，而不是看全局平均 |
-
----
 
 ## 5. 服务与 Kubernetes 证据
 
@@ -222,8 +212,6 @@ zone
 
 滚动发布期间的 5xx 经常不是模型推理错误，而是就绪、摘流和优雅退出时间没有对齐。
 
----
-
 ## 6. GPU 与显存证据
 
 ### 6.1 主机快照
@@ -256,8 +244,6 @@ nvidia-smi dmon -s pucvmet -c 10
 
 显存占用高不一定异常。vLLM 会主动预留 KV Cache；要结合 waiting、preemption、
 KV Cache 使用率和请求长度判断。
-
----
 
 ## 7. 网络与通信证据
 
@@ -307,8 +293,6 @@ NCCL_DEBUG_FILE=/var/log/nccl.%h.%p.log
 ```
 
 生产环境长期启用详细 Debug 可能产生大量日志，应在受控时间窗采集。
-
----
 
 ## 8. 存储与模型加载证据
 
@@ -369,8 +353,6 @@ ceph tell osd.* dump_historic_ops
 
 只有分段计时后，才能判断问题属于调度、网络、存储、CPU 还是 GPU。
 
----
-
 ## 9. 标准事件证据包
 
 建议每次事件生成不可变目录：
@@ -426,8 +408,6 @@ collector: oncall-user
 
 证据包必须脱敏；不得收集 prompt、token、Secret、完整用户身份等敏感数据。
 
----
-
 ## 10. 从时间相关走向因果关系
 
 “发布后出现故障”只是相关性。完整因果链应包含：
@@ -455,8 +435,6 @@ collector: oncall-user
 2. 调度/Profiler 数据证明机制发生。
 3. 指标时间线证明中间信号与症状同步。
 4. 回滚或受控复现实验证明反事实成立。
-
----
 
 ## 11. 故障树分析
 
@@ -488,8 +466,6 @@ flowchart TD
 | 存储变慢 | 仅冷启动实例异常 | 在线实例 TTFT 也变慢 | 降权 |
 | 路由不均 | 单 Pod waiting 远高于同组 | 哈希规则显示倾斜 | 高可信 |
 
----
-
 ## 12. RCA 文档结构
 
 一份技术 RCA 至少包括：
@@ -504,7 +480,7 @@ flowchart TD
 8. **改进项**：代码、配置、观测、容量和自动化。
 9. **验证计划**：如何证明改进有效。
 
-### 根因、触发因素和促成因素
+### 12.1 根因、触发因素和促成因素 {/* #根因触发因素和促成因素 */}
 
 不要把三者混在一起：
 
@@ -513,8 +489,6 @@ flowchart TD
 技术根因：参数使 Prefill 批次过大，调度器长期占用执行槽位。
 促成因素：没有 TTFT 发布门禁；路由器不能感知实例队列；回滚需人工。
 ```
-
----
 
 ## 13. 改进项必须可验证
 
@@ -545,8 +519,6 @@ Evidence: pipeline run + Prometheus query + rollback test
 | 加快检测 | 新增 TTFT SLO 和 missing-data 告警 |
 | 加快恢复 | 自动回滚、预热备用容量 |
 | 增强证据 | Trace 关联 model revision 和 Pod UID |
-
----
 
 ## 14. 故障演练
 

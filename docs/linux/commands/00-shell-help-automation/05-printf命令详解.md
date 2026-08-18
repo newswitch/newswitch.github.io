@@ -1,11 +1,12 @@
 ---
-title: printf 命令详解：格式化、转义、变量赋值与安全输出
+title: "printf 命令详解：格式化、转义、变量赋值与安全输出"
+sidebar_label: "05. printf 命令详解：格式化、转义、变量赋值与安全输出"
 sidebar_position: 5
-description: 完整讲解 Bash printf 的 -v、格式说明、%q/%Q/%b/%T、宽度精度、locale、重复格式和 format string 风险。
+description: "完整讲解 Bash printf 的 -v、格式说明、%q/%Q/%b/%T、宽度精度、locale、重复格式和 format string 风险。"
 tags: [Linux, Bash, printf, 格式化, 安全脚本]
 ---
 
-# `printf` 命令详解：可靠输出而不是依赖 `echo`
+# printf 命令详解：格式化、转义、变量赋值与安全输出
 
 Bash `printf` 按格式字符串输出，行为比跨实现的 `echo -e/-n` 更可预测。它还支持 shell-escaped `%q`、时间 `%T` 和 `-v` 赋值；格式字符串如果来自不可信输入会成为注入或异常输出入口。
 

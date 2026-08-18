@@ -2,15 +2,13 @@
 title: "ACID、隔离级别、MVCC、版本链与 Read View"
 sidebar_label: "05. ACID、隔离级别、MVCC、版本链与 Read View"
 sidebar_position: 5
-tags: [MySQL, ACID, MVCC, 隔离级别, Read View]
 description: "理解事务 ACID、四种隔离级别、一致性读、当前读、Undo 版本链和 Read View 的可见性规则。"
+tags: [MySQL, ACID, MVCC, 隔离级别, Read View]
 ---
 
 # ACID、隔离级别、MVCC、版本链与 Read View
 
 MVCC 让读者在许多场景下不阻塞写者，但它不是“完全无锁”。一致性读、锁定读和写操作走不同并发路径，隔离级别决定快照建立与锁范围。
-
----
 
 ## 1. ACID
 
@@ -20,8 +18,6 @@ MVCC 让读者在许多场景下不阻塞写者，但它不是“完全无锁”
 - **Durability**：已确认提交在定义的故障模型下可恢复，依赖 Redo/Binlog 刷盘、存储与备份。
 
 ACID 不是一个开关。持久性参数、非事务表、跨服务副作用和错误事务边界都会改变保证。
-
----
 
 ## 2. 四种隔离级别
 
@@ -40,8 +36,6 @@ START TRANSACTION;
 
 `SET TRANSACTION` 的作用范围和执行时机要核对，不在事务中途随意改变。
 
----
-
 ## 3. 脏读、不可重复读和幻读
 
 ```text
@@ -51,8 +45,6 @@ START TRANSACTION;
 ```
 
 这些现象只是理解隔离的入口。真实业务还要考虑写偏斜、丢失更新、状态检查与范围约束。
-
----
 
 ## 4. 版本链
 
@@ -66,8 +58,6 @@ current version (trx 120)
 
 一致性读根据 Read View 找到对当前事务可见的版本。版本链过长会增加读取和 Purge 成本。
 
----
-
 ## 5. Read View
 
 Read View 概念上记录创建快照时活跃事务范围，用来判断某版本：
@@ -77,8 +67,6 @@ Read View 概念上记录创建快照时活跃事务范围，用来判断某版�
 - 当时仍活跃或更晚产生，不可见，需要沿 Undo 找旧版本。
 
 具体内部字段属于实现细节，学习重点是：可见性由版本创建事务与快照边界共同决定，而不是简单“取磁盘最新值”。
-
----
 
 ## 6. RR 与 RC 的快照差异
 
@@ -93,8 +81,6 @@ T1 再 SELECT
 在 RR 的普通一致性读中，T1 通常继续看到原快照；在 RC 中，第二条语句通常建立新快照并看到 T2 已提交值。
 
 必须用目标版本、同一 SQL 和明确事务边界实验，不把 ORM 日志中的“BEGIN”当作唯一证据。
-
----
 
 ## 7. 一致性读与当前读
 
@@ -111,8 +97,6 @@ DELETE ...;
 
 不能用普通 SELECT 做“检查库存后扣减”的并发保护；另一个事务可能在检查和修改之间改变数据。
 
----
-
 ## 8. 原子条件更新
 
 库存扣减可把检查与修改合成一条语句：
@@ -126,8 +110,6 @@ WHERE product_id = ?
 
 再检查影响行数。它常比“SELECT 后 UPDATE”更短、更安全；复杂跨行规则仍需事务和锁定读。
 
----
-
 ## 9. 长快照的代价
 
 长报表事务即使只读，也可能：
@@ -139,8 +121,6 @@ WHERE product_id = ?
 - 影响 DDL/恢复窗口。
 
 报表应评估只读副本、快照时长、分批与分析系统，而不是无限保持主库 RR 事务。
-
----
 
 ## 10. 隔离级别不是越高越好
 
@@ -155,8 +135,6 @@ WHERE product_id = ?
 
 把隔离降到 RC 可能减少部分范围锁影响，但不能自动修复错误事务和缺失索引。
 
----
-
 ## 11. 观测
 
 ```sql
@@ -165,8 +143,6 @@ SHOW ENGINE INNODB STATUS\G
 ```
 
 关注事务开始时间、状态、锁定/修改行、当前 SQL、History List。业务监控还要记录事务时长 P99 和超时/回滚率。
-
----
 
 ## 12. 实验与验收
 
@@ -183,7 +159,7 @@ SHOW ENGINE INNODB STATUS\G
 
 下一篇进入具体锁类型、等待链和死锁。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [InnoDB Multi-Versioning](https://dev.mysql.com/doc/refman/8.4/en/innodb-multi-versioning.html)
 - [Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html)

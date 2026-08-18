@@ -1,11 +1,12 @@
 ---
-title: umask 命令详解：新建文件权限、进程继承与默认 ACL
+title: "umask 命令详解：新建文件权限、进程继承与默认 ACL"
+sidebar_label: "20. umask 命令详解：新建文件权限、进程继承与默认 ACL"
 sidebar_position: 20
-description: 完整讲解 Bash umask 的参数、八进制与符号掩码、文件和目录创建 mode、进程继承、systemd/container 配置及默认 ACL 覆盖关系。
+description: "完整讲解 Bash umask 的参数、八进制与符号掩码、文件和目录创建 mode、进程继承、systemd/container 配置及默认 ACL 覆盖关系。"
 tags: [Linux, umask, 文件权限, 默认ACL, Bash]
 ---
 
-# `umask` 命令详解：新建文件权限、进程继承与默认 ACL
+# umask 命令详解：新建文件权限、进程继承与默认 ACL
 
 `umask` 是当前进程的文件创建 mode 掩码。它影响之后创建的对象，不追溯修改已有文件；子进程继承它，每个进程都可再修改。Bash 的 `umask` 是 shell builtin，不能通过执行一个外部子进程永久改变父 shell。
 
@@ -118,7 +119,7 @@ fi
 
 掌握标准：能列出 Bash 全部参数；能用按位公式计算且解释例外；能沿父进程→服务→应用追踪 umask，并在 default ACL 下计算实际结果。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [GNU Bash：Bourne Shell Builtins](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html)
 - [Linux umask(2)](https://man7.org/linux/man-pages/man2/umask.2.html)

@@ -1,11 +1,12 @@
 ---
-title: mount 命令详解：文件系统、bind、remount 与生产安全
+title: "mount 命令详解：文件系统、bind、remount 与生产安全"
+sidebar_label: "04. mount 命令详解：文件系统、bind、remount 与生产安全"
 sidebar_position: 4
-description: 讲解 mount 的 VFS 语义、fstab/libmount、源与目标、通用参数、bind/rbind、传播、remount、loop、网络文件系统、systemd 集成和故障排查。
+description: "讲解 mount 的 VFS 语义、fstab/libmount、源与目标、通用参数、bind/rbind、传播、remount、loop、网络文件系统、systemd 集成和故障排查。"
 tags: [Linux, mount, VFS, fstab, Namespace, util-linux]
 ---
 
-# `mount` 命令详解：文件系统、bind、remount 与生产安全
+# mount 命令详解：文件系统、bind、remount 与生产安全
 
 `mount` 请求内核把一个文件系统树附着到当前 mount namespace 的目录。它不“把磁盘复制到目录”，也不会自动证明文件系统健康。现代 util-linux `mount` 通过 libmount 解析 fstab、标签、helper、utab 和 namespace。
 

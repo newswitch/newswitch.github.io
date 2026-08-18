@@ -1,11 +1,12 @@
 ---
-title: libcgroup 命令套件：cgcreate、cgexec、cgclassify、cgget、cgset 与 cgdelete
+title: "libcgroup 命令套件：cgcreate、cgexec、cgclassify、cgget、cgset 与 cgdelete"
+sidebar_label: "14. libcgroup 命令套件：cgcreate、cgexec、cgclassify、cgget、cgset 与 cgdelete"
 sidebar_position: 14
-description: 系统讲解 libcgroup 六个核心命令、v1/v2 语法、systemd delegation 边界、进程迁移、参数读写与安全删除。
+description: "系统讲解 libcgroup 六个核心命令、v1/v2 语法、systemd delegation 边界、进程迁移、参数读写与安全删除。"
 tags: [Linux, libcgroup, cgroup v1, cgroup v2, systemd]
 ---
 
-# libcgroup 命令套件：创建、执行、迁移、读写与删除
+# libcgroup 命令套件：cgcreate、cgexec、cgclassify、cgget、cgset 与 cgdelete
 
 libcgroup 的 `cgcreate/cgexec/cgclassify/cgget/cgset/cgdelete` 共享同一对象模型，放在一篇联合作业手册中才能完整解释生命周期。现代 systemd+cgroup v2 主机优先 unit resource control 或已委派子树；不要让两套 manager 同时拥有同一 cgroup。
 

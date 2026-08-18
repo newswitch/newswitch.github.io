@@ -2,8 +2,8 @@
 title: "etcd 从零到精通学习路线"
 sidebar_label: "00. etcd 从零到精通学习路线"
 sidebar_position: 0
-tags: [etcd, Raft, MVCC, Kubernetes, 学习路线]
 description: "以 etcd 3.6 为主线，从 KV、Revision、Watch、Lease 深入 Raft、WAL、Snapshot、线性一致读、集群维护、灾难恢复和源码。"
+tags: [etcd, Raft, MVCC, Kubernetes, 学习路线]
 ---
 
 # etcd 从零到精通学习路线
@@ -30,25 +30,25 @@ Linearizable Read
   → response
 ```
 
-## 2. 13 篇文章规划
+## 2. 篇文章学习清单 {/* #2-13-篇文章学习清单 */}
 
-| 编号 | 文章 | 优先级 | 状态 |
+| 编号 | 文章 | 优先级 | 收录情况 |
 | --- | --- | --- | --- |
-| T00 | etcd 从零到精通学习路线 | P0 | 已完成 |
-| T01 | [etcd 架构、Raft 与 Kubernetes 控制面](../kubernetes/architecture/03-Etcd解析.md) | P0 | 已完成 |
-| T02 | [Key、Revision、MVCC、Range、Txn 与 Compare-And-Swap](./02-etcd-Key-Revision-MVCC-Range-Txn与CAS.md) | P0 | 已完成 |
-| T03 | [Watch、Lease、TTL、Lock 与 Leader Election](./03-etcd-Watch-Lease-TTL-Lock与Leader-Election.md) | P0 | 已完成 |
-| T04 | [Raft Term、Log、Commit、Apply、Election 与 ReadIndex](./04-Raft-Term-Log-Commit-Apply-Election与ReadIndex.md) | P0 | 已完成 |
-| T05 | [WAL、Snapshot、BoltDB、Compaction、Defrag 与 Quota](./05-etcd-WAL-Snapshot-bbolt-Compaction-Defrag与Quota.md) | P0 | 已完成 |
-| T06 | [三/五节点静态、TLS、systemd、Docker 与 StatefulSet 部署](./06-etcd三五节点静态TLS-systemd-Docker与StatefulSet部署.md) | P0 | 已完成 |
-| T07 | [Member Add/Remove/Replace、Learner、扩缩和滚动升级](./07-etcd成员变更Learner扩缩与滚动升级.md) | P1 | 已完成 |
-| T08 | [Snapshot Backup/Restore、Revision Bump 与灾难恢复](./08-etcd-Snapshot-Restore-Revision-Bump与灾难恢复.md) | P0 | 已完成 |
-| T09 | [线性/串行读、延迟、吞吐、磁盘 fsync 与容量规划](./09-etcd读一致性延迟吞吐fsync与容量规划.md) | P1 | 已完成 |
-| T10 | [TLS、Authentication、Role、Network Isolation 与审计](./10-etcd-TLS认证Role网络隔离与审计.md) | P1 | 已完成 |
-| T11 | [Kubernetes etcd 备份、控制面故障和恢复边界](./11-Kubernetes-etcd备份控制面故障与恢复边界.md) | P1 | 已完成 |
-| T12 | [etcdctl 命令、监控、空间告警与故障 Runbook](../kubernetes/commands/10-etcdctl命令详解.md) | P1 | 已完成 |
+| T00 | etcd 从零到精通学习路线 | P0 | 已收录 |
+| T01 | [etcd 架构、Raft 与 Kubernetes 控制面](../kubernetes/architecture/03-Etcd解析.md) | P0 | 已收录 |
+| T02 | [Key、Revision、MVCC、Range、Txn 与 Compare-And-Swap](./02-etcd-Key-Revision-MVCC-Range-Txn与CAS.md) | P0 | 已收录 |
+| T03 | [Watch、Lease、TTL、Lock 与 Leader Election](./03-etcd-Watch-Lease-TTL-Lock与Leader-Election.md) | P0 | 已收录 |
+| T04 | [Raft Term、Log、Commit、Apply、Election 与 ReadIndex](./04-Raft-Term-Log-Commit-Apply-Election与ReadIndex.md) | P0 | 已收录 |
+| T05 | [WAL、Snapshot、bbolt、Compaction、Defrag 与 Quota](./05-etcd-WAL-Snapshot-bbolt-Compaction-Defrag与Quota.md) | P0 | 已收录 |
+| T06 | [三/五节点静态、TLS、systemd、Docker 与 StatefulSet 部署](./06-etcd三五节点静态TLS-systemd-Docker与StatefulSet部署.md) | P0 | 已收录 |
+| T07 | [Member Add/Remove/Replace、Learner、扩缩和滚动升级](./07-etcd成员变更Learner扩缩与滚动升级.md) | P1 | 已收录 |
+| T08 | [Snapshot Backup/Restore、Revision Bump 与灾难恢复](./08-etcd-Snapshot-Restore-Revision-Bump与灾难恢复.md) | P0 | 已收录 |
+| T09 | [线性/串行读、延迟、吞吐、磁盘 fsync 与容量规划](./09-etcd读一致性延迟吞吐fsync与容量规划.md) | P1 | 已收录 |
+| T10 | [TLS、Authentication、Role、Network Isolation 与审计](./10-etcd-TLS认证Role网络隔离与审计.md) | P1 | 已收录 |
+| T11 | [Kubernetes etcd 备份、控制面故障和恢复边界](./11-Kubernetes-etcd备份控制面故障与恢复边界.md) | P1 | 已收录 |
+| T12 | [etcdctl 命令、监控、空间告警与故障 Runbook](../kubernetes/commands/10-etcdctl命令详解.md) | P1 | 已收录 |
 
-当前完成 **13/13**，剩余 **0 篇**。
+当前路线收录 13 篇文章。是否掌握应以能解释写入/读取路径、完成多数派故障实验、独立恢复快照并验证 Kubernetes Watch 行为为准，而不是以文章文件是否存在判断。
 
 ## 3. 关键一致性概念
 
@@ -61,7 +61,7 @@ Linearizable Read：读取不落后于已确认写
 Serializable Read：可从本地状态读取，可能陈旧
 ```
 
-### 为什么必须使用奇数节点
+### 3.1 为什么必须使用奇数节点 {/* #为什么必须使用奇数节点 */}
 
 三节点容忍一个故障，五节点容忍两个故障；四节点仍只能容忍一个，却增加写入多数派和运维成本。跨故障域分布要同时考虑网络延迟与同时故障，不是节点越多越好。
 

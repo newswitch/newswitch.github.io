@@ -1,23 +1,24 @@
 ---
-title: NCCL Timeout 排查流程
+title: "NCCL Timeout 排查流程"
+sidebar_label: "07. NCCL Timeout 排查流程"
+sidebar_position: 7
+description: "训练日志里出现 NCCL timeout / Watchdog / collective stuck，或表现为：进程还在、GPU 利用率接近 0、步数不再涨。本文给出可复用的复盘流程，串联官方 Troubleshooting、Logging 与本系列 NCCL 原理、训练网络全链路排障、拓扑感……"
+tags: ["NCCL", "Timeout", "排障", "GPU", "Kubernetes", "学习路线"]
 date: 2026-07-22 18:15:00
 categories: 云原生
-tags: ["NCCL", "Timeout", "排障", "GPU", "Kubernetes", "学习路线"]
 ---
 
 # NCCL Timeout 排查流程
 
 训练日志里出现 **NCCL timeout / Watchdog / collective stuck**，或表现为：进程还在、GPU 利用率接近 0、步数不再涨。本文给出可复用的复盘流程，串联官方 [Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)、[Logging](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/logging.html) 与本系列 [NCCL 原理](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)、[训练网络全链路排障](../../../networking/ai-fabric/production/07-训练网络全链路故障排查.md)、[拓扑感知调度](../scheduling/12-GPU%20集群拓扑感知调度.md)、[Checkpoint](../../../ai-systems/training/distributed/04-训练任务%20Checkpoint%20与断点恢复.md)。
 
----
-
 ## 1. 现象与先固定现场
 
 常见表象：
 
-- PyTorch：`NCCL Error` / `Watchdog caught collective operation timeout`  
-- 部分 rank 已退出，其余卡在 AllReduce  
-- `kubectl` 看 Pod Running，但业务无进度  
+- PyTorch：`NCCL Error` / `Watchdog caught collective operation timeout`
+- 部分 rank 已退出，其余卡在 AllReduce
+- `kubectl` 看 Pod Running，但业务无进度
 
 **先留证，再重启**（若可）：
 
@@ -35,8 +36,6 @@ kubectl get events --field-selector involvedObject.name=<pod>
 ```
 
 同时记录：`world_size`、节点列表、是否刚扩容/换网、最近是否改过 IFNAME/镜像。
-
----
 
 ## 2. 总流程（先二分）
 
@@ -63,8 +62,6 @@ kubectl get events --field-selector involvedObject.name=<pod>
 
 官方顺序同样强调：GPU 问题 → 网络问题 → 运行时/MPI → 性能调参 → 日志/RAS，**不要一上来盲改 NCCL_ALGO**。
 
----
-
 ## 3. Step A：是不是「假 NCCL 问题」
 
 | 检查 | 命令 / 线索 | 若命中 |
@@ -76,8 +73,6 @@ kubectl get events --field-selector involvedObject.name=<pod>
 | 数据死锁 | 仅部分 rank 进 collective | 查 dataloader / 条件分支少做 collective |
 
 **集合通信要求全员进入**。任一 rank 在进 AllReduce 前崩溃或走不同代码路径，其余会一直等到超时。
-
----
 
 ## 4. Step B：打开日志（按场景）
 
@@ -96,12 +91,10 @@ export NCCL_DEBUG_SUBSYS=GRAPH,TUNING,NET
 
 在日志中确认：
 
-1. `Using network IB` 还是 `NET/Socket`  
-2. Channel 是否走 `P2P` / `SHM` / `NET/IB`  
-3. 是否有 `Failed to initialize any NET plugin`、`ibv_* failed`  
-4. 挂起前最后一个成功的 collective / bootstrap 步骤  
-
----
+1. `Using network IB` 还是 `NET/Socket`
+2. Channel 是否走 `P2P` / `SHM` / `NET/IB`
+3. 是否有 `Failed to initialize any NET plugin`、`ibv_* failed`
+4. 挂起前最后一个成功的 collective / bootstrap 步骤
 
 ## 5. Step C：机内路径
 
@@ -129,8 +122,6 @@ NCCL_SHM_DISABLE=1
 
 `/dev/shm` 过小是 K8s 高频坑——Deployment/Job 里给 Memory emptyDir 足够 `sizeLimit`。
 
----
-
 ## 6. Step D：跨机网络路径
 
 ```bash
@@ -153,7 +144,7 @@ ethtool -S <nic>
 NCCL_IB_DISABLE=1
 ```
 
-防火墙：临时端口范围与节点间策略是否放行（第 34 篇）。  
+防火墙：临时端口范围与节点间策略是否放行（第 34 篇）。
 K8s NetworkPolicy：训练网是否误拦。
 
 NCCL 层复测：
@@ -162,8 +153,6 @@ NCCL 层复测：
 ./all_reduce_perf -b 8 -e 1G -f 2 -g <gpus_per_node>
 # 多机用集群启动器拉齐进程
 ```
-
----
 
 ## 7. Step E：运行时与权限
 
@@ -174,12 +163,10 @@ NCCL 层复测：
 | 文件描述符耗尽 | 提高 `ulimit -n`；查泄漏 |
 | MPI/launcher 只起了部分进程 | 核对 nnodes / nproc |
 
----
-
 ## 8. Step F：恢复与复盘模板
 
-1. **临时恢复**：Volcano `RestartJob` 或删 Pod 整组拉起 + `--resume` 最新 CKPT（[第 32 篇](../../../ai-systems/training/distributed/04-训练任务%20Checkpoint%20与断点恢复.md)）  
-2. **根因分类**（写入复盘）：  
+1. **临时恢复**：Volcano `RestartJob` 或删 Pod 整组拉起 + `--resume` 最新 CKPT（[第 32 篇](../../../ai-systems/training/distributed/04-训练任务%20Checkpoint%20与断点恢复.md)）
+2. **根因分类**（写入复盘）：
 
 | 分类 | 例 |
 |------|-----|
@@ -189,13 +176,11 @@ NCCL 层复测：
 | 网络 | 错网卡、IB Down、RoCE 无损未配、防火墙 |
 | 资源 | OOM、Xid、节点 NotReady |
 
-3. **监控补课**：训练 `global_step` 停滞告警；DCGM 利用率骤降；NET 字节为 0；保留 `NCCL_DEBUG_FILE` 到失败现场  
+3. **监控补课**：训练 `global_step` 停滞告警；DCGM 利用率骤降；NET 字节为 0；保留 `NCCL_DEBUG_FILE` 到失败现场
 
-4. **回归**：同一节点对跑通 `ib_write_bw` + `all_reduce_perf` 后再交业务作业  
+4. **回归**：同一节点对跑通 `ib_write_bw` + `all_reduce_perf` 后再交业务作业
 
 可选：新版本 NCCL **RAS** 子系统辅助查 hang（见官方 RAS 章），生产可按版本开启并保留查询输出。
-
----
 
 ## 9. 速查表
 
@@ -208,20 +193,16 @@ NCCL 层复测：
 | 仅机内挂 | P2P / ACS / shm |
 | 重启就好偶发 | 网络抖动 / 重试计数 / 换线 |
 
----
-
 ## 10. 小结
 
 Timeout 多半是 **「有人没进集合通信」或「路不通/太慢被判定超时」**。按 **假故障 → 日志 → 机内 → 跨机 → 基线 → CKPT 恢复** 推进，并对照官方 GPU / Networking / Logging 文档，比反复调 `NCCL_ALGO` 有效得多。
 
----
+## 11. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)  
-- [GPU troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html)  
-- [Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html)  
-- [Logging](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/logging.html)  
-- [NCCL Documentation](https://docs.nvidia.com/deeplearning/nccl/index.html)  
+- [Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)
+- [GPU troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html)
+- [Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html)
+- [Logging](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/logging.html)
+- [NCCL Documentation](https://docs.nvidia.com/deeplearning/nccl/index.html)
 
 本文把官方排障树收成可跟练的 Timeout 复盘流程，供训练值班使用。

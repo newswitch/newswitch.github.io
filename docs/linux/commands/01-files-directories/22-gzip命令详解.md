@@ -1,11 +1,12 @@
 ---
-title: gzip/gunzip/zcat 命令详解：流压缩、级别、完整性与多成员
+title: "gzip/gunzip/zcat 命令详解：流压缩、级别、完整性与多成员"
+sidebar_label: "22. gzip/gunzip/zcat 命令详解：流压缩、级别、完整性与多成员"
 sidebar_position: 22
-description: 完整讲解 gzip 的 -c/-d/-k/-f/-l/-r/-t/-n/-N/-1..-9、suffix、stdout、CRC 和多成员语义。
+description: "完整讲解 gzip 的 -c/-d/-k/-f/-l/-r/-t/-n/-N/-1..-9、suffix、stdout、CRC 和多成员语义。"
 tags: [Linux, gzip, gunzip, zcat, 压缩]
 ---
 
-# `gzip`、`gunzip`、`zcat`：压缩单个字节流
+# gzip/gunzip/zcat 命令详解：流压缩、级别、完整性与多成员
 
 gzip 格式压缩字节流并保存 CRC/长度；它不保存目录树、ACL 或多文件边界，多个文件通常先用 tar 归档。`gunzip` 等价 `gzip -d`，`zcat` 等价解压到 stdout。
 

@@ -1,16 +1,16 @@
 ---
-title: Volcano Queue 与 GPU 配额管理
+title: "Volcano Queue 与 GPU 配额管理"
 sidebar_label: "05. Volcano Queue 与 GPU 配额管理"
+sidebar_position: 5
+description: "Queue 是 Volcano 多租户资源分配与任务调度的核心。通过队列可以做配额、优先级、抢占与回收，提高 GPU / CPU 等资源利用率。本文整理自官方 Queue Resource Management 与 层级队列，前置阅读：Volcano 调度器入门。"
+tags: ["Kubernetes", "Volcano", "Queue", "GPU", "多租户", "学习路线"]
 date: 2026-07-22 16:55:00
 categories: 云原生
-tags: ["Kubernetes", "Volcano", "Queue", "GPU", "多租户", "学习路线"]
 ---
 
 # Volcano Queue 与 GPU 配额管理
 
 Queue 是 Volcano 多租户资源分配与任务调度的核心。通过队列可以做配额、优先级、抢占与回收，提高 GPU / CPU 等资源利用率。本文整理自官方 [Queue Resource Management](https://volcano.sh/docs/v1.15.0/keyfeatures/queueresourcemanagement/) 与 [层级队列](https://volcano.sh/zh-hans/docs/keyfeatures/hierarchicalqueue/)，前置阅读：[Volcano 调度器入门](./04-Volcano%20GPU%20调度器入门.md)。
-
----
 
 ## 1. 队列能解决什么
 
@@ -23,8 +23,6 @@ Queue 是 Volcano 多租户资源分配与任务调度的核心。通过队列�
 | 关键任务 | 队列内 preempt；跨队列 reclaim |
 
 GPU 只是扩展资源的一种：在 `capability` / `deserved` / `guarantee` 里写 `nvidia.com/gpu` 即可（资源名以集群实际为准）。
-
----
 
 ## 2. 三级资源配置
 
@@ -42,12 +40,10 @@ guarantee ≤ deserved ≤ capability
 
 注意：
 
-1. 启用 **capacity** 插件时，一般需要配置 `deserved`  
-2. 同级队列场景：各队列 `deserved` 之和宜约等于集群该维度总量  
-3. 层级队列：子队列 `deserved`/`guarantee` 之和不超过父队列；子队列 `capability` 不超过父队列；未设则继承父 / 祖先 / root  
-4. 集群自动扩缩（Cluster Autoscaler / Karpenter）时总量会变：capacity 插件可能要手动调 deserved；proportion 可按权重自动重算  
-
----
+1. 启用 **capacity** 插件时，一般需要配置 `deserved`
+2. 同级队列场景：各队列 `deserved` 之和宜约等于集群该维度总量
+3. 层级队列：子队列 `deserved`/`guarantee` 之和不超过父队列；子队列 `capability` 不超过父队列；未设则继承父 / 祖先 / root
+4. 集群自动扩缩（Cluster Autoscaler / Karpenter）时总量会变：capacity 插件可能要手动调 deserved；proportion 可按权重自动重算
 
 ## 3. 两个互斥插件：capacity vs proportion
 
@@ -94,8 +90,6 @@ queue_deserved = (queue_weight / total_weight) * total_resource
 
 若算出的 deserved 大于队列内待调度 PodGroup 总需求，最终 deserved 会收到「总需求」上，避免过度预留。
 
----
-
 ## 4. 与队列相关的 Action
 
 | Action | 范围 | 作用 |
@@ -124,20 +118,16 @@ tiers:
   - name: binpack
 ```
 
----
-
 ## 5. 回收机制示例（官方四步）
 
 假设集群共 4 CPU：
 
-1. **初始**：default 队列暂用全部 4C  
-2. **default 上跑 job1=1C、job2=3C**：可暂时超过「应得」  
-3. **新建 test 队列**：capacity 设 `deserved.cpu: 3`，或 proportion 设 `weight: 3`（相对 default=1）且 `reclaimable: true`  
-4. **test 上提交 job3=3C**：系统从 default **回收超出应得** 的资源 → 驱逐 job2(3C)，保留 job1(1C)，job3 运行  
+1. **初始**：default 队列暂用全部 4C
+2. **default 上跑 job1=1C、job2=3C**：可暂时超过「应得」
+3. **新建 test 队列**：capacity 设 `deserved.cpu: 3`，或 proportion 设 `weight: 3`（相对 default=1）且 `reclaimable: true`
+4. **test 上提交 job3=3C**：系统从 default **回收超出应得** 的资源 → 驱逐 job2(3C)，保留 job1(1C)，job3 运行
 
 GPU 同理：把 CPU 换成 `nvidia.com/gpu` 即可理解「训练队列借推理队列空闲卡，推理一忙就收回」。
-
----
 
 ## 6. 层级队列
 
@@ -147,8 +137,8 @@ GPU 同理：把 CPU 换成 `nvidia.com/gpu` 即可理解「训练队列借推�
 
 层级能力建在 **capacity** 插件上，需：
 
-- 启用 `capacity`，`enableHierarchy: true`  
-- 启用 `reclaim`  
+- 启用 `capacity`，`enableHierarchy: true`
+- 启用 `reclaim`
 
 ```yaml
 kind: ConfigMap
@@ -241,11 +231,9 @@ spec:
 
 约束：
 
-- 当前版本一般只能往 **叶子队列** 交作业  
-- 若已有任务提交到某队列，通常不能再在其下建子队列  
-- 子队列 deserved/guarantee 之和 ≤ 父；capability ≤ 父；未设则继承  
-
----
+- 当前版本一般只能往 **叶子队列** 交作业
+- 若已有任务提交到某队列，通常不能再在其下建子队列
+- 子队列 deserved/guarantee 之和 ≤ 父；capability ≤ 父；未设则继承
 
 ## 7. GPU 场景三队列设计示例
 
@@ -285,13 +273,11 @@ spec:
 
 策略意图：
 
-- **production**：推理，权重高，尽量不被 reclaim  
-- **training**：可借用空闲卡，忙时可能被收  
-- **development**：权重低，最易让路  
+- **production**：推理，权重高，尽量不被 reclaim
+- **training**：可借用空闲卡，忙时可能被收
+- **development**：权重低，最易让路
 
 更精细时用 capacity + 显式 `deserved`，或上层级队列按事业部拆分。
-
----
 
 ## 8. 小结
 
@@ -305,11 +291,9 @@ spec:
 
 下一篇：[Gang Scheduling 在分布式训练中的作用](./06-Gang%20Scheduling%20在分布式训练中的作用.md)。
 
----
+## 9. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [Queue Resource Management](https://volcano.sh/docs/v1.15.0/keyfeatures/queueresourcemanagement/)  
-- [层级队列](https://volcano.sh/zh-hans/docs/keyfeatures/hierarchicalqueue/)  
+- [Queue Resource Management](https://volcano.sh/docs/v1.15.0/keyfeatures/queueresourcemanagement/)
+- [层级队列](https://volcano.sh/zh-hans/docs/keyfeatures/hierarchicalqueue/)
 
 本文基于上述 Volcano 官方文档整理，并补充了 GPU 三队列示例。

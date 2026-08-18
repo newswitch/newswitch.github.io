@@ -2,8 +2,8 @@
 title: "一句话如何变成 EngineCoreRequest：输入处理与请求对象"
 sidebar_label: "03. 一句话如何变成 EngineCoreRequest：输入处理与请求对象"
 sidebar_position: 3
-tags: [vLLM, Chat Template, Tokenizer, InputProcessor, EngineCoreRequest, 源码分析]
 description: "追踪一条 Chat Completions 请求从 HTTP JSON、Chat Template、Tokenization、SamplingParams 到 EngineCoreRequest 和 Scheduler Request 的对象变化。"
+tags: [vLLM, Chat Template, Tokenizer, InputProcessor, EngineCoreRequest, 源码分析]
 ---
 
 # 一句话如何变成 EngineCoreRequest：输入处理与请求对象

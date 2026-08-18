@@ -1,10 +1,11 @@
 ---
 title: "GPU 集群故障演练：从场景设计到复盘闭环"
 sidebar_label: "03. GPU 集群故障演练：从场景设计到复盘闭环"
+sidebar_position: 3
+description: "面向 GPU 训练与推理平台的安全故障演练方法，覆盖爆炸半径、停止条件、告警、恢复、度量和复盘。"
+tags: ["GPU", "故障演练", "GameDay", "SRE", "Kubernetes", "NCCL"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "故障演练", "GameDay", "SRE", "Kubernetes", "NCCL"]
-description: "面向 GPU 训练与推理平台的安全故障演练方法，覆盖爆炸半径、停止条件、告警、恢复、度量和复盘。"
 ---
 
 # GPU 集群故障演练：从场景设计到复盘闭环
@@ -353,7 +354,7 @@ PDB 主要约束自愿中断，不会阻止宕机、内核崩溃或物理掉电�
 
 下一步可以进入[一次 LLM 请求从网关到 GPU 再到流式返回](../ai-infra-end-to-end/06-一次LLM请求从网关到GPU再到流式返回.md)，把服务故障放回完整请求链路中分析。
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Disruptions and PodDisruptionBudget](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/)
 - [Kubernetes Pod lifecycle and termination](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)

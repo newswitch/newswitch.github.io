@@ -2,19 +2,19 @@
 title: "Kubernetes 原生 Serverless 模式"
 sidebar_label: "05. Kubernetes 原生 Serverless 模式"
 sidebar_position: 5
-tags: [Kubernetes, Serverless, PartIII, 学习路线]
 description: "使用 Kubernetes 原生功能实现 Serverless 模式，包括 HPA、KEDA 和 Job 模式"
+tags: [Kubernetes, Serverless, PartIII, 学习路线]
 ---
 
 # Kubernetes 原生 Serverless 模式
 
 > 本文系统梳理了如何利用 Kubernetes 原生能力实现 Serverless 模式，涵盖 HPA、KEDA、Job、CronJob 及事件驱动等典型场景，帮助你在无需专用 Serverless 平台的情况下，构建高弹性、自动化的云原生工作负载。
 
-## Kubernetes 原生 Serverless 模式
+## 1. Kubernetes 原生 Serverless 模式 {/* #kubernetes-原生-serverless-模式-1 */}
 
 Kubernetes 虽非为 Serverless 场景而生，但凭借其强大的控制器和扩展机制，已能实现许多 Serverless 的核心特性。本章将详细介绍如何通过 Kubernetes 原生功能构建 Serverless 工作负载，并结合最佳实践进行总结。
 
-## HPA：自动扩缩容控制器
+## 2. HPA：自动扩缩容控制器 {/* #hpa自动扩缩容控制器 */}
 
 HPA（Horizontal Pod Autoscaler）是 Kubernetes 内置的自动扩缩容控制器，能够根据资源利用率或自定义指标自动调整 Pod 副本数量，实现弹性伸缩。
 
@@ -52,7 +52,7 @@ graph TD
 
 ![HPA 工作原理](/images/k8s/serverless/kubernetes-patterns/97e84e350760c562672ca58d6587826f.svg)
 
-### 基于 CPU 的扩缩容
+### 2.1 基于 CPU 的扩缩容 {/* #基于-cpu-的扩缩容 */}
 
 以下示例展示如何基于 CPU 利用率自动扩缩容：
 
@@ -95,7 +95,7 @@ spec:
       selectPolicy: Max
 ```
 
-### 基于内存与多指标扩缩容
+### 2.2 基于内存与多指标扩缩容 {/* #基于内存与多指标扩缩容 */}
 
 支持多指标联合决策：
 
@@ -126,7 +126,7 @@ spec:
         averageUtilization: 60
 ```
 
-### 基于自定义指标扩缩容
+### 2.3 基于自定义指标扩缩容 {/* #基于自定义指标扩缩容 */}
 
 可结合业务指标实现更智能的弹性：
 
@@ -163,7 +163,7 @@ spec:
         value: "100"
 ```
 
-## KEDA：事件驱动自动扩缩容
+## 3. KEDA：事件驱动自动扩缩容 {/* #keda事件驱动自动扩缩容 */}
 
 KEDA（Kubernetes Event-driven Autoscaling）是基于事件的自动扩缩容解决方案，支持 50+ 种事件源，能实现 Pod 从 0 到 N 的弹性伸缩。
 
@@ -203,7 +203,7 @@ graph TD
 
 ![KEDA 事件驱动扩缩容架构](/images/k8s/serverless/kubernetes-patterns/85924c427b422d4d66e2a4e042540680.svg)
 
-### KEDA 安装与配置
+### 3.1 KEDA 安装与配置 {/* #keda-安装与配置 */}
 
 使用 Helm 快速安装 KEDA：
 
@@ -217,7 +217,7 @@ helm install keda kedacore/keda \
   --wait
 ```
 
-### Kafka 事件驱动扩缩容示例
+### 3.2 Kafka 事件驱动扩缩容示例 {/* #kafka-事件驱动扩缩容示例 */}
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -251,15 +251,15 @@ spec:
             periodSeconds: 60
 ```
 
-### 其他事件源与定时扩缩容
+### 3.3 其他事件源与定时扩缩容 {/* #其他事件源与定时扩缩容 */}
 
 KEDA 支持 RabbitMQ、Cron、HTTP、Redis 等多种事件源，配置方式类似。
 
-## Job 与 CronJob：批处理与定时任务
+## 4. Job 与 CronJob：批处理与定时任务 {/* #job-与-cronjob批处理与定时任务 */}
 
 Kubernetes Job 适用于一次性任务，CronJob 用于周期性任务。结合 KEDA 可实现事件驱动的批处理。
 
-### Job 示例
+### 4.1 Job 示例 {/* #job-示例 */}
 
 ```yaml
 apiVersion: batch/v1
@@ -294,7 +294,7 @@ spec:
       restartPolicy: Never
 ```
 
-### CronJob 示例
+### 4.2 CronJob 示例 {/* #cronjob-示例 */}
 
 ```yaml
 apiVersion: batch/v1
@@ -331,7 +331,7 @@ spec:
   failedJobsHistoryLimit: 1
 ```
 
-### 事件驱动 Job（ScaledJob）
+### 4.3 事件驱动 Job（ScaledJob） {/* #事件驱动-jobscaledjob */}
 
 结合 KEDA ScaledJob，实现事件触发的批处理：
 
@@ -367,7 +367,7 @@ spec:
       lagThreshold: '100'
 ```
 
-## 工作队列与异步处理模式
+## 5. 工作队列与异步处理模式 {/* #工作队列与异步处理模式 */}
 
 通过 Redis、RabbitMQ 等队列结合 KEDA，实现事件驱动的异步消费。
 
@@ -428,11 +428,11 @@ spec:
           value: "job-queue"
 ```
 
-## Serverless 存储模式
+## 6. Serverless 存储模式 {/* #serverless-存储模式 */}
 
 Serverless 工作负载常用临时存储（emptyDir）或外部对象存储（如 MinIO、S3）实现数据持久化。
 
-### 临时存储卷示例
+### 6.1 临时存储卷示例 {/* #临时存储卷示例 */}
 
 ```yaml
 apiVersion: apps/v1
@@ -453,7 +453,7 @@ spec:
         emptyDir: {}
 ```
 
-### 对象存储集成示例
+### 6.2 对象存储集成示例 {/* #对象存储集成示例 */}
 
 ```yaml
 apiVersion: apps/v1
@@ -481,7 +481,7 @@ spec:
               key: secret-key
 ```
 
-## 监控与调试
+## 7. 监控与调试 {/* #监控与调试 */}
 
 为保障 Serverless 工作负载的稳定性，需关注 HPA、KEDA、Job 等对象的状态与事件。
 
@@ -502,34 +502,34 @@ kubectl describe job <job-name>
 kubectl logs job/<job-name>
 ```
 
-## 最佳实践
+## 8. 最佳实践 {/* #最佳实践 */}
 
 在实际生产环境中，建议遵循以下优化建议：
 
-### HPA 配置优化
+### 8.1 HPA 配置优化 {/* #hpa-配置优化 */}
 
 - 选择合适的指标（如请求延迟优于 CPU）
 - 设置合理的副本上下限，避免冷启动和资源浪费
 - 优化扩缩容行为，防止抖动
 
-### KEDA 配置优化
+### 8.2 KEDA 配置优化 {/* #keda-配置优化 */}
 
 - 针对业务场景选择合适的事件源和阈值
 - 合理设置 pollingInterval、cooldownPeriod 等参数
 - 充分利用 scale-to-zero 降低成本
 
-### Job/CronJob 优化
+### 8.3 Job/CronJob 优化 {/* #jobcronjob-优化 */}
 
 - 合理配置资源请求与限制
 - 设置 backoffLimit、activeDeadlineSeconds 等容错参数
 - 配置 ttlSecondsAfterFinished 自动清理历史任务
 
-### 成本优化建议
+### 8.4 成本优化建议 {/* #成本优化建议 */}
 
 - 精确设置 requests/limits，提升资源利用率
 - 利用抢占式节点降低成本
 - 结合 KEDA 自动休眠，空闲时缩容到 0
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 Kubernetes 原生 Serverless 模式通过 HPA、KEDA、Job/CronJob 及事件驱动等机制，已能满足大部分弹性伸缩和自动化处理需求。虽然功能不及专用 Serverless 平台丰富，但对于大多数云原生场景而言，已是轻量、灵活且易于集成的选择。

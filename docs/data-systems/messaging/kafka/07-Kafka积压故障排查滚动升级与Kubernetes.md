@@ -1,9 +1,9 @@
 ---
-title: Kafka 积压、故障排查、滚动升级与 Kubernetes 部署
+title: "Kafka 积压、故障排查、滚动升级与 Kubernetes 部署"
 sidebar_label: "07. Kafka 积压、故障排查、滚动升级与 Kubernetes 部署"
 sidebar_position: 7
+description: "用数据路径诊断 lag、ISR 和 broker 故障，设计可回滚升级及 Kubernetes 有状态部署。"
 tags: [Kafka, 故障排查, 滚动升级, Kubernetes]
-description: 用数据路径诊断 lag、ISR 和 broker 故障，设计可回滚升级及 Kubernetes 有状态部署。
 ---
 
 # Kafka 积压、故障排查、滚动升级与 Kubernetes 部署
@@ -51,11 +51,11 @@ flowchart TB
 
 必须明确：broker/controller ID 如何稳定、PVC 是否绑定到正确节点/可用区、listener 对集群内外如何发布、证书和 ACL 如何轮换、Pod 终止时如何优雅离组、Operator 是否并发滚动多个副本。
 
-### 存储选择
+### 4.1 存储选择 {/* #存储选择 */}
 
 Kafka 日志偏顺序吞吐，但恢复和 compaction 也产生 I/O。网络块存储提高调度弹性，本地盘提供低延迟，各有故障与迁移取舍。无论哪种，都需要持久化语义和压测，禁止用临时盘承载唯一副本。
 
-### 调度与故障域
+### 4.2 调度与故障域 {/* #调度与故障域 */}
 
 用 topology spread/anti-affinity 让同 partition 副本跨节点/可用区，给 broker 设置合理 requests/limits 和 disruption budget。PDB 不能阻止节点突然故障，也不能替代 Operator 的安全滚动逻辑。
 
@@ -81,7 +81,7 @@ Kafka 日志偏顺序吞吐，但恢复和 compaction 也产生 I/O。网络块�
 
 上一篇：[Kafka 容量规划](./06-Topic-Partition磁盘网络与容量规划.md)　下一模块：[Spark 架构、RDD 与 DataFrame](../../big-data/spark/01-Spark架构RDD-DataFrame与Driver-Executor.md)
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Kafka Operations](https://kafka.apache.org/documentation/#operations)
 - [Kubernetes StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)

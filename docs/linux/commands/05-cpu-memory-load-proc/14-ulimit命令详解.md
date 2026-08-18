@@ -1,11 +1,12 @@
 ---
-title: ulimit 命令详解：Bash 资源限制、soft/hard 与继承
+title: "ulimit 命令详解：Bash 资源限制、soft/hard 与继承"
+sidebar_label: "14. ulimit 命令详解：Bash 资源限制、soft/hard 与继承"
 sidebar_position: 14
-description: 完整讲解 Bash 5.3 ulimit 的全部选项、单位、soft/hard limit、Shell 进程继承、nofile/nproc/core/stack 和 systemd/容器边界。
+description: "完整讲解 Bash 5.3 ulimit 的全部选项、单位、soft/hard limit、Shell 进程继承、nofile/nproc/core/stack 和 systemd/容器边界。"
 tags: [Linux, Bash, ulimit, RLIMIT, nofile, 资源限制]
 ---
 
-# `ulimit` 命令详解：Bash 资源限制、soft/hard 与继承
+# ulimit 命令详解：Bash 资源限制、soft/hard 与继承
 
 `ulimit` 是 Bash builtin，它查询或修改当前 Shell 的 resource limits；之后启动的子进程继承这些限制。它不能直接修改已运行的兄弟进程，也不会自动持久化到 systemd 服务。
 
@@ -139,7 +140,7 @@ container runtime → OCI rlimits → container init → workload
 
 掌握标准：能列出全部 Bash 选项与单位，解释 soft/hard/继承，定位实际配置源，并区分 RLIMIT 与 sysctl/cgroup。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [GNU Bash 5.3：ulimit](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-ulimit)
 - [Linux getrlimit(2)](https://man7.org/linux/man-pages/man2/getrlimit.2.html)

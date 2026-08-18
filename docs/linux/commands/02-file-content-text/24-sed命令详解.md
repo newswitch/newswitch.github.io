@@ -1,11 +1,12 @@
 ---
-title: sed 命令详解：地址、命令、Pattern/Hold Space 与安全原地编辑
+title: "sed 命令详解：地址、命令、Pattern/Hold Space 与安全原地编辑"
+sidebar_label: "24. sed 命令详解：地址、命令、Pattern/Hold Space 与安全原地编辑"
 sidebar_position: 24
-description: 系统讲解 GNU sed -e/-f/-n/-E/-i/-z/-s/-u、地址范围、s/y/d/p/q/r/w、branch、hold space 和 in-place 风险。
+description: "系统讲解 GNU sed -e/-f/-n/-E/-i/-z/-s/-u、地址范围、s/y/d/p/q/r/w、branch、hold space 和 in-place 风险。"
 tags: [Linux, sed, 正则, 流编辑, GNU]
 ---
 
-# `sed` 命令详解：对记录流执行小程序
+# sed 命令详解：地址、命令、Pattern/Hold Space 与安全原地编辑
 
 `sed` 逐 cycle 读取 pattern space，执行 script，再默认打印；hold space 可跨记录保存状态。它擅长受控文本替换，不是 YAML/JSON/配置语法解析器。
 

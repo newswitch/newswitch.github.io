@@ -1,11 +1,12 @@
 ---
-title: iptables 命令详解：表、链、匹配、NAT 与 nft 后端
+title: "iptables 命令详解：表、链、匹配、NAT 与 nft 后端"
+sidebar_label: "18. iptables 命令详解：表、链、匹配、NAT 与 nft 后端"
 sidebar_position: 18
-description: 以 iptables 1.8.13 为基线，系统讲解 iptables/ip6tables 命令、全部通用参数、表链与 hook、扩展匹配、目标、连接跟踪、NAT、iptables-nft/legacy 差异和安全变更。
+description: "以 iptables 1.8.13 为基线，系统讲解 iptables/ip6tables 命令、全部通用参数、表链与 hook、扩展匹配、目标、连接跟踪、NAT、iptables-nft/legacy 差异和安全变更。"
 tags: [Linux, iptables, ip6tables, Netfilter, nftables, 防火墙, NAT]
 ---
 
-# `iptables` 命令详解：表、链、匹配、NAT 与 nft 后端
+# iptables 命令详解：表、链、匹配、NAT 与 nft 后端
 
 `iptables`/`ip6tables` 是经典 Netfilter 规则管理接口。现代发行版中，`iptables` 可能是：
 
@@ -168,7 +169,7 @@ iptables -A INPUT ! -s 192.0.2.0/24 -p tcp --dport 22 -j DROP
 
 ## 8. TCP、UDP、ICMP 基础匹配
 
-### TCP
+### 8.1 TCP {/* #tcp */}
 
 ```text
 -p tcp [!] --source-port PORT[:PORT]
@@ -182,7 +183,7 @@ iptables -A INPUT ! -s 192.0.2.0/24 -p tcp --dport 22 -j DROP
 
 `--syn` 等价于匹配设置 SYN 且没有 ACK/RST/FIN 的 TCP 报文，不能代表所有 `ctstate NEW`。
 
-### UDP/UDPLite
+### 8.2 UDP/UDPLite {/* #udpudplite */}
 
 ```text
 -p udp --sport PORT[:PORT]
@@ -191,7 +192,7 @@ iptables -A INPUT ! -s 192.0.2.0/24 -p tcp --dport 22 -j DROP
 
 UDP 无连接，但 Netfilter 仍可通过超时和双向 tuple 建立 conntrack 状态。
 
-### ICMP/ICMPv6
+### 8.3 ICMP/ICMPv6 {/* #icmpicmpv6 */}
 
 ```text
 -p icmp --icmp-type TYPE[/CODE]
@@ -286,14 +287,14 @@ sudo conntrack -S
 
 ## 12. NAT 实例与完整前提
 
-### DNAT
+### 12.1 DNAT {/* #dnat */}
 
 ```bash
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 8443 \
   -j DNAT --to-destination 10.20.0.10:443
 ```
 
-### SNAT 与 MASQUERADE
+### 12.2 SNAT 与 MASQUERADE {/* #snat-与-masquerade */}
 
 ```bash
 iptables -t nat -A POSTROUTING -o eth0 -s 10.20.0.0/24 \
@@ -481,4 +482,3 @@ sudo tcpdump -i any -nn -c 100 'host 203.0.113.10 and tcp port 443'
 - [`iptables(8)` 1.8.13 上游手册镜像](https://man7.org/linux/man-pages/man8/iptables.8.html)
 - [Netfilter iptables 官方项目](https://netfilter.org/projects/iptables/)
 - [xtables 扩展手册](https://man7.org/linux/man-pages/man8/iptables-extensions.8.html)
-

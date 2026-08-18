@@ -1,9 +1,9 @@
 ---
-title: 共享 RDMA、Host Device 与 Macvlan
+title: "共享 RDMA、Host Device 与 Macvlan"
 sidebar_label: "02. 共享 RDMA、Host Device 与 Macvlan"
 sidebar_position: 2
+description: "理解多个 Pod 共享 PF/HCA 的资源模型、Host Device/Macvlan 数据面、隔离边界和容量治理。"
 tags: [RDMA Shared Device Plugin, Host Device, Macvlan, Kubernetes]
-description: 理解多个 Pod 共享 PF/HCA 的资源模型、Host Device/Macvlan 数据面、隔离边界和容量治理。
 ---
 
 # 共享 RDMA、Host Device 与 Macvlan
@@ -203,7 +203,7 @@ kubectl exec <pod> -- ip -d link show
 能够解释 Shared Device Plugin 发布的是调度资源而非独占带宽；能判断 Host Device、
 Macvlan 和共享 RDMA 的数据面、隔离和故障域。
 
-## 参考资料
+## 14. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA Network Operator Deployment Guide](https://docs.nvidia.com/networking/display/kubernetes2640/)
 - [Kubernetes Device Plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/)

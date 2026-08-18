@@ -1,9 +1,9 @@
 ---
-title: 无损 Fabric 分层故障排查
+title: "无损 Fabric 分层故障排查"
 sidebar_label: "09. 无损 Fabric 分层故障排查"
 sidebar_position: 9
+description: "从失败 Collective、GPU/NIC、RDMA、路由、队列到 PFC/ECN 建立 AI Fabric 的分层证据链。"
 tags: [Troubleshooting, RoCE, InfiniBand, PFC, ECN, NCCL]
-description: 从失败 Collective、GPU/NIC、RDMA、路由、队列到 PFC/ECN 建立 AI Fabric 的分层证据链。
 ---
 
 # 无损 Fabric 分层故障排查
@@ -102,7 +102,7 @@ ethtool -S <netdev>
 
 ## 6. L4：Fabric 转发
 
-### RoCE
+### 6.1 RoCE {/* #roce */}
 
 - IP Route 和 ECMP 下一跳；
 - VLAN、MTU、DSCP Trust；
@@ -111,7 +111,7 @@ ethtool -S <netdev>
 - 路由/BFD 抖动；
 - 单向和回程。
 
-### InfiniBand
+### 6.2 InfiniBand {/* #infiniband */}
 
 - SM Master；
 - Port Active；
@@ -229,7 +229,7 @@ Switch Queue
 面对 NCCL Timeout，能在 15～30 分钟内把故障归入工作负载、GPU、PCIe、RDMA、
 Fabric、拥塞或 NCCL 层，并用至少两类独立证据支持，而不是试错式修改参数。
 
-## 参考资料
+## 15. 参考资料 {/* #参考资料 */}
 
 - [NCCL Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)
 - [linux-rdma/perftest](https://github.com/linux-rdma/perftest)

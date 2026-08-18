@@ -2,15 +2,13 @@
 title: "TP 慢 Rank、NVLink 与 NCCL 推理故障排查"
 sidebar_label: "20. TP 慢 Rank、NVLink 与 NCCL 推理故障排查"
 sidebar_position: 20
-tags: [vLLM, Tensor Parallel, NCCL, NVLink, 故障排查]
 description: "从 vLLM TP 同步点出发，排查慢 rank、GPU 拓扑、NVLink/PCIe、NCCL、跨机网络和硬件降级。"
+tags: [vLLM, Tensor Parallel, NCCL, NVLink, 故障排查]
 ---
 
 # TP 慢 Rank、NVLink 与 NCCL 推理故障排查
 
 Tensor Parallel 让多张 GPU 共同完成一份模型副本。它解决单卡放不下模型或希望扩大计算资源的问题，但也把每个 Decode Step 变成一个同步系统：**最慢 rank 决定整组速度。**
-
----
 
 ## 1. 为什么一个慢 rank 会拖慢所有卡
 
@@ -32,8 +30,6 @@ rank3 compute ─────────┐
 - TPOT P99 变差但错误率正常。
 
 所以集群平均 GPU Util 是最危险的聚合方式之一。
-
----
 
 ## 2. 先画清实际拓扑
 
@@ -57,8 +53,6 @@ numactl --hardware
 ```
 
 Kubernetes 中不要只相信容器内 `GPU 0`。使用 UUID 和 Pod/Node/Rank 映射建立证据。
-
----
 
 ## 3. 单机 TP 的数据路径
 
@@ -84,8 +78,6 @@ GPU ↔ PCIe Switch/Root ↔ GPU
 
 部署前要基于拓扑选择 TP Group，而不是任意取 N 张空闲卡。
 
----
-
 ## 4. 跨机 TP 的额外路径
 
 跨机 collective 可能经过：
@@ -103,18 +95,16 @@ GPU
 
 推理 Decode 每步消息可能较小而频繁，时延尤其关键。带宽测试跑得高，不代表小消息 collective 延迟一定健康；NCCL Tests 要覆盖与实际相近的消息大小和 collective 类型。
 
----
-
 ## 5. 分层排查顺序
 
-### 第一步：确认是多卡特有
+### 5.1 第一步：确认是多卡特有 {/* #第一步确认是多卡特有 */}
 
 用相同模型能力的单卡/更小 TP 或基准模型对比：
 
 - 单卡正常、TP 异常：进入并行/拓扑；
 - 单卡也异常：先查模型、CPU、调度与 GPU 本身。
 
-### 第二步：按 rank 比较时间线
+### 5.2 第二步：按 rank 比较时间线 {/* #第二步按-rank-比较时间线 */}
 
 对齐：
 
@@ -126,7 +116,7 @@ GPU
 
 先到 collective 的 rank 在等谁，一眼就能定位候选慢 rank。
 
-### 第三步：排除 GPU 健康与降频
+### 5.3 第三步：排除 GPU 健康与降频 {/* #第三步排除-gpu-健康与降频 */}
 
 每卡查看：
 
@@ -136,7 +126,7 @@ GPU
 - ECC/Xid/Retired Pages；
 - 其他进程或 MPS/MIG 干扰。
 
-### 第四步：验证链路
+### 5.4 第四步：验证链路 {/* #第四步验证链路 */}
 
 - `nvidia-smi topo -m`；
 - NVLink 链路状态/错误；
@@ -145,7 +135,7 @@ GPU
 - 跨机 NIC 计数器、丢包、ECN/PFC；
 - GDR 是否生效。
 
-### 第五步：核对软件矩阵
+### 5.5 第五步：核对软件矩阵 {/* #第五步核对软件矩阵 */}
 
 - Driver/CUDA/NCCL；
 - 容器镜像；
@@ -153,8 +143,6 @@ GPU
 - rank 绑定；
 - 拓扑文件或插件；
 - vLLM/模型 revision。
-
----
 
 ## 6. 典型时间线模式
 
@@ -167,8 +155,6 @@ GPU
 | 只有小消息慢 | 链路时延、同步、CPU/NCCL launch |
 | 周期性尖刺 | 网络拥塞、功耗/温度、后台任务、错误重试 |
 | 某 Pod 重建后才慢 | 选卡/节点/NUMA/拓扑变化 |
-
----
 
 ## 7. NCCL Tests 怎样正确使用
 
@@ -194,8 +180,6 @@ AllReduce（及实际使用的其他 collective）
 - 模型分片不均；
 - 生产流量的 Batch Shape。
 
----
-
 ## 8. 网络专项证据
 
 RoCE/IB 场景关注：
@@ -212,8 +196,6 @@ RoCE/IB 场景关注：
 
 必须对齐异常时间窗。累计错误计数很大不代表当前故障；计数器斜率在异常期增长才是证据。
 
----
-
 ## 9. 常见修复与风险
 
 | 修复 | 适用 | 风险 |
@@ -227,8 +209,6 @@ RoCE/IB 场景关注：
 | 网络 QoS/拥塞治理 | Fabric 证据明确 | 需网络团队联合变更 |
 
 不要用 `NCCL_*` 环境变量随机试错。每个变量都应对应一个已证实的链路/算法假设，并保留回滚。
-
----
 
 ## 10. 故障报告模板
 
@@ -244,8 +224,6 @@ NIC/Switch 计数器:
 根因与证据链:
 临时缓解、永久修复和复验:
 ```
-
----
 
 ## 11. 延伸阅读与验收
 

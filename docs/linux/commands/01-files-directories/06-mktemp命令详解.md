@@ -1,11 +1,12 @@
 ---
-title: mktemp 命令详解：安全创建临时文件和目录
+title: "mktemp 命令详解：安全创建临时文件和目录"
+sidebar_label: "06. mktemp 命令详解：安全创建临时文件和目录"
 sidebar_position: 6
-description: 完整讲解 GNU coreutils mktemp 的全部长短参数、模板规则、TMPDIR、权限、竞态风险、清理陷阱和生产脚本写法。
+description: "完整讲解 GNU coreutils mktemp 的全部长短参数、模板规则、TMPDIR、权限、竞态风险、清理陷阱和生产脚本写法。"
 tags: [Linux, mktemp, GNU coreutils, 临时文件, Shell安全]
 ---
 
-# `mktemp` 命令详解：安全创建临时文件和目录
+# mktemp 命令详解：安全创建临时文件和目录
 
 `mktemp` 以不可预测名称原子创建临时文件或目录，并输出最终路径。它解决的核心问题不是“随机起名”，而是防止先检查名称、后创建文件之间的竞态和符号链接攻击。
 
@@ -318,7 +319,7 @@ ls -ld /tmp
 - 能设计不会越界删除的 trap 清理函数。
 - 能根据容量、生命周期和原子替换要求选择临时目录。
 
-## 官方参考
+## 16. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils：mktemp invocation](https://www.gnu.org/software/coreutils/manual/html_node/mktemp-invocation.html)
 - [GNU coreutils：Common options](https://www.gnu.org/software/coreutils/manual/html_node/Common-options.html)

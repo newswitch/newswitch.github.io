@@ -1,11 +1,12 @@
 ---
-title: numastat 命令详解：验证 NUMA 命中、远端分配与进程驻留页
+title: "numastat 命令详解：验证 NUMA 命中、远端分配与进程驻留页"
+sidebar_label: "15. numastat 命令详解：验证 NUMA 命中、远端分配与进程驻留页"
 sidebar_position: 15
-description: 完整讲解 numastat 的全部参数、numa_hit/miss/foreign/local/other 指标、per-node meminfo、进程驻留页、采样差值和 NUMA 优化验证。
+description: "完整讲解 numastat 的全部参数、numa_hit/miss/foreign/local/other 指标、per-node meminfo、进程驻留页、采样差值和 NUMA 优化验证。"
 tags: [Linux, numastat, NUMA, 内存性能, 性能分析]
 ---
 
-# `numastat` 命令详解：验证 NUMA 命中、远端分配与进程驻留页
+# numastat 命令详解：验证 NUMA 命中、远端分配与进程驻留页
 
 `numastat` 展示每个 NUMA node 的分配统计和进程 resident pages 分布。它用于验证“页实际上在哪里”，而不是设置 policy；设置用 `numactl`，进程 CPU affinity 用 `taskset`。
 

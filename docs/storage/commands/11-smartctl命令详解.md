@@ -1,11 +1,12 @@
 ---
-title: smartctl 命令详解：ATA、SCSI、NVMe 健康、错误与自检
+title: "smartctl 命令详解：ATA、SCSI、NVMe 健康、错误与自检"
+sidebar_label: "11. smartctl 命令详解：ATA、SCSI、NVMe 健康、错误与自检"
 sidebar_position: 11
-description: 讲解 smartctl 设备识别、全部核心参数族、SMART 属性、NVMe/SCSI 差异、错误日志、自检、JSON、RAID 控制器透传和退出码位图。
+description: "讲解 smartctl 设备识别、全部核心参数族、SMART 属性、NVMe/SCSI 差异、错误日志、自检、JSON、RAID 控制器透传和退出码位图。"
 tags: [Linux, smartctl, SMART, SSD, HDD, NVMe]
 ---
 
-# `smartctl` 命令详解：ATA、SCSI、NVMe 健康、错误与自检
+# smartctl 命令详解：ATA、SCSI、NVMe 健康、错误与自检
 
 `smartctl` 读取或控制磁盘固件暴露的 SMART/health 信息。它能发现介质、接口、温度、寿命和错误线索，但“PASSED”不代表磁盘没有风险，厂商 raw attribute 也不能跨型号机械比较。
 

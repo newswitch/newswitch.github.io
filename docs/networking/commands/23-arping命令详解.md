@@ -1,11 +1,12 @@
 ---
-title: arping 命令详解：ARP 可达性、重复地址与 Gratuitous ARP
+title: "arping 命令详解：ARP 可达性、重复地址与 Gratuitous ARP"
+sidebar_label: "23. arping 命令详解：ARP 可达性、重复地址与 Gratuitous ARP"
 sidebar_position: 23
-description: 以 iputils 20250605 为基线，讲解 arping 全部参数、ARP Request/Reply、二层广播域、重复地址检测、Unsolicited/Gratuitous ARP、退出码以及 VLAN、Bond、虚拟 IP 故障排查。
+description: "以 iputils 20250605 为基线，讲解 arping 全部参数、ARP Request/Reply、二层广播域、重复地址检测、Unsolicited/Gratuitous ARP、退出码以及 VLAN、Bond、虚拟 IP 故障排查。"
 tags: [Linux, arping, ARP, Duplicate Address, Gratuitous ARP, 二层网络]
 ---
 
-# `arping` 命令详解：ARP 可达性、重复地址与 Gratuitous ARP
+# arping 命令详解：ARP 可达性、重复地址与 Gratuitous ARP
 
 `arping` 在本地二层广播域发送 ARP 报文。它不依赖 ICMP Echo，能验证 IPv4 地址对应的 MAC、检测地址冲突，或在 VIP 漂移后发送 Unsolicited/Gratuitous ARP 更新邻居缓存。
 
@@ -229,7 +230,7 @@ sudo arping -b -I eth0 -c 5 -w 5 192.0.2.20
 
 ## 11. VLAN、Bond、Bridge 和 namespace
 
-### VLAN
+### 11.1 VLAN {/* #vlan */}
 
 应在三层 IP 所在逻辑接口发包：
 
@@ -237,7 +238,7 @@ sudo arping -b -I eth0 -c 5 -w 5 192.0.2.20
 sudo arping -I eth0.100 -c 3 192.0.2.20
 ```
 
-### Bond
+### 11.2 Bond {/* #bond */}
 
 通常从 bond master 发包：
 
@@ -248,7 +249,7 @@ cat /proc/net/bonding/bond0
 
 直接从 slave 发包可能绕开 bond MAC/选路语义。
 
-### Bridge
+### 11.3 Bridge {/* #bridge */}
 
 IP 配置在 bridge master 时从 master 发包：
 
@@ -257,7 +258,7 @@ sudo arping -I br0 -c 3 192.0.2.20
 bridge fdb show br br0
 ```
 
-### network namespace
+### 11.4 network namespace {/* #network-namespace */}
 
 ```bash
 sudo ip netns exec blue arping -I eth0 -c 3 192.0.2.20
@@ -306,7 +307,7 @@ sudo tcpdump -i eth0 -nn -e -c 20 arp
 
 ## 14. 常见场景
 
-### 场景一：网关邻居为 FAILED
+### 14.1 场景一：网关邻居为 FAILED {/* #场景一网关邻居为-failed */}
 
 ```bash
 ip route show default
@@ -317,7 +318,7 @@ sudo arping -I eth0 -c 3 -w 5 192.0.2.1
 
 arping 无回复时重点检查 VLAN、接口、交换机端口、网关状态和二层隔离；有回复但 neighbour 仍失败时抓包检查内核发送/接收地址、ARP 策略和 namespace。
 
-### 场景二：VIP 漂移后部分客户端仍访问旧节点
+### 14.2 场景二：VIP 漂移后部分客户端仍访问旧节点 {/* #场景二vip-漂移后部分客户端仍访问旧节点 */}
 
 ```bash
 ip address show dev eth0
@@ -327,7 +328,7 @@ sudo tcpdump -i eth0 -nn -e arp and host 192.0.2.100
 
 确认 HA owner、VIP、GARP 实际发出、交换机/EVPN MAC-IP 路由更新及客户端缓存。不要只在新节点重复执行 arping 掩盖控制器问题。
 
-### 场景三：部署静态 IP 前检查冲突
+### 14.3 场景三：部署静态 IP 前检查冲突 {/* #场景三部署静态-ip-前检查冲突 */}
 
 ```bash
 sudo arping -D -q -I eth0 -c 3 -w 5 192.0.2.10
@@ -359,4 +360,3 @@ esac
 - [iputils 官方仓库](https://github.com/iputils/iputils)
 - [RFC 826：Address Resolution Protocol](https://www.rfc-editor.org/rfc/rfc826)
 - [RFC 5227：IPv4 Address Conflict Detection](https://www.rfc-editor.org/rfc/rfc5227)
-

@@ -2,8 +2,8 @@
 title: "Higress Wasm Plugin：SDK、生命周期、发布与安全"
 sidebar_label: "09. Higress Wasm Plugin：SDK、生命周期、发布与安全"
 sidebar_position: 9
-tags: [Higress, Wasm, Proxy-Wasm, Plugin, Go]
 description: "理解 Higress Wasm 插件怎样进入 Envoy Filter Chain，并掌握开发、配置、发布、灰度、性能和故障边界。"
+tags: [Higress, Wasm, Proxy-Wasm, Plugin, Go]
 ---
 
 # Higress Wasm Plugin：SDK、生命周期、发布与安全
@@ -87,7 +87,7 @@ spec:
 
 你应能把一个插件放到准确的请求阶段，说明暂停/恢复和配置生命周期，完成 digest 灰度、性能预算、失败注入与回滚，而不是只写出能编译的 wasm。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Higress Plugin Usage Guide](https://higress.cn/en/docs/latest/plugins/intro/)
 - [Higress Go Wasm Plugin](https://higress.cn/en/docs/latest/user/wasm-go/)

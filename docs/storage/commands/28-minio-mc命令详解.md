@@ -1,11 +1,12 @@
 ---
-title: MinIO mc 命令详解：Alias、对象、Mirror、版本与生命周期
+title: "MinIO mc 命令详解：Alias、对象、Mirror、版本与生命周期"
+sidebar_label: "28. MinIO mc 命令详解：Alias、对象、Mirror、版本与生命周期"
 sidebar_position: 28
-description: 讲解 MinIO Client mc 的全局参数、alias、ls/stat/cp/get/put、mirror、rm、version、retention、replication、ilm、admin 边界、凭据和 S3 兼容排障。
+description: "讲解 MinIO Client mc 的全局参数、alias、ls/stat/cp/get/put、mirror、rm、version、retention、replication、ilm、admin 边界、凭据和 S3 兼容排障。"
 tags: [MinIO, mc, S3, Object Storage, Mirror]
 ---
 
-# MinIO `mc` 命令详解：Alias、对象、Mirror、版本与生命周期
+# MinIO mc 命令详解：Alias、对象、Mirror、版本与生命周期
 
 MinIO Client `mc` 用类 Unix 子命令操作 MinIO、AWS S3 和部分 S3 兼容服务。`mc cp/mirror/rm` 的对象语义仍是 S3，不会因为名字像 `cp/rsync/rm` 就获得 POSIX 原子性。
 

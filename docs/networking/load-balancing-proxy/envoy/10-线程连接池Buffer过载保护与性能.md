@@ -2,8 +2,8 @@
 title: "Envoy 线程、连接池、Buffer、Overload Manager 与性能"
 sidebar_label: "10. Envoy 线程、连接池、Buffer、Overload Manager 与性能"
 sidebar_position: 10
-tags: [Envoy, Threading, Connection Pool, Buffer, Overload Manager, Performance]
 description: "理解 Envoy 主线程与 Worker、连接归属、上游连接池、背压、内存和代理自身过载保护。"
+tags: [Envoy, Threading, Connection Pool, Buffer, Overload Manager, Performance]
 ---
 
 # Envoy 线程、连接池、Buffer、Overload Manager 与性能
@@ -54,7 +54,7 @@ Overload Manager 监控代理自身资源压力，并在阈值触发动作，例
 
 你应能用 Little's Law 估算并发，用连接/Stream/Buffer 建立内存模型，区分 Circuit Breaker 与 Overload Manager，并通过混合负载找出 SLO 拐点。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [Envoy Threading Model](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/intro/threading_model)
 - [Overload Manager](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/overload_manager)

@@ -2,15 +2,15 @@
 title: "Kubernetes API 访问与 kubectl 实践"
 sidebar_label: "02. Kubernetes API 访问与 kubectl 实践"
 sidebar_position: 2
-tags: [Kubernetes, 访问集群, PartII, 学习路线]
 description: "详解如何通过 kubectl 命令行工具与 Kubernetes API 交互，涵盖认证机制、请求模式、资源管理与自动化实践，助力高效管理集群资源。"
+tags: [Kubernetes, 访问集群, PartII, 学习路线]
 ---
 
 # Kubernetes API 访问与 kubectl 实践
 
 kubectl 是 Kubernetes 官方命令行工具，极大简化了 API 交互、认证、资源管理与自动化操作。掌握 kubectl 与 API 的工作原理，有助于提升集群运维与开发效率。
 
-## kubectl 与 API Server 交互原理
+## 1. kubectl 与 API Server 交互原理 {/* #kubectl-与-api-server-交互原理 */}
 
 Kubernetes API 是控制面的核心，提供 HTTP REST 接口，支持用户、集群组件及外部系统通信。kubectl 作为官方 CLI，负责处理认证、请求格式化与响应解析。
 
@@ -35,7 +35,7 @@ flowchart LR
 
 ![kubectl 到 API Server 交互流程](/images/k8s/access/kubectl/90d8522b1c4d173fce941c1923b4c05d.svg)
 
-## Kubernetes API 基础
+## 2. Kubernetes API 基础 {/* #kubernetes-api-基础 */}
 
 Kubernetes API 遵循 RESTful 设计，支持标准 HTTP 动作（GET、POST、PUT、PATCH、DELETE）操作资源。资源按 API 组、版本、类型组织。
 
@@ -72,7 +72,7 @@ flowchart LR
 - 命名空间资源：`/apis/GROUP/VERSION/namespaces/NAMESPACE/RESOURCETYPE`
 - 单个资源：`/apis/GROUP/VERSION/namespaces/NAMESPACE/RESOURCETYPE/NAME`
 
-## kubectl 工作机制
+## 3. kubectl 工作机制 {/* #kubectl-工作机制 */}
 
 kubectl 作为 API 客户端，将用户命令转为 HTTP 请求，读取 kubeconfig 配置集群、认证与上下文信息。
 
@@ -96,7 +96,7 @@ sequenceDiagram
 
 ![kubectl 证书签发流程](/images/k8s/access/kubectl/eb4487a0e2cbaae9404782167d217556.svg)
 
-## kubectl 认证机制
+## 4. kubectl 认证机制 {/* #kubectl-认证机制 */}
 
 kubectl 通过 kubeconfig 自动完成 API Server 认证，支持多种方式：
 
@@ -140,7 +140,7 @@ flowchart TB
 
 ![kubectl 认证流程](/images/k8s/access/kubectl/49abe7da4d4cfc4ab63048cede84ea6d.svg)
 
-## kubectl 基本用法
+## 5. kubectl 基本用法 {/* #kubectl-基本用法 */}
 
 kubectl 命令基本格式如下：
 
@@ -166,7 +166,7 @@ kubectl [command] [TYPE] [NAME] [flags]
 | exec         | 容器内执行命令        | `kubectl exec -it nginx -- bash`             |
 | port-forward | 端口转发              | `kubectl port-forward pod/nginx 8080:80`     |
 
-## 直接访问 API
+## 6. 直接访问 API {/* #直接访问-api */}
 
 kubectl 支持 `kubectl proxy` 启动本地代理，便于 curl 等工具直接访问 API，适合高级场景。
 
@@ -178,7 +178,7 @@ kubectl proxy --port=8080
 curl http://localhost:8080/api/v1/namespaces/default/pods
 ```
 
-## 输出格式与 JSONPath
+## 7. 输出格式与 JSONPath {/* #输出格式与-jsonpath */}
 
 kubectl 支持多种输出格式，便于脚本与自动化：
 
@@ -192,7 +192,7 @@ kubectl 支持多种输出格式，便于脚本与自动化：
 | jsonpath       | JSONPath 过滤       | `kubectl get pods -o jsonpath='{.items[0].metadata.name}'`     |
 | go-template    | Go 模板格式化       | `kubectl get pods -o go-template='{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}'` |
 
-### JSONPath 常用表达式
+### 7.1 JSONPath 常用表达式 {/* #jsonpath-常用表达式 */}
 
 | Expression                | Description         |
 | ------------------------- | ------------------ |
@@ -202,7 +202,7 @@ kubectl 支持多种输出格式，便于脚本与自动化：
 | `{range .items[*]}{end}`  | 遍历所有项         |
 | `{.spec.containers[*].image}` | 所有容器镜像   |
 
-## Server-Side Apply 原理
+## 8. Server-Side Apply 原理 {/* #server-side-apply-原理 */}
 
 Server-Side Apply 支持多管理者协作管理同一对象，追踪字段所有权，避免相互覆盖。
 
@@ -244,11 +244,11 @@ flowchart TB
 - `--field-manager` 标识管理者
 - `--force-conflicts` 强制覆盖冲突字段
 
-## 其他 API 访问方式
+## 9. 其他 API 访问方式 {/* #其他-api-访问方式 */}
 
 除 kubectl 外，还可通过多种方式访问 Kubernetes API。
 
-### 官方客户端库
+### 9.1 官方客户端库 {/* #官方客户端库 */}
 
 Kubernetes 提供多语言官方客户端库：
 
@@ -260,7 +260,7 @@ Kubernetes 提供多语言官方客户端库：
 | JavaScript | github.com/kubernetes-client/javascript |
 | .NET       | github.com/kubernetes-client/csharp   |
 
-### API 代理与端口转发
+### 9.2 API 代理与端口转发 {/* #api-代理与端口转发 */}
 
 - 使用 `kubectl proxy` 启动本地代理
 - 直接带认证访问 API Server
@@ -271,7 +271,7 @@ kubectl proxy --port=8080
 curl http://localhost:8080/api/v1/namespaces/default/pods
 ```
 
-## kubectl 脚本与自动化最佳实践
+## 10. kubectl 脚本与自动化最佳实践 {/* #kubectl-脚本与自动化最佳实践 */}
 
 - 明确指定输出格式（json、yaml、name），便于解析
 - 明确资源版本（如 `apps/v1/deployments`）
@@ -288,11 +288,11 @@ kubectl apply -f deployment.yaml
 kubectl apply -f deployment.yaml --dry-run=server
 ```
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 kubectl 极大简化了 Kubernetes API 交互，支持丰富的资源管理、输出格式与自动化能力。深入理解 kubectl 与 API 的工作机制，有助于高效管理和自动化 Kubernetes 集群。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 1. [Kubernetes 官方文档 - kubernetes.io](https://kubernetes.io/zh-cn/docs/)
 2. [kubectl 命令参考 - kubernetes.io](https://kubernetes.io/zh-cn/docs/reference/kubectl/)

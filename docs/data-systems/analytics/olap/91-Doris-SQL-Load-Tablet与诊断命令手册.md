@@ -1,8 +1,8 @@
 ---
-title: Doris SQL、Load、Tablet 与诊断命令手册
+title: "Doris SQL、Load、Tablet 与诊断命令手册"
 sidebar_label: "91. Doris SQL、Load、Tablet 与诊断命令手册"
 sidebar_position: 91
-description: 覆盖 Doris FE/BE 状态、SQL 计划、Stream Load、Routine Load、Tablet 副本健康、诊断与生产故障排查。
+description: "覆盖 Doris FE/BE 状态、SQL 计划、Stream Load、Routine Load、Tablet 副本健康、诊断与生产故障排查。"
 tags: [Doris, 命令手册, OLAP, Tablet, 故障排查]
 ---
 
@@ -241,7 +241,7 @@ SQL / Load Label / Tablet ID
 | 数据分布不均 | SHOW TABLETS、BACKENDS、分桶键与 Bucket 数 |
 | 副本异常 | SHOW TABLET、DIAGNOSIS、BE 心跳和磁盘 |
 
-## 12. 30 分钟实验
+## 12. 分钟实验 {/* #12-30-分钟实验 */}
 
 1. 创建一个按日期分区、Hash 分桶的实验表。
 2. 使用相同 label 重试 Stream Load，观察幂等行为。
@@ -258,10 +258,9 @@ SQL / Load Label / Tablet ID
 - 能联查 Kafka Lag、Routine Load、BE 资源和 Compaction。
 - 能从 Tablet ID 定位副本、节点、版本和健康问题。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [Doris SQL Manual](https://doris.apache.org/docs/sql-manual/)
 - [Stream Load](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual/)
 - [Routine Load](https://doris.apache.org/docs/data-operate/import/import-way/routine-load-manual/)
 - [Tablet Repair and Balance](https://doris.apache.org/docs/admin-manual/maint-monitor/tablet-repair-and-balance/)
-

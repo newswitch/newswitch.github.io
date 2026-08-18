@@ -1,11 +1,12 @@
 ---
-title: nice 命令详解：以调整后的 CPU 调度权重启动程序
+title: "nice 命令详解：以调整后的 CPU 调度权重启动程序"
+sidebar_label: "14. nice 命令详解：以调整后的 CPU 调度权重启动程序"
 sidebar_position: 14
-description: 完整讲解 GNU coreutils nice 参数、增量 niceness、-20 到 19、权限、CFS 权重、cgroup 与实时调度边界及退出码。
+description: "完整讲解 GNU coreutils nice 参数、增量 niceness、-20 到 19、权限、CFS 权重、cgroup 与实时调度边界及退出码。"
 tags: [Linux, nice, CPU调度, CFS, coreutils]
 ---
 
-# `nice` 命令详解：以调整后的 CPU 调度权重启动程序
+# nice 命令详解：以调整后的 CPU 调度权重启动程序
 
 `nice` 用调整后的 niceness 启动新程序；无命令时显示当前 niceness。它影响普通调度策略下的相对 CPU 权重，不限制 CPU 上限，也不控制内存、I/O、GPU、NUMA、affinity 或实时调度。
 
@@ -66,7 +67,7 @@ ps -o pid,cls,pri,ni,psr,%cpu,comm -p PID
 
 掌握标准：能列出全部参数；能解释增量、范围和退出码；不把 nice 当限流/实时/CPU affinity 或 GPU 调度工具。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：nice(1)](https://man7.org/linux/man-pages/man1/nice.1.html)
 - [Linux sched(7)](https://man7.org/linux/man-pages/man7/sched.7.html)

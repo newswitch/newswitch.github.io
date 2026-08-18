@@ -1,11 +1,12 @@
 ---
-title: sysctl 命令详解：运行时内核参数、加载顺序与安全变更
+title: "sysctl 命令详解：运行时内核参数、加载顺序与安全变更"
+sidebar_label: "15. sysctl 命令详解：运行时内核参数、加载顺序与安全变更"
 sidebar_position: 15
-description: 完整讲解 procps-ng sysctl 的全部参数、/proc/sys 映射、读写、sysctl.d 优先级、namespace、验证回滚与生产调参边界。
+description: "完整讲解 procps-ng sysctl 的全部参数、/proc/sys 映射、读写、sysctl.d 优先级、namespace、验证回滚与生产调参边界。"
 tags: [Linux, sysctl, 内核参数, procfs, sysctl.d, procps-ng]
 ---
 
-# `sysctl` 命令详解：运行时内核参数、加载顺序与安全变更
+# sysctl 命令详解：运行时内核参数、加载顺序与安全变更
 
 `sysctl` 读取或修改 `/proc/sys` 下的运行时内核参数，并能加载配置文件。参数可能影响整机网络、内存、文件表、安全与稳定性；“某篇调优文章给了值”不是修改理由。
 
@@ -147,7 +148,7 @@ node sysctl.d     → node kernel/global or namespaced defaults
 
 掌握标准：能列出全部参数，解释 `/proc/sys` 映射与加载优先级，设计 before/change/verify/rollback/reboot 验证，并拒绝无证据的“万能调优”。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [procps-ng sysctl(8)](https://man7.org/linux/man-pages/man8/sysctl.8.html)
 - [sysctl.conf(5)](https://man7.org/linux/man-pages/man5/sysctl.conf.5.html)

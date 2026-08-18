@@ -1,11 +1,12 @@
 ---
-title: chcon 命令详解：临时修改 SELinux 文件安全上下文
+title: "chcon 命令详解：临时修改 SELinux 文件安全上下文"
+sidebar_label: "04. chcon 命令详解：临时修改 SELinux 文件安全上下文"
 sidebar_position: 4
-description: 完整讲解 GNU chcon 9.11 的上下文、reference、user/role/type/range、递归、符号链接与 root 保护参数，以及与 restorecon/semanage 的持久性边界。
+description: "完整讲解 GNU chcon 9.11 的上下文、reference、user/role/type/range、递归、符号链接与 root 保护参数，以及与 restorecon/semanage 的持久性边界。"
 tags: [Linux, chcon, SELinux, context, label, coreutils]
 ---
 
-# `chcon` 命令详解：临时修改 SELinux 文件安全上下文
+# chcon 命令详解：临时修改 SELinux 文件安全上下文
 
 `chcon` 直接修改文件 `security.selinux` xattr。它改变当前标签，不修改 policy 中“这个路径应该是什么标签”的映射，所以 `restorecon`、全盘 relabel 或重新创建文件可能覆盖结果。
 
@@ -97,7 +98,7 @@ restorecon -nRv /srv/site
 
 掌握标准：能列出全部参数，解释 context 四字段、symlink/递归爆炸半径，区分 inode 当前标签和 policy 路径期望，并能安全恢复。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [GNU chcon 9.11](https://www.gnu.org/software/coreutils/manual/html_node/chcon-invocation.html)
 - [selinux(8)](https://man7.org/linux/man-pages/man8/selinux.8.html)

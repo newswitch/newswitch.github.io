@@ -1,11 +1,12 @@
 ---
-title: machinectl 命令详解：systemd-machined 容器与系统镜像管理
+title: "machinectl 命令详解：systemd-machined 容器与系统镜像管理"
+sidebar_label: "13. machinectl 命令详解：systemd-machined 容器与系统镜像管理"
 sidebar_position: 13
-description: 讲清 machinectl 的 machine 查询、shell/login、启动停止、文件复制、bind、image 导入导出克隆及 destructive 边界。
+description: "讲清 machinectl 的 machine 查询、shell/login、启动停止、文件复制、bind、image 导入导出克隆及 destructive 边界。"
 tags: [Linux, machinectl, systemd-machined, 容器, systemd-nspawn]
 ---
 
-# `machinectl` 命令详解：管理注册 Machine 与系统镜像
+# machinectl 命令详解：systemd-machined 容器与系统镜像管理
 
 `machinectl` 是 `systemd-machined` 的客户端，管理本机注册的容器/VM “machine”及 `/var/lib/machines` 系统镜像。它不是 Docker/CRI 通用客户端；Kubernetes 容器继续用 `crictl`/runtime 工具。
 

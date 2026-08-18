@@ -1,9 +1,9 @@
 ---
-title: Flink Keyed State、Operator State 与 State Backend
+title: "Flink Keyed State、Operator State 与 State Backend"
 sidebar_label: "04. Flink Keyed State、Operator State 与 State Backend"
 sidebar_position: 4
+description: "理解状态类型、key-group、TTL、State Backend、本地恢复和状态容量治理。"
 tags: [Flink State, Keyed State, State Backend]
-description: 理解状态类型、key-group、TTL、State Backend、本地恢复和状态容量治理。
 ---
 
 # Flink Keyed State、Operator State 与 State Backend
@@ -61,7 +61,7 @@ Map/List 中每元素和序列化/索引也有开销，应从 checkpoint/state m
 
 上一篇：[Event Time 与 Watermark](./03-Event-Time-Watermark-Window与迟到数据.md)　下一篇：[Checkpoint、Barrier、Savepoint 与 Exactly-Once](./05-Checkpoint-Barrier-Savepoint与Exactly-Once.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Flink Stateful Stream Processing](https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/stateful-stream-processing/)
 - [Flink State Backends](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/state/state_backends/)

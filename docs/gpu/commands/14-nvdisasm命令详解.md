@@ -1,11 +1,12 @@
 ---
-title: nvdisasm 命令详解：Cubin、SASS 与控制流分析
+title: "nvdisasm 命令详解：Cubin、SASS 与控制流分析"
+sidebar_label: "14. nvdisasm 命令详解：Cubin、SASS 与控制流分析"
 sidebar_position: 14
-description: 使用 nvdisasm 反汇编 CUDA Cubin，读取函数、指令、源代码映射和控制流图，并与 Nsight Compute 形成闭环。
+description: "使用 nvdisasm 反汇编 CUDA Cubin，读取函数、指令、源代码映射和控制流图，并与 Nsight Compute 形成闭环。"
 tags: [CUDA, nvdisasm, Cubin, SASS, 性能分析]
 ---
 
-# nvdisasm 命令详解
+# nvdisasm 命令详解：Cubin、SASS 与控制流分析
 
 `nvdisasm` 将独立 Cubin 反汇编为 NVIDIA GPU 机器指令 SASS，并可输出控制流信息。它适合验证编译器实际生成的指令、定位源码与指令差异；它不显示运行时耗时，不能替代 Nsight Compute。
 
@@ -99,7 +100,7 @@ diff -u o2.sass o3.sass
 
 能从发布 Binary 提取正确架构 Cubin；能定位目标 Kernel、Memory/Branch/Barrier 指令与源码行；能用 SASS 提出而非武断确认性能假设；能用 NCU 运行时指标验证。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [CUDA Binary Utilities: nvdisasm](https://docs.nvidia.com/cuda/cuda-binary-utilities/#nvdisasm)
 - [Nsight Compute Documentation](https://docs.nvidia.com/nsight-compute/)

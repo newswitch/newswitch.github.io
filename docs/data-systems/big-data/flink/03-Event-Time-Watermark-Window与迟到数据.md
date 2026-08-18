@@ -1,9 +1,9 @@
 ---
-title: Flink Event Time、Watermark、Window 与迟到数据
+title: "Flink Event Time、Watermark、Window 与迟到数据"
 sidebar_label: "03. Flink Event Time、Watermark、Window 与迟到数据"
 sidebar_position: 3
+description: "从事件时间与乱序出发设计 Watermark、窗口触发、允许迟到和状态清理。"
 tags: [Flink, Event Time, Watermark, Window]
-description: 从事件时间与乱序出发设计 Watermark、窗口触发、允许迟到和状态清理。
 ---
 
 # Flink Event Time、Watermark、Window 与迟到数据
@@ -66,6 +66,6 @@ Sink 必须能表达更新/撤回或幂等覆盖。若只 append，窗口更新�
 
 上一篇：[DataStream 分区与并行度](./02-DataStream-Operator-Chain分区与并行度.md)　下一篇：[Keyed State、Operator State 与 State Backend](./04-Keyed-State-Operator-State与State-Backend.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Flink Event Time and Watermarks](https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/time/)

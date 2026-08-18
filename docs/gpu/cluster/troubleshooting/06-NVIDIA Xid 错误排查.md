@@ -1,9 +1,11 @@
 ---
 title: "NVIDIA Xid：从内核事件到隔离、恢复与硬件诊断"
+sidebar_label: "06. NVIDIA Xid：从内核事件到隔离、恢复与硬件诊断"
+sidebar_position: 6
+description: "理解 Xid 与 SXid，建立 GPU UUID、PCI BDF、进程和 Pod 的证据链，并按官方 Recovery Action 安全完成隔离、诊断与恢复。"
+tags: ["GPU", "Xid", "ECC", "NVLink", "DCGM", "故障排查"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["GPU", "Xid", "ECC", "NVLink", "DCGM", "故障排查"]
-description: "理解 Xid 与 SXid，建立 GPU UUID、PCI BDF、进程和 Pod 的证据链，并按官方 Recovery Action 安全完成隔离、诊断与恢复。"
 ---
 
 # NVIDIA Xid：从内核事件到隔离、恢复与硬件诊断
@@ -424,43 +426,43 @@ Node Capacity / Allocatable 变化
 
 不要为了学习主动制造真正 Xid、拔卡或切断 PCIe。可以使用以下安全方式：
 
-### 实验一：离线日志解析
+### 16.1 实验一：离线日志解析 {/* #实验一离线日志解析 */}
 
 准备脱敏的多条 Xid 样本，编写脚本提取时间、BDF、编号和原始文本，并验证第一事件/伴随事件顺序。
 
-### 实验二：资产关联
+### 16.2 实验二：资产关联 {/* #实验二资产关联 */}
 
 在健康测试节点建立 UUID、BDF、NUMA、NVLink、NIC 和 Kubernetes Node 映射，证明 GPU index 不是稳定主键。
 
-### 实验三：告警回放
+### 16.3 实验三：告警回放 {/* #实验三告警回放 */}
 
 向测试日志管道回放脱敏 Xid fixture，验证告警能关联节点和测试 Pod；不要伪造生产 kernel 日志。
 
-### 实验四：隔离与恢复桌面演练
+### 16.4 实验四：隔离与恢复桌面演练 {/* #实验四隔离与恢复桌面演练 */}
 
 用虚拟事件走完告警确认、cordon、业务通知、Checkpoint、诊断审批、重新上线和复盘，不执行真正 reset。
 
 ## 17. 掌握标准
 
-### 入门
+### 17.1 入门 {/* #入门 */}
 
 - 能从 kernel journal 找到 Xid 并识别 BDF；
 - 能解释 Xid 是调试线索而非最终根因；
 - 能使用 UUID 把 GPU 与节点资产关联。
 
-### 进阶
+### 17.2 进阶 {/* #进阶 */}
 
 - 能关联 Xid、进程、容器、Pod 和变更时间线；
 - 能区分应用、PCIe、ECC 和 NVLink 路径；
 - 能正确使用 Xid Catalog、Xid 154 和 DCGM 证据。
 
-### 生产级
+### 17.3 生产级 {/* #生产级 */}
 
 - 能决定观察、应用重启、drain/reset、node reboot 和厂商报修边界；
 - 能设计避免误 reset 的节点恢复状态机；
 - 能以诊断、性能和观察窗口证明节点可以重新上线。
 
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA Xid Errors introduction](https://docs.nvidia.com/deploy/xid-errors/introduction.html)
 - [Working with Xid Errors](https://docs.nvidia.com/deploy/xid-errors/working-with-xid-errors.html)

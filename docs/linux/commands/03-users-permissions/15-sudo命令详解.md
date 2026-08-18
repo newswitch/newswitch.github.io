@@ -1,11 +1,12 @@
 ---
-title: sudo 命令详解：最小授权、环境、凭据缓存与审计
+title: "sudo 命令详解：最小授权、环境、凭据缓存与审计"
+sidebar_label: "15. sudo 命令详解：最小授权、环境、凭据缓存与审计"
 sidebar_position: 15
-description: 完整讲解 sudo 1.9 的全部命令行参数、策略判断、目标身份、sudoedit、非交互模式、环境、timestamp、退出码及最小权限设计。
+description: "完整讲解 sudo 1.9 的全部命令行参数、策略判断、目标身份、sudoedit、非交互模式、环境、timestamp、退出码及最小权限设计。"
 tags: [Linux, sudo, sudoers, 最小权限, 审计]
 ---
 
-# `sudo` 命令详解：最小授权、环境、凭据缓存与审计
+# sudo 命令详解：最小授权、环境、凭据缓存与审计
 
 `sudo` 让通过策略检查的调用者以目标用户/组执行命令。前端、策略插件、PAM、审计与 I/O 日志共同决定结果；“属于 sudo 组”只是某些发行版 sudoers 规则的入口，不是内核特权。
 
@@ -126,7 +127,7 @@ AI_OPS ALL=(root) MYAGENT_CTL
 
 掌握标准：能列出全部参数；能沿“调用者真实身份→策略→认证/cache→目标凭据/env→exec→日志/退出码”解释请求；能识别规则中隐式 shell/编辑器逃逸面。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [Sudo 1.9.18：sudo(8)](https://man7.org/linux/man-pages/man8/sudo.8.html)
 - [Sudo 1.9.18：sudoers(5)](https://man7.org/linux/man-pages/man5/sudoers.5.html)

@@ -2,21 +2,21 @@
 title: "容器网络接口（CNI）"
 sidebar_label: "03. 容器网络接口（CNI）"
 sidebar_position: 3
-tags: [Kubernetes, 开放接口, 学习路线]
 description: "深入了解容器网络接口（CNI）的设计原理、接口定义、插件实现和使用方式，掌握 Kubernetes 网络管理的核心机制。"
+tags: [Kubernetes, 开放接口, 学习路线]
 ---
 
 # 容器网络接口（CNI）
 
 > CNI（容器网络接口）为容器网络提供了标准化的接口和插件机制，极大地简化了容器编排平台的网络管理与扩展，是云原生网络生态的基础。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 [容器网络接口（Container Network Interface，CNI）](https://github.com/containernetworking/cni) 是 CNCF 旗下的重要项目，提供了一套标准化的容器网络配置规范和库。CNI 专注于容器创建时的网络资源分配和容器删除时的网络资源释放，为容器编排平台提供了统一的网络管理接口。
 
 本节将系统介绍 CNI 的核心组成、架构设计、关键概念、实现细节及其在生态系统中的应用。
 
-## 什么是 CNI？
+## 2. 什么是 CNI？ {/* #什么是-cni */}
 
 CNI 由三大核心组成部分构成：
 
@@ -26,7 +26,7 @@ CNI 由三大核心组成部分构成：
 
 CNI 设计只关注网络设置、连接和资源清理，便于实现和与各种容器运行时集成。
 
-## 核心架构
+## 3. 核心架构 {/* #核心架构 */}
 
 CNI 架构设计简洁，容器运行时可直接实现 CNI 规范或通过 `libcni` 库调用插件，完成容器网络配置。
 
@@ -61,7 +61,7 @@ graph TD
 
 CNI 仓库同时提供规范和辅助代码，方便运行时和插件开发者实现。
 
-### 关键组件及关系
+### 3.1 关键组件及关系 {/* #关键组件及关系 */}
 
 下图展示了 CNI 关键组件之间的关系：
 
@@ -72,7 +72,7 @@ graph TD
     Libcni["libcni 库</br>(pkg/types, libcni/)"]
     Skel["插件骨架</br>(pkg/skel)"]
     Plugins["网络插件"]
-    
+
     Runtime -->|"调用"| Libcni
     Libcni -->|"执行"| Plugins
     Plugins -->|"基于"| Skel
@@ -90,11 +90,11 @@ graph TD
 
 ![CNI 组件关系](/images/k8s/interfaces/cni/a3de223c2ba33a5179be7feccba7f46b.svg)
 
-## 关键概念
+## 4. 关键概念 {/* #关键概念 */}
 
 CNI 的核心概念包括网络配置、操作类型、插件执行流程和插件类型。
 
-### 网络配置
+### 4.1 网络配置 {/* #网络配置 */}
 
 CNI 使用 JSON 格式的网络配置，定义网络参数和插件设置。以下为示例配置：
 
@@ -117,7 +117,7 @@ CNI 使用 JSON 格式的网络配置，定义网络参数和插件设置。以�
 
 网络配置由 CNI 运行时处理，并传递给各插件。
 
-### CNI 操作类型
+### 4.2 CNI 操作类型 {/* #cni-操作类型 */}
 
 CNI 规范要求插件实现如下操作：
 
@@ -132,7 +132,7 @@ CNI 规范要求插件实现如下操作：
 
 容器运行时通过环境变量和标准输入/输出调用插件操作。
 
-### 插件执行流程
+### 4.3 插件执行流程 {/* #插件执行流程 */}
 
 下图展示了 CNI 操作的典型流程，包括 IP 地址管理插件的委托调用：
 
@@ -142,14 +142,14 @@ sequenceDiagram
     participant CNI as libcni
     participant Plugin as 网络插件
     participant IPAM as IPAM 插件
-    
+
     Runtime->>CNI: AddNetworkList(config)
     CNI->>Plugin: 执行 ADD（exec）
     Plugin->>IPAM: 委托 IPAM 操作
     IPAM-->>Plugin: 返回 IP 信息
     Plugin-->>CNI: 返回结果
     CNI-->>Runtime: 返回结果
-    
+
     Note over Runtime,Plugin: 容器删除时
 
     Runtime->>CNI: DelNetworkList(config)
@@ -162,7 +162,7 @@ sequenceDiagram
 
 ![CNI 插件执行流程](/images/k8s/interfaces/cni/eec825a4aef190e7437aba5f58db64ea.svg)
 
-### 插件类型
+### 4.4 插件类型 {/* #插件类型 */}
 
 CNI 插件主要分为以下几类：
 
@@ -171,11 +171,11 @@ CNI 插件主要分为以下几类：
 - **IPAM 插件**：负责 IP 地址分配和管理，通常由接口插件委托调用。
 - **Meta 插件**：顺序调用多个插件（如 flannel、multus）。
 
-## 实现细节
+## 5. 实现细节 {/* #实现细节 */}
 
 CNI 的实现细节主要体现在 `libcni` 库和插件返回的结构化结果类型。
 
-### libcni 库
+### 5.1 libcni 库 {/* #libcni-库 */}
 
 `libcni` 提供 Go API，供容器运行时与 CNI 插件交互，主要负责：
 
@@ -194,7 +194,7 @@ type CNI interface {
 }
 ```
 
-### 结果类型
+### 5.2 结果类型 {/* #结果类型 */}
 
 CNI 操作返回结构化结果，定义于 `pkg/types`，主要类型包括：
 
@@ -214,7 +214,7 @@ classDiagram
         +Print() error
         +PrintTo(writer) error
     }
-    
+
     class Current_Result {
         +CNIVersion string
         +Interfaces []*Interface
@@ -222,7 +222,7 @@ classDiagram
         +Routes []*Route
         +DNS DNS
     }
-    
+
     class PluginConf {
         +CNIVersion string
         +Name string
@@ -231,20 +231,20 @@ classDiagram
         +DNS DNS
         +PrevResult Result
     }
-    
+
     class NetConfList {
         +CNIVersion string
         +Name string
         +Plugins []*PluginConf
     }
-    
+
     Result <|.. Current_Result : implements
     NetConfList --> PluginConf : contains
 ```
 
 ![CNI 结果类型关系](/images/k8s/interfaces/cni/8ea6e7fe2d908ca5f66eada3bf13209c.svg)
 
-## 生态系统与应用
+## 6. 生态系统与应用 {/* #生态系统与应用 */}
 
 CNI 已被众多容器运行时和编排平台采用，包括：
 
@@ -266,29 +266,29 @@ CNI 已被众多容器运行时和编排平台采用，包括：
 
 广泛的生态应用证明了 CNI 在容器网络标准化方面的成功。
 
-## 设计原则与规范
+## 7. 设计原则与规范 {/* #设计原则与规范 */}
 
 CNI 的设计遵循以下核心原则：
 
-### 生命周期管理
+### 7.1 生命周期管理 {/* #生命周期管理 */}
 
 - **网络命名空间**：容器运行时必须在调用插件前为容器创建独立的网络命名空间。
 - **网络确定**：运行时需确定容器所属网络及相应的插件执行顺序。
 - **配置格式**：采用 JSON 格式存储网络配置，包含必需字段如 `name`、`type` 等。
 
-### 执行顺序
+### 7.2 执行顺序 {/* #执行顺序 */}
 
 - **添加操作**：按配置顺序依次执行插件。
 - **删除操作**：按添加操作的相反顺序执行插件。
 - **幂等性**：DELETE 操作必须支持多次调用。
 
-### 并发控制
+### 7.3 并发控制 {/* #并发控制 */}
 
 - **容器隔离**：同一容器不允许并行操作。
 - **容器间并行**：不同容器可以并行处理。
 - **唯一标识**：每个容器通过 ContainerID 唯一标识。
 
-## CNI 插件实现
+## 8. CNI 插件实现 {/* #cni-插件实现 */}
 
 CNI 插件的实现需满足如下要求：
 
@@ -297,7 +297,7 @@ CNI 插件的实现需满足如下要求：
 - 在主机上执行必要的网络配置。
 - 通过 IPAM 插件分配 IP 地址和配置路由。
 
-## IP 地址管理（IPAM）
+## 9. IP 地址管理（IPAM） {/* #ip-地址管理ipam */}
 
 为了解耦 IP 管理策略与 CNI 插件类型，CNI 引入了 IPAM（IP Address Management）插件：
 
@@ -312,7 +312,7 @@ IPAM 插件通过以下方式工作：
 - 返回 IP/子网、网关和路由信息。
 - 可执行文件位于 `CNI_PATH` 指定的路径中。
 
-## 常用插件生态
+## 10. 常用插件生态 {/* #常用插件生态 */}
 
 以下表格列举了常用 CNI 主插件、IPAM 插件和 Meta 插件，并简要说明其功能。
 
@@ -338,11 +338,11 @@ IPAM 插件通过以下方式工作：
 | **firewall** | 基于 iptables 的防火墙规则      |
 | **tuning**   | 网络接口参数调优               |
 
-## 配置示例
+## 11. 配置示例 {/* #配置示例 */}
 
 下面分别给出基本网桥配置和链式插件配置的 JSON 示例，并附简要说明。
 
-### 基本网桥配置
+### 11.1 基本网桥配置 {/* #基本网桥配置 */}
 
 该配置为容器分配一个 bridge 网络，并通过 host-local IPAM 插件分配 IP 地址。
 
@@ -363,7 +363,7 @@ IPAM 插件通过以下方式工作：
 }
 ```
 
-### 链式插件配置
+### 11.2 链式插件配置 {/* #链式插件配置 */}
 
 该配置通过 plugins 字段串联多个插件，实现更复杂的网络功能。
 
@@ -388,27 +388,27 @@ IPAM 插件通过以下方式工作：
 }
 ```
 
-## 最佳实践
+## 12. 最佳实践 {/* #最佳实践 */}
 
 CNI 插件的选择和故障排查是实际运维中的重点，建议如下：
 
-### 插件选择
+### 12.1 插件选择 {/* #插件选择 */}
 
 - **生产环境**：推荐使用成熟的网络方案如 Calico、Flannel、Cilium。
 - **开发测试**：可使用简单的 bridge + host-local 组合。
 - **高性能需求**：考虑使用 SR-IOV 或 DPDK 相关插件。
 
-### 故障排查
+### 12.2 故障排查 {/* #故障排查 */}
 
 - **日志检查**：查看 kubelet 和 CNI 插件日志。
 - **网络验证**：使用 `cni` 命令行工具测试配置。
 - **网络连通性**：检查路由表和 iptables 规则。
 
-## 总结
+## 13. 总结 {/* #总结 */}
 
 CNI 作为容器网络的事实标准，极大地推动了云原生网络生态的发展。其模块化、标准化的设计理念，使得容器网络方案具备高度的可扩展性和可插拔性。理解 CNI 的架构和实现，有助于深入掌握 Kubernetes 等平台的网络原理，并为实际生产环境中的网络方案选型和故障排查提供坚实基础。
 
-## 参考文献
+## 14. 参考资料 {/* #参考文献 */}
 
 1. [CNI 官方规范 - github.com](https://github.com/containernetworking/cni/blob/main/SPEC.md)
 2. [CNI 插件仓库 - github.com](https://github.com/containernetworking/plugins)

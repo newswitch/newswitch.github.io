@@ -1,11 +1,12 @@
 ---
-title: getcap 命令详解：检查文件 capabilities 与 namespace root ID
+title: "getcap 命令详解：检查文件 capabilities 与 namespace root ID"
+sidebar_label: "13. getcap 命令详解：检查文件 capabilities 与 namespace root ID"
 sidebar_position: 13
-description: 完整讲解 getcap 的 -h/-n/-r/-v 参数、file capability 文本、空 capability、递归盘点、挂载与容器陷阱及安全审计方法。
+description: "完整讲解 getcap 的 -h/-n/-r/-v 参数、file capability 文本、空 capability、递归盘点、挂载与容器陷阱及安全审计方法。"
 tags: [Linux, getcap, capabilities, xattr, 最小权限]
 ---
 
-# `getcap` 命令详解：检查文件 capabilities 与 namespace root ID
+# getcap 命令详解：检查文件 capabilities 与 namespace root ID
 
 `getcap` 读取文件的 `security.capability` 扩展属性，并把 file capabilities 转成可读文本。它只描述**可执行文件参与下一次 `execve()` 权限计算的输入**，不等于当前进程实际拥有的 capabilities，也不保证文件执行后一定获得这些权限。
 
@@ -117,7 +118,7 @@ getcap -n 确认文件 xattr
 
 掌握标准：能列出 4 个参数；能解释 `p/i/e`、空集合和 V3 root UID；能把 file capability 与进程 P/E/I/B/A 区分；能做限定目录的安全基线与容器排障。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [getcap(8)](https://manpages.debian.org/unstable/libcap2-bin/getcap.8.en.html)
 - [capabilities(7)](https://man7.org/linux/man-pages/man7/capabilities.7.html)

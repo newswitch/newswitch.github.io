@@ -1,9 +1,9 @@
 ---
-title: Kafka 副本、ISR、Leader 选举与 KRaft 控制面
+title: "Kafka 副本、ISR、Leader 选举与 KRaft 控制面"
 sidebar_label: "04. Kafka 副本、ISR、Leader 选举与 KRaft 控制面"
 sidebar_position: 4
+description: "理解分区复制、High Watermark、ISR、leader 故障和 KRaft 元数据控制面。"
 tags: [Kafka, ISR, Leader Election, KRaft]
-description: 理解分区复制、High Watermark、ISR、leader 故障和 KRaft 元数据控制面。
 ---
 
 # Kafka 副本、ISR、Leader 选举与 KRaft 控制面
@@ -72,6 +72,6 @@ Quorum 要容忍 `f` 个 controller 故障通常需要 `2f+1` 个投票成员。
 
 上一篇：[Consumer Group 与 Rebalance](./03-Consumer-Group-Offset-Rebalance与顺序.md)　下一篇：[Kafka 事务与端到端 Exactly-Once](./05-Kafka事务与端到端Exactly-Once.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Kafka Operations and KRaft](https://kafka.apache.org/documentation/#operations)

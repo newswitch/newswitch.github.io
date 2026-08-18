@@ -2,8 +2,8 @@
 title: "存储性能指标与 fio 压测方法"
 sidebar_label: "03. 存储性能指标与 fio 压测方法"
 sidebar_position: 3
-tags: [Linux, fio, IOPS, 延迟, 吞吐, 队列深度, 性能测试]
 description: "从 IOPS、吞吐、延迟和队列深度的关系出发，设计可复现、符合业务语义且不会误伤生产的 fio 存储实验。"
+tags: [Linux, fio, IOPS, 延迟, 吞吐, 队列深度, 性能测试]
 ---
 
 # 存储性能指标与 fio 压测方法
@@ -564,7 +564,7 @@ nvme smart-log /dev/<nvme-controller>
 
 下一阶段可学习[本地 NVMe 与 Local PV 实践](../ai-workloads/03-本地NVMe与Local-PV实践.md)，再进入 NVMe 队列、RAID/LVM 和节点模型缓存。
 
-## 参考资料
+## 23. 参考资料 {/* #参考资料 */}
 
 - [fio documentation](https://fio.readthedocs.io/en/latest/fio_doc.html)
 - [fio source and releases](https://github.com/axboe/fio)

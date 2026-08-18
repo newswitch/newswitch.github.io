@@ -1,11 +1,12 @@
 ---
-title: basename 命令详解：提取路径末段与删除后缀
+title: "basename 命令详解：提取路径末段与删除后缀"
+sidebar_label: "15. basename 命令详解：提取路径末段与删除后缀"
 sidebar_position: 15
-description: 完整讲解 GNU coreutils basename 的全部参数、多操作数、精确后缀删除、NUL 输出、Shell 展开差异和任意文件名处理。
+description: "完整讲解 GNU coreutils basename 的全部参数、多操作数、精确后缀删除、NUL 输出、Shell 展开差异和任意文件名处理。"
 tags: [Linux, basename, GNU coreutils, Shell, 路径]
 ---
 
-# `basename` 命令详解：提取路径末段与删除后缀
+# basename 命令详解：提取路径末段与删除后缀
 
 `basename` 对路径字符串做词法处理：移除前导目录部分和末尾斜杠，并可删除一个精确后缀。它不会访问文件系统，因此输入不必存在，也不会解析符号链接。
 
@@ -167,7 +168,7 @@ base=$(basename -- "$path")
 - 能处理含换行的结果。
 - 能解释为什么 basename 不能作为文件唯一标识。
 
-## 官方参考
+## 12. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：basename invocation](https://www.gnu.org/software/coreutils/manual/html_node/basename-invocation.html)
 - [POSIX basename](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/basename.html)
@@ -175,4 +176,3 @@ base=$(basename -- "$path")
 上一篇：[`realpath` 命令详解](./14-realpath命令详解.md)
 
 下一篇：[`dirname` 命令详解](./16-dirname命令详解.md)
-

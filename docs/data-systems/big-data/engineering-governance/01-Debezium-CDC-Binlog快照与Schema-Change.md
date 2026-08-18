@@ -1,9 +1,9 @@
 ---
-title: Debezium CDC、Binlog、快照与 Schema Change
+title: "Debezium CDC、Binlog、快照与 Schema Change"
 sidebar_label: "01. Debezium CDC、Binlog、快照与 Schema Change"
 sidebar_position: 1
+description: "理解数据库快照与增量日志的无缝衔接、事件 Envelope、Schema History 和生产排障。"
 tags: [Debezium, CDC, Binlog, Schema Change]
-description: 理解数据库快照与增量日志的无缝衔接、事件 Envelope、Schema History 和生产排障。
 ---
 
 # Debezium CDC、Binlog、快照与 Schema Change
@@ -76,6 +76,6 @@ DDL 上线前测试新增/删除/重命名、decimal/timestamp、默认值和 ta
 
 下一篇：[Airflow DAG、补数、重试与幂等调度](./02-Airflow-DAG依赖补数重试与幂等调度.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Debezium Documentation](https://debezium.io/documentation/reference/stable/)

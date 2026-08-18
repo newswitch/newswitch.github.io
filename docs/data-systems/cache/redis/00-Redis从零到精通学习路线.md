@@ -2,8 +2,8 @@
 title: "Redis 从零到精通学习路线"
 sidebar_label: "00. Redis 从零到精通学习路线"
 sidebar_position: 0
-tags: [Redis, 缓存, 数据结构, 高可用, 学习路线]
 description: "以 Redis Open Source 8.x 为主线，从命令与数据结构逐步深入事件循环、内存、持久化、复制、Sentinel、Cluster、性能容量和生产故障排查。"
+tags: [Redis, 缓存, 数据结构, 高可用, 学习路线]
 ---
 
 # Redis 从零到精通学习路线
@@ -28,35 +28,35 @@ Application
 
 一次请求快不代表系统安全：返回响应、复制到副本、写入 AOF、AOF 刷盘和生成 RDB 是不同时间点。
 
-## 2. 15 篇文章规划
+## 2. 篇文章学习清单 {/* #2-15-篇文章学习清单 */}
 
-| 编号 | 文章 | 优先级 | 必须解决的问题 | 状态 |
+| 编号 | 文章 | 优先级 | 必须解决的问题 | 收录情况 |
 | --- | --- | --- | --- | --- |
-| R00 | Redis 从零到精通学习路线 | P0 | 建立数据、持久化和故障地图 | 已完成 |
-| R01 | [Redis 解决什么问题与一次命令的完整路径](./01-Redis解决什么问题与一次命令的完整路径.md) | P0 | 缓存、数据库、队列、状态存储的边界 | 已完成 |
-| R02 | [RESP、客户端连接、Pipeline、事务与 Lua](./02-RESP客户端连接Pipeline事务与Lua.md) | P0 | 网络往返、原子性和阻塞从哪里产生 | 已完成 |
-| R03 | [String、Hash、List、Set、ZSet 与底层编码](./03-Redis核心数据结构与底层编码.md) | P0 | 数据结构选型、复杂度和内存代价 | 已完成 |
-| R04 | [Bitmap、HyperLogLog、Geo、JSON、Search 与 Vector](./04-Bitmap-HyperLogLog-Geo-JSON-Search与Vector.md) | P1 | 特殊结构和模块能力的适用边界 | 已完成 |
-| R05 | [事件循环、I/O Threads、命令执行与源码主路径](./05-Redis事件循环IO-Threads命令执行与源码主路径.md) | P2 | Redis 为什么快、哪里仍是串行瓶颈 | 已完成 |
-| R06 | [jemalloc、对象共享、过期删除与内存淘汰](./06-Redis内存过期与淘汰.md) | P0 | used_memory、RSS、碎片和 OOM 如何解释 | 已完成 |
-| R07 | [RDB、AOF、多段 AOF、fork 与 Copy-on-Write](./07-Redis-RDB-AOF-fork与Copy-on-Write.md) | P0 | 持久化时间点、恢复和磁盘风险 | 已完成 |
-| R08 | [主从复制、PSYNC、Replication Backlog 与一致性](./08-Redis主从复制PSYNC与一致性.md) | P0 | 全量/部分同步和数据丢失边界 | 已完成 |
-| R09 | [Sentinel 监控、主观/客观下线与故障转移](./09-Redis-Sentinel监控与故障转移.md) | P1 | 仲裁、选主、客户端切换和脑裂 | 已完成 |
-| R10 | [Redis Cluster、slot、Gossip、迁移与故障转移](./10-Redis-Cluster-slot-Gossip迁移与故障转移.md) | P1 | 分片路由、热点 slot 和多数派 | 已完成 |
-| R11 | [APT/RPM、源码、Docker、Sentinel、Cluster 与 K8s 部署](./11-Redis-APT-RPM源码Docker-Sentinel-Cluster与Kubernetes部署.md) | P0 | 多种部署方法及生命周期原理 | 已完成 |
-| R12 | [缓存模式、穿透、击穿、雪崩、热 Key 与大 Key](./12-Redis缓存模式穿透击穿雪崩热Key与大Key.md) | P0 | 缓存如何保护而不是拖垮数据库 | 已完成 |
-| R13 | [Streams、Pub/Sub、可靠队列与 Kafka/RocketMQ 对比](./13-Redis-Streams-PubSub与可靠队列.md) | P1 | 消费确认、重放、积压和可靠性边界 | 已完成 |
-| R14 | [性能、容量、监控、安全、备份、升级与故障 Runbook](./14-Redis性能容量监控安全备份升级与故障Runbook.md) | P1 | 从压测到生产治理的闭环 | 已完成 |
+| R00 | Redis 从零到精通学习路线 | P0 | 建立数据、持久化和故障地图 | 已收录 |
+| R01 | [Redis 解决什么问题与一次命令的完整路径](./01-Redis解决什么问题与一次命令的完整路径.md) | P0 | 缓存、数据库、队列、状态存储的边界 | 已收录 |
+| R02 | [RESP、客户端连接、Pipeline、事务与 Lua](./02-RESP客户端连接Pipeline事务与Lua.md) | P0 | 网络往返、原子性和阻塞从哪里产生 | 已收录 |
+| R03 | [String、Hash、List、Set、ZSet 与底层编码](./03-Redis核心数据结构与底层编码.md) | P0 | 数据结构选型、复杂度和内存代价 | 已收录 |
+| R04 | [Bitmap、HyperLogLog、Geo、JSON、Search 与 Vector](./04-Bitmap-HyperLogLog-Geo-JSON-Search与Vector.md) | P1 | 特殊结构和模块能力的适用边界 | 已收录 |
+| R05 | [事件循环、I/O Threads、命令执行与源码主路径](./05-Redis事件循环IO-Threads命令执行与源码主路径.md) | P2 | Redis 为什么快、哪里仍是串行瓶颈 | 已收录 |
+| R06 | [jemalloc、对象共享、过期删除与内存淘汰](./06-Redis内存过期与淘汰.md) | P0 | used_memory、RSS、碎片和 OOM 如何解释 | 已收录 |
+| R07 | [RDB、AOF、多段 AOF、fork 与 Copy-on-Write](./07-Redis-RDB-AOF-fork与Copy-on-Write.md) | P0 | 持久化时间点、恢复和磁盘风险 | 已收录 |
+| R08 | [主从复制、PSYNC、Replication Backlog 与一致性](./08-Redis主从复制PSYNC与一致性.md) | P0 | 全量/部分同步和数据丢失边界 | 已收录 |
+| R09 | [Sentinel 监控、主观/客观下线与故障转移](./09-Redis-Sentinel监控与故障转移.md) | P1 | 仲裁、选主、客户端切换和脑裂 | 已收录 |
+| R10 | [Redis Cluster、slot、Gossip、迁移与故障转移](./10-Redis-Cluster-slot-Gossip迁移与故障转移.md) | P1 | 分片路由、热点 slot 和多数派 | 已收录 |
+| R11 | [APT/RPM、源码、Docker、Sentinel、Cluster 与 K8s 部署](./11-Redis-APT-RPM源码Docker-Sentinel-Cluster与Kubernetes部署.md) | P0 | 多种部署方法及生命周期原理 | 已收录 |
+| R12 | [缓存模式、穿透、击穿、雪崩、热 Key 与大 Key](./12-Redis缓存模式穿透击穿雪崩热Key与大Key.md) | P0 | 缓存如何保护而不是拖垮数据库 | 已收录 |
+| R13 | [Streams、Pub/Sub、可靠队列与 Kafka/RocketMQ 对比](./13-Redis-Streams-PubSub与可靠队列.md) | P1 | 消费确认、重放、积压和可靠性边界 | 已收录 |
+| R14 | [性能、容量、监控、安全、备份、升级与故障 Runbook](./14-Redis性能容量监控安全备份升级与故障Runbook.md) | P1 | 从压测到生产治理的闭环 | 已收录 |
 
-当前完成 **15/15**，剩余 **0 篇**。
+当前路线收录 15 篇文章。是否掌握应以能解释命令执行、持久化和复制时间线，并完成缓存雪崩、主从切换和恢复验证为准。
 
 ## 3. 学习阶段
 
-### 阶段一：会用但不误用
+### 3.1 阶段一：会用但不误用 {/* #阶段一会用但不误用 */}
 
 完成 R01～R04。重点不是背完命令，而是能为计数、排行榜、集合关系、会话、限流和向量检索选择正确结构，并计算键、值、过期时间和索引的内存代价。
 
-### 阶段二：理解单机内核
+### 3.2 阶段二：理解单机内核 {/* #阶段二理解单机内核 */}
 
 完成 R05～R07。要能解释：
 
@@ -66,7 +66,7 @@ Application
 - RDB、AOF everysec 与操作系统刷盘之间的 RPO；
 - `used_memory` 不高但 RSS 很高的原因。
 
-### 阶段三：理解分布式
+### 3.3 阶段三：理解分布式 {/* #阶段三理解分布式 */}
 
 完成 R08～R10。需要分清：
 
@@ -76,7 +76,7 @@ Sentinel：监控和故障转移，不负责数据分片
 Cluster：数据分片 + 副本 + 故障转移
 ```
 
-### 阶段四：生产交付
+### 3.4 阶段四：生产交付 {/* #阶段四生产交付 */}
 
 完成 R11～R14。每种部署方式必须包含规划、实施、验收、回滚和故障演练；性能文章必须同时覆盖吞吐、P99、内存、网络、磁盘、复制、热 Key 和下游数据库保护。
 

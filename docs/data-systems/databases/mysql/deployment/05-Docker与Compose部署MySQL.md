@@ -2,8 +2,8 @@
 title: "Docker 与 Compose 部署 MySQL"
 sidebar_label: "05. Docker 与 Compose 部署 MySQL"
 sidebar_position: 5
-tags: [MySQL, Docker, Compose, 容器, 持久化]
 description: "理解 MySQL 容器镜像、entrypoint 初始化、Volume、配置、健康检查、日志、升级和备份边界，并用 Compose 建立可重复实验环境。"
+tags: [MySQL, Docker, Compose, 容器, 持久化]
 ---
 
 # Docker 与 Compose 部署 MySQL
@@ -98,7 +98,7 @@ networks:
 
 模板刻意只映射到宿主机 `127.0.0.1`。如果应用也在 Compose 网络中，应通过服务名 `mysql:3306` 连接，通常不需要把端口暴露给整个局域网。
 
-### 布尔环境变量陷阱
+### 3.1 布尔环境变量陷阱 {/* #布尔环境变量陷阱 */}
 
 官方镜像中，`MYSQL_RANDOM_ROOT_PASSWORD`、`MYSQL_ONETIME_PASSWORD` 等布尔变量只要设置为非空字符串就会被视为 true；写成 `"false"` 也可能仍然启用。要关闭应删除该变量，而不是写 `false`。
 
@@ -128,7 +128,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON appdb.* TO 'app'@'%';
 
 ## 5. Volume 与 bind mount
 
-### 命名 Volume
+### 5.1 命名 Volume {/* #命名-volume */}
 
 优点是 Docker 管理路径和生命周期，实验环境简单；缺点是宿主机真实存储位置不直观，仍依赖单机本地盘。
 
@@ -137,11 +137,11 @@ docker volume inspect mysql84_lab_data
 docker inspect mysql84-lab
 ```
 
-### bind mount
+### 5.2 bind mount {/* #bind-mount */}
 
 可以显式指定宿主机目录和配置，但必须处理 UID/GID、SELinux/AppArmor、文件系统和目录为空条件。官方镜像默认数据目录是 `/var/lib/mysql`；首次初始化要求挂载目录为空。
 
-### 关键结论
+### 5.3 关键结论 {/* #关键结论 */}
 
 - `docker compose down` 默认不等于删除命名 Volume；
 - 带 Volume 删除选项的操作会改变数据生命周期，执行前必须单独审批；

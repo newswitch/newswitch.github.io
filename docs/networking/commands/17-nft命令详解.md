@@ -1,11 +1,12 @@
 ---
-title: nft 命令详解：nftables 规则、集合、NAT 与生产变更
+title: "nft 命令详解：nftables 规则、集合、NAT 与生产变更"
+sidebar_label: "17. nft 命令详解：nftables 规则、集合、NAT 与生产变更"
 sidebar_position: 17
-description: 以 nftables 1.1.6 为基线，从 Netfilter hook、family、table、chain、rule 入门，系统讲解 nft 全部命令行选项、集合、映射、连接跟踪、NAT、监控、事务和安全变更。
+description: "以 nftables 1.1.6 为基线，从 Netfilter hook、family、table、chain、rule 入门，系统讲解 nft 全部命令行选项、集合、映射、连接跟踪、NAT、监控、事务和安全变更。"
 tags: [Linux, nft, nftables, Netfilter, 防火墙, NAT, 连接跟踪]
 ---
 
-# `nft` 命令详解：nftables 规则、集合、NAT 与生产变更
+# nft 命令详解：nftables 规则、集合、NAT 与生产变更
 
 `nft` 是 nftables 的用户态管理工具，通过 Netlink 把规则、集合、映射和状态对象提交给内核 `nf_tables`。它可以完成包过滤、NAT、分类、标记、限速、日志和部分转发加速，是现代 Linux 原生防火墙接口。
 
@@ -96,7 +97,7 @@ family + table + chain + rule handle
 
 ## 4. `nft` 全部命令行选项
 
-### 通用与规则输入
+### 4.1 通用与规则输入 {/* #通用与规则输入 */}
 
 | 短参数 | 长参数 | 作用 |
 |---|---|---|
@@ -110,7 +111,7 @@ family + table + chain + rule handle
 | `-c` | `--check` | 只校验，不提交更改；是变更前必做检查 |
 | `-o` | `--optimize` | 优化规则集，可结合 `-c` 查看建议结果 |
 
-### 列表输出格式
+### 4.2 列表输出格式 {/* #列表输出格式 */}
 
 | 短参数 | 长参数 | 作用 |
 |---|---|---|
@@ -125,7 +126,7 @@ family + table + chain + rule handle
 | `-p` | `--numeric-protocol` | 四层协议显示为数字 |
 | `-T` | `--numeric-time` | 时间、日期、小时值显示为数字 |
 
-### 命令输出与调试
+### 4.3 命令输出与调试 {/* #命令输出与调试 */}
 
 | 短参数 | 长参数 | 作用 |
 |---|---|---|
@@ -152,7 +153,7 @@ ruleset
             └── rules...
 ```
 
-### ruleset 命令
+### 5.1 ruleset 命令 {/* #ruleset-命令 */}
 
 ```text
 list ruleset [family]
@@ -161,7 +162,7 @@ flush ruleset [family]
 
 `flush ruleset` 会删除范围内所有表及其内容，使已有过滤消失，属于高危 `[D]`。它不是“清空计数器”。
 
-### table 命令
+### 5.2 table 命令 {/* #table-命令 */}
 
 ```text
 add|create table FAMILY NAME
@@ -176,7 +177,7 @@ sudo nft list tables
 sudo nft list table inet filter
 ```
 
-### chain 命令
+### 5.3 chain 命令 {/* #chain-命令 */}
 
 ```text
 add|create chain FAMILY TABLE CHAIN { ... }
@@ -192,7 +193,7 @@ chain 分两类：
 | base chain | 具有 `type hook priority`，直接接入内核 hook，可配置 policy |
 | regular chain | 没有 hook，由其他 rule `jump`/`goto`，用于组织规则 |
 
-### rule 命令
+### 5.4 rule 命令 {/* #rule-命令 */}
 
 ```text
 add rule FAMILY TABLE CHAIN RULE
@@ -215,7 +216,7 @@ table inet demo_filter {
 }
 ```
 
-### chain type
+### 6.1 chain type {/* #chain-type */}
 
 | type | 作用 |
 |---|---|
@@ -223,11 +224,11 @@ table inet demo_filter {
 | `nat` | 为连接建立 NAT 映射，主要处理首包 |
 | `route` | output 修改关键 IP 字段后触发重新查路 |
 
-### priority
+### 6.2 priority {/* #priority */}
 
 同一 hook 可以挂多个 base chain。数值越小越早执行；`raw`、`mangle`、`dstnat`、`filter`、`security`、`srcnat` 等是常见符号优先级。排障要用 `nft -y list ruleset` 看到真实数值。
 
-### policy
+### 6.3 policy {/* #policy */}
 
 base chain 的 `policy accept|drop` 只在报文走到 chain 末尾且没有获得最终 verdict 时生效。regular chain 没有 policy。
 
@@ -562,4 +563,3 @@ sudo tcpdump -i any -nn -c 100 'host 203.0.113.10 and tcp port 443'
 - [`nft(8)` 官方手册](https://netfilter.org/projects/nftables/manpage.html)
 - [nftables 官方 Wiki](https://wiki.nftables.org/)
 - [Netfilter hooks 内核文档](https://docs.kernel.org/networking/nf_hooks.html)
-

@@ -1,5 +1,6 @@
 ---
 title: "promtool 命令详解"
+sidebar_label: "01. promtool 命令详解"
 sidebar_position: 1
 description: "掌握 Prometheus 配置与规则检查、规则单元测试、PromQL查询、TSDB分析和调试信息采集。"
 tags: [Prometheus, promtool, PromQL, 告警规则, TSDB]
@@ -104,11 +105,11 @@ promtool debug all http://prometheus:9090
 | `rate`异常 | counter reset、窗口过短、采样间隔和标签重启 |
 | TSDB分析失败 | 数据目录权限、运行中读取、块损坏或版本不兼容 |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能把check和test放入CI；能为多窗口燃烧率和GPU告警构造输入序列；能安全执行PromQL查询；能在副本上分析TSDB并保护证据。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [Prometheus rule testing](https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/)
 - [promtool source reference](https://github.com/prometheus/prometheus/tree/main/cmd/promtool)

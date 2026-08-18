@@ -1,11 +1,12 @@
 ---
-title: s5cmd 命令详解：高并发 S3 批处理、同步与失败治理
+title: "s5cmd 命令详解：高并发 S3 批处理、同步与失败治理"
+sidebar_label: "26. s5cmd 命令详解：高并发 S3 批处理、同步与失败治理"
 sidebar_position: 26
-description: 以 s5cmd 2.3.0 为基线，讲解全局参数、ls/cp/mv/rm/sync/run/select、通配符、并发、endpoint、凭据、日志、重试、checksum 和批量删除风险。
+description: "以 s5cmd 2.3.0 为基线，讲解全局参数、ls/cp/mv/rm/sync/run/select、通配符、并发、endpoint、凭据、日志、重试、checksum 和批量删除风险。"
 tags: [S3, s5cmd, Object Storage, 数据搬运, 并发]
 ---
 
-# `s5cmd` 命令详解：高并发 S3 批处理、同步与失败治理
+# s5cmd 命令详解：高并发 S3 批处理、同步与失败治理
 
 `s5cmd` 针对大量 S3 对象并行执行 list/copy/sync/delete。它的优势也是风险：错误通配符、目的路径或 `sync --delete` 会以高并发放大。
 

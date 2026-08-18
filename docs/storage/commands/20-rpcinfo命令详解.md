@@ -1,11 +1,12 @@
 ---
-title: rpcinfo 命令详解：rpcbind 注册、RPC 程序版本与传输验证
+title: "rpcinfo 命令详解：rpcbind 注册、RPC 程序版本与传输验证"
+sidebar_label: "20. rpcinfo 命令详解：rpcbind 注册、RPC 程序版本与传输验证"
 sidebar_position: 20
-description: 讲解 rpcinfo 的 dump、ping、broadcast、address、TCP/UDP/IPv6 netid 参数，NFS 程序号、动态端口、防火墙与 NFSv4 边界。
+description: "讲解 rpcinfo 的 dump、ping、broadcast、address、TCP/UDP/IPv6 netid 参数，NFS 程序号、动态端口、防火墙与 NFSv4 边界。"
 tags: [Linux, RPC, rpcinfo, NFS, rpcbind]
 ---
 
-# `rpcinfo` 命令详解：rpcbind 注册、RPC 程序版本与传输验证
+# rpcinfo 命令详解：rpcbind 注册、RPC 程序版本与传输验证
 
 `rpcinfo` 查询 rpcbind/portmapper 注册，或直接对某个 RPC program/version 发 NULL procedure 探测。它证明 RPC endpoint 能响应，不证明真实 NFS READ/WRITE、权限或后端存储健康。
 

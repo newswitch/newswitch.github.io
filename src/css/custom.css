@@ -47,3 +47,65 @@
 .theme-doc-card-heading {
   align-items: flex-start;
 }
+
+/*
+ * Category cards use recognizable brand marks where a technology has one,
+ * and a consistent semantic SVG icon for structural learning categories.
+ */
+.theme-doc-card-icon:has(.tech-doc-card-icon) {
+  display: inline-flex;
+  flex: 0 0 auto;
+  margin-top: -0.15rem;
+}
+
+.tech-doc-card-icon {
+  display: inline-flex;
+  width: 2.35rem;
+  height: 2.35rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.7rem;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-primary);
+}
+
+.tech-doc-card-icon svg {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+.tech-doc-card-icon--brand {
+  background: color-mix(in srgb, var(--tech-icon-color) 12%, transparent);
+  color: var(--tech-icon-color);
+}
+
+.tech-doc-card-icon--brand svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.tech-doc-card-icon--badge {
+  background: var(--tech-icon-color);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+[data-theme='dark'] .tech-doc-card-icon--brand[data-monochrome='true'] {
+  --tech-icon-color: #f5f5f5 !important;
+}
+
+@media (max-width: 576px) {
+  .tech-doc-card-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.6rem;
+  }
+
+  .tech-doc-card-icon svg,
+  .tech-doc-card-icon--brand svg {
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+}

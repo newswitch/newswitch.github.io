@@ -1,11 +1,12 @@
 ---
-title: findmnt 命令详解：挂载树、fstab、传播属性与配置验证
+title: "findmnt 命令详解：挂载树、fstab、传播属性与配置验证"
+sidebar_label: "03. findmnt 命令详解：挂载树、fstab、传播属性与配置验证"
 sidebar_position: 3
-description: 讲解 findmnt 的内核 mountinfo、fstab/mtab 数据源、目标与源查询、树/JSON/轮询、选项匹配、传播关系、验证，以及容器挂载排障。
+description: "讲解 findmnt 的内核 mountinfo、fstab/mtab 数据源、目标与源查询、树/JSON/轮询、选项匹配、传播关系、验证，以及容器挂载排障。"
 tags: [Linux, findmnt, mount, fstab, Namespace, util-linux]
 ---
 
-# `findmnt` 命令详解：挂载树、fstab、传播属性与配置验证
+# findmnt 命令详解：挂载树、fstab、传播属性与配置验证
 
 `findmnt` 查询挂载表并结构化输出。它比解析 `mount` 文本或 `/proc/mounts` 更可靠，能够区分当前内核运行状态、`/etc/fstab` 期望和指定 namespace 的挂载视图。
 

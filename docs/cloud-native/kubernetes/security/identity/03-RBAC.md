@@ -2,8 +2,8 @@
 title: "基于角色的访问控制（RBAC）"
 sidebar_label: "03. 基于角色的访问控制（RBAC）"
 sidebar_position: 3
-tags: [Kubernetes, 身份认证, 学习路线]
 description: "深入了解 Kubernetes RBAC（基于角色的访问控制）授权机制，包括 Role、ClusterRole、RoleBinding 和 ClusterRoleBinding 的概念与使用，以及默认角色、权限管理和最佳实践。"
+tags: [Kubernetes, 身份认证, 学习路线]
 ---
 
 # 基于角色的访问控制（RBAC）
@@ -14,15 +14,15 @@ description: "深入了解 Kubernetes RBAC（基于角色的访问控制）授�
 
 要启用 RBAC，需要在启动 API Server 时使用 `--authorization-mode=RBAC` 参数。
 
-## RBAC API 概述
+## 1. RBAC API 概述 {/* #rbac-api-概述 */}
 
 RBAC API 定义了四种核心资源类型，它们可以像其他 Kubernetes 资源一样通过 `kubectl` 或 API 调用进行管理。
 
-### Role 与 ClusterRole
+### 1.1 Role 与 ClusterRole {/* #role-与-clusterrole */}
 
 **Role** 和 **ClusterRole** 用于定义权限集合。权限采用累加形式（不支持"拒绝"规则）。
 
-#### Role
+#### 1.1.1 Role {/* #role */}
 
 `Role` 对象定义了命名空间范围内的权限规则。以下示例展示了一个允许读取 `default` 命名空间中 Pod 的 Role：
 
@@ -38,7 +38,7 @@ rules:
   verbs: ["get", "watch", "list"]
 ```
 
-#### ClusterRole
+#### 1.1.2 ClusterRole {/* #clusterrole */}
 
 `ClusterRole` 对象定义集群范围的权限，可以授予以下资源的访问权限：
 
@@ -59,11 +59,11 @@ rules:
   verbs: ["get", "watch", "list"]
 ```
 
-### RoleBinding 与 ClusterRoleBinding
+### 1.2 RoleBinding 与 ClusterRoleBinding {/* #rolebinding-与-clusterrolebinding */}
 
 **RoleBinding** 和 **ClusterRoleBinding** 用于将角色绑定到用户、用户组或服务账户。
 
-#### RoleBinding
+#### 1.2.1 RoleBinding {/* #rolebinding */}
 
 `RoleBinding` 在命名空间范围内授予权限。以下示例将 `pod-reader` 角色授予用户 `jane`：
 
@@ -101,7 +101,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-#### ClusterRoleBinding
+#### 1.2.2 ClusterRoleBinding {/* #clusterrolebinding */}
 
 `ClusterRoleBinding` 在集群范围内授予权限。以下示例允许 `manager` 用户组读取集群中所有 Secret：
 
@@ -120,11 +120,11 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-## 资源引用详解
+## 2. 资源引用详解 {/* #资源引用详解 */}
 
 RBAC 支持对子资源和资源实例的精细化权限控制，提升安全性和灵活性。
 
-### 子资源访问
+### 2.1 子资源访问 {/* #子资源访问 */}
 
 RBAC 支持对子资源的权限控制。例如，访问 Pod 日志需要使用斜线分隔主资源和子资源：
 
@@ -140,7 +140,7 @@ rules:
   verbs: ["get", "list"]
 ```
 
-### 资源名称限制
+### 2.2 资源名称限制 {/* #资源名称限制 */}
 
 通过 `resourceNames` 字段可以限制对特定资源实例的访问：
 
@@ -159,7 +159,7 @@ rules:
 
 > **注意**：当指定 `resourceNames` 时，不能使用 `list`、`watch`、`create` 或 `deletecollection` 动词。
 
-### 权限规则示例
+### 2.3 权限规则示例 {/* #权限规则示例 */}
 
 以下是一些常见的权限规则示例，便于理解不同场景下的授权配置。
 
@@ -189,11 +189,11 @@ rules:
   verbs: ["get", "post"]
 ```
 
-## 主体（Subject）类型
+## 3. 主体（Subject）类型 {/* #主体subject类型 */}
 
 RBAC 支持三种主体类型，分别适用于不同的授权场景。
 
-### 用户（User）
+### 3.1 用户（User） {/* #用户user */}
 
 以下是相关的代码示例：
 
@@ -204,7 +204,7 @@ subjects:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-### 用户组（Group）
+### 3.2 用户组（Group） {/* #用户组group */}
 
 以下是相关的代码示例：
 
@@ -215,7 +215,7 @@ subjects:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-### 服务账户（ServiceAccount）
+### 3.3 服务账户（ServiceAccount） {/* #服务账户serviceaccount */}
 
 以下是相关的代码示例：
 
@@ -226,7 +226,7 @@ subjects:
   namespace: kube-system
 ```
 
-### 特殊组
+### 3.4 特殊组 {/* #特殊组 */}
 
 Kubernetes 定义了一些特殊的系统组，便于批量授权和系统管理。
 
@@ -237,11 +237,11 @@ Kubernetes 定义了一些特殊的系统组，便于批量授权和系统管理
 | system:authenticated | 所有已认证用户 |
 | system:unauthenticated | 所有未认证用户 |
 
-## 默认角色和角色绑定
+## 4. 默认角色和角色绑定 {/* #默认角色和角色绑定 */}
 
 Kubernetes 预定义了一系列默认角色，这些角色名称以 `system:` 前缀标识系统组件所有。
 
-### 用户角色
+### 4.1 用户角色 {/* #用户角色 */}
 
 | 角色 | 绑定 | 描述 |
 |------|------|------|
@@ -250,7 +250,7 @@ Kubernetes 预定义了一系列默认角色，这些角色名称以 `system:` �
 | edit | 无 | 允许读写大多数资源，但不能查看或修改角色 |
 | view | 无 | 只读权限，不能查看角色或 Secret |
 
-### 系统组件角色
+### 4.2 系统组件角色 {/* #系统组件角色 */}
 
 | 角色 | 用途 |
 |------|------|
@@ -259,11 +259,11 @@ Kubernetes 预定义了一系列默认角色，这些角色名称以 `system:` �
 | system:node | kubelet 组件权限 |
 | system:kube-proxy | kube-proxy 组件权限 |
 
-### 自动更新机制
+### 4.3 自动更新机制 {/* #自动更新机制 */}
 
 API Server 在启动时会自动更新默认角色的权限和绑定关系。要禁用自动更新，可将角色的 `rbac.authorization.kubernetes.io/autoupdate` 注解设置为 `false`。
 
-## 权限升级防护
+## 5. 权限升级防护 {/* #权限升级防护 */}
 
 RBAC API 实施权限升级防护策略，防止用户越权操作。
 
@@ -301,11 +301,11 @@ subjects:
   name: user-1
 ```
 
-## 命令行操作
+## 6. 命令行操作 {/* #命令行操作 */}
 
 RBAC 相关的命令行操作可提升权限管理的效率和准确性。
 
-### 创建 RoleBinding
+### 6.1 创建 RoleBinding {/* #创建-rolebinding */}
 
 以下是相关的定义示例：
 
@@ -323,7 +323,7 @@ kubectl create rolebinding myapp-view-binding \
   --namespace=acme
 ```
 
-### 创建 ClusterRoleBinding
+### 6.2 创建 ClusterRoleBinding {/* #创建-clusterrolebinding */}
 
 以下是相关的定义示例：
 
@@ -339,11 +339,11 @@ kubectl create clusterrolebinding myapp-view-binding \
   --serviceaccount=acme:myapp
 ```
 
-## 服务账户权限管理
+## 7. 服务账户权限管理 {/* #服务账户权限管理 */}
 
 默认情况下，RBAC 策略不会为 `kube-system` 命名空间外的服务账户授予任何权限。以下是几种授权策略，按安全性从高到低排序：
 
-### 特定应用授权（推荐）
+### 7.1 特定应用授权（推荐） {/* #特定应用授权推荐 */}
 
 为特定应用的服务账户授予最小必要权限：
 
@@ -354,7 +354,7 @@ kubectl create rolebinding my-sa-view \
   --namespace=my-namespace
 ```
 
-### 默认服务账户授权
+### 7.2 默认服务账户授权 {/* #默认服务账户授权 */}
 
 为命名空间的默认服务账户授予权限：
 
@@ -365,7 +365,7 @@ kubectl create rolebinding default-view \
   --namespace=my-namespace
 ```
 
-### 命名空间级别授权
+### 7.3 命名空间级别授权 {/* #命名空间级别授权 */}
 
 为命名空间中所有服务账户授予相同权限：
 
@@ -376,7 +376,7 @@ kubectl create rolebinding serviceaccounts-view \
   --namespace=my-namespace
 ```
 
-### 集群级别授权（不推荐）
+### 7.4 集群级别授权（不推荐） {/* #集群级别授权不推荐 */}
 
 为所有服务账户授予集群范围权限：
 
@@ -386,7 +386,7 @@ kubectl create clusterrolebinding serviceaccounts-view \
   --group=system:serviceaccounts
 ```
 
-## 最佳实践
+## 8. 最佳实践 {/* #最佳实践 */}
 
 在实际生产环境中，建议遵循以下最佳实践以提升权限管理的安全性和可维护性。
 
@@ -396,11 +396,11 @@ kubectl create clusterrolebinding serviceaccounts-view \
 - **避免通配符**：尽量避免使用 `*` 通配符授权
 - **监控权限使用**：启用审计日志监控权限使用情况
 
-## 故障排除
+## 9. 故障排除 {/* #故障排除 */}
 
 RBAC 配置错误或权限不足时，可通过以下方法排查和定位问题。
 
-### 查看权限
+### 9.1 查看权限 {/* #查看权限 */}
 
 以下是相关的代码示例：
 
@@ -412,7 +412,7 @@ kubectl auth can-i get pods --as=jane
 kubectl auth can-i get secrets --as=system:serviceaccount:default:my-sa
 ```
 
-### 调试授权问题
+### 9.2 调试授权问题 {/* #调试授权问题 */}
 
 启用详细日志查看 RBAC 拒绝信息：
 
@@ -420,7 +420,7 @@ kubectl auth can-i get secrets --as=system:serviceaccount:default:my-sa
 --v=2  # 在 API Server 日志中显示 RBAC DENY 信息
 ```
 
-## 版本升级注意事项
+## 10. 版本升级注意事项 {/* #版本升级注意事项 */}
 
 从早期版本升级到支持 RBAC 的版本时，可以采用以下策略：
 
@@ -428,11 +428,11 @@ kubectl auth can-i get secrets --as=system:serviceaccount:default:my-sa
 2. **逐步迁移**：逐步将权限从旧的授权方式迁移到 RBAC
 3. **权限验证**：充分测试应用在新权限模型下的运行情况
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 RBAC 是 Kubernetes 集群安全的核心机制，支持细粒度的权限控制和灵活的授权策略。通过合理设计 Role、ClusterRole、RoleBinding 和 ClusterRoleBinding，结合最小权限原则和定期审计，可有效防止权限滥用和越权操作。建议在生产环境中优先启用 RBAC，并持续优化权限模型，保障多租户和敏捷运维的安全需求。
 
-## 参考文献
+## 12. 参考资料 {/* #参考文献 */}
 
 - [Using RBAC Authorization - kubernetes.io](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 - [Kubernetes API Reference - kubernetes.io](https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/)

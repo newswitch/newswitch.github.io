@@ -2,8 +2,8 @@
 title: "Model、Attention Backend 与 Sampling"
 sidebar_label: "12. Model、Attention Backend 与 Sampling"
 sidebar_position: 12
-tags: [vLLM, V1, Attention, Sampling, 源码分析]
 description: "从 GPUModelRunner 的输入张量出发，理解模型层、Attention Backend、KV Cache 写入、Logits 与采样的边界。"
+tags: [vLLM, V1, Attention, Sampling, 源码分析]
 ---
 
 # Model、Attention Backend 与 Sampling
@@ -13,8 +13,6 @@ description: "从 GPUModelRunner 的输入张量出发，理解模型层、Atten
 本篇不逐层粘贴模型代码，而是回答：**一次前向怎样读取权重和历史 KV、写入新 KV、产生 Logits，并选出下一个 token？**
 
 > 源码基线：vLLM `v0.23.0`。具体模型类、Attention Backend 和 Kernel 会随硬件与版本变化，本文把稳定接口和可观测现象分开说明。
-
----
 
 ## 1. 先看完整数据变换
 
@@ -33,8 +31,6 @@ sampled token IDs
 ```
 
 一次 Decode 看似只新增一个 token，但仍需经过每一层，并读取该请求此前全部上下文的 KV。它省掉的是历史 token 的 Q/K/V 和 MLP 重算，不是“只运行模型最后一层”。
-
----
 
 ## 2. 模型层与运行框架的边界
 
@@ -57,11 +53,9 @@ sampled token IDs
 
 因此新增一个模型支持与新增一个 Kernel Backend 是两条不同扩展路径。模型类描述语义，Backend 描述怎样高效执行 Attention。
 
----
-
 ## 3. Prefill 与 Decode 在 Attention 中有什么不同
 
-### Prefill
+### 3.1 Prefill {/* #prefill */}
 
 Prompt 中大量新 token 同时进入模型：
 
@@ -77,7 +71,7 @@ Prompt 中大量新 token 同时进入模型：
 - TTFT 对长 Prompt 非常敏感；
 - Chunked Prefill 可能把它拆到多个 Step。
 
-### Decode
+### 3.2 Decode {/* #decode */}
 
 每条普通请求本轮通常新增一个 token：
 
@@ -95,8 +89,6 @@ Prompt 中大量新 token 同时进入模型：
 - TPOT/ITL 是更直接的用户指标。
 
 Continuous Batching 的核心价值之一，就是把多条请求的“小 Decode”合成更有效的 GPU 工作。
-
----
 
 ## 4. Attention Layer 为什么需要 Backend
 
@@ -131,8 +123,6 @@ Attention Layer
 
 元数据错误比普通性能问题更危险：它可能产生错误输出，而不是简单变慢。
 
----
-
 ## 5. Slot Mapping 怎样落到 KV Cache
 
 逻辑上，每个新 token 都需要在每层写入 K 和 V。Slot Mapping 告诉 Kernel：这个 token 对应哪个物理 Block 的哪个偏移。
@@ -146,8 +136,6 @@ slot_id = physical_block_id × 16 + offset_in_block
 真实实现还要考虑不同 KV Cache Group、Layer 布局和 Backend，但这个公式足以建立直觉。
 
 同一条请求的逻辑相邻 token 可以落到不连续物理 Block；Attention 通过 Block Table 恢复正确序列视图。这正是 PagedAttention 把逻辑序列与物理显存解耦的地方。
-
----
 
 ## 6. TP 模式下模型层发生什么
 
@@ -171,8 +159,6 @@ Attention Head、QKV Projection、Output Projection、MLP 也会按模型实现�
 
 分析时必须查看每 rank Timeline、NCCL Kernel 与 NVLink/PCIe 拓扑，不能只看节点平均 GPU Util。
 
----
-
 ## 7. 从 Hidden States 到 Logits
 
 最后一层输出经过 Norm 和 LM Head，映射到词表维度：
@@ -187,8 +173,6 @@ logits [num_selected_tokens, vocab_size]
 并非本轮所有输入 token 都一定需要采样。例如 Chunked Prefill 的中间块主要是在建立 KV，通常只需在达到可生成位置时选取相关 Hidden State 进入 LM Head/采样。
 
 大词表下，Logits 计算、跨 rank 处理和 logprobs 返回都可能成为可见开销。开启大量 `logprobs` 不是免费的功能开关。
-
----
 
 ## 8. Sampling 不只是 `argmax`
 
@@ -217,7 +201,7 @@ raw logits
 
 参数通常按请求不同。Runner 需要把请求对象中的 Python 配置整理成可批处理的 Sampling Metadata，再在 GPU 上高效执行。
 
-### 为什么结构化输出会增加尾延迟
+### 8.1 为什么结构化输出会增加尾延迟 {/* #为什么结构化输出会增加尾延迟 */}
 
 Grammar 状态可能需要 CPU 侧推进或为每个请求生成允许 token Mask。如果它阻断下一轮采样，就可能在 GPU Step 之间制造空洞。应分别测量：
 
@@ -225,8 +209,6 @@ Grammar 状态可能需要 CPU 侧推进或为每个请求生成允许 token Mas
 - Grammar 编译首请求；
 - Grammar 热缓存请求；
 - 每步 Mask/状态推进开销。
-
----
 
 ## 9. 推测解码怎样改变路径
 
@@ -252,8 +234,6 @@ Target: 一次验证
 
 只看“每轮提出几个 token”会高估收益。必须记录接受 token 数、验证时间和最终 TPOT。
 
----
-
 ## 10. 这一层的性能证据
 
 | 现象 | 可能原因 | 需要的证据 |
@@ -266,8 +246,6 @@ Target: 一次验证
 | TP 扩大反而慢 | collective 延迟、拓扑差、单 rank 工作太小 | rank 时间线与 NCCL 统计 |
 
 注意：DCGM 的 GPU Util 是时间窗口内“是否有 Kernel 活动”的近似，不等于 Tensor Core 有效利用率，更不等于请求没有排队。
-
----
 
 ## 11. 源码阅读路标
 
@@ -283,8 +261,6 @@ Target: 一次验证
 - [模型实现目录（v0.23.0）](https://github.com/vllm-project/vllm/tree/v0.23.0/vllm/model_executor/models)
 - [Attention 目录（v0.23.0）](https://github.com/vllm-project/vllm/tree/v0.23.0/vllm/attention)
 - [gpu_model_runner.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/worker/gpu_model_runner.py)
-
----
 
 ## 12. 学完后的验收题
 

@@ -1,11 +1,12 @@
 ---
-title: conntrack 命令详解：连接跟踪、NAT 状态与容量排障
+title: "conntrack 命令详解：连接跟踪、NAT 状态与容量排障"
+sidebar_label: "19. conntrack 命令详解：连接跟踪、NAT 状态与容量排障"
 sidebar_position: 19
-description: 以 conntrack-tools 1.4.9 为基线，系统讲解 conntrack 全部命令和过滤参数、original/reply tuple、TCP/UDP 状态、NAT、zone、事件监控、容量溢出和安全清理。
+description: "以 conntrack-tools 1.4.9 为基线，系统讲解 conntrack 全部命令和过滤参数、original/reply tuple、TCP/UDP 状态、NAT、zone、事件监控、容量溢出和安全清理。"
 tags: [Linux, conntrack, Netfilter, NAT, TCP, UDP, 防火墙, 容量排障]
 ---
 
-# `conntrack` 命令详解：连接跟踪、NAT 状态与容量排障
+# conntrack 命令详解：连接跟踪、NAT 状态与容量排障
 
 Linux Netfilter connection tracking（conntrack）为经过主机的流维护状态。防火墙的 `ESTABLISHED,RELATED`、DNAT/SNAT、Kubernetes Service、部分负载均衡和状态同步都依赖它。
 
@@ -177,7 +178,7 @@ sudo conntrack -L -f ipv4 -p tcp \
 
 ## 8. 端口和协议特有过滤参数
 
-### TCP、UDP、UDPLite、SCTP、DCCP 通用端口
+### 8.1 TCP、UDP、UDPLite、SCTP、DCCP 通用端口 {/* #tcpudpudplitesctpdccp-通用端口 */}
 
 | 参数 | 匹配字段 |
 |---|---|
@@ -186,7 +187,7 @@ sudo conntrack -L -f ipv4 -p tcp \
 | `--reply-port-src PORT` | reply 源端口 |
 | `--reply-port-dst PORT` | reply 目的端口 |
 
-### TCP
+### 8.2 TCP {/* #tcp */}
 
 ```text
 --state NONE|SYN_SENT|SYN_RECV|ESTABLISHED|FIN_WAIT|CLOSE_WAIT|LAST_ACK|TIME_WAIT|CLOSE|LISTEN
@@ -194,7 +195,7 @@ sudo conntrack -L -f ipv4 -p tcp \
 
 这是 conntrack TCP state，不是 `ss` 显示的某个进程 socket 状态，两者观察对象不同。
 
-### ICMP
+### 8.3 ICMP {/* #icmp */}
 
 | 参数 | 作用 |
 |---|---|
@@ -202,7 +203,7 @@ sudo conntrack -L -f ipv4 -p tcp \
 | `--icmp-code N` | 数字 ICMP code |
 | `--icmp-id N` | ICMP identifier，可选 |
 
-### SCTP
+### 8.4 SCTP {/* #sctp */}
 
 | 参数 | 作用 |
 |---|---|
@@ -210,14 +211,14 @@ sudo conntrack -L -f ipv4 -p tcp \
 | `--orig-vtag VALUE` | original verification tag |
 | `--reply-vtag VALUE` | reply verification tag |
 
-### DCCP
+### 8.5 DCCP {/* #dccp */}
 
 | 参数 | 作用 |
 |---|---|
 | `--state STATE` | `NONE/REQUEST/RESPOND/PARTOPEN/OPEN/CLOSEREQ/CLOSING/TIMEWAIT` |
 | `--role client|server` | original tuple 的角色 |
 
-### GRE
+### 8.6 GRE {/* #gre */}
 
 | 参数 | 作用 |
 |---|---|
@@ -477,4 +478,3 @@ journalctl -k --since '-10 min' --no-pager
 - [`conntrack(8)` 官方手册](https://netfilter.org/projects/conntrack-tools/conntrack-manpage.html)
 - [conntrack-tools 官方项目](https://netfilter.org/projects/conntrack-tools/)
 - [Netfilter conntrack sysctl 内核文档](https://docs.kernel.org/networking/nf_conntrack-sysctl.html)
-

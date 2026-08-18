@@ -1,5 +1,6 @@
 ---
 title: "uv 与 Conda 环境管理"
+sidebar_label: "02. uv 与 Conda 环境管理"
 sidebar_position: 2
 description: "掌握 uv 与 Conda 的解释器、环境、依赖锁定、导出复现、缓存和诊断命令，并理解两者的职责边界。"
 tags: [uv, Conda, Python, 环境管理, 依赖锁定, AI Infra]
@@ -42,7 +43,7 @@ env | grep -E '^(VIRTUAL_ENV|CONDA_PREFIX|CONDA_DEFAULT_ENV|UV_PROJECT_ENVIRONME
 | 缓存 | `uv cache dir/info/clean/prune` | 查询或清理缓存 |
 | 凭据 | `uv auth login/logout/token` | 管理索引HTTP凭据，令牌优先从 stdin 输入 |
 
-### 项目复现 `[W]`
+### 2.1 项目复现 `[W]` {/* #项目复现-w */}
 
 ```bash
 uv python pin 3.12
@@ -62,7 +63,7 @@ uv tree
 - `--python`：显式指定解释器，避免自动发现错误版本。
 - `--refresh`、`--reinstall`、`--upgrade`：会改变解析或制品选择，必须通过锁文件审计。
 
-### requirements 工作流 `[W]`
+### 2.2 requirements 工作流 `[W]` {/* #requirements-工作流-w */}
 
 ```bash
 uv pip compile pyproject.toml -o requirements.lock
@@ -86,7 +87,7 @@ uv pip tree
 | 配置 | `conda config --show-sources`、`--show`、`--set`、`--add` |
 | 健康与清理 | `conda doctor`、`conda clean` |
 
-### 可复现环境 `[W]`
+### 3.1 可复现环境 `[W]` {/* #可复现环境-w */}
 
 ```bash
 conda create -n train python=3.12 --dry-run --json
@@ -101,7 +102,7 @@ conda env export -n train --from-history > environment.yml
 - `--explicit`：记录精确制品URL，最接近同平台逐字节复现，但跨平台能力差。
 - `--from-history`：只记录显式请求，更适合跨平台重新求解，但结果可能变化。
 
-### 关键参数族
+### 3.2 关键参数族 {/* #关键参数族 */}
 
 | 参数 | 含义 |
 |---|---|
@@ -152,11 +153,11 @@ conda clean --tarballs --packages --dry-run
 | 离线环境缺包 | 在同平台提前下载所有 Wheel/Conda 制品并验证哈希 |
 | CUDA 包与驱动不匹配 | 区分 Conda/PyPI 的用户态 CUDA 库与宿主机驱动 |
 
-## 掌握标准
+## 7. 掌握标准 {/* #掌握标准 */}
 
 能选择明确的环境所有者；能在不更新锁文件的情况下复现项目；能解释精确导出与历史导出的差异；能在变更前查看求解计划；能安全治理缓存而不破坏离线恢复能力。
 
-## 官方资料
+## 8. 官方资料 {/* #官方资料 */}
 
 - [uv CLI reference](https://docs.astral.sh/uv/reference/cli/)
 - [Conda commands](https://docs.conda.io/projects/conda/en/stable/commands/commands.html)

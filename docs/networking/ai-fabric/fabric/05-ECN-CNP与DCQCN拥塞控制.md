@@ -1,9 +1,9 @@
 ---
-title: ECN、CNP 与 DCQCN 拥塞控制
+title: "ECN、CNP 与 DCQCN 拥塞控制"
 sidebar_label: "05. ECN、CNP 与 DCQCN 拥塞控制"
 sidebar_position: 5
+description: "理解交换机 CE 标记、接收端 CNP、发送端速率控制，以及 ECN 阈值与 PFC 的协同。"
 tags: [ECN, CNP, DCQCN, RoCE, Congestion Control]
-description: 理解交换机 CE 标记、接收端 CNP、发送端速率控制，以及 ECN 阈值与 PFC 的协同。
 ---
 
 # ECN、CNP 与 DCQCN 拥塞控制
@@ -128,7 +128,7 @@ Fabric 跳数、线缆、队列和 CNP 调度都会改变延迟。不能为单�
 
 ## 8. 关键指标
 
-### 交换机
+### 8.1 交换机 {/* #交换机 */}
 
 - ECN Marked Packets；
 - Queue Current/Max；
@@ -136,20 +136,20 @@ Fabric 跳数、线缆、队列和 CNP 调度都会改变延迟。不能为单�
 - Buffer Discard；
 - 每 TC 吞吐。
 
-### 接收 NIC
+### 8.2 接收 NIC {/* #接收-nic */}
 
 - 收到 CE/拥塞相关计数；
 - 生成/发送 CNP；
 - RoCE RX Packet/Error。
 
-### 发送 NIC
+### 8.3 发送 NIC {/* #发送-nic */}
 
 - 收到 CNP；
 - Congestion/Rate Reduction；
 - Retransmission；
 - 每 QP/TC 吞吐（平台支持时）。
 
-### 应用
+### 8.4 应用 {/* #应用 */}
 
 - perftest 时延/吞吐抖动；
 - NCCL P95/P99；
@@ -195,7 +195,7 @@ Fabric 跳数、线缆、队列和 CNP 调度都会改变延迟。不能为单�
 能够从 Queue 水位开始，证明哪台交换机标记 CE、哪张接收 NIC 产生 CNP、哪张发送 NIC
 执行降速；能解释 ECN 与 PFC 阈值为什么必须协同，而不是独立复制默认值。
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [RFC 3168：Explicit Congestion Notification](https://www.rfc-editor.org/rfc/rfc3168)
 - [NVIDIA RoCE Counters](https://docs.nvidia.com/networking/display/nvidiaonyxusermanualv3104006/roce%2Bcommands)

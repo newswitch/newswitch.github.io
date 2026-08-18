@@ -1,9 +1,9 @@
 ---
-title: 网络可观测性与 Telemetry
+title: "网络可观测性与 Telemetry"
 sidebar_label: "07. 网络可观测性与 Telemetry"
 sidebar_position: 7
+description: "用指标、日志、流记录、配置和主动探测构建从设备健康到业务路径的网络证据链。"
 tags: [Observability, SNMP, Syslog, IPFIX, Streaming Telemetry, SLO]
-description: 用指标、日志、流记录、配置和主动探测构建从设备健康到业务路径的网络证据链。
 ---
 
 # 网络可观测性与 Telemetry
@@ -172,7 +172,7 @@ gNMI 等流式遥测可以推送结构化状态，减少高频轮询开销。
 
 看到“应用超时”时，你应能从探针确认范围，用 Flow 确认路径，用接口/队列指标判断拥塞，用路由/FDB状态确认控制面，再用 Syslog 和配置事件建立因果关系。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [RFC 3411：SNMP 管理框架](https://www.rfc-editor.org/rfc/rfc3411)
 - [RFC 5424：Syslog Protocol](https://www.rfc-editor.org/rfc/rfc5424)

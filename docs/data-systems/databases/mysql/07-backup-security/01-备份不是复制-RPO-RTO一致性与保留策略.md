@@ -2,8 +2,8 @@
 title: "备份不是复制：RPO、RTO、一致性与保留策略"
 sidebar_label: "01. 备份不是复制：RPO、RTO、一致性与保留策略"
 sidebar_position: 1
-tags: [MySQL, 备份, RPO, RTO, 灾备]
 description: "从失败场景和恢复目标设计备份组合、保留、校验、加密与演练，避免把副本和快照误当可恢复备份。"
+tags: [MySQL, 备份, RPO, RTO, 灾备]
 ---
 
 # 备份不是复制：RPO、RTO、一致性与保留策略
@@ -73,8 +73,7 @@ binlog：覆盖最长发现时间 + 恢复余量
 
 成功率、最新可恢复点年龄、Binlog 归档延迟、校验失败、备份大小异常、恢复演练通过率和实测 RTO。只监控 cron exit code 不够。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [MySQL Backup and Recovery](https://dev.mysql.com/doc/refman/8.4/en/backup-and-recovery.html)
 - [Backup Policy](https://dev.mysql.com/doc/refman/8.4/en/backup-policy.html)
-

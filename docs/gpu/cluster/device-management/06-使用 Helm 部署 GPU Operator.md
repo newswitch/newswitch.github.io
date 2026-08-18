@@ -1,9 +1,11 @@
 ---
-title: 使用 Helm 部署 GPU Operator
+title: "使用 Helm 部署 GPU Operator"
 sidebar_label: "06. 使用 Helm 部署 GPU Operator"
+sidebar_position: 6
+description: "GPU Operator 用 Operator 模式管理 GPU 节点软件：驱动、Container Toolkit、Device Plugin、节点发现与监控等。NVIDIA 推荐用 Helm 安装；安装前确认 Kubernetes、容器运行时、GPU 节点 OS、Pod Security……"
+tags: ["Kubernetes", "GPU Operator", "Helm", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU Operator", "Helm", "学习路线"]
 ---
 
 # 使用 Helm 部署 GPU Operator
@@ -12,18 +14,14 @@ GPU Operator 用 Operator 模式管理 GPU 节点软件：驱动、Container Too
 
 组件原理见：[NVIDIA GPU Operator 架构与组件说明](./05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)。驱动预装 vs Operator 安装见：[两种驱动管理模式](./07-GPU%20Operator%20两种驱动管理模式.md)。
 
----
-
 ## 1. 学习目标
 
-1. 理解 GPU Operator 的作用；  
-2. 完成安装前环境检查；  
-3. 按驱动是否预装选择安装模式；  
-4. 用 Helm 安装并验证 ClusterPolicy / 各组件；  
-5. 创建 GPU 测试 Pod；  
+1. 理解 GPU Operator 的作用；
+2. 完成安装前环境检查；
+3. 按驱动是否预装选择安装模式；
+4. 用 Helm 安装并验证 ClusterPolicy / 各组件；
+5. 创建 GPU 测试 Pod；
 6. 排查常见安装问题；完成升级、回滚与卸载。
-
----
 
 ## 2. 主要组件与关系
 
@@ -38,8 +36,6 @@ GPU Operator → ClusterPolicy → 管理各类 DaemonSet
 ```
 
 另含 NFD、MIG Manager 等（视 values 而定）。
-
----
 
 ## 3. 安装前检查
 
@@ -70,8 +66,6 @@ kubectl get pods -A | grep -i node-feature-discovery
 
 集群已有 NFD 时设 `nfd.enabled=false`，避免重复部署。
 
----
-
 ## 4. 命名空间与 PSA
 
 ```bash
@@ -81,8 +75,6 @@ kubectl create namespace gpu-operator
 kubectl label --overwrite namespace gpu-operator \
   pod-security.kubernetes.io/enforce=privileged
 ```
-
----
 
 ## 5. 添加 Helm 仓库
 
@@ -94,8 +86,6 @@ helm search repo nvidia/gpu-operator --versions | head -20
 ```
 
 生产应固定已验证的 Chart 版本。
-
----
 
 ## 6. 选择安装模式
 
@@ -140,8 +130,6 @@ helm upgrade --install gpu-operator nvidia/gpu-operator \
 --set nfd.enabled=false
 ```
 
----
-
 ## 7. 使用 values.yaml
 
 ```bash
@@ -156,8 +144,6 @@ helm upgrade --install gpu-operator nvidia/gpu-operator \
 ```
 
 配置纳入 Git；勿把私有仓库密码写进仓库。
-
----
 
 ## 8. 检查安装结果
 
@@ -184,8 +170,6 @@ kubectl get nodes -L nvidia.com/gpu.present,nvidia.com/gpu.product
 kubectl get nodes \
   -o custom-columns='节点:.metadata.name,GPU容量:.status.capacity.nvidia\.com/gpu,GPU可分配:.status.allocatable.nvidia\.com/gpu'
 ```
-
----
 
 ## 9. 创建 GPU 测试 Pod
 
@@ -214,8 +198,6 @@ kubectl delete pod gpu-test
 
 预期日志可见型号、驱动、显存、CUDA 兼容版本。Pending 排查：[GPU Pod 一直 Pending](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
 
----
-
 ## 10. 安装问题排查顺序
 
 | 对象 | 检查 |
@@ -226,8 +208,6 @@ kubectl delete pod gpu-test
 | Driver | 内核头文件、版本、Secure Boot、nouveau、宿主机驱动冲突 |
 | Toolkit | Pod 日志；节点 `containerd config dump \| grep -A20 -i nvidia` |
 | Device Plugin | Pod 日志；最终 `describe node` 的 Capacity/Allocatable |
-
----
 
 ## 11. 升级与回滚
 
@@ -244,8 +224,6 @@ helm rollback gpu-operator <Revision> \
 
 升级前：查兼容矩阵、单节点灰度、确认业务可迁移、备份 values、记录 Revision、准备回滚。
 
----
-
 ## 12. 卸载
 
 ```bash
@@ -257,8 +235,6 @@ kubectl get crd | grep nvidia
 ```
 
 未确认依赖前，不要随意删全部 NVIDIA CRD。
-
----
 
 ## 13. 本篇总结
 
@@ -279,9 +255,7 @@ kubectl get crd | grep nvidia
 
 下一篇：[GPU Operator 两种驱动管理模式](./07-GPU%20Operator%20两种驱动管理模式.md)。
 
----
-
-## 参考与致谢
+## 14. 参考与致谢 {/* #参考与致谢 */}
 
 - [Install NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/install-gpu-operator.html)
 - [Getting Started — NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html)

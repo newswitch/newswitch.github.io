@@ -1,16 +1,16 @@
 ---
-title: 生产 GPU 集群节点池规划
+title: "生产 GPU 集群节点池规划"
 sidebar_label: "01. 生产 GPU 集群节点池规划"
+sidebar_position: 1
+description: "生产集群很少「所有 GPU 节点一个池」。按 型号、用途、网络拓扑 切开，才能控 SLA、成本和嘈杂邻居。本文给出节点池模型，并用 Kueue ResourceFlavor / 拓扑感知调度 表达「哪种卡、哪一层拓扑」。前置：污点、拓扑。"
+tags: ["Kubernetes", "GPU", "节点池", "ResourceFlavor", "Kueue", "学习路线"]
 date: 2026-07-22 19:05:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "节点池", "ResourceFlavor", "Kueue", "学习路线"]
 ---
 
 # 生产 GPU 集群节点池规划
 
 生产集群很少「所有 GPU 节点一个池」。按 **型号、用途、网络拓扑** 切开，才能控 SLA、成本和嘈杂邻居。本文给出节点池模型，并用 [Kueue ResourceFlavor](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/) / [拓扑感知调度](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/topology_aware_scheduling/) 表达「哪种卡、哪一层拓扑」。前置：[污点](../scheduling/02-GPU%20节点%20Taint%20与%20Toleration%20实践.md)、[拓扑](../scheduling/12-GPU%20集群拓扑感知调度.md)。
-
----
 
 ## 1. 为什么要分池
 
@@ -20,8 +20,6 @@ tags: ["Kubernetes", "GPU", "节点池", "ResourceFlavor", "Kueue", "学习路�
 | T4 与 H100 都叫 `nvidia.com/gpu` | Flavor / 标签区分型号 |
 | 训练跨机架，NCCL 极慢 | TAS / 同 rack 标签 |
 | 成本算不清 | 按池做利用率与账单 |
-
----
 
 ## 2. 推荐池类型
 
@@ -52,8 +50,6 @@ spec:
       value: training
       effect: NoSchedule
 ```
-
----
 
 ## 3. Kueue ResourceFlavor：把池变成「规格」
 
@@ -119,8 +115,6 @@ resourceGroups:
 
 `cpu`/`memory`/`nvidia.com/gpu` 放同一 resourceGroup，保证绑到同一节点规格时一起分配。
 
----
-
 ## 4. 与「只打标签 + kube-scheduler」对比
 
 | 方式 | 优点 | 局限 |
@@ -132,17 +126,15 @@ resourceGroups:
 
 GPU 集群常见组合：**节点池污点 +（Volcano 或 Kueue）队列**；推理 Deployment 可只靠污点与 PriorityClass。
 
----
-
 ## 5. 拓扑感知（TAS）与节点池
 
 Kueue [拓扑感知调度](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/topology_aware_scheduling/)（alpha）：用节点标签表示 block → rack → hostname 层次，让通信密集的 PodSet 尽量同域。
 
 管理员：
 
-1. 开 `TopologyAwareScheduling`  
-2. 创建 `Topology`，levels 指向节点标签  
-3. ResourceFlavor 设 `topologyName`  
+1. 开 `TopologyAwareScheduling`
+2. 创建 `Topology`，levels 指向节点标签
+3. ResourceFlavor 设 `topologyName`
 
 ```yaml
 apiVersion: kueue.x-k8s.io/v1beta2
@@ -158,25 +150,21 @@ spec:
 
 用户注解（示意）：
 
-- `kueue.x-k8s.io/podset-preferred-topology`：尽量同 block，不够再上浮  
-- `kueue.x-k8s.io/podset-required-topology`：必须同指定层级  
-- `podset-unconstrained-topology`：填碎片  
+- `kueue.x-k8s.io/podset-preferred-topology`：尽量同 block，不够再上浮
+- `kueue.x-k8s.io/podset-required-topology`：必须同指定层级
+- `podset-unconstrained-topology`：填碎片
 
 与本系列 [第 35 篇](../scheduling/12-GPU%20集群拓扑感知调度.md) 的 `nvidia-smi topo` 互补：一个管 **机内 NVLink**，一个管 **机架/区块** 放置。
 
 代价：Kueue 跟踪更多 Pod/节点，内存与调度耗时上升。
 
----
-
 ## 6. 规划检查表
 
-- [ ] 每池：型号、驱动、网络（IB/以太）、污点、谁可容忍  
-- [ ] 推理与训练是否物理或污点隔离  
-- [ ] Flavor 名称与 ClusterQueue `nominalQuota` 是否对账  
-- [ ] 拓扑标签是否由云厂商/运维自动打齐  
-- [ ] 扩容（CA/Karpenter）是否复制相同标签与污点  
-
----
+- [ ] 每池：型号、驱动、网络（IB/以太）、污点、谁可容忍
+- [ ] 推理与训练是否物理或污点隔离
+- [ ] Flavor 名称与 ClusterQueue `nominalQuota` 是否对账
+- [ ] 拓扑标签是否由云厂商/运维自动打齐
+- [ ] 扩容（CA/Karpenter）是否复制相同标签与污点
 
 ## 7. 小结
 
@@ -189,13 +177,11 @@ spec:
 
 下一篇：[多租户与资源配额](./02-GPU%20多租户与资源配额设计.md)。
 
----
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [ResourceFlavor](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/)  
-- [拓扑感知调度](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/topology_aware_scheduling/)  
-- [ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)  
-- [Kubernetes 多租户](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)  
+- [ResourceFlavor](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/)
+- [拓扑感知调度](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/topology_aware_scheduling/)
+- [ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)
+- [Kubernetes 多租户](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)
 
 本文把节点池设计与 Kueue Flavor/TAS 对齐到 GPU 生产场景。

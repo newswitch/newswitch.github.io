@@ -1,11 +1,12 @@
 ---
-title: tee 命令详解：复制管道、追加、输出错误策略与权限边界
+title: "tee 命令详解：复制管道、追加、输出错误策略与权限边界"
+sidebar_label: "20. tee 命令详解：复制管道、追加、输出错误策略与权限边界"
 sidebar_position: 20
-description: 完整讲解 GNU tee 的 -a/-i/-p/--output-error、SIGPIPE、pipefail、sudo tee、进程替换和证据采集。
+description: "完整讲解 GNU tee 的 -a/-i/-p/--output-error、SIGPIPE、pipefail、sudo tee、进程替换和证据采集。"
 tags: [Linux, tee, coreutils, 管道, 日志]
 ---
 
-# `tee` 命令详解：一份输入，多路证据
+# tee 命令详解：复制管道、追加、输出错误策略与权限边界
 
 `tee` 从 stdin 读取并复制到 stdout 与一个或多个文件。它常用来边看输出边保存证据，或让高权限 tee 写受保护文件；默认覆盖文件，错误的目标路径会造成数据丢失。
 

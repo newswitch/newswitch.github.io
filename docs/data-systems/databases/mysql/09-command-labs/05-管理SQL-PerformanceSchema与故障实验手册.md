@@ -1,8 +1,9 @@
 ---
 title: "管理 SQL、Performance Schema 与故障实验手册"
+sidebar_label: "05. 管理 SQL、Performance Schema 与故障实验手册"
 sidebar_position: 5
-tags: [MySQL, 管理SQL, Performance Schema, 故障实验]
 description: "提供只读优先的实例、会话、事务、锁、复制、空间和性能诊断 SQL，并设计可控故障实验。"
+tags: [MySQL, 管理SQL, Performance Schema, 故障实验]
 ---
 
 # 管理 SQL、Performance Schema 与故障实验手册
@@ -158,23 +159,23 @@ SELECT * FROM information_schema.ENABLED_ROLES;
 
 只在隔离环境：独立实例/命名空间、虚构数据、备份、资源上限、停止条件、观察面和清理步骤。禁止连接生产凭据和网络。
 
-### 行锁等待
+### 10.1 行锁等待 {/* #行锁等待 */}
 
 会话 A 开事务更新一行不提交；会话 B 更新同一行。观察 `data_lock_waits` 后回滚 A，验证队列消失。
 
-### MDL 阻塞
+### 10.2 MDL 阻塞 {/* #mdl-阻塞 */}
 
 会话 A 开事务读取表并保持；会话 B 执行受控 ALTER。观察 `metadata_locks`，随后取消 DDL、回滚 A。
 
-### 死锁
+### 10.3 死锁 {/* #死锁 */}
 
 两个会话以相反顺序更新两行，观察死锁受害者和 `SHOW ENGINE INNODB STATUS`。应用应重试完整事务。
 
-### 复制延迟
+### 10.4 复制延迟 {/* #复制延迟 */}
 
 实验拓扑暂停 applier，生成小事务，观察 received/executed/relay；恢复并测 catch-up。不要制造无界 backlog。
 
-### 磁盘/CPU/网络
+### 10.5 磁盘/CPU/网络 {/* #磁盘cpu网络 */}
 
 使用实验平台的受控故障注入，设置持续时间和自动撤销；观察 MySQL 与 OS 指纹。不要直接填满生产盘或修改主机全局网络。
 
@@ -191,7 +192,7 @@ SELECT * FROM information_schema.ENABLED_ROLES;
 偏差与改进
 ```
 
-## 参考资料
+## 12. 参考资料 {/* #参考资料 */}
 
 - [Performance Schema Table Reference](https://dev.mysql.com/doc/refman/8.4/en/performance-schema-table-reference.html)
 - [Replication SQL Statements](https://dev.mysql.com/doc/refman/8.4/en/replication-statements.html)

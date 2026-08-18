@@ -1,9 +1,9 @@
 ---
-title: RoCE QoS 分类与队列映射
+title: "RoCE QoS 分类与队列映射"
 sidebar_label: "03. RoCE QoS 分类与队列映射"
 sidebar_position: 3
+description: "建立从 NIC Traffic Class、DSCP/PCP、交换优先级到硬件队列、PFC 和 ECN Profile 的端到端映射。"
 tags: [RoCE, QoS, DSCP, PCP, Traffic Class, DCBX, ETS]
-description: 建立从 NIC Traffic Class、DSCP/PCP、交换优先级到硬件队列、PFC 和 ECN Profile 的端到端映射。
 ---
 
 # RoCE QoS 分类与队列映射
@@ -116,7 +116,7 @@ RoCEv2 拥塞通知包也需要正确分类和队列：
 
 ## 8. 端到端验证
 
-### 主机
+### 8.1 主机 {/* #主机 */}
 
 ```bash
 ip -d link show <netdev>
@@ -134,7 +134,7 @@ lldptool -t -i <netdev>
 - Application TLV；
 - ECN/DCQCN。
 
-### 交换机
+### 8.2 交换机 {/* #交换机 */}
 
 检查每个 Hop：
 
@@ -148,7 +148,7 @@ Queue Scheduler
 Buffer Pool
 ```
 
-### 数据面
+### 8.3 数据面 {/* #数据面 */}
 
 抓包/计数器证明：
 
@@ -184,7 +184,7 @@ Buffer Pool
 看到一个 RoCE 数据包，能够沿每一跳说出 DSCP/PCP、内部 Priority、TC、Queue、Buffer、
 PFC 和 ECN Profile；能用计数器证明流量实际进入目标队列。
 
-## 参考资料
+## 12. 参考资料 {/* #参考资料 */}
 
 - [NVIDIA RoCE Commands and Counters](https://docs.nvidia.com/networking/display/nvidiaonyxusermanualv3104006/roce%2Bcommands)
 - [IEEE 802.1 Data Center Bridging](https://1.ieee802.org/dcb/)

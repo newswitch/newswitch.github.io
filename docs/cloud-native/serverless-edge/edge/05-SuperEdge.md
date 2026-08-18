@@ -2,21 +2,21 @@
 title: "SuperEdge：单集群多区域边缘管理框架"
 sidebar_label: "05. SuperEdge：单集群多区域边缘管理框架"
 sidebar_position: 5
-tags: [Kubernetes, 边缘计算, PartIII, 学习路线]
 description: "SuperEdge 是腾讯云主导的 Kubernetes 边缘计算框架，支持单集群多区域、分布式健康检查和服务拓扑隔离，适合大规模边缘场景。"
+tags: [Kubernetes, 边缘计算, PartIII, 学习路线]
 ---
 
 # SuperEdge：单集群多区域边缘管理框架
 
 > 边缘计算的未来，是云边一体与自治能力的极致平衡。
 
-## 项目简介
+## 1. 项目简介 {/* #项目简介 */}
 
 [SuperEdge](https://github.com/superedge/superedge) 是腾讯云联合 Intel、VMware 等于 2020 年推出的 Kubernetes（K8s, Kubernetes）原生边缘计算框架，同样以无侵入方式将 Kubernetes 容器编排能力扩展到边缘场景。相较于 OpenYurt 和 KubeEdge，SuperEdge 在具备云边协同和边缘自治基础能力之外，还引入了独有的分布式健康检查和服务访问控制等高级特性。这些特性旨在进一步降低云边网络不稳定对业务的影响，并方便在边缘集群内实现服务按地域发布和治理。SuperEdge 于 2020 年开源并捐赠给开放原子开源基金会，致力于打造一个单集群多区域的边缘云容器平台。目前 SuperEdge 已在腾讯云边缘计算产品中应用，并逐步在社区获得关注。
 
 SuperEdge 通过非侵入式增强将标准 Kubernetes 集群扩展为 SuperEdge 集群，兼容所有 Kubernetes API 和资源。SuperEdge 采用云 - 边分离架构，支持多级边缘自治，适合大规模多站点边缘场景。
 
-## 架构与核心组件
+## 2. 架构与核心组件 {/* #架构与核心组件 */}
 
 SuperEdge 整体架构延续了“中心云 + 若干边缘站点”的模式。与 OpenYurt 类似，云端保留完整的 Kubernetes Master 节点，并运行 SuperEdge 提供的控制组件；每个边缘节点作为 Kubernetes Worker 节点，额外运行 SuperEdge 的边缘代理组件。SuperEdge 支持单集群管理跨地域的节点，即一个 Kubernetes 集群可以包含分布在不同地域/网络环境中的节点，SuperEdge 提供机制保证这些节点在网络隔离情况下的稳定运行和服务协同。
 
@@ -99,7 +99,7 @@ graph TB
 | `application-grid-wrapper` | pkg/application-grid-wrapper/ | ServiceGroup 内流量控制 |
 | `edge-health` | pkg/edge-health/ | 边缘节点健康监控 |
 
-## 主要组件说明
+## 3. 主要组件说明 {/* #主要组件说明 */}
 
 SuperEdge 在云端和边缘节点均引入了多种创新组件。下方列表对各核心模块进行简要说明，帮助理解其分布式自治与服务治理能力。
 
@@ -148,7 +148,7 @@ graph LR
 
 ![SuperEdge 组件分布与交互关系](/images/k8s/edge-computing/superedge/ad4c02535945451193967b6c802bb99e.svg)
 
-## 主要特性
+## 4. 主要特性 {/* #主要特性 */}
 
 SuperEdge 具备多项面向边缘场景的核心能力，以下列表对其主要特性进行归纳：
 
@@ -158,7 +158,7 @@ SuperEdge 具备多项面向边缘场景的核心能力，以下列表对其主�
 - **云边一体**：SuperEdge 支持单集群跨多云多边的场景，统一的 Kubernetes 控制平面降低了运维复杂度。同时通过 Tunnel 等保证云边连接，Edge Admission 结合 cloud 控制器让云对边缘状态了如指掌。对运维人员来说，可以在云端集中监控整个跨地域的边缘基础设施，而不必维护多套控制平面。
 - **成熟度与生态**：SuperEdge 由腾讯云主导开发，已在腾讯云 Edge Computing 产品中验证过大规模商用，稳定性有保障。社区上也提供了丰富的文档、安装脚本和案例教程。由于其底层还是标准 Kubernetes，可配合的生态工具也很丰富——例如可以与 KubeSphere 等容器平台配合，为边缘提供可视化管理；结合 GitOps 工具实现对多边缘的统一应用分发等。
 
-## 网络隧道与云边通信
+## 5. 网络隧道与云边通信 {/* #网络隧道与云边通信 */}
 
 SuperEdge 通过 tunnel-cloud 与 tunnel-edge 组件实现云边安全互通，支持 gRPC/TLS、HTTP/TCP 等协议。下图展示了云边通信的主要流程：
 
@@ -190,7 +190,7 @@ graph TB
 
 ![SuperEdge 云边通信流程](/images/k8s/edge-computing/superedge/9624f8a54c9639fe06b62033483315d0.svg)
 
-## 分布式应用与服务治理
+## 6. 分布式应用与服务治理 {/* #分布式应用与服务治理 */}
 
 SuperEdge 针对边缘场景下的分布式应用和服务治理，提供了如下机制：
 
@@ -198,14 +198,14 @@ SuperEdge 针对边缘场景下的分布式应用和服务治理，提供了如�
 - **ServiceGrid**：实现站点内服务发现与隔离，保障服务流量不跨站点。
 - **ServiceGroup**：进一步保障服务流量本地化，提升访问效率。
 
-## 边缘节点组织
+## 7. 边缘节点组织 {/* #边缘节点组织 */}
 
 SuperEdge 通过以下资源对象实现边缘节点的灵活组织和批量管理：
 
 - **NodeUnit**：同区域节点的逻辑分组，便于自治和健康检查。
 - **NodeGroup**：对 NodeUnit 进行批量管理，提升运维效率。
 
-## 边缘自治级别
+## 8. 边缘自治级别 {/* #边缘自治级别 */}
 
 SuperEdge 支持多级自治能力，适应不同场景下的边缘需求。下表总结了各级别的能力与实现方式：
 
@@ -246,13 +246,13 @@ graph TB
 
 ![SuperEdge Kins 架构](/images/k8s/edge-computing/superedge/4d3f25e527b44605608a78b12c8eec25.svg)
 
-## 适用场景
+## 9. 适用场景 {/* #适用场景 */}
 
 SuperEdge 特别适合大规模边缘站点统一管理的场景，比如运营商或大型互联网公司需要在全国各地部署边缘节点来提供就近服务。通过 SuperEdge，一个 Kubernetes 集群即可跨越多个区域，将各地边缘节点纳入统一编排，同时保证各区域的自治性和服务隔离。
 
 例如，CDN（Content Delivery Network, 内容分发网络）厂商利用 SuperEdge 在不同城市部署缓存节点，并确保用户流量始终命中本地缓存而非跨城；又例如连锁企业在各门店部署边缘服务器作为一个整体集群，每个门店被视为一个节点分组，服务仅在店内互访，集中管理又不失灵活性。SuperEdge 的分布式健康检查让边缘集群对网络抖动更健壮，因此也适合网络质量不佳但需要高可用的场景，如海上平台、山地基站等。对于已经使用腾讯云容器服务的用户，SuperEdge 可以无缝对接，提供从云到边的一致管理体验。
 
-## 安装与依赖
+## 10. 安装与依赖 {/* #安装与依赖 */}
 
 SuperEdge 基于 Go（Go Programming Language）1.17 开发，依赖 Kubernetes 1.22.3，支持 amd64/arm64 架构。推荐使用 edgeadm 工具一键安装。
 
@@ -262,6 +262,6 @@ SuperEdge 基于 Go（Go Programming Language）1.17 开发，依赖 Kubernetes 
 - gRPC（Google Remote Procedure Call, 谷歌远程过程调用）
 - controller-runtime（Kubernetes 控制器运行时库）
 
-## 总结
+## 11. 总结 {/* #总结 */}
 
 综上，SuperEdge 通过创新的分布式架构和完善的云边协同机制，满足了在单一 Kubernetes 集群下管理多区域边缘的需求，在边缘计算开源项目中独树一帜。它与前述的 KubeEdge、OpenYurt、K3s 一起，构成当前 Kubernetes 边缘计算生态的核心力量，为不同场景下的边缘部署提供了多样化的解决方案。各项目各有侧重，用户可根据自身需求选择：需要极致轻量可选 K3s，需要物联网设备管理和边云协同可选 KubeEdge，已有 Kubernetes 集群希望零改造扩展边缘选 OpenYurt，而追求单集群多站点精细管理则可考虑 SuperEdge。在未来，随着边缘计算的快速发展，这些项目也将继续演进，为云原生技术在边缘侧的落地提供更强大的支持。

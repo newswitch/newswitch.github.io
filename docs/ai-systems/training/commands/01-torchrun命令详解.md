@@ -1,5 +1,6 @@
 ---
 title: "torchrun 命令详解"
+sidebar_label: "01. torchrun 命令详解"
 sidebar_position: 1
 description: "掌握 torchrun 单机与多机启动、进程拓扑、rendezvous、Elastic重启、日志重定向和生产排障。"
 tags: [PyTorch, torchrun, Elastic, DDP, NCCL, 分布式训练]
@@ -137,11 +138,11 @@ torchrun ...
 | Elastic不断重启 | 查第一个失败worker，重启日志不是根因；确认checkpoint恢复逻辑 |
 | 日志互相覆盖 | 每个rank使用独立路径，文件名包含run ID、restart count和rank |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能从参数计算总worker数；能设计不会跨作业串组的rendezvous；能解释每个环境变量；能用最小all-reduce把启动问题与模型问题分离；能安全收集分rank日志并定位第一个失败者。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [torchrun Elastic Launch](https://docs.pytorch.org/docs/stable/elastic/run)
 - [PyTorch distributed](https://docs.pytorch.org/docs/stable/distributed.html)

@@ -1,11 +1,12 @@
 ---
-title: getenforce 命令详解：识别 SELinux 当前运行模式
+title: "getenforce 命令详解：识别 SELinux 当前运行模式"
+sidebar_label: "01. getenforce 命令详解：识别 SELinux 当前运行模式"
 sidebar_position: 1
-description: 讲解 getenforce 无参数接口、Enforcing/Permissive/Disabled 含义、运行态与配置态差异、退出码和 SELinux 拒绝排障入口。
+description: "讲解 getenforce 无参数接口、Enforcing/Permissive/Disabled 含义、运行态与配置态差异、退出码和 SELinux 拒绝排障入口。"
 tags: [Linux, getenforce, SELinux, enforcing, permissive]
 ---
 
-# `getenforce` 命令详解：识别 SELinux 当前运行模式
+# getenforce 命令详解：识别 SELinux 当前运行模式
 
 `getenforce` 只回答内核当前 SELinux enforcement 状态：`Enforcing`、`Permissive` 或 `Disabled`。它不显示加载的策略名、配置文件目标模式、单域 permissive，也不证明某次拒绝一定来自 SELinux。
 
@@ -79,7 +80,7 @@ getenforce=Disabled
 
 掌握标准：能解释三个输出、运行态/启动配置/单域 permissive 的区别，并把 getenforce 放到多安全层排障入口而非最终结论。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [getenforce(8)](https://manpages.debian.org/unstable/selinux-utils/getenforce.8.en.html)
 - [SELinux userspace 3.11](https://github.com/SELinuxProject/selinux/releases/tag/3.11)

@@ -1,9 +1,11 @@
 ---
-title: 一个 GPU Pod 从提交到开始计算经历了什么
+title: "一个 GPU Pod 从提交到开始计算经历了什么"
 sidebar_label: "01. 一个 GPU Pod 从提交到开始计算经历了什么"
+sidebar_position: 1
+description: "用户执行 kubectl apply 后，GPU 不会立刻开始计算。中间至少要经过 API 校验、调度、卷挂载、设备分配、容器创建、模型加载、CUDA 初始化和应用预热。"
+tags: [Kubernetes, GPU, 调度, Device Plugin, CSI]
 date: 2026-08-06 18:00:00
 categories: 云原生
-tags: [Kubernetes, GPU, 调度, Device Plugin, CSI]
 ---
 
 # 一个 GPU Pod 从提交到开始计算经历了什么
@@ -11,8 +13,6 @@ tags: [Kubernetes, GPU, 调度, Device Plugin, CSI]
 用户执行 `kubectl apply` 后，GPU 不会立刻开始计算。中间至少要经过 API 校验、调度、卷挂载、设备分配、容器创建、模型加载、CUDA 初始化和应用预热。
 
 本篇用一个 GPU 推理 Pod，把此前分散的 Kubernetes、存储、显存和 GPU 文章串成一条真实生命周期。
-
----
 
 ## 1. 学习目标
 
@@ -23,8 +23,6 @@ tags: [Kubernetes, GPU, 调度, Device Plugin, CSI]
 - 区分“Pod 已调度”“容器已运行”“GPU 已开始计算”和“服务 Ready”。
 - 根据 Pod 阶段快速选择日志、事件和指标。
 - 建立端到端启动时间线。
-
----
 
 ## 2. 运行前集群已经做了什么
 
@@ -49,8 +47,6 @@ kubectl get node <gpu-node> \
 ```
 
 如果这一步是空值，后续 Scheduler 根本不知道该节点有 GPU。
-
----
 
 ## 3. 示例 Pod
 
@@ -103,8 +99,6 @@ spec:
 
 Scheduler 必须找到同时满足这些条件的节点。
 
----
-
 ## 4. 总体时序
 
 ```mermaid
@@ -137,8 +131,6 @@ sequenceDiagram
 
 镜像拉取、卷准备等部分动作可能并行发生，不应把图理解成每个实现都严格串行。
 
----
-
 ## 5. 阶段一：API Server 接收 Pod
 
 `kubectl` 把对象提交给 API Server：
@@ -163,8 +155,6 @@ spec.nodeName=""
 ```
 
 `Pending` 只表示 Pod 尚未进入运行状态，既可能在等调度，也可能已调度但在拉镜像或挂卷。必须结合 `spec.nodeName`、Condition 和 Events 判断。
-
----
 
 ## 6. 阶段二：Scheduler 选择节点
 
@@ -218,8 +208,6 @@ PreFilter
 在一次可行性判断中同时满足 GPU 与卷拓扑
 ```
 
----
-
 ## 7. 阶段三：Pod 绑定到节点
 
 Scheduler 写入节点绑定结果后：
@@ -236,8 +224,6 @@ kubectl -n ai get pod gpu-model-server -o wide
 - 模型已进入显存。
 
 这是排障中最常见的时间线混淆。
-
----
 
 ## 8. 阶段四：kubelet 准备运行环境
 
@@ -258,8 +244,6 @@ kubectl -n ai describe pod gpu-model-server
 ```
 
 不要直接进入 CUDA 层排障。
-
----
 
 ## 9. 阶段五：CSI 把模型卷挂进节点
 
@@ -286,8 +270,6 @@ kubectl get csinode <node>
 
 如果事件是 `FailedMount`，先查 CSI Node Plugin、kubelet、权限和存储网络，不要先查 Device Plugin。
 
----
-
 ## 10. 阶段六：Device Plugin 分配 GPU
 
 节点上的 NVIDIA Device Plugin 已经向 kubelet报告可用设备。kubelet 在准备容器时为请求的扩展资源选择具体设备，并调用 Device Plugin 的 `Allocate`。
@@ -310,8 +292,6 @@ nvidia.com/gpu: 1
 
 Scheduler 通常只预留资源数量，具体设备选择主要发生在目标节点。
 
----
-
 ## 11. 阶段七：Container Toolkit 注入 GPU 能力
 
 容器镜像一般不携带宿主机内核驱动。NVIDIA Container Toolkit 与容器运行时协作，把必要能力暴露给容器，例如：
@@ -333,8 +313,6 @@ python -c "import torch; print(torch.cuda.is_available(), torch.cuda.device_coun
 - `nvidia-smi` 成功：NVML/驱动基础路径可用。
 - `torch.cuda.is_available()` 为真：框架可以初始化 CUDA。
 - 业务 Kernel 正常执行：应用、模型和显存路径进一步通过。
-
----
 
 ## 12. 阶段八：进程初始化 CUDA
 
@@ -364,8 +342,6 @@ torch.cuda.synchronize()
 print("cuda_init_s", time.perf_counter() - t0)
 ```
 
----
-
 ## 13. 阶段九：模型从存储进入 HBM
 
 简化路径：
@@ -392,8 +368,6 @@ PVC /models
 - 临时 Workspace。
 - CUDA Graph。
 
----
-
 ## 14. 阶段十：多卡进程建立 NCCL
 
 如果 Pod 使用多张 GPU，应用还可能：
@@ -410,8 +384,6 @@ PVC /models
 
 所以模型已经加载完成，任务仍可能卡在 NCCL 初始化或 Rendezvous。
 
----
-
 ## 15. 阶段十一：预热并 Ready
 
 推理服务常需执行一次或多次预热请求：
@@ -427,8 +399,6 @@ PVC /models
 ```text
 Started ≠ CUDA Ready ≠ Model Ready ≠ Traffic Ready
 ```
-
----
 
 ## 16. 建立启动时间线
 
@@ -457,8 +427,6 @@ Started ≠ CUDA Ready ≠ Model Ready ≠ Traffic Ready
 端到端冷启动 = T10 - T0
 ```
 
----
-
 ## 17. 按阶段排障
 
 | 停在哪里 | 首要检查 |
@@ -481,8 +449,6 @@ kubectl -n ai logs gpu-model-server --timestamps
 kubectl get events -A --sort-by=.lastTimestamp
 ```
 
----
-
 ## 18. 本篇总结
 
 一个 GPU Pod 的真实链路是：
@@ -503,8 +469,6 @@ API 接收
 
 上一篇：[生产级 Kubernetes GPU 集群架构设计](../production-gpu-cluster/01-生产级%20Kubernetes%20GPU%20集群架构设计.md)。下一篇：[模型文件从存储加载到 GPU 显存的完整路径](./02-模型文件从存储加载到GPU显存的完整路径.md)。
 
----
-
 ## 19. 课后练习
 
 1. Pod 已经绑定节点，为什么仍可能长时间 Pending？
@@ -515,9 +479,7 @@ API 接收
 6. 为什么 readiness 不能只检查端口？
 7. 画出所在集群 GPU Pod 的真实组件和日志位置。
 
----
-
-## 参考与致谢
+## 20. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Scheduling Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/)
 - [Kubernetes Device Plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/)

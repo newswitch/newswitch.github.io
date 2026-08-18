@@ -1,11 +1,12 @@
 ---
-title: semanage 命令详解：SELinux 本地策略定制与持久映射
+title: "semanage 命令详解：SELinux 本地策略定制与持久映射"
+sidebar_label: "06. semanage 命令详解：SELinux 本地策略定制与持久映射"
 sidebar_position: 6
-description: 系统讲解 semanage 的全部对象子命令、通用 CRUD 参数，以及 fcontext、port、login、boolean、permissive、module、network、InfiniBand 和 import/export 工作流。
+description: "系统讲解 semanage 的全部对象子命令、通用 CRUD 参数，以及 fcontext、port、login、boolean、permissive、module、network、InfiniBand 和 import/export 工作流。"
 tags: [Linux, semanage, SELinux, fcontext, port, boolean, policy]
 ---
 
-# `semanage` 命令详解：SELinux 本地策略定制与持久映射
+# semanage 命令详解：SELinux 本地策略定制与持久映射
 
 `semanage` 修改 policy store 中的本地定制，不需要直接重编基础策略。它管理“期望映射/策略记录”，通常不会自动把现有文件 xattr 改好，也不会自动重启使用者。
 
@@ -133,7 +134,7 @@ ausearch -m MAC_POLICY_LOAD,CONFIG_CHANGE -ts recent -i
 
 掌握标准：能列出全部顶层对象和共用参数，解释 fcontext/port/login/user 的对象差异，知道 semanage 只修改 policy store 的边界，并具备 export→change→apply→verify→rollback 流程。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [semanage(8)](https://manpages.debian.org/unstable/policycoreutils-python-utils/semanage.8.en.html)
 - [semanage-fcontext(8)](https://manpages.debian.org/unstable/policycoreutils-python-utils/semanage-fcontext.8.en.html)

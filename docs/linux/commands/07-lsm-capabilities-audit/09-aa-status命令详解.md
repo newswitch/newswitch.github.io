@@ -1,11 +1,12 @@
 ---
-title: aa-status 命令详解：核对 AppArmor 策略与进程约束状态
+title: "aa-status 命令详解：核对 AppArmor 策略与进程约束状态"
+sidebar_label: "09. aa-status 命令详解：核对 AppArmor 策略与进程约束状态"
 sidebar_position: 9
-description: 完整讲解 aa-status 的全部参数、退出码、文本与 JSON 输出、profile/进程状态、namespace 视角及自动化巡检方法。
+description: "完整讲解 aa-status 的全部参数、退出码、文本与 JSON 输出、profile/进程状态、namespace 视角及自动化巡检方法。"
 tags: [Linux, aa-status, AppArmor, LSM, 安全巡检]
 ---
 
-# `aa-status` 命令详解：核对 AppArmor 策略与进程约束状态
+# aa-status 命令详解：核对 AppArmor 策略与进程约束状态
 
 `aa-status` 从 AppArmor securityfs 读取当前内核策略状态：是否启用、加载了多少 profile、各 profile 处于 enforce/complain/kill 等哪种模式，以及哪些进程受约束。它回答的是**运行时事实**，不是 `/etc/apparmor.d/` 中“打算加载什么”。
 
@@ -122,7 +123,7 @@ aa-status 确认模块/加载量
 
 掌握标准：能列出全部参数和退出码；能区分模块启用、策略加载、profile 模式和进程附着；能解释容器内外视角；能写不依赖文本排版的状态巡检。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [aa-status(8)](https://apparmor-documentation-c38b15.gitlab.io/documentation/manpages/manpage_aa-status.8/)
 - [AppArmor monitoring](https://apparmor-documentation-c38b15.gitlab.io/documentation/getting-started/monitoring/)

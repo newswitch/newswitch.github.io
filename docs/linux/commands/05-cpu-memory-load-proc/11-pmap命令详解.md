@@ -1,11 +1,12 @@
 ---
-title: pmap 命令详解：进程地址空间、RSS、PSS、匿名页与映射归因
+title: "pmap 命令详解：进程地址空间、RSS、PSS、匿名页与映射归因"
+sidebar_label: "11. pmap 命令详解：进程地址空间、RSS、PSS、匿名页与映射归因"
 sidebar_position: 11
-description: 完整讲解 procps-ng pmap 的全部参数、maps/smaps、虚拟地址、RSS/PSS/private/shared/dirty/swap、权限与内存泄漏排障边界。
+description: "完整讲解 procps-ng pmap 的全部参数、maps/smaps、虚拟地址、RSS/PSS/private/shared/dirty/swap、权限与内存泄漏排障边界。"
 tags: [Linux, pmap, 虚拟内存, RSS, PSS, smaps]
 ---
 
-# `pmap` 命令详解：进程地址空间、RSS、PSS、匿名页与映射归因
+# pmap 命令详解：进程地址空间、RSS、PSS、匿名页与映射归因
 
 `pmap` 报告一个或多个进程的虚拟内存映射。它能回答“地址空间由哪些匿名区、heap、stack、共享库和 mmap 文件组成”，但一次快照不能单独证明泄漏。
 
@@ -131,7 +132,7 @@ ptrace access mode、Yama、hidepid、LSM、UID 和 container PID namespace 会�
 
 掌握标准：能列出全部参数，解释映射和关键内存字段，从增长趋势缩小到 mapping 类别，并说明 pmap、cgroup 与语言 heap profiler 的分工。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [procps-ng pmap(1)](https://man7.org/linux/man-pages/man1/pmap.1.html)
 - [Linux proc_pid_smaps(5)](https://man7.org/linux/man-pages/man5/proc_pid_smaps.5.html)

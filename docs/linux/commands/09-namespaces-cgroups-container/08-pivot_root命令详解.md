@@ -1,11 +1,12 @@
 ---
-title: pivot_root 命令详解：容器 Mount Namespace 的根文件系统切换
+title: "pivotroot 命令详解：容器 Mount Namespace 的根文件系统切换"
+sidebar_label: "08. pivotroot 命令详解：容器 Mount Namespace 的根文件系统切换"
 sidebar_position: 8
-description: 讲清 pivot_root 的 new_root、put_old、mount propagation、chdir、旧根卸载与容器初始化安全边界。
+description: "讲清 pivot_root 的 new_root、put_old、mount propagation、chdir、旧根卸载与容器初始化安全边界。"
 tags: [Linux, pivot_root, Mount Namespace, rootfs, 容器]
 ---
 
-# `pivot_root` 命令详解：容器根文件系统切换
+# pivotroot 命令详解：容器 Mount Namespace 的根文件系统切换
 
 `pivot_root NEW_ROOT PUT_OLD` 调用同名系统调用，把调用进程所在 Mount Namespace 的根挂载切换为 `NEW_ROOT`，并把旧根移动到新根下的 `PUT_OLD`。它改变的是挂载树，不是简单的路径前缀，因此是容器 runtime 常用原语；手工执行错误可能移动宿主挂载树。
 

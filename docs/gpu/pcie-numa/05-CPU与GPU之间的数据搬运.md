@@ -1,10 +1,11 @@
 ---
-title: CPU 与 GPU 之间的数据搬运：PCIe、Pinned Memory、DMA 与 CUDA Stream
+title: "CPU 与 GPU 之间的数据搬运：PCIe、Pinned Memory、DMA 与 CUDA Stream"
 sidebar_label: "05. CPU 与 GPU 之间的数据搬运：PCIe、Pinned Memory、DMA 与 CUDA Stream"
+sidebar_position: 5
+description: "从普通内存复制开始，理解 CPU 系统内存到 GPU HBM 的数据路径、Pageable/Pinned Memory、DMA、异步复制、CUDA Stream、NUMA 亲和与性能验证。"
+tags: [GPU, CUDA, PCIe, DMA, Pinned Memory, NUMA]
 date: 2026-08-06 18:10:00
 categories: 云原生
-tags: [GPU, CUDA, PCIe, DMA, Pinned Memory, NUMA]
-description: 从普通内存复制开始，理解 CPU 系统内存到 GPU HBM 的数据路径、Pageable/Pinned Memory、DMA、异步复制、CUDA Stream、NUMA 亲和与性能验证。
 ---
 
 # CPU 与 GPU 之间的数据搬运：PCIe、Pinned Memory、DMA 与 CUDA Stream
@@ -142,7 +143,7 @@ DataLoader(
 batch = batch.to("cuda", non_blocking=True)
 ```
 
-### Pinned Memory 不是越多越好
+### 5.1 Pinned Memory 不是越多越好 {/* #pinned-memory-不是越多越好 */}
 
 锁页内存是一种有限系统资源。过量使用可能导致：
 
@@ -283,7 +284,7 @@ sequenceDiagram
     Copy->>Compute: Kernel Batch 2
 ```
 
-### 双缓冲
+### 10.1 双缓冲 {/* #双缓冲 */}
 
 准备两个 Buffer：
 
@@ -459,7 +460,7 @@ CUDA Samples 中的 `bandwidthTest` 更适合建立 H2D/D2H/D2D 基线。
 
 ## 16. 传输瓶颈的判断
 
-### GPU 周期性空闲
+### 16.1 GPU 周期性空闲 {/* #gpu-周期性空闲 */}
 
 可能原因：
 
@@ -470,7 +471,7 @@ CUDA Samples 中的 `bandwidthTest` 更适合建立 H2D/D2H/D2D 基线。
 - Batch 太小
 - 请求流量不足
 
-### PCIe 流量高、GPU Core 低
+### 16.2 PCIe 流量高、GPU Core 低 {/* #pcie-流量高gpu-core-低 */}
 
 可能原因：
 
@@ -479,7 +480,7 @@ CUDA Samples 中的 `bandwidthTest` 更适合建立 H2D/D2H/D2D 基线。
 - 小 Tensor 复制过多
 - 数据预处理没有放到 GPU
 
-### Pinned Memory 很高
+### 16.3 Pinned Memory 很高 {/* #pinned-memory-很高 */}
 
 可能原因：
 
@@ -488,7 +489,7 @@ CUDA Samples 中的 `bandwidthTest` 更适合建立 H2D/D2H/D2D 基线。
 - Buffer 没有复用
 - 应用泄漏锁页内存
 
-### 同一个程序在不同 NUMA 上差异大
+### 16.4 同一个程序在不同 NUMA 上差异大 {/* #同一个程序在不同-numa-上差异大 */}
 
 检查：
 
@@ -515,24 +516,24 @@ CUDA Samples 中的 `bandwidthTest` 更适合建立 H2D/D2H/D2D 基线。
 
 ## 18. 它与其他模块的关系
 
-### 上游
+### 18.1 上游 {/* #上游 */}
 
 - NFS、CephFS、对象存储或本地 NVMe 提供数据
 - CPU 执行解码、Tokenizer 和预处理
 
-### 本层
+### 18.2 本层 {/* #本层 */}
 
 - Pinned Memory 为 DMA 提供稳定源地址
 - Copy Engine 通过 PCIe 搬运数据
 - CUDA Stream 组织依赖和并发
 
-### 下游
+### 18.3 下游 {/* #下游 */}
 
 - HBM 保存模型和 Batch
 - CUDA Kernel 使用数据
 - 多 GPU 通过 PCIe P2P、NVLink 或 NVSwitch继续通信
 
-### 对调度的影响
+### 18.4 对调度的影响 {/* #对调度的影响 */}
 
 调度不能只看 GPU 数量，还可能需要：
 
@@ -543,23 +544,23 @@ CUDA Samples 中的 `bandwidthTest` 更适合建立 H2D/D2H/D2D 基线。
 
 ## 19. 常见误区
 
-### Unified Virtual Addressing 等于没有数据复制
+### 19.1 Unified Virtual Addressing 等于没有数据复制 {/* #unified-virtual-addressing-等于没有数据复制 */}
 
 统一地址空间简化寻址，不代表物理数据不需要迁移。
 
-### `non_blocking=True` 一定异步
+### 19.2 `non_blocking=True` 一定异步 {/* #nonblockingtrue-一定异步 */}
 
 是否真正异步和重叠取决于内存类型、Stream、硬件和依赖。
 
-### Pinned Memory 总是越多越快
+### 19.3 Pinned Memory 总是越多越快 {/* #pinned-memory-总是越多越快 */}
 
 过多锁页内存会损害系统整体稳定性。
 
-### GPU 利用率低就增加 Batch
+### 19.4 GPU 利用率低就增加 Batch {/* #gpu-利用率低就增加-batch */}
 
 先确认瓶颈是否在存储、CPU 预处理或 H2D。
 
-### DMA 完全不需要 CPU
+### 19.5 DMA 完全不需要 CPU {/* #dma-完全不需要-cpu */}
 
 CPU 仍负责控制面、驱动和同步，只是不必亲自搬每个字节。
 
@@ -598,7 +599,7 @@ Reusable Pinned Buffer
 6. 使用 `bandwidthTest` 比较 Pageable/Pinned 和 H2D/D2H。
 7. 改变 DataLoader 的 `num_workers`、`pin_memory`，记录 GPU 等待时间和端到端吞吐。
 
-## 参考与致谢
+## 22. 参考与致谢 {/* #参考与致谢 */}
 
 - [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/)
 - [CUDA C++ Best Practices：Data Transfer Between Host and Device](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/)

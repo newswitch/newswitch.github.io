@@ -1,11 +1,12 @@
 ---
-title: systemd-analyze 命令详解：启动关键路径、unit 校验与安全评分
+title: "systemd-analyze 命令详解：启动关键路径、unit 校验与安全评分"
+sidebar_label: "03. systemd-analyze 命令详解：启动关键路径、unit 校验与安全评分"
 sidebar_position: 3
-description: 完整讲解 systemd-analyze 的启动耗时、依赖图、配置验证、时间解析、安全审计、ELF、TPM 与调试子命令及全部参数。
+description: "完整讲解 systemd-analyze 的启动耗时、依赖图、配置验证、时间解析、安全审计、ELF、TPM 与调试子命令及全部参数。"
 tags: [Linux, systemd-analyze, systemd, 启动优化, unit校验, 安全加固]
 ---
 
-# `systemd-analyze` 命令详解：启动关键路径、unit 校验与安全评分
+# systemd-analyze 命令详解：启动关键路径、unit 校验与安全评分
 
 `systemd-analyze` 查询 manager 内部状态，也能离线验证 unit、解析 systemd 时间语法、评估 sandbox、安全属性和二进制元数据。`blame` 只是其中一个入口，不能单独证明启动根因。
 
@@ -40,7 +41,7 @@ systemd-analyze blame --no-pager | head
 systemd-analyze plot > boot.svg
 ```
 
-### 为什么 `blame` 会误导
+### 2.1 为什么 `blame` 会误导 {/* #为什么-blame-会误导 */}
 
 - service 可能很快 fork 返回，但后台未真正 ready。
 - socket activation 会把工作推迟到首次请求。
@@ -182,7 +183,7 @@ systemctl show suspect.service -p After,Before,Wants,Requires,ActiveEnterTimesta
 
 掌握标准：能列出全部子命令族和参数，拒绝用 blame 排名直接下结论，把 unit 静态验证纳入发布，并根据系统版本选择可用的高级分析功能。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [systemd-analyze(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd-analyze.html)
 - [systemd.time(7)](https://www.freedesktop.org/software/systemd/man/latest/systemd.time.html)

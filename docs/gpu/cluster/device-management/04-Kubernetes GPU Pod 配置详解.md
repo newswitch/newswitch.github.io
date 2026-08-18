@@ -1,9 +1,11 @@
 ---
-title: Kubernetes GPU Pod 配置详解
+title: "Kubernetes GPU Pod 配置详解"
 sidebar_label: "04. Kubernetes GPU Pod 配置详解"
+sidebar_position: 4
+description: "本文说明如何在 Kubernetes 中把 GPU 配成可调度资源，以及 Pod 申请 GPU 时的规则与限制。内容整理自官方文档 调度 GPU，并结合本系列前文做了实践补充。"
+tags: ["Kubernetes", "GPU", "Pod", "调度", "NFD", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "Pod", "调度", "NFD", "学习路线"]
 ---
 
 # Kubernetes GPU Pod 配置详解
@@ -13,8 +15,6 @@ tags: ["Kubernetes", "GPU", "Pod", "调度", "NFD", "学习路线"]
 **特性状态：** Kubernetes v1.26 [stable]
 
 Kubernetes 可通过设备插件（Device Plugin），在集群节点上管理 AMD、NVIDIA 等 GPU，该能力目前处于稳定状态。
-
----
 
 ## 1. 使用设备插件
 
@@ -45,8 +45,6 @@ nvidia.com/gpu
 - 手动：[驱动 / Toolkit](../../driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md) + Device Plugin
 - 自动化：[GPU Operator](./05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)
 - 分配链路：[Pod 如何使用上 GPU](./03-Pod如何使用上GPU：Device%20Plugin与Container%20Toolkit.md)
-
----
 
 ## 2. 申请规则：GPU 只能写在 limits
 
@@ -103,8 +101,6 @@ resources:
     nvidia.com/gpu: 1
 ```
 
----
-
 ## 3. 管理配有不同类型 GPU 的集群
 
 若不同节点上的 GPU 型号不同（例如有的是 T4，有的是 A100），可用**节点标签 + 节点选择 / 亲和性**，把 Pod 调度到合适节点。
@@ -139,8 +135,6 @@ nodeSelector:
 ```
 
 （具体标签名以节点上实际 `kubectl get node --show-labels` 为准。）
-
----
 
 ## 4. 自动节点标签（NFD）
 
@@ -178,16 +172,14 @@ spec:
           gpu-vendor.example/example-gpu: 1
 ```
 
----
-
 ## 5. 生产配置清单（建议）
 
 写 GPU Pod 时建议自检：
 
-1. **扩展资源是否已出现在 Node**  
+1. **扩展资源是否已出现在 Node**
    `kubectl describe node <name> | grep nvidia.com/gpu`（或对应厂商资源名）
-2. **只在 limits 申请 GPU**（或 requests=limits）  
-3. **异构卡池用标签 / 亲和性选型号**，避免 T4 任务落到不合适的卡上  
+2. **只在 limits 申请 GPU**（或 requests=limits）
+3. **异构卡池用标签 / 亲和性选型号**，避免 T4 任务落到不合适的卡上
 4. **GPU 节点建议配合 Taint**，防止普通业务误调度（见后续 [Taint 与 Toleration 实践](../scheduling/02-GPU%20节点%20Taint%20与%20Toleration%20实践.md)）
 5. 需要细粒度共享时，再看 [Time-Slicing](../sharing/08-Kubernetes%20GPU%20Time-Slicing%20配置实践.md) / [HAMi](../sharing/10-HAMi%20vGPU%20原理与实践.md) / MIG，而不是只改 `nvidia.com/gpu: 1` 的语义
 
@@ -214,8 +206,6 @@ spec:
           nvidia.com/gpu: 1
 ```
 
----
-
 ## 6. 小结
 
 | 主题 | 要点 |
@@ -227,9 +217,7 @@ spec:
 
 官方说明见：[Kubernetes 文档 · 调度 GPU](https://kubernetes.io/zh-cn/docs/tasks/manage-gpus/scheduling-gpus/)。
 
----
-
-## 参考与致谢
+## 7. 参考与致谢 {/* #参考与致谢 */}
 
 - [调度 GPU \| Kubernetes](https://kubernetes.io/zh-cn/docs/tasks/manage-gpus/scheduling-gpus/)（英文：[Schedule GPUs](https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/)）
 - [Device Plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/)

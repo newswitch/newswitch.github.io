@@ -1,11 +1,12 @@
 ---
-title: sort 命令详解：排序键、locale、外部归并与稳定性
+title: "sort 命令详解：排序键、locale、外部归并与稳定性"
+sidebar_label: "09. sort 命令详解：排序键、locale、外部归并与稳定性"
 sidebar_position: 9
-description: 完整讲解 GNU coreutils 9.11 sort 的全部参数、比较模式、键范围、字段分隔、稳定去重、检查与归并、NUL 记录、临时文件、内存并行和生产一致性。
+description: "完整讲解 GNU coreutils 9.11 sort 的全部参数、比较模式、键范围、字段分隔、稳定去重、检查与归并、NUL 记录、临时文件、内存并行和生产一致性。"
 tags: [Linux, sort, GNU coreutils, 排序, 外部归并]
 ---
 
-# `sort` 命令详解：排序键、locale、外部归并与稳定性
+# sort 命令详解：排序键、locale、外部归并与稳定性
 
 `sort` 对记录进行排序、归并或顺序校验。它的结果由记录边界、locale、字段定义、键范围、比较类型和最终 tie-break 共同决定。生产中最常见的错误不是命令失败，而是双方使用了不同排序规则却仍得到“看起来合理”的输出。
 
@@ -310,7 +311,7 @@ LC_ALL=C sort --files0-from=- -o merged.sorted
 - 能设计外部排序的内存、临时盘、并行和归并流程。
 - 能为 `comm/join` 生成并验证完全同规则的预排序输入。
 
-## 官方参考
+## 17. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：sort invocation](https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html)
 - [GNU coreutils：Version sort ordering](https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-ordering.html)
@@ -319,4 +320,3 @@ LC_ALL=C sort --files0-from=- -o merged.sorted
 上一篇：[`paste` 命令详解](./08-paste命令详解.md)
 
 下一篇：[`uniq` 命令详解](./10-uniq命令详解.md)
-

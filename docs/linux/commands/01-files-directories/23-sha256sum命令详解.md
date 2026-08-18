@@ -1,11 +1,12 @@
 ---
-title: sha256sum 命令详解：生成、校验、NUL 清单与信任边界
+title: "sha256sum 命令详解：生成、校验、NUL 清单与信任边界"
+sidebar_label: "23. sha256sum 命令详解：生成、校验、NUL 清单与信任边界"
 sidebar_position: 23
-description: 完整讲解 GNU sha256sum 的 -b/-t/-c/--tag/-z/--ignore-missing/--quiet/--status/--strict/--warn 与 checksum 清单安全。
+description: "完整讲解 GNU sha256sum 的 -b/-t/-c/--tag/-z/--ignore-missing/--quiet/--status/--strict/--warn 与 checksum 清单安全。"
 tags: [Linux, sha256sum, SHA-256, 完整性, 供应链]
 ---
 
-# `sha256sum` 命令详解：完整性不等于真实性
+# sha256sum 命令详解：生成、校验、NUL 清单与信任边界
 
 `sha256sum` 计算 SHA-256 或按清单复核文件。相同 digest 能高概率证明字节一致，但如果攻击者能同时替换文件和 checksum 清单，校验仍会通过；真实性需要可信 HTTPS、签名或已验证的外部 digest。
 

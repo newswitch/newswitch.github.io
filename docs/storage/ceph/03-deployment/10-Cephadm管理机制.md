@@ -2,8 +2,8 @@
 title: "Cephadm 日常管理：Host、ServiceSpec、维护模式与日志排查"
 sidebar_label: "10. Cephadm 日常管理：Host、ServiceSpec、维护模式与日志排查"
 sidebar_position: 10
-tags: [Ceph, 学习路线, 存储, Cephadm]
 description: "建立 cephadm 日常管理模型：Host/Service/Daemon、Placement、ServiceSpec 变更、维护与 Drain、配置与日志排查。"
+tags: [Ceph, 学习路线, 存储, Cephadm]
 ---
 
 # Cephadm 日常管理：Host、ServiceSpec、维护模式与日志排查
@@ -28,10 +28,9 @@ description: "建立 cephadm 日常管理模型：Host/Service/Daemon、Placemen
 
 这篇文章会建立 cephadm 的日常管理模型，并给出可直接用于值班的检查流程。
 
+## 1. 先理解四个管理对象 {/* #先理解四个管理对象 */}
 
-## 先理解四个管理对象
-
-### 1. Host
+### 1.1 Host {/* #1-host */}
 
 Host 是被 cephadm 纳管的服务器，例如：
 
@@ -50,7 +49,7 @@ ceph orch host ls --detail
 
 Host 记录包含主机名、管理地址、标签和状态。它不是 CRUSH Host 的完全同义词：前者属于 cephadm 编排层，后者属于数据放置层。多数标准部署会让二者对应，但排障时要明确正在查看哪一层。
 
-### 2. Service
+### 1.2 Service {/* #2-service */}
 
 Service 描述一组由同一规则管理的守护进程，例如：
 
@@ -69,7 +68,7 @@ prometheus
 ceph orch ls
 ```
 
-### 3. Daemon
+### 1.3 Daemon {/* #3-daemon */}
 
 Daemon 是 Service 的一个具体实例，例如：
 
@@ -89,7 +88,7 @@ ceph orch ps --daemon_type osd
 ceph orch ps --hostname ceph02
 ```
 
-### 4. ServiceSpec
+### 1.4 ServiceSpec {/* #4-servicespec */}
 
 ServiceSpec 是声明 Service 应该如何存在的 YAML 配置，例如希望三个 MON 分别运行在三台主机：
 
@@ -121,11 +120,11 @@ flowchart TD
 
 这就是 cephadm 最重要的设计思想：**声明式管理**。
 
-## 日常查看状态的正确顺序
+## 2. 日常查看状态的正确顺序 {/* #日常查看状态的正确顺序 */}
 
 当值班人员收到告警时，不要一上来就重启容器。先按层次查看。
 
-### 第 1 层：集群健康
+### 2.1 第 1 层：集群健康 {/* #第-1-层集群健康 */}
 
 ```bash
 ceph -s
@@ -138,7 +137,7 @@ ceph health detail
 - 业务是否受影响？
 - 是否正在 Recovery 或 Backfill？
 
-### 第 2 层：编排器和 Host
+### 2.2 第 2 层：编排器和 Host {/* #第-2-层编排器和-host */}
 
 ```bash
 ceph orch status
@@ -151,7 +150,7 @@ ceph orch host ls --detail
 - 哪台 Host 为 Offline 或 Maintenance？
 - SSH、时间、容器运行时或设备信息是否异常？
 
-### 第 3 层：Service
+### 2.3 第 3 层：Service {/* #第-3-层service */}
 
 ```bash
 ceph orch ls --refresh
@@ -163,7 +162,7 @@ ceph orch ls --refresh
 - 哪个 Service 处于异常状态？
 - 最近是否修改过 Placement 或 Spec？
 
-### 第 4 层：具体 Daemon
+### 2.4 第 4 层：具体 Daemon {/* #第-4-层具体-daemon */}
 
 ```bash
 ceph orch ps --refresh
@@ -178,15 +177,15 @@ ceph orch ps --daemon_type osd --refresh
 - REFRESHED 字段是否足够新？
 - 内存使用和限制是否异常？
 
-### 为什么要使用 `--refresh`
+### 2.5 为什么要使用 `--refresh` {/* #为什么要使用---refresh */}
 
 `ceph orch ps` 的数据有缓存，默认输出不一定代表此刻状态。排障时关注 REFRESHED 列，必要时添加 `--refresh` 请求重新采集。
 
 但刷新需要 cephadm 连接主机。如果 Host 离线，刷新也不会凭空获得远端实时状态，应继续检查 SSH、网络和主机本身。
 
-## Host 标签和 Placement
+## 3. Host 标签和 Placement {/* #host-标签和-placement */}
 
-### 1. 普通标签
+### 3.1 普通标签 {/* #1-普通标签 */}
 
 普通标签由管理员定义，本身没有内置动作，主要用于 Placement。
 
@@ -230,7 +229,7 @@ rack_a
 
 不要让标签名称同时表达太多含义，例如 `fast-prod-rack-a-rgw-osd`，否则后期变更困难。
 
-### 2. 特殊标签
+### 3.2 特殊标签 {/* #2-特殊标签 */}
 
 以下标签以下划线开头，由 cephadm 赋予特殊语义。
 
@@ -243,7 +242,7 @@ rack_a
 
 重要细节：给已有 Daemon 的 Host 添加 `_no_schedule`，cephadm 可能把非 OSD Daemon 迁移到其他符合 Placement 的 Host；已有 OSD 不会仅因为这个标签就自动删除。
 
-### 3. 显式 Host、标签还是 Pattern
+### 3.3 显式 Host、标签还是 Pattern {/* #3-显式-host标签还是-pattern */}
 
 | Placement 方式 | 适用场景 | 风险 |
 | --- | --- | --- |
@@ -254,9 +253,9 @@ rack_a
 
 生产变更前必须同时查看 Host 标签和当前 Spec，避免「标签改动看似无害，实际触发 Daemon 迁移」。
 
-## ServiceSpec 的安全变更流程
+## 4. ServiceSpec 的安全变更流程 {/* #servicespec-的安全变更流程 */}
 
-### 1. 导出当前声明
+### 4.1 导出当前声明 {/* #1-导出当前声明 */}
 
 导出全部 ServiceSpec：
 
@@ -276,7 +275,7 @@ ceph orch ls --service-type mgr --export > mgr.yaml
 ceph orch ls --service-name osd.hdd_data --export > osd.hdd_data.yaml
 ```
 
-### 2. 在版本库中修改
+### 4.2 在版本库中修改 {/* #2-在版本库中修改 */}
 
 建议流程：
 
@@ -294,7 +293,7 @@ ceph orch ls --service-name osd.hdd_data --export > osd.hdd_data.yaml
 
 不要把 Admin Keyring、Registry 密码、TLS 私钥等敏感信息提交到普通 Git 仓库。
 
-### 3. Dry Run
+### 4.3 Dry Run {/* #3-dry-run */}
 
 ```bash
 ceph orch apply -i mgr.yaml --dry-run
@@ -306,7 +305,7 @@ OSD Spec 尤其要执行 Dry Run：
 ceph orch apply -i osd.hdd_data.yaml --dry-run
 ```
 
-### 4. 应用并观察
+### 4.4 应用并观察 {/* #4-应用并观察 */}
 
 ```bash
 ceph orch apply -i mgr.yaml
@@ -315,7 +314,7 @@ ceph orch ps --daemon_type mgr --refresh
 ceph -s
 ```
 
-### 5. Apply 不是追加
+### 4.5 Apply 不是追加 {/* #5-apply-不是追加 */}
 
 每次 Apply 都会更新该 Service 的完整期望状态。例如：
 
@@ -333,7 +332,7 @@ ceph orch apply mon "ceph01,ceph02,ceph03"
 
 更推荐使用经过版本控制的 YAML。
 
-## Daemon 操作：什么时候重启，什么时候重部署
+## 5. Daemon 操作：什么时候重启，什么时候重部署 {/* #daemon-操作什么时候重启什么时候重部署 */}
 
 先从 `ceph orch ps` 获得完整 Daemon 名称：
 
@@ -341,7 +340,7 @@ ceph orch apply mon "ceph01,ceph02,ceph03"
 ceph orch ps --hostname ceph02 --refresh
 ```
 
-### 1. 启动、停止和重启
+### 5.1 启动、停止和重启 {/* #1-启动停止和重启 */}
 
 ```bash
 ceph orch daemon start <daemon-name>
@@ -364,7 +363,7 @@ ceph orch ps --daemon_type osd --daemon_id 3 --refresh
 
 重启 OSD 会让相关 PG 短暂降级。重启 MON 可能影响 Quorum，重启 Active MGR 可能触发主备切换。任何操作都要先确认剩余副本、Quorum 和 Standby 情况。
 
-### 2. Reconfig
+### 5.2 Reconfig {/* #2-reconfig */}
 
 Reconfig 让 cephadm 重新生成或下发 Daemon 配置。命令形式以目标版本帮助为准，常见 Daemon 级操作为：
 
@@ -374,7 +373,7 @@ ceph orch daemon reconfig <daemon-name>
 
 它不等于「把容器全部删除重建」。如果配置项本身支持运行时更新，也可能不需要重启。
 
-### 3. Redeploy
+### 5.3 Redeploy {/* #3-redeploy */}
 
 Redeploy 重新部署 Daemon 容器或 Service，常用于镜像、挂载配置或容器定义发生变化后的重建。Service 级示例：
 
@@ -384,7 +383,7 @@ ceph orch redeploy <service-name>
 
 它的影响通常大于普通 Reconfig。执行前检查服务冗余并采用滚动方式，不能把整个 MON 或 OSD 服务一次性中断。
 
-### 4. 为什么不建议直接 `podman restart`
+### 5.4 为什么不建议直接 `podman restart` {/* #4-为什么不建议直接-podman-restart */}
 
 cephadm 使用 systemd 单元、容器定义和编排状态管理 Daemon。直接运行：
 
@@ -402,11 +401,11 @@ podman rm ...
 
 容器运行时命令适合只读诊断；生命周期管理优先使用 `ceph orch`。
 
-## Ceph 配置应该在哪里修改
+## 6. Ceph 配置应该在哪里修改 {/* #ceph-配置应该在哪里修改 */}
 
 现代 Ceph 的大部分配置保存在 Monitor 维护的配置数据库中，不应把手工编辑某台主机 `/etc/ceph/ceph.conf` 当作集群级配置方式。
 
-### 1. 查看配置
+### 6.1 查看配置 {/* #1-查看配置 */}
 
 ```bash
 ceph config dump
@@ -414,7 +413,7 @@ ceph config show osd.3
 ceph config get osd osd_memory_target
 ```
 
-### 2. 配置作用域
+### 6.2 配置作用域 {/* #2-配置作用域 */}
 
 常见作用域：
 
@@ -428,7 +427,7 @@ osd.3     只作用于 osd.3
 
 越具体的有效配置通常会覆盖更宽泛作用域的值。
 
-### 3. 设置和删除配置
+### 6.3 设置和删除配置 {/* #3-设置和删除配置 */}
 
 通用语法：
 
@@ -446,7 +445,7 @@ ceph config dump
 
 并记录旧值、修改原因、影响范围、是否动态生效和回滚方式。
 
-### 4. 不要复制不理解的调优参数
+### 6.4 不要复制不理解的调优参数 {/* #4-不要复制不理解的调优参数 */}
 
 网络文章或旧版本案例中的参数可能已经更名、失效或改变默认值。设置前检查：
 
@@ -457,11 +456,11 @@ ceph config dump
 - 是否需要 Restart、Reconfig 或 Redeploy
 - 测试环境中对吞吐、尾延迟和恢复的影响
 
-## 容器化 Ceph 的日志在哪里
+## 7. 容器化 Ceph 的日志在哪里 {/* #容器化-ceph-的日志在哪里 */}
 
 cephadm 部署的 Daemon 默认把日志交给容器运行环境，并通常进入 journald。因此看不到传统的 `/var/log/ceph/ceph-osd.0.log` 不代表没有日志。
 
-### 1. 先定位 Daemon 所在 Host
+### 7.1 先定位 Daemon 所在 Host {/* #1-先定位-daemon-所在-host */}
 
 ```bash
 ceph orch ps --daemon_type osd --daemon_id 3 --refresh
@@ -469,7 +468,7 @@ ceph orch ps --daemon_type osd --daemon_id 3 --refresh
 
 然后登录该 Host。
 
-### 2. 使用 cephadm 查看单个 Daemon 日志
+### 7.2 使用 cephadm 查看单个 Daemon 日志 {/* #2-使用-cephadm-查看单个-daemon-日志 */}
 
 ```bash
 cephadm logs --name osd.3 -- -n 200
@@ -478,7 +477,7 @@ cephadm logs --name osd.3 -- -f
 
 `-n 200` 查看最后 200 行，`-f` 持续跟踪。
 
-### 3. 使用 journalctl
+### 7.3 使用 journalctl {/* #3-使用-journalctl */}
 
 先取得 FSID：
 
@@ -499,7 +498,7 @@ journalctl -u 'ceph-<fsid>@osd.3' -f
 systemctl list-units 'ceph-*'
 ```
 
-### 4. cephadm 自身日志
+### 7.4 cephadm 自身日志 {/* #4-cephadm-自身日志 */}
 
 cephadm 执行和编排相关问题还应查看：
 
@@ -512,7 +511,7 @@ cephadm 执行和编排相关问题还应查看：
 1. Ceph Daemon 本身启动或运行失败
 2. cephadm 无法通过 SSH、容器运行时或 ServiceSpec 完成部署
 
-### 5. 收集日志时注意敏感信息
+### 7.5 收集日志时注意敏感信息 {/* #5-收集日志时注意敏感信息 */}
 
 日志可能包含：
 
@@ -524,7 +523,7 @@ cephadm 执行和编排相关问题还应查看：
 
 向外部提交日志前应脱敏，但不要删除故障时间线、Daemon 名称、错误码和版本等关键上下文。
 
-## Maintenance、`_no_schedule` 与 Drain 的区别
+## 8. Maintenance、`_no_schedule` 与 Drain 的区别 {/* #maintenancenoschedule-与-drain-的区别 */}
 
 这三个概念经常被混用，但它们的影响完全不同。
 
@@ -540,11 +539,11 @@ cephadm 执行和编排相关问题还应查看：
 
 不要为了重启服务器执行 Drain。Drain 可能触发整台 Host 的数据迁移，带来巨大 IO 和长时间 Recovery。
 
-## 安全维护一台 Host
+## 9. 安全维护一台 Host {/* #安全维护一台-host */}
 
 假设需要维护 `ceph03`。
 
-### 1. 维护前检查
+### 9.1 维护前检查 {/* #1-维护前检查 */}
 
 ```bash
 ceph -s
@@ -563,7 +562,7 @@ ceph osd tree
 - 副本或 EC 剩余块满足业务 IO 条件
 - 集群没有正在进行的高风险变更
 
-### 2. 让 cephadm 执行安全检查
+### 9.2 让 cephadm 执行安全检查 {/* #2-让-cephadm-执行安全检查 */}
 
 ```bash
 ceph orch host ok-to-stop ceph03
@@ -571,7 +570,7 @@ ceph orch host ok-to-stop ceph03
 
 如果检查不通过，应解决原因，而不是习惯性添加 `--force`。
 
-### 3. 进入维护模式
+### 9.3 进入维护模式 {/* #3-进入维护模式 */}
 
 ```bash
 ceph orch host maintenance enter ceph03
@@ -585,17 +584,17 @@ ceph orch ps --hostname ceph03 --refresh
 ceph -s
 ```
 
-### 4. 执行主机维护
+### 9.4 执行主机维护 {/* #4-执行主机维护 */}
 
 例如系统补丁、固件更新或硬件更换。过程中持续监控剩余集群，不要并行维护同一保护集合中的多台 Host。
 
-### 5. 退出维护模式
+### 9.5 退出维护模式 {/* #5-退出维护模式 */}
 
 ```bash
 ceph orch host maintenance exit ceph03
 ```
 
-### 6. 维护后验收
+### 9.6 维护后验收 {/* #6-维护后验收 */}
 
 ```bash
 ceph orch ps --hostname ceph03 --refresh
@@ -606,15 +605,15 @@ ceph health detail
 
 等待相关 PG 恢复到预期状态，再关闭变更。
 
-### 关于强制参数
+### 9.7 关于强制参数 {/* #关于强制参数 */}
 
 `--force` 和 `--yes-i-really-mean-it` 会绕过部分甚至全部安全检查，可能导致数据不可用、MON 失去 Quorum 或 MGR/编排命令失效。它们不是「命令报错时再加一下」的普通选项。
 
-## 永久移除 Host 的流程
+## 10. 永久移除 Host 的流程 {/* #永久移除-host-的流程 */}
 
 假设 `ceph03` 要退役。这个操作会改变集群拓扑并迁移数据，必须有变更窗口和回滚方案。
 
-### 1. 先检查容量和故障域
+### 10.1 先检查容量和故障域 {/* #1-先检查容量和故障域 */}
 
 ```bash
 ceph -s
@@ -630,7 +629,7 @@ ceph orch ps --hostname ceph03 --refresh
 - 在 Full 阈值之前完成迁移
 - 承受 Recovery 带来的性能压力
 
-### 2. 更新所有引用该 Host 的 ServiceSpec
+### 10.2 更新所有引用该 Host 的 ServiceSpec {/* #2-更新所有引用该-host-的-servicespec */}
 
 ```bash
 ceph orch ls --export > before-host-removal.yaml
@@ -638,7 +637,7 @@ ceph orch ls --export > before-host-removal.yaml
 
 删除或调整 Placement 中的 `ceph03`，先 Dry Run，再 Apply。否则移除 Host 后，Spec 仍会持续期望在不存在的 Host 上部署服务。
 
-### 3. Drain
+### 10.3 Drain {/* #3-drain */}
 
 ```bash
 ceph orch host drain ceph03
@@ -657,7 +656,7 @@ ceph progress
 
 不要默认添加 `--zap-osd-devices`。Zap 会擦除设备，只有明确需要且数据迁移已安全完成时才考虑。
 
-### 4. 确认 Daemon 全部移除
+### 10.4 确认 Daemon 全部移除 {/* #4-确认-daemon-全部移除 */}
 
 ```bash
 ceph orch ps ceph03
@@ -666,7 +665,7 @@ ceph osd tree
 ceph -s
 ```
 
-### 5. 从编排器移除 Host
+### 10.5 从编排器移除 Host {/* #5-从编排器移除-host */}
 
 ```bash
 ceph orch host rm ceph03
@@ -674,9 +673,9 @@ ceph orch host rm ceph03
 
 离线强制移除可能直接清除 OSD 记录并造成数据丢失，不能作为普通「Host 删不掉」的解决方法。
 
-## 服务移除和 Unmanaged 状态
+## 11. 服务移除和 Unmanaged 状态 {/* #服务移除和-unmanaged-状态 */}
 
-### 1. 移除 Service
+### 11.1 移除 Service {/* #1-移除-service */}
 
 通用命令：
 
@@ -696,7 +695,7 @@ ceph orch rm <service-name>
 
 不要随意使用 `--force-delete-data`。
 
-### 2. Unmanaged 不是停止服务
+### 11.2 Unmanaged 不是停止服务 {/* #2-unmanaged-不是停止服务 */}
 
 ServiceSpec 中：
 
@@ -708,18 +707,18 @@ unmanaged: true
 
 它适合极少数需要暂时接管布局的场景，但也会失去编排器自动修复能力。完成特殊操作后，应恢复 Managed 并重新核对 Spec。
 
-## 配置和服务变更后的观察方法
+## 12. 配置和服务变更后的观察方法 {/* #配置和服务变更后的观察方法 */}
 
 一次变更不能以「命令返回 0」作为完成标准。
 
-### 1. 看协调结果
+### 12.1 看协调结果 {/* #1-看协调结果 */}
 
 ```bash
 ceph orch ls --refresh
 ceph orch ps --refresh
 ```
 
-### 2. 看集群健康
+### 12.2 看集群健康 {/* #2-看集群健康 */}
 
 ```bash
 ceph -s
@@ -727,14 +726,14 @@ ceph health detail
 ceph progress
 ```
 
-### 3. 看版本和镜像一致性
+### 12.3 看版本和镜像一致性 {/* #3-看版本和镜像一致性 */}
 
 ```bash
 ceph versions
 ceph orch ps --refresh
 ```
 
-### 4. 看数据面
+### 12.4 看数据面 {/* #4-看数据面 */}
 
 ```bash
 ceph osd stat
@@ -742,7 +741,7 @@ ceph osd tree
 ceph pg stat
 ```
 
-### 5. 看业务指标
+### 12.5 看业务指标 {/* #5-看业务指标 */}
 
 - 客户端吞吐和 IOPS
 - P95/P99/P999 延迟
@@ -751,11 +750,11 @@ ceph pg stat
 - 网络重传和磁盘延迟
 - 错误率和业务超时
 
-### 6. 设定观察窗口
+### 12.6 设定观察窗口 {/* #6-设定观察窗口 */}
 
 不同变更的观察时长不同。重启 MGR 可能很快稳定，OSD 迁移或 CRUSH 变更可能持续数小时甚至数天。变更单应说明「达到什么条件才算完成」。
 
-## 常见管理错误
+## 13. 常见管理错误 {/* #常见管理错误 */}
 
 **错误 1：看到 Daemon Error 就立即重启**
 
@@ -785,9 +784,9 @@ Drain 用于永久排空，会迁移数据；短期重启使用 Maintenance。
 
 编排器仍然期望旧 Host 存在，可能持续报错或无法满足实例数。
 
-## 每日与每周巡检建议
+## 14. 每日与每周巡检建议 {/* #每日与每周巡检建议 */}
 
-### 每日巡检
+### 14.1 每日巡检 {/* #每日巡检 */}
 
 ```bash
 ceph -s
@@ -800,7 +799,7 @@ ceph df
 
 重点：新告警、Offline Host、Daemon 数量、容量增长和 Recovery。
 
-### 每周巡检
+### 14.2 每周巡检 {/* #每周巡检 */}
 
 ```bash
 ceph orch ps --refresh
@@ -822,7 +821,7 @@ ceph config dump
 
 巡检不是为了保存一堆命令输出，而是发现趋势和偏差，并形成可跟踪的处置项。
 
-## 本篇总结
+## 15. 本篇总结 {/* #本篇总结 */}
 
 cephadm 日常管理的核心关系是：
 
@@ -848,8 +847,7 @@ cephadm 持续协调实际状态
 
 后续文章将先进入 Pool 与 CephX，再分别创建和使用 CephFS、RBD 与 RGW，并解释它们如何映射到 RADOS Pool。
 
-
-## 自测题
+## 16. 自测题 {/* #自测题 */}
 
 1. Service 与 Daemon 有什么区别？
 2. cephadm 的声明式协调是什么意思？
@@ -862,7 +860,7 @@ cephadm 持续协调实际状态
 9. Host Drain 为什么必须先检查容量和故障域？
 10. 一次变更应从哪些层面判断是否真正完成？
 
-## 参考资料
+## 17. 参考资料 {/* #参考资料 */}
 
 - [Host Management](https://docs.ceph.com/en/latest/cephadm/host-management/)
 - [Service Management](https://docs.ceph.com/en/latest/cephadm/services/)

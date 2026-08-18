@@ -1,11 +1,12 @@
 ---
-title: lsmod 命令详解：读取已加载模块、依赖者与引用计数
+title: "lsmod 命令详解：读取已加载模块、依赖者与引用计数"
+sidebar_label: "03. lsmod 命令详解：读取已加载模块、依赖者与引用计数"
 sidebar_position: 3
-description: 完整讲解 lsmod 的全部参数、/proc/modules 字段、内建驱动与可加载模块的区别，以及模块卸载前的证据链。
+description: "完整讲解 lsmod 的全部参数、/proc/modules 字段、内建驱动与可加载模块的区别，以及模块卸载前的证据链。"
 tags: [Linux, lsmod, kmod, 内核模块, 驱动]
 ---
 
-# `lsmod` 命令详解：读取已加载模块、依赖者与引用计数
+# lsmod 命令详解：读取已加载模块、依赖者与引用计数
 
 `lsmod` 展示**当前内核已经加载的可加载模块**。它本质上只是把 `/proc/modules` 格式化为三列，并不扫描磁盘上的 `.ko`，也不会显示直接编进内核的 built-in 驱动。
 

@@ -2,8 +2,8 @@
 title: "Envoy xDS、Bootstrap、ADS、SotW/Delta 与 ACK/NACK"
 sidebar_label: "05. Envoy xDS、Bootstrap、ADS、SotW/Delta 与 ACK/NACK"
 sidebar_position: 5
-tags: [Envoy, xDS, ADS, ACK, NACK, Control Plane]
 description: "理解 Envoy 动态配置协议、资源依赖、版本确认、配置预热和控制面正确性。"
+tags: [Envoy, xDS, ADS, ACK, NACK, Control Plane]
 ---
 
 # Envoy xDS、Bootstrap、ADS、SotW/Delta 与 ACK/NACK
@@ -69,7 +69,7 @@ Listener/Cluster 可等待 RDS/EDS/SDS 等依赖准备后再 active。资源卡�
 
 你应能解释配置“保存成功、ACK、active、请求命中”是四个不同阶段，并可凭 node、type URL、nonce、version 和 error detail 定位 NACK。
 
-## 参考资料
+## 8. 参考资料 {/* #参考资料 */}
 
 - [xDS Protocol](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol.html)
 - [Dynamic Configuration](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/dynamic_configuration)

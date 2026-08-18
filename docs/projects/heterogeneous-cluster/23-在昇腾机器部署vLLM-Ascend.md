@@ -1,16 +1,18 @@
 ---
-title: 在昇腾资源池部署vLLM-Ascend——把NPU软件栈、设备调度和服务连起来
-sidebar_label: 23 · 昇腾池部署vLLM-Ascend
+title: "在昇腾资源池部署vLLM-Ascend——把NPU软件栈、设备调度和服务连起来"
+sidebar_label: "23. 23 · 昇腾池部署vLLM-Ascend"
+sidebar_position: 23
+description: "系列：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》 阶段：第六阶段——两套机器部署推理 本文定位：昇腾池 vLLM-Ascend 安装、部署、验收与故障排查篇"
+tags: [vLLM-Ascend, 昇腾, CANN, HCCL, NPU, 双资源池]
 date: 2026-08-07 23:00:00
 categories: 云原生
-tags: [vLLM-Ascend, 昇腾, CANN, HCCL, NPU, 双资源池]
 ---
 
 # 在昇腾资源池部署vLLM-Ascend——把NPU软件栈、设备调度和服务连起来
 
 :::info 系列与定位
-**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》  
-**阶段**：第六阶段——两套机器部署推理  
+**系列**：《NVIDIA＋昇腾双资源池 AI 推理集群：从 0 到部署、运维与故障排查》
+**阶段**：第六阶段——两套机器部署推理
 **本文定位**：昇腾池 vLLM-Ascend 安装、部署、验收与故障排查篇
 :::
 
@@ -37,15 +39,11 @@ tags: [vLLM-Ascend, 昇腾, CANN, HCCL, NPU, 双资源池]
 
 对照：[第 12 篇昇腾池](./12-部署昇腾NPU资源池.md) · [第 21 篇容量](./21-部署前计算显存HBM与vLLM启动参数.md) · [第 22 篇 NVIDIA 部署](./22-在NVIDIA机器部署原生vLLM.md)。
 
----
-
-## 一、学完本文应掌握什么
+## 1. 学完本文应掌握什么 {/* #一学完本文应掌握什么 */}
 
 解释 vLLM-Ascend 在完整昇腾软件栈中的位置；按官方兼容矩阵固定成套版本；检查主机和容器中的 NPU 状态；找出集群真实上报的 NPU 资源键；在 Kubernetes 中部署单机多 NPU 的 vLLM-Ascend；用 OpenAI 兼容 API 验收；区分调度、设备注入、CANN、算子、HBM 和 HCCL 故障；知道哪些 NVIDIA 经验可复用、哪些不能复制。
 
----
-
-## 二、先看 NVIDIA 与昇腾部署对照
+## 2. 先看 NVIDIA 与昇腾部署对照 {/* #二先看-nvidia-与昇腾部署对照 */}
 
 | 位置 | NVIDIA 资源池 | 昇腾资源池 |
 |------|---------------|------------|
@@ -63,9 +61,7 @@ tags: [vLLM-Ascend, 昇腾, CANN, HCCL, NPU, 双资源池]
 
 **不能直接复制**：镜像、驱动与 Runtime、Device Plugin 资源键、设备环境变量、量化格式、图执行与算子参数、多卡/多机通信变量、性能基线。
 
----
-
-## 三、冻结完整兼容矩阵
+## 3. 冻结完整兼容矩阵 {/* #三冻结完整兼容矩阵 */}
 
 官方安装文档要求把以下组件视为同一个兼容集合：
 
@@ -92,9 +88,7 @@ quay.io/ascend/vllm-ascend@sha256:REPLACE_ME
 
 而不是只有 `latest`。Tag 表达可读版本，Digest 保证内容不可变。
 
----
-
-## 四、确认目标模型和功能真的受支持
+## 4. 确认目标模型和功能真的受支持 {/* #四确认目标模型和功能真的受支持 */}
 
 不能因为模型能在 NVIDIA vLLM 运行，就假设同版本 vLLM-Ascend 也支持所有功能。部署前检查：架构是否在支持矩阵；状态是稳定、实验还是未验证；是否有专项教程；精度/量化是否支持；TP/PP/EP/LoRA/工具调用等是否支持；目标 NPU 产品是否在验证范围；是否需要特殊环境变量或 Additional Config。
 
@@ -115,9 +109,7 @@ knownLimitations: []
 
 若官方状态是「实验支持」，生产上线前要提高测试覆盖和回滚要求。
 
----
-
-## 五～六、宿主机验收与真实 NPU 资源键
+## 5. 五～六、宿主机验收与真实 NPU 资源键 {/* #五六宿主机验收与真实-npu-资源键 */}
 
 ```bash
 kubectl get nodes -l accelerator.vendor=ascend,resource-pool=ascend-pool -o wide
@@ -138,9 +130,7 @@ kubectl describe node <ascend-node>
 
 记录准确的资源键、Capacity、Allocatable、Allocated、产品型号、Device Plugin 版本。YAML 中的 `huawei.com/Ascend910: 4` 只是示例——写错不会自动兼容，结果是 Pending 或容器拿不到设备。
 
----
-
-## 七、先做最小 NPU Pod 测试
+## 6. 先做最小 NPU Pod 测试 {/* #七先做最小-npu-pod-测试 */}
 
 ```yaml
 apiVersion: v1
@@ -186,9 +176,7 @@ spec:
 在 Kubernetes 中，Ascend Device Plugin 和 Runtime 负责分配并注入设备。不要在不理解目标组件行为时又手工写入 `ASCEND_RT_VISIBLE_DEVICES` / `ASCEND_VISIBLE_DEVICES`，否则可能出现调度分配与进程可见卡不一致、多 Pod 抢同一设备、可见数与 TP 不一致、HCCL Rank 映射错误。
 :::
 
----
-
-## 八、在容器中确认软件版本
+## 7. 在容器中确认软件版本 {/* #八在容器中确认软件版本 */}
 
 用准备部署的镜像执行：
 
@@ -214,9 +202,7 @@ npu-smi info
 
 将结果存入发布记录，不要只记录 Dockerfile 中的声明版本。
 
----
-
-## 九、Docker 单机验证
+## 8. Docker 单机验证 {/* #九docker-单机验证 */}
 
 官方模型教程通常提供预构建镜像和与具体产品匹配的设备挂载方式。以下是流程骨架，必须按目标产品官方教程修订。
 
@@ -262,9 +248,7 @@ curl -fsS -H "Authorization: Bearer ${VLLM_API_KEY}" \
 watch -n 1 npu-smi info
 ```
 
----
-
-## 十、Kubernetes Deployment 示例
+## 9. Kubernetes Deployment 示例 {/* #十kubernetes-deployment-示例 */}
 
 下面使用示例资源键 `huawei.com/Ascend910`。若实际上报 `huawei.com/npu`，必须替换所有出现位置。
 
@@ -431,9 +415,7 @@ spec:
 
 **仍用 Recreate**：一个副本占 4 张 NPU，无额外空闲时 RollingUpdate 无法先拉新副本。有冗余用 RollingUpdate；无冗余且允许中断用 Recreate；不能中断则蓝绿/分组/先扩容再切换；双池同模型可先切流量到另一池再更新本池，但须经第 28 篇验证。
 
----
-
-## 十一、应用与启动阶段观察
+## 10. 应用与启动阶段观察 {/* #十一应用与启动阶段观察 */}
 
 ```bash
 kubectl apply -f company-model-a-ascend.yaml
@@ -457,9 +439,7 @@ kubectl exec -n ai-serving <pod-name> -- npu-smi info
 
 每一步对应不同故障层，不能只搜索最后一行报错。
 
----
-
-## 十二、API 验收
+## 11. API 验收 {/* #十二api-验收 */}
 
 ```bash
 curl -fsS http://company-model-a-ascend.ai-serving.svc:8000/health
@@ -471,9 +451,7 @@ curl -fsS http://company-model-a-ascend.ai-serving.svc:8000/metrics | head
 
 接口相同不代表输出一定完全一致。双池同模型还应做：固定测试集正确性、输出格式、采样参数、工具调用/结构化输出、长上下文、并发吞吐时延、故障与超限行为对比。
 
----
-
-## 十三、常见故障的六层定位法
+## 12. 常见故障的六层定位法 {/* #十三常见故障的六层定位法 */}
 
 | 层 | 现象 | 优先检查 |
 |----|------|----------|
@@ -490,9 +468,7 @@ kubectl exec -n ai-serving <pod> -- ls -l /dev/davinci* /dev/davinci_manager
 kubectl logs -n ai-serving <pod> --tail=500
 ```
 
----
-
-## 十四、典型报错与处理方向
+## 13. 典型报错与处理方向 {/* #十四典型报错与处理方向 */}
 
 | 现象/报错类型 | 优先检查 |
 |---------------|----------|
@@ -507,20 +483,16 @@ kubectl logs -n ai-serving <pod> --tail=500
 | Pod Pending | 资源键、空闲 NPU、Label/Taint、调度器 |
 | 探针长期失败 | 仍在加载、卡住、超时过短、端点配置 |
 
----
-
-## 十五、关于首次编译和运行时缓存
+## 14. 关于首次编译和运行时缓存 {/* #十五关于首次编译和运行时缓存 */}
 
 昇腾模型首次运行可能涉及算子编译、图准备或缓存生成：首次启动/首请求显著更慢；本地缓存增长；同镜像在不同节点各自编译；缓存不可写导致重复编译或失败。
 
 建议：加载与业务 Ready 分开；Startup Probe 给足时间；预热后再接流量；运行时缓存与权威模型目录分开；缓存可重建；记录冷/热启动时长；不同版本缓存分目录；升级后勿盲目复用旧编译缓存。
 
----
+## 15. 十六～十七、监控与双池制品分开 {/* #十六十七监控与双池制品分开 */}
 
-## 十六～十七、监控与双池制品分开
-
-**NPU 层**：健康、HBM、AI Core、功耗温度、ECC、HCCS/RoCE、进程与设备映射。  
-**服务层**：成功率、TTFT、Token 吞吐、Running/Waiting、KV、启动与预热、首请求错误。  
+**NPU 层**：健康、HBM、AI Core、功耗温度、ECC、HCCS/RoCE、进程与设备映射。
+**服务层**：成功率、TTFT、Token 吞吐、Running/Waiting、KV、启动与预热、首请求错误。
 **软件栈事件**：CANN/算子错误、HCCL 超时、掉卡、Pod 重启、Device Plugin、节点 NotReady。
 
 推荐目录：
@@ -533,20 +505,16 @@ kubectl logs -n ai-serving <pod> --tail=500
 
 即使原始权重相同，也要把 Manifest、Tokenizer revision、量化元数据、引擎版本、硬件目标、启动参数、精度与性能报告分开。是否共享原始权重由制品规范决定，不能仅看扩展名相同。
 
----
+## 16. 十八～十九、发布前验收与练习 {/* #十八十九发布前验收与练习 */}
 
-## 十八～十九、发布前验收与练习
-
-**硬件与主机**：`npu-smi` 健康；固件驱动匹配；架构/OS 受支持；时钟同步；拓扑满足 TP。  
-**软件栈**：同一兼容行；Digest；容器内实际版本归档；模型与功能、量化受支持。  
-**Kubernetes**：真实资源键；Request/Limit；只调度昇腾池；Plugin/Runtime 正常；只见分配的 NPU；模型只读；探针与更新策略；RuntimeClass/调度器按集群配置。  
+**硬件与主机**：`npu-smi` 健康；固件驱动匹配；架构/OS 受支持；时钟同步；拓扑满足 TP。
+**软件栈**：同一兼容行；Digest；容器内实际版本归档；模型与功能、量化受支持。
+**Kubernetes**：真实资源键；Request/Limit；只调度昇腾池；Plugin/Runtime 正常；只见分配的 NPU；模型只读；探针与更新策略；RuntimeClass/调度器按集群配置。
 **服务**：health/models/流式与非流式；长上下文与并发；精度格式；HBM/HCCL/算子告警；回滚上一整套兼容矩阵已演练。
 
 **练习**：列出真实软件栈并对照兼容矩阵；从 Node Allocatable 找资源键做 Smoke Test；单机 4 卡 TP 记录启动/首请求/热请求/HBM/吞吐；与第 22 篇同请求集做双池对比（正确性、TTFT、吞吐、内存、冷启动、故障行为）。
 
----
-
-## 二十、本篇小结
+## 17. 本篇小结 {/* #二十本篇小结 */}
 
 ```text
 固件/驱动、CANN、torch_npu、vLLM、vLLM-Ascend 作为一套兼容组合
@@ -559,9 +527,7 @@ OpenAI 兼容 API 和 NPU 指标完成验收
 
 下一篇把单机多卡扩展到多机，系统理解 NVIDIA NCCL 与昇腾 HCCL 两条通信链路。
 
----
-
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [vLLM Ascend 首页](https://vllm-ascend.readthedocs.io/)
 - [vLLM Ascend Installation](https://vllm-ascend.readthedocs.io/en/latest/installation.html)
@@ -570,14 +536,10 @@ OpenAI 兼容 API 和 NPU 指标完成验收
 - [vLLM Ascend Supported Features](https://vllm-ascend.readthedocs.io/en/latest/user_guide/support_matrix/supported_features.html)
 - [vLLM Ascend Quantization](https://vllm-ascend.readthedocs.io/en/latest/user_guide/feature_guide/quantization.html)
 
----
-
-## 相关链接
+## 19. 相关链接 {/* #相关链接 */}
 
 - [专栏目录](./00-专栏目录.md)
 - [第 22 篇：NVIDIA 池部署原生 vLLM](./22-在NVIDIA机器部署原生vLLM.md)
 - [第 12 篇：部署昇腾 NPU 资源池](./12-部署昇腾NPU资源池.md)
-
----
 
 ← [第 22 篇](./22-在NVIDIA机器部署原生vLLM.md) · → [第 24 篇：NCCL与HCCL多卡多机](./24-多卡多机NCCL路线与HCCL路线.md)

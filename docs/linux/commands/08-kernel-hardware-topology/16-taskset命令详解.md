@@ -1,11 +1,12 @@
 ---
-title: taskset 命令详解：设置 CPU affinity、线程范围与容器边界
+title: "taskset 命令详解：设置 CPU affinity、线程范围与容器边界"
+sidebar_label: "16. taskset 命令详解：设置 CPU affinity、线程范围与容器边界"
 sidebar_position: 16
-description: 完整讲解 taskset 的全部长短参数、十六进制 mask 与 CPU list、stride、PID 和全部线程、cpuset/cgroup 交集、权限及性能实验方法。
+description: "完整讲解 taskset 的全部长短参数、十六进制 mask 与 CPU list、stride、PID 和全部线程、cpuset/cgroup 交集、权限及性能实验方法。"
 tags: [Linux, taskset, CPU亲和性, 调度, 性能分析]
 ---
 
-# `taskset` 命令详解：设置 CPU affinity、线程范围与容器边界
+# taskset 命令详解：设置 CPU affinity、线程范围与容器边界
 
 `taskset` 读取或设置 task 的 CPU affinity。affinity 是允许执行的 CPU 集合，不是 CPU 独占、实时优先级或 NUMA memory policy；scheduler 仍在集合内选择 CPU。
 

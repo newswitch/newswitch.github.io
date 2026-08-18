@@ -1,11 +1,12 @@
 ---
-title: loginctl 命令详解：会话、用户、seat 与 linger 生命周期
+title: "loginctl 命令详解：会话、用户、seat 与 linger 生命周期"
+sidebar_label: "06. loginctl 命令详解：会话、用户、seat 与 linger 生命周期"
 sidebar_position: 6
-description: 完整讲解 loginctl 的 session、user、seat、linger、锁定、终止、信号和属性输出命令及全部参数，理解 logind 与用户 manager 边界。
+description: "完整讲解 loginctl 的 session、user、seat、linger、锁定、终止、信号和属性输出命令及全部参数，理解 logind 与用户 manager 边界。"
 tags: [Linux, loginctl, systemd-logind, session, linger, seat]
 ---
 
-# `loginctl` 命令详解：会话、用户、seat 与 linger 生命周期
+# loginctl 命令详解：会话、用户、seat 与 linger 生命周期
 
 `loginctl` 查询和控制 `systemd-logind` 管理的登录 session、登录用户和 seat。它不是 `who` 的简单替代，也不等于用户进程全集：cron、容器、脱离会话的服务和 linger 用户 manager 都可能超出直觉。
 
@@ -114,7 +115,7 @@ journalctl _SYSTEMD_SESSION=3 -b --no-pager
 
 掌握标准：能列出全部对象子命令和参数，解释 session/user/seat/user manager/cgroup 的关系，使用稳定属性定位会话，并在任何终止或设备变更前确认爆炸半径。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [loginctl(1)](https://www.freedesktop.org/software/systemd/man/latest/loginctl.html)
 - [systemd-logind.service(8)](https://www.freedesktop.org/software/systemd/man/latest/systemd-logind.service.html)

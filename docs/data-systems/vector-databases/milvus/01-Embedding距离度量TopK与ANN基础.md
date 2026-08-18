@@ -2,8 +2,8 @@
 title: "Embedding、距离度量、Top-K 与 ANN 基础"
 sidebar_label: "01. Embedding、距离度量、Top-K 与 ANN 基础"
 sidebar_position: 1
-tags: [Milvus, Embedding, Vector, ANN, Top-K]
 description: "在进入 Milvus 组件之前，建立向量生成、归一化、距离度量、Top-K、精确检索与近似最近邻的正确模型。"
+tags: [Milvus, Embedding, Vector, ANN, Top-K]
 ---
 
 # Embedding、距离度量、Top-K 与 ANN 基础
@@ -87,7 +87,7 @@ Recall@K = ANN Top-K 与精确 Top-K 的交集数量 / K
 
 ## 6. 常见 ANN 思路
 
-### IVF
+### 6.1 IVF {/* #ivf */}
 
 训练若干聚类中心，将向量分配到倒排桶。查询时只探测部分桶。
 
@@ -96,7 +96,7 @@ Recall@K = ANN Top-K 与精确 Top-K 的交集数量 / K
 更大 nprobe                 → 召回提高，计算和延迟增加
 ```
 
-### HNSW
+### 6.2 HNSW {/* #hnsw */}
 
 构建多层近邻图，查询从稀疏高层逐步走向稠密底层。
 
@@ -105,7 +105,7 @@ Recall@K = ANN Top-K 与精确 Top-K 的交集数量 / K
 更大搜索宽度 → 召回更高、查询更慢
 ```
 
-### Quantization
+### 6.3 Quantization {/* #quantization */}
 
 用更紧凑表示减少内存和距离计算成本，但引入量化误差。是否可接受必须通过真实数据评测，不能仅凭索引名字判断。
 

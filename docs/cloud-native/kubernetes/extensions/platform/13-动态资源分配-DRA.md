@@ -2,8 +2,8 @@
 title: "DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型"
 sidebar_label: "13. DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型"
 sidebar_position: 13
-tags: [Kubernetes, 扩展, PartII, 学习路线]
 description: "DRA（Dynamic Resource Allocation）将“设备类资源”的分配从静态整数配额升级为可协商、可选择、可共享、可晚绑定的声明式流程，是 Kubernetes 面向 GPU/FPGA/SmartNIC 等异构硬件的核心演进方向。"
+tags: [Kubernetes, 扩展, PartII, 学习路线]
 ---
 
 # DRA（Dynamic Resource Allocation）：Kubernetes 的新一代资源分配模型
@@ -14,7 +14,7 @@ DRA（Dynamic Resource Allocation，动态资源分配）是 Kubernetes 面向�
 
 在 Kubernetes v1.34 版本中，DRA 已进入 stable 阶段并默认启用（实际分配设备仍需安装对应驱动）。
 
-## 为什么需要 DRA
+## 1. 为什么需要 DRA {/* #为什么需要-dra */}
 
 传统模型下，最常见的做法是为节点暴露一个类似 `vendor.com/gpu: 8` 的扩展资源，Pod 通过 `resources.limits` 申请整数个 GPU。但这种方式在工程实践中存在结构性瓶颈：
 
@@ -25,11 +25,11 @@ DRA（Dynamic Resource Allocation，动态资源分配）是 Kubernetes 面向�
 
 DRA 的核心价值在于：Kubernetes 负责调度框架与声明式 API，**设备语义由 Driver 承担**，从而避免将异构硬件的复杂性固化进 Kubernetes 核心。
 
-## DRA 的核心对象与角色
+## 2. DRA 的核心对象与角色 {/* #dra-的核心对象与角色 */}
 
 DRA 引入（或强化）了一组围绕 `resource.k8s.io` API 的对象，用于串联“设备请求—设备可用性—分配结果”的全流程：
 
-### DeviceClass：设备类型与选择规则（集群侧）
+### 2.1 DeviceClass：设备类型与选择规则（集群侧） {/* #deviceclass设备类型与选择规则集群侧 */}
 
 `DeviceClass` 描述一类可分配设备的“抽象入口”，包含如下要素：
 
@@ -39,7 +39,7 @@ DRA 引入（或强化）了一组围绕 `resource.k8s.io` API 的对象，用�
 
 它更像“设备池/设备类”的入口，而非具体某块设备。
 
-### ResourceClaim：一次具体的设备请求（命名空间内）
+### 2.2 ResourceClaim：一次具体的设备请求（命名空间内） {/* #resourceclaim一次具体的设备请求命名空间内 */}
 
 `ResourceClaim` 是工作负载侧实际“申请设备”的对象，表达如下内容：
 
@@ -49,15 +49,15 @@ DRA 引入（或强化）了一组围绕 `resource.k8s.io` API 的对象，用�
 
 一个 `ResourceClaim` 可被一个或多个 Pod 引用（取决于 driver 支持与 claim 设计目标）。
 
-### ResourceClaimTemplate：声明式模板（按需创建 Claim）
+### 2.3 ResourceClaimTemplate：声明式模板（按需创建 Claim） {/* #resourceclaimtemplate声明式模板按需创建-claim */}
 
 如不希望手动创建 `ResourceClaim`，可用 `ResourceClaimTemplate` 作为模板，让 Kubernetes 在创建 Pod/Job 时自动生成对应 claim，实现“随 Pod 生命周期按需申请”。
 
-### ResourceSlice：设备可用性发布（driver 侧）
+### 2.4 ResourceSlice：设备可用性发布（driver 侧） {/* #resourceslice设备可用性发布driver-侧 */}
 
 DRA driver 通过 `ResourceSlice` 向集群发布其管理的设备清单与属性（如型号、拓扑、容量、可切分能力等）。调度与分配阶段会基于这些信息做决策。
 
-## DRA 的工作流：从“声明”到“注入”
+## 3. DRA 的工作流：从“声明”到“注入” {/* #dra-的工作流从声明到注入 */}
 
 DRA 采用“声明式 + 多阶段协商”流程，整体工作流如下：
 
@@ -88,11 +88,11 @@ sequenceDiagram
 - **节点阶段**：Kubelet 侧通过插件与 driver 协作完成“设备注入”（如生成 CDI 规范、挂载设备节点、配置环境变量、准备 runtime hooks 等）。
 - **语义外置**：哪些属性可选、如何切分、是否支持共享、何时释放，均由 driver 实现负责。
 
-## 工作负载如何使用 DRA：示例（Claim + Template + Pod/Job）
+## 4. 工作负载如何使用 DRA：示例（Claim + Template + Pod/Job） {/* #工作负载如何使用-dra示例claim--template--podjob */}
 
 以下通过官方示例结构，演示关键写法（重点在字段位置与引用方式）。
 
-### 创建 ResourceClaimTemplate（推荐：按需创建）
+### 4.1 创建 ResourceClaimTemplate（推荐：按需创建） {/* #创建-resourceclaimtemplate推荐按需创建 */}
 
 在实际应用中，通常推荐通过模板自动创建 claim。下面是一个 ResourceClaimTemplate 的 YAML 示例：
 
@@ -119,7 +119,7 @@ spec:
 - `selectors` 用于按设备属性筛选（示例用 CEL 表达 NUMA 亲和）。
 - `allocationMode/count` 表达“数量”是最基础的方式；更复杂的“容量/切分”通常由 driver 的 parameters/attributes 实现。
 
-### 创建 ResourceClaim（可复用：多个 Pod/容器共享同一 claim）
+### 4.2 创建 ResourceClaim（可复用：多个 Pod/容器共享同一 claim） {/* #创建-resourceclaim可复用多个-pod容器共享同一-claim */}
 
 如需多个 Pod/容器共享同一 claim，可手动创建 ResourceClaim：
 
@@ -140,7 +140,7 @@ spec:
       count: 1
 ```
 
-### 在 Pod/Job 中引用（核心：Pod 级 `resourceClaims` + 容器级 `resources.claims`）
+### 4.3 在 Pod/Job 中引用（核心：Pod 级 `resourceClaims` + 容器级 `resources.claims`） {/* #在-podjob-中引用核心pod-级-resourceclaims--容器级-resourcesclaims */}
 
 下例展示了如何在 Job 中引用 claim。一个容器独占一个 claim，另两个容器共享同一个 claim：
 
@@ -186,7 +186,7 @@ spec:
 - **Pod 级别**：用 `spec.resourceClaims[]` 声明“该 Pod 需要哪些 claim（以及 claim 来源：template 还是已存在的 claim）”。
 - **容器级别**：用 `container.resources.claims[]` 声明“该容器消费 Pod 的哪一个 claim（通过 name 引用）”。
 
-## 集群侧需要做什么：启用与安装驱动
+## 5. 集群侧需要做什么：启用与安装驱动 {/* #集群侧需要做什么启用与安装驱动 */}
 
 虽然 DRA 在 v1.34 已 stable 并默认启用，但集群要真正支持设备分配，还需完成以下准备：
 
@@ -196,13 +196,13 @@ spec:
 
 [官方教程](https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/)提供了示例 driver 的安装方式，采用 DaemonSet 在每个节点部署 kubelet plugin。生产环境 driver 通常还会补充健康检查、节点能力探测与更完善的安全边界设计。
 
-## 与 device plugin / extended resources 的关系
+## 6. 与 device plugin / extended resources 的关系 {/* #与-device-plugin--extended-resources-的关系 */}
 
 DRA 并非简单“替代 device plugin”，更准确地说，它为设备类资源提供了更通用的分配抽象，并将设备语义标准化为 API + driver 行为。
 
 为兼容既有生态，Kubernetes 也支持将 DRA 与 extended resources 关联（如在 `DeviceClass` 中指定扩展资源名，使仍使用 `vendor.com/gpu` 的工作负载可逐步迁移到 DRA 模型）。
 
-## 什么时候应该优先使用 DRA
+## 7. 什么时候应该优先使用 DRA {/* #什么时候应该优先使用-dra */}
 
 优先考虑 DRA 的场景通常具备以下特征：
 
@@ -213,6 +213,6 @@ DRA 并非简单“替代 device plugin”，更准确地说，它为设备类�
 
 对于 AI 推理/训练等场景，DRA 的长期意义在于：它让“算力资源”从整数配额走向“可描述、可协商、可治理”的资源模型，为后续的 GPU 虚拟化、配额/队列系统、拓扑感知调度与成本模型提供坚实的 API 基础。
 
-## 总结
+## 8. 总结 {/* #总结 */}
 
 DRA 为 Kubernetes 设备类资源管理带来了更高的灵活性和可扩展性。通过声明式 API 与 driver 解耦，DRA 支持按属性、容量、拓扑等多维度请求和分配设备，满足异构硬件和 AI 场景下的复杂需求。随着 DRA 进入 stable 并逐步完善，未来的算力治理与资源调度将更加智能和可控。

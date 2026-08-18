@@ -1,11 +1,12 @@
 ---
-title: kubectl logs、exec、debug、cp 与 port-forward：Pod 调试和取证
+title: "kubectl logs、exec、debug、cp 与 port-forward：Pod 调试和取证"
+sidebar_label: "04. kubectl logs、exec、debug、cp 与 port-forward：Pod 调试和取证"
 sidebar_position: 4
-description: 系统使用 kubectl logs、exec、attach、debug、cp、port-forward 和 proxy，处理多容器、崩溃实例、临时容器与节点调试。
+description: "系统使用 kubectl logs、exec、attach、debug、cp、port-forward 和 proxy，处理多容器、崩溃实例、临时容器与节点调试。"
 tags: [Kubernetes, kubectl, logs, exec, debug, Pod 排障]
 ---
 
-# kubectl Pod 调试与现场取证
+# kubectl logs、exec、debug、cp 与 port-forward：Pod 调试和取证
 
 Pod 调试的核心是保持对象身份与时间线：Pod 名可能复用，容器会重启，日志会轮转。先记录 namespace、Pod UID、Node、容器名、restartCount、current/last state，再进入现场。
 
@@ -94,7 +95,7 @@ kubectl events -n ai-prod --for pod/inference > events.txt
 
 能取到当前和上一实例日志；能解释 exec/attach/debug 的进程和权限差异；能在不修改业务镜像的情况下使用临时容器；能证明调试操作的身份、时间、目标 UID 和影响。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [kubectl logs](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/)
 - [kubectl exec](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_exec/)

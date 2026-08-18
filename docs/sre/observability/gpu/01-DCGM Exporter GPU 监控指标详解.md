@@ -1,16 +1,16 @@
 ---
-title: DCGM Exporter GPU 监控指标详解
+title: "DCGM Exporter GPU 监控指标详解"
 sidebar_label: "01. DCGM Exporter GPU 监控指标详解"
+sidebar_position: 1
+description: "GPU 集群没有指标，就无法做容量、排障和租户对账。推荐栈：DCGM → dcgm-exporter → Prometheus → Grafana。本文整理自 使用 DCGM 监控 Kubernetes 中的 GPU、About GPU Telemetry、DCGM Exporter。前置：G……"
+tags: ["DCGM", "dcgm-exporter", "Prometheus", "GPU", "监控", "学习路线"]
 date: 2026-07-22 18:30:00
 categories: 云原生
-tags: ["DCGM", "dcgm-exporter", "Prometheus", "GPU", "监控", "学习路线"]
 ---
 
 # DCGM Exporter GPU 监控指标详解
 
 GPU 集群没有指标，就无法做容量、排障和租户对账。推荐栈：**DCGM → dcgm-exporter → Prometheus → Grafana**。本文整理自 [使用 DCGM 监控 Kubernetes 中的 GPU](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/)、[About GPU Telemetry](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/index.html)、[DCGM Exporter](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/dcgm-exporter.html)。前置：[GPU Operator](../../../gpu/cluster/device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)（默认可带上 dcgm-exporter）。
-
----
 
 ## 1. 监控栈长什么样
 
@@ -25,13 +25,11 @@ GPU 节点
 
 要点：
 
-- **DCGM**：数据中心 GPU 管理与遥测（健康、诊断、功耗/时钟策略等）  
-- **dcgm-exporter**：用 Go 绑定拉 DCGM 字段，以 Prometheus 格式暴露  
-- **Kubelet Pod Resources API**（`/var/lib/kubelet/pod-resources`）：把 GPU 指标打上 **Pod / Namespace** 标签，才能做「谁在用哪张卡」  
+- **DCGM**：数据中心 GPU 管理与遥测（健康、诊断、功耗/时钟策略等）
+- **dcgm-exporter**：用 Go 绑定拉 DCGM 字段，以 Prometheus 格式暴露
+- **Kubelet Pod Resources API**（`/var/lib/kubelet/pod-resources`）：把 GPU 指标打上 **Pod / Namespace** 标签，才能做「谁在用哪张卡」
 
 GPU Operator 默认会部署 dcgm-exporter；也可单独 Helm 安装。
-
----
 
 ## 2. 部署方式
 
@@ -97,8 +95,6 @@ curl localhost:9400/metrics | head
 
 K8s 中需挂载 kubelet pod-resources socket，Helm chart 一般已配好。
 
----
-
 ## 3. 核心指标怎么读
 
 指标名随 DCGM / CSV 配置略有增减；下列为训练/推理值班最常用的一类。单位与标签以 `/metrics` HELP 行为准。
@@ -158,8 +154,6 @@ Xid 专项见第 47 篇；告警规则见 [第 39 篇](./02-Prometheus%20GPU%20�
 
 开启 MIG 后，exporter 可同时暴露 **整卡** 与 **GPU Instance** 指标（标签含 `GPU_I_PROFILE`、`GPU_I_ID` 等）。MIG 模式下调度按 instance 记账，看板需按标签区分。
 
----
-
 ## 4. 标签与「每 Pod」视角
 
 开启 Kubernetes 映射后，指标可带 `pod`、`namespace`、`container` 等（具体 label 名以你版本为准）。这样就能：
@@ -170,8 +164,6 @@ avg by (namespace) (DCGM_FI_DEV_GPU_UTIL{namespace!=""})
 ```
 
 没有 Pod 映射时，只能按 `gpu` / `UUID` / `Hostname` 看节点卡，难以做租户账单。
-
----
 
 ## 5. 验收清单
 
@@ -188,8 +180,6 @@ curl -s http://<node>:9400/metrics | grep DCGM_FI_DEV_GPU_UTIL
 
 导入 NVIDIA 提供的 Grafana JSON（博客与 Telemetry 文档有入口），确认利用率、功耗、显存面板有数。
 
----
-
 ## 6. 小结
 
 | 主题 | 要点 |
@@ -201,13 +191,11 @@ curl -s http://<node>:9400/metrics | grep DCGM_FI_DEV_GPU_UTIL
 
 下一篇：[Prometheus GPU 告警策略设计](./02-Prometheus%20GPU%20告警策略设计.md)。
 
----
+## 7. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [使用 DCGM 监控 Kubernetes 中的 GPU](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/)  
-- [About GPU Telemetry](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/index.html)  
-- [DCGM Exporter](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/dcgm-exporter.html)  
-- [Setting up Prometheus](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/kube-prometheus.html)  
+- [使用 DCGM 监控 Kubernetes 中的 GPU](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/)
+- [About GPU Telemetry](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/index.html)
+- [DCGM Exporter](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/dcgm-exporter.html)
+- [Setting up Prometheus](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/kube-prometheus.html)
 
 本文基于上述 NVIDIA 博客与官方 Telemetry 文档整理。

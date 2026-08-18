@@ -1,11 +1,12 @@
 ---
-title: crictl 命令详解：从 kubelet 的 CRI 视角排查节点
+title: "crictl 命令详解：从 kubelet 的 CRI 视角排查节点"
+sidebar_label: "11. crictl 命令详解：从 kubelet 的 CRI 视角排查节点"
 sidebar_position: 11
-description: 掌握 crictl 的 Runtime Endpoint、Pod Sandbox、容器、镜像、日志、exec、stats 和 inspect，建立 Kubernetes 节点排障闭环。
+description: "掌握 crictl 的 Runtime Endpoint、Pod Sandbox、容器、镜像、日志、exec、stats 和 inspect，建立 Kubernetes 节点排障闭环。"
 tags: [Kubernetes, CRI, crictl, kubelet, containerd, 节点排障]
 ---
 
-# crictl 命令详解
+# crictl 命令详解：从 kubelet 的 CRI 视角排查节点
 
 `crictl` 直接调用 kubelet 使用的 Container Runtime Interface，能观察 Pod Sandbox、Container、Image 和 Runtime Status。它是 Kubernetes 节点首选运行时排障工具，但不是面向用户的容器编排器：用它创建的对象不在 API Server 期望状态中，可能被 kubelet 清理。
 
@@ -123,7 +124,7 @@ Kubernetes `containerID` 常含 `containerd://` 前缀，传给 crictl 时可使
 
 能配置正确 Endpoint；能把 Kubernetes Pod UID 映射到 Sandbox 和每次 Container Attempt；能在 API 不可用时取日志；能判断 RuntimeReady/NetworkReady；不会用 crictl 删除来替代 Kubernetes 生命周期管理。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [Debugging Kubernetes Nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
 - [cri-tools crictl documentation](https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md)

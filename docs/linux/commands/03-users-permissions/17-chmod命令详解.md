@@ -1,11 +1,12 @@
 ---
-title: chmod 命令详解：符号权限、八进制、特殊位与递归安全
+title: "chmod 命令详解：符号权限、八进制、特殊位与递归安全"
+sidebar_label: "17. chmod 命令详解：符号权限、八进制、特殊位与递归安全"
 sidebar_position: 17
-description: 完整讲解 GNU coreutils chmod 9.11 参数、符号与数字 mode、目录权限、setuid/setgid/sticky、ACL 交互、符号链接遍历和生产回滚。
+description: "完整讲解 GNU coreutils chmod 9.11 参数、符号与数字 mode、目录权限、setuid/setgid/sticky、ACL 交互、符号链接遍历和生产回滚。"
 tags: [Linux, chmod, 文件权限, setuid, sticky]
 ---
 
-# `chmod` 命令详解：符号权限、八进制、特殊位与递归安全
+# chmod 命令详解：符号权限、八进制、特殊位与递归安全
 
 `chmod` 修改 inode 的 mode bits。它不改变 owner/group，也不直接管理 SELinux、AppArmor、capabilities、mount flags 或 NFSv4 ACL；存在 POSIX ACL 时，group mode 位对应 ACL mask，结果不能只看 `ls -l`。
 
@@ -130,7 +131,7 @@ chmod --preserve-root -R -P u=rwX,g=rX,o= -- "$root"
 
 掌握标准：能列出全部参数；能从 inode/路径/ACL/LSM 多层解释 EACCES；能设计不跨文件系统、不追随意外 symlink、可审计回滚的递归变更。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：chmod(1)](https://man7.org/linux/man-pages/man1/chmod.1.html)
 - [Linux chmod(2)](https://man7.org/linux/man-pages/man2/chmod.2.html)

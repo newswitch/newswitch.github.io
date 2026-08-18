@@ -1,9 +1,9 @@
 ---
-title: SGLang 生产参数参考
+title: "SGLang 生产参数参考"
 sidebar_label: "02. SGLang 生产参数参考"
 sidebar_position: 2
+description: "按模型、内存、Radix Cache、调度、Kernel、Graph、并行和请求层解释 SGLang Server 参数及调优因果关系。"
 tags: [SGLang, 参数, Radix Cache, Scheduler, CUDA Graph]
-description: 按模型、内存、Radix Cache、调度、Kernel、Graph、并行和请求层解释 SGLang Server 参数及调优因果关系。
 ---
 
 # SGLang 生产参数参考
@@ -80,7 +80,7 @@ python -m sglang.launch_server \
 | `--model-loader-extra-config` | Loader 专属 JSON | 字段依 Loader 变化 |
 | `--download-dir` | 下载/缓存目录 | 影响冷启动、磁盘和多副本共享 |
 
-### 多模态模型
+### 3.1 多模态模型 {/* #多模态模型 */}
 
 | 参数 | 作用 |
 |---|---|
@@ -194,7 +194,7 @@ OOM 时首先降低 `mem_fraction_static` 并观察是哪一阶段失败。启�
 | `--enable-dynamic-chunking` | 动态计算 Pipeline Chunk | PP 场景使用，依赖在线拟合与稳定工作负载 |
 | Prefill Delayer 参数 | 在 DP Attention 场景延迟 Prefill | 用于减少空闲，需控制最大延迟和水位 |
 
-### Request Retract
+### 9.1 Request Retract {/* #request-retract */}
 
 当 KV 预算不足，SGLang 可能撤回运行请求并稍后重调度。频繁 Retract 的证据包括尾延迟升高、重复计算和相关计数增加。优先检查：
 
@@ -232,7 +232,7 @@ OOM 时首先降低 `mem_fraction_static` 并观察是哪一阶段失败。启�
 | `--enable-dp-attention` | Attention 使用 DP 组织 | 依模型/拓扑，改变权重和通信分工 |
 | `--dp-size` + Router | 多 DP 实例路由 | 官方通常推荐配合 SGLang Model Gateway |
 
-### 多节点 TP
+### 11.1 多节点 TP {/* #多节点-tp */}
 
 | 参数 | 作用 |
 |---|---|
@@ -416,7 +416,7 @@ Overlap 可减少 Kernel 间空洞，但增加并发状态和排障复杂度。�
 [ ] 回滚和进程/网络/GPU 故障演练完成
 ```
 
-## 官方资料
+## 24. 官方资料 {/* #官方资料 */}
 
 - [Server Arguments](https://docs.sglang.io/docs/advanced_features/server_arguments)
 - [Hyperparameter Tuning](https://docs.sglang.io/docs/advanced_features/hyperparameter_tuning)

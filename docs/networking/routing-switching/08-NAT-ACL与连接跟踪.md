@@ -1,9 +1,9 @@
 ---
-title: NAT、ACL、状态防火墙与连接跟踪
+title: "NAT、ACL、状态防火墙与连接跟踪"
 sidebar_label: "08. NAT、ACL、状态防火墙与连接跟踪"
 sidebar_position: 8
+description: "理解无状态过滤、状态防火墙、Netfilter Hook、连接跟踪和 SNAT/DNAT 的真实数据路径。"
 tags: [NAT, ACL, Firewall, Conntrack, nftables]
-description: 理解无状态过滤、状态防火墙、Netfilter Hook、连接跟踪和 SNAT/DNAT 的真实数据路径。
 ---
 
 # NAT、ACL、状态防火墙与连接跟踪
@@ -98,7 +98,7 @@ NAT 通常只在首包创建映射，后续包根据 Conntrack 快速应用同�
 
 ## 6. SNAT、DNAT 和端口转换
 
-### SNAT
+### 6.1 SNAT {/* #snat */}
 
 改变源地址，常用于私网访问公网：
 
@@ -107,7 +107,7 @@ NAT 通常只在首包创建映射，后续包根据 Conntrack 快速应用同�
 → 198.51.100.10:40001
 ```
 
-### DNAT
+### 6.2 DNAT {/* #dnat */}
 
 改变目的地址，常用于把公网地址发布到内网服务：
 
@@ -116,7 +116,7 @@ NAT 通常只在首包创建映射，后续包根据 Conntrack 快速应用同�
 → 10.0.1.20:8443
 ```
 
-### PAT/NAPT
+### 6.3 PAT/NAPT {/* #patnapt */}
 
 多个内部连接共享一个公网 IP，通过端口区分映射。容量取决于可用公网地址、端口范围、
 五元组复用规则、连接生命周期和目标分布。
@@ -230,7 +230,7 @@ DNS 视图管理成本。
 - 非对称路由只影响抓包：它会直接破坏状态防火墙和 NAT。
 - MASQUERADE 适用于所有场景：固定公网地址通常更适合显式 SNAT。
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [Linux Netfilter Documentation](https://www.netfilter.org/documentation/)
 - [nftables Wiki](https://wiki.nftables.org/)

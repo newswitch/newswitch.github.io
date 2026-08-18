@@ -1,11 +1,12 @@
 ---
-title: type 命令详解：识别 Alias、Function、Builtin 与可执行文件
+title: "type 命令详解：识别 Alias、Function、Builtin 与可执行文件"
+sidebar_label: "03. type 命令详解：识别 Alias、Function、Builtin 与可执行文件"
 sidebar_position: 3
-description: 完整讲解 Bash type 的 -a/-f/-P/-p/-t、PATH 查找、hash 与同名命令排障。
+description: "完整讲解 Bash type 的 -a/-f/-P/-p/-t、PATH 查找、hash 与同名命令排障。"
 tags: [Linux, Bash, type, PATH, 命令查找]
 ---
 
-# `type` 命令详解：证明一个名称到底执行什么
+# type 命令详解：识别 Alias、Function、Builtin 与可执行文件
 
 `type` 使用 Bash 自己的命令查找规则，能识别 alias、keyword、function、builtin、hashed file 和 PATH executable，是排查“同名命令行为不一样”的第一步。
 

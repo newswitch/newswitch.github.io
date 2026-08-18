@@ -1,9 +1,11 @@
 ---
-title: NVIDIA Device Plugin 部署与配置
+title: "NVIDIA Device Plugin 部署与配置"
 sidebar_label: "02. NVIDIA Device Plugin 部署与配置"
+sidebar_position: 2
+description: "本文是 NVIDIA/k8s-device-plugin 官方 README 的中文整理，说明如何在 Kubernetes 中部署、配置 NVIDIA Device Plugin，以及 Time-Slicing / MPS、Helm、GFD 等能力。原理见 Device Plugin 机制，分……"
+tags: ["Kubernetes", "GPU", "Device Plugin", "Helm", "Time-Slicing", "MPS", "学习路线"]
 date: 2026-07-22 16:40:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "Device Plugin", "Helm", "Time-Slicing", "MPS", "学习路线"]
 ---
 
 # NVIDIA Device Plugin 部署与配置
@@ -12,25 +14,21 @@ tags: ["Kubernetes", "GPU", "Device Plugin", "Helm", "Time-Slicing", "MPS", "学
 
 下文示例版本以 **v0.17.1** 为主（以仓库当前发布为准）。
 
----
-
 ## 1. 简介
 
 NVIDIA Device Plugin 以 **DaemonSet** 方式运行，用于：
 
-- 向集群暴露每个节点的 GPU 数量  
-- 跟踪 GPU 健康状态（能力仍在增强中）  
-- 让集群能跑启用 GPU 的容器  
+- 向集群暴露每个节点的 GPU 数量
+- 跟踪 GPU 健康状态（能力仍在增强中）
+- 让集群能跑启用 GPU 的容器
 
 这是 NVIDIA **官方** Device Plugin 实现。自 **v0.15.0** 起，仓库也包含 **GPU Feature Discovery (GFD)** 相关实现。
 
 需要注意：
 
-- Device Plugin API 自 Kubernetes v1.10 起为 beta  
-- 当前仍相对缺少：全面的 GPU 健康检查、GPU 清理等能力  
+- Device Plugin API 自 Kubernetes v1.10 起为 beta
+- 当前仍相对缺少：全面的 GPU 健康检查、GPU 清理等能力
 - NVIDIA 只对**官方插件**提供支持（不含 fork / 魔改变体）
-
----
 
 ## 2. 前置条件
 
@@ -47,9 +45,9 @@ NVIDIA Device Plugin 以 **DaemonSet** 方式运行，用于：
 
 按官方指南安装 Toolkit 后，分别配置：
 
-- containerd  
-- CRI-O  
-- Docker（已标记 Deprecated）  
+- containerd
+- CRI-O
+- Docker（已标记 Deprecated）
 
 改完配置后记得重启对应 runtime。
 
@@ -97,8 +95,6 @@ runtimes = ["crun", "docker-runc", "runc"]
 sudo systemctl restart crio
 ```
 
----
-
 ## 3. 快速开始
 
 ### 3.1 启用 GPU 支持
@@ -138,8 +134,6 @@ kubectl logs gpu-pod
 ```
 
 **警告：** 若使用了 Device Plugin，但容器**没有申请** GPU，插件可能把机器上**所有 GPU** 暴露进该容器。务必在 `limits` 中显式申请（见 [GPU Pod 配置](./04-Kubernetes%20GPU%20Pod%20配置详解.md)）。
-
----
 
 ## 4. 配置 Device Plugin
 
@@ -181,8 +175,8 @@ flags:
 
 **MIG_STRATEGY**
 
-- `none`：不暴露 MIG  
-- `single` / `mixed`：按策略暴露 MIG；`mixed` 下会出现形如 `nvidia.com/mig-<slice>g.<mem>gb` 的资源  
+- `none`：不暴露 MIG
+- `single` / `mixed`：按策略暴露 MIG；`mixed` 下会出现形如 `nvidia.com/mig-<slice>g.<mem>gb` 的资源
 
 **DEVICE_LIST_STRATEGY**（可逗号组合）
 
@@ -195,14 +189,12 @@ flags:
 
 **DEVICE_ID_STRATEGY**
 
-- `uuid`：传统 UUID  
-- `index`：`nvidia-smi` 看到的编号；在「Pod 重启后物理卡可能变化」等场景可能更合适  
+- `uuid`：传统 UUID
+- `index`：`nvidia-smi` 看到的编号；在「Pod 重启后物理卡可能变化」等场景可能更合适
 
 **NVIDIA_DRIVER_ROOT**
 
 宿主机直装驱动用 `/`；驱动容器场景用驱动所在 rootfs（如 `/run/nvidia/driver`）。主要在配合 `PASS_DEVICE_SPECS` 时给设备路径加前缀。
-
----
 
 ## 5. GPU 共享：Time-Slicing 与 MPS
 
@@ -230,8 +222,8 @@ sharing:
 
 含义：每个对应物理 GPU 生成 `replicas` 份可调度引用。8 卡 × 10 → Capacity 变为 `nvidia.com/gpu: 80`。
 
-- `renameByDefault: true` → 资源名变为 `nvidia.com/gpu.shared`  
-- `failRequestsGreaterThanOne: true` → 单容器申请超过 1 个共享资源会失败（`UnexpectedAdmissionError`）。推荐打开，便于理解「1 = 访问权」而非「独占算力」；默认 `false` 仅为兼容旧行为  
+- `renameByDefault: true` → 资源名变为 `nvidia.com/gpu.shared`
+- `failRequestsGreaterThanOne: true` → 单容器申请超过 1 个共享资源会失败（`UnexpectedAdmissionError`）。推荐打开，便于理解「1 = 访问权」而非「独占算力」；默认 `false` 仅为兼容旧行为
 
 注意：申请多个 shared GPU **不保证**按比例独占算力，只表示拿到被多人共享的卡；CUDA 会在客户端进程间均分时间片。
 
@@ -253,8 +245,6 @@ sharing:
 
 更细的实践可另见本系列 [Time-Slicing 配置实践](../sharing/08-Kubernetes%20GPU%20Time-Slicing%20配置实践.md)、[整卡/共享/MIG 对比](../sharing/07-GPU%20整卡独占、Time-Slicing、MPS%20与%20MIG%20对比.md)。
 
----
-
 ## 6. IMEX 支持
 
 可全局选择是否向工作负载注入 IMEX channel（可选）：
@@ -266,8 +256,6 @@ sharing:
 | `[0]` | `true` | 能发现则添加；不能发现则报错 |
 
 目前有效 `channelIDs` 基本是 `[]` 与 `[0]`。容器化插件要能发现 IMEX，需保证对应设备节点对容器可见。
-
----
 
 ## 7. 相关标签（节选）
 
@@ -281,8 +269,6 @@ sharing:
 | `nvidia.com/vgpu.host-driver-branch` / `host-driver-version` | 宿主机侧 vGPU 驱动信息 |
 
 GFD 还会追加产品型号、显存等标签；共享开启时还可能有 `nvidia.com/<resource>.replicas` 等。
-
----
 
 ## 8. Helm 部署（推荐）
 
@@ -384,8 +370,6 @@ helm upgrade -i nvdp nvdp/nvidia-device-plugin \
 
 也可直接用 chart tarball URL 安装（不经过 helm repo）。完整可覆盖项见上游 `values.yaml`。
 
----
-
 ## 9. 本地构建与运行（开发向）
 
 多数用户无需此步。可用预构建镜像：
@@ -402,19 +386,15 @@ docker pull nvcr.io/nvidia/k8s-device-plugin:v0.17.1
 
 与 CPUManager 静态策略兼容时需 `--pass-device-specs` 且通常要 privileged。也可用 Go 本地编译运行。
 
----
-
 ## 10. 版本与升级
 
-- 早期（约 v1.8–v1.12）版本号曾与 Kubernetes 版本强绑定，易混淆  
-- 现已改为 **SEMVER**（从 `v0.0.0` 起）；主版本随 Device Plugin API 变化  
-- Kubernetes ≥ 1.10 可用 `v0.x` 系插件  
-- **升级 Kubernetes**：一般不必换插件大版本；节点回来后 GPU 会重新注册  
-- **升级插件本身**：建议先排空 GPU 任务；滚动升级不保证任务存活，官方会尽量保留但无法承诺  
+- 早期（约 v1.8–v1.12）版本号曾与 Kubernetes 版本强绑定，易混淆
+- 现已改为 **SEMVER**（从 `v0.0.0` 起）；主版本随 Device Plugin API 变化
+- Kubernetes ≥ 1.10 可用 `v0.x` 系插件
+- **升级 Kubernetes**：一般不必换插件大版本；节点回来后 GPU 会重新注册
+- **升级插件本身**：建议先排空 GPU 任务；滚动升级不保证任务存活，官方会尽量保留但无法承诺
 
 问题反馈与贡献见仓库 [Contributing](https://github.com/NVIDIA/k8s-device-plugin/blob/main/CONTRIBUTING.md)；变更见 [Changelog](https://github.com/NVIDIA/k8s-device-plugin/blob/main/CHANGELOG.md)。
-
----
 
 ## 11. 小结
 
@@ -426,8 +406,6 @@ docker pull nvcr.io/nvidia/k8s-device-plugin:v0.17.1
 | 异构 / 选卡 | 开 GFD/NFD，用产品标签 + nodeSelector |
 | 分配机制 | 默认 `NVIDIA_VISIBLE_DEVICES`；细节见本系列第 06 篇 |
 
----
-
-## 参考与致谢
+## 12. 参考与致谢 {/* #参考与致谢 */}
 
 本文内容整理自 [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) README，并按本系列学习路线做了中文结构化与交叉链接。版本说明以仓库当前发布为准。

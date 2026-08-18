@@ -1,11 +1,12 @@
 ---
-title: nvme 命令详解：Controller、Namespace、日志、固件与 NVMe-oF
+title: "nvme 命令详解：Controller、Namespace、日志、固件与 NVMe-oF"
+sidebar_label: "12. nvme 命令详解：Controller、Namespace、日志、固件与 NVMe-oF"
 sidebar_position: 12
-description: 以 nvme-cli 2.16 稳定版为基线，讲解 nvme 子命令架构、设备拓扑、Identify、SMART/error log、format/sanitize/firmware 风险、reservation 和 NVMe-oF。
+description: "以 nvme-cli 2.16 稳定版为基线，讲解 nvme 子命令架构、设备拓扑、Identify、SMART/error log、format/sanitize/firmware 风险、reservation 和 NVMe-oF。"
 tags: [Linux, nvme-cli, NVMe, SSD, NVMe-oF]
 ---
 
-# `nvme` 命令详解：Controller、Namespace、日志、固件与 NVMe-oF
+# nvme 命令详解：Controller、Namespace、日志、固件与 NVMe-oF
 
 `nvme` 是 nvme-cli 的多子命令入口，直接通过 NVMe admin/I/O command、sysfs 和 fabrics 配置管理 Controller、Namespace 与 Subsystem。它既有安全查询，也有会立即破坏数据的 format/sanitize/ns-delete。
 

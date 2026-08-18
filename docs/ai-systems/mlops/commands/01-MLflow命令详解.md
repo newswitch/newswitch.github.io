@@ -1,5 +1,6 @@
 ---
 title: "MLflow CLI 命令详解"
+sidebar_label: "01. MLflow CLI 命令详解"
 sidebar_position: 1
 description: "掌握MLflow Tracking、Run、Artifact、Model、Server、数据库迁移和远端连接的命令边界。"
 tags: [MLflow, MLOps, Model Registry, Artifact, 模型服务]
@@ -117,11 +118,11 @@ mlflow db upgrade <database-url>
 | Run参数泄露密钥 | 立即轮换Secret，清理日志/metadata并修复记录策略 |
 | 升级后schema错误 | 服务版本与数据库迁移不一致，停止写入并按恢复计划处理 |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能证明CLI连接目标；能安全下载/校验Artifact；能用不可变模型版本发布；能区分backend store与artifact store；能按数据库变更标准执行迁移。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [MLflow CLI reference](https://mlflow.org/docs/latest/api_reference/cli.html)
 - [MLflow model serving](https://mlflow.org/docs/latest/deployment/)

@@ -1,5 +1,6 @@
 ---
 title: "Hugging Face Accelerate 命令详解"
+sidebar_label: "03. Hugging Face Accelerate 命令详解"
 sidebar_position: 3
 description: "掌握 accelerate config、env、test、launch 与estimate-memory，安全运行多GPU、DeepSpeed和FSDP训练。"
 tags: [Accelerate, Hugging Face, FSDP, DeepSpeed, 分布式训练]
@@ -98,11 +99,11 @@ accelerate estimate-memory MODEL_ID
 | 默认配置被意外改变 | 显式 `--config_file`，对文件做哈希并随作业保存 |
 | `accelerate test`通过但训练卡住 | 继续查模型加载、数据、首个collective、checkpoint和自定义代码 |
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能生成并版本化配置；能说明Accelerate与torchrun/DeepSpeed/FSDP的分工；能从env输出还原最终环境；能用test与最小训练逐步验证；不会把用户目录里的隐式默认配置带入生产。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [Accelerate documentation](https://huggingface.co/docs/accelerate/index)
 - [Accelerate launchers](https://huggingface.co/docs/accelerate/en/package_reference/launchers)

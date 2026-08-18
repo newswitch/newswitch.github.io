@@ -1,9 +1,9 @@
 ---
-title: Airflow DAG、依赖、补数、重试与幂等调度
+title: "Airflow DAG、依赖、补数、重试与幂等调度"
 sidebar_label: "02. Airflow DAG、依赖、补数、重试与幂等调度"
 sidebar_position: 2
+description: "从 Data Interval 和 Task Instance 设计可重跑、可补数、可观测的数据工作流。"
 tags: [Airflow, DAG, Backfill, 幂等, 调度]
-description: 从 Data Interval 和 Task Instance 设计可重跑、可补数、可观测的数据工作流。
 ---
 
 # Airflow DAG、依赖、补数、重试与幂等调度
@@ -70,7 +70,7 @@ Pools 限制数据库/API/集群的并发；queue/priority控制紧急任务；D
 
 上一篇：[Debezium CDC](./01-Debezium-CDC-Binlog快照与Schema-Change.md)　下一篇：[数据质量、契约、元数据与血缘](./03-数据质量数据契约元数据与血缘.md)
 
-## 参考资料
+## 11. 参考资料 {/* #参考资料 */}
 
 - [Apache Airflow Core Concepts](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/)
 - [Airflow DAG Runs and Backfill](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dag-run.html)

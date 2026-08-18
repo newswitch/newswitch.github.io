@@ -1,11 +1,12 @@
 ---
-title: whoami 命令详解：当前有效用户与脚本身份判断
+title: "whoami 命令详解：当前有效用户与脚本身份判断"
+sidebar_label: "02. whoami 命令详解：当前有效用户与脚本身份判断"
 sidebar_position: 2
-description: 讲解 GNU coreutils whoami 的完整参数、有效 UID 语义、id -un 等价关系、NSS 名称解析及 sudo、容器和自动化排障边界。
+description: "讲解 GNU coreutils whoami 的完整参数、有效 UID 语义、id -un 等价关系、NSS 名称解析及 sudo、容器和自动化排障边界。"
 tags: [Linux, whoami, UID, sudo, NSS]
 ---
 
-# `whoami` 命令详解：当前有效用户与脚本身份判断
+# whoami 命令详解：当前有效用户与脚本身份判断
 
 `whoami` 输出当前进程有效 UID 对应的用户名，等价于 `id -un`。它回答“当前权限检查主要把我当成谁”，不回答登录来源、真实 UID、完整组列表或 sudo 原始调用者。
 
@@ -85,7 +86,7 @@ fi
 
 实验：比较普通 shell、`su` 登录 shell、`sudo -u`、systemd 服务和容器中 `whoami/id/proc` 的输出。掌握标准是能说明 `whoami` 只提供一个便捷名称视图，安全决策应使用内核凭据与实际操作结果。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [GNU Coreutils：whoami invocation](https://www.gnu.org/software/coreutils/manual/html_node/whoami-invocation.html)
 - [Linux credentials(7)](https://man7.org/linux/man-pages/man7/credentials.7.html)

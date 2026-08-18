@@ -1,9 +1,9 @@
 ---
-title: Spark Join、数据倾斜、AQE 与性能调优
+title: "Spark Join、数据倾斜、AQE 与性能调优"
 sidebar_label: "05. Spark Join、数据倾斜、AQE 与性能调优"
 sidebar_position: 5
+description: "从物理计划和 task 分布识别 Join 倾斜，正确使用广播、AQE、salting 和两阶段聚合。"
 tags: [Spark, Join, 数据倾斜, AQE]
-description: 从物理计划和 task 分布识别 Join 倾斜，正确使用广播、AQE、salting 和两阶段聚合。
 ---
 
 # Spark Join、数据倾斜、AQE 与性能调优
@@ -32,19 +32,19 @@ join_amplification = output_rows / max(left_rows, right_rows)
 
 ## 3. 热 Key 治理
 
-### Salting
+### 3.1 Salting {/* #salting */}
 
 大表热 key 随机加盐，小表对应 key 复制 N 份；Join 后去盐。适合小侧可复制，代价是额外行和逻辑复杂。
 
-### 分流
+### 3.2 分流 {/* #分流 */}
 
 提前识别热点，普通 key 走常规 Join，热点单独策略后 union。适合热点集合稳定。
 
-### 两阶段聚合
+### 3.3 两阶段聚合 {/* #两阶段聚合 */}
 
 对可结合聚合先按 `(key,salt)` 局部聚合，再按 key 合并，降低最大 partition。
 
-### 业务修正
+### 3.4 业务修正 {/* #业务修正 */}
 
 NULL/unknown 共用一个 key 常是模型问题；按正确业务粒度拆分比永久参数补丁更可靠。
 
@@ -85,6 +85,6 @@ Adaptive Query Execution 可根据运行期统计合并小 Shuffle partition、�
 
 上一篇：[Shuffle、内存与 Spill](./04-Shuffle内存缓存Spill与序列化.md)　下一篇：[Structured Streaming 状态与 Checkpoint](./06-Structured-Streaming状态Watermark与Checkpoint.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Spark SQL Performance Tuning](https://spark.apache.org/docs/latest/sql-performance-tuning.html)

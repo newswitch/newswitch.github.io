@@ -1,8 +1,8 @@
 ---
-title: ClickHouse Client、System 表与运维命令手册
+title: "ClickHouse Client、System 表与运维命令手册"
 sidebar_label: "15. ClickHouse Client、System 表与运维命令手册"
 sidebar_position: 15
-description: 从 clickhouse-client、安全连接和执行计划，到 parts、merges、replicas、mutations、query_log 与慢查询排障。
+description: "从 clickhouse-client、安全连接和执行计划，到 parts、merges、replicas、mutations、query_log 与慢查询排障。"
 tags: [ClickHouse, 命令手册, OLAP, System Tables, 故障排查]
 ---
 
@@ -260,7 +260,7 @@ LIMIT 20;
 | 磁盘快速增长 | parts、mutations、TTL、临时文件与副本数 |
 | Mutation 不结束 | system.mutations、失败原因、剩余 Part |
 
-## 12. 30 分钟实验
+## 12. 分钟实验 {/* #12-30-分钟实验 */}
 
 1. 创建 MergeTree 实验表，分多次写入小批数据。
 2. 查询 `system.parts`，观察 Part 数量。
@@ -277,9 +277,8 @@ LIMIT 20;
 - 能用 query_id 串联实时查询、历史日志和节点证据。
 - 能解释为何强制 FINAL、批量 Mutation 和宽泛 Kill 是高风险操作。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [ClickHouse Command-line Client](https://clickhouse.com/docs/interfaces/cli)
 - [System Tables](https://clickhouse.com/docs/operations/system-tables)
 - [EXPLAIN](https://clickhouse.com/docs/sql-reference/statements/explain)
-

@@ -1,11 +1,12 @@
 ---
-title: chage 命令详解：密码老化、账户过期与时间计算
+title: "chage 命令详解：密码老化、账户过期与时间计算"
+sidebar_label: "12. chage 命令详解：密码老化、账户过期与时间计算"
 sidebar_position: 12
-description: 完整讲解 shadow-utils chage 的参数、lastday、mindays、maxdays、warning、inactive、账户过期、UTC 日期和 PAM 登录边界。
+description: "完整讲解 shadow-utils chage 的参数、lastday、mindays、maxdays、warning、inactive、账户过期、UTC 日期和 PAM 登录边界。"
 tags: [Linux, chage, shadow, 密码过期, 账户安全]
 ---
 
-# `chage` 命令详解：密码老化、账户过期与时间计算
+# chage 命令详解：密码老化、账户过期与时间计算
 
 `chage` 修改 `/etc/shadow` 中的密码老化与账户过期字段。它管理的是日期策略，不负责改变密码内容，也不能单独撤销 SSH key、token、现有会话或服务权限。
 
@@ -74,7 +75,7 @@ journalctl -u sshd --since today
 
 掌握标准：能列出全部参数；能画出两条时间线；能解释为什么老化字段只有在具体 PAM/登录链路执行时才产生预期效果。
 
-## 官方参考
+## 6. 官方参考 {/* #官方参考 */}
 
 - [shadow-utils：chage(1)](https://shadow-maint.github.io/shadow/man/chage.html)
 - [Linux shadow(5)](https://man7.org/linux/man-pages/man5/shadow.5.html)

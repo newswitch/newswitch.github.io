@@ -1,9 +1,9 @@
 ---
-title: Spark Shuffle、内存管理、缓存、Spill 与序列化
+title: "Spark Shuffle、内存管理、缓存、Spill 与序列化"
 sidebar_label: "04. Spark Shuffle、内存管理、缓存、Spill 与序列化"
 sidebar_position: 4
+description: "追踪 Spark Shuffle 的内存、磁盘和网络路径，定位 OOM、spill、fetch failure 与缓存误用。"
 tags: [Spark, Shuffle, Memory, Spill, Serialization]
-description: 追踪 Spark Shuffle 的内存、磁盘和网络路径，定位 OOM、spill、fetch failure 与缓存误用。
 ---
 
 # Spark Shuffle、内存管理、缓存、Spill 与序列化
@@ -68,6 +68,6 @@ Cache 适合多次复用、计算昂贵且可容纳的数据。决定前问：�
 
 上一篇：[Spark SQL 与物理计划](./03-Spark-SQL-Catalyst物理计划与代码生成.md)　下一篇：[Join、数据倾斜、AQE 与性能调优](./05-Join数据倾斜AQE与性能调优.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Spark Tuning Guide](https://spark.apache.org/docs/latest/tuning.html)

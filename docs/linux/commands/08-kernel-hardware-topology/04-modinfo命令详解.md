@@ -1,11 +1,12 @@
 ---
-title: modinfo 命令详解：检查模块文件、参数、ABI 与签名
+title: "modinfo 命令详解：检查模块文件、参数、ABI 与签名"
+sidebar_label: "04. modinfo 命令详解：检查模块文件、参数、ABI 与签名"
 sidebar_position: 4
-description: 完整讲解 modinfo 的全部长短参数，读懂 filename、alias、depends、parm、vermagic、firmware 与签名字段，并定位模块不兼容问题。
+description: "完整讲解 modinfo 的全部长短参数，读懂 filename、alias、depends、parm、vermagic、firmware 与签名字段，并定位模块不兼容问题。"
 tags: [Linux, modinfo, kmod, 内核模块, Secure Boot]
 ---
 
-# `modinfo` 命令详解：检查模块文件、参数、ABI 与签名
+# modinfo 命令详解：检查模块文件、参数、ABI 与签名
 
 `modinfo` 查询**磁盘上的模块元数据**。默认按正在运行的 `uname -r` 在 `/lib/modules/<release>` 中解析模块名，也可以直接给 `.ko` 路径。它回答“这个模块文件是什么”，而 `lsmod` 回答“当前加载了什么”。
 

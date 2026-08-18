@@ -1,5 +1,6 @@
 ---
 title: "AI HTTP 与 gRPC 接口诊断"
+sidebar_label: "02. AI HTTP 与 gRPC 接口诊断"
 sidebar_position: 2
 description: "使用 curl、jq、openssl s_client 与 grpcurl 验证健康检查、模型元数据、流式推理、TLS、超时和网关链路。"
 tags: [HTTP, gRPC, curl, grpcurl, SSE, TLS, 推理服务]
@@ -104,11 +105,11 @@ grpcurl -cacert ca.pem \
 | gRPC UNIMPLEMENTED | 方法/协议版本错误或reflection关闭，提供proto验证 |
 | 401只发生在网关 | Header转发、Token受众/范围、网关策略 |
 
-## 掌握标准
+## 9. 掌握标准 {/* #掌握标准 */}
 
 能分开DNS、TLS、路由、模型就绪和推理语义；能验证SSE完整结束；能使用proto诊断关闭reflection的gRPC；能通过同请求逐层对照定位网关问题。
 
-## 官方资料
+## 10. 官方资料 {/* #官方资料 */}
 
 - [curl manual](https://curl.se/docs/manpage.html)
 - [grpcurl](https://github.com/fullstorydev/grpcurl)

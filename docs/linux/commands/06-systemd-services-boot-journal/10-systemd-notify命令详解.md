@@ -1,11 +1,12 @@
 ---
-title: systemd-notify 命令详解：readiness、状态、watchdog 与文件描述符
+title: "systemd-notify 命令详解：readiness、状态、watchdog 与文件描述符"
+sidebar_label: "10. systemd-notify 命令详解：readiness、状态、watchdog 与文件描述符"
 sidebar_position: 10
-description: 完整讲解 systemd-notify 的 READY、RELOADING、STOPPING、STATUS、MAINPID、WATCHDOG、FDSTORE、exec/fork 及全部参数，理解 Type=notify 协议和归属验证。
+description: "完整讲解 systemd-notify 的 READY、RELOADING、STOPPING、STATUS、MAINPID、WATCHDOG、FDSTORE、exec/fork 及全部参数，理解 Type=notify 协议和归属验证。"
 tags: [Linux, systemd-notify, sd_notify, Type=notify, watchdog, readiness]
 ---
 
-# `systemd-notify` 命令详解：readiness、状态、watchdog 与文件描述符
+# systemd-notify 命令详解：readiness、状态、watchdog 与文件描述符
 
 `systemd-notify` 从 shell 或程序外部向 service manager 发送 `sd_notify(3)` 协议消息。它常用于 `Type=notify` 的“真正 ready”、reload 状态、watchdog 心跳和 fd store。发送命令成功不一定表示 manager 接受并归属到预期 unit。
 
@@ -113,7 +114,7 @@ journalctl -b -u demo.service --no-pager
 
 掌握标准：能列出全部参数和主要协议变量，解释 process ready 与 process started 的差异、发送归属校验和竞态，设计能反映真实业务活性的 watchdog，而不是只会发送 `READY=1`。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [systemd-notify(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd-notify.html)
 - [sd_notify(3)](https://www.freedesktop.org/software/systemd/man/latest/sd_notify.html)

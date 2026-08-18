@@ -1,11 +1,12 @@
 ---
-title: ip route 与 ip rule 命令详解：路由选择、策略路由和故障定位
+title: "ip route 与 ip rule 命令详解：路由选择、策略路由和故障定位"
+sidebar_label: "02. ip route 与 ip rule 命令详解：路由选择、策略路由和故障定位"
 sidebar_position: 2
-description: 从 Linux FIB 与 RPDB 模型出发，完整讲解 ip route 和 ip rule 的查询、增删改、路由表、下一跳、源地址、策略选择、验证方法与生产风险。
+description: "从 Linux FIB 与 RPDB 模型出发，完整讲解 ip route 和 ip rule 的查询、增删改、路由表、下一跳、源地址、策略选择、验证方法与生产风险。"
 tags: [Linux, iproute2, ip route, ip rule, 路由, 策略路由]
 ---
 
-# `ip route` 与 `ip rule` 命令详解：路由选择、策略路由和故障定位
+# ip route 与 ip rule 命令详解：路由选择、策略路由和故障定位
 
 Linux 并不是看到目的地址后只查一张“路由表”。它先按优先级匹配路由策略数据库 RPDB 中的规则，再在规则指定的表中完成 FIB 查找。排障时，`ip route show` 只是在看表，`ip route get` 才是在询问内核“这个包会怎么走”。
 

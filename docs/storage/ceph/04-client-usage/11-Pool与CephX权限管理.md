@@ -2,8 +2,8 @@
 title: "Ceph Pool 与 CephX 实战：存储策略、配额与最小权限"
 sidebar_label: "11. Ceph Pool 与 CephX 实战：存储策略、配额与最小权限"
 sidebar_position: 11
-tags: [Ceph, 学习路线, 存储, Pool, CephX, 安全]
 description: "理解 Pool 的边界，安全创建副本池，使用 PG autoscaler、配额和应用标签，并为 RBD、CephFS 客户端配置最小权限 CephX 账号。"
+tags: [Ceph, 学习路线, 存储, Pool, CephX, 安全]
 ---
 
 # Ceph Pool 与 CephX 实战：存储策略、配额与最小权限
@@ -23,8 +23,7 @@ Pool 解决的是**数据策略与逻辑隔离**，CephX 解决的是**身份认
 
 本文命令以 cephadm 管理的较新 Ceph 集群为例。Pool 删除、权限覆盖和密钥输出都可能造成严重后果，生产环境执行前必须备份当前配置、复核对象名称，并在测试环境验证。
 
-
-## 本文目标
+## 1. 本文目标 {/* #本文目标 */}
 
 完成本文后，你应该能够：
 
@@ -38,7 +37,7 @@ Pool 解决的是**数据策略与逻辑隔离**，CephX 解决的是**身份认
 - 安全分发、验证、轮换和回收 keyring
 - 避免误删 Pool、覆盖 caps 和泄露 `client.admin` 密钥
 
-## Pool 到底是什么
+## 2. Pool 到底是什么 {/* #pool-到底是什么 */}
 
 Pool 是 RADOS 对象的逻辑集合，也是数据策略的配置边界。
 
@@ -70,7 +69,7 @@ Pool 不是：
 
 同一个 OSD 可以同时承载多个 Pool 的 PG。Pool 之间虽然具有逻辑策略和权限边界，但仍可能共享相同的 CPU、磁盘和网络资源。
 
-## 创建前先做设计
+## 3. 创建前先做设计 {/* #创建前先做设计 */}
 
 不要看到业务名称就立刻创建 Pool。先记录下面这些信息。
 
@@ -104,7 +103,7 @@ Pool 数量也不是越多越好。每个 Pool 至少会消耗 PG、监控和运
 - 性能与恢复优先级不同
 - 权限隔离确实需要 Pool 级边界
 
-## 查看现有 Pool
+## 4. 查看现有 Pool {/* #查看现有-pool */}
 
 ```bash
 ceph osd pool ls
@@ -128,7 +127,7 @@ ceph osd pool get rbd-vm all
 
 不要修改名称以点号开头的系统 Pool，也不要手工清理 RGW、CephFS 或 Manager 创建的 Pool。先确认它属于哪个服务以及服务是否仍在使用。
 
-## 创建副本 Pool
+## 5. 创建副本 Pool {/* #创建副本-pool */}
 
 假设集群已经存在一个面向 SSD、failure domain 为 `host` 的 CRUSH Rule：
 
@@ -168,7 +167,7 @@ ceph osd pool get rbd-vm all
 ceph osd pool autoscale-status
 ```
 
-### Pool 命名建议
+### 5.1 Pool 命名建议 {/* #pool-命名建议 */}
 
 名称应该体现接口、用途或服务，而不是人员姓名。
 
@@ -192,7 +191,7 @@ pool-final-v3
 
 名称以后可能出现在客户端配置、监控规则、备份脚本和权限表达式中，随意改名会产生连锁影响。
 
-## 配置副本数
+## 6. 配置副本数 {/* #配置副本数 */}
 
 设置三副本：
 
@@ -223,7 +222,7 @@ ceph osd pool get rbd-vm crush_rule
 
 为了短期恢复写入而把 `min_size` 改成 `1`，可能让最后一份数据在后续故障中丢失。它不是普通性能参数，而是数据安全边界。
 
-### 修改 size 不会瞬间完成
+### 6.1 修改 size 不会瞬间完成 {/* #修改-size-不会瞬间完成 */}
 
 将 `size` 从 2 改为 3 后，Ceph 需要为所有相关 PG 创建额外副本，会消耗：
 
@@ -250,7 +249,7 @@ watch ceph -s
 
 不要同时修改大量 Pool 的副本数，也不要在容量接近阈值时增加副本数。
 
-## CRUSH Rule 与故障域
+## 7. CRUSH Rule 与故障域 {/* #crush-rule-与故障域 */}
 
 副本数只是数量，CRUSH Rule 决定副本放到哪里。
 
@@ -278,7 +277,7 @@ ceph osd tree
 4. 评估迁移流量和业务窗口
 5. 准备停止或回退条件
 
-## PG Autoscaler
+## 8. PG Autoscaler {/* #pg-autoscaler */}
 
 PG 太少可能造成数据分布和并行度不足；PG 太多会增加 OSD、MON 和 Manager 的内存及控制面负担。
 
@@ -310,7 +309,7 @@ ceph osd pool set rbd-vm pg_autoscale_mode on
 ceph osd pool get rbd-vm pg_autoscale_mode
 ```
 
-### 告诉 autoscaler 未来会用多少空间
+### 8.1 告诉 autoscaler 未来会用多少空间 {/* #告诉-autoscaler-未来会用多少空间 */}
 
 新 Pool 还没有数据时，autoscaler 无法仅靠当前使用量理解未来规模。可以设置目标比例或目标大小：
 
@@ -331,7 +330,7 @@ ceph osd pool autoscale-status
 ceph health detail
 ```
 
-### bulk Pool
+### 8.2 bulk Pool {/* #bulk-pool */}
 
 预计从一开始就承载大量数据的 Pool，可以在创建时考虑 `--bulk`。它帮助 autoscaler 更早分配合适的 PG，而不是等待数据增长后多次调整。
 
@@ -341,7 +340,7 @@ ceph osd pool create archive --bulk
 
 是否支持以及具体语法取决于当前版本，执行前查看命令帮助。不要把所有 Pool 都标为 bulk。
 
-## 应用类型配置
+## 9. 应用类型配置 {/* #应用类型配置 */}
 
 每个业务 Pool 都应该关联应用类型。常见值：
 
@@ -372,7 +371,7 @@ ceph osd pool ls detail
 
 CephFS 创建文件系统时会管理它需要的 metadata 和 data Pool；RGW 通常由服务流程创建并标记自己的 Pool。不要因为看到应用标签就认为可以随意替换或删除系统 Pool。
 
-## Pool 配额
+## 10. Pool 配额 {/* #pool-配额 */}
 
 Pool 可以限制最大字节数或最大对象数：
 
@@ -394,7 +393,7 @@ ceph df detail
 ceph osd pool set-quota rbd-vm max_bytes 0
 ```
 
-### 配额不是容量规划
+### 10.1 配额不是容量规划 {/* #配额不是容量规划 */}
 
 Pool 配额只限制这个 Pool，不能替代集群整体容量预留。设置时需要同时考虑：
 
@@ -410,7 +409,7 @@ Pool 配额只限制这个 Pool，不能替代集群整体容量预留。设置�
 
 配额接近上限时应该提前告警，而不是等到业务写失败才处理。
 
-## 安全删除 Pool
+## 11. 安全删除 Pool {/* #安全删除-pool */}
 
 删除 Pool 会永久删除其中全部对象，通常不可恢复。
 
@@ -442,7 +441,7 @@ ceph osd pool delete --help
 
 不要通过删除底层 RADOS 对象来“清理”RBD、CephFS 或 RGW 数据，应使用对应服务接口执行生命周期操作。
 
-## CephX 认证机制
+## 12. CephX 认证机制 {/* #cephx-认证机制 */}
 
 CephX 是 Ceph 自身的认证系统。默认启用时，客户端需要先证明身份，再依据 capabilities 获得权限。
 
@@ -473,7 +472,7 @@ CephX 不等于：
 
 因此安全设计还要结合网络隔离、Messenger v2 secure 模式、磁盘加密、Secret 管理和上层身份系统。
 
-## CephX 用户与 capabilities
+## 13. CephX 用户与 capabilities {/* #cephx-用户与-capabilities */}
 
 客户端实体通常写成：
 
@@ -512,7 +511,7 @@ ceph auth get client.rbd-app
 ceph auth get client.rbd-app | sed '/key:/d'
 ```
 
-## 创建 RBD 最小权限客户端
+## 14. 创建 RBD 最小权限客户端 {/* #创建-rbd-最小权限客户端 */}
 
 假设客户端只允许使用 `rbd-vm` Pool：
 
@@ -538,11 +537,11 @@ rbd --id rbd-app --keyring /etc/ceph/ceph.client.rbd-app.keyring -p another-pool
 
 预期结果应该是权限拒绝，而不是成功列出数据。
 
-### 只读 RBD 客户端
+### 14.1 只读 RBD 客户端 {/* #只读-rbd-客户端 */}
 
 某些备份或审计场景只需要读权限。具体 profile 和 caps 应按当前版本官方文档设计，并使用真实读写操作验证。不要仅凭 `ceph auth get` 的输出就认为最小权限已经生效。
 
-## 创建 CephFS 最小权限客户端
+## 15. 创建 CephFS 最小权限客户端 {/* #创建-cephfs-最小权限客户端 */}
 
 CephFS 权限不仅涉及 OSD，还涉及 MDS 路径。
 
@@ -570,7 +569,7 @@ ceph auth get client.team-a
 
 CephFS capabilities 的 path、root squash、snapshot 等语义较多，优先使用 `ceph fs authorize`，并参考当前版本官方 CephFS client authorization 文档。
 
-## CephX 最小权限设计方法
+## 16. CephX 最小权限设计方法 {/* #cephx-最小权限设计方法 */}
 
 为每个应用填写一张权限矩阵：
 
@@ -591,7 +590,7 @@ CephFS capabilities 的 path、root squash、snapshot 等语义较多，优先�
 7. 必要时限制允许访问的 CIDR
 8. 定期检查长期未使用的身份
 
-### caps 更新是覆盖，不是追加
+### 16.1 caps 更新是覆盖，不是追加 {/* #caps-更新是覆盖不是追加 */}
 
 这是非常容易踩坑的一点：
 
@@ -608,7 +607,7 @@ ceph auth get client.rbd-app
 
 然后在新命令中完整写出仍需保留的 daemon caps。变更后立即做正向和负向验证。
 
-## Keyring 文件管理
+## 17. Keyring 文件管理 {/* #keyring-文件管理 */}
 
 推荐一个 keyring 只保存一个应用身份：
 
@@ -641,7 +640,7 @@ chmod 600 /etc/ceph/ceph.client.rbd-app.keyring
 
 如果应用进程不是 root，应该将文件交给专用用户或组，并只授予该进程读取权限。不要简单使用 `chmod 644`。
 
-### Secret 分发原则
+### 17.1 Secret 分发原则 {/* #secret-分发原则 */}
 
 - 使用企业 Secret Manager、配置管理系统或 Kubernetes Secret
 - 传输通道必须加密
@@ -653,7 +652,7 @@ chmod 600 /etc/ceph/ceph.client.rbd-app.keyring
 
 可以在仓库中保存**不含 key 的权限声明模板**，但不要保存真实 keyring。
 
-## 密钥轮换
+## 18. 密钥轮换 {/* #密钥轮换 */}
 
 较新版本提供认证实体密钥轮换命令：
 
@@ -674,7 +673,7 @@ ceph auth rotate client.rbd-app
 
 如果业务无法无中断更新同一实体的密钥，可评估创建新的平行身份、迁移客户端、验证后再回收旧身份。
 
-## 回收客户端身份
+## 19. 回收客户端身份 {/* #回收客户端身份 */}
 
 删除 CephX 实体不会删除 Pool 数据，但仍会使使用旧密钥的客户端立即失去访问能力。
 
@@ -694,9 +693,9 @@ ceph auth del client.old-app
 
 执行后验证旧 keyring 无法再访问，并从 Secret 系统和客户端安全删除副本。
 
-## 完整实验：为一个 RBD 应用建立边界
+## 20. 完整实验：为一个 RBD 应用建立边界 {/* #完整实验为一个-rbd-应用建立边界 */}
 
-### 1. 检查集群
+### 20.1 检查集群 {/* #1-检查集群 */}
 
 ```bash
 ceph -s
@@ -707,7 +706,7 @@ ceph osd pool autoscale-status
 
 要求集群状态已知，没有未解释的 PG 异常或容量风险。
 
-### 2. 创建并初始化 Pool
+### 20.2 创建并初始化 Pool {/* #2-创建并初始化-pool */}
 
 ```bash
 ceph osd pool create lab-rbd 32 32 replicated replicated_rule --autoscale-mode=on
@@ -718,14 +717,14 @@ rbd pool init lab-rbd
 
 `replicated_rule` 只是示例，必须替换成当前集群已验证的 CRUSH Rule。
 
-### 3. 设置实验配额
+### 20.3 设置实验配额 {/* #3-设置实验配额 */}
 
 ```bash
 ceph osd pool set-quota lab-rbd max_bytes 100G
 ceph osd pool get-quota lab-rbd
 ```
 
-### 4. 创建客户端
+### 20.4 创建客户端 {/* #4-创建客户端 */}
 
 ```bash
 ceph auth get-or-create client.lab-rbd \
@@ -735,7 +734,7 @@ ceph auth get-or-create client.lab-rbd \
 chmod 600 /etc/ceph/ceph.client.lab-rbd.keyring
 ```
 
-### 5. 正向验证
+### 20.5 正向验证 {/* #5-正向验证 */}
 
 ```bash
 rbd --id lab-rbd \
@@ -747,7 +746,7 @@ rbd --id lab-rbd \
   -p lab-rbd ls
 ```
 
-### 6. 负向验证
+### 20.6 负向验证 {/* #6-负向验证 */}
 
 尝试列出未授权 Pool，预期收到权限拒绝：
 
@@ -757,7 +756,7 @@ rbd --id lab-rbd \
   -p rbd-vm ls
 ```
 
-### 7. 清理实验
+### 20.7 清理实验 {/* #7-清理实验 */}
 
 先删除测试 Image：
 
@@ -769,39 +768,39 @@ rbd --id lab-rbd \
 
 确认无数据、无引用后，再按照实验环境审批流程回收用户和 Pool。不要把生产 Pool 的删除命令写入通用自动化脚本。
 
-## 常见错误
+## 21. 常见错误 {/* #常见错误 */}
 
-### 所有应用共用 client.admin
+### 21.1 所有应用共用 client.admin {/* #所有应用共用-clientadmin */}
 
 任意一个应用 Secret 泄露都可能危及整个集群，而且无法清楚审计是谁执行了操作。
 
-### OSD caps 没有限制 Pool
+### 21.2 OSD caps 没有限制 Pool {/* #osd-caps-没有限制-pool */}
 
 官方文档特别提醒：具有 OSD capabilities 的用户，如果没有正确限制范围，可能访问集群中的全部 Pool。
 
-### 修改 caps 时漏掉原有权限
+### 21.3 修改 caps 时漏掉原有权限 {/* #修改-caps-时漏掉原有权限 */}
 
 `ceph auth caps` 是覆盖操作。漏写某个 daemon caps 会让业务立即失去相应能力。
 
-### 用 Pool 代替备份
+### 21.4 用 Pool 代替备份 {/* #用-pool-代替备份 */}
 
 Pool 隔离不了误删除、管理员误操作、软件缺陷和整个集群故障。
 
-### 手工固定大量 PG
+### 21.5 手工固定大量 PG {/* #手工固定大量-pg */}
 
 旧经验公式不理解业务目标、Pool 数量和实际使用率。优先观察 autoscaler 建议。
 
-### 通过提高配额处理容量危机
+### 21.6 通过提高配额处理容量危机 {/* #通过提高配额处理容量危机 */}
 
 提高 Pool 配额不会增加任何磁盘空间，只会让业务继续消耗集群剩余安全余量。
 
-### keyring 出现在 Git 或命令历史
+### 21.7 keyring 出现在 Git 或命令历史 {/* #keyring-出现在-git-或命令历史 */}
 
 密钥一旦进入 Git 历史，即使后来删除文件也应视为已经泄露，需要立即轮换。
 
-## 生产检查清单
+## 22. 生产检查清单 {/* #生产检查清单 */}
 
-### Pool
+### 22.1 Pool {/* #pool */}
 
 - [ ] 名称、用途和所有者明确
 - [ ] 应用类型正确
@@ -812,7 +811,7 @@ Pool 隔离不了误删除、管理员误操作、软件缺陷和整个集群故
 - [ ] 监控覆盖容量、对象数和 PG
 - [ ] 删除流程有审批和引用检查
 
-### CephX
+### 22.2 CephX {/* #cephx */}
 
 - [ ] 普通应用不使用 `client.admin`
 - [ ] 每个身份都有明确所有者
@@ -823,7 +822,7 @@ Pool 隔离不了误删除、管理员误操作、软件缺陷和整个集群故
 - [ ] Secret 分发渠道安全
 - [ ] 有轮换和回收流程
 
-## 本文小结
+## 23. 本文小结 {/* #本文小结 */}
 
 Pool 是数据策略边界，CephX 是访问控制边界。
 
@@ -840,12 +839,11 @@ Pool 是数据策略边界，CephX 是访问控制边界。
 → 接入监控、轮换和回收流程
 ```
 
-
 下一篇将使用 Pool 与 CephX 基础能力创建和使用 CephFS 文件存储。
 
 → [第 12 篇：CephFS 文件存储实战](./12-CephFS文件存储实战.md)
 
-## 课后练习
+## 24. 课后练习 {/* #课后练习 */}
 
 1. Pool 与目录有什么区别？为什么一个 Pool 不等于一组固定磁盘？
 2. `size = 3`、`min_size = 2` 分别控制什么？
@@ -856,7 +854,7 @@ Pool 是数据策略边界，CephX 是访问控制边界。
 7. 为什么 `ceph auth caps` 变更前要导出当前权限？
 8. 为一个只能访问指定 RBD Pool 的应用写出权限矩阵并完成负向测试。
 
-## 官方资料
+## 25. 官方资料 {/* #官方资料 */}
 
 - [Ceph Pools](https://docs.ceph.com/en/latest/rados/operations/pools/)
 - [Placement Groups](https://docs.ceph.com/en/latest/rados/operations/placement-groups/)

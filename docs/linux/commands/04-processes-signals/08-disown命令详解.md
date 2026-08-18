@@ -1,11 +1,12 @@
 ---
-title: disown 命令详解：移除作业记录与 SIGHUP 标记
+title: "disown 命令详解：移除作业记录与 SIGHUP 标记"
+sidebar_label: "08. disown 命令详解：移除作业记录与 SIGHUP 标记"
 sidebar_position: 8
-description: 完整讲解 Bash disown 的 -a/-r/-h 参数、jobspec/PID、作业表移除、SIGHUP 标记、终端 I/O 和可靠后台运行边界。
+description: "完整讲解 Bash disown 的 -a/-r/-h 参数、jobspec/PID、作业表移除、SIGHUP 标记、终端 I/O 和可靠后台运行边界。"
 tags: [Linux, Bash, disown, SIGHUP, 后台任务]
 ---
 
-# `disown` 命令详解：移除作业记录与 SIGHUP 标记
+# disown 命令详解：移除作业记录与 SIGHUP 标记
 
 `disown` 修改当前 Bash 的作业表或“Shell 退出时不向该作业发送 SIGHUP”标记。它不会改变进程 PPID/SID/PGID、不会关闭 TTY 文件描述符、不会建立日志和监督，也不是守护化工具。
 
@@ -46,7 +47,7 @@ disown %1      # 从作业表移除
 
 掌握标准：能列出全部参数；能明确“从作业表移除”“不由 Bash 发送 HUP”“脱离终端”“服务监督”四者不同。
 
-## 官方参考
+## 5. 官方参考 {/* #官方参考 */}
 
 - [GNU Bash：Job Control Builtins](https://www.gnu.org/software/bash/manual/html_node/Job-Control-Builtins.html)
 - [Linux session-leader termination](https://man7.org/linux/man-pages/man3/exit.3.html)

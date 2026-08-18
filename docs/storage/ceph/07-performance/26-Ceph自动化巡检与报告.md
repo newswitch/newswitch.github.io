@@ -2,8 +2,8 @@
 title: "Ceph 自动化巡检与报告：从只读命令、风险分级到每日健康评分"
 sidebar_label: "26. Ceph 自动化巡检与报告：从只读命令、风险分级到每日健康评分"
 sidebar_position: 26
-tags: [Ceph, 学习路线, 存储, 巡检, 运维自动化]
 description: "设计只读、可比较、可告警的 Ceph 巡检：JSON 采集、严重度规则、Shell 骨架、Markdown/Prometheus 报告与历史基线。"
+tags: [Ceph, 学习路线, 存储, 巡检, 运维自动化]
 ---
 
 # Ceph 自动化巡检与报告：从只读命令、风险分级到每日健康评分
@@ -14,8 +14,7 @@ description: "设计只读、可比较、可告警的 Ceph 巡检：JSON 采集�
 
 人工登录服务器执行几条命令，只能得到某一时刻的零散信息。真正有价值的巡检应当可重复、只读、可比较、可告警，并能把异常定位到主机、守护进程、Pool、PG 和业务接口。本篇将从零设计一套 Ceph 自动化巡检方案。
 
-
-## 本文目标
+## 1. 本文目标 {/* #本文目标 */}
 
 读完并完成实验后，你应该能够：
 
@@ -34,9 +33,9 @@ description: "设计只读、可比较、可告警的 Ceph 巡检：JSON 采集�
 本文默认巡检为只读。`rados bench`、FIO、OSD bench、deep-scrub、Pool 创建删除、网络压测和故障注入均属于主动测试，不应混入日常巡检任务。
 :::
 
-## 监控和巡检有什么区别
+## 2. 监控和巡检有什么区别 {/* #监控和巡检有什么区别 */}
 
-### 监控
+### 2.1 监控 {/* #监控 */}
 
 持续采集时间序列，擅长回答：
 
@@ -45,7 +44,7 @@ description: "设计只读、可比较、可告警的 Ceph 巡检：JSON 采集�
 - 延迟、错误率、容量如何变化
 - 是否超过 SLO
 
-### 巡检
+### 2.2 巡检 {/* #巡检 */}
 
 按固定清单周期执行，擅长回答：
 
@@ -54,11 +53,11 @@ description: "设计只读、可比较、可告警的 Ceph 巡检：JSON 采集�
 - Pool、CRUSH、keyring、服务规格是否被改变
 - 是否存在尚未触发实时告警的趋势风险
 
-### 审计
+### 2.3 审计 {/* #审计 */}
 
 关注谁在何时做了什么，不能由健康巡检替代。
 
-### 主动测试
+### 2.4 主动测试 {/* #主动测试 */}
 
 通过真实读写、网络或故障行为验证服务，例如：
 
@@ -70,7 +69,7 @@ description: "设计只读、可比较、可告警的 Ceph 巡检：JSON 采集�
 
 主动测试应使用独立账号、专用资源、限速和明确清理流程。
 
-## 一套巡检系统的结构
+## 3. 一套巡检系统的结构 {/* #一套巡检系统的结构 */}
 
 ```mermaid
 flowchart TD
@@ -92,7 +91,7 @@ flowchart TD
 
 不要把所有逻辑写进一个巨大的 `grep | awk` 命令。
 
-## 为什么优先使用 JSON
+## 4. 为什么优先使用 JSON {/* #为什么优先使用-json */}
 
 以下输出适合人阅读：
 
@@ -120,7 +119,7 @@ ceph df detail --format json
 
 仍需为版本差异设计兼容层：字段不存在时应返回 `unknown`，而不是默认判定健康。
 
-## 巡检账号应使用最小权限
+## 5. 巡检账号应使用最小权限 {/* #巡检账号应使用最小权限 */}
 
 不要把 `client.admin` keyring 分发到每个巡检节点。应先列出脚本实际需要的命令，然后创建只读实体并验证。
 
@@ -136,7 +135,7 @@ ceph df detail --format json
 
 由于不同巡检命令的 MGR module caps 会随版本变化，建议在测试环境从只读 profile 开始逐项验证，而不是直接复制一条全权限命令。
 
-## 巡检严重度设计
+## 6. 巡检严重度设计 {/* #巡检严重度设计 */}
 
 建议统一为：
 
@@ -150,7 +149,7 @@ ceph df detail --format json
 
 Unknown 不能当成 OK。如果巡检无法连接集群，最危险的做法就是生成一份「无异常」报告。
 
-## 第一层：巡检自身可用性
+## 7. 第一层：巡检自身可用性 {/* #第一层巡检自身可用性 */}
 
 在判断 Ceph 前，先检查采集器：
 
@@ -178,7 +177,7 @@ timeout 15 ceph status --format json > /tmp/ceph-status.json
 
 不要用一个 `if command; then OK; fi` 混在一起。
 
-## 集群总览
+## 8. 集群总览 {/* #集群总览 */}
 
 基础采集：
 
@@ -206,7 +205,7 @@ ceph health detail --format json
 - 维护窗口中的 `noout` 可能有审批，但超期未清理应告警
 - PG recovery 在换盘后可能合理，但持续超过恢复窗口就不合理
 
-## MON 巡检
+## 9. MON 巡检 {/* #mon-巡检 */}
 
 ```bash
 ceph mon dump --format json
@@ -227,7 +226,7 @@ ceph mon stat
 
 仅有三个 MON Pod/进程 Running，不能证明 quorum 正常。
 
-## MGR 与模块巡检
+## 10. MGR 与模块巡检 {/* #mgr-与模块巡检 */}
 
 ```bash
 ceph mgr dump --format json
@@ -246,7 +245,7 @@ ceph orch ps --daemon-type mgr --refresh --format json
 
 频繁 MGR failover 不一定影响数据 I/O，但会影响 Dashboard、Prometheus、cephadm 和编排能力。
 
-## OSD 状态巡检
+## 11. OSD 状态巡检 {/* #osd-状态巡检 */}
 
 ```bash
 ceph osd stat --format json
@@ -269,7 +268,7 @@ ceph osd perf --format json
 
 延迟规则不应使用全局固定值。例如 HDD、SATA SSD、NVMe 基线不同。建议按 device class 和历史分位数比较。
 
-## PG 巡检
+## 12. PG 巡检 {/* #pg-巡检 */}
 
 ```bash
 ceph pg stat --format json
@@ -295,7 +294,7 @@ ceph pg dump pgs_brief --format json
 
 不要每天自动执行 deep-scrub 作为巡检。它是真实磁盘负载，由 Ceph 调度并按维护策略管理。
 
-## 容量巡检
+## 13. 容量巡检 {/* #容量巡检 */}
 
 ```bash
 ceph df detail --format json
@@ -323,7 +322,7 @@ ceph osd dump --format json
 
 只看集群平均使用率会掩盖单个 OSD 提前 full。
 
-## Pool 与 PG autoscaler 巡检
+## 14. Pool 与 PG autoscaler 巡检 {/* #pool-与-pg-autoscaler-巡检 */}
 
 ```bash
 ceph osd pool ls detail --format json
@@ -344,7 +343,7 @@ ceph osd pool autoscale-status --format json
 
 Pool 名称和数量也应与配置基线比较。一个新 Pool 可能来自合法业务，也可能是错误脚本。
 
-## CRUSH 巡检
+## 15. CRUSH 巡检 {/* #crush-巡检 */}
 
 ```bash
 ceph osd crush tree --format json
@@ -366,7 +365,7 @@ ceph osd getcrushmap -o /secure/report/crushmap.bin
 
 CRUSH 差异应进入变更审计。错误的机架标签会让三副本看似分散，实际上落在同一物理故障域。
 
-## CephFS 巡检
+## 16. CephFS 巡检 {/* #cephfs-巡检 */}
 
 ```bash
 ceph fs status --format json
@@ -395,7 +394,7 @@ ceph fs snapshot mirror status <fs-name>
 
 应检查每个目录的最近成功同步点，而不只是 mirror daemon 是否 Running。
 
-## RBD 巡检
+## 17. RBD 巡检 {/* #rbd-巡检 */}
 
 集群级巡检可检查：
 
@@ -415,7 +414,7 @@ rbd mirror pool status <pool> --verbose
 
 对成千上万镜像逐个执行昂贵命令会给 MON/MGR 增加压力。应分页、限并发，并优先从管理系统或批量接口取数。
 
-## RGW 巡检
+## 18. RGW 巡检 {/* #rgw-巡检 */}
 
 ```bash
 ceph orch ps --daemon-type rgw --refresh --format json
@@ -436,7 +435,7 @@ radosgw-admin sync status
 
 `radosgw-admin` 某些命令可能扫描大量元数据，不应高频无边界执行。先在测试环境测量成本。
 
-## Cephadm 巡检
+## 19. Cephadm 巡检 {/* #cephadm-巡检 */}
 
 ```bash
 ceph orch status --format json
@@ -460,7 +459,7 @@ ceph log last cephadm
 
 不要每天无条件执行 `ceph orch daemon redeploy` 或 restart 作为「自愈」。自动重启会掩盖根因并可能造成级联故障。
 
-## Cephadm 主机配置一致性检查
+## 20. Cephadm 主机配置一致性检查 {/* #cephadm-主机配置一致性检查 */}
 
 cephadm 可检查主机 OS、网络和版本差异。
 
@@ -496,7 +495,7 @@ ceph cephadm check-host <hostname>
 
 不要为了消除告警直接 disable 规则。若确有设计例外，应记录原因、范围和复核时间。
 
-## Crash 巡检
+## 21. Crash 巡检 {/* #crash-巡检 */}
 
 ```bash
 ceph crash ls-new
@@ -520,7 +519,7 @@ ceph crash archive <crash-id>
 
 归档只表示已处理，不代表故障已修复。
 
-## 版本与镜像一致性
+## 22. 版本与镜像一致性 {/* #版本与镜像一致性 */}
 
 ```bash
 ceph versions --format json
@@ -539,7 +538,7 @@ ceph orch ps --refresh --format json
 
 规则必须能读取维护日历，否则容易产生大量无意义告警。
 
-## OSD flags 巡检
+## 23. OSD flags 巡检 {/* #osd-flags-巡检 */}
 
 ```bash
 ceph osd dump --format json
@@ -568,7 +567,7 @@ ceph osd dump --format json
 
 Ceph 本身未必保存完整业务审批信息，需要与变更平台关联。
 
-## 主机层巡检
+## 24. 主机层巡检 {/* #主机层巡检 */}
 
 只从 Ceph CLI 无法发现所有问题。主机检查包括：
 
@@ -597,7 +596,7 @@ journalctl -k --since '-24 hours' --priority warning
 
 SMART long test、全盘读取等操作会消耗设备资源，不应在高峰自动并发运行。
 
-## 巡检频率
+## 25. 巡检频率 {/* #巡检频率 */}
 
 | 频率 | 适合项目 |
 | --- | --- |
@@ -609,9 +608,9 @@ SMART long test、全盘读取等操作会消耗设备资源，不应在高峰�
 
 实时风险应由监控处理，不要等每天 9 点巡检才发现 PG inactive。
 
-## 超时、并发和重试
+## 26. 超时、并发和重试 {/* #超时并发和重试 */}
 
-### 超时
+### 26.1 超时 {/* #超时 */}
 
 每条外部命令必须有超时，否则一个卡住的 CLI 会阻塞整份报告。
 
@@ -619,7 +618,7 @@ SMART long test、全盘读取等操作会消耗设备资源，不应在高峰�
 timeout 20 ceph health detail --format json
 ```
 
-### 并发
+### 26.2 并发 {/* #并发 */}
 
 主机检查可受控并发，但不要同时向所有 OSD 发大量 admin socket 请求。
 
@@ -631,11 +630,11 @@ timeout 20 ceph health detail --format json
 - 记录实际耗时
 - 发现 MON 负载升高时自动降速
 
-### 重试
+### 26.3 重试 {/* #重试 */}
 
 只对短暂网络故障进行少量、带退避的重试。认证失败、JSON 结构错误和明确健康异常不应无限重试。
 
-## 一个安全的 Shell 脚本骨架
+## 27. 一个安全的 Shell 脚本骨架 {/* #一个安全的-shell-脚本骨架 */}
 
 下面示例演示工程结构，不包含所有规则：
 
@@ -692,7 +691,7 @@ exit "${overall_rc}"
 
 生产脚本还应有锁、日志轮转、指标输出、版本兼容层和脱敏。
 
-## 防止重复运行
+## 28. 防止重复运行 {/* #防止重复运行 */}
 
 ```bash
 exec 9>/run/lock/ceph-inspection.lock
@@ -711,7 +710,7 @@ fi
 
 不要盲目删除锁文件。
 
-## 规则输出结构
+## 29. 规则输出结构 {/* #规则输出结构 */}
 
 建议每条规则输出统一 JSON：
 
@@ -739,7 +738,7 @@ fi
 
 `summary` 面向人，`rule_id` 和结构化 `evidence` 面向系统。
 
-## 健康评分的正确用法
+## 30. 健康评分的正确用法 {/* #健康评分的正确用法 */}
 
 可以为管理层提供 0–100 分，但分数不能取代原始异常。
 
@@ -766,7 +765,7 @@ fi
 - 预计风险
 - 原始证据链接
 
-## 趋势与基线
+## 31. 趋势与基线 {/* #趋势与基线 */}
 
 单次状态正常不代表没有风险。历史比较包括：
 
@@ -783,7 +782,7 @@ fi
 
 建议保存规范化后的摘要，而不是永久保存所有原始命令输出。敏感原始数据按安全制度限期保留。
 
-## 报告模板
+## 32. 报告模板 {/* #报告模板 */}
 
 ```markdown
 # Ceph 每日巡检报告
@@ -814,7 +813,7 @@ fi
 
 报告第一屏应显示「下一步做什么」，而不是先堆数百行命令输出。
 
-## 接入 Prometheus
+## 33. 接入 Prometheus {/* #接入-prometheus */}
 
 脚本可以输出 textfile collector 指标，例如：
 
@@ -834,7 +833,7 @@ ceph_inspection_score 92
 - 原子写入临时文件后 rename，避免 Prometheus 读到半文件
 - 详细证据放报告，不放高基数指标
 
-## 告警去重与维护窗口
+## 34. 告警去重与维护窗口 {/* #告警去重与维护窗口 */}
 
 一条 OSD down 可能同时触发：
 
@@ -856,7 +855,7 @@ ceph_inspection_score 92
 
 静默不能无限期，也不能把采集失败静默掉。
 
-## 巡检脚本测试
+## 35. 巡检脚本测试 {/* #巡检脚本测试 */}
 
 至少测试：
 
@@ -875,7 +874,7 @@ ceph_inspection_score 92
 
 测试可使用保存的脱敏 JSON fixture，不必每次真实破坏 Ceph 集群。
 
-## 不应该自动修复什么
+## 36. 不应该自动修复什么 {/* #不应该自动修复什么 */}
 
 以下动作默认需要人工决策：
 
@@ -892,9 +891,9 @@ ceph_inspection_score 92
 
 可以自动化「收集证据、创建工单、关联 Runbook、执行已审批的低风险动作」，但不能把危险命令藏在巡检脚本里。
 
-## 上线检查清单
+## 37. 上线检查清单 {/* #上线检查清单 */}
 
-### 采集器
+### 37.1 采集器 {/* #采集器 */}
 
 - 使用独立最小权限实体
 - 所有命令有超时
@@ -904,7 +903,7 @@ ceph_inspection_score 92
 - 输出目录权限和轮转正确
 - 不输出 key、token 和 secret
 
-### 规则
+### 37.2 规则 {/* #规则 */}
 
 - Critical/Warning/Notice/Unknown 定义统一
 - 数据不可用设硬门槛
@@ -914,7 +913,7 @@ ceph_inspection_score 92
 - 每条异常有证据和 Runbook
 - 未采集成功不会判定 OK
 
-### 输出
+### 37.3 输出 {/* #输出 */}
 
 - 报告首屏给出行动项
 - JSON 可供系统消费
@@ -924,7 +923,7 @@ ceph_inspection_score 92
 - 巡检自身失败有告警
 - 报告访问符合数据安全要求
 
-## 本文小结
+## 38. 本文小结 {/* #本文小结 */}
 
 可靠的 Ceph 巡检系统应当：
 
@@ -938,12 +937,11 @@ ceph_inspection_score 92
 - 报告给出行动项，指标用于趋势，原始证据用于排障
 - 默认不执行高风险自动修复
 
-
 下一篇将讲生产事故发生后的应急方法：如何判断事故等级、先止损还是先恢复、如何保存证据，以及怎样避免「越修越坏」。
 
 → [第 27 篇：Ceph 生产事故应急与复盘](./27-生产事故应急.md)
 
-## 课后练习
+## 39. 课后练习 {/* #课后练习 */}
 
 1. 为什么 Prometheus 监控不能完全替代每日巡检？
 2. 自动化为什么应优先解析 JSON？
@@ -956,7 +954,7 @@ ceph_inspection_score 92
 9. 哪些动作不适合自动修复？
 10. 如何测试巡检脚本而不破坏生产集群？
 
-## 官方资料
+## 40. 官方资料 {/* #官方资料 */}
 
 - [Ceph 健康检查说明](https://docs.ceph.com/en/latest/rados/operations/health-checks/)
 - [Cephadm Operations 与配置一致性检查](https://docs.ceph.com/en/latest/cephadm/operations/)

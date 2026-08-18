@@ -1,9 +1,9 @@
 ---
-title: SR-IOV RDMA 独占数据路径
+title: "SR-IOV RDMA 独占数据路径"
 sidebar_label: "03. SR-IOV RDMA 独占数据路径"
 sidebar_position: 3
+description: "从 PF/VF 创建、资源发现、Device Plugin 分配、SR-IOV CNI 配置到 Pod 内 RDMA 验收。"
 tags: [SR-IOV, VF, RDMA, Device Plugin, CNI, IOMMU]
-description: 从 PF/VF 创建、资源发现、Device Plugin 分配、SR-IOV CNI 配置到 Pod 内 RDMA 验收。
 ---
 
 # SR-IOV RDMA 独占数据路径
@@ -215,7 +215,7 @@ VF 独占 Queue/PCI Function，但以下仍共享：
 能够从 Pod Resource Request 追到 VF BDF、PF、NUMA、RDMA Device 和交换端口；能解释
 SR-IOV 的隔离收益及其仍然共享的故障域。
 
-## 参考资料
+## 14. 参考资料 {/* #参考资料 */}
 
 - [SR-IOV Network Device Plugin](https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin)
 - [NVIDIA Network Operator](https://docs.nvidia.com/networking/display/kubernetes2640/)

@@ -1,11 +1,12 @@
 ---
-title: iperf3 命令详解：TCP、UDP、吞吐、抖动与丢包测试
+title: "iperf3 命令详解：TCP、UDP、吞吐、抖动与丢包测试"
+sidebar_label: "16. iperf3 命令详解：TCP、UDP、吞吐、抖动与丢包测试"
 sidebar_position: 16
-description: 以 iperf3 3.21 为基线，系统讲解服务端与客户端、TCP/UDP/SCTP、正反向和双向测试、并行流、JSON、CPU/NUMA、窗口与拥塞控制，以及安全压测方法。
+description: "以 iperf3 3.21 为基线，系统讲解服务端与客户端、TCP/UDP/SCTP、正反向和双向测试、并行流、JSON、CPU/NUMA、窗口与拥塞控制，以及安全压测方法。"
 tags: [Linux, iperf3, TCP, UDP, 吞吐, 抖动, 丢包, 性能测试]
 ---
 
-# `iperf3` 命令详解：TCP、UDP、吞吐、抖动与丢包测试
+# iperf3 命令详解：TCP、UDP、吞吐、抖动与丢包测试
 
 `iperf3` 在两个受控端点之间生成流量，用来测量 TCP/SCTP 吞吐、重传和拥塞窗口，或 UDP 的接收速率、丢包与抖动。它是网络性能实验工具，不是应用压测工具，也不能单独代表存储、RPC、模型训练或真实业务性能。
 
@@ -450,4 +451,3 @@ iperf3 -c 192.0.2.20 -u -b 100M -t 10 -J
 - [ESnet iperf3 官方文档](https://software.es.net/iperf/invoking.html)
 - [iperf3 官方仓库与发布版本](https://github.com/esnet/iperf)
 - [iperf3 FAQ](https://software.es.net/iperf/faq.html)
-

@@ -1,11 +1,12 @@
 ---
-title: getfacl 命令详解：访问 ACL、默认 ACL 与有效权限
+title: "getfacl 命令详解：访问 ACL、默认 ACL 与有效权限"
+sidebar_label: "21. getfacl 命令详解：访问 ACL、默认 ACL 与有效权限"
 sidebar_position: 21
-description: 完整讲解 getfacl 的全部参数、base/named entries、ACL mask、effective 权限、default ACL、递归符号链接、数字 ID 和备份格式。
+description: "完整讲解 getfacl 的全部参数、base/named entries、ACL mask、effective 权限、default ACL、递归符号链接、数字 ID 和备份格式。"
 tags: [Linux, getfacl, POSIX ACL, 权限排障, ACL mask]
 ---
 
-# `getfacl` 命令详解：访问 ACL、默认 ACL 与有效权限
+# getfacl 命令详解：访问 ACL、默认 ACL 与有效权限
 
 `getfacl` 读取文件访问 ACL 和目录 default ACL。它是解释“`ls -l` 看起来允许却 EACCES”或“某个命名用户为什么只有部分权限”的核心工具。
 
@@ -100,7 +101,7 @@ findmnt -T /srv/team/report
 
 掌握标准：能列出全部参数；能手算组集合与 mask；能区分 access/default；能生成数字 ID 稳定、路径明确、可验证恢复的 ACL 清单。
 
-## 官方参考
+## 7. 官方参考 {/* #官方参考 */}
 
 - [ACL tools：getfacl(1)](https://man7.org/linux/man-pages/man1/getfacl.1.html)
 - [Linux acl(5)](https://man7.org/linux/man-pages/man5/acl.5.html)

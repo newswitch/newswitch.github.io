@@ -1,11 +1,12 @@
 ---
-title: nvidia-container-cli 命令详解：容器 GPU 注入链路诊断
+title: "nvidia-container-cli 命令详解：容器 GPU 注入链路诊断"
+sidebar_label: "07. nvidia-container-cli 命令详解：容器 GPU 注入链路诊断"
 sidebar_position: 7
-description: 使用 nvidia-container-cli 查看驱动、GPU、库与容器注入信息，定位宿主机正常但容器不可见 GPU 的问题。
+description: "使用 nvidia-container-cli 查看驱动、GPU、库与容器注入信息，定位宿主机正常但容器不可见 GPU 的问题。"
 tags: [GPU, NVIDIA Container Toolkit, nvidia-container-cli, 容器, 故障排查]
 ---
 
-# nvidia-container-cli 命令详解
+# nvidia-container-cli 命令详解：容器 GPU 注入链路诊断
 
 `nvidia-container-cli` 是 `libnvidia-container` 的底层 CLI。OCI runtime hook 和 Toolkit 通过它发现 GPU、选择驱动能力，并向容器注入设备节点、库和挂载。日常配置优先使用 `nvidia-ctk`；本命令主要用于底层诊断。
 
@@ -91,7 +92,7 @@ NVIDIA_REQUIRE_CUDA
 
 能画出 Runtime → hook/CDI → libnvidia-container → 设备节点/驱动库的链路；能用 `info` 判定发现层是否健康；能解释“看得到 `/dev/nvidia0`”为什么仍不代表 CUDA 可用；不会把底层 `configure` 当普通业务命令。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [libnvidia-container repository](https://github.com/NVIDIA/libnvidia-container)
 - [NVIDIA Container Toolkit Architecture Overview](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/arch-overview.html)

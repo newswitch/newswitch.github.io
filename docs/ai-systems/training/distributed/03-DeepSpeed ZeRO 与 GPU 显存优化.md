@@ -1,10 +1,11 @@
 ---
 title: "DeepSpeed ZeRO：从显存估算到多机训练与故障排查"
 sidebar_label: "03. DeepSpeed ZeRO：从显存估算到多机训练与故障排查"
+sidebar_position: 3
+description: "从训练显存组成、ZeRO 1/2/3、Offload、通信与配置调优，到 Kubernetes 部署、Checkpoint 和故障排查。"
+tags: ["DeepSpeed", "ZeRO", "GPU", "显存", "分布式训练", "故障排查"]
 date: 2026-07-22 17:40:00
 categories: 云原生
-tags: ["DeepSpeed", "ZeRO", "GPU", "显存", "分布式训练", "故障排查"]
-description: "从训练显存组成、ZeRO 1/2/3、Offload、通信与配置调优，到 Kubernetes 部署、Checkpoint 和故障排查。"
 ---
 
 # DeepSpeed ZeRO：从显存估算到多机训练与故障排查
@@ -501,7 +502,7 @@ GPU SM 利用率呈锯齿或长期低
 
 ## 15. 生产落地检查表
 
-### 容量与性能
+### 15.1 容量与性能 {/* #容量与性能 */}
 
 - [ ] 模型状态、激活和临时缓冲分别有估算与实测；
 - [ ] 保留显存余量，不以“刚好不 OOM”为验收；
@@ -509,7 +510,7 @@ GPU SM 利用率呈锯齿或长期低
 - [ ] global batch 和学习率策略已核对；
 - [ ] 单机、跨机和 Offload 分别有性能基线。
 
-### 调度与网络
+### 15.2 调度与网络 {/* #调度与网络 */}
 
 - [ ] 训练组使用 Gang/PodGroup 或等价机制；
 - [ ] rank 到节点、GPU、NIC、NUMA 的映射可追溯；
@@ -517,7 +518,7 @@ GPU SM 利用率呈锯齿或长期低
 - [ ] NCCL 网卡、RDMA、`/dev/shm` 和 memlock 已验证；
 - [ ] 网络故障时有超时、终止和重试策略。
 
-### 数据与恢复
+### 15.3 数据与恢复 {/* #数据与恢复 */}
 
 - [ ] Checkpoint 所有 rank 均参与保存；
 - [ ] 保存发布避免半成品；
@@ -527,20 +528,20 @@ GPU SM 利用率呈锯齿或长期低
 
 ## 16. 掌握标准
 
-### 入门
+### 16.1 入门 {/* #入门 */}
 
 - 能说清参数、梯度、优化器和激活的区别；
 - 能解释为什么 DDP 增卡不等于单卡显存按比例下降；
 - 能完成单机 ZeRO-2 训练和恢复。
 
-### 进阶
+### 16.2 进阶 {/* #进阶 */}
 
 - 能估算 7B/70B 模型状态量级；
 - 能根据 OOM 发生阶段选择 ZeRO、重计算或 Offload；
 - 能比较 ZeRO-2 与 ZeRO-3 的显存和吞吐；
 - 能定位多机初始化挂起和 NCCL 慢 rank。
 
-### 生产级
+### 16.3 生产级 {/* #生产级 */}
 
 - 能设计 ZeRO、TP、PP 的并行拓扑；
 - 能把 GPU、NVLink、NIC、存储和 Gang 调度纳入同一容量模型；
@@ -553,7 +554,7 @@ GPU SM 利用率呈锯齿或长期低
 - [训练任务 Checkpoint 与断点恢复](./04-训练任务%20Checkpoint%20与断点恢复.md)
 - [NCCL 通信原理与常见问题](./05-NCCL%20通信原理与常见问题.md)
 
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [DeepSpeed ZeRO tutorial](https://www.deepspeed.ai/tutorials/zero/)
 - [DeepSpeed ZeRO-Offload tutorial](https://www.deepspeed.ai/tutorials/zero-offload/)

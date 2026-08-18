@@ -1,10 +1,11 @@
 ---
 title: "Kubernetes GPU 集群完整部署实录：从裸机到训练与推理验收"
 sidebar_label: "02. Kubernetes GPU 集群完整部署实录：从裸机到训练与推理验收"
+sidebar_position: 2
+description: "一份不伪造执行结果的 GPU 集群部署手册，覆盖环境规划、组件安装、拓扑验证、训练与推理验收、证据归档和回滚门禁。"
+tags: ["Kubernetes", "GPU Operator", "Volcano", "DCGM", "vLLM", "部署"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU Operator", "Volcano", "DCGM", "vLLM", "部署"]
-description: "一份不伪造执行结果的 GPU 集群部署手册，覆盖环境规划、组件安装、拓扑验证、训练与推理验收、证据归档和回滚门禁。"
 ---
 
 # Kubernetes GPU 集群完整部署实录：从裸机到训练与推理验收
@@ -442,7 +443,7 @@ Pod 启动 → 模型校验 → 模型加载 → startup 成功
 
 下一篇进入[GPU 集群故障演练：从场景设计到复盘闭环](./03-GPU%20集群故障演练记录.md)。
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Production environment](https://kubernetes.io/docs/setup/production-environment/)
 - [NVIDIA GPU Operator installation](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/install-gpu-operator.html)

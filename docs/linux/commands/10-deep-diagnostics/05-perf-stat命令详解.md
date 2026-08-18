@@ -1,11 +1,12 @@
 ---
-title: perf stat 命令详解：CPU 周期、指令、缓存、复用与指标解释
+title: "perf stat 命令详解：CPU 周期、指令、缓存、复用与指标解释"
+sidebar_label: "05. perf stat 命令详解：CPU 周期、指令、缓存、复用与指标解释"
 sidebar_position: 5
-description: 系统讲解 perf stat 的事件、PID/CPU/cgroup 作用域、重复、区间、聚合、输出、metric group 和 multiplexing。
+description: "系统讲解 perf stat 的事件、PID/CPU/cgroup 作用域、重复、区间、聚合、输出、metric group 和 multiplexing。"
 tags: [Linux, perf stat, PMU, CPU, 性能分析]
 ---
 
-# `perf stat` 命令详解：先计数，再采样
+# perf stat 命令详解：CPU 周期、指令、缓存、复用与指标解释
 
 `perf stat` 对一段工作负载或目标 PID/CPU/cgroup 统计 PMU、软件和 tracepoint 事件。它回答“这段时间发生了多少 cycles/instructions/cache miss/context switch”，不告诉你具体热点函数。
 

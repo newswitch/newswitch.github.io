@@ -1,9 +1,9 @@
 ---
-title: GPU、NIC 与 NUMA 拓扑调度
+title: "GPU、NIC 与 NUMA 拓扑调度"
 sidebar_label: "04. GPU、NIC 与 NUMA 拓扑调度"
 sidebar_position: 4
+description: "协调 CPU、HugePage、GPU、VF/RDMA NIC 和 NUMA，避免资源数量满足但物理拓扑错误。"
 tags: [Kubernetes, Topology Manager, CPU Manager, NUMA, GPU, NIC]
-description: 协调 CPU、HugePage、GPU、VF/RDMA NIC 和 NUMA，避免资源数量满足但物理拓扑错误。
 ---
 
 # GPU、NIC 与 NUMA 拓扑调度
@@ -189,7 +189,7 @@ journalctl -u kubelet
 能够解释 Scheduler 与 Kubelet Topology Manager 的职责差异；能从 Pod 请求证明 CPU、Memory、
 GPU 和 NIC 的真实 NUMA 对齐，并量化错误拓扑的性能影响。
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Topology Manager](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/)
 - [Kubernetes Resource Managers](https://kubernetes.io/docs/concepts/workloads/resource-managers/)

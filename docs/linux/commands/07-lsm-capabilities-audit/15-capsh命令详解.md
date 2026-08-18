@@ -1,11 +1,12 @@
 ---
-title: capsh 命令详解：解码、验证并构造 capability 受限进程
+title: "capsh 命令详解：解码、验证并构造 capability 受限进程"
+sidebar_label: "15. capsh 命令详解：解码、验证并构造 capability 受限进程"
 sidebar_position: 15
-description: 完整讲解 capsh 的全部参数、顺序执行语义、P/E/I/B/A 与 IAB、UID/GID、securebits、模式、chroot、shell/重新执行和安全实验。
+description: "完整讲解 capsh 的全部参数、顺序执行语义、P/E/I/B/A 与 IAB、UID/GID、securebits、模式、chroot、shell/重新执行和安全实验。"
 tags: [Linux, capsh, capabilities, securebits, 最小权限]
 ---
 
-# `capsh` 命令详解：解码、验证并构造 capability 受限进程
+# capsh 命令详解：解码、验证并构造 capability 受限进程
 
 `capsh` 用于观察 capability 状态、解码 `/proc` 位图、检查内核支持，以及按指定 UID/GID、capability、bounding/ambient/IAB 和 securebits 构造测试进程。它的参数**按出现顺序执行**，交换两个参数可能得到完全不同的权限或直接失败。
 
@@ -147,7 +148,7 @@ getcap -n /proc/1/exe
 
 掌握标准：能列出全部参数；能解释顺序语义和 P/E/I/B/A/IAB；能判断不可逆 drop/securebits 风险；能用退出码做能力断言；能分析 systemd 与容器中的实际集合。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [capsh(1)](https://manpages.debian.org/unstable/libcap2-bin/capsh.1.en.html)
 - [libcap project](https://sites.google.com/site/fullycapable/)

@@ -1,9 +1,9 @@
 ---
-title: Kafka Topic、Partition、磁盘、网络与容量规划
+title: "Kafka Topic、Partition、磁盘、网络与容量规划"
 sidebar_label: "06. Kafka Topic、Partition、磁盘、网络与容量规划"
 sidebar_position: 6
+description: "从峰值流量、保留、副本、恢复和消费者并行度估算 Kafka broker、partition、磁盘与网络。"
 tags: [Kafka, 容量规划, Partition, 性能]
-description: 从峰值流量、保留、副本、恢复和消费者并行度估算 Kafka broker、partition、磁盘与网络。
 ---
 
 # Kafka Topic、Partition、磁盘、网络与容量规划
@@ -81,6 +81,6 @@ Partition 不宜过少导致热点和并行不足，也不宜“预留无限多�
 
 上一篇：[Kafka 事务与 Exactly-Once](./05-Kafka事务与端到端Exactly-Once.md)　下一篇：[积压、故障排查、滚动升级与 Kubernetes](./07-Kafka积压故障排查滚动升级与Kubernetes.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Kafka Operations](https://kafka.apache.org/documentation/#operations)

@@ -2,8 +2,8 @@
 title: "TTFT 超标但 GPU 利用率低：完整排查案例"
 sidebar_label: "15. TTFT 超标但 GPU 利用率低：完整排查案例"
 sidebar_position: 15
-tags: [vLLM, TTFT, GPU利用率, 故障排查, 案例]
 description: "以 GPU 利用率 30%、TTFT 超标为例，给出从测量校验到网关、CPU、调度、KV、GPU 和多卡通信的证据闭环。"
+tags: [vLLM, TTFT, GPU利用率, 故障排查, 案例]
 ---
 
 # TTFT 超标但 GPU 利用率低：完整排查案例
@@ -13,8 +13,6 @@ description: "以 GPU 利用率 30%、TTFT 超标为例，给出从测量校验�
 可以回答，但不能只凭这两个数字下结论。30% 只说明观测窗口内 GPU Kernel 活动不连续；TTFT 超标说明首 token 链路某一段变慢。二者交集通常优先落在“GPU 前的等待”或“GPU Step 之间的空洞”。
 
 本篇给出可以直接执行的排查顺序。
-
----
 
 ## 1. 案例假设
 
@@ -29,11 +27,9 @@ GPU Util: 30%
 
 目标不是立刻把 GPU 拉到 90%，而是找到 TTFT 中多出的约 4 秒在哪里。
 
----
-
 ## 2. 第一关：确认两个指标没有测错
 
-### TTFT 口径
+### 2.1 TTFT 口径 {/* #ttft-口径 */}
 
 确认它是：
 
@@ -44,7 +40,7 @@ GPU Util: 30%
 
 不要把 HTTP Header、空 Chunk 或服务内部首 token 时间混为一谈。
 
-### GPU Util 口径
+### 2.2 GPU Util 口径 {/* #gpu-util-口径 */}
 
 确认：
 
@@ -55,8 +51,6 @@ GPU Util: 30%
 - 采样粒度足以看出“短时打满、长时空闲”。
 
 如果某卡 90%、某卡 5%，平均 30% 本身就在掩盖路由或并行问题。
-
----
 
 ## 3. 先做四段时间戳
 
@@ -84,8 +78,6 @@ T6 client_first_byte
 
 最大的一段决定第一条调查路径。
 
----
-
 ## 4. 快速决策树
 
 ```text
@@ -108,11 +100,9 @@ TTFT 高 + GPU 30%
     └─ Detokenize/SSE/Proxy/网络
 ```
 
----
-
 ## 5. 路径 A：Gateway 或路由层排队
 
-### 证据
+### 5.1 证据 {/* #证据 */}
 
 - T0→T2 占 TTFT 大头；
 - vLLM `waiting` 不高；
@@ -120,7 +110,7 @@ TTFT 高 + GPU 30%
 - 部分副本空闲、部分副本 waiting 很高；
 - 重试次数、超时和连接池等待增加。
 
-### 常见根因
+### 5.2 常见根因 {/* #常见根因 */}
 
 - 只按请求数轮询，没有按 token/队列负载路由；
 - Sticky Session 把长请求压到少数副本；
@@ -129,18 +119,16 @@ TTFT 高 + GPU 30%
 - 已不 Ready 的副本仍在 Endpoint；
 - Prefix Cache 粘性过强，牺牲了排队公平性。
 
-### 修复验证
+### 5.3 修复验证 {/* #修复验证 */}
 
 - 记录每副本 running/waiting、输入 token 和 TTFT；
 - 对比直连空闲副本与经 Gateway；
 - 路由改动后确认 P99 改善且 Prefix 命中/成本未不可接受下降；
 - 为重试加预算，流式请求不要无条件重放。
 
----
-
 ## 6. 路径 B：API、Tokenizer 或 Python CPU 饥饿
 
-### 证据
+### 6.1 证据 {/* #证据-1 */}
 
 - Engine add request 明显晚于 Gateway accept；
 - 节点或容器 CPU throttling；
@@ -149,7 +137,7 @@ TTFT 高 + GPU 30%
 - GPU Timeline 在执行之间有大空洞；
 - KV 使用不高、Scheduler 也拿不到足够请求。
 
-### 常见根因
+### 6.2 常见根因 {/* #常见根因-1 */}
 
 - 大 JSON、超长 Prompt 的解析和 Chat Template；
 - Tokenizer 线程池不足或 CPU 配额太小；
@@ -158,7 +146,7 @@ TTFT 高 + GPU 30%
 - Python GC 或日志同步写；
 - Kubernetes CPU Limit 造成 CFS throttling。
 
-### 实验
+### 6.3 实验 {/* #实验 */}
 
 1. 用预先 tokenized 或短输入做 A/B；
 2. 暂时绕过 Gateway；
@@ -168,11 +156,9 @@ TTFT 高 + GPU 30%
 
 若 CPU 增加后 Scheduler 提交频率、GPU Busy 和 TTFT 同时改善，才支持 CPU 饥饿假设。
 
----
-
 ## 7. 路径 C：EngineCore 或 Scheduler 循环不及时
 
-### 证据
+### 7.1 证据 {/* #证据-2 */}
 
 - 请求已经 `add_request`，但首次被选中很晚；
 - waiting 上升；
@@ -180,7 +166,7 @@ TTFT 高 + GPU 30%
 - GPU 有规律地“短忙—长闲”；
 - EngineCore 进程 CPU 高或存在 IPC 等待。
 
-### 可能根因
+### 7.2 可能根因 {/* #可能根因 */}
 
 - 大量请求状态更新、取消或结构化输出；
 - Scheduler 单轮 CPU 工作过重；
@@ -188,7 +174,7 @@ TTFT 高 + GPU 30%
 - 异步调度配置和当前特性组合退化；
 - 日志、指标高基数或 Trace 导出阻塞。
 
-### 验证
+### 7.3 验证 {/* #验证 */}
 
 记录每轮：
 
@@ -202,13 +188,11 @@ running/waiting
 
 如果 GPU 单步很快，但 `execute_end → next_execute_start` 很长，根因就在 GPU 之外。
 
----
-
 ## 8. 路径 D：KV Block 压力与抢占
 
 “GPU 利用率低”并不能排除 KV 容量不足。没有可分配 Block 时，即使算力空闲，Scheduler 也可能无法把等待请求变成有效批次。
 
-### 证据
+### 8.1 证据 {/* #证据-3 */}
 
 - waiting、queue time 高；
 - KV Cache 使用率接近上限；
@@ -216,7 +200,7 @@ running/waiting
 - 长上下文/大 `max_tokens` 请求占比上升；
 - 短请求 P99 被少量长请求拖垮。
 
-### 修复方向
+### 8.2 修复方向 {/* #修复方向 */}
 
 - 按 token 预算准入，而不是只限请求数；
 - 收紧不合理最大上下文和最大输出；
@@ -227,11 +211,9 @@ running/waiting
 
 不能为了降低 KV 压力盲目减小 Batch，因为更小 Batch 可能让 GPU 更空、吞吐更差。
 
----
-
 ## 9. 路径 E：ModelRunner CPU 准备或 CUDA Graph 未命中
 
-### 时间线特征
+### 9.1 时间线特征 {/* #时间线特征 */}
 
 ```text
 CPU prepare ─────────┐
@@ -249,7 +231,7 @@ GPU Kernel 活动短而碎，平均 Util 低。常见原因：
 - 结构化输出或 Sampling 状态推进；
 - CUDA Graph 捕获范围与真实工作负载不匹配。
 
-### 验证
+### 9.2 验证 {/* #验证-1 */}
 
 - Nsight Systems 查看 CPU Thread、CUDA API、Kernel 和空洞；
 - 记录每步 scheduled tokens、num requests 和执行形状；
@@ -257,13 +239,11 @@ GPU Kernel 活动短而碎，平均 Util 低。常见原因：
 - 对固定 Shape 与真实混合 Shape 做 A/B；
 - 禁用某功能只用于归因，不直接作为生产修复。
 
----
-
 ## 10. 路径 F：多卡慢 rank 或通信等待
 
 节点平均 GPU 30% 可能来自：一个 rank 忙或变慢，其他 rank 大量等待。
 
-### 证据
+### 10.1 证据 {/* #证据-4 */}
 
 - 各卡 Util/时钟/功耗明显不一致；
 - NCCL Kernel 或 collective 之间等待；
@@ -271,15 +251,13 @@ GPU Kernel 活动短而碎，平均 Util 低。常见原因：
 - NVLink 降级到 PCIe，或跨 NUMA/跨机路径异常；
 - 某卡有 Xid、ECC、降频或温度/功耗限制。
 
-### 验证
+### 10.2 验证 {/* #验证-2 */}
 
 1. 每 rank 抓同一时间窗 Timeline；
 2. 检查 `nvidia-smi topo -m` 与实际 rank 绑定；
 3. 跑 NCCL Tests 建立链路基线；
 4. 检查 NVLink/PCIe 错误和带宽；
 5. 用同模型单卡/小 TP 对比，把模型计算和通信分开。
-
----
 
 ## 11. 路径 G：输出或代理缓冲
 
@@ -295,8 +273,6 @@ GPU Kernel 活动短而碎，平均 Util 低。常见原因：
 
 旁路代理直连 Pod 是强归因实验，但必须同时记录服务端与客户端时间戳。
 
----
-
 ## 12. 一个完整结论示例
 
 不要写：
@@ -308,8 +284,6 @@ GPU Kernel 活动短而碎，平均 Util 低。常见原因：
 > 异常窗口 TTFT P99 为 6.1 s，其中 Engine queue P99 为 4.7 s；API 前处理和首次 Prefill 分别为 180 ms 与 620 ms。KV 使用率仅 42%，无抢占；GPU Timeline 显示每次执行后有 30～80 ms CPU 空洞。CPU Profile 显示结构化输出状态推进和高基数 Trace 导出占 EngineCore 单核 68%。关闭同步导出并把 Grammar 缓存预热后，执行间空洞降至 5～12 ms，GPU Busy 从 30% 升至 57%，TTFT P99 降至 1.8 s。相同负载复验三次，TPOT 与错误率无回退。
 
 这才是可复查、可回滚的因果闭环。
-
----
 
 ## 13. 现场采集清单
 
@@ -326,8 +300,6 @@ GPU Kernel 活动短而碎，平均 Util 低。常见原因：
 [ ] Prefix hit、输入/输出 token 分布
 [ ] 版本、配置和异常前变更
 ```
-
----
 
 ## 14. 验收题
 

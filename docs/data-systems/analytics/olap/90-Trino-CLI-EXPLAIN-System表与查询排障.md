@@ -1,8 +1,8 @@
 ---
-title: Trino CLI、EXPLAIN、System 表与查询排障
+title: "Trino CLI、EXPLAIN、System 表与查询排障"
 sidebar_label: "90. Trino CLI、EXPLAIN、System 表与查询排障"
 sidebar_position: 90
-description: 掌握 Trino CLI、Catalog 元数据、执行计划、会话参数、运行时系统表，以及跨数据源查询故障和性能定位。
+description: "掌握 Trino CLI、Catalog 元数据、执行计划、会话参数、运行时系统表，以及跨数据源查询故障和性能定位。"
 tags: [Trino, SQL, 命令手册, 查询引擎, 故障排查]
 ---
 
@@ -204,7 +204,7 @@ Query ID
 | 外部数据库被打满 | 谓词未下推、并发过大、跨源 Join 策略不合理 |
 | Worker lost | Pod/进程退出、GC、OOM、节点或网络故障 |
 
-## 11. 20 分钟实验
+## 11. 分钟实验 {/* #11-20-分钟实验 */}
 
 1. 用 CLI 列出 Catalog、Schema 和表。
 2. 对同一查询分别执行普通 `EXPLAIN`、`TYPE DISTRIBUTED` 和 `TYPE IO`。
@@ -221,10 +221,9 @@ Query ID
 - 能解释 CPU 高、Blocked 高、Planning 慢分别意味着什么。
 - 能把 Trino 慢查询继续追踪到湖表文件、Metastore、网络或外部数据库。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [Trino Command Line Interface](https://trino.io/docs/current/client/cli.html)
 - [EXPLAIN](https://trino.io/docs/current/sql/explain.html)
 - [System Connector](https://trino.io/docs/current/connector/system.html)
 - [Iceberg Connector](https://trino.io/docs/current/connector/iceberg.html)
-

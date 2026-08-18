@@ -1,7 +1,8 @@
 ---
-title: systemd 服务、启动与日志命令导读
+title: "systemd 服务、启动与日志命令导读"
+sidebar_label: "00. systemd 服务、启动与日志命令导读"
 sidebar_position: 0
-description: 从 unit、依赖事务、cgroup、journal、登录会话、崩溃转储和 UEFI 引导链系统掌握 systemd 运维与故障排查。
+description: "从 unit、依赖事务、cgroup、journal、登录会话、崩溃转储和 UEFI 引导链系统掌握 systemd 运维与故障排查。"
 tags: [Linux, systemd, systemctl, journalctl, 启动, 日志, SRE]
 ---
 
@@ -164,7 +165,7 @@ systemd-delta
 - 能定位登录会话、core dump、本地配置覆盖和关机抑制者。
 - 能只读检查 UEFI/systemd-boot 状态，并识别写 NVRAM/ESP 的高风险操作。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [systemd 260.2 release](https://github.com/systemd/systemd/releases/tag/v260.2)
 - [systemd manual](https://www.freedesktop.org/software/systemd/man/)

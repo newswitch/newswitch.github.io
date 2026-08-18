@@ -2,8 +2,8 @@
 title: "vLLM 与大模型推理学习路线"
 sidebar_label: "00. vLLM 与大模型推理学习路线"
 sidebar_position: 0
-tags: [vLLM, LLM, 推理, KV Cache, PagedAttention, 学习路线]
 description: "从 Transformer 推理、Prefill/Decode、KV Cache 和调度开始，系统学习 vLLM 架构、并行部署、性能分析与生产运维。"
+tags: [vLLM, LLM, 推理, KV Cache, PagedAttention, 学习路线]
 ---
 
 # vLLM 与大模型推理学习路线
@@ -27,8 +27,6 @@ HTTP / SSE 协议
 
 1. **源码线**：理解 vLLM 内部对象和算法如何实现。
 2. **生产线**：理解请求路径、资源模型、部署架构、性能和可靠性。
-
----
 
 ## 1. 版本说明
 
@@ -54,11 +52,9 @@ vllm serve --help
 
 并固定镜像 Digest、模型 Revision、驱动和 CUDA 版本。
 
----
-
 ## 2. 学习前置
 
-### 必须具备
+### 2.1 必须具备 {/* #必须具备 */}
 
 - Python 和 PyTorch 基础。
 - Transformer 自回归生成流程。
@@ -66,15 +62,13 @@ vllm serve --help
 - Kubernetes Deployment、Service、Probe 和 GPU 调度。
 - Prometheus Counter、Gauge、Histogram。
 
-### 推荐先读
+### 2.2 推荐先读 {/* #推荐先读 */}
 
 - [GPU 基础知识](../../../gpu/fundamentals/01-GPU基础知识：从计算核心到显存.md)
 - [HBM 显存原理](../../../gpu/memory/01-HBM显存原理：容量、带宽与访问效率.md)
 - [CPU 与 GPU 之间的数据搬运](../../../gpu/pcie-numa/05-CPU与GPU之间的数据搬运.md)
 - [NVLink 与 NVSwitch](../../../gpu/nvlink-nvswitch/01-NVLink与NVSwitch原理.md)
 - [Kubernetes 部署 vLLM](../serving/01-Kubernetes%20部署%20vLLM%20推理服务.md)
-
----
 
 ## 3. 第一阶段：建立 V1 组件与源码主线
 
@@ -93,7 +87,7 @@ vllm serve --help
 
 这八篇是源码主线。学习时以组件接口、状态变化和一次请求为主，不需要先背诵大段实现代码。
 
-### 硬件平台分叉阅读
+### 3.1 硬件平台分叉阅读 {/* #硬件平台分叉阅读 */}
 
 完成上述共同控制面后，再学习硬件执行面：
 
@@ -103,8 +97,6 @@ vllm serve --help
 | [vLLM Serve 生产参数参考](./25-vLLM-Serve生产参数参考.md) | 能将服务、模型、显存、调度、并行、编译和请求参数映射到组件、资源预算与 SLO |
 
 这篇文章不是重复部署步骤，而是将已有 V1 源码主线映射到昇腾 910B 执行面。阅读后应能判断一个问题属于共同的 API/EngineCore/Scheduler 层，还是属于 vLLM-Ascend、torch_npu、CANN、ACLGraph 或 HCCL 层。
-
----
 
 ## 4. 第二阶段：一次推理到底发生了什么
 
@@ -124,22 +116,20 @@ vllm serve --help
 - 为什么 KV Cache 满不等于 CUDA OOM？
 - 为什么大 Prefill 会影响正在 Decode 的请求？
 
----
-
 ## 5. V0 历史源码笔记
 
 下面是原有 V0 源码笔记，放在完成 V1 主线之后作为历史对照阅读：
 
 | 顺序 | 文章 | 版本定位 |
 | --- | --- | --- |
-| 01 | [整体代码架构](./vLLM学习笔记（一）整体代码架构.md) | V0 `LLMEngine` 与 Worker |
-| 02 | [调度前的预处理工作](./vLLM学习笔记（二）vLLM调度前的预处理工作.md) | V0 输入处理与请求对象 |
-| 03 | [调度器策略](./vLLM学习笔记（三）vLLM调度器策略.md) | V0 Scheduler |
-| 04 | [BlockSpaceManager](./vLLM学习笔记（四）BlockSpaceManager.md) | V0 KV Block 管理 |
-| 05 | [PrefixCachingBlockAllocator](./vLLM学习笔记（五）PrefixCachingBlockAllocator.md) | V0 Prefix Cache 实现 |
-| 06 | [参数使用](./vLLM学习笔记（六）参数使用.md) | 旧版本参数，需要与当前 CLI 核对 |
+| 01 | [整体代码架构](./91-vLLM学习笔记（一）整体代码架构.md) | V0 `LLMEngine` 与 Worker |
+| 02 | [调度前的预处理工作](./92-vLLM学习笔记（二）vLLM调度前的预处理工作.md) | V0 输入处理与请求对象 |
+| 03 | [调度器策略](./93-vLLM学习笔记（三）vLLM调度器策略.md) | V0 Scheduler |
+| 04 | [BlockSpaceManager](./94-vLLM学习笔记（四）BlockSpaceManager.md) | V0 KV Block 管理 |
+| 05 | [PrefixCachingBlockAllocator](./95-vLLM学习笔记（五）PrefixCachingBlockAllocator.md) | V0 Prefix Cache 实现 |
+| 06 | [参数使用](./96-vLLM学习笔记（六）参数使用.md) | 旧版本参数，需要与当前 CLI 核对 |
 
-### V1 源码阅读入口
+### 5.1 V1 源码阅读入口 {/* #v1-源码阅读入口 */}
 
 ```text
 OpenAI API Server
@@ -154,8 +144,6 @@ OpenAI API Server
 ```
 
 源码阅读不要从整个仓库第一行开始。先用一次请求建立调用链，再对照指标和日志定位对象。
-
----
 
 ## 6. 第三阶段：显存与缓存
 
@@ -180,8 +168,6 @@ OpenAI API Server
 KV Connector 及 Prefill/Decode 分离属于进阶架构；采用前需要结合所用 vLLM 版本和实际存储、
 网络链路单独验证。
 
----
-
 ## 7. 第四阶段：并行推理
 
 | 策略 | 解决问题 |
@@ -199,8 +185,6 @@ KV Connector 及 Prefill/Decode 分离属于进阶架构；采用前需要结合
 - [NCCL 通信原理](../../training/distributed/05-NCCL%20通信原理与常见问题.md)
 - [多机训练的完整路径](../../../projects/ai-infra-end-to-end/04-多机训练的完整路径.md)
 
----
-
 ## 8. 第五阶段：生产服务
 
 | 文章 | 技术重点 |
@@ -210,8 +194,6 @@ KV Connector 及 Prefill/Decode 分离属于进阶架构；采用前需要结合
 | [探针设计](../serving/04-大模型服务%20Kubernetes%20探针设计.md) | startup/readiness/liveness |
 | [滚动升级与优雅退出](../serving/05-大模型推理服务滚动升级与优雅退出.md) | 摘流、Drain、SSE、回滚 |
 | [LLM 服务 SLI/SLO](../../../sre/reliability/01-LLM服务SLI-SLO-SLA工程化.md) | 可用性、流式完成、延迟 SLO |
-
----
 
 ## 9. 第六阶段：性能分析与源码归因
 
@@ -232,8 +214,6 @@ GPUModelRunner、Kernel、NCCL 或输出层。
 到达模型、Prefix 命中和 Scheduler 参数。结果同时比较 TTFT/TPOT/E2E P50/P95/P99、
 Prompt/Generation tokens/s、错误与流式完成、资源余量和 token 成本。
 
----
-
 ## 10. 第七阶段：容量规划与生产故障
 
 | 顺序 | 文章 | 学习成果 |
@@ -245,30 +225,28 @@ Prompt/Generation tokens/s、错误与流式完成、资源余量和 token 成�
 容量以满足 SLO 的安全工作率为准，不以最大无错误 QPS 或显存装满为准。生产故障结束条件
 也不只是“重启恢复”，还要恢复流式完成、尾延迟、N-1 余量并形成可复验根因。
 
----
-
 ## 11. 建议实验
 
-### 实验 A：请求生命周期
+### 11.1 实验 A：请求生命周期 {/* #实验-a请求生命周期 */}
 
 1. 启动单卡小模型。
 2. 分别发送流式和非流式请求。
 3. 为 Gateway、API Server 和 Engine 加 Trace。
 4. 标注排队、Prefill、首 token、Decode 和完成时间。
 
-### 实验 B：长短请求干扰
+### 11.2 实验 B：长短请求干扰 {/* #实验-b长短请求干扰 */}
 
 1. 固定短请求流量。
 2. 注入一个长 Prompt。
 3. 对比启用和调整 Chunked Prefill 前后的 TTFT/ITL。
 
-### 实验 C：KV Cache
+### 11.3 实验 C：KV Cache {/* #实验-ckv-cache */}
 
 1. 逐步增加并发和上下文。
 2. 观察 KV Cache、waiting、preemption 和错误。
 3. 重复相同 System Prompt，验证 Prefix Cache 命中。
 
-### 实验 D：并行策略
+### 11.4 实验 D：并行策略 {/* #实验-d并行策略 */}
 
 在相同 8 GPU 节点对比：
 
@@ -279,8 +257,6 @@ TP=2, DP=4
 ```
 
 记录显存、通信、吞吐和尾延迟，而不是只判断“能否启动”。
-
----
 
 ## 12. 模块验收
 

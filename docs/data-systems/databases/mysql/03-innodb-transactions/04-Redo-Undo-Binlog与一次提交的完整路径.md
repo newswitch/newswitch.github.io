@@ -2,15 +2,13 @@
 title: "Redo、Undo、Binlog 与一次提交的完整路径"
 sidebar_label: "04. Redo、Undo、Binlog 与一次提交的完整路径"
 sidebar_position: 4
-tags: [MySQL, Redo, Undo, Binlog, 事务提交]
 description: "区分 Redo、Undo 和 Binlog，追踪 InnoDB 事务从修改、两阶段提交到持久化、复制与恢复的完整路径。"
+tags: [MySQL, Redo, Undo, Binlog, 事务提交]
 ---
 
 # Redo、Undo、Binlog 与一次提交的完整路径
 
 三个日志回答不同问题：崩溃后怎样恢复 Page、事务怎样回滚/构造旧版本、变更怎样复制和做 PITR。把它们都称为“事务日志”会掩盖关键差异。
-
----
 
 ## 1. 职责表
 
@@ -21,8 +19,6 @@ description: "区分 Redo、Undo 和 Binlog，追踪 InnoDB 事务从修改、�
 | Binlog | Server | 事务逻辑事件 | Replica、PITR、CDC |
 
 Redo 循环复用；Binlog 按文件保留策略管理；Undo 在不再被事务/快照需要后清理。
-
----
 
 ## 2. Redo：Write-Ahead Logging
 
@@ -39,8 +35,6 @@ Redo 循环复用；Binlog 按文件保留策略管理；Undo 在不再被事务
 
 Redo 使用 LSN 标识日志位置。Checkpoint 表示此前修改已反映到数据文件，可推进可复用边界。
 
----
-
 ## 3. Undo：回滚与历史版本
 
 更新前生成 Undo，使事务可以反向恢复，并让一致性读沿版本链找到可见旧版本。
@@ -54,8 +48,6 @@ current row
 
 提交后 Undo 不一定立即删除；只要活跃 Read View 可能需要它就要保留。长事务会扩大 History List 和 Undo 空间。
 
----
-
 ## 4. Binlog：复制与恢复时间线
 
 Binlog 记录已提交事务的变更事件，可用于：
@@ -66,8 +58,6 @@ Binlog 记录已提交事务的变更事件，可用于：
 - 审计/回放边界（需控制权限和隐私）。
 
 Binlog 格式、GTID、保留期和完整备份共同决定可恢复窗口。只有 Binlog、没有基础备份，无法高效从任意历史起点恢复整个实例。
-
----
 
 ## 5. 一次 UPDATE
 
@@ -94,8 +84,6 @@ COMMIT;
 
 实际内部细节会随版本演进，稳定要点是协调 Redo 与 Binlog，避免一边认为提交、另一边缺失事务。
 
----
-
 ## 6. 两阶段提交心智模型
 
 MySQL 需要让 InnoDB 提交状态与 Binlog 一致：
@@ -107,8 +95,6 @@ InnoDB Prepare
 ```
 
 若中间崩溃，恢复根据日志状态判断事务应提交还是回滚。它不是跨任意微服务的分布式事务协议，而是 Server 与存储引擎内部提交协调。
-
----
 
 ## 7. 刷盘参数与数据丢失窗口
 
@@ -127,8 +113,6 @@ SHOW VARIABLES LIKE 'innodb_redo_log_capacity';
 
 不要把示例值当推荐值。
 
----
-
 ## 8. Group Commit
 
 多个并发事务可在日志写入/刷盘阶段合并固定成本，提高吞吐。单并发延迟、并发吞吐和存储 fsync 能力相互作用。
@@ -142,8 +126,6 @@ SHOW VARIABLES LIKE 'innodb_redo_log_capacity';
 - Replica/CDC 消费；
 - 持久性配置。
 
----
-
 ## 9. 大事务
 
 大事务放大：
@@ -156,8 +138,6 @@ SHOW VARIABLES LIKE 'innodb_redo_log_capacity';
 - 备份与网络峰值。
 
 批量任务按业务原子性合理分批，使用幂等断点。不能为了性能随意拆开必须原子完成的账务事务。
-
----
 
 ## 10. 日志保留与磁盘满
 
@@ -176,13 +156,9 @@ backup restore point coverage
 
 磁盘告警必须预留应急和恢复时间，不在 99.9% 才处理。
 
----
-
 ## 11. 复制不是备份
 
 误删事务会进入 Binlog 并复制到 Replica；逻辑错误不会被副本自动阻止。备份提供独立时间点和保留，Binlog 提供增量恢复，两者共同满足 RPO/RTO。
-
----
 
 ## 12. 实验
 
@@ -205,7 +181,7 @@ backup restore point coverage
 
 下一篇进入并发可见性：ACID、隔离级别、MVCC 与 Read View。
 
-## 官方参考
+## 14. 官方参考 {/* #官方参考 */}
 
 - [InnoDB Redo Log](https://dev.mysql.com/doc/refman/8.4/en/innodb-redo-log.html)
 - [InnoDB Undo Logs](https://dev.mysql.com/doc/refman/8.4/en/innodb-undo-logs.html)

@@ -1,11 +1,12 @@
 ---
-title: udevadm 命令详解：从内核事件到设备节点与稳定命名
+title: "udevadm 命令详解：从内核事件到设备节点与稳定命名"
+sidebar_label: "13. udevadm 命令详解：从内核事件到设备节点与稳定命名"
 sidebar_position: 13
-description: 系统讲解 udevadm 全部子命令与参数族，覆盖 info、monitor、test、verify、trigger、settle、control、wait、cat 和 block-device lock。
+description: "系统讲解 udevadm 全部子命令与参数族，覆盖 info、monitor、test、verify、trigger、settle、control、wait、cat 和 block-device lock。"
 tags: [Linux, udevadm, udev, sysfs, 设备管理]
 ---
 
-# `udevadm` 命令详解：从内核事件到设备节点与稳定命名
+# udevadm 命令详解：从内核事件到设备节点与稳定命名
 
 `udevadm` 查询 udev 数据库、观察 kernel uevent 与规则处理、验证/模拟规则、重放事件并控制 `systemd-udevd`。它连接了 `/sys` 内核设备与 `/dev` 节点、稳定 symlink、权限、标签和 systemd device unit。
 

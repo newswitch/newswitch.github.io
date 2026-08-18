@@ -1,9 +1,11 @@
 ---
-title: MIG 原理与 Kubernetes 配置
+title: "MIG 原理与 Kubernetes 配置"
 sidebar_label: "09. MIG 原理与 Kubernetes 配置"
+sidebar_position: 9
+description: "版本提示：MIG Profile、GPU Operator 配置名与节点标签随驱动 / Operator 版本变化。实践时固定 GPU Operator、驱动、CUDA 镜像 版本，不要使用 latest。示例基于 NVIDIA GPU Operator。"
+tags: ["Kubernetes", "GPU", "MIG", "GPU Operator", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "MIG", "GPU Operator", "学习路线"]
 ---
 
 # MIG 原理与 Kubernetes 配置
@@ -14,13 +16,9 @@ tags: ["Kubernetes", "GPU", "MIG", "GPU Operator", "学习路线"]
 
 **MIG（Multi-Instance GPU）** 把支持 MIG 的物理 GPU 切成多个相互隔离的实例，各有独立计算、显存、缓存和部分硬件引擎，可作为独立设备交给容器。概念对比见：[整卡 / Time-Slicing / MPS / MIG](./07-GPU%20整卡独占、Time-Slicing、MPS%20与%20MIG%20对比.md)。
 
----
-
 ## 1. 学习目标
 
 理解 GI / CI 与 Profile；区分 `single` / `mixed`；用 Operator 部署 MIG Manager；配置节点布局；Pod 申请 MIG；变更与恢复；排查失败。
-
----
 
 ## 2. 支持范围
 
@@ -34,8 +32,6 @@ nvidia-smi mig -lcip    # Compute Instance Profile
 ```
 
 `Current/Pending: Disabled` → 支持但未启用；无 MIG 信息 → 再核型号与驱动。
-
----
 
 ## 3. 核心概念
 
@@ -55,8 +51,6 @@ nvidia-smi mig -lcip    # Compute Instance Profile
 
 A100 40GB 示例：`1g.5gb`、`2g.10gb`、`3g.20gb`、`4g.20gb`、`7g.40gb`（`1g`≈计算切片规模，`5gb`≈显存）。A100 80GB、H100 等名称与显存不同——**不能把 A100 40GB 的 Profile 原样抄到其他卡**。
 
----
-
 ## 4. 与 Time-Slicing
 
 | 对比 | Time-Slicing | MIG |
@@ -69,8 +63,6 @@ A100 40GB 示例：`1g.5gb`、`2g.10gb`、`3g.20gb`、`4g.20gb`、`7g.40gb`（`1
 | 变更影响 | 较小 | 可能停业务或重启 |
 | 场景 | 开发测试 | 生产多租户 |
 
----
-
 ## 5. Operator 中的 MIG Manager
 
 ```text
@@ -82,8 +74,6 @@ ClusterPolicy → MIG Manager DaemonSet
 
 改布局时 GPU 上不应有用户负载；部分平台启停 MIG 可能需重启。生产先 `cordon` / 迁移业务（见 [第 12 篇](../device-management/08-GPU%20Operator%20升级、回滚与节点维护.md)）。
 
----
-
 ## 6. single 与 mixed
 
 | 策略 | 含义 | 资源名示例 |
@@ -92,8 +82,6 @@ ClusterPolicy → MIG Manager DaemonSet
 | `mixed` | 多种 Profile 并存 | `nvidia.com/mig-1g.10gb`、`mig-2g.20gb` 等 |
 
 `mixed` 更灵活，配额与容量管理更复杂。
-
----
 
 ## 7. 安装 / 修改策略
 
@@ -115,8 +103,6 @@ kubectl patch clusterpolicy cluster-policy --type=json -p='[
 
 kubectl get pods -n gpu-operator -o wide | grep mig-manager
 ```
-
----
 
 ## 8. 配置节点布局
 
@@ -142,8 +128,6 @@ watch -n 2 "kubectl get node $NODE -o custom-columns='NODE:.metadata.name,CONFIG
 
 状态常见：`pending` / `rebooting` / `success` / `failed`。成功应见 `mig.config.state=success`。查 MIG Manager 日志排查。
 
----
-
 ## 9. 验证资源
 
 ```bash
@@ -159,13 +143,9 @@ nvidia-smi -L   # 或在 Driver Pod 内执行
 
 以节点 Capacity / Allocatable 的**实际资源名**为准。
 
----
-
 ## 10. 测试 Pod
 
 **single**（常申请 `nvidia.com/gpu: 1`）；**mixed**（申请具体 Profile，如 `nvidia.com/mig-1g.10gb: 1`）。容器内通常只见被分配的 MIG 设备。
-
----
 
 ## 11. 恢复整卡
 
@@ -178,8 +158,6 @@ kubectl uncordon "$NODE"
 
 `all-disabled` 为默认禁用 MIG 的常见配置之一。
 
----
-
 ## 12. 常见问题
 
 | 现象 | 方向 |
@@ -188,8 +166,6 @@ kubectl uncordon "$NODE"
 | 标签成功无资源 | Device Plugin / GFD 日志 |
 | Pod Pending | 资源名是否与 Capacity **完全一致**（勿把 80GB 的 `1g.10gb` 写成 40GB 的 `1g.5gb`） |
 | 改 MIG 业务中断 | **预期风险**——勿在承载生产的节点上直接改 |
-
----
 
 ## 13. 本篇总结
 
@@ -202,9 +178,7 @@ kubectl uncordon "$NODE"
 
 下一篇共享方案可看 [HAMi](./10-HAMi%20vGPU%20原理与实践.md)；推理侧见 [部署 vLLM](../../../ai-systems/inference/serving/01-Kubernetes%20部署%20vLLM%20推理服务.md)。
 
----
-
-## 参考与致谢
+## 14. 参考与致谢 {/* #参考与致谢 */}
 
 - [MIG User Guide](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/latest/index.html)
 - [Supported GPUs / Profiles](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/supported-gpus.html)

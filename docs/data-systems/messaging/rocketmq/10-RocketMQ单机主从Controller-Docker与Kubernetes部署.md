@@ -2,8 +2,8 @@
 title: "RocketMQ 单机、主从、Controller 自动切换、Docker 与 Kubernetes 部署"
 sidebar_label: "10. RocketMQ 单机、主从、Controller 自动切换、Docker 与 Kubernetes 部署"
 sidebar_position: 10
-tags: [RocketMQ, 部署, Controller, Docker, Kubernetes, 高可用]
 description: "从单 Broker 实验到 NameServer、Broker 副本组、Controller 多数派和 Proxy，建立 RocketMQ 5.x 生产部署与验收流程。"
+tags: [RocketMQ, 部署, Controller, Docker, Kubernetes, 高可用]
 ---
 
 # RocketMQ 单机、主从、Controller 自动切换、Docker 与 Kubernetes 部署

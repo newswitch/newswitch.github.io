@@ -1,11 +1,12 @@
 ---
-title: blkid 命令详解：文件系统签名、UUID、LABEL 与安全探测
+title: "blkid 命令详解：文件系统签名、UUID、LABEL 与安全探测"
+sidebar_label: "02. blkid 命令详解：文件系统签名、UUID、LABEL 与安全探测"
 sidebar_position: 2
-description: 讲解 blkid 的 libblkid 探测、缓存与低级 probe、标签查询、输出格式、冲突签名、PARTUUID，以及格式化和挂载故障排查。
+description: "讲解 blkid 的 libblkid 探测、缓存与低级 probe、标签查询、输出格式、冲突签名、PARTUUID，以及格式化和挂载故障排查。"
 tags: [Linux, blkid, UUID, 文件系统, util-linux]
 ---
 
-# `blkid` 命令详解：文件系统签名、UUID、LABEL 与安全探测
+# blkid 命令详解：文件系统签名、UUID、LABEL 与安全探测
 
 `blkid` 识别块设备上的文件系统、swap、RAID、LVM 和分区表签名，并输出 `UUID`、`LABEL`、`TYPE`、`PARTUUID` 等 token。它识别的是介质元数据，不代表设备已经挂载或数据可正常读取。
 

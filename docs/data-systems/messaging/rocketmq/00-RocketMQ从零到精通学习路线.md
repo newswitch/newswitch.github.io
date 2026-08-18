@@ -2,8 +2,8 @@
 title: "RocketMQ 从零到精通学习路线"
 sidebar_label: "00. RocketMQ 从零到精通学习路线"
 sidebar_position: 0
-tags: [RocketMQ, 消息队列, 事务消息, Controller, 学习路线]
 description: "以 RocketMQ 5.5 为主线，从 Topic、Queue、CommitLog 深入 Producer/Consumer、事务/顺序/延迟消息、Controller 高可用、容量和源码排障。"
+tags: [RocketMQ, 消息队列, 事务消息, Controller, 学习路线]
 ---
 
 # RocketMQ 从零到精通学习路线
@@ -26,7 +26,7 @@ Producer
   → ack / offset / retry / DLQ
 ```
 
-## 2. 15 篇文章规划
+## 2. 篇文章规划 {/* #2-15-篇文章规划 */}
 
 | 编号 | 文章 | 优先级 | 核心问题 | 状态 |
 | --- | --- | --- | --- | --- |
@@ -48,9 +48,11 @@ Producer
 
 当前完成 **15/15**，剩余 **0 篇**。
 
+> 质量基线：本模块已按 Apache RocketMQ 5.5.0（2026-04-10 发布）重新审阅。Q02～Q14 已补齐资源边界、请求/存储链路、4.x/5.x 差异、可执行实验、容量模型、安全基线和生产 Runbook；学习时仍应固定实际运行的 Broker、Proxy、SDK 与管理工具版本。
+
 ## 3. 学习重点
 
-### 业务语义
+### 3.1 业务语义 {/* #业务语义 */}
 
 - 普通消息：至少一次传递下的消费者幂等；
 - FIFO：同一 MessageGroup/Queue 内顺序，不代表全局顺序；
@@ -58,11 +60,11 @@ Producer
 - 延迟消息：调度精度、存储和过期必须验证；
 - Retry/DLQ：是失败治理机制，不是无限重试理由。
 
-### 高可用
+### 3.2 高可用 {/* #高可用 */}
 
 Controller 可以自动选择 Broker Master；为了让 Controller 自身容错，需要三副本或更多 Raft 多数派。`enableElectUncleanMaster` 若允许从 SyncStateSet 外选主，可能以消息丢失换可用性，不能只看切换速度。
 
-### 5.x 客户端
+### 3.3 5.x 客户端 {/* #5x-客户端 */}
 
 5.x 引入标准化 gRPC SDK，通常通过 Proxy 接入；4.x Remoting 客户端与 5.x SDK 在协议、Consumer 模型和能力上有差异，文章会分别给出兼容矩阵。
 

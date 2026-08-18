@@ -1,6 +1,7 @@
 ---
 title: "Volcano vcctl 命令详解"
-sidebar_position: 1
+sidebar_label: "21. Volcano vcctl 命令详解"
+sidebar_position: 21
 description: "掌握 vcctl Job与Queue查询、暂停、恢复、运行和删除，并结合kubectl定位PodGroup与Gang调度。"
 tags: [Volcano, vcctl, GPU调度, Queue, Gang Scheduling]
 ---
@@ -93,11 +94,11 @@ kubectl -n volcano-system logs deploy/volcano-admission --since=30m
 
 大集群避免无过滤抓取全量日志；按job UID、PodGroup、namespace和时间窗检索。将调度周期、队列、action/plugin决策与Kubernetes event对齐。
 
-## 掌握标准
+## 6. 掌握标准 {/* #掌握标准 */}
 
 能使用vcctl完成只读巡检；能解释Job、PodGroup、Queue的关系；能在暂停/删除前确认checkpoint和desired state；能把Volcano等待与原生Pod调度失败区分。
 
-## 官方资料
+## 7. 官方资料 {/* #官方资料 */}
 
 - [Volcano CLI](https://volcano.sh/zh-hans/docs/cli/commandline/)
 - [Volcano Job](https://volcano.sh/zh-hans/docs/concepts/volcanojob/)

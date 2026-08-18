@@ -1,11 +1,12 @@
 ---
-title: bridge 命令详解：Linux 网桥、FDB、VLAN、MDB 与 VXLAN
+title: "bridge 命令详解：Linux 网桥、FDB、VLAN、MDB 与 VXLAN"
+sidebar_label: "05. bridge 命令详解：Linux 网桥、FDB、VLAN、MDB 与 VXLAN"
 sidebar_position: 5
-description: 系统讲解 iproute2 bridge 的全局选项、link、fdb、vlan、mdb、mst、vni 和 monitor 对象，以及 Linux Bridge 与 VXLAN 故障排查。
+description: "系统讲解 iproute2 bridge 的全局选项、link、fdb、vlan、mdb、mst、vni 和 monitor 对象，以及 Linux Bridge 与 VXLAN 故障排查。"
 tags: [Linux, bridge, iproute2, FDB, VLAN, VXLAN, 网络命令]
 ---
 
-# `bridge` 命令详解：Linux 网桥、FDB、VLAN、MDB 与 VXLAN
+# bridge 命令详解：Linux 网桥、FDB、VLAN、MDB 与 VXLAN
 
 `ip link` 创建 bridge 设备并把端口加入 master，`bridge` 命令则管理和观察桥端口、MAC 转发表 FDB、VLAN、组播数据库 MDB、MST 状态与 VXLAN VNI。它对应 Linux 内核网桥的数据面，而不是传统 `brctl` 的简单替代语法表。
 

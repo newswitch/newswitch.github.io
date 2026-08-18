@@ -2,8 +2,8 @@
 title: "Higress Kind、Helm、Docker、标准 Kubernetes 与生产 HA 部署"
 sidebar_label: "03. Higress Kind、Helm、Docker、标准 Kubernetes 与生产 HA 部署"
 sidebar_position: 3
-tags: [Higress, 部署, Helm, Kubernetes, 高可用]
 description: "从 Kind/Docker 学习环境到 Helm 标准集群，理解 Higress Controller、Gateway 数据面、Console、服务发现、HA 与升级。"
+tags: [Higress, 部署, Helm, Kubernetes, 高可用]
 ---
 
 # Higress Kind、Helm、Docker、标准 Kubernetes 与生产 HA 部署

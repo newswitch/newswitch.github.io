@@ -1,11 +1,12 @@
 ---
-title: docker 命令详解：镜像、容器、网络、卷与 Build
+title: "docker 命令详解：镜像、容器、网络、卷与 Build"
+sidebar_label: "14. docker 命令详解：镜像、容器、网络、卷与 Build"
 sidebar_position: 14
-description: 从 Docker Client、Daemon、containerd、OCI 理解 docker CLI，掌握容器生命周期、日志、资源、安全、网络、卷、Buildx 与 Context。
+description: "从 Docker Client、Daemon、containerd、OCI 理解 docker CLI，掌握容器生命周期、日志、资源、安全、网络、卷、Buildx 与 Context。"
 tags: [Docker, 容器, 镜像, BuildKit, OCI]
 ---
 
-# docker 命令详解
+# docker 命令详解：镜像、容器、网络、卷与 Build
 
 `docker` CLI 通过 Docker API 访问 Dockerd；Dockerd 再协调 containerd、OCI Runtime、Network、Volume 和 BuildKit。Kubernetes 早已移除 Dockershim，大多数节点的 `docker ps` 看不到 Kubernetes Pod，这不是故障。
 
@@ -126,7 +127,7 @@ Prune 按“未被当前元数据引用”删除对象，不知道业务未来�
 
 能解释 Client→Daemon→containerd→runc；能安全使用 Run/Mount/Network/Resource/Security 参数；能从 State/Log/cgroup 定位退出；能构建可追溯多平台镜像；不会把 Docker Group、Socket 或 Privileged 当普通权限。
 
-## 官方参考
+## 11. 官方参考 {/* #官方参考 */}
 
 - [Docker CLI Reference](https://docs.docker.com/reference/cli/docker/)
 - [Docker Engine Security](https://docs.docker.com/engine/security/)

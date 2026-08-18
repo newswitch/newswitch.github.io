@@ -1,11 +1,12 @@
 ---
-title: systemd-escape 命令详解：路径、实例与合法 unit 名转换
+title: "systemd-escape 命令详解：路径、实例与合法 unit 名转换"
+sidebar_label: "09. systemd-escape 命令详解：路径、实例与合法 unit 名转换"
 sidebar_position: 9
-description: 完整讲解 systemd-escape 的 escape、unescape、mangle、path、suffix、template、instance 参数，理解路径 unit、模板实例、转义可逆边界和脚本安全。
+description: "完整讲解 systemd-escape 的 escape、unescape、mangle、path、suffix、template、instance 参数，理解路径 unit、模板实例、转义可逆边界和脚本安全。"
 tags: [Linux, systemd-escape, systemd, unit name, template unit]
 ---
 
-# `systemd-escape` 命令详解：路径、实例与合法 unit 名转换
+# systemd-escape 命令详解：路径、实例与合法 unit 名转换
 
 unit 名只能使用受限字符，其他字节要写成 `\xHH`；路径转 unit 名还有 `/` 到 `-`、根路径和规范化规则。`systemd-escape` 实现与 systemd 相同的转换，避免脚本手写替换造成碰撞。
 
@@ -88,7 +89,7 @@ decoded=$(systemd-escape --unescape -- "$escaped") || exit
 
 掌握标准：能列出全部参数，区分普通/path/template 三种语义，解释 `-` 碰撞和 `%i/%I/%f`，且不会把名称转义误当作 shell/路径安全。
 
-## 官方参考
+## 8. 官方参考 {/* #官方参考 */}
 
 - [systemd-escape(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd-escape.html)
 - [systemd.unit(5) unit name escaping](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html#String%20Escaping%20for%20Inclusion%20in%20Unit%20Names)

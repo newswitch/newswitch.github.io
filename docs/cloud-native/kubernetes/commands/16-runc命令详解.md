@@ -1,11 +1,12 @@
 ---
-title: runc 命令详解：OCI Bundle、容器生命周期与低层排障
+title: "runc 命令详解：OCI Bundle、容器生命周期与低层排障"
+sidebar_label: "16. runc 命令详解：OCI Bundle、容器生命周期与低层排障"
 sidebar_position: 16
-description: 理解 OCI Runtime Spec、config.json、Root Filesystem、runc state/list/spec/run/create/start/exec/kill/delete 和容器运行时边界。
+description: "理解 OCI Runtime Spec、config.json、Root Filesystem、runc state/list/spec/run/create/start/exec/kill/delete 和容器运行时边界。"
 tags: [runc, OCI, containerd, Linux Namespace, cgroup]
 ---
 
-# runc 命令详解
+# runc 命令详解：OCI Bundle、容器生命周期与低层排障
 
 `runc` 是 OCI Runtime Spec 的低层实现：输入一个包含 `config.json` 与 Root Filesystem 的 OCI Bundle，创建 Linux Namespaces、cgroup、Mount、Capability 和进程。containerd/Docker/CRI-O 通常通过 shim 调用它；用户不应直接用 runc 管理上层编排对象。
 
@@ -117,7 +118,7 @@ OCI Spec 只是声明格式，不自动保证安全；如果配置授予 Host PI
 
 能解释 OCI Image Spec 与 Runtime Spec 区别；能读懂 Bundle/config.json；能说明 create/start/run；能从 Task PID 关联 Namespace/cgroup；能认识 runc 是上层 Runtime 的执行部件，不是 Kubernetes 管理 CLI。
 
-## 官方参考
+## 9. 官方参考 {/* #官方参考 */}
 
 - [runc](https://github.com/opencontainers/runc)
 - [OCI Runtime Specification](https://github.com/opencontainers/runtime-spec)

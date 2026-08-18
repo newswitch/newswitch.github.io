@@ -2,8 +2,8 @@
 title: "sysbench 基准测试、工作负载建模与结果解释"
 sidebar_label: "04. sysbench 基准测试、工作负载建模与结果解释"
 sidebar_position: 4
-tags: [MySQL, sysbench, 基准测试, 压力测试]
 description: "掌握 sysbench prepare/run/cleanup、数据与并发建模、分阶段加压、结果解释和可复现实验报告。"
+tags: [MySQL, sysbench, 基准测试, 压力测试]
 ---
 
 # sysbench 基准测试、工作负载建模与结果解释
@@ -115,8 +115,7 @@ CPU/I/O/锁/复制饱和证据
 限制、回滚和下一实验
 ```
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [sysbench 官方仓库](https://github.com/akopytov/sysbench)
 - [MySQL Benchmarking and Stress Testing](https://dev.mysql.com/doc/refman/8.4/en/benchmarking.html)
-

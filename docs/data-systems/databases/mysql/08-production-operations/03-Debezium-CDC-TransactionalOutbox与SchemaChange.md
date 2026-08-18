@@ -2,8 +2,8 @@
 title: "Debezium CDC、Transactional Outbox 与 Schema Change"
 sidebar_label: "03. Debezium CDC、Transactional Outbox 与 Schema Change"
 sidebar_position: 3
-tags: [MySQL, Debezium, CDC, Outbox, Schema Evolution]
 description: "理解从一致性快照、Binlog、offset、Schema History 到消费者幂等和 Outbox 的端到端 CDC 语义。"
+tags: [MySQL, Debezium, CDC, Outbox, Schema Evolution]
 ---
 
 # Debezium CDC、Transactional Outbox 与 Schema Change
@@ -66,7 +66,7 @@ Debezium 发布 outbox 行，避免“数据库提交成功但消息没发”双
 
 连接器停机先保护 Binlog；保存 offset、配置和 history 状态；判断是数据库、权限、DDL 解析、Kafka 还是消费者；禁止未经验证地清 offset/history 触发全量重放。恢复后检查重复、缺口和下游一致性。
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Debezium MySQL Connector](https://debezium.io/documentation/reference/stable/connectors/mysql.html)
 - [Debezium Outbox Event Router](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html)

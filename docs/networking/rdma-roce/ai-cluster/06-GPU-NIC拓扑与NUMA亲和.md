@@ -1,9 +1,9 @@
 ---
-title: GPU、PCIe、NIC 与 NUMA 亲和
+title: "GPU、PCIe、NIC 与 NUMA 亲和"
 sidebar_label: "06. GPU、PCIe、NIC 与 NUMA 亲和"
 sidebar_position: 6
+description: "使用 nvidia-smi、lspci、numactl 和 hwloc 建立 GPU、NIC、CPU、PCIe Switch 与 NUMA 的联合拓扑。"
 tags: [GPU, NIC, PCIe, NUMA, NVLink, Topology]
-description: 使用 nvidia-smi、lspci、numactl 和 hwloc 建立 GPU、NIC、CPU、PCIe Switch 与 NUMA 的联合拓扑。
 ---
 
 # GPU、PCIe、NIC 与 NUMA 亲和
@@ -208,7 +208,7 @@ numastat -p <pid>
 能够从 Rank 找到 GPU BDF、PCIe 路径、NUMA、首选 NIC、RDMA Device 和 Rail；遇到节点性能
 异常时先证明硬件拓扑和 Link 状态，而不是先修改 NCCL 算法。
 
-## 参考资料
+## 13. 参考资料 {/* #参考资料 */}
 
 - [NCCL GPU Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html)
 - [NVIDIA GPUDirect RDMA Documentation](https://docs.nvidia.com/cuda/gpudirect-rdma/)

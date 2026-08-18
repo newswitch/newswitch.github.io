@@ -1,11 +1,12 @@
 ---
-title: lshw 命令详解：构建系统硬件树与可审计资产快照
+title: "lshw 命令详解：构建系统硬件树与可审计资产快照"
+sidebar_label: "12. lshw 命令详解：构建系统硬件树与可审计资产快照"
 sidebar_position: 12
-description: 完整讲解 lshw 的全部参数、class 与 businfo、JSON/XML/HTML 输出、启停测试、权限差异、敏感字段脱敏及与 lspci/dmidecode 的边界。
+description: "完整讲解 lshw 的全部参数、class 与 businfo、JSON/XML/HTML 输出、启停测试、权限差异、敏感字段脱敏及与 lspci/dmidecode 的边界。"
 tags: [Linux, lshw, 硬件资产, sysfs, PCIe]
 ---
 
-# `lshw` 命令详解：构建系统硬件树与可审计资产快照
+# lshw 命令详解：构建系统硬件树与可审计资产快照
 
 `lshw` 聚合 sysfs、DMI、PCI、CPU、内存和设备数据库，构建“系统—总线—设备—逻辑对象”的硬件树。它适合资产快照和总览，但每个字段仍要回到权威子系统工具复核。
 

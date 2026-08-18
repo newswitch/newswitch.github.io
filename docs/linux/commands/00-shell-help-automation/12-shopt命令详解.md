@@ -1,11 +1,12 @@
 ---
-title: shopt 命令详解：Globbing、Pipeline、兼容模式与 Shell 行为
+title: "shopt 命令详解：Globbing、Pipeline、兼容模式与 Shell 行为"
+sidebar_label: "12. shopt 命令详解：Globbing、Pipeline、兼容模式与 Shell 行为"
 sidebar_position: 12
-description: 完整讲解 Bash shopt 的 -s/-u/-q/-p/-o、globstar/nullglob/failglob/dotglob/lastpipe/inherit_errexit/extdebug 与兼容选项。
+description: "完整讲解 Bash shopt 的 -s/-u/-q/-p/-o、globstar/nullglob/failglob/dotglob/lastpipe/inherit_errexit/extdebug 与兼容选项。"
 tags: [Linux, Bash, shopt, glob, Shell]
 ---
 
-# `shopt` 命令详解：控制 Bash 专有行为
+# shopt 命令详解：Globbing、Pipeline、兼容模式与 Shell 行为
 
 `shopt` 管理 Bash 可选特性，尤其 glob、history、交互、调试和兼容行为。脚本依赖某选项时应显式设置并记录，因为用户 profile 和 `BASHOPTS` 可能改变初始值。
 

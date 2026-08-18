@@ -2,15 +2,15 @@
 title: "Service"
 sidebar_label: "02. Service"
 sidebar_position: 2
-tags: [Kubernetes, 服务发现, 学习路线]
 description: "Kubernetes Service 为 Pod 提供稳定的网络访问抽象，通过标签选择器将流量路由到后端 Pod，支持多种服务发现方式和代理模式，是微服务架构中的核心组件。"
+tags: [Kubernetes, 服务发现, 学习路线]
 ---
 
 # Service
 
 > Service 是 Kubernetes 微服务架构中实现稳定服务发现与流量调度的基础设施，合理设计可极大提升系统的可用性与可维护性。
 
-## Service 概述
+## 1. Service 概述 {/* #service-概述 */}
 
 在 Kubernetes 集群中，Pod 具有生命周期性，IP 地址并不总是稳定可靠。通过 ReplicaSet 或 Deployment 等控制器可以动态地创建和销毁 Pod。对于需要为其他 Pod 提供服务的一组后端 Pod，前端应用如何发现并连接这些后端 Pod，是微服务架构中的关键问题。
 
@@ -20,7 +20,7 @@ Kubernetes Service（服务）定义了一种抽象，将一组功能相同的 P
 
 对于集群内应用，Kubernetes 提供 Endpoints API 自动更新后端地址。对于集群外访问，Service 通过虚拟 IP（VIP）实现统一入口，自动路由到后端 Pod。
 
-## 定义 Service
+## 2. 定义 Service {/* #定义-service */}
 
 Service 是 Kubernetes 的 REST 对象，可通过 YAML/JSON 配置并提交到 API Server 创建。
 
@@ -44,7 +44,7 @@ spec:
 
 `targetPort` 可为数字或字符串（引用容器端口名），便于后端升级时端口变更而不影响客户端调用。Service 支持 TCP、UDP、SCTP 协议，默认 TCP。
 
-### 无选择器的 Service
+### 2.1 无选择器的 Service {/* #无选择器的-service */}
 
 Service 也可用于代理集群外部服务或特殊场景（如跨 Namespace、混合部署），此时无需 selector：
 
@@ -76,7 +76,7 @@ subsets:
 
 > Endpoint IP 不能为回环、链路本地或多播地址。
 
-## Service 类型
+## 3. Service 类型 {/* #service-类型 */}
 
 Kubernetes 支持多种 ServiceType，满足不同访问需求。
 
@@ -87,15 +87,15 @@ Kubernetes 支持多种 ServiceType，满足不同访问需求。
 | LoadBalancer   | 云厂商负载均衡器，自动分配外部 IP                             | 生产级外部访问     |
 | ExternalName   | 通过 CNAME 指向外部 DNS 名称                                 | 代理外部服务       |
 
-### ClusterIP
+### 3.1 ClusterIP {/* #clusterip */}
 
 仅集群内部可访问，适合微服务间通信。
 
-### NodePort
+### 3.2 NodePort {/* #nodeport */}
 
 每个 Node 分配静态端口，外部可通过 `<NodeIP>:<NodePort>` 访问。端口范围默认 30000-32767。
 
-### LoadBalancer
+### 3.3 LoadBalancer {/* #loadbalancer */}
 
 云平台自动创建负载均衡器，分配外部 IP，适合生产环境暴露服务。
 
@@ -118,7 +118,7 @@ status:
       - ip: 146.148.47.155
 ```
 
-### ExternalName
+### 3.4 ExternalName {/* #externalname */}
 
 通过 CNAME 方式代理外部服务，无需代理流量。
 
@@ -135,21 +135,21 @@ spec:
 
 > ExternalName 不能直接解析为 IP，推荐用于 DNS 名称代理。
 
-## Service 代理模式
+## 4. Service 代理模式 {/* #service-代理模式 */}
 
 每个 Node 运行 `kube-proxy`，负责实现 Service 虚拟 IP（VIP）代理。
 
-### iptables 代理模式
+### 4.1 iptables 代理模式 {/* #iptables-代理模式 */}
 
 kube-proxy 监控 Service/Endpoints 变化，自动生成 iptables 规则，将流量重定向到后端 Pod。支持基于客户端 IP 的会话亲和性（`service.spec.sessionAffinity: ClientIP`）。
 
 ![iptables 代理模式下 Service 概览图](/images/k8s/service-discovery/service/services-iptables-overview.webp)
 
-### IPVS 代理模式
+### 4.2 IPVS 代理模式 {/* #ipvs-代理模式 */}
 
 基于内核 IPVS，性能优于 iptables，支持多种负载均衡算法（轮询、最少连接、哈希等），适合大规模集群。
 
-## 多端口 Service
+## 5. 多端口 Service {/* #多端口-service */}
 
 Service 支持暴露多个端口，需为每个端口命名，避免歧义。
 
@@ -172,30 +172,30 @@ spec:
       targetPort: 9377
 ```
 
-## 自定义 ClusterIP
+## 6. 自定义 ClusterIP {/* #自定义-clusterip */}
 
 可通过 `spec.clusterIP` 指定自定义集群 IP，需在 `--service-cluster-ip-range` 范围内。若无效，API Server 返回 422 错误。
 
-## 服务发现机制
+## 7. 服务发现机制 {/* #服务发现机制 */}
 
 Kubernetes 支持环境变量和 DNS 两种服务发现方式。
 
-### 环境变量
+### 7.1 环境变量 {/* #环境变量 */}
 
 Pod 启动时，kubelet 为每个 Service 注入环境变量（如 `REDIS_MASTER_SERVICE_HOST`）。需注意 Service 必须先于 Pod 创建。
 
-### DNS
+### 7.2 DNS {/* #dns */}
 
 推荐方式。集群内 DNS 服务器为每个 Service 创建 DNS 记录，支持 A 记录和 SRV 记录。跨 Namespace 需使用全限定名（如 `my-service.my-ns`）。
 
-## Headless Service
+## 8. Headless Service {/* #headless-service */}
 
 如无需负载均衡和 VIP，可将 `spec.clusterIP` 设为 `"None"`，实现 Headless Service。此时 DNS 直接返回所有后端 Pod 的 IP，适合自注册、状态同步等场景。
 
 - 有选择器：DNS 返回 Pod IP 列表
 - 无选择器：需手动创建 Endpoints
 
-## 外部 IP 与 externalIPs
+## 9. 外部 IP 与 externalIPs {/* #外部-ip-与-externalips */}
 
 Service 可通过 `externalIPs` 字段暴露外部 IP，需由集群管理员保证路由可达。
 
@@ -212,23 +212,23 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 9376
-  externalIPs: 
+  externalIPs:
     - 80.11.12.10
 ```
 
-## 虚拟 IP 实现与冲突避免
+## 10. 虚拟 IP 实现与冲突避免 {/* #虚拟-ip-实现与冲突避免 */}
 
 Kubernetes 为每个 Service 分配唯一 VIP，避免端口冲突。VIP 通过 iptables 或 IPVS 规则实现，客户端访问 VIP 时自动转发到后端 Pod。
 
-## API 对象与参考
+## 11. API 对象与参考 {/* #api-对象与参考 */}
 
 Service 是 Kubernetes 顶级 REST 资源，详细字段见 [Service API 对象](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#service-v1-core)。
 
-## 总结
+## 12. 总结 {/* #总结 */}
 
 Kubernetes Service 通过标签选择器、虚拟 IP、灵活的代理和服务发现机制，实现了微服务架构下的高可用、可扩展和易维护的服务访问。建议结合实际场景选择合适的 Service 类型和发现方式，提升系统健壮性。
 
-## 参考文献
+## 13. 参考资料 {/* #参考文献 */}
 
 - [使用 Service 连接前端和后端 - kubernetes.io](https://kubernetes.io/docs/tutorials/connecting-apps/connecting-frontend-backend/)
 - [DNS for Services and Pods - kubernetes.io](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)

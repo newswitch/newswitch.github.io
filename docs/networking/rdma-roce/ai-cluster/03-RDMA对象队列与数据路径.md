@@ -1,9 +1,9 @@
 ---
-title: RDMA 对象、队列与数据路径
+title: "RDMA 对象、队列与数据路径"
 sidebar_label: "03. RDMA 对象、队列与数据路径"
 sidebar_position: 3
+description: "从 Context、PD、MR、CQ、QP、WQE 和 SGE 出发，理解 Send/Receive、Read、Write 的完整执行过程。"
 tags: [RDMA, Verbs, QP, CQ, MR, WQE, RDMA CM]
-description: 从 Context、PD、MR、CQ、QP、WQE 和 SGE 出发，理解 Send/Receive、Read、Write 的完整执行过程。
 ---
 
 # RDMA 对象、队列与数据路径
@@ -193,7 +193,7 @@ ls -l /sys/class/infiniband
 能从应用 Buffer 开始，逐个说明 MR、SGE、WQE、QP、CQE 的作用；能解释 Send/Receive
 为何需要预投递、Write 为何需要额外同步，以及 RC 在 UDP/IP 之上如何提供可靠传输。
 
-## 参考资料
+## 14. 参考资料 {/* #参考资料 */}
 
 - [RDMA Core Userspace API](https://github.com/linux-rdma/rdma-core)
 - [linux-rdma/perftest](https://github.com/linux-rdma/perftest)

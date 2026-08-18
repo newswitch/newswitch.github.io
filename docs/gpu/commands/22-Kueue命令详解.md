@@ -1,6 +1,7 @@
 ---
 title: "Kueue kubectl 插件与 kueuectl 命令详解"
-sidebar_position: 2
+sidebar_label: "22. Kueue kubectl 插件与 kueuectl 命令详解"
+sidebar_position: 22
 description: "掌握Kueue Workload、LocalQueue、ClusterQueue、ResourceFlavor的查询、创建、停止、恢复和GPU准入排障。"
 tags: [Kueue, kueuectl, Kubernetes, GPU调度, 配额]
 ---
@@ -95,11 +96,11 @@ kubectl get events -A --sort-by=.lastTimestamp | grep -i kueue
 | 反复Evicted/Requeued | 抢占、admission check、节点故障、外部控制器 |
 | GPU配额看似足够仍不匹配 | resource name、flavor标签/污点、拓扑和整卡碎片 |
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能从Workload追到LocalQueue、ClusterQueue和Flavor；能区分“未准入”和“已准入但未调度”；能在stop/resume前评估checkpoint；能解释nominal quota、借用和抢占对租户的影响。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [Kueue reference](https://kueue.sigs.k8s.io/docs/reference/)
 - [Kueue concepts](https://kueue.sigs.k8s.io/docs/concepts/)

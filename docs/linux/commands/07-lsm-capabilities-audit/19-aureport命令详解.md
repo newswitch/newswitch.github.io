@@ -1,11 +1,12 @@
 ---
-title: aureport 命令详解：把 Linux Audit 事件汇总成安全报表
+title: "aureport 命令详解：把 Linux Audit 事件汇总成安全报表"
+sidebar_label: "19. aureport 命令详解：把 Linux Audit 事件汇总成安全报表"
 sidebar_position: 19
-description: 完整讲解 aureport 的全部报表、输入、时间、成功失败、节点、解释与转义参数，事件下钻、指标边界、基线对比和自动化报表流程。
+description: "完整讲解 aureport 的全部报表、输入、时间、成功失败、节点、解释与转义参数，事件下钻、指标边界、基线对比和自动化报表流程。"
 tags: [Linux, aureport, Audit, 安全报表, 可观测性]
 ---
 
-# `aureport` 命令详解：把 Linux Audit 事件汇总成安全报表
+# aureport 命令详解：把 Linux Audit 事件汇总成安全报表
 
 `aureport` 把 audit 日志汇总为认证、AVC、用户、文件、syscall、可执行文件等报表。它用于发现趋势和热点，不替代原始证据：除主摘要外，报表通常给出 event number，应继续用 `ausearch -a` 下钻完整事件。
 
@@ -128,7 +129,7 @@ sudo aureport --executable --summary
 
 掌握标准：能列出全部报表和控制参数；能解释各报表口径；能由汇总下钻完整事件；能构建带采集健康度的可比较基线；能安全处理离线解释、隐私和自动化输出。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [aureport(8)](https://manpages.debian.org/unstable/auditd/aureport.8.en.html)
 - [ausearch(8)](https://manpages.debian.org/unstable/auditd/ausearch.8.en.html)

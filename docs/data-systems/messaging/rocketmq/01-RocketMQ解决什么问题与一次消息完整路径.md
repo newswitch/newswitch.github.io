@@ -2,8 +2,8 @@
 title: "RocketMQ 解决什么问题与一次消息完整路径"
 sidebar_label: "01. RocketMQ 解决什么问题与一次消息完整路径"
 sidebar_position: 1
-tags: [RocketMQ, 消息队列, CommitLog, Producer, Consumer]
 description: "沿 Producer、NameServer、Broker、CommitLog、ConsumeQueue、复制和消费重试，拆解 RocketMQ 一条消息的完整路径。"
+tags: [RocketMQ, 消息队列, CommitLog, Producer, Consumer]
 ---
 
 # RocketMQ 解决什么问题与一次消息完整路径

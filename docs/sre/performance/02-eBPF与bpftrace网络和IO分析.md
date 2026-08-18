@@ -2,8 +2,8 @@
 title: "eBPF 与 bpftrace 网络和 I/O 分析"
 sidebar_label: "02. eBPF 与 bpftrace 网络和 I/O 分析"
 sidebar_position: 2
-tags: [eBPF, bpftrace, Linux, 网络, I/O, 性能分析]
 description: "理解 eBPF Probe、Map、Histogram 和 Cgroup 过滤，使用 bpftrace 分析系统调用、调度、网络与块 I/O，并控制生产采集开销。"
+tags: [eBPF, bpftrace, Linux, 网络, I/O, 性能分析]
 ---
 
 # eBPF 与 bpftrace 网络和 I/O 分析
@@ -29,8 +29,6 @@ TCP retrans 增长
 eBPF 可以在内核验证后安全执行受限程序，并通过 Probe 采集事件、在 Map 中聚合。
 bpftrace 提供接近 awk/DTrace 风格的高级语言，适合快速动态追踪。
 
----
-
 ## 1. 数据路径
 
 ```mermaid
@@ -50,8 +48,6 @@ flowchart LR
 - 不必为每个事件都切换到用户态。
 - 可按 PID、TID、Cgroup、端口等筛选。
 - 能输出分布而不是只有平均值。
-
----
 
 ## 2. Probe 类型
 
@@ -74,8 +70,6 @@ flowchart LR
 
 内核函数名和参数可能随版本变化，Kprobe 脚本不能无验证跨版本使用。
 
----
-
 ## 3. 先发现 Probe
 
 列出 syscall：
@@ -97,8 +91,6 @@ bpftrace -lv 'tracepoint:syscalls:sys_enter_read'
 ```
 
 执行任何脚本前先用 `-l/-lv` 验证当前内核字段，不要直接复制其他发行版脚本。
-
----
 
 ## 4. bpftrace 程序结构
 
@@ -125,8 +117,6 @@ tracepoint:raw_syscalls:sys_enter
 - `count()` 在 Map 中计数。
 
 按进程名不一定唯一；精确分析应结合 PID/Cgroup。
-
----
 
 ## 5. Map 与基数
 
@@ -159,8 +149,6 @@ Key 组合可能无限增长，消耗内核 Map 内存。
 - 限制 PID/Cgroup。
 - 避免记录请求内容。
 
----
-
 ## 6. 系统调用延迟直方图
 
 以 `read` 为例：
@@ -190,8 +178,6 @@ tracepoint:syscalls:sys_exit_read
 - 线程异常退出留下的 Key。
 - 只跟踪目标进程/Cgroup。
 - 异步 I/O 不完全符合一次 enter/exit 即业务完成。
-
----
 
 ## 7. 按返回值统计读取
 
@@ -225,8 +211,6 @@ tracepoint:syscalls:sys_exit_read
 - mmap/page fault。
 - 共享文件系统元数据。
 
----
-
 ## 8. CPU Profile
 
 对 PID 以 99Hz 采样用户栈：
@@ -249,8 +233,6 @@ profile:hz:99
 ```
 
 数据量和符号处理更重，应缩短窗口。
-
----
 
 ## 9. Page Fault
 
@@ -278,8 +260,6 @@ Page Fault 多不等于一定慢：
 - 模型加载阶段。
 
 一起分析。
-
----
 
 ## 10. 块 I/O 分析方法
 
@@ -319,7 +299,7 @@ biosnoop
 
 等 BCC/bpftrace 工具，但必须核对工具来源、版本和字段。
 
-### 结果判断
+### 10.1 结果判断 {/* #结果判断 */}
 
 | 现象 | 假设 |
 | --- | --- |
@@ -330,8 +310,6 @@ biosnoop
 | 全节点异常 | 设备、内核或共享资源 |
 
 NFS/CephFS 的远端等待不一定进入本地 Block Device，需要转向网络和客户端 Tracepoint。
-
----
 
 ## 11. 网络分析方法
 
@@ -382,8 +360,6 @@ tcprtt
 
 但工具必须与 Kernel/BTF/发行版匹配。
 
----
-
 ## 12. 调度延迟与 Off-CPU
 
 请求慢但 CPU 不高时，线程可能在等待调度。
@@ -410,8 +386,6 @@ sched:sched_process_exit
 这是较复杂脚本，优先使用版本匹配、经过验证的 `offcputime`/`runqlat` 工具，不要在生产
 临时拼接未测试脚本。
 
----
-
 ## 13. Cgroup 与容器过滤
 
 同一节点可能运行多个 Pod。只按 `comm="python"` 会混合所有容器。
@@ -433,8 +407,6 @@ containerd/CRI-O
 
 bpftrace 支持与 Cgroup 相关的内建值和函数，但可用方式取决于版本。使用当前官方文档和
 `bpftrace --info` 核对。
-
----
 
 ## 14. 在 Kubernetes 中部署的风险
 
@@ -462,8 +434,6 @@ eBPF Agent 常需要：
 - 审计谁在何节点运行了什么 Probe。
 - Kill Switch。
 
----
-
 ## 15. 丢事件与测量开销
 
 Ring Buffer 满、用户态处理跟不上时可能丢事件。
@@ -488,11 +458,9 @@ Ring Buffer 满、用户态处理跟不上时可能丢事件。
 
 `printf` 每个事件通常比 `count/hist` 聚合更昂贵。
 
----
-
 ## 16. AI Infra 场景
 
-### 场景 1：模型加载慢
+### 16.1 场景 1：模型加载慢 {/* #场景-1模型加载慢 */}
 
 顺序：
 
@@ -503,7 +471,7 @@ Ring Buffer 满、用户态处理跟不上时可能丢事件。
 5. CPU 反序列化。
 6. H2D Copy。
 
-### 场景 2：TTFT 偶发尖峰
+### 16.2 场景 2：TTFT 偶发尖峰 {/* #场景-2ttft-偶发尖峰 */}
 
 检查：
 
@@ -513,7 +481,7 @@ Ring Buffer 满、用户态处理跟不上时可能丢事件。
 - Major Fault。
 - CPU Cgroup throttling。
 
-### 场景 3：NCCL Timeout
+### 16.3 场景 3：NCCL Timeout {/* #场景-3nccl-timeout */}
 
 eBPF 可帮助看 Host TCP/RDMA Control Path，但 GPU Collective、RDMA NIC 和交换机还需要：
 
@@ -523,8 +491,6 @@ eBPF 可帮助看 Host TCP/RDMA Control Path，但 GPU Collective、RDMA NIC 和
 - NIC/交换机 Telemetry。
 
 eBPF 不是所有网络问题的单一答案。
-
----
 
 ## 17. 一个安全脚本模板
 
@@ -568,35 +534,31 @@ bpftrace read-latency.bt <PID>
 
 生产前先在匹配内核的实验节点验证语法、字段、开销和退出清理。
 
----
-
 ## 18. 常见错误
 
-### 直接复制 Kprobe 地址/参数
+### 18.1 直接复制 Kprobe 地址/参数 {/* #直接复制-kprobe-地址参数 */}
 
 内核升级后函数可能内联、改名或参数变化。
 
-### 每个事件都 printf
+### 18.2 每个事件都 printf {/* #每个事件都-printf */}
 
 高频路径可能产生巨大开销和丢事件。
 
-### Map Key 无界
+### 18.3 Map Key 无界 {/* #map-key-无界 */}
 
 按文件名、地址、TID 永久累积会耗尽 Map。
 
-### 忽略容器过滤
+### 18.4 忽略容器过滤 {/* #忽略容器过滤 */}
 
 把整个节点所有 Python/网络事件归因给目标 Pod。
 
-### 平均值代替分布
+### 18.5 平均值代替分布 {/* #平均值代替分布 */}
 
 网络和 I/O 常由 P99/P999 尾部决定用户体验。
 
-### Probe 看到相关性就断言根因
+### 18.6 Probe 看到相关性就断言根因 {/* #probe-看到相关性就断言根因 */}
 
 还需要与 SLO 时间线、应用 Trace 和对照实验验证。
-
----
 
 ## 19. 实验
 

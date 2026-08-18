@@ -1,11 +1,12 @@
 ---
-title: ping 命令详解：ICMP、时延、丢包、PMTU 与源路径验证
+title: "ping 命令详解：ICMP、时延、丢包、PMTU 与源路径验证"
+sidebar_label: "09. ping 命令详解：ICMP、时延、丢包、PMTU 与源路径验证"
 sidebar_position: 9
-description: 以 iputils 20250605 为基线，完整讲解 ping 参数、退出码、RTT 与 mdev、IPv4/IPv6、源接口、策略路由、DSCP、PMTU、报文大小和生产安全边界。
+description: "以 iputils 20250605 为基线，完整讲解 ping 参数、退出码、RTT 与 mdev、IPv4/IPv6、源接口、策略路由、DSCP、PMTU、报文大小和生产安全边界。"
 tags: [Linux, ping, iputils, ICMP, PMTU, 网络排障]
 ---
 
-# `ping` 命令详解：ICMP、时延、丢包、PMTU 与源路径验证
+# ping 命令详解：ICMP、时延、丢包、PMTU 与源路径验证
 
 `ping` 发送 ICMP Echo Request 并等待 Echo Reply。它能验证本机到目标的 ICMP 往返路径、RTT 和样本丢失，但不能证明 TCP/UDP 端口、应用、DNS、TLS 或大流量吞吐正常。禁 ICMP 的主机也可能正常提供业务。
 

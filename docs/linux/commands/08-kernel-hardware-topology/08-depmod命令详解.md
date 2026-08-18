@@ -1,11 +1,12 @@
 ---
-title: depmod 命令详解：生成模块依赖、别名与符号索引
+title: "depmod 命令详解：生成模块依赖、别名与符号索引"
+sidebar_label: "08. depmod 命令详解：生成模块依赖、别名与符号索引"
 sidebar_position: 8
-description: 完整讲解 depmod 的全部长短参数、modules.dep.bin 等索引、指定内核与离线 rootfs、快速模式风险，以及模块安装后的验证闭环。
+description: "完整讲解 depmod 的全部长短参数、modules.dep.bin 等索引、指定内核与离线 rootfs、快速模式风险，以及模块安装后的验证闭环。"
 tags: [Linux, depmod, kmod, 内核模块, DKMS]
 ---
 
-# `depmod` 命令详解：生成模块依赖、别名与符号索引
+# depmod 命令详解：生成模块依赖、别名与符号索引
 
 `depmod` 扫描一个 kernel release 的模块文件，解析其导出/引用符号与 modalias，生成供 `modprobe` 快速查询的依赖和别名索引。复制一个 `.ko` 到 `/lib/modules` 后若忘记运行它，常见现象就是 `modinfo` 按路径能读、`modprobe` 按名字却找不到。
 

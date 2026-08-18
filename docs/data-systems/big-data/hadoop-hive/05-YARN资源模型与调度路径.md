@@ -1,9 +1,9 @@
 ---
-title: YARN ResourceManager、NodeManager、Container 与资源模型
+title: "YARN ResourceManager、NodeManager、Container 与资源模型"
 sidebar_label: "05. YARN ResourceManager、NodeManager、Container 与资源模型"
 sidebar_position: 5
+description: "理解 YARN 从应用提交到 Container 运行的控制路径、队列、公平性、资源隔离和故障恢复。"
 tags: [YARN, ResourceManager, Container, 调度]
-description: 理解 YARN 从应用提交到 Container 运行的控制路径、队列、公平性、资源隔离和故障恢复。
 ---
 
 # YARN ResourceManager、NodeManager、Container 与资源模型
@@ -93,7 +93,7 @@ Capacity/Fair 等调度器提供队列容量、公平共享、优先级、最大
 
 上一篇：[HDFS 容量规划、性能指标与故障排查](./04-HDFS容量规划性能指标与故障排查.md)　下一篇：[MapReduce 从 Map 到 Shuffle、Sort 和 Reduce](./06-MapReduce从Map到Shuffle-Sort和Reduce.md)
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [Apache Hadoop YARN](https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html)
 - [YARN Capacity Scheduler](https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/CapacityScheduler.html)

@@ -2,8 +2,8 @@
 title: "Scheduler、Batch、KV Cache 与抢占性能实验"
 sidebar_label: "18. Scheduler、Batch、KV Cache 与抢占性能实验"
 sidebar_position: 18
-tags: [vLLM, Scheduler, Continuous Batching, KV Cache, 性能实验]
 description: "用控制变量实验分析 max_num_seqs、max_num_batched_tokens、Chunked Prefill、KV 容量和抢占的相互作用。"
+tags: [vLLM, Scheduler, Continuous Batching, KV Cache, 性能实验]
 ---
 
 # Scheduler、Batch、KV Cache 与抢占性能实验
@@ -11,8 +11,6 @@ description: "用控制变量实验分析 max_num_seqs、max_num_batched_tokens�
 调度参数之间不是独立旋钮。更大的 Batch 可能提升吞吐，也可能延迟短请求；更大的 KV Cache 可以容纳更多序列，但可能挤压执行 Workspace；Chunked Prefill 能控制长请求干扰，也可能让单条长 Prompt 分更多轮完成。
 
 本文不提供一个适用于所有模型的“最佳值”，而是提供找出本业务安全区间的方法。
-
----
 
 ## 1. 三个预算
 
@@ -34,8 +32,6 @@ KV 预算：这些请求的历史与新增 token 是否有 Block
 
 任何一个预算先耗尽，都可能限制批次。
 
----
-
 ## 2. 参数影响矩阵
 
 | 改动 | 可能收益 | 可能代价 |
@@ -48,8 +44,6 @@ KV 预算：这些请求的历史与新增 token 是否有 Block
 | 收紧最大长度 | 保护最坏 KV 预算 | 产品能力受限 |
 
 所以一次实验必须同时看 TTFT、TPOT、吞吐、KV、抢占、OOM 和公平性。
-
----
 
 ## 3. 建立工作负载矩阵
 
@@ -72,8 +66,6 @@ KV 预算：这些请求的历史与新增 token 是否有 Block
 
 如果只用固定 128 input / 128 output，调出来的参数很可能在真实长上下文业务失效。
 
----
-
 ## 4. 实验一：扫描 `max_num_seqs`
 
 固定：模型、token 分布、到达率、`max_num_batched_tokens`、KV 配置。
@@ -90,7 +82,7 @@ GPU gap/busy
 EngineCore CPU
 ```
 
-### 结果解释
+### 4.1 结果解释 {/* #结果解释 */}
 
 - 吞吐增长、TPOT 稳定：仍有合批收益；
 - 吞吐不再增长、Scheduler CPU 上升：序列管理开始成为成本；
@@ -99,13 +91,11 @@ EngineCore CPU
 
 选择的是“满足所有 SLO 的最高档”，不是吞吐峰值档。
 
----
-
 ## 5. 实验二：扫描 `max_num_batched_tokens`
 
 这个参数决定每轮 token 预算，对 Prefill 尤其重要。
 
-### 观察三条曲线
+### 5.1 观察三条曲线 {/* #观察三条曲线 */}
 
 1. Prompt tokens/s；
 2. 长 Prompt TTFT；
@@ -124,8 +114,6 @@ Token budget 太大
 ```
 
 要用混合流量找折中点，不要只跑长 Prompt 看 Prefill 吞吐。
-
----
 
 ## 6. 实验三：Chunked Prefill 公平性
 
@@ -149,8 +137,6 @@ Token budget 太大
 ```
 
 这本质是多类工作负载的公平性实验。
-
----
 
 ## 7. 实验四：KV 压力与抢占拐点
 
@@ -176,7 +162,7 @@ recompute_amplification
 
 比值持续大于 1 且上升，说明重算正在吞噬容量。
 
-### 目标余量
+### 7.1 目标余量 {/* #目标余量 */}
 
 不要把稳态 KV 使用率目标设为 100%。需要为：
 
@@ -187,8 +173,6 @@ recompute_amplification
 - 故障 N-1 后迁移流量
 
 保留余量。具体百分比要由真实突发实验确定。
-
----
 
 ## 8. 实验五：Prefix Cache 与路由
 
@@ -208,8 +192,6 @@ recompute_amplification
 
 如果固定粘性提高命中但造成热点副本 TTFT 失守，不能称为成功。生产策略通常要在缓存局部性和负载公平之间动态取舍。
 
----
-
 ## 9. 如何判断真正限制预算
 
 | 现象 | 限制预算 |
@@ -222,8 +204,6 @@ recompute_amplification
 
 参数优化必须针对真正先耗尽的预算。
 
----
-
 ## 10. 实验数据表模板
 
 | 配置 | 负载 | TTFT P99 | TPOT P99 | Gen tok/s | KV P95 | 抢占/s | GPU Busy | 结论 |
@@ -233,8 +213,6 @@ recompute_amplification
 | C | 长请求突发 |  |  |  |  |  |  |  |
 
 原始数据要保留每请求 token 长度和时间戳，不能只保存聚合截图。
-
----
 
 ## 11. 生产变更保护
 
@@ -253,8 +231,6 @@ recompute_amplification
 ```
 
 因为路由可能把更短请求分给灰度，造成假收益。
-
----
 
 ## 12. 验收题
 

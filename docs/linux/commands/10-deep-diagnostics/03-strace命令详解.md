@@ -1,11 +1,12 @@
 ---
-title: strace 命令详解：系统调用、信号、文件描述符与延迟定位
+title: "strace 命令详解：系统调用、信号、文件描述符与延迟定位"
+sidebar_label: "03. strace 命令详解：系统调用、信号、文件描述符与延迟定位"
 sidebar_position: 3
-description: 系统讲解 strace attach/launch、过滤表达式、follow-fork、时间戳/耗时、FD/path、统计、输出分片与生产开销。
+description: "系统讲解 strace attach/launch、过滤表达式、follow-fork、时间戳/耗时、FD/path、统计、输出分片与生产开销。"
 tags: [Linux, strace, 系统调用, 延迟, 故障排查]
 ---
 
-# `strace` 命令详解：定位进程与内核的交界
+# strace 命令详解：系统调用、信号、文件描述符与延迟定位
 
 `strace` 通过 ptrace/seccomp 辅助机制观察系统调用、参数、返回值和信号。它能证明进程在等待哪个 FD、哪个路径返回 EACCES、连接为何超时；不能看到纯用户态计算，也可能显著改变高 syscall-rate 程序的时序。
 

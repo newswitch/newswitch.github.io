@@ -2,8 +2,8 @@
 title: "Horizontal Pod Autoscaling"
 sidebar_label: "09. Horizontal Pod Autoscaling"
 sidebar_position: 9
-tags: [Kubernetes, 控制器, 学习路线]
 description: "深入了解 Kubernetes HPA（Horizontal Pod Autoscaling）的工作原理、配置方法和自定义指标支持，包括基于 CPU、内存和自定义指标的自动扩缩容实现。"
+tags: [Kubernetes, 控制器, 学习路线]
 ---
 
 # Horizontal Pod Autoscaling
@@ -14,14 +14,14 @@ description: "深入了解 Kubernetes HPA（Horizontal Pod Autoscaling）的工�
 
 HPA 是最能体现 Kubernetes 相比传统运维价值的功能之一，不再需要手动扩容，真正实现了自动化运维，还可以基于自定义指标进行扩缩容。
 
-## 概述
+## 1. 概述 {/* #概述 */}
 
 HPA 属于 Kubernetes 中的 **autoscaling** SIG（Special Interest Group），其下有两个主要特性：
 
 - [Arbitrary/Custom Metrics in the Horizontal Pod Autoscaler#117](https://github.com/kubernetes/features/issues/117)
 - [Monitoring Pipeline Metrics HPA API #118](https://github.com/kubernetes/features/issues/118)
 
-### 版本演进
+### 1.1 版本演进 {/* #版本演进 */}
 
 Kubernetes HPA 的功能随着版本不断演进，主要里程碑如下：
 
@@ -30,7 +30,7 @@ Kubernetes HPA 的功能随着版本不断演进，主要里程碑如下：
 - **Kubernetes 1.6+**：支持自定义指标
 - **现在**：推荐使用 `autoscaling/v2` API
 
-## 架构原理
+## 2. 架构原理 {/* #架构原理 */}
 
 Horizontal Pod Autoscaling 仅适用于 Deployment 和 ReplicaSet，由 API server 和 controller 共同实现。
 
@@ -38,7 +38,7 @@ Horizontal Pod Autoscaling 仅适用于 Deployment 和 ReplicaSet，由 API serv
 
 ![HPA 示意图](/images/k8s/controllers/hpa/horizontal-pod-autoscaler.webp)
 
-### 工作机制
+### 2.1 工作机制 {/* #工作机制 */}
 
 HPA 通过控制循环实现自动扩缩容，循环周期由 controller manager 的 `--horizontal-pod-autoscaler-sync-period` 参数指定（默认 30 秒）。
 
@@ -54,11 +54,11 @@ HPA 通过控制循环实现自动扩缩容，循环周期由 controller manager
 
 如果 Pod 的容器没有设置 resource request，则无法定义 CPU 利用率，HPA 不会对该指标采取任何操作。
 
-## 支持的指标类型
+## 3. 支持的指标类型 {/* #支持的指标类型 */}
 
 Kubernetes HPA 支持多种指标类型，具体如下：
 
-### API 版本对比
+### 3.1 API 版本对比 {/* #api-版本对比 */}
 
 下表对比了不同 API 版本下 HPA 支持的指标类型。
 
@@ -67,18 +67,18 @@ Kubernetes HPA 支持多种指标类型，具体如下：
 | autoscaling/v1   | CPU 利用率                  |
 | autoscaling/v2   | CPU、内存、自定义指标、多指标组合 |
 
-### 指标获取方式
+### 3.2 指标获取方式 {/* #指标获取方式 */}
 
 HPA 控制器可通过以下两种方式获取指标：
 
 - 直接 Heapster 访问：通过 API 服务器的服务代理查询 Heapster。
 - REST 客户端访问：通过 metrics API 获取指标。
 
-## 基本使用
+## 4. 基本使用 {/* #基本使用 */}
 
 在实际运维中，HPA 的使用非常灵活，支持命令行和 YAML 配置两种方式。
 
-### kubectl 命令
+### 4.1 kubectl 命令 {/* #kubectl-命令 */}
 
 以下是常用的 HPA 管理命令：
 
@@ -93,7 +93,7 @@ kubectl delete hpa
 kubectl autoscale deployment nginx --min=2 --max=10 --cpu-percent=80
 ```
 
-### 命令参数说明
+### 4.2 命令参数说明 {/* #命令参数说明 */}
 
 kubectl autoscale 命令的参数说明如下：
 
@@ -107,7 +107,7 @@ kubectl autoscale (-f FILENAME | TYPE NAME | TYPE/NAME) [--min=MINPODS] --max=MA
 kubectl autoscale deployment foo --min=2 --max=5 --cpu-percent=80
 ```
 
-### YAML 配置示例
+### 4.3 YAML 配置示例 {/* #yaml-配置示例 */}
 
 通过 YAML 文件可以更灵活地配置 HPA，支持多指标扩缩容。
 
@@ -143,11 +143,11 @@ spec:
 
 原因：滚动更新会创建新的 ReplicationController，HPA 不会自动绑定到新的 RC。
 
-## 自定义指标配置
+## 5. 自定义指标配置 {/* #自定义指标配置 */}
 
 HPA 支持基于自定义指标的扩缩容，需满足一定的前提条件。
 
-### 前提条件
+### 5.1 前提条件 {/* #前提条件 */}
 
 要使用自定义指标，需完成如下配置：
 
@@ -170,7 +170,7 @@ HPA 支持基于自定义指标的扩缩容，需满足一定的前提条件。
    --proxy-client-key-file=/etc/kubernetes/ssl/kubernetes-key.pem
    ```
 
-### APIService 配置
+### 5.2 APIService 配置 {/* #apiservice-配置 */}
 
 创建自定义指标 API 服务的 YAML 示例：
 
@@ -190,7 +190,7 @@ spec:
   version: v1beta2
 ```
 
-### Prometheus 集成
+### 5.3 Prometheus 集成 {/* #prometheus-集成 */}
 
 通过 Prometheus Operator 可以实现自定义指标的采集与暴露。
 
@@ -241,7 +241,7 @@ spec:
            value: "10k"
    ```
 
-## 多指标支持
+## 6. 多指标支持 {/* #多指标支持 */}
 
 Kubernetes 1.6 及以上版本支持基于多个指标的扩缩容。
 
@@ -249,7 +249,7 @@ Kubernetes 1.6 及以上版本支持基于多个指标的扩缩容。
 - 取所有指标计算结果中的最大值作为最终扩缩容结果
 - 需确保所有指标都满足要求
 
-### 指标类型说明
+### 6.1 指标类型说明 {/* #指标类型说明 */}
 
 下表总结了 HPA 支持的指标类型及其用途。
 
@@ -260,11 +260,11 @@ Kubernetes 1.6 及以上版本支持基于多个指标的扩缩容。
 | Object     | Kubernetes 对象指标 | 外部资源监控   |
 | External   | 外部系统指标        | 云服务指标     |
 
-## 最佳实践
+## 7. 最佳实践 {/* #最佳实践 */}
 
 在实际生产环境中，建议遵循以下最佳实践：
 
-### 资源请求设置
+### 7.1 资源请求设置 {/* #资源请求设置 */}
 
 合理设置 Pod 的资源请求和限制，有助于 HPA 精确扩缩容。
 
@@ -278,7 +278,7 @@ resources:
     memory: 512Mi
 ```
 
-### 合理的扩缩容参数
+### 7.2 合理的扩缩容参数 {/* #合理的扩缩容参数 */}
 
 通过配置 behavior 字段，可以优化扩缩容的平滑性，避免频繁波动。
 
@@ -298,17 +298,17 @@ behavior:
       periodSeconds: 60
 ```
 
-### 监控和告警
+### 7.3 监控和告警 {/* #监控和告警 */}
 
 - 监控 HPA 状态和扩缩容事件
 - 设置合理的告警阈值
 - 定期检查指标的准确性
 
-## 故障排除
+## 8. 故障排除 {/* #故障排除 */}
 
 在使用 HPA 过程中，常见问题及排查方法如下：
 
-### 常见问题
+### 8.1 常见问题 {/* #常见问题 */}
 
 1. **HPA 不生效**
    - 检查 Pod 是否设置了 resource requests
@@ -325,7 +325,7 @@ behavior:
    - 优化指标阈值设置
    - 检查应用负载模式
 
-### 调试命令
+### 8.2 调试命令 {/* #调试命令 */}
 
 以下命令可用于排查 HPA 相关问题：
 
@@ -341,11 +341,11 @@ kubectl get --raw "/apis/metrics.k8s.io/v1/nodes" | jq .
 kubectl get --raw "/apis/custom-metrics.metrics.k8s.io/v1beta2" | jq .
 ```
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 HPA 是 Kubernetes 自动化运维的核心能力之一，能够根据多种指标实现 Pod 的自动扩缩容。通过合理配置资源请求、自定义指标和扩缩容策略，可以显著提升集群资源利用率和应用弹性。实际生产中，建议结合监控和告警体系，持续优化 HPA 策略，确保系统稳定高效运行。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [HPA 官方文档 - kubernetes.io](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 - [HPA Walkthrough - kubernetes.io](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/)

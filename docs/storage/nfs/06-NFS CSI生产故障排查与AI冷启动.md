@@ -2,8 +2,8 @@
 title: "NFS CSI、生产故障排查与 AI 冷启动"
 sidebar_label: "06. NFS CSI、生产故障排查与 AI 冷启动"
 sidebar_position: 6
-tags: [NFS, Kubernetes, CSI, 故障排查, 模型冷启动, Runbook]
 description: "串联 PVC、NFS CSI、kubelet、Linux mount、RPC 与后端存储，处理 Pending、FailedMount、权限、D 状态、stale handle 和模型冷启动风暴。"
+tags: [NFS, Kubernetes, CSI, 故障排查, 模型冷启动, Runbook]
 ---
 
 # NFS CSI、生产故障排查与 AI 冷启动
@@ -421,7 +421,7 @@ NFS 写带宽高不代表 Checkpoint 可恢复。
 
 至此 NFS 模块形成：协议 → 缓存/锁 → 部署/HA → 性能调优 → CSI/排障/AI。
 
-## 参考资料
+## 22. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes NFS volumes](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
 - [Kubernetes CSI NFS Driver](https://github.com/kubernetes-csi/csi-driver-nfs)

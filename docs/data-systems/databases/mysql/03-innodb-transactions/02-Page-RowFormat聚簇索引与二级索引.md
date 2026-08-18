@@ -2,15 +2,13 @@
 title: "Page、Row Format、聚簇索引与二级索引"
 sidebar_label: "02. Page、Row Format、聚簇索引与二级索引"
 sidebar_position: 2
-tags: [MySQL, InnoDB, Page, Row Format, 聚簇索引]
 description: "从 InnoDB Page 和记录布局理解聚簇索引、二级索引、回表、页分裂、大字段和主键设计。"
+tags: [MySQL, InnoDB, Page, Row Format, 聚簇索引]
 ---
 
 # Page、Row Format、聚簇索引与二级索引
 
 InnoDB 的 I/O、缓存和 B+Tree 管理以 Page 为核心，不是每次只从磁盘读取一行。理解 Page 后，回表、覆盖索引、页分裂和“大主键为什么贵”会自然连起来。
-
----
 
 ## 1. 从表到 Page
 
@@ -28,8 +26,6 @@ Table
 SHOW VARIABLES LIKE 'innodb_page_size';
 ```
 
----
-
 ## 2. B+Tree
 
 索引树包含：
@@ -40,8 +36,6 @@ SHOW VARIABLES LIKE 'innodb_page_size';
 - 兄弟页之间的顺序关系，支持范围扫描。
 
 树高受记录/键宽度和页填充影响。更宽的键让每页条目更少，可能增加页数、缓存和 I/O。
-
----
 
 ## 3. 聚簇索引
 
@@ -55,8 +49,6 @@ leaf: [PK | row columns]
 主键范围查询能顺序访问相邻叶子页。更新主键意味着记录逻辑位置变化，因此主键应稳定。
 
 没有显式主键时，InnoDB 会选择可用唯一非空索引或内部生成行标识；这会削弱应用和运维对行身份的控制。
-
----
 
 ## 4. 二级索引
 
@@ -76,8 +68,6 @@ leaf: [PK | row columns]
 
 这就是回表。大量随机回表可能造成 Buffer Pool 和 I/O 压力。
 
----
-
 ## 5. 覆盖索引
 
 若二级索引已包含过滤、排序和返回所需列，可以直接从二级索引完成查询，避免回表。
@@ -88,8 +78,6 @@ KEY idx_orders_customer_created
 ```
 
 但不要把所有返回列都加入索引：索引越宽，写放大、空间、缓存和 DDL 成本越高。用工作负载频率与收益评估。
-
----
 
 ## 6. 为什么主键宽度传播
 
@@ -103,8 +91,6 @@ KEY idx_orders_customer_created
 ```
 
 UUID 是否适合作主键不能只争论“随机”。还要看二进制/文本表示、插入分布、页分裂、全局唯一需求和索引数量。
-
----
 
 ## 7. Page Split 与 Merge
 
@@ -121,8 +107,6 @@ UUID 是否适合作主键不能只争论“随机”。还要看二进制/文�
 随机主键插入更容易在树中不同位置产生分裂与随机写。顺序主键也可能形成右侧热点，在超高并发/分布式场景需权衡。
 
 删除记录不会总是立即让文件缩小；空间可能留在表空间复用，页合并和物理回收有各自条件。
-
----
 
 ## 8. Row Format 与大字段
 
@@ -144,15 +128,11 @@ SHOW TABLE STATUS FROM shop LIKE 'orders'\G
 SHOW CREATE TABLE shop.orders\G
 ```
 
----
-
 ## 9. 行记录中的事务信息
 
 InnoDB 会为记录维护内部事务标识和 Roll Pointer 等信息，用于定位最近修改事务、连接 Undo 版本链和处理删除标记。
 
 因此更新不是简单覆盖字节：它需要支持回滚、并发可见性和恢复。
-
----
 
 ## 10. 索引条件与回表成本
 
@@ -167,8 +147,6 @@ InnoDB 会为记录维护内部事务标识和 Roll Pointer 等信息，用于�
 ```
 
 后续 `EXPLAIN ANALYZE` 要比较 estimated rows 与 actual rows，并结合 Handler/Buffer Pool 指标。
-
----
 
 ## 11. 隐式转换与索引
 
@@ -187,8 +165,6 @@ WHERE created_at >= '2026-08-14 00:00:00'
 
 最终以执行计划证明，不把规则背成绝对结论。
 
----
-
 ## 12. Page 损坏与校验
 
 Page 从磁盘读入时会进行结构/校验检查。错误可能来自：
@@ -200,8 +176,6 @@ Page 从磁盘读入时会进行结构/校验检查。错误可能来自：
 - 软件 Bug。
 
 遇到 Page Corruption：先保护现场、停止扩大写入、保存错误日志与存储健康证据，优先从已验证备份恢复。`innodb_force_recovery` 是数据抢救工具，不是长期运行模式。
-
----
 
 ## 13. 实验
 
@@ -224,7 +198,7 @@ Page 从磁盘读入时会进行结构/校验检查。错误可能来自：
 
 下一篇进入 Buffer Pool、脏页与数据页安全刷盘。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [InnoDB Physical Structure](https://dev.mysql.com/doc/refman/8.4/en/innodb-physical-structure.html)
 - [Clustered and Secondary Indexes](https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html)

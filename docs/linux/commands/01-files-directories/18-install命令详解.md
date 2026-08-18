@@ -1,11 +1,12 @@
 ---
-title: install 命令详解：复制、建目录、权限与部署语义
+title: "install 命令详解：复制、建目录、权限与部署语义"
+sidebar_label: "18. install 命令详解：复制、建目录、权限与部署语义"
 sidebar_position: 18
-description: 完整讲解 GNU coreutils install 的四种语法与全部参数，覆盖目录创建、权限所有者、备份、比较、strip、SELinux、安全发布和部署边界。
+description: "完整讲解 GNU coreutils install 的四种语法与全部参数，覆盖目录创建、权限所有者、备份、比较、strip、SELinux、安全发布和部署边界。"
 tags: [Linux, install, GNU coreutils, 文件部署, 权限]
 ---
 
-# `install` 命令详解：复制、建目录、权限与部署语义
+# install 命令详解：复制、建目录、权限与部署语义
 
 `install` 把“复制文件、创建父目录、设置 mode/owner/group、可选 strip”组合成一个面向构建与部署的命令。它不是软件包管理器，也不保证多文件事务、原子发布或配置回滚。
 
@@ -212,7 +213,7 @@ install --preserve-context -- source target
 - 能说明 install 不保留哪些属性、不提供哪些事务保证。
 - 能把它放入可验证、可回滚的发布流程，而不是把单条命令当发布系统。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：install invocation](https://www.gnu.org/software/coreutils/manual/html_node/install-invocation.html)
 - [GNU coreutils：Backup options](https://www.gnu.org/software/coreutils/manual/html_node/Backup-options.html)
@@ -221,4 +222,3 @@ install --preserve-context -- source target
 上一篇：[`find` 命令详解](./17-find命令详解.md)
 
 下一篇：[`unlink` 命令详解](./19-unlink命令详解.md)
-

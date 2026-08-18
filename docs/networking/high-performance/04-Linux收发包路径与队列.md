@@ -2,8 +2,8 @@
 title: "Linux 收发包路径与队列：从 Socket 到 NIC Ring"
 sidebar_label: "04. Linux 收发包路径与队列：从 Socket 到 NIC Ring"
 sidebar_position: 4
-tags: [Linux, Socket, TCP, NAPI, qdisc, RSS, RPS, XPS, 网卡]
 description: "从应用 Socket、TCP/IP、qdisc、驱动、NIC ring、IRQ、NAPI 和 softirq 完整解释 Linux 发包与收包路径及分层排障。"
+tags: [Linux, Socket, TCP, NAPI, qdisc, RSS, RPS, XPS, 网卡]
 ---
 
 # Linux 收发包路径与队列：从 Socket 到 NIC Ring
@@ -268,15 +268,15 @@ cat /proc/net/softnet_stat
 
 ## 14. RPS、RFS 与 aRFS
 
-### RPS
+### 14.1 RPS {/* #rps */}
 
 在软件层把接收处理转移到其他 CPU，适合 NIC queue 少或需要更均匀分布，但增加跨 CPU 调度和 cache 成本。
 
-### RFS
+### 14.2 RFS {/* #rfs */}
 
 尝试把 flow 处理靠近消费该 socket 的应用 CPU，提高 cache locality。
 
-### aRFS
+### 14.3 aRFS {/* #arfs */}
 
 硬件/驱动支持时，把 flow steering 规则下发 NIC。
 
@@ -415,19 +415,19 @@ NIC physical/FEC
 
 ## 24. AI 集群中的映射
 
-### 模型下载/NFS
+### 24.1 模型下载/NFS {/* #模型下载nfs */}
 
 大 TCP 流关注窗口、RSS、多连接、NIC 和存储后端；应用可能受 TLS/checksum/NVMe。
 
-### vLLM 流式响应
+### 24.2 vLLM 流式响应 {/* #vllm-流式响应 */}
 
 小 chunk 长连接，关注网关缓冲、event loop、Socket 反压和 idle timeout，峰值 Gbps通常不是瓶颈。
 
-### NCCL Socket
+### 24.3 NCCL Socket {/* #nccl-socket */}
 
 若 RDMA 不可用退回 Socket，Linux TCP/queue/CPU 路径成为 Collective 路径；“能通信”但性能可能显著下降。
 
-### RDMA
+### 24.4 RDMA {/* #rdma */}
 
 RDMA 数据面绕过普通 socket copy/TCP 栈的很多部分，但连接管理、路由、NIC queue、CQ/IRQ、PFC/ECN 和应用同步仍存在。本文路径不能原样解释 RDMA payload。
 
@@ -459,7 +459,7 @@ RDMA 数据面绕过普通 socket copy/TCP 栈的很多部分，但连接管理�
 
 继续学习：[AI 集群网络从零到精通](../ai-fabric/00-AI集群网络从零到精通学习路线.md)和[AI 网络可观测性指标体系](../ai-fabric/production/05-AI网络可观测性指标体系.md)。
 
-## 参考资料
+## 28. 参考资料 {/* #参考资料 */}
 
 - [Linux networking documentation](https://docs.kernel.org/networking/index.html)
 - [Scaling in the Linux Networking Stack](https://docs.kernel.org/networking/scaling.html)

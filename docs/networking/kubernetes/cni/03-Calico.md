@@ -2,8 +2,8 @@
 title: "Calico 网络：从 Pod veth 到 BGP、VXLAN 与 eBPF 数据路径"
 sidebar_label: "03. Calico 网络：从 Pod veth 到 BGP、VXLAN 与 eBPF 数据路径"
 sidebar_position: 3
-tags: [Kubernetes, Calico, CNI, BGP, VXLAN, eBPF, 网络排障]
 description: "从 CNI、IPAM、veth、路由、BGP、IPIP/VXLAN、NetworkPolicy 到 eBPF 和故障排查，建立完整 Calico 数据路径。"
+tags: [Kubernetes, Calico, CNI, BGP, VXLAN, eBPF, 网络排障]
 ---
 
 # Calico 网络：从 Pod veth 到 BGP、VXLAN 与 eBPF 数据路径
@@ -444,7 +444,7 @@ kubectl -n calico-system logs <calico-node-pod> -c calico-node --since=30m
 
 ## 15. 生产设计检查表
 
-### IP 与路由
+### 15.1 IP 与路由 {/* #ip-与路由 */}
 
 - Pod CIDR 不与 Node、Service、IDC/VPC、VPN 网段重叠；
 - IPPool 按环境/租户/节点选择器规划；
@@ -452,7 +452,7 @@ kubectl -n calico-system logs <calico-node-pod> -c calico-node --since=30m
 - BGP 有双 RR、路由过滤、最大前缀和变更回滚；
 - Encapsulation 与 Underlay 能力匹配。
 
-### 性能与可靠性
+### 15.2 性能与可靠性 {/* #性能与可靠性 */}
 
 - Pod/Tunnel/Underlay MTU 有计算和大包验证；
 - Felix、Typha、BGP、IPAM、丢包和 Tunnel 有监控；
@@ -460,7 +460,7 @@ kubectl -n calico-system logs <calico-node-pod> -c calico-node --since=30m
 - eBPF/iptables 模式升级前有功能、性能、回滚验证；
 - 管理、存储、RDMA 和普通 Pod 网络的边界明确。
 
-### 安全
+### 15.3 安全 {/* #安全 */}
 
 - 先允许 DNS、监控、镜像仓、对象存储等基础依赖；
 - Default Deny 分 Namespace 灰度；
@@ -469,7 +469,7 @@ kubectl -n calico-system logs <calico-node-pod> -c calico-node --since=30m
 
 ## 16. 从零到精通实验
 
-### 阶段一：单节点
+### 16.1 阶段一：单节点 {/* #阶段一单节点 */}
 
 1. 创建两个测试 Pod；
 2. 找 Pod IP、Sandbox PID、veth Pair；
@@ -477,7 +477,7 @@ kubectl -n calico-system logs <calico-node-pod> -c calico-node --since=30m
 4. 抓同节点双向包；
 5. 加 Default Deny 后逐条放行。
 
-### 阶段二：跨节点
+### 16.2 阶段二：跨节点 {/* #阶段二跨节点 */}
 
 1. 固定 Pod 到两个节点；
 2. 确认实际 Encapsulation Mode；
@@ -485,7 +485,7 @@ kubectl -n calico-system logs <calico-node-pod> -c calico-node --since=30m
 4. 在 Inner 和 Outer 路径同时抓包；
 5. 验证不同包长和 MTU。
 
-### 阶段三：故障注入
+### 16.3 阶段三：故障注入 {/* #阶段三故障注入 */}
 
 仅在隔离实验环境：
 
@@ -509,7 +509,7 @@ kubectl -n calico-system logs <calico-node-pod> -c calico-node --since=30m
 - [ ] 能从 Pod Namespace 一直抓到物理网卡；
 - [ ] 能设计可监控、可灰度、可回滚的生产 Calico 网络。
 
-## 参考资料
+## 18. 参考资料 {/* #参考资料 */}
 
 - [Calico：Component Architecture](https://docs.tigera.io/calico/latest/reference/architecture/overview)
 - [Calico：Determine Best Networking Option](https://docs.tigera.io/calico/latest/networking/determine-best-networking)

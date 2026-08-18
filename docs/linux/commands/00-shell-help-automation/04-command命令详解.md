@@ -1,11 +1,12 @@
 ---
-title: command 命令详解：绕过 Function、查询解析结果与默认 PATH
+title: "command 命令详解：绕过 Function、查询解析结果与默认 PATH"
+sidebar_label: "04. command 命令详解：绕过 Function、查询解析结果与默认 PATH"
 sidebar_position: 4
-description: 完整讲解 Bash command 的 -p/-v/-V、函数绕过、builtin/外部命令选择与可移植探测。
+description: "完整讲解 Bash command 的 -p/-v/-V、函数绕过、builtin/外部命令选择与可移植探测。"
 tags: [Linux, Bash, command, PATH, Shell]
 ---
 
-# `command` 命令详解：按普通命令规则执行
+# command 命令详解：绕过 Function、查询解析结果与默认 PATH
 
 `command` 是 POSIX/Bash builtin。它绕过同名 shell function，继续按 builtin 与 PATH 查找执行；常用于函数包装器调用原命令，以及脚本探测命令解析结果。它不会绕过 alias 的语法展开，alias 通常在 `command` 执行前已展开命令词位置。
 

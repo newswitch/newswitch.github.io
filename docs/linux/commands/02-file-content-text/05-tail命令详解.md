@@ -1,11 +1,12 @@
 ---
-title: tail 命令详解：尾部截取、日志跟踪与轮转语义
+title: "tail 命令详解：尾部截取、日志跟踪与轮转语义"
+sidebar_label: "05. tail 命令详解：尾部截取、日志跟踪与轮转语义"
 sidebar_position: 5
-description: 完整讲解 GNU coreutils tail 的全部参数、正计数、follow descriptor/name、retry、PID、inotify 与轮询、日志截断轮转、NUL 记录和容器排障。
+description: "完整讲解 GNU coreutils tail 的全部参数、正计数、follow descriptor/name、retry、PID、inotify 与轮询、日志截断轮转、NUL 记录和容器排障。"
 tags: [Linux, tail, GNU coreutils, 日志, inotify]
 ---
 
-# `tail` 命令详解：尾部截取、日志跟踪与轮转语义
+# tail 命令详解：尾部截取、日志跟踪与轮转语义
 
 `tail` 默认输出每个输入的最后 10 行。`-f/-F` 又把它变成持续观察增长文件的工具。要正确排障，必须区分“跟踪已打开 inode”与“跟踪这个路径名”，否则日志轮转后很容易一直盯着旧文件。
 
@@ -244,7 +245,7 @@ timeout --signal=TERM 30s tail -F -- app.log
 - 能判断 inotify、轮询、远端文件系统和 PID Namespace 的影响。
 - 能为 follow 设置明确终止条件并定位打开后已删除文件。
 
-## 官方参考
+## 17. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：tail invocation](https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html)
 - [Linux inotify(7)](https://man7.org/linux/man-pages/man7/inotify.7.html)
@@ -253,4 +254,3 @@ timeout --signal=TERM 30s tail -F -- app.log
 上一篇：[`head` 命令详解](./04-head命令详解.md)
 
 下一篇：[`wc` 命令详解](./06-wc命令详解.md)
-

@@ -1,17 +1,16 @@
 ---
-title: InfiniBand、RoCE 与 GPU 集群网络
+title: "InfiniBand、RoCE 与 GPU 集群网络"
 sidebar_label: "08. InfiniBand、RoCE 与 GPU 集群网络"
 sidebar_position: 8
+description: "多机 DDP 的梯度同步，最终要么走 高速 RDMA 网络，要么退化成普通 TCP Socket——后者往往让 GPU「算得快、等得久」。本文整理自 NCCL 官方 Networking Troubleshooting 与 GPU↔NIC 章节，覆盖：网络类型、网卡选择、IB/RoCE 检查……"
+tags: ["InfiniBand", "RoCE", "RDMA", "NCCL", "GPU", "学习路线"]
 date: 2026-07-22 18:05:00
 categories: 云原生
-tags: ["InfiniBand", "RoCE", "RDMA", "NCCL", "GPU", "学习路线"]
 ---
 
 # InfiniBand、RoCE 与 GPU 集群网络
 
 多机 DDP 的梯度同步，最终要么走 **高速 RDMA 网络**，要么退化成普通 TCP Socket——后者往往让 GPU「算得快、等得久」。本文整理自 NCCL 官方 [Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html) 与 [GPU↔NIC](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html) 章节，覆盖：网络类型、网卡选择、IB/RoCE 检查、`all_reduce_perf` 基线。前置：[NCCL 通信原理与常见问题](../../../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)。
-
----
 
 ## 1. 三种常见通路
 
@@ -27,8 +26,6 @@ tags: ["InfiniBand", "RoCE", "RDMA", "NCCL", "GPU", "学习路线"]
 sudo modprobe nvidia-peermem
 lsmod | grep nvidia-peermem
 ```
-
----
 
 ## 2. 网卡选择：`NCCL_SOCKET_IFNAME`
 
@@ -59,8 +56,6 @@ export NCCL_IB_HCA=mlx5_0
 export NCCL_IB_DISABLE=1
 ```
 
----
-
 ## 3. IP 端口与防火墙
 
 NCCL 会开 TCP 端口交换连接信息。可限制本机临时端口范围，便于开防火墙：
@@ -74,8 +69,6 @@ echo 50000 51000 > /proc/sys/net/ipv4/ip_local_port_range
 
 Kubernetes：检查 NetworkPolicy / 安全组是否放行节点间训练网；Pod 使用 hostNetwork 时更要注意网卡与路由。
 
----
-
 ## 4. InfiniBand 检查清单
 
 ### 4.1 端口是否健康
@@ -87,10 +80,10 @@ ibstat      # 每 HCA/端口详情
 
 关注：
 
-- Port state = **Active**（不是 Down / Init / Armed）  
-- Physical state 常为 **LinkUp**  
-- Link layer 为 **InfiniBand**（RoCE 场景则为 Ethernet，且全网一致）  
-- **Rate** 符合预期，无异常降速  
+- Port state = **Active**（不是 Down / Init / Armed）
+- Physical state 常为 **LinkUp**
+- Link layer 为 **InfiniBand**（RoCE 场景则为 Ethernet，且全网一致）
+- **Rate** 符合预期，无异常降速
 
 ### 4.2 Subnet Manager
 
@@ -149,8 +142,6 @@ NCCL WARN Call to ibv_reg_mr failed
 
 重新登录或确保作业启动带上新 limits，用 `ulimit -l` 验证。
 
----
-
 ## 5. RoCE 检查清单
 
 RoCE 与 IB 诊断工具不同：
@@ -179,8 +170,6 @@ NCCL WARN Call to ibv_modify_qp failed with error Invalid argument
 
 常与 **GID index** 有关。NCCL **2.21+** 会动态选择 GID，一般 **不要** 再设 `NCCL_IB_GID_INDEX`；旧版本需 `show_gids` 后手动指定 RoCE v2 的 index。RoCE 织物还可能需按厂商文档设置 `NCCL_IB_TC`。
 
----
-
 ## 6. `all_reduce_perf`：NCCL 层基线
 
 在 IB/RoCE 单测通过后，用 [nccl-tests](https://github.com/NVIDIA/nccl-tests) 的 `all_reduce_perf` 测集合通信带宽（版本与编译选项以仓库 README 为准）：
@@ -194,13 +183,11 @@ NCCL WARN Call to ibv_modify_qp failed with error Invalid argument
 
 解读要点：
 
-- 随消息增大，带宽应接近机内 NVLink 或跨机 RDMA 的合理比例  
-- 跨机结果若接近「千兆/普通十万兆 TCP」量级，对照 `NCCL_DEBUG_SUBSYS=NET`：是否其实在 **Socket**  
-- 对比 `NCCL_IB_DISABLE=1` 前后：若几乎无变化 → RDMA 路径未生效  
+- 随消息增大，带宽应接近机内 NVLink 或跨机 RDMA 的合理比例
+- 跨机结果若接近「千兆/普通十万兆 TCP」量级，对照 `NCCL_DEBUG_SUBSYS=NET`：是否其实在 **Socket**
+- 对比 `NCCL_IB_DISABLE=1` 前后：若几乎无变化 → RDMA 路径未生效
 
 建议把「节点对 + 消息大小 → busbw」记成基线表，训练变慢时先复测。
-
----
 
 ## 7. 选型与 K8s 注意点
 
@@ -212,8 +199,6 @@ NCCL WARN Call to ibv_modify_qp failed with error Invalid argument
 | K8s | 训练网与业务网分离；DaemonSet 保证 peermem；Queue/Gang 整组调度 |
 
 显存直连网络的完整原理与实验见 [GPUDirect RDMA 原理与实践](./07-GPUDirect-RDMA原理与实践.md)；存储、冷启动请进入存储模块；拓扑调度见 [GPU 集群拓扑感知调度](../../../gpu/cluster/scheduling/12-GPU%20集群拓扑感知调度.md)。
-
----
 
 ## 8. 小结
 
@@ -228,13 +213,11 @@ NCCL WARN Call to ibv_modify_qp failed with error Invalid argument
 
 超时与挂起的完整复盘：[NCCL Timeout 排查流程](../../../gpu/cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)。
 
----
+## 9. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html)  
-- [GPU troubleshooting · GPU-to-NIC](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html)  
-- [NCCL Documentation](https://docs.nvidia.com/deeplearning/nccl/index.html)  
-- [nccl-tests](https://github.com/NVIDIA/nccl-tests)  
+- [Networking Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/networking_troubleshooting.html)
+- [GPU troubleshooting · GPU-to-NIC](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html)
+- [NCCL Documentation](https://docs.nvidia.com/deeplearning/nccl/index.html)
+- [nccl-tests](https://github.com/NVIDIA/nccl-tests)
 
 本文基于上述 NVIDIA / NCCL 官方排障文档整理，并补充训练集群落地检查表。

@@ -1,11 +1,12 @@
 ---
-title: trap 命令详解：Signal、EXIT、ERR、DEBUG 与幂等清理
+title: "trap 命令详解：Signal、EXIT、ERR、DEBUG 与幂等清理"
+sidebar_label: "15. trap 命令详解：Signal、EXIT、ERR、DEBUG 与幂等清理"
 sidebar_position: 15
-description: 完整讲解 Bash trap 的 -l/-p/-P、signal disposition、EXIT/ERR/DEBUG/RETURN、继承、状态保留和安全 cleanup。
+description: "完整讲解 Bash trap 的 -l/-p/-P、signal disposition、EXIT/ERR/DEBUG/RETURN、继承、状态保留和安全 cleanup。"
 tags: [Linux, Bash, trap, Signal, 清理]
 ---
 
-# `trap` 命令详解：让中断与退出可控
+# trap 命令详解：Signal、EXIT、ERR、DEBUG 与幂等清理
 
 `trap` 修改 Shell 对 signal 和伪信号 EXIT/ERR/DEBUG/RETURN 的处理。它常用于清理临时目录、恢复配置、转发终止信号；错误 trap 会吞掉退出码、递归触发或执行不安全拼接。
 

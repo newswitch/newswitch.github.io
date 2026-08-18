@@ -1,5 +1,6 @@
 ---
 title: "Trivy 命令详解"
+sidebar_label: "04. Trivy 命令详解"
 sidebar_position: 4
 description: "使用Trivy扫描AI镜像、文件系统、代码仓库、Kubernetes配置、漏洞、错误配置、许可证和Secret。"
 tags: [Trivy, 安全扫描, 容器镜像, SBOM, Secret, AI供应链]
@@ -90,11 +91,11 @@ SBOM应绑定镜像digest并作为OCI artifact/attestation发布。门禁策略�
 | 大量误报 | 逐项验证依赖是否存在/可达，带证据建立限时例外 |
 | CI泄露Secret | 报告权限、日志输出、上传Artifact和脱敏策略 |
 
-## 掌握标准
+## 8. 掌握标准 {/* #掌握标准 */}
 
 能对digest扫描并记录DB身份；能生成SBOM；能设计有解释的门禁与例外；能处理Secret发现；能把扫描结果与运行时和修复可行性结合。
 
-## 官方资料
+## 9. 官方资料 {/* #官方资料 */}
 
 - [Trivy CLI reference](https://trivy.dev/latest/docs/references/configuration/cli/trivy/)
 - [Trivy documentation](https://trivy.dev/latest/docs/)

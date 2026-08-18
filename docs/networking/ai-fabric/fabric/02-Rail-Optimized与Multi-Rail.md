@@ -1,9 +1,9 @@
 ---
-title: Rail-Optimized 与 Multi-Rail
+title: "Rail-Optimized 与 Multi-Rail"
 sidebar_label: "02. Rail-Optimized 与 Multi-Rail"
 sidebar_position: 2
+description: "理解每 GPU/NIC Rail 的拓扑、Rank 映射、带宽聚合、跨 Rail 转发和故障隔离。"
 tags: [Rail-Optimized, Multi-Rail, NCCL, Fault Domain, Topology]
-description: 理解每 GPU/NIC Rail 的拓扑、Rank 映射、带宽聚合、跨 Rail 转发和故障隔离。
 ---
 
 # Rail-Optimized 与 Multi-Rail
@@ -48,14 +48,14 @@ Rail 可以使用完全独立交换机，也可以共享部分 Spine/机框。�
 
 ## 3. 两种常见设计
 
-### 独立 Rail
+### 3.1 独立 Rail {/* #独立-rail */}
 
 - 每个 Rail 有独立 Leaf/Spine；
 - 故障隔离清晰；
 - 线缆和交换机数量多；
 - 跨 Rail 通信需要节点内或专门网关路径。
 
-### 统一 Fabric 中的多端口
+### 3.2 统一 Fabric 中的多端口 {/* #统一-fabric-中的多端口 */}
 
 - 多 NIC 接入同一 Clos；
 - 路由与运维更统一；

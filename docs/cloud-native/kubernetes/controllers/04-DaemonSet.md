@@ -2,19 +2,19 @@
 title: "DaemonSet"
 sidebar_label: "04. DaemonSet"
 sidebar_position: 4
-tags: [Kubernetes, 控制器, 学习路线]
 description: "DaemonSet 是 Kubernetes 中的一种控制器，确保在集群中的每个（或特定）节点上运行一个 Pod 副本。本文详细介绍 DaemonSet 的概念、使用场景、配置方法以及管理策略。"
+tags: [Kubernetes, 控制器, 学习路线]
 ---
 
 # DaemonSet
 
 > DaemonSet 控制器为 Kubernetes 提供了节点级系统服务的自动化部署能力，是集群可观测性与基础设施运维的关键保障。
 
-## DaemonSet 概述
+## 1. DaemonSet 概述 {/* #daemonset-概述 */}
 
 DaemonSet 是 Kubernetes 中的一种控制器，确保在集群中的每个（或特定）节点上运行一个 Pod 副本。当有新节点加入集群时，DaemonSet 会自动在新节点上创建 Pod；当节点从集群中移除时，对应的 Pod 也会被回收。删除 DaemonSet 时，它创建的所有 Pod 都会被删除。
 
-## 典型使用场景
+## 2. 典型使用场景 {/* #典型使用场景 */}
 
 DaemonSet 适用于需要在每个节点上运行系统级服务的场景。常见用例如下：
 
@@ -23,18 +23,18 @@ DaemonSet 适用于需要在每个节点上运行系统级服务的场景。常�
 - 监控代理：如 [Prometheus Node Exporter](https://github.com/prometheus/node_exporter)、collectd、Datadog Agent、New Relic Agent
 - 网络组件：如 CNI 网络插件或网络代理
 
-## DaemonSet 配置规范
+## 3. DaemonSet 配置规范 {/* #daemonset-配置规范 */}
 
 DaemonSet 资源定义包含必需字段和可选字段，合理配置可满足不同节点管理需求。
 
-### 基本结构
+### 3.1 基本结构 {/* #基本结构 */}
 
 - `apiVersion`：API 版本
 - `kind`：资源类型
 - `metadata`：元数据信息
 - `spec`：规格定义
 
-### Pod 模板配置
+### 3.2 Pod 模板配置 {/* #pod-模板配置 */}
 
 `.spec.template` 是 DaemonSet 的核心配置，定义要创建的 Pod 模板：
 
@@ -42,11 +42,11 @@ DaemonSet 资源定义包含必需字段和可选字段，合理配置可满足�
 - 必须指定适当的标签以便选择器匹配
 - `restartPolicy` 必须设置为 `Always`（默认值）
 
-### Pod 选择器
+### 3.3 Pod 选择器 {/* #pod-选择器 */}
 
 `.spec.selector` 用于选择管理的 Pod，支持 matchLabels 和 matchExpressions 两种方式。选择器必须与 Pod 模板的标签匹配，否则 API 会拒绝创建。
 
-### 节点选择
+### 3.4 节点选择 {/* #节点选择 */}
 
 可通过以下方式限制 Pod 运行的节点：
 
@@ -56,7 +56,7 @@ DaemonSet 资源定义包含必需字段和可选字段，合理配置可满足�
 
 如果未指定节点选择条件，DaemonSet 默认在所有节点上创建 Pod。
 
-## 调度机制
+## 4. 调度机制 {/* #调度机制 */}
 
 DaemonSet 的调度机制与普通 Pod 不同，具备如下特点：
 
@@ -65,7 +65,7 @@ DaemonSet 的调度机制与普通 Pod 不同，具备如下特点：
 - 容忍不可调度：忽略节点的 `unschedulable` 状态
 - 集群启动友好：可在调度器启动前创建 Pod
 
-### 污点和容忍
+### 4.1 污点和容忍 {/* #污点和容忍 */}
 
 DaemonSet Pod 自动添加以下容忍配置：
 
@@ -77,7 +77,7 @@ DaemonSet Pod 自动添加以下容忍配置：
 | node.kubernetes.io/memory-pressure     | NoSchedule    |
 | node.kubernetes.io/unschedulable       | NoSchedule    |
 
-## 通信模式
+## 5. 通信模式 {/* #通信模式 */}
 
 DaemonSet Pod 的通信模式多样，常见方式如下：
 
@@ -86,11 +86,11 @@ DaemonSet Pod 的通信模式多样，常见方式如下：
 - DNS 发现：通过 Headless Service 进行 DNS 查询，获取所有 Pod 的 IP
 - Service 负载均衡：通过普通 Service 随机访问某节点上的 Pod（无法指定特定节点）
 
-## 更新和维护
+## 6. 更新和维护 {/* #更新和维护 */}
 
 DaemonSet 支持多种更新与维护策略，便于系统级服务的平滑升级。
 
-### 滚动更新
+### 6.1 滚动更新 {/* #滚动更新 */}
 
 Kubernetes 1.6+ 支持 DaemonSet 滚动更新：
 
@@ -102,7 +102,7 @@ spec:
       maxUnavailable: 1
 ```
 
-### 更新触发条件
+### 6.2 更新触发条件 {/* #更新触发条件 */}
 
 以下情况会触发 DaemonSet 更新：
 
@@ -110,11 +110,11 @@ spec:
 - 更改节点标签（影响节点选择）
 - 修改选择器规则
 
-### 手动管理
+### 6.3 手动管理 {/* #手动管理 */}
 
 可通过 `--cascade=orphan` 选项删除 DaemonSet 但保留 Pod，便于后续手动管理。
 
-## 最佳实践
+## 7. 最佳实践 {/* #最佳实践 */}
 
 - 为 DaemonSet Pod 设置适当的资源请求和限制：
 
@@ -152,7 +152,7 @@ spec:
     initialDelaySeconds: 5
   ```
 
-## 与其他控制器的比较
+## 8. 与其他控制器的比较 {/* #与其他控制器的比较 */}
 
 下表对比了 DaemonSet 与其他常见控制器的适用场景和特性。
 
@@ -163,6 +163,6 @@ spec:
 | StaticPod      | kubelet 直接管理，配置简单  | 特殊场景、功能有限 |
 | Job/CronJob    | 一次性/定时任务             | 批处理、定时任务   |
 
-## 总结
+## 9. 总结 {/* #总结 */}
 
 DaemonSet 控制器为 Kubernetes 提供了节点级服务的自动化部署能力，适用于日志收集、监控、网络等系统级场景。合理配置和管理 DaemonSet，有助于提升集群的可观测性、可维护性和基础设施弹性。

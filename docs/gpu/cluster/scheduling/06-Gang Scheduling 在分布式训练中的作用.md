@@ -1,9 +1,11 @@
 ---
-title: Gang Scheduling 在分布式训练中的作用
+title: "Gang Scheduling 在分布式训练中的作用"
 sidebar_label: "06. Gang Scheduling 在分布式训练中的作用"
+sidebar_position: 6
+description: "分布式训练常要 多个 Worker（+ Master/PS）同时就绪 才能开始。若只调度起一部分 Pod，它们会占住 GPU 却空等同伴，造成浪费甚至死锁感。Volcano 的 Gang 策略要求：达到最小可运行数量（如 minAvailable）才真正把整组作业推下去——「全部成功或全部不执……"
+tags: ["Kubernetes", "Volcano", "Gang", "分布式训练", "GPU", "学习路线"]
 date: 2026-07-22 17:00:00
 categories: 云原生
-tags: ["Kubernetes", "Volcano", "Gang", "分布式训练", "GPU", "学习路线"]
 ---
 
 # Gang Scheduling 在分布式训练中的作用
@@ -12,20 +14,16 @@ tags: ["Kubernetes", "Volcano", "Gang", "分布式训练", "GPU", "学习路线"
 
 本文整理自官方 [Gang 插件](https://volcano.sh/zh-Hans/docs/Scheduler/Plugins/gang) 与 [调度器介绍](https://volcano.sh/zh-hans/docs/scheduler/overview/)。前置：[Volcano 入门](./04-Volcano%20GPU%20调度器入门.md)、[Queue 配额](./05-Volcano%20Queue%20与%20GPU%20配额管理.md)。
 
----
-
 ## 1. 没有 Gang 时会发生什么
 
 假设 4 卡集群，一个 DDP 作业要 4 个 Worker、每 Worker 1 GPU：
 
-1. 调度器先起了 3 个 Worker → 占满 3 卡  
-2. 第 4 个一直 Pending  
-3. 已运行的 3 个在等 rendezvous / NCCL，**GPU 利用率接近 0，但卡已被占用**  
+1. 调度器先起了 3 个 Worker → 占满 3 卡
+2. 第 4 个一直 Pending
+3. 已运行的 3 个在等 rendezvous / NCCL，**GPU 利用率接近 0，但卡已被占用**
 4. 其它作业也起不来 → 典型「部分启动浪费」
 
 Gang 的目标：要么凑齐最小集合再绑节点，要么先不占这些卡。
-
----
 
 ## 2. Gang 工作原理（概念）
 
@@ -47,8 +45,6 @@ Gang 是 Volcano 核心插件之一，会观察一个 Job / PodGroup 下已调�
 
 *若官方图链失效，请以 [Gang 文档](https://volcano.sh/zh-Hans/docs/Scheduler/Plugins/gang) 页内插图为准。*
 
----
-
 ## 3. 应用场景
 
 ### 3.1 AI / 深度学习
@@ -63,8 +59,6 @@ Gang 是 Volcano 核心插件之一，会观察一个 Job / PodGroup 下已调�
 
 集群紧张时，禁止「部分分配」可显著减少无效占用，提高整体利用率。
 
----
-
 ## 4. 配置
 
 Gang 通常默认启用，在 scheduler ConfigMap 中：
@@ -78,8 +72,6 @@ tiers:
 ```
 
 与队列、抢占组合时，可按官方示例关闭部分 preemptable 行为，避免与 Gang 语义打架（见层级队列文档中的配置示例）。
-
----
 
 ## 5. 示例：VolcanoJob + minAvailable
 
@@ -151,18 +143,14 @@ kubectl describe job.batch.volcano.sh pytorch-ddp
 # 资源不够时：整组不应长期「半 Running 半 Pending」占卡
 ```
 
----
-
 ## 6. 和 PodGroup / Queue 的关系
 
-- **VolcanoJob** 会关联 **PodGroup**；`minAvailable` / `minMember` 一类字段表达 Gang 约束（具体字段以所用 API 版本为准）  
-- Job 应落到正确 **Queue**，否则可能被队列配额卡住——此时要区分是「Gang 不齐」还是「队列没额度」  
-- 分布式训练排障顺序建议：  
-  1. Queue capability / deserved 是否够整组 GPU  
-  2. `minAvailable` 是否大于集群瞬时空闲  
-  3. 再查 NCCL / 代码 rendezvous（见后续训练与 NCCL 篇）  
-
----
+- **VolcanoJob** 会关联 **PodGroup**；`minAvailable` / `minMember` 一类字段表达 Gang 约束（具体字段以所用 API 版本为准）
+- Job 应落到正确 **Queue**，否则可能被队列配额卡住——此时要区分是「Gang 不齐」还是「队列没额度」
+- 分布式训练排障顺序建议：
+  1. Queue capability / deserved 是否够整组 GPU
+  2. `minAvailable` 是否大于集群瞬时空闲
+  3. 再查 NCCL / 代码 rendezvous（见后续训练与 NCCL 篇）
 
 ## 7. 小结
 
@@ -175,11 +163,9 @@ kubectl describe job.batch.volcano.sh pytorch-ddp
 
 配合 [Queue 配额](./05-Volcano%20Queue%20与%20GPU%20配额管理.md)，才能同时管好「租户有多少卡」和「作业要整组多少卡」。
 
----
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
-## 参考与致谢
-
-- [Gang \| Volcano](https://volcano.sh/zh-Hans/docs/Scheduler/Plugins/gang)  
-- [调度器介绍](https://volcano.sh/zh-hans/docs/scheduler/overview/)  
+- [Gang \| Volcano](https://volcano.sh/zh-Hans/docs/Scheduler/Plugins/gang)
+- [调度器介绍](https://volcano.sh/zh-hans/docs/scheduler/overview/)
 
 本文基于上述 Volcano 官方文档整理，并补充了 GPU 分布式训练场景说明。

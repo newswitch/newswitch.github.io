@@ -1,9 +1,11 @@
 ---
 title: "GPU 节点 NotReady：从 Lease、kubelet、Runtime 到硬件的完整排查"
+sidebar_label: "08. GPU 节点 NotReady：从 Lease、kubelet、Runtime 到硬件的完整排查"
+sidebar_position: 8
+description: "区分 Ready=False 与 Unknown，从 Node Lease、kubelet、CRI、CNI、磁盘、内存、网络和 GPU 硬件建立安全恢复流程。"
+tags: ["Kubernetes", "GPU", "Node NotReady", "kubelet", "containerd", "故障排查"]
 date: 2026-07-22 16:00:00
 categories: 云原生
-tags: ["Kubernetes", "GPU", "Node NotReady", "kubelet", "containerd", "故障排查"]
-description: "区分 Ready=False 与 Unknown，从 Node Lease、kubelet、CRI、CNI、磁盘、内存、网络和 GPU 硬件建立安全恢复流程。"
 ---
 
 # GPU 节点 NotReady：从 Lease、kubelet、Runtime 到硬件的完整排查
@@ -422,44 +424,44 @@ BMC 是否可达？
 
 ## 12. 安全实验
 
-### 实验一：cordon 与 Ready
+### 12.1 实验一：cordon 与 Ready {/* #实验一cordon-与-ready */}
 
 在测试节点执行 cordon，观察它仍可 Ready，但 `kubectl get nodes` 显示 SchedulingDisabled。再 uncordon，理解二者差异。
 
-### 实验二：停止测试 kubelet
+### 12.2 实验二：停止测试 kubelet {/* #实验二停止测试-kubelet */}
 
 只在可恢复的测试集群中、通过批准的故障演练停止 kubelet，观察 Lease renewTime、Ready Unknown、taint 和 Pod 状态。
 记录停止条件与恢复命令。
 
-### 实验三：runtime 故障
+### 12.3 实验三：runtime 故障 {/* #实验三runtime-故障 */}
 
 在测试节点模拟 containerd 不可用，比较 kubelet日志、Lease 和 Ready condition，验证它与管理网络断开的证据差异。
 
-### 实验四：磁盘水位
+### 12.4 实验四：磁盘水位 {/* #实验四磁盘水位 */}
 
 不要填满系统盘。通过小型独立测试文件系统或监控数据回放验证 DiskPressure 告警、image GC 和 Runbook。
 
 ## 13. 掌握标准
 
-### 入门
+### 13.1 入门 {/* #入门 */}
 
 - 能区分 False、Unknown 和 SchedulingDisabled；
 - 能查看 Node condition、Lease、Event 和节点 Pod；
 - 能判断是否需要 cordon。
 
-### 进阶
+### 13.2 进阶 {/* #进阶 */}
 
 - 能从 Lease 下钻到 kubelet、CRI、CNI、磁盘和内核；
 - 能解释 NotReady 为什么不等于 GPU 故障；
 - 能处理训练、推理、PDB 和本地数据的恢复边界。
 
-### 生产级
+### 13.3 生产级 {/* #生产级 */}
 
 - 能建立控制面与节点的统一时间线；
 - 能避免多服务同时重启掩盖根因；
 - 能用系统、GPU、网络、存储和业务门禁证明节点可重新上线。
 
-## 参考资料
+## 14. 参考资料 {/* #参考资料 */}
 
 - [Kubernetes Node Status](https://kubernetes.io/docs/reference/node/node-status/)
 - [Kubernetes Nodes](https://kubernetes.io/docs/concepts/architecture/nodes/)

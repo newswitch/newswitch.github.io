@@ -1,9 +1,9 @@
 ---
-title: Iceberg Schema Evolution、Partition Evolution 与 Time Travel
+title: "Iceberg Schema Evolution、Partition Evolution 与 Time Travel"
 sidebar_label: "03. Iceberg Schema Evolution、Partition Evolution 与 Time Travel"
 sidebar_position: 3
+description: "理解字段 ID、分区规范演进、隐藏分区、历史快照和安全回滚。"
 tags: [Iceberg, Schema Evolution, Partition Evolution, Time Travel]
-description: 理解字段 ID、分区规范演进、隐藏分区、历史快照和安全回滚。
 ---
 
 # Iceberg Schema Evolution、Partition Evolution 与 Time Travel
@@ -62,7 +62,7 @@ Rollback/设置当前 snapshot 改变“当前指针”，但后续提交和分�
 
 上一篇：[Iceberg Metadata 与 Snapshot](./02-Iceberg-Metadata-Manifest-Snapshot与读写路径.md)　下一篇：[并发提交、小文件、Compaction 与快照生命周期](./04-并发提交小文件Compaction与快照生命周期.md)
 
-## 参考资料
+## 9. 参考资料 {/* #参考资料 */}
 
 - [Iceberg Evolution](https://iceberg.apache.org/docs/latest/evolution/)
 - [Iceberg Partitioning](https://iceberg.apache.org/docs/latest/partitioning/)

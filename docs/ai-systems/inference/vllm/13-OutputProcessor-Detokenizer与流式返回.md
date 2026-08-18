@@ -2,8 +2,8 @@
 title: "OutputProcessor、Detokenizer 与流式返回"
 sidebar_label: "13. OutputProcessor、Detokenizer 与流式返回"
 sidebar_position: 13
-tags: [vLLM, V1, OutputProcessor, Detokenizer, SSE, 源码分析]
 description: "从 ModelRunnerOutput 出发，分析 token 验收、停止判断、增量解码、SSE 返回、取消与资源释放。"
+tags: [vLLM, V1, OutputProcessor, Detokenizer, SSE, 源码分析]
 ---
 
 # OutputProcessor、Detokenizer 与流式返回
@@ -25,8 +25,6 @@ ModelRunnerOutput
 
 > 源码基线：vLLM `v0.23.0`。本文区分“模型生成 token”“服务产生 SSE”“客户端真正收到字节”三个时刻。
 
----
-
 ## 1. 为什么 token 不能直接 `decode()` 后返回
 
 输出处理至少要解决：
@@ -41,8 +39,6 @@ ModelRunnerOutput
 - 流式请求只应发送本次新增内容。
 
 所以正确抽象是“请求状态机消费 token 增量”，而不是对每个 token 独立调用一次字符串解码。
-
----
 
 ## 2. EngineCore 先完成状态核算
 
@@ -65,8 +61,6 @@ EngineCore 标记 finished
   = 后端可以进入资源回收流程
 ```
 
----
-
 ## 3. AsyncLLM 的 Output Handler 做什么
 
 前端 `AsyncLLM` 一方面提交请求，另一方面有持续消费 EngineCore 输出的处理循环。它需要：
@@ -78,8 +72,6 @@ EngineCore 标记 finished
 5. 为仍在等待的 API 协程唤醒事件。
 
 这意味着单个慢客户端不应该直接阻塞整个 EngineCore 主循环。生产实现要在请求队列、输出队列和连接层之间建立背压与取消传播。
-
----
 
 ## 4. Detokenizer 为什么要维护增量状态
 
@@ -107,8 +99,6 @@ EngineCore 标记 finished
 
 不能简单按字符串长度切割所有语言场景；必须尊重 tokenizer 的增量解码规则和 Unicode 边界。
 
----
-
 ## 5. 停止条件在哪里判断
 
 完成原因大致分为：
@@ -124,8 +114,6 @@ EngineCore 标记 finished
 stop string 可能跨多个 token，因此输出端通常要暂存足够尾部，避免把停止串的一部分提前发给客户端。
 
 `finish_reason`、是否包含 stop 内容、Usage 的计数边界必须在 API 兼容测试中固定，否则升级 tokenizer 或框架后可能出现协议回归。
-
----
 
 ## 6. SSE 返回并不是一次普通 JSON
 
@@ -160,18 +148,16 @@ client_first_byte_time
 
 只在客户端测一个 TTFT，无法判断问题是否发生在模型之前或之后。
 
----
-
 ## 7. 流式与非流式的内存边界
 
-### 流式
+### 7.1 流式 {/* #流式 */}
 
 - 每次产生增量就可发送；
 - 客户端慢时会积压输出；
 - 连接存活时间长；
 - 取消传播和背压非常重要。
 
-### 非流式
+### 7.2 非流式 {/* #非流式 */}
 
 - 服务端要聚合全部文本、token 和可选 logprobs；
 - 首字节接近完整 E2E；
@@ -179,8 +165,6 @@ client_first_byte_time
 - 代理超时更容易被触发。
 
 如果用户只关心交互体验，流式能改善感知首包，但不会减少模型完成全部 token 的 GPU 成本。
-
----
 
 ## 8. 客户端取消如何一路返回
 
@@ -207,8 +191,6 @@ Client disconnect / timeout
 - 不再累计 generation token；
 - 长连接对象最终被回收。
 
----
-
 ## 9. 慢客户端与背压
 
 假设模型每 20 ms 产生一批增量，而客户端每秒只读取一次。若输出队列无限增长，会带来：
@@ -228,8 +210,6 @@ Client disconnect / timeout
 - 将网络写入延迟与模型 TPOT 分开观测。
 
 不能粗暴用很短的全局超时：长输出本来就需要较长连接，应该区分“持续有 token 的健康长流”和“长时间无进展的僵死流”。
-
----
 
 ## 10. Usage 与计费边界
 
@@ -252,8 +232,6 @@ Client disconnect / timeout
 
 三者不一定相等。容量规划如果误用业务 token，可能遗漏 Prefix 命中、重算和推测解码带来的真实计算差异。
 
----
-
 ## 11. 输出侧故障矩阵
 
 | 现象 | 优先怀疑 | 证明方法 |
@@ -265,8 +243,6 @@ Client disconnect / timeout
 | 中文/Emoji 偶发乱码 | 错误增量解码或字节边界 | 固定 token 序列协议测试 |
 | 完成请求仍占 KV | 完成事件/释放路径异常 | finished 事件与 Block 释放对齐 |
 | 流末尾缺 Usage/finish_reason | API 适配或异常终止 | 自动化协议契约测试 |
-
----
 
 ## 12. 端到端 Trace 应怎样打点
 
@@ -287,8 +263,6 @@ resources_released
 
 为每个点记录统一 `request_id`、副本、model revision、输入/输出 token、finish reason。跨进程时传递 Trace Context，不要依赖模糊时间窗口关联。
 
----
-
 ## 13. 源码阅读路标
 
 1. `vllm/v1/engine/async_llm.py`：请求生成器与输出处理循环；
@@ -302,8 +276,6 @@ resources_released
 - [async_llm.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/engine/async_llm.py)
 - [output_processor.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/engine/output_processor.py)
 - [detokenizer.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/engine/detokenizer.py)
-
----
 
 ## 14. 学完后的验收题
 

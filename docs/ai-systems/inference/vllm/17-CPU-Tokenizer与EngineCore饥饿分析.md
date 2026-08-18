@@ -2,8 +2,8 @@
 title: "CPU、Tokenizer 与 EngineCore 饥饿分析"
 sidebar_label: "17. CPU、Tokenizer 与 EngineCore 饥饿分析"
 sidebar_position: 17
-tags: [vLLM, CPU, Tokenizer, EngineCore, 性能分析]
 description: "分析 API 前处理、Tokenizer、Python 事件循环、EngineCore 调度与 CPU throttling 如何让 GPU 吃不饱。"
+tags: [vLLM, CPU, Tokenizer, EngineCore, 性能分析]
 ---
 
 # CPU、Tokenizer 与 EngineCore 饥饿分析
@@ -11,8 +11,6 @@ description: "分析 API 前处理、Tokenizer、Python 事件循环、EngineCor
 大模型服务使用 GPU，不代表 CPU 只是“发请求”。JSON、Chat Template、Tokenizer、Scheduler、Sampling、Detokenizer、指标和网络都在 CPU 上运行。
 
 CPU 跟不上时的典型症状是：**请求排队、GPU Step 之间有空洞、GPU Util 低，但 TTFT/TPOT 变差。**
-
----
 
 ## 1. CPU 工作分布在哪些进程
 
@@ -35,8 +33,6 @@ Worker/ModelRunner
 
 看节点总 CPU 40% 不能排除瓶颈：EngineCore 可能被单核打满，而其他核空闲；容器也可能因 Limit 被 throttled。
 
----
-
 ## 2. Tokenizer 为什么会成为 TTFT 瓶颈
 
 Tokenization 成本受以下因素影响：
@@ -50,7 +46,7 @@ Tokenization 成本受以下因素影响：
 
 超长 JSON 工具 Schema 可能在模型看到 token 之前，先消耗大量解析和模板时间。
 
-### 必须分开的计时
+### 2.1 必须分开的计时 {/* #必须分开的计时 */}
 
 ```text
 request_body_read
@@ -61,8 +57,6 @@ engine_submit
 ```
 
 如果只打一个“preprocess”，无法决定是优化模板、扩 CPU、限制输入还是减少校验开销。
-
----
 
 ## 3. Python 事件循环如何影响流式服务
 
@@ -76,8 +70,6 @@ API Server 通常同时维护很多长连接。以下工作若在事件循环线
 - 复杂 stop string/Detokenization。
 
 观测 event loop lag：定期调度轻量回调，记录计划时间与实际执行时间的差值。Lag P99 上升且 GPU 空洞增大，说明 API/输出 CPU 可能在关键路径。
-
----
 
 ## 4. EngineCore 的单核热点
 
@@ -105,8 +97,6 @@ execute_end
 
 这个间隔应和 GPU Timeline 的空洞对齐。若 CPU Profile 显示某个函数占比高，再进入对应源码验证。
 
----
-
 ## 5. Kubernetes CPU Limit 陷阱
 
 CPU 使用率没有达到节点 100%，容器仍可能被 CFS Throttling：
@@ -128,8 +118,6 @@ CPU 使用率没有达到节点 100%，容器仍可能被 CFS Throttling：
 
 不要只把 Limit 调大就结束调查。还要确认是计算需求真实增加、线程过多，还是不必要的同步日志/高基数指标。
 
----
-
 ## 6. NUMA 与 CPU-GPU 亲和性
 
 多路 CPU 服务器上，GPU 和 NIC 分别连接特定 NUMA Node。若 API/Worker 内存与线程在远端 NUMA：
@@ -149,23 +137,21 @@ nvidia-smi topo -m
 
 结合 Pod CPU Manager、Topology Manager 和进程绑定验证。修改亲和性后，既看 CPU 延迟，也看 GPU 执行间空洞。
 
----
-
 ## 7. 区分 CPU 忙与 CPU 等待
 
-### CPU 真计算
+### 7.1 CPU 真计算 {/* #cpu-真计算 */}
 
 - Profile 中某函数占用 on-CPU 时间；
 - 单核高；
 - 增加核或优化算法可能有效。
 
-### CPU 被锁/IPC/同步阻塞
+### 7.2 CPU 被锁/IPC/同步阻塞 {/* #cpu-被锁ipc同步阻塞 */}
 
 - CPU usage 不高，但 off-CPU 时间长；
 - 线程等待 Queue、Lock、Pipe、CUDA Event；
 - 增加 CPU 核不一定有效。
 
-### CPU 被 Throttle
+### 7.3 CPU 被 Throttle {/* #cpu-被-throttle */}
 
 - 可运行但被 cgroup 暂停；
 - 时间线呈周期性空洞；
@@ -173,23 +159,21 @@ nvidia-smi topo -m
 
 必须同时使用 on-CPU Profile、off-CPU/线程状态和 cgroup 指标。
 
----
-
 ## 8. 一组归因实验
 
-### A：短文本 vs 长文本
+### 8.1 A：短文本 vs 长文本 {/* #a短文本-vs-长文本 */}
 
 固定输出和到达率，只改变原始输入/工具 Schema。若 Engine 前延迟随文本显著增加，进入解析/模板/Tokenizer。
 
-### B：预热 Tokenizer
+### 8.2 B：预热 Tokenizer {/* #b预热-tokenizer */}
 
 区分首次加载、首次模板/JIT/缓存与稳态性能。容量规划不能用冷首请求代表稳态，也不能忽略扩容冷启动。
 
-### C：关闭昂贵输出功能
+### 8.3 C：关闭昂贵输出功能 {/* #c关闭昂贵输出功能 */}
 
 对比 logprobs、grammar、详细 Trace 的开关，只用来定位成本。若关闭后好转，下一步是优化/隔离，而不是永久偷偷移除业务能力。
 
-### D：CPU 配额阶梯
+### 8.4 D：CPU 配额阶梯 {/* #dcpu-配额阶梯 */}
 
 在相同流量下改变 CPU request/limit，观察：
 
@@ -201,8 +185,6 @@ TTFT/TPOT
 ```
 
 只有四者形成一致变化，才支持 CPU 容量结论。
-
----
 
 ## 9. 修复方向及副作用
 
@@ -218,8 +200,6 @@ TTFT/TPOT
 
 优化目标是让 CPU 稳定供应 GPU，同时保留可诊断性，不是把 CPU 指标变成 100%。
 
----
-
 ## 10. 故障检查表
 
 ```text
@@ -234,8 +214,6 @@ TTFT/TPOT
 [ ] NUMA、CPU/GPU/NIC 拓扑
 [ ] 取消、输出积压与大 logprobs
 ```
-
----
 
 ## 11. 验收题
 

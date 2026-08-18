@@ -2,8 +2,8 @@
 title: "MLOps 学习路线"
 sidebar_label: "00. MLOps 学习路线"
 sidebar_position: 0
-tags: [MLOps, MLflow, Model Registry, Evaluation, GitOps, Argo, 学习路线]
 description: "围绕可复现、可追溯、可评测和可回滚，学习实验追踪、模型制品与血缘、评测门禁、Pipeline、GitOps 和渐进式发布。"
+tags: [MLOps, MLflow, Model Registry, Evaluation, GitOps, Argo, 学习路线]
 ---
 
 # MLOps 学习路线

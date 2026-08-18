@@ -1,9 +1,9 @@
 ---
-title: 从 Kafka 到 Flink、Iceberg、Spark 再到 GPU：一条数据的完整路径
+title: "从 Kafka 到 Flink、Iceberg、Spark 再到 GPU：一条数据的完整路径"
 sidebar_label: "01. 从 Kafka 到 Flink、Iceberg、Spark 再到 GPU：一条数据的完整路径"
 sidebar_position: 1
+description: "串联 CDC、Kafka、Flink、Iceberg、对象存储、Spark 和 GPU 数据加载，理解每一跳的数据面、控制面、一致性、性能指标与故障排查。"
 tags: [Kafka, Flink, Iceberg, Spark, GPU, 端到端]
-description: 串联 CDC、Kafka、Flink、Iceberg、对象存储、Spark 和 GPU 数据加载，理解每一跳的数据面、控制面、一致性、性能指标与故障排查。
 ---
 
 # 从 Kafka 到 Flink、Iceberg、Spark 再到 GPU：一条数据的完整路径
@@ -452,7 +452,7 @@ Compaction 常需要同时保留旧文件和新文件，磁盘接近满水位时
 
 ## 16. 分阶段实验：从一台机器走到可演练链路
 
-### 阶段 A：正确性最小闭环
+### 16.1 阶段 A：正确性最小闭环 {/* #阶段-a正确性最小闭环 */}
 
 使用小规模 Kafka、Flink 和表存储环境，生成带 `event_id`、业务 key、事件时间和金额的确定性数据。完成：
 
@@ -464,11 +464,11 @@ Compaction 常需要同时保留旧文件和新文件，磁盘接近满水位时
 
 验收：唯一事件数、金额汇总、最大事件时间、snapshot ID 和 shard checksum 全部一致。
 
-### 阶段 B：性能基线
+### 16.2 阶段 B：性能基线 {/* #阶段-b性能基线 */}
 
 逐步增加数据率，记录每段吞吐、P99 延迟和资源。建立正常基线，不要一开始就追求最大值。对比不同 Kafka partition、Flink 并行度、文件大小、Spark Shuffle partition 和 DataLoader worker 数。
 
-### 阶段 C：故障注入
+### 16.3 阶段 C：故障注入 {/* #阶段-c故障注入 */}
 
 依次执行：
 
@@ -482,33 +482,33 @@ Compaction 常需要同时保留旧文件和新文件，磁盘接近满水位时
 
 每次只注入一种故障，记录时间线：故障开始、检测、自动动作、人工动作、恢复、数据校验。不要在没有隔离的生产环境直接执行破坏实验。
 
-### 阶段 D：跨层争抢
+### 16.4 阶段 D：跨层争抢 {/* #阶段-d跨层争抢 */}
 
 同时运行 Iceberg compaction、Spark 特征作业和多机 GPU 训练，观察存储、网络和调度的资源争抢。通过配额、优先级、错峰、独立网络或限速进行治理，并证明训练 step time 与数据平台 deadline 同时改善。
 
 ## 17. 生产发布检查表
 
-### 数据契约
+### 17.1 数据契约 {/* #数据契约 */}
 
 - event ID、业务 key、时间、时区和 schema version 已定义；
 - 兼容策略、坏数据隔离和回放流程已测试；
 - PII 分类、加密与访问审计已配置。
 
-### 一致性与恢复
+### 17.2 一致性与恢复 {/* #一致性与恢复 */}
 
 - source position、checkpoint、snapshot 和 dataset version 可关联；
 - sink 幂等/事务边界明确，外部副作用单独设计；
 - checkpoint/savepoint、catalog metadata 和训练 manifest 有备份与恢复演练；
 - 去重 TTL 覆盖最大迟到和重放窗口。
 
-### 性能与容量
+### 17.3 性能与容量 {/* #性能与容量 */}
 
 - 峰值输入、复制、Shuffle、compaction、恢复和训练流量均已估算；
 - 文件大小、partition、并行度和 writer 数有基准依据；
 - 磁盘、对象请求、网络、checkpoint 和本地缓存有安全水位；
 - GPU data wait 与 collective time 可拆分观测。
 
-### 运维
+### 17.4 运维 {/* #运维 */}
 
 - 每段都有 SLO、告警和 runbook；
 - Dashboard 能从业务新鲜度下钻到 partition/task/file/node；
@@ -539,7 +539,7 @@ Compaction 常需要同时保留旧文件和新文件，磁盘接近满水位时
 - 为整链路定义新鲜度 SLO、训练吞吐 SLO 和分段延迟预算；
 - 注入任一 worker 故障后，用业务守恒、唯一性与版本链证明恢复正确。
 
-## 继续学习
+## 20. 继续学习 {/* #继续学习 */}
 
 - [大数据技术学习地图](../00-大数据技术学习地图.md)
 - [分区、并行度、Shuffle 与数据倾斜](../foundations/03-分区并行度Shuffle与数据倾斜.md)
@@ -548,7 +548,7 @@ Compaction 常需要同时保留旧文件和新文件，磁盘接近满水位时
 - [AI 工作负载的存储 I/O 模型](../../../storage/ai-workloads/01-AI工作负载的存储IO模型.md)
 - [Kubernetes 分布式训练基础](../../../ai-systems/training/distributed/01-Kubernetes%20分布式训练基础.md)
 
-## 参考资料
+## 21. 参考资料 {/* #参考资料 */}
 
 - [Apache Kafka 文档](https://kafka.apache.org/documentation/)
 - [Apache Flink 稳定版文档](https://nightlies.apache.org/flink/flink-docs-stable/)

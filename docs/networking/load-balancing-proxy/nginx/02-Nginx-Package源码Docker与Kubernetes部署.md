@@ -2,8 +2,8 @@
 title: "Nginx Package、源码、Docker 与 Kubernetes 多种部署"
 sidebar_label: "02. Nginx Package、源码、Docker 与 Kubernetes 多种部署"
 sidebar_position: 2
-tags: [Nginx, 部署, 源码编译, Docker, Kubernetes]
 description: "从 Package/systemd、源码模块、容器到 Kubernetes 网关，讲清 Nginx 配置验证、权限、信号、持久化、验收与回滚。"
+tags: [Nginx, 部署, 源码编译, Docker, Kubernetes]
 ---
 
 # Nginx Package、源码、Docker 与 Kubernetes 多种部署

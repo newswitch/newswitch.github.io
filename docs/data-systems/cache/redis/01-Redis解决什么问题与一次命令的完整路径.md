@@ -2,8 +2,8 @@
 title: "Redis 解决什么问题与一次命令的完整路径"
 sidebar_label: "01. Redis 解决什么问题与一次命令的完整路径"
 sidebar_position: 1
-tags: [Redis, 缓存, RESP, Event Loop, 数据路径]
 description: "从边界、连接、命令执行、内存、过期淘汰、复制与持久化时间点，拆解一条 Redis 命令的完整路径。"
+tags: [Redis, 缓存, RESP, Event Loop, 数据路径]
 ---
 
 # Redis 解决什么问题与一次命令的完整路径

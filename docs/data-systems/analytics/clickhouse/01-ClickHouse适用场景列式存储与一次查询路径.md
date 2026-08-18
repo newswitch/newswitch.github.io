@@ -2,8 +2,8 @@
 title: "ClickHouse 适用场景、列式存储与一次查询路径"
 sidebar_label: "01. ClickHouse 适用场景、列式存储与一次查询路径"
 sidebar_position: 1
-tags: [ClickHouse, OLAP, 列式存储, MergeTree, 查询执行]
 description: "从 OLTP/OLAP 边界、Part 写入、列文件、稀疏索引、向量化 Pipeline 与分布式查询拆解 ClickHouse 数据路径。"
+tags: [ClickHouse, OLAP, 列式存储, MergeTree, 查询执行]
 ---
 
 # ClickHouse 适用场景、列式存储与一次查询路径

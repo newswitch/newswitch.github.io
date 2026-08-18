@@ -2,15 +2,13 @@
 title: "Buffer Pool、脏页、刷盘、Change Buffer 与 Doublewrite"
 sidebar_label: "03. Buffer Pool、脏页、刷盘、Change Buffer 与 Doublewrite"
 sidebar_position: 3
-tags: [MySQL, InnoDB, Buffer Pool, 脏页, Doublewrite]
 description: "理解 InnoDB 缓存、LRU、脏页、Checkpoint 刷盘、Change Buffer 和 Doublewrite 的性能与完整性边界。"
+tags: [MySQL, InnoDB, Buffer Pool, 脏页, Doublewrite]
 ---
 
 # Buffer Pool、脏页、刷盘、Change Buffer 与 Doublewrite
 
 Buffer Pool 把磁盘 Page 缓存在内存，使读写不必每次等待数据文件。性能来自延迟写回，但安全来自 Redo、Checkpoint 与 Doublewrite 的协作。
-
----
 
 ## 1. Page 状态
 
@@ -22,8 +20,6 @@ Pinned/In-use   当前不能随意淘汰
 ```
 
 内存满时不能直接丢弃脏页，必须先安全刷盘。
-
----
 
 ## 2. LRU 不是简单队列
 
@@ -37,8 +33,6 @@ InnoDB 使用经过调整的 LRU，区分新/旧区域，防止一次大扫描�
 - 重启后冷缓存导致延迟尖峰。
 
 需要看 Page Read、Young/Not Young、Eviction Without Access 和业务延迟。
-
----
 
 ## 3. 命中率的误区
 
@@ -57,8 +51,6 @@ InnoDB 使用经过调整的 LRU，区分新/旧区域，防止一次大扫描�
 
 不要仅用 `Buffer Pool Hit Rate < 99%` 做通用告警。
 
----
-
 ## 4. 脏页怎样产生
 
 `INSERT/UPDATE/DELETE` 修改 Buffer Pool Page，Page 标记为 Dirty。提交主要保证必要日志持久化，脏页可稍后写回。
@@ -72,8 +64,6 @@ InnoDB 使用经过调整的 LRU，区分新/旧区域，防止一次大扫描�
 
 若写入持续超过磁盘刷页能力，脏页与 Redo 压力积累，最终前台被节流。
 
----
-
 ## 5. 刷盘触发
 
 刷盘受多种信号驱动：
@@ -85,8 +75,6 @@ InnoDB 使用经过调整的 LRU，区分新/旧区域，防止一次大扫描�
 - 空闲和关闭流程。
 
 小 Redo 容量会迫使更频繁 Checkpoint；盲目把 Redo 设得巨大可能增加异常恢复需要扫描的工作范围。容量要基于写入速率、I/O 和 RTO 压测。
-
----
 
 ## 6. Doublewrite 的写入路径
 
@@ -100,8 +88,6 @@ Dirty Page
 若最终 Page 写到一半发生故障，恢复可从 Doublewrite 找完整副本，再应用 Redo。
 
 它不是把所有数据库保存两份，也不是业务备份。关闭会降低 torn-page 修复能力；仅在理解底层原子写保证和数据风险后评估。
-
----
 
 ## 7. Change Buffer
 
@@ -123,8 +109,6 @@ Dirty Page
 
 MySQL 8.4 的实际默认 `innodb_change_buffering` 应查询目标实例，不照搬旧文章。
 
----
-
 ## 8. 观测
 
 ```sql
@@ -142,8 +126,6 @@ WHERE NAME LIKE '%ibuf%';
 
 `INNODB_BUFFER_PAGE` 等逐页视图可能很重，优先在测试实例使用。
 
----
-
 ## 9. Buffer Pool 大小
 
 专用数据库常把较大内存分给 Buffer Pool，但不能机械使用某个百分比。预留：
@@ -157,15 +139,11 @@ WHERE NAME LIKE '%ibuf%';
 
 Swap 或 OOM Kill 往往比小一点 Buffer Pool 更糟。
 
----
-
 ## 10. 冷启动
 
 重启后数据页需要重新进入内存，表现为物理读和延迟上升。可保存/恢复 Buffer Pool 热点信息、执行受控预热或渐进导流，但都不能替代容量余量。
 
 扩容、故障切换和发布的容量模型要包含冷缓存状态。
-
----
 
 ## 11. 调优实验
 
@@ -192,7 +170,7 @@ Swap 或 OOM Kill 往往比小一点 Buffer Pool 更糟。
 
 下一篇连接事务的三类日志：Redo、Undo 与 Binlog。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [Buffer Pool](https://dev.mysql.com/doc/refman/8.4/en/innodb-buffer-pool.html)
 - [Change Buffer](https://dev.mysql.com/doc/refman/8.4/en/innodb-change-buffer.html)

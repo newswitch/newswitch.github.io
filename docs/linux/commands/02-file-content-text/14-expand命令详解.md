@@ -1,11 +1,12 @@
 ---
-title: expand 命令详解：按制表位把 TAB 转为空格
+title: "expand 命令详解：按制表位把 TAB 转为空格"
+sidebar_label: "14. expand 命令详解：按制表位把 TAB 转为空格"
 sidebar_position: 14
-description: 完整讲解 GNU coreutils expand 的全部参数、默认与自定义制表位、初始 TAB、绝对和相对重复规则、退格与显示列、编码边界和代码格式风险。
+description: "完整讲解 GNU coreutils expand 的全部参数、默认与自定义制表位、初始 TAB、绝对和相对重复规则、退格与显示列、编码边界和代码格式风险。"
 tags: [Linux, expand, GNU coreutils, TAB, 文本格式]
 ---
 
-# `expand` 命令详解：按制表位把 TAB 转为空格
+# expand 命令详解：按制表位把 TAB 转为空格
 
 `expand` 把 TAB 转换成足够数量的空格，使后续文本到达相同制表位。它不是简单把每个 TAB 替换成固定 8 个空格：展开数量取决于 TAB 出现时的当前显示列。
 
@@ -172,7 +173,7 @@ expand -i -t 4 -- legacy.txt > normalized.txt
 - 能说明 `-i`、控制字符、宽字符和代码语义边界。
 - 能把转换限定为可审阅、可测试的输出流程。
 
-## 官方参考
+## 12. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：expand invocation](https://www.gnu.org/software/coreutils/manual/html_node/expand-invocation.html)
 - [POSIX expand](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/expand.html)
@@ -180,4 +181,3 @@ expand -i -t 4 -- legacy.txt > normalized.txt
 上一篇：[`tr` 命令详解](./13-tr命令详解.md)
 
 下一篇：[`unexpand` 命令详解](./15-unexpand命令详解.md)
-

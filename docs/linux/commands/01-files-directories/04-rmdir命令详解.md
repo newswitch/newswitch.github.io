@@ -1,11 +1,12 @@
 ---
-title: rmdir 命令详解：安全删除空目录与父目录链
+title: "rmdir 命令详解：安全删除空目录与父目录链"
+sidebar_label: "04. rmdir 命令详解：安全删除空目录与父目录链"
 sidebar_position: 4
-description: 完整讲解 GNU coreutils rmdir 的全部长短参数、空目录判断、parents 行为、忽略非空失败、退出状态和生产安全边界。
+description: "完整讲解 GNU coreutils rmdir 的全部长短参数、空目录判断、parents 行为、忽略非空失败、退出状态和生产安全边界。"
 tags: [Linux, rmdir, GNU coreutils, 文件系统, 删除目录]
 ---
 
-# `rmdir` 命令详解：安全删除空目录与父目录链
+# rmdir 命令详解：安全删除空目录与父目录链
 
 `rmdir` 只删除空目录。与 `rm -r` 相比，它把“目录必须为空”作为安全条件，因此很适合清理已经确认没有内容的目录结构。但 `-p` 会沿父路径继续删除，仍然需要谨慎。
 
@@ -244,11 +245,10 @@ fuser -vm /path/to/target
 - 能区分目录、符号链接与挂载点。
 - 能解释为什么删除权限取决于父目录。
 
-## 官方参考
+## 13. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：rmdir invocation](https://www.gnu.org/software/coreutils/manual/html_node/rmdir-invocation.html)
 
 上一篇：[`mkdir` 命令详解](./03-mkdir命令详解.md)
 
 下一篇：[`touch` 命令详解](./05-touch命令详解.md)
-

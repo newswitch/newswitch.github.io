@@ -1,11 +1,12 @@
 ---
-title: systemd-run 命令详解：瞬态 service、scope、timer 与资源约束
+title: "systemd-run 命令详解：瞬态 service、scope、timer 与资源约束"
+sidebar_label: "04. systemd-run 命令详解：瞬态 service、scope、timer 与资源约束"
 sidebar_position: 4
-description: 完整讲解 systemd-run 的全部参数，掌握 transient service/scope/timer、TTY、环境变量、资源限制、等待语义、变量展开和现场清理。
+description: "完整讲解 systemd-run 的全部参数，掌握 transient service/scope/timer、TTY、环境变量、资源限制、等待语义、变量展开和现场清理。"
 tags: [Linux, systemd-run, transient unit, timer, cgroup, 资源限制]
 ---
 
-# `systemd-run` 命令详解：瞬态 service、scope、timer 与资源约束
+# systemd-run 命令详解：瞬态 service、scope、timer 与资源约束
 
 `systemd-run` 让 manager 创建不必先写 unit file 的瞬态 unit。它比 `nohup cmd &` 多了 cgroup、日志、生命周期、资源属性和查询能力，但也更容易因 manager/shell 两层变量展开而产生误解。
 
@@ -76,7 +77,7 @@ systemd-run --unit=batch-demo --wait --collect \
 
 service 默认不是登录 shell，不保证继承当前 shell 的 PATH、cwd、umask 和所有环境。敏感值通过命令行/环境可能出现在属性、日志或审计中；优先 credentials 等专用机制。
 
-### 两次展开陷阱
+### 4.1 两次展开陷阱 {/* #两次展开陷阱 */}
 
 ```bash
 systemd-run -E GREETING=hello /usr/bin/echo '${GREETING}'
@@ -160,7 +161,7 @@ systemctl reset-failed demo.service
 
 掌握标准：能解释 service/scope 的父子和生命周期差异，列出全部参数，控制 shell/manager 两层展开，用 cgroup 属性设置资源边界，并可靠取得业务退出结果和清理现场。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [systemd-run(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd-run.html)
 - [systemd-run transient settings](https://www.freedesktop.org/software/systemd/man/latest/systemd-run.html#Properties)

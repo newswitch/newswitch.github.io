@@ -1,5 +1,6 @@
 ---
 title: "Grafana Loki logcli 命令详解"
+sidebar_label: "03. Grafana Loki logcli 命令详解"
 sidebar_position: 3
 description: "使用 logcli 进行LogQL查询、标签与Series分析、时间窗日志导出、并行下载、Volume估算和本地日志复现。"
 tags: [Loki, logcli, LogQL, 日志, 故障排查]
@@ -118,11 +119,11 @@ cat app.log | logcli --stdin query '| json | level="error"'
 | JSON解析失败 | 日志非纯JSON、多行、前缀；先输出raw观察 |
 | 高基数爆炸 | `series --analyze-labels`，调整采集标签而非仅改查询 |
 
-## 掌握标准
+## 10. 掌握标准 {/* #掌握标准 */}
 
 能写有界流选择器；能按UTC时间窗导出并校验日志；能发现高基数标签；能评估大查询成本；能保护多租户凭据和敏感日志。
 
-## 官方资料
+## 11. 官方资料 {/* #官方资料 */}
 
 - [LogCLI getting started](https://grafana.com/docs/loki/latest/query/logcli/getting-started/)
 - [LogQL reference](https://grafana.com/docs/loki/latest/query/)

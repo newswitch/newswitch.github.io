@@ -1,11 +1,12 @@
 ---
-title: fsck 命令详解：文件系统检查前端、离线修复与安全边界
+title: "fsck 命令详解：文件系统检查前端、离线修复与安全边界"
+sidebar_label: "08. fsck 命令详解：文件系统检查前端、离线修复与安全边界"
 sidebar_position: 8
-description: 讲解 fsck 前端如何调用 fsck.type、fstab pass、并行检查、参数、退出码、已挂载文件系统风险，以及 ext4、XFS 和根文件系统恢复流程。
+description: "讲解 fsck 前端如何调用 fsck.type、fstab pass、并行检查、参数、退出码、已挂载文件系统风险，以及 ext4、XFS 和根文件系统恢复流程。"
 tags: [Linux, fsck, 文件系统, ext4, XFS, util-linux]
 ---
 
-# `fsck` 命令详解：文件系统检查前端、离线修复与安全边界
+# fsck 命令详解：文件系统检查前端、离线修复与安全边界
 
 `fsck` 是前端调度器，不是通用修复算法。它根据文件系统类型调用 `/sbin/fsck.TYPE`，例如 `fsck.ext4`。XFS 通常由 `xfs_repair` 处理，Btrfs/ZFS 也有独立工具和完全不同的恢复语义。
 

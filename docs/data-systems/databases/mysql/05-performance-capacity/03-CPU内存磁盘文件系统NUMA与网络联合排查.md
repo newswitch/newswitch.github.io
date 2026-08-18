@@ -2,8 +2,8 @@
 title: "CPU、内存、磁盘、文件系统、NUMA 与网络联合排查"
 sidebar_label: "03. CPU、内存、磁盘、文件系统、NUMA 与网络联合排查"
 sidebar_position: 3
-tags: [MySQL, Linux, CPU, IO, NUMA, 网络]
 description: "把 MySQL 内部等待与 Linux CPU、内存、磁盘、文件系统、NUMA 和网络证据对齐，避免单指标调优。"
+tags: [MySQL, Linux, CPU, IO, NUMA, 网络]
 ---
 
 # CPU、内存、磁盘、文件系统、NUMA 与网络联合排查
@@ -132,7 +132,7 @@ ip -s link
 
 在隔离环境分别制造 CPU 密集查询、冷缓存大扫描、fsync 延迟、行锁等待和网络延迟。为每种故障记录 MySQL 与 OS 的不同指纹，形成自己的证据手册。
 
-## 参考资料
+## 10. 参考资料 {/* #参考资料 */}
 
 - [MySQL Server Status Variables](https://dev.mysql.com/doc/refman/8.4/en/server-status-variables.html)
 - [Performance Schema Wait Tables](https://dev.mysql.com/doc/refman/8.4/en/performance-schema-wait-tables.html)

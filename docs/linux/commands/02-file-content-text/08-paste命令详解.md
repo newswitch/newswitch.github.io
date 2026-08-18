@@ -1,11 +1,12 @@
 ---
-title: paste 命令详解：按列或串行合并记录
+title: "paste 命令详解：按列或串行合并记录"
+sidebar_label: "08. paste 命令详解：按列或串行合并记录"
 sidebar_position: 8
-description: 完整讲解 GNU coreutils paste 的全部参数、并行与串行模式、循环分隔符、转义、标准输入复用、NUL 记录、不等长输入和表格数据边界。
+description: "完整讲解 GNU coreutils paste 的全部参数、并行与串行模式、循环分隔符、转义、标准输入复用、NUL 记录、不等长输入和表格数据边界。"
 tags: [Linux, paste, GNU coreutils, 字段合并, NUL]
 ---
 
-# `paste` 命令详解：按列或串行合并记录
+# paste 命令详解：按列或串行合并记录
 
 `paste` 把多个输入中相同序号的记录横向合并，或在 `-s` 下把每个文件的记录串成一行。它按位置连接，不按 key 关联；需要数据库式 join 时使用 `join`、awk、数据库或数据处理框架。
 
@@ -232,7 +233,7 @@ paste -d $'\t' timestamps cpu_usage gpu_usage
 - 能区分空分隔符与 NUL 记录。
 - 能识别按位置连接的前提，并在按 key 场景选择正确工具。
 
-## 官方参考
+## 15. 官方参考 {/* #官方参考 */}
 
 - [GNU coreutils 9.11：paste invocation](https://www.gnu.org/software/coreutils/manual/html_node/paste-invocation.html)
 - [POSIX paste](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/paste.html)

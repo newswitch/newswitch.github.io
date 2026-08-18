@@ -1,11 +1,12 @@
 ---
-title: setcap 命令详解：为可执行文件授予最小 Linux capability
+title: "setcap 命令详解：为可执行文件授予最小 Linux capability"
+sidebar_label: "14. setcap 命令详解：为可执行文件授予最小 Linux capability"
 sidebar_position: 14
-description: 完整讲解 setcap 的 -q/-v/-n/-f、设置/验证/删除/标准输入语法、capability 文本、exec 转换、部署丢失、风险评审与回滚。
+description: "完整讲解 setcap 的 -q/-v/-n/-f、设置/验证/删除/标准输入语法、capability 文本、exec 转换、部署丢失、风险评审与回滚。"
 tags: [Linux, setcap, capabilities, xattr, 最小权限]
 ---
 
-# `setcap` 命令详解：为可执行文件授予最小 Linux capability
+# setcap 命令详解：为可执行文件授予最小 Linux capability
 
 `setcap` 设置、验证或移除文件的 `security.capability` 扩展属性。它可以把传统 root 权限拆成更小单元，但能力会授予**任何能执行该文件且满足 exec 条件的调用者**；给错误二进制或过强能力会形成稳定提权入口。
 
@@ -124,7 +125,7 @@ getcap -v /usr/local/bin/web
 
 掌握标准：能列出全部选项和特殊操作数；能解释 file `e/i/p` 与进程集合；能定位“设置成功但不生效”；能评审高危能力并完成可验证、可回滚的部署。
 
-## 官方参考
+## 10. 官方参考 {/* #官方参考 */}
 
 - [setcap(8)](https://manpages.debian.org/unstable/libcap2-bin/setcap.8.en.html)
 - [cap_text_formats(7)](https://manpages.debian.org/unstable/libcap2-dev/cap_text_formats.7.en.html)

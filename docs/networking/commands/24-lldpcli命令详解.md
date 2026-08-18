@@ -1,11 +1,12 @@
 ---
-title: lldpcli 命令详解：LLDP 邻居、交换机端口与二层拓扑排查
+title: "lldpcli 命令详解：LLDP 邻居、交换机端口与二层拓扑排查"
+sidebar_label: "24. lldpcli 命令详解：LLDP 邻居、交换机端口与二层拓扑排查"
 sidebar_position: 24
-description: 以 lldpd 1.0.21 为基线，系统讲解 lldpcli 的守护进程模型、全部全局参数、邻居与接口查询、输出格式、统计、事件监听、LLDP TLV、发送策略、持久配置，以及 Bond、VLAN、AI 集群布线和无邻居故障排查。
+description: "以 lldpd 1.0.21 为基线，系统讲解 lldpcli 的守护进程模型、全部全局参数、邻居与接口查询、输出格式、统计、事件监听、LLDP TLV、发送策略、持久配置，以及 Bond、VLAN、AI 集群布线和无邻居故障排查。"
 tags: [Linux, lldpcli, lldpd, LLDP, 数据中心网络, 二层拓扑]
 ---
 
-# `lldpcli` 命令详解：LLDP 邻居、交换机端口与二层拓扑排查
+# lldpcli 命令详解：LLDP 邻居、交换机端口与二层拓扑排查
 
 `lldpcli` 是 `lldpd` 的控制客户端。它最重要的用途，是回答服务器二层接入中的三个问题：
 
@@ -668,7 +669,7 @@ Leaf / switch port / rail / failure domain
 
 ## 17. “没有 LLDP 邻居”的分层排查
 
-### 第 1 步：确认客户端和 daemon
+### 17.1 第 1 步：确认客户端和 daemon {/* #第-1-步确认客户端和-daemon */}
 
 ```bash
 lldpcli -v
@@ -678,7 +679,7 @@ lldpcli show configuration
 
 如果 socket 连接失败，先查 daemon、socket 路径和权限，不要直接归因于交换机。
 
-### 第 2 步：确认接口存在且有物理链路
+### 17.2 第 2 步：确认接口存在且有物理链路 {/* #第-2-步确认接口存在且有物理链路 */}
 
 ```bash
 ip -br link show eth0
@@ -688,7 +689,7 @@ lldpcli show interfaces ports eth0 details
 
 检查 interface pattern、端口 agent status、carrier 和正确接口名。
 
-### 第 3 步：直接抓 LLDP 帧
+### 17.3 第 3 步：直接抓 LLDP 帧 {/* #第-3-步直接抓-lldp-帧 */}
 
 ```bash
 tcpdump -i eth0 -nn -e -vv -c 20 'ether proto 0x88cc'
@@ -701,7 +702,7 @@ tcpdump -i eth0 -nn -e -vv -c 20 'ether proto 0x88cc'
 | 只有对端发 | 查 lldpd 发送状态和 interface pattern；接收本身可能正常 |
 | 完全没有 | 查抓包接口、daemon、链路、Bond/Bridge 层次和 LLDP 所有者 |
 
-### 第 4 步：显示被隐藏邻居和统计
+### 17.4 第 4 步：显示被隐藏邻居和统计 {/* #第-4-步显示被隐藏邻居和统计 */}
 
 ```bash
 lldpcli show neighbors hidden details
@@ -711,7 +712,7 @@ journalctl -u lldpd --since '-15 min' --no-pager
 
 smart filtering 可能隐藏某些冗余或兼容协议邻居。`hidden` 有记录时，重点查过滤策略，不要误判“没收包”。
 
-### 第 5 步：核对交换机与中间层
+### 17.5 第 5 步：核对交换机与中间层 {/* #第-5-步核对交换机与中间层 */}
 
 由网络侧确认：
 
@@ -721,7 +722,7 @@ smart filtering 可能隐藏某些冗余或兼容协议邻居。`hidden` 有记�
 - MLAG/LAG 成员和实际线缆是否一致；
 - 交换机看到的源 MAC/port ID 是否符合预期。
 
-### 第 6 步：最小变更验证
+### 17.6 第 6 步：最小变更验证 {/* #第-6-步最小变更验证 */}
 
 只有在证据指向本机发送状态且变更获批时，才执行：
 
@@ -735,31 +736,31 @@ lldpcli watch limit 10
 
 ## 18. 常见误区
 
-### 误区 1：LLDP 能发现整条网络路径
+### 18.1 误区 1：LLDP 能发现整条网络路径 {/* #误区-1lldp-能发现整条网络路径 */}
 
 LLDP 只发现直连链路邻居。跨三层路径用路由和逐跳工具验证。
 
-### 误区 2：看不到邻居就是线缆坏了
+### 18.2 误区 2：看不到邻居就是线缆坏了 {/* #误区-2看不到邻居就是线缆坏了 */}
 
 daemon、socket 权限、interface pattern、rx/tx 方向、交换机配置、smart filter 都可能造成相同现象。
 
-### 误区 3：`nmcli`、`networkctl`、`lldpcli` 的邻居应该完全一致
+### 18.3 误区 3：`nmcli`、`networkctl`、`lldpcli` 的邻居应该完全一致 {/* #误区-3nmclinetworkctllldpcli-的邻居应该完全一致 */}
 
 它们可能由不同 agent、不同接口选择和不同缓存周期产生，必须先确认配置所有权。
 
-### 误区 4：LLDP 中的 VLAN 就是交换机完整配置
+### 18.4 误区 4：LLDP 中的 VLAN 就是交换机完整配置 {/* #误区-4lldp-中的-vlan-就是交换机完整配置 */}
 
 LLDP 只显示对端愿意宣告且本机能够解析的 TLV，不能替代交换机 running configuration。
 
-### 误区 5：用 system name 作为唯一资产键
+### 18.5 误区 5：用 system name 作为唯一资产键 {/* #误区-5用-system-name-作为唯一资产键 */}
 
 system name 可以重复或被修改。至少组合 chassis ID、port ID、management IP、MAC、交换机侧接口和 CMDB 信息。
 
-### 误区 6：脚本解析 `plain` 对齐文本
+### 18.6 误区 6：脚本解析 `plain` 对齐文本 {/* #误区-6脚本解析-plain-对齐文本 */}
 
 不同版本、字段长度和本地化会破坏脚本。使用 `json0`/`keyvalue`，容忍可选字段和未知字段。
 
-### 误区 7：为了立即看到邻居而高频发送
+### 18.7 误区 7：为了立即看到邻居而高频发送 {/* #误区-7为了立即看到邻居而高频发送 */}
 
 过短 interval 会扩大整个集群的控制报文与事件量。正常刷新使用 `update`，周期设计要考虑节点规模和拓扑系统处理能力。
 
