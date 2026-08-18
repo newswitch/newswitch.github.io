@@ -25,7 +25,7 @@ tags: [Linux, 命令参考, GNU coreutils, SRE, 学习路线]
 | sysstat | `iostat`、`mpstat`、`pidstat`、`sar` | 性能与历史指标 |
 | 专用基础工具 | `strace`、`perf`、`tcpdump`、`ethtool` | 深度诊断 |
 
-本系列收录主流 GNU/Linux 服务器中用于日常管理、自动化和 SRE 排障的命令。`kubectl`、`nvidia-smi`、`ceph`、Kafka CLI 等产品专用命令仍放在各自技术模块中，避免边界混乱。目前可直接进入[Kubernetes 与容器命令参考库](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)、[GPU 与加速器命令参考库](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)、[网络命令参考库](../networking/commands/00-网络命令参考库学习路线.md)、[存储命令参考库](../storage/commands/00-存储命令参考库学习路线.md)和[包含 10 篇命令与实验手册的大数据学习地图](../data-systems/big-data/00-大数据技术学习地图.md)。
+本系列收录主流 GNU/Linux 服务器中用于日常管理、自动化和 SRE 排障的命令。`kubectl`、`nvidia-smi`、`ceph`、Kafka CLI 等产品专用命令仍放在各自技术模块中，避免边界混乱。相关入口包括 [Kubernetes 与容器命令参考库](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)、[GPU 与加速器命令参考库](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)、[网络命令参考库](../networking/commands/00-网络命令参考库学习路线.md)、[存储命令参考库](../storage/commands/00-存储命令参考库学习路线.md)和[大数据学习地图](../data-systems/big-data/00-大数据技术学习地图.md)。
 
 ## 2. 版本与实现约定
 
@@ -40,7 +40,7 @@ tags: [Linux, 命令参考, GNU coreutils, SRE, 学习路线]
 如何确认实际执行的是哪个实现
 ```
 
-coreutils 命令以 **GNU coreutils 9.11** 官方手册为文档基线，`find` 以 **GNU findutils 4.10.0** 为基线，`file` 以 **file 5.46** 手册为基线。本轮账户工具以 **shadow-utils 4.19** 上游手册为基线，身份切换以当前 **util-linux** 手册为基线，提权工具以 **Sudo 1.9.18** 手册为基线；ACL 工具以 2026 年 5 月获取的上游手册为基线。CPU、内存与负载批次以 **procps-ng 4.0.6**、**util-linux 2.42.2**、**sysstat 12.7.9**、**GNU Time 1.10** 和 **Bash 5.3** 为文档基线。systemd 服务、启动与日志批次以 **systemd 260.2** 上游手册源码为完整接口基线。安全批次以 **SELinux userspace 3.11**、**AppArmor 5.0.2**、**libcap 2.78** 与 **Linux Audit userspace 4.1.x** 的上游接口和当前手册为基线。内核与硬件批次以当前 **kmod**、**pciutils 3.15.0**、**dmidecode 3.7**、**numactl**、**util-linux IRQ 工具**、**systemd-udev** 与 **hwloc 2.14** 上游接口为基线。正文会标出老发行版可能缺少的新接口；你的服务器也可能带发行版补丁，因此执行前仍要检查：
+coreutils 命令以 **GNU coreutils 9.11** 官方手册为文档基线，`find` 以 **GNU findutils 4.10.0** 为基线，`file` 以 **file 5.46** 手册为基线。账户工具以 **shadow-utils 4.19** 为基线，身份切换使用当前 **util-linux** 手册，提权工具以 **Sudo 1.9.18** 为基线，ACL 工具以 2026 年 5 月获取的上游手册为基线。CPU、内存与负载工具以 **procps-ng 4.0.6**、**util-linux 2.42.2**、**sysstat 12.7.9**、**GNU Time 1.10** 和 **Bash 5.3** 为基线；systemd 服务、启动与日志工具以 **systemd 260.2** 为基线；安全工具以 **SELinux userspace 3.11**、**AppArmor 5.0.2**、**libcap 2.78** 与 **Linux Audit userspace 4.1.x** 为基线；内核与硬件工具以当前 **kmod**、**pciutils 3.15.0**、**dmidecode 3.7**、**numactl**、**util-linux IRQ 工具**、**systemd-udev** 与 **hwloc 2.14** 为基线。发行版可能缺少新接口或包含下游补丁，因此执行前仍要检查：
 
 ```bash
 type -a <command>
@@ -95,7 +95,7 @@ flowchart LR
     L --> M["性能分析与故障诊断"]
 ```
 
-生产 SRE 核心库 v1 已按以下分类全部完成：
+生产 SRE 核心命令按以下领域分类：
 
 1. 命令行、Shell 与帮助系统。
 2. 文件与目录。
@@ -112,11 +112,11 @@ flowchart LR
 13. strace、perf、eBPF 等深度性能和故障诊断工具。
 14. Shell 脚本和安全自动化。
 
-v1 共包含 **203 篇核心技术文章、11 篇分类导读和本学习路线**。这里的“完成”指上述有限、可验收的核心范围已经闭环，不表示 Linux 生态中所有可安装命令都已收录；策略工程、发行版专用工具和低频专用命令按实际学习需求进入后续扩展版。
+收录范围聚焦主流服务器的核心管理和排障命令，不代表 Linux 生态中所有可安装命令。策略工程、发行版专用工具和低频专用命令应根据实际环境扩展学习。
 
-## 6. 已完成：文件与目录
+## 6. 文件与目录
 
-本分类完成二十四篇核心文章，补齐目录观察、创建、复制、移动、删除、链接、路径规范化、遍历查找、文件部署、类型识别、归档、压缩、完整性校验和增量同步闭环：
+本分类覆盖目录观察、创建、复制、移动、删除、链接、路径规范化、遍历查找、文件部署、类型识别、归档、压缩、完整性校验和增量同步：
 
 1. [`pwd`：显示当前工作目录](./commands/01-files-directories/01-pwd命令详解.md)
 2. [`ls`：列出目录内容和文件元数据](./commands/01-files-directories/02-ls命令详解.md)
@@ -143,9 +143,9 @@ v1 共包含 **203 篇核心技术文章、11 篇分类导读和本学习路线*
 23. [`sha256sum`：生成、严格校验与信任边界](./commands/01-files-directories/23-sha256sum命令详解.md)
 24. [`rsync`：增量同步、过滤、删除与恢复](./commands/01-files-directories/24-rsync命令详解.md)
 
-## 7. 已完成：文件内容与文本处理
+## 7. 文件内容与文本处理
 
-本分类完成二十六篇核心文章：
+本分类覆盖以下文件内容与文本处理命令：
 
 1. [`cat`：连接文件、显示控制字符与流式复制](./commands/02-file-content-text/01-cat命令详解.md)
 2. [`tac`：按记录逆序输出文件](./commands/02-file-content-text/02-tac命令详解.md)
@@ -174,11 +174,11 @@ v1 共包含 **203 篇核心技术文章、11 篇分类导读和本学习路线*
 25. [`awk/gawk`：记录、字段、数组与安全变量传递](./commands/02-file-content-text/25-awk命令详解.md)
 26. [`jq`：JSON 流、Filter、变量与退出状态](./commands/02-file-content-text/26-jq命令详解.md)
 
-本分类已经建立“字节流 → 字符编码 → 记录边界 → 字段选择 → 排序/集合连接 → 字符与显示转换 → 切分/二进制观察 → 正则流编辑 → 字段聚合 → JSON 结构化查询”的完整闭环。
+学习路径为“字节流 → 字符编码 → 记录边界 → 字段选择 → 排序/集合连接 → 字符与显示转换 → 切分/二进制观察 → 正则流编辑 → 字段聚合 → JSON 结构化查询”。
 
-## 8. 已完成：用户、用户组与权限批次
+## 8. 用户、用户组与权限
 
-本分类完成二十二个独立命令页面，并建立“身份解析 → 账户生命周期 → 身份切换与授权 → mode/owner/group → 创建掩码 → ACL”的闭环：
+本分类按照“身份解析 → 账户生命周期 → 身份切换与授权 → mode/owner/group → 创建掩码 → ACL”的路径组织：
 
 1. [`id`：UID、GID、补充组与安全上下文](./commands/03-users-permissions/01-id命令详解.md)
 2. [`whoami`：当前有效用户与脚本身份判断](./commands/03-users-permissions/02-whoami命令详解.md)
@@ -203,11 +203,11 @@ v1 共包含 **203 篇核心技术文章、11 篇分类导读和本学习路线*
 21. [`getfacl`：访问 ACL、默认 ACL 与有效权限](./commands/03-users-permissions/21-getfacl命令详解.md)
 22. [`setfacl`：修改、继承、备份与恢复 POSIX ACL](./commands/03-users-permissions/22-setfacl命令详解.md)
 
-本批有意把传统 DAC/POSIX ACL 与 SELinux、AppArmor、Linux capabilities 分层：前者已经完成；LSM、安全上下文变更和 capability 管理将在后续安全模块独立展开。
+传统 DAC/POSIX ACL 与 SELinux、AppArmor、Linux capabilities 分层学习：前者描述文件所有权、mode 与 ACL，后者描述 LSM、安全上下文和 capability 边界。
 
-## 9. 已完成：进程、线程、作业控制与信号批次
+## 9. 进程、线程、作业控制与信号
 
-本分类完成十九个独立命令页面，并建立“进程快照与选择 → 父子/线程/进程组/session → Shell 作业表 → 信号与等待 → niceness → SIGHUP/session/期限”的闭环：
+本分类按照“进程快照与选择 → 父子/线程/进程组/session → Shell 作业表 → 信号与等待 → niceness → SIGHUP/session/期限”的路径组织：
 
 1. [`ps`：进程选择、线程、状态与自定义字段](./commands/04-processes-signals/01-ps命令详解.md)
 2. [`pgrep`：按名称、身份、状态与 namespace 精确找进程](./commands/04-processes-signals/02-pgrep命令详解.md)
@@ -231,9 +231,9 @@ v1 共包含 **203 篇核心技术文章、11 篇分类导读和本学习路线*
 
 CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 节的 CPU 拓扑与调度模块完成，systemd 服务生命周期已经进入第 11 节。跨模块的[Kubernetes 与容器命令参考库](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)、[网络命令参考库](../networking/commands/00-网络命令参考库学习路线.md)、[存储命令参考库](../storage/commands/00-存储命令参考库学习路线.md)、[大数据学习地图](../data-systems/big-data/00-大数据技术学习地图.md)和[GPU 与加速器命令参考库](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)继续直接复用。
 
-## 10. 已完成：CPU、内存、负载与 procfs 批次
+## 10. CPU、内存、负载与 procfs
 
-本分类完成十五个独立命令页面，并建立“资源容量与拓扑 → 全局利用率、队列和压力 → PID/TID 消费者 → 进程映射与内核 slab → RLIMIT/sysctl 约束 → sar 历史回放”的闭环：
+本分类按照“资源容量与拓扑 → 全局利用率、队列和压力 → PID/TID 消费者 → 进程映射与内核 slab → RLIMIT/sysctl 约束 → sar 历史回放”的路径组织：
 
 1. [`uptime`：运行时间、负载平均与容器时间边界](./commands/05-cpu-memory-load-proc/01-uptime命令详解.md)
 2. [`nproc`：可用 CPU、affinity、cgroup 配额与并行度](./commands/05-cpu-memory-load-proc/02-nproc命令详解.md)
@@ -251,11 +251,11 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 14. [`ulimit`：Bash 资源限制、soft/hard 与继承](./commands/05-cpu-memory-load-proc/14-ulimit命令详解.md)
 15. [`sysctl`：运行时内核参数、加载顺序与安全变更](./commands/05-cpu-memory-load-proc/15-sysctl命令详解.md)
 
-本分类复用存储专栏已有的 [`iostat`](../storage/commands/09-iostat命令详解.md)；`numastat/taskset/chrt` 已在第 13 节完成，`perf/strace/eBPF` 已在第 16 节完成。
+磁盘性能分析使用存储专题中的 [`iostat`](../storage/commands/09-iostat命令详解.md)；`numastat/taskset/chrt` 见第 13 节，`perf/strace/eBPF` 见第 16 节。
 
-## 11. 已完成：systemd 服务、启动过程与日志批次
+## 11. systemd 服务、启动过程与日志
 
-本分类完成十二个独立命令页面，并建立“PID 1 与 unit → job/transaction → service cgroup → journal 证据 → 启动关键路径 → 登录会话与 core dump → 配置覆盖 → readiness/watchdog → 关机抑制 → UEFI 引导”的闭环：
+本分类按照“PID 1 与 unit → job/transaction → service cgroup → journal 证据 → 启动关键路径 → 登录会话与 core dump → 配置覆盖 → readiness/watchdog → 关机抑制 → UEFI 引导”的路径组织：
 
 1. [`systemctl`：unit 生命周期、依赖事务与开机状态](./commands/06-systemd-services-boot-journal/01-systemctl命令详解.md)
 2. [`journalctl`：结构化日志、启动时间线与证据保全](./commands/06-systemd-services-boot-journal/02-journalctl命令详解.md)
@@ -272,9 +272,9 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 
 [`systemd 服务、启动与日志命令导读`](./commands/06-systemd-services-boot-journal/00-systemd服务启动与日志命令导读.md)负责串联对象模型、配置层级、日志字段和标准排障顺序。`machinectl` 与 cgroup 查看工具已在第 15 节完成；systemd-networkd 和 resolved 的专用命令归入网络模块。
 
-## 12. 已完成：LSM、capabilities 与 Audit 批次
+## 12. LSM、capabilities 与 Audit
 
-本分类完成十九个独立命令页面，并建立“识别实际 LSM → 核对 SELinux/AppArmor 策略与附着 → 分析 file/process capability → 设计和持久化 Audit 规则 → 按 serial 组装事件 → 报表发现热点并下钻原始证据”的闭环：
+本分类按照“识别实际 LSM → 核对 SELinux/AppArmor 策略与附着 → 分析 file/process capability → 设计和持久化 Audit 规则 → 按 serial 组装事件 → 报表发现热点并下钻原始证据”的路径组织：
 
 1. [`getenforce`：读取 SELinux 当前 enforcement 模式](./commands/07-lsm-capabilities-audit/01-getenforce命令详解.md)
 2. [`sestatus`：核对 SELinux 模式、策略与配置](./commands/07-lsm-capabilities-audit/02-sestatus命令详解.md)
@@ -296,11 +296,11 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 18. [`ausearch`：按完整事件检索 Audit 证据](./commands/07-lsm-capabilities-audit/18-ausearch命令详解.md)
 19. [`aureport`：把 Audit 事件汇总成安全报表](./commands/07-lsm-capabilities-audit/19-aureport命令详解.md)
 
-[`LSM、capabilities 与审计命令导读`](./commands/07-lsm-capabilities-audit/00-LSM-capabilities与审计命令导读.md)负责串联 DAC/ACL、capability、LSM、namespace/seccomp 和 Audit 的边界。`audit2why/audit2allow`、`seinfo/sesearch` 与 `aa-logprof` 暂不作为基础命令页：它们属于策略工程，后续会和策略阅读、最小授权评审及回归测试一起写，避免形成“从日志自动放行”的错误习惯。内核与硬件批次已经进入下一节。
+[`LSM、capabilities 与审计命令导读`](./commands/07-lsm-capabilities-audit/00-LSM-capabilities与审计命令导读.md)负责串联 DAC/ACL、capability、LSM、namespace/seccomp 和 Audit 的边界。`audit2why/audit2allow`、`seinfo/sesearch` 与 `aa-logprof` 属于策略工程，必须结合策略阅读、最小授权评审和回归测试使用，不能把日志直接转换成放行规则。内核与硬件命令见下一节。
 
-## 13. 已完成：内核、模块、PCIe、NUMA、IRQ 与硬件拓扑批次
+## 13. 内核、模块、PCIe、NUMA、IRQ 与硬件拓扑
 
-本分类完成二十个独立命令页面，并建立“固定运行内核 → 保存 kernel log → 解析模块文件、索引、加载状态与设备绑定 → 枚举 PCIe/SMBIOS/udev 对象 → 约束并验证 CPU/NUMA placement → 观察 IRQ/softirq → 合并 GPU、NIC、CPU 和内存拓扑”的闭环：
+本分类按照“固定运行内核 → 保存 kernel log → 解析模块文件、索引、加载状态与设备绑定 → 枚举 PCIe/SMBIOS/udev 对象 → 约束并验证 CPU/NUMA placement → 观察 IRQ/softirq → 合并 GPU、NIC、CPU 和内存拓扑”的路径组织：
 
 1. [`uname`：固定运行内核、架构与节点身份](./commands/08-kernel-hardware-topology/01-uname命令详解.md)
 2. [`dmesg`：读取、筛选和保存内核环形日志](./commands/08-kernel-hardware-topology/02-dmesg命令详解.md)
@@ -325,9 +325,9 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 
 [`内核、硬件拓扑与中断命令导读`](./commands/08-kernel-hardware-topology/00-内核硬件拓扑与中断命令导读.md)提供五层对象模型、GPU/NIC/NVMe 综合排障顺序和可复现实验。`lscpu` 已在 CPU 模块完整讲解，本分类直接复用而不重复建页。
 
-## 14. 已完成：Shell、帮助与安全自动化
+## 14. Shell、帮助与安全自动化
 
-本分类完成二十篇核心文章，建立“Bash 调用 → 实现识别 → 安全输入输出 → 变量属性与环境 → Shell 行为 → CLI 解析 → 信号清理与进程替换 → 外部批处理”的闭环：
+本分类按照“Bash 调用 → 实现识别 → 安全输入输出 → 变量属性与环境 → Shell 行为 → CLI 解析 → 信号清理与进程替换 → 外部批处理”的路径组织：
 
 1. [`bash`](./commands/00-shell-help-automation/01-bash命令详解.md)
 2. [`help`](./commands/00-shell-help-automation/02-help命令详解.md)
@@ -350,9 +350,9 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 19. [`xargs`](./commands/00-shell-help-automation/19-xargs命令详解.md)
 20. [`tee`](./commands/00-shell-help-automation/20-tee命令详解.md)
 
-## 15. 已完成：Namespace、cgroup 与容器现场
+## 15. Namespace、cgroup 与容器现场
 
-本分类完成十五篇核心技术文章（其中 libcgroup 六个生命周期命令按同一对象模型联合讲解），覆盖 namespace 盘点/进入/创建、subuid/subgid 映射、最小权限执行、rootfs 切换、SysV IPC、systemd cgroup、machined、libcgroup 与 v2 原生文件接口：
+本分类覆盖 Namespace 盘点/进入/创建、subuid/subgid 映射、最小权限执行、rootfs 切换、SysV IPC、systemd cgroup、machined、libcgroup 与 v2 原生文件接口；libcgroup 生命周期命令按照同一对象模型联合讲解：
 
 1. [`lsns`](./commands/09-namespaces-cgroups-container/01-lsns命令详解.md)
 2. [`nsenter`](./commands/09-namespaces-cgroups-container/02-nsenter命令详解.md)
@@ -370,9 +370,9 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 14. [`cgcreate/cgexec/cgclassify/cgget/cgset/cgdelete`](./commands/09-namespaces-cgroups-container/14-libcgroup-cgcreate-cgexec命令详解.md)
 15. [cgroup v2 原生文件接口](./commands/09-namespaces-cgroups-container/15-cgroup-v2原生文件接口实战.md)
 
-## 16. 已完成：深度性能与故障诊断
+## 16. 深度性能与故障诊断
 
-本分类完成十一篇核心文章，覆盖 FD/挂载占用、syscall、动态库、PMU 计数、热点与调用栈、调度延迟、ftrace、bpftrace 和 BPF 对象治理：
+本分类覆盖 FD/挂载占用、syscall、动态库、PMU 计数、热点与调用栈、调度延迟、ftrace、bpftrace 和 BPF 对象治理：
 
 1. [`lsof`](./commands/10-deep-diagnostics/01-lsof命令详解.md)
 2. [`fuser`](./commands/10-deep-diagnostics/02-fuser命令详解.md)

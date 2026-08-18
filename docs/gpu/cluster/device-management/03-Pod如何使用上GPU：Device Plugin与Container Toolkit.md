@@ -296,7 +296,7 @@ runC prestart
 
 排查「Node 有 GPU，但容器里没有 / 看到了不该看的卡」时，可按这条链逐段查：Plugin 是否 Running、Env 是否写入、runtime 是否为 nvidia、镜像是否 legacy、CLI configure 是否成功。
 
-下一篇可继续写生产向的 Pod 配置与 Pending 排查：[Kubernetes GPU Pod 配置详解](./04-Kubernetes%20GPU%20Pod%20配置详解.md)、[GPU Pod 一直 Pending 的排查流程](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
+生产配置与 Pending 排查可继续阅读：[Kubernetes GPU Pod 配置详解](./04-Kubernetes%20GPU%20Pod%20配置详解.md)、[GPU Pod 一直 Pending 的排查流程](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
 
 ## 6. 参考与致谢 {/* #参考与致谢 */}
 
@@ -304,4 +304,4 @@ runC prestart
 - [NVIDIA/nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit)
 - [NVIDIA/libnvidia-container](https://github.com/NVIDIA/libnvidia-container)
 
-本文内容整理自 [意琦行 / KubeExplorer - 在 K8S 中创建 Pod 是如何使用到 GPU 的](https://www.cnblogs.com/KubeExplorer/p/18624112)，并按本系列学习路线做了结构调整与补充。
+本文参考 [意琦行 / KubeExplorer - 在 K8S 中创建 Pod 是如何使用到 GPU 的](https://www.cnblogs.com/KubeExplorer/p/18624112)，并结合当前 Kubernetes 与 NVIDIA 组件的数据路径进行校订。

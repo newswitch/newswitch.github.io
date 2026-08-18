@@ -2,7 +2,7 @@
 title: "Kubernetes GPU Pod 配置详解"
 sidebar_label: "04. Kubernetes GPU Pod 配置详解"
 sidebar_position: 4
-description: "本文说明如何在 Kubernetes 中把 GPU 配成可调度资源，以及 Pod 申请 GPU 时的规则与限制。内容整理自官方文档 调度 GPU，并结合本系列前文做了实践补充。"
+description: "本文说明如何在 Kubernetes 中把 GPU 配成可调度资源，以及 Pod 申请 GPU 时的规则、限制与验证方法。"
 tags: ["Kubernetes", "GPU", "Pod", "调度", "NFD", "学习路线"]
 date: 2026-07-22 16:00:00
 categories: 云原生
@@ -10,7 +10,7 @@ categories: 云原生
 
 # Kubernetes GPU Pod 配置详解
 
-本文说明如何在 Kubernetes 中把 GPU 配成可调度资源，以及 Pod 申请 GPU 时的规则与限制。内容整理自官方文档 [调度 GPU](https://kubernetes.io/zh-cn/docs/tasks/manage-gpus/scheduling-gpus/)，并结合本系列前文做了实践补充。
+本文说明如何在 Kubernetes 中把 GPU 配成可调度资源，以及 Pod 申请 GPU 时的规则、限制与验证方法。相关机制参考 Kubernetes 官方文档 [调度 GPU](https://kubernetes.io/zh-cn/docs/tasks/manage-gpus/scheduling-gpus/)。
 
 **特性状态：** Kubernetes v1.26 [stable]
 
@@ -223,4 +223,4 @@ spec:
 - [Device Plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/)
 - [Node Feature Discovery](https://github.com/kubernetes-sigs/node-feature-discovery)
 
-本文基于上述 Kubernetes 官方文档整理，并按本系列学习路线补充了 NVIDIA 实践示例与交叉链接。官方文档遵循项目许可；第三方设备插件链接按 CNCF 网站指南以字母序列出，Kubernetes 项目作者不对这些第三方项目负责。
+本文依据上述 Kubernetes 官方文档说明设备调度机制，并结合 NVIDIA 实践示例进行验证。官方文档遵循项目许可；第三方设备插件链接按 CNCF 网站指南以字母序列出，Kubernetes 项目作者不对这些第三方项目负责。

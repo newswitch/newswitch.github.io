@@ -46,7 +46,7 @@ curl -H 'X-Request-ID: source-lab' http://127.0.0.1:8080/test
 
 输出一张 phase/handler 调用图，并标注模块注册 handler/filter 的源码文件和 commit。Subrequest 共享部分主请求上下文但有独立生命周期，递归或大 fan-out 会放大内存和上游流量；filter 链顺序由模块构建/注册决定，不能只凭配置行顺序推断。
 
-自定义模块必须验证异步回调、引用计数、request pool 生命周期、错误 finalize 和 reload 兼容。运行结论用 debug log、gdb/perf 和 access log 相互证明，避免把旧版本博客类名当成当前事实。
+自定义模块必须验证异步回调、引用计数、request pool 生命周期、错误 finalize 和 reload 兼容。运行结论用 debug log、gdb/perf 和 access log 相互证明，避免把旧版本资料中的类名当成当前事实。
 
 ## 6. 验收题 {/* #验收题 */}
 

@@ -419,4 +419,4 @@ Done
 
 ## 6. 参考与致谢 {/* #参考与致谢 */}
 
-本文内容整理自 [意琦行 - GPU 环境搭建指南：如何在物理机、Docker、K8s 等环境中使用 GPU](https://www.lixueduan.com/posts/ai/01-how-to-use-gpu/)，并按本系列学习路线做了结构调整与补充。原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可。
+本文参考 [意琦行 - GPU 环境搭建指南：如何在物理机、Docker、K8s 等环境中使用 GPU](https://www.lixueduan.com/posts/ai/01-how-to-use-gpu/)，并结合当前 NVIDIA 驱动、CUDA 与容器运行时的组件关系校订。原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可。

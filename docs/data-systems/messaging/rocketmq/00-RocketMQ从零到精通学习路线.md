@@ -26,29 +26,27 @@ Producer
   → ack / offset / retry / DLQ
 ```
 
-## 2. 篇文章规划 {/* #2-15-篇文章规划 */}
+## 2. 课程结构 {/* #2-15-篇文章规划 */}
 
-| 编号 | 文章 | 优先级 | 核心问题 | 状态 |
-| --- | --- | --- | --- | --- |
-| Q00 | RocketMQ 从零到精通学习路线 | P0 | 建立消息、存储和控制面地图 | 已完成 |
-| Q01 | [RocketMQ 解决什么问题与一次消息完整路径](./01-RocketMQ解决什么问题与一次消息完整路径.md) | P0 | 与 Kafka/RabbitMQ 的边界 | 已完成 |
-| Q02 | [Topic、MessageQueue、Tag、Key、Group 与消息类型](./02-RocketMQ资源模型与消息类型.md) | P0 | 资源模型和路由 | 已完成 |
-| Q03 | [NameServer、Broker、Proxy、Controller 架构](./03-NameServer-Broker-Proxy-Controller架构.md) | P0 | 发现、数据面和选主职责 | 已完成 |
-| Q04 | [CommitLog、ConsumeQueue、IndexFile 与刷盘](./04-CommitLog-ConsumeQueue-IndexFile与刷盘.md) | P0 | 写入、索引、存储和恢复 | 已完成 |
-| Q05 | [Producer 同步/异步、重试、批量与可靠发送](./05-Producer同步异步重试批量与可靠发送.md) | P0 | ACK、超时和重复边界 | 已完成 |
-| Q06 | [Push/Simple Consumer、Offset、负载均衡与重试 DLQ](./06-Push-Simple-Consumer-Offset重试与DLQ.md) | P0 | 消费进度、重复和积压 | 已完成 |
-| Q07 | [FIFO 顺序消息、锁、Queue 与扩缩容](./07-FIFO顺序消息锁Queue与扩缩容.md) | P0 | 局部顺序和可用性代价 | 已完成 |
-| Q08 | [事务消息、Half Message、回查与业务幂等](./08-事务消息Half-Message回查与业务幂等.md) | P0 | 本地事务与消息最终一致 | 已完成 |
-| Q09 | [延迟/定时消息、批量、Filter 与 LiteTopic](./09-延迟定时批量Filter与LiteTopic.md) | P1 | 特殊消息类型和 5.5 能力 | 已完成 |
-| Q10 | [单机、主从、Controller 自动切换、Docker 与 K8s 部署](./10-RocketMQ单机主从Controller-Docker与Kubernetes部署.md) | P0 | 多种拓扑及原理 | 已完成 |
-| Q11 | [同步复制、刷盘、SyncStateSet、选主与数据丢失边界](./11-同步复制刷盘SyncStateSet选主与RPO.md) | P1 | 高可用不等于零 RPO | 已完成 |
-| Q12 | [Topic/Queue、吞吐、存储、网络与容量规划](./12-Topic-Queue吞吐存储网络与容量规划.md) | P1 | 如何估算 Broker 和保留空间 | 已完成 |
-| Q13 | [ACL、TLS、监控、Dashboard、升级与跨集群迁移](./13-ACL-TLS监控Dashboard升级与跨集群迁移.md) | P1 | 安全运维闭环 | 已完成 |
-| Q14 | [源码请求路径、积压、发送失败、主从异常与故障 Runbook](./14-源码请求路径与生产故障Runbook.md) | P2 | 从客户端到 CommitLog 定位 | 已完成 |
+| 编号 | 文章 | 优先级 | 核心问题 |
+| --- | --- | --- | --- |
+| Q00 | RocketMQ 从零到精通学习路线 | P0 | 建立消息、存储和控制面地图 |
+| Q01 | [RocketMQ 解决什么问题与一次消息完整路径](./01-RocketMQ解决什么问题与一次消息完整路径.md) | P0 | 与 Kafka/RabbitMQ 的边界 |
+| Q02 | [Topic、MessageQueue、Tag、Key、Group 与消息类型](./02-RocketMQ资源模型与消息类型.md) | P0 | 资源模型和路由 |
+| Q03 | [NameServer、Broker、Proxy、Controller 架构](./03-NameServer-Broker-Proxy-Controller架构.md) | P0 | 发现、数据面和选主职责 |
+| Q04 | [CommitLog、ConsumeQueue、IndexFile 与刷盘](./04-CommitLog-ConsumeQueue-IndexFile与刷盘.md) | P0 | 写入、索引、存储和恢复 |
+| Q05 | [Producer 同步/异步、重试、批量与可靠发送](./05-Producer同步异步重试批量与可靠发送.md) | P0 | ACK、超时和重复边界 |
+| Q06 | [Push/Simple Consumer、Offset、负载均衡与重试 DLQ](./06-Push-Simple-Consumer-Offset重试与DLQ.md) | P0 | 消费进度、重复和积压 |
+| Q07 | [FIFO 顺序消息、锁、Queue 与扩缩容](./07-FIFO顺序消息锁Queue与扩缩容.md) | P0 | 局部顺序和可用性代价 |
+| Q08 | [事务消息、Half Message、回查与业务幂等](./08-事务消息Half-Message回查与业务幂等.md) | P0 | 本地事务与消息最终一致 |
+| Q09 | [延迟/定时消息、批量、Filter 与 LiteTopic](./09-延迟定时批量Filter与LiteTopic.md) | P1 | 特殊消息类型和 5.5 能力 |
+| Q10 | [单机、主从、Controller 自动切换、Docker 与 K8s 部署](./10-RocketMQ单机主从Controller-Docker与Kubernetes部署.md) | P0 | 多种拓扑及原理 |
+| Q11 | [同步复制、刷盘、SyncStateSet、选主与数据丢失边界](./11-同步复制刷盘SyncStateSet选主与RPO.md) | P1 | 高可用不等于零 RPO |
+| Q12 | [Topic/Queue、吞吐、存储、网络与容量规划](./12-Topic-Queue吞吐存储网络与容量规划.md) | P1 | 如何估算 Broker 和保留空间 |
+| Q13 | [ACL、TLS、监控、Dashboard、升级与跨集群迁移](./13-ACL-TLS监控Dashboard升级与跨集群迁移.md) | P1 | 安全运维闭环 |
+| Q14 | [源码请求路径、积压、发送失败、主从异常与故障 Runbook](./14-源码请求路径与生产故障Runbook.md) | P2 | 从客户端到 CommitLog 定位 |
 
-当前完成 **15/15**，剩余 **0 篇**。
-
-> 质量基线：本模块已按 Apache RocketMQ 5.5.0（2026-04-10 发布）重新审阅。Q02～Q14 已补齐资源边界、请求/存储链路、4.x/5.x 差异、可执行实验、容量模型、安全基线和生产 Runbook；学习时仍应固定实际运行的 Broker、Proxy、SDK 与管理工具版本。
+> 版本基线：本路线以 Apache RocketMQ 5.5.x 为主线，并区分 4.x/5.x 的资源模型、请求路径和部署差异。实验应固定实际运行的 Broker、Proxy、SDK 与管理工具版本。
 
 ## 3. 学习重点
 
@@ -96,4 +94,4 @@ Proxy + gRPC：多语言客户端和接入
 - [Controller Automatic Failover](https://rocketmq.apache.org/docs/deploymentOperations/03autofailover/)
 - [Apache RocketMQ Source](https://github.com/apache/rocketmq)
 
-本路线会把 RocketMQ 与 Kafka 放在相同的可靠性维度比较：写入确认、复制、消费进度、重试、事务、积压、扩缩和跨集群，而不是做功能清单对比。
+比较 RocketMQ 与 Kafka 时，应采用相同的可靠性维度：写入确认、复制、消费进度、重试、事务、积压、扩缩和跨集群，不能只对照功能清单。

@@ -2,7 +2,7 @@
 title: "Grafana GPU 集群总览看板设计"
 sidebar_label: "03. Grafana GPU 集群总览看板设计"
 sidebar_position: 3
-description: "指标进了 Prometheus 之后，值班需要的是 分层看板，而不是一张塞满几百条曲线的图。本文按四套看板组织：集群总览 → 节点/卡 → Namespace·Pod·模型 → 推理业务。部署与导入方式见 中文博客 与 Setting up Prometheus；指标字典见 第 38 篇。"
+description: "设计集群、节点与 GPU、Namespace/Pod/模型和推理业务四层看板，把资源指标、业务 SLO 与故障 Runbook 关联起来。"
 tags: ["Grafana", "DCGM", "Prometheus", "看板", "学习路线"]
 date: 2026-07-22 18:40:00
 categories: 云原生
@@ -10,13 +10,13 @@ categories: 云原生
 
 # Grafana GPU 集群总览看板设计
 
-指标进了 Prometheus 之后，值班需要的是 **分层看板**，而不是一张塞满几百条曲线的图。本文按四套看板组织：集群总览 → 节点/卡 → Namespace·Pod·模型 → 推理业务。部署与导入方式见 [中文博客](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/) 与 [Setting up Prometheus](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/kube-prometheus.html)；指标字典见 [第 38 篇](./01-DCGM%20Exporter%20GPU%20监控指标详解.md)。
+指标进入 Prometheus 后，值班需要的是 **分层看板**，而不是一张塞满几百条曲线的图。本文按四层组织：集群总览 → 节点/GPU → Namespace/Pod/模型 → 推理业务。部署方式参见 [NVIDIA Kubernetes GPU 监控说明](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/) 与 [Setting up Prometheus](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/kube-prometheus.html)；指标定义参见 [DCGM Exporter GPU 监控指标详解](./01-DCGM%20Exporter%20GPU%20监控指标详解.md)。
 
 ## 1. 接入 Grafana
 
 1. 安装 `kube-prometheus-stack`（含 Grafana）
 2. 安装 / 确认 `dcgm-exporter`，Prometheus 能查到 `DCGM_*`
-3. 导入 NVIDIA 官方 GPU dashboard JSON（博客「数一数仪表板」/ Telemetry 文档入口）
+3. 导入 NVIDIA 官方 GPU Dashboard JSON，并核对 Telemetry 文档中的指标定义
 4. 再按下面四层 **复制出专用看板**，避免改坏上游 JSON
 
 访问：NodePort、或 `kubectl port-forward svc/...-grafana 3000:80`。
@@ -95,8 +95,8 @@ Production Stack 自带看板时，可把 DCGM 面板嵌进同一文件夹，统
 1. **默认时间 1h / 6h**，总览另提供 24h 容量视角
 2. **单位统一**：温度 ℃、功耗 W、显存 GiB、利用率 % 或 0～1 标注清楚
 3. **少花哨**：Stat + Time series + Table TopN 足够
-4. **链接 runbook**：面板描述里挂 39/41/47/48 篇
-5. **用 dcgmproftester 验收**：打满 Tensor 负载后，A/B 看板应明显跳动（博客同款实验）
+4. **链接 Runbook**：面板描述直接关联对应的容量、性能和故障处置文档
+5. **用 dcgmproftester 验收**：构造 Tensor 负载后，A/B 看板应能正确反映指标变化
 
 ## 8. 小结
 

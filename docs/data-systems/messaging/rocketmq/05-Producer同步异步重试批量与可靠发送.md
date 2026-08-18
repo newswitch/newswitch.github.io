@@ -36,7 +36,7 @@ Producer 的职责不只是调用 `send()`。它需要把业务事件变成可�
 | 消息类型 | 较多行为由客户端配置 | Topic 元数据约束更明确 |
 | 重试参数 | SDK 本地参数较多 | 由新版 SDK/服务端语义共同决定 |
 
-不要把 4.x 博客参数直接复制给 5.x SDK。先固定 Broker、Proxy、SDK 和 Admin 工具版本，再阅读对应 Javadoc/源码。
+不要把 4.x 资料中的参数直接复制给 5.x SDK。先固定 Broker、Proxy、SDK 和 Admin 工具版本，再阅读对应 Javadoc/源码。
 
 ## 3. 同步与异步不是可靠性等级
 

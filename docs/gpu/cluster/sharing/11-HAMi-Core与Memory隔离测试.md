@@ -233,4 +233,4 @@ Successfully allocated 19500 MB on GPU.
 
 ## 5. 参考与致谢 {/* #参考与致谢 */}
 
-本文内容整理自 [意琦行 / KubeExplorer - 开源 vGPU 方案 HAMi: core&memory 隔离测试](https://www.cnblogs.com/KubeExplorer/p/18964975)，并按本系列学习路线做了结构调整与补充。前置阅读：[HAMi vGPU 原理与实践](./10-HAMi%20vGPU%20原理与实践.md)。
+本文参考 [意琦行 / KubeExplorer - 开源 vGPU 方案 HAMi: core&memory 隔离测试](https://www.cnblogs.com/KubeExplorer/p/18964975)，并结合当前 HAMi 组件行为校订。前置阅读：[HAMi vGPU 原理与实践](./10-HAMi%20vGPU%20原理与实践.md)。

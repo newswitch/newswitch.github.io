@@ -118,7 +118,7 @@ shm 要够大                  还要通端口、DNS、防火墙
 | 网络 | 本机 NCCL | 跨节点带宽与 RDMA 常成瓶颈 |
 | 调度 | 一 Pod 占满节点卡 | Gang：`minAvailable` = Worker 数 |
 
-拓扑与跨机性能见后续第 34、35 篇规划。
+拓扑与跨机性能可继续学习 [NVLink 与 NVSwitch 原理](../../../gpu/nvlink-nvswitch/01-NVLink与NVSwitch原理.md)和 [GPUDirect RDMA 原理与实践](../../../networking/rdma-roce/ai-cluster/07-GPUDirect-RDMA原理与实践.md)。
 
 ## 7. 训练任务在 Kubernetes 上的生命周期
 

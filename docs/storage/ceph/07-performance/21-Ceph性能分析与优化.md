@@ -925,7 +925,7 @@ ceph daemon osd.<id> dump_historic_slow_ops
 - waiting for commit：本地 BlueStore/设备延迟
 - waiting for map：集群映射或控制面问题
 
-必须结合当前版本输出解释，不能只匹配一个旧博客中的字符串。
+必须结合当前版本输出解释，不能只匹配旧资料中的字符串。
 
 ## 21. 第五层：BlueStore、DB/WAL 与磁盘 {/* #第五层bluestoredbwal-与磁盘 */}
 

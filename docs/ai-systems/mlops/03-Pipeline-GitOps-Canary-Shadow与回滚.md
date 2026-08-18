@@ -855,9 +855,9 @@ Pipeline 在创建 PR 后崩溃并重试
 - [Argo Rollouts Rollback Window](https://argo-rollouts.readthedocs.io/en/stable/features/rollback/)
 - [KServe](https://kserve.github.io/website/)
 
-仓库已有工具基础介绍：
+相关工具基础：
 
 - [Argo CD](../../cloud-native/kubernetes/operations/application-delivery/08-ArgoCD.md)
 - [Argo Rollout](../../cloud-native/kubernetes/operations/application-delivery/09-Argo-Rollout.md)
 
-本文重点是把它们放进模型发布协议，并补齐 LLM 流量、证据、门禁和回滚边界。
+这些能力需要进入统一的模型发布协议，并明确 LLM 流量、证据、门禁和回滚边界。

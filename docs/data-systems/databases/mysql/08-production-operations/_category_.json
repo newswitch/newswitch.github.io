@@ -4,6 +4,6 @@
   "collapsed": true,
   "link": {
     "type": "generated-index",
-    "description": "覆盖版本升级、Kubernetes、CDC、代理与故障编排，并形成统一生产故障 Runbook。"
+    "description": "覆盖版本升级、Kubernetes、CDC、代理、异构数据库迁移与故障编排，并形成统一生产故障 Runbook。"
   }
 }

@@ -72,7 +72,7 @@ categories: 云原生
 
 - 现象：进程在、不接请求、显存不释放
 - 证据：Pod Ready 但业务探针失败；或 Python 卡在死锁
-- 处理：重启 Pod、修探针与优雅退出（26/27 篇）
+- 处理：按 Runbook 重启 Pod，并修正业务探针与优雅退出流程
 
 ### 3.6 共享 / MIG / Time-Slicing 错觉
 

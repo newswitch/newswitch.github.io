@@ -89,9 +89,9 @@ SHOW VARIABLES LIKE 'version%';
 
 顺序不是绝对限制，但不能跳过事务、索引和恢复基础就直接修改生产参数。
 
-## 4. 完整文章清单
+## 4. 课程结构
 
-整套路线当前收录 **61 篇**。原有 49 篇继续保留编号，新部署专题使用 D1～D12，避免旧文章编号和外部引用整体漂移。可以按模块顺序学习，也可以沿 P0/P1/P2 和故障场景交叉练习；是否掌握应以能独立部署、观测、压测、恢复和解释数据路径为准。
+课程由十个核心模块、D1～D12 部署专题和 M1 异构迁移专题组成。可以按模块顺序学习，也可以沿 P0/P1/P2 和故障场景交叉练习；是否掌握应以能独立部署、观测、压测、恢复和解释数据路径为准。
 
 ### 4.1 模块一：基础与 SQL 入门（5 篇） {/* #模块一基础与-sql-入门5-篇 */}
 
@@ -168,13 +168,14 @@ SHOW VARIABLES LIKE 'version%';
 38. [Binlog PITR、误删恢复与灾难恢复演练](./07-backup-security/04-Binlog-PITR误删恢复与灾难恢复演练.md)
 39. [账户、角色、最小权限、TLS、加密、审计与密钥](./07-backup-security/05-账户角色最小权限TLS加密审计与密钥.md)
 
-### 4.9 模块九：生产架构与故障排查（5 篇） {/* #模块九生产架构与故障排查5-篇 */}
+### 4.9 模块九：生产架构与故障排查（6 篇） {/* #模块九生产架构与故障排查6-篇 */}
 
 40. [MySQL 版本升级、兼容性、回滚与灰度验证](./08-production-operations/01-MySQL版本升级兼容性回滚与灰度验证.md)
 41. [MySQL on Kubernetes、Operator、存储与反模式](./08-production-operations/02-MySQL-on-Kubernetes-Operator存储与反模式.md)
 42. [Debezium CDC、Transactional Outbox 与 Schema Change](./08-production-operations/03-Debezium-CDC-TransactionalOutbox与SchemaChange.md)
 43. [ProxySQL、Orchestrator 与读写路由架构](./08-production-operations/04-ProxySQL-Orchestrator与读写路由架构.md)
 44. [MySQL 生产故障排查 Runbook 与事故复盘](./08-production-operations/05-MySQL生产故障排查Runbook与事故复盘.md)
+- M1. [MySQL 迁移到 TBase 生产方案：评估、改造、同步、割接与回滚](./08-production-operations/06-MySQL迁移到TBase生产方案.md)
 
 ### 4.10 模块十：命令与实验手册（5 篇） {/* #模块十命令与实验手册5-篇 */}
 
@@ -200,6 +201,7 @@ P0 的验收不是笔试，而是能解释一条慢查询、一次死锁、一�
 ### 5.2 P1：生产必需 {/* #p1生产必需 */}
 
 - 部署 D7～D11，以及性能、容量、复制、高可用、监控、安全、DDL、升级与 Kubernetes；
+- 异构迁移 M1：完成 MySQL 到 TBase 的兼容性改造、全量增量同步、数据校验、割接和回滚演练；
 - 能在预生产完成压力、故障、备份恢复和切换演练；
 - 能建立 SLO、变更审计和容量水位。
 
@@ -254,7 +256,7 @@ SELECT @@hostname, @@port, @@server_uuid, @@read_only, @@super_read_only;
 
 ## 8. 最终验收
 
-完成 61 篇后，应能独立完成：
+完成全部模块的学习与实验后，应能独立完成：
 
 - 从需求设计 Schema、索引、事务和查询；
 - 根据环境完成包管理、离线、容器、复制、InnoDB Cluster、Operator 与自动化部署，并解释各自原理和故障边界；

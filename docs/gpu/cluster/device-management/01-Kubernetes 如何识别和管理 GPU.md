@@ -374,4 +374,4 @@ GPU、以及其它加速设备，都是在这套框架上接入 Kubernetes 的�
 - [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin)
 - [lixd/i-device-plugin](https://github.com/lixd/i-device-plugin)
 
-本文内容整理自 [意琦行 / KubeExplorer - 自定义资源支持：K8s Device Plugin 从原理到实现](https://www.cnblogs.com/KubeExplorer/p/18604655)，并按本系列学习路线做了结构调整与补充。
+本文参考 [意琦行 / KubeExplorer - 自定义资源支持：K8s Device Plugin 从原理到实现](https://www.cnblogs.com/KubeExplorer/p/18604655)，并结合当前 Kubernetes Device Plugin 机制校订。

@@ -105,7 +105,7 @@ CONFIG_CHANGE：规则/配置变化
 
 原始记录可能交错，使用 `ausearch` 按 serial 组装，不要单纯 `grep audit.log` 后漏掉 PATH 或把不同事件拼在一起。`auid/loginuid` 表示最初登录身份，`uid/euid` 是当前凭据，二者回答不同问题。
 
-## 6. 本批 19 个命令
+## 6. 命令清单
 
 | 领域 | 命令 | 核心用途 |
 |---|---|---|

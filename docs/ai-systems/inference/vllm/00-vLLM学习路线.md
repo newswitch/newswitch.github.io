@@ -30,7 +30,7 @@ HTTP / SSE 协议
 
 ## 1. 版本说明
 
-原有六篇源码笔记基于 **vLLM 0.6.3**，主要描述 V0 架构：
+附录中的六篇源码笔记基于 **vLLM 0.6.3**，主要描述 V0 架构：
 
 - `LLMEngine`
 - 旧 Scheduler 队列。
@@ -158,13 +158,13 @@ OpenAI API Server
 - Prefix Cache。
 - KV Cache quantization。
 
-已有文章：
+关联专题：
 
 - [vLLM GPU 显存组成与容量规划](../serving/02-vLLM%20GPU%20显存组成与容量规划.md)
 - [CUDA OOM 排查与优化](../../../gpu/cluster/troubleshooting/05-CUDA%20OOM%20排查与优化.md)
 
-本模块已经在 [KVCacheManager、BlockPool 与 Prefix Cache](./05-KVCacheManager-BlockPool与PrefixCache.md)
-中补齐 Automatic Prefix Caching 的哈希、Block、缓存和回收主线。KV Cache Offload、外部
+Automatic Prefix Caching 的哈希、Block、缓存与回收机制见
+[KVCacheManager、BlockPool 与 Prefix Cache](./05-KVCacheManager-BlockPool与PrefixCache.md)。KV Cache Offload、外部
 KV Connector 及 Prefill/Decode 分离属于进阶架构；采用前需要结合所用 vLLM 版本和实际存储、
 网络链路单独验证。
 

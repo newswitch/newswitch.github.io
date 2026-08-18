@@ -34,7 +34,7 @@ flowchart LR
 
 `nsenter --all` 不会自然复制目标进程环境变量、cwd、root、cgroup 和 SELinux context；这些需要显式选择，并理解权限影响。
 
-## 2. 本批 19 个命令
+## 2. 命令清单
 
 | 阶段 | 命令 | 学习目标 |
 |---|---|---|

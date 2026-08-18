@@ -109,3 +109,105 @@
     height: 1.45rem;
   }
 }
+
+/*
+ * Top-level documentation domains use compact semantic icons. The icon is
+ * decorative CSS, so labels, URLs, search text and accessible names stay
+ * unchanged.
+ */
+.sidebar-domain {
+  --sidebar-domain-color: var(--ifm-color-primary);
+  --sidebar-domain-icon: url('/img/sidebar/learning.svg');
+}
+
+.sidebar-domain > .menu__list-item-collapsible > .menu__link {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-domain > .menu__list-item-collapsible > .menu__link::before {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 1.15rem;
+  background-color: var(--sidebar-domain-color);
+  content: '';
+  -webkit-mask-image: var(--sidebar-domain-icon);
+  mask-image: var(--sidebar-domain-icon);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.sidebar-domain--learning {
+  --sidebar-domain-color: #7c3aed;
+  --sidebar-domain-icon: url('/img/sidebar/learning.svg');
+}
+
+.sidebar-domain--linux {
+  --sidebar-domain-color: #374151;
+  --sidebar-domain-icon: url('/img/sidebar/linux.svg');
+}
+
+.sidebar-domain--gpu {
+  --sidebar-domain-color: #5f9400;
+  --sidebar-domain-icon: url('/img/sidebar/gpu.svg');
+}
+
+.sidebar-domain--network {
+  --sidebar-domain-color: #2563eb;
+  --sidebar-domain-icon: url('/img/sidebar/network.svg');
+}
+
+.sidebar-domain--storage {
+  --sidebar-domain-color: #0f766e;
+  --sidebar-domain-icon: url('/img/sidebar/storage.svg');
+}
+
+.sidebar-domain--kubernetes {
+  --sidebar-domain-color: #326ce5;
+  --sidebar-domain-icon: url('/img/sidebar/kubernetes.svg');
+}
+
+.sidebar-domain--ai {
+  --sidebar-domain-color: #ea580c;
+  --sidebar-domain-icon: url('/img/sidebar/ai.svg');
+}
+
+.sidebar-domain--data {
+  --sidebar-domain-color: #2e8555;
+  --sidebar-domain-icon: url('/img/sidebar/data.svg');
+}
+
+.sidebar-domain--sre {
+  --sidebar-domain-color: #e11d48;
+  --sidebar-domain-icon: url('/img/sidebar/sre.svg');
+}
+
+.sidebar-domain--automation {
+  --sidebar-domain-color: #b7791f;
+  --sidebar-domain-icon: url('/img/sidebar/automation.svg');
+}
+
+.sidebar-domain--projects {
+  --sidebar-domain-color: #8b5cf6;
+  --sidebar-domain-icon: url('/img/sidebar/projects.svg');
+}
+
+[data-theme='dark'] .sidebar-domain--linux {
+  --sidebar-domain-color: #e5e7eb;
+}
+
+@media (max-width: 576px) {
+  .sidebar-domain > .menu__list-item-collapsible > .menu__link {
+    gap: 0.45rem;
+  }
+
+  .sidebar-domain > .menu__list-item-collapsible > .menu__link::before {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-basis: 1.05rem;
+  }
+}

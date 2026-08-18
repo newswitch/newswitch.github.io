@@ -455,4 +455,4 @@ GPU Operator 把 Driver、Container Toolkit、Device Plugin、Exporter 等自动
 - [About the NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html)
 - [nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit)
 
-本文内容整理自 [意琦行 - GPU 环境搭建指南：使用 GPU Operator 加速 Kubernetes GPU 环境搭建](https://www.lixueduan.com/posts/ai/02-gpu-operator/)，并按本系列学习路线做了结构调整与补充。原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可。
+本文参考 [意琦行 - GPU 环境搭建指南：使用 GPU Operator 加速 Kubernetes GPU 环境搭建](https://www.lixueduan.com/posts/ai/02-gpu-operator/)，并结合当前 NVIDIA GPU Operator 组件职责与控制流程校订。原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可。

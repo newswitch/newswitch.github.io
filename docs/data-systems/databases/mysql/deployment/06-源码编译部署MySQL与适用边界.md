@@ -101,7 +101,7 @@ cmake --build /build/work/mysql-8.4.x --parallel <jobs>
 | `WITH_SSL=system` | 使用系统 OpenSSL | 系统库兼容与安全更新需跟踪 |
 | `WITH_SYSTEMD=1` | 构建 systemd 支持 | unit 仍要按目标环境安装和验证 |
 
-实际 CMake 选项会随版本变化，必须以当前源码的 `CMakeLists.txt`、CMake 输出和官方配置选项为准。不要从旧博客复制已经删除或改变语义的参数。
+实际 CMake 选项会随版本变化，必须以当前源码的 `CMakeLists.txt`、CMake 输出和官方配置选项为准。不要复制已经删除或改变语义的旧版本参数。
 
 ### 5.1 构建类型建议 {/* #构建类型建议 */}
 

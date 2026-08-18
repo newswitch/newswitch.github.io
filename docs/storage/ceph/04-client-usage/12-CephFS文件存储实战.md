@@ -102,7 +102,7 @@ flowchart TD
 
 CephFS 不等于 NFS。CephFS 客户端需要理解 Ceph 协议并访问 MON、MDS 和 OSD；传统 NFS 客户端只需要访问 NFS 服务端。
 
-如果旧业务只能使用 NFS，可以通过 NFS-Ganesha 导出 CephFS，但会增加一层网关和运维组件。这部分可以放到后续 NFS 专题文章。
+如果旧业务只能使用 NFS，可以通过 NFS-Ganesha 导出 CephFS，但会增加一层网关和运维组件，因此需要单独评估高可用、性能、权限映射和故障域。
 
 ## 3. CephFS 的核心组件 {/* #cephfs-的核心组件 */}
 

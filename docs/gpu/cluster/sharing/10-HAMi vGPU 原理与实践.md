@@ -290,4 +290,4 @@ kubectl exec -it gpu-pod -- nvidia-smi
 - [Project-HAMi/HAMi](https://github.com/Project-HAMi/HAMi)
 - [HAMi Helm 仓库](https://project-hami.github.io/HAMi/)
 
-本文内容整理自 [意琦行 / KubeExplorer - 开源 vGPU 方案：HAMi,实现细粒度 GPU 切分](https://www.cnblogs.com/KubeExplorer/p/18913850)，并按本系列学习路线做了结构调整与补充。
+本文参考 [意琦行 / KubeExplorer - 开源 vGPU 方案：HAMi,实现细粒度 GPU 切分](https://www.cnblogs.com/KubeExplorer/p/18913850)，并结合当前 HAMi 组件行为校订。

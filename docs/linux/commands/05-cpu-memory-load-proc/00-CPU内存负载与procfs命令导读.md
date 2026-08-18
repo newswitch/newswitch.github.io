@@ -88,7 +88,7 @@ socket → core → hardware thread/logical CPU
 
 `free used`、进程 RSS、cgroup memory.current 和宿主机内存不是同一口径；容器 OOM 也可能发生在宿主机仍有大量 available 内存时。
 
-## 6. 本批 15 个命令
+## 6. 命令清单
 
 | 阶段 | 命令 | 学习目标 |
 |---|---|---|

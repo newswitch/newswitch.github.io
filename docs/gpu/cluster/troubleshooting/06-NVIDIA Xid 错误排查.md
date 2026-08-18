@@ -184,7 +184,7 @@ MIG / NVLink / NVSwitch / 虚拟化状态
 - Resolution/Recovery bucket：应用重启、GPU reset、节点重启、支持工单等。
 
 部分新驱动/平台可能通过 Xid 154 报告类似 `Drain P2P`、`Drain and Reset`、`GPU Reset Required`、
-`Node Reboot Required` 的恢复动作。应优先执行官方针对该事件组合给出的动作，而不是博客中的静态速查表。
+`Node Reboot Required` 的恢复动作。应优先执行当前驱动版本官方文档针对该事件组合给出的动作，而不是未经版本验证的静态速查表。
 
 ## 8. 常见 Xid 的理解方式
 

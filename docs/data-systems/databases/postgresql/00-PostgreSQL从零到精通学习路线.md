@@ -25,31 +25,31 @@ Maintenance path
 Dead Tuple → Vacuum → Visibility Map / FSM → Freeze → Bloat Control
 ```
 
-## 2. 篇文章学习清单 {/* #2-19-篇文章学习清单 */}
+## 2. 课程结构 {/* #2-19-篇文章学习清单 */}
 
-| 编号 | 文章 | 优先级 | 核心问题 | 收录情况 |
-| --- | --- | --- | --- | --- |
-| P00 | PostgreSQL 从零到精通学习路线 | P0 | 建立 SQL、WAL、MVCC 和运维地图 | 已收录 |
-| P01 | [PostgreSQL 解决什么问题与一条 SQL 的完整路径](./01-PostgreSQL解决什么问题与一条SQL的完整路径.md) | P0 | 进程模型、数据库对象和执行入口 | 已收录 |
-| P02 | [安装、Docker、源码、Linux Package 与安全实验环境](./02-PostgreSQL安装Docker源码Linux-Package与安全实验环境.md) | P0 | 多种部署方式和初始化原理 | 已收录 |
-| P03 | [psql、Database、Schema、Role 与元数据导航](./03-psql-Database-Schema-Role与元数据导航.md) | P0 | 对象层级、连接与权限基础 | 已收录 |
-| P04 | [类型、约束、Sequence、Partition 与 Schema 设计](./04-PostgreSQL类型约束Sequence分区与Schema设计.md) | P0 | 正确建模和演进边界 | 已收录 |
-| P05 | [SQL、CTE、Window、JSONB、Array 与全文检索](./05-PostgreSQL-SQL-CTE-Window-JSONB-Array与全文检索.md) | P0 | PostgreSQL SQL 能力及代价 | 已收录 |
-| P06 | [Page、Heap Tuple、TOAST、FSM 与 Visibility Map](./06-PostgreSQL-Page-Heap-Tuple-TOAST-FSM与Visibility-Map.md) | P0 | 行怎样存储、宽字段在哪里 | 已收录 |
-| P07 | [MVCC、Snapshot、隔离级别、锁与 SSI](./07-PostgreSQL-MVCC-Snapshot隔离级别锁与SSI.md) | P0 | 并发可见性、阻塞和序列化失败 | 已收录 |
-| P08 | [WAL、Commit、Checkpoint、Crash Recovery 与 Timeline](./08-PostgreSQL-WAL-Commit-Checkpoint恢复与Timeline.md) | P0 | 持久性和恢复边界 | 已收录 |
-| P09 | [Vacuum、Autovacuum、Freeze、XID Wraparound 与 Bloat](./09-PostgreSQL-Vacuum-Autovacuum-Freeze与Bloat.md) | P0 | 为什么数据库必须持续清理 | 已收录 |
-| P10 | [B-Tree、GIN、GiST、BRIN、Hash 与索引设计](./10-PostgreSQL-BTree-GIN-GiST-BRIN-Hash索引设计.md) | P0 | 不同访问方法怎样选 | 已收录 |
-| P11 | [Planner、统计信息、EXPLAIN ANALYZE 与 Join](./11-PostgreSQL-Planner统计信息EXPLAIN与Join.md) | P0 | 计划为何选错、如何证明 | 已收录 |
-| P12 | [连接进程、PgBouncer、内存、Huge Pages 与 I/O](./12-PostgreSQL连接PgBouncer内存HugePages与IO.md) | P1 | 连接与资源如何预算 | 已收录 |
-| P13 | [流复制、同步复制、Replication Slot 与 Hot Standby](./13-PostgreSQL流复制同步复制Slot与Hot-Standby.md) | P1 | WAL 复制、延迟、冲突和 RPO | 已收录 |
-| P14 | [Patroni、etcd、HAProxy 与自动故障转移](./14-Patroni-etcd-HAProxy与自动故障转移.md) | P1 | DCS、选主、fencing 和接入 | 已收录 |
-| P15 | [逻辑复制、Publication/Subscription、CDC 与迁移](./15-PostgreSQL逻辑复制Publication-Subscription与CDC.md) | P1 | 表级复制、DDL 和冲突边界 | 已收录 |
-| P16 | [pg_dump、pg_basebackup、WAL Archive 与 PITR](./16-pg_dump-pg_basebackup-WAL归档与PITR.md) | P0 | 备份链、Timeline 和恢复验证 | 已收录 |
-| P17 | [性能、容量、监控、安全、升级与故障 Runbook](./17-PostgreSQL性能容量监控安全升级与故障Runbook.md) | P1 | 生产 SRE 完整闭环 | 已收录 |
-| P18 | [PostgreSQL 源码、Extension、Hook 与内核调试](./18-PostgreSQL源码Extension-Hook与内核调试.md) | P2 | 从 Backend 追到存储和扩展点 | 已收录 |
+| 编号 | 文章 | 优先级 | 核心问题 |
+| --- | --- | --- | --- |
+| P00 | PostgreSQL 从零到精通学习路线 | P0 | 建立 SQL、WAL、MVCC 和运维地图 |
+| P01 | [PostgreSQL 解决什么问题与一条 SQL 的完整路径](./01-PostgreSQL解决什么问题与一条SQL的完整路径.md) | P0 | 进程模型、数据库对象和执行入口 |
+| P02 | [安装、Docker、源码、Linux Package 与安全实验环境](./02-PostgreSQL安装Docker源码Linux-Package与安全实验环境.md) | P0 | 多种部署方式和初始化原理 |
+| P03 | [psql、Database、Schema、Role 与元数据导航](./03-psql-Database-Schema-Role与元数据导航.md) | P0 | 对象层级、连接与权限基础 |
+| P04 | [类型、约束、Sequence、Partition 与 Schema 设计](./04-PostgreSQL类型约束Sequence分区与Schema设计.md) | P0 | 正确建模和演进边界 |
+| P05 | [SQL、CTE、Window、JSONB、Array 与全文检索](./05-PostgreSQL-SQL-CTE-Window-JSONB-Array与全文检索.md) | P0 | PostgreSQL SQL 能力及代价 |
+| P06 | [Page、Heap Tuple、TOAST、FSM 与 Visibility Map](./06-PostgreSQL-Page-Heap-Tuple-TOAST-FSM与Visibility-Map.md) | P0 | 行怎样存储、宽字段在哪里 |
+| P07 | [MVCC、Snapshot、隔离级别、锁与 SSI](./07-PostgreSQL-MVCC-Snapshot隔离级别锁与SSI.md) | P0 | 并发可见性、阻塞和序列化失败 |
+| P08 | [WAL、Commit、Checkpoint、Crash Recovery 与 Timeline](./08-PostgreSQL-WAL-Commit-Checkpoint恢复与Timeline.md) | P0 | 持久性和恢复边界 |
+| P09 | [Vacuum、Autovacuum、Freeze、XID Wraparound 与 Bloat](./09-PostgreSQL-Vacuum-Autovacuum-Freeze与Bloat.md) | P0 | 为什么数据库必须持续清理 |
+| P10 | [B-Tree、GIN、GiST、BRIN、Hash 与索引设计](./10-PostgreSQL-BTree-GIN-GiST-BRIN-Hash索引设计.md) | P0 | 不同访问方法怎样选 |
+| P11 | [Planner、统计信息、EXPLAIN ANALYZE 与 Join](./11-PostgreSQL-Planner统计信息EXPLAIN与Join.md) | P0 | 计划为何选错、如何证明 |
+| P12 | [连接进程、PgBouncer、内存、Huge Pages 与 I/O](./12-PostgreSQL连接PgBouncer内存HugePages与IO.md) | P1 | 连接与资源如何预算 |
+| P13 | [流复制、同步复制、Replication Slot 与 Hot Standby](./13-PostgreSQL流复制同步复制Slot与Hot-Standby.md) | P1 | WAL 复制、延迟、冲突和 RPO |
+| P14 | [Patroni、etcd、HAProxy 与自动故障转移](./14-Patroni-etcd-HAProxy与自动故障转移.md) | P1 | DCS、选主、fencing 和接入 |
+| P15 | [逻辑复制、Publication/Subscription、CDC 与迁移](./15-PostgreSQL逻辑复制Publication-Subscription与CDC.md) | P1 | 表级复制、DDL 和冲突边界 |
+| P16 | [pg_dump、pg_basebackup、WAL Archive 与 PITR](./16-pg_dump-pg_basebackup-WAL归档与PITR.md) | P0 | 备份链、Timeline 和恢复验证 |
+| P17 | [性能、容量、监控、安全、升级与故障 Runbook](./17-PostgreSQL性能容量监控安全升级与故障Runbook.md) | P1 | 生产 SRE 完整闭环 |
+| P18 | [PostgreSQL 源码、Extension、Hook 与内核调试](./18-PostgreSQL源码Extension-Hook与内核调试.md) | P2 | 从 Backend 追到存储和扩展点 |
 
-当前路线收录 19 篇文章。是否掌握应以能设计约束和索引、解释 MVCC/WAL、完成 PITR 与主备切换，并用等待事件和执行计划定位故障为准。
+是否掌握应以能设计约束和索引、解释 MVCC/WAL、完成 PITR 与主备切换，并用等待事件和执行计划定位故障为准。
 
 ## 3. 学习阶段
 

@@ -30,28 +30,26 @@ SELECT
   → result
 ```
 
-## 2. 篇文章规划 {/* #2-16-篇文章规划 */}
+## 2. 课程结构 {/* #2-16-篇文章规划 */}
 
-| 编号 | 文章 | 优先级 | 状态 |
-| --- | --- | --- | --- |
-| C00 | ClickHouse 从零到精通学习路线 | P0 | 已完成 |
-| C01 | [ClickHouse 适用场景、列式存储与一次查询路径](./01-ClickHouse适用场景列式存储与一次查询路径.md) | P0 | 已完成 |
-| C02 | [数据类型、Nullable、LowCardinality、Array/Map 与 Schema](./02-ClickHouse数据类型LowCardinality-Array-Map与Schema.md) | P0 | 已完成 |
-| C03 | [Part、Column File、Granule、Mark 与稀疏主键索引](./03-Part列文件Granule-Mark与稀疏主键索引.md) | P0 | 已完成 |
-| C04 | [MergeTree 分区、排序键与后台合并](../olap/02-ClickHouse-MergeTree分区排序键与后台合并.md) | P0 | 已完成 |
-| C05 | [Replacing/Summing/Aggregating/Collapsing MergeTree 语义](./05-Replacing-Summing-Aggregating-Collapsing-MergeTree.md) | P0 | 已完成 |
-| C06 | [SELECT Pipeline、向量化、PREWHERE、Join 与聚合](./06-SELECT-Pipeline向量化PREWHERE-Join与聚合.md) | P0 | 已完成 |
-| C07 | [Projection、Materialized View、Skip Index 与 Query Cache](./07-Projection物化视图Skip-Index与Query-Cache.md) | P1 | 已完成 |
-| C08 | [异步 INSERT、Batch、Kafka Engine、去重与一致性](./08-异步INSERT-Batch-Kafka-Engine去重与一致性.md) | P1 | 已完成 |
-| C09 | [Package、Docker、ClickHouse Keeper 与多节点部署](./09-ClickHouse-Package-Docker-Keeper与多节点部署.md) | P0 | 已完成 |
-| C10 | [ReplicatedMergeTree、Shard、Replica、Distributed Table 与路由](./10-ReplicatedMergeTree-Shard-Replica与Distributed-Table.md) | P0 | 已完成 |
-| C11 | [Keeper/Raft、复制队列、选主、故障恢复和扩缩容](./11-Keeper-Raft复制队列故障恢复与扩缩容.md) | P1 | 已完成 |
-| C12 | [Merge、Mutation、TTL、小 Part、磁盘与对象存储治理](./12-Merge-Mutation-TTL小Part磁盘与对象存储治理.md) | P1 | 已完成 |
-| C13 | [内存、线程、网络、并发、容量规划与 Benchmark](./13-内存线程网络并发容量规划与Benchmark.md) | P1 | 已完成 |
-| C14 | [备份恢复、权限、配额、升级与生产故障 Runbook](./14-备份权限配额升级与生产故障Runbook.md) | P1 | 已完成 |
-| C15 | [ClickHouse Client、System 表与运维命令手册](./15-ClickHouse-Client-System表与运维命令手册.md) | P0 | 已完成 |
-
-当前完成 **16/16**，剩余 **0 篇**。
+| 编号 | 文章 | 优先级 |
+| --- | --- | --- |
+| C00 | ClickHouse 从零到精通学习路线 | P0 |
+| C01 | [ClickHouse 适用场景、列式存储与一次查询路径](./01-ClickHouse适用场景列式存储与一次查询路径.md) | P0 |
+| C02 | [数据类型、Nullable、LowCardinality、Array/Map 与 Schema](./02-ClickHouse数据类型LowCardinality-Array-Map与Schema.md) | P0 |
+| C03 | [Part、Column File、Granule、Mark 与稀疏主键索引](./03-Part列文件Granule-Mark与稀疏主键索引.md) | P0 |
+| C04 | [MergeTree 分区、排序键与后台合并](../olap/02-ClickHouse-MergeTree分区排序键与后台合并.md) | P0 |
+| C05 | [Replacing/Summing/Aggregating/Collapsing MergeTree 语义](./05-Replacing-Summing-Aggregating-Collapsing-MergeTree.md) | P0 |
+| C06 | [SELECT Pipeline、向量化、PREWHERE、Join 与聚合](./06-SELECT-Pipeline向量化PREWHERE-Join与聚合.md) | P0 |
+| C07 | [Projection、Materialized View、Skip Index 与 Query Cache](./07-Projection物化视图Skip-Index与Query-Cache.md) | P1 |
+| C08 | [异步 INSERT、Batch、Kafka Engine、去重与一致性](./08-异步INSERT-Batch-Kafka-Engine去重与一致性.md) | P1 |
+| C09 | [Package、Docker、ClickHouse Keeper 与多节点部署](./09-ClickHouse-Package-Docker-Keeper与多节点部署.md) | P0 |
+| C10 | [ReplicatedMergeTree、Shard、Replica、Distributed Table 与路由](./10-ReplicatedMergeTree-Shard-Replica与Distributed-Table.md) | P0 |
+| C11 | [Keeper/Raft、复制队列、选主、故障恢复和扩缩容](./11-Keeper-Raft复制队列故障恢复与扩缩容.md) | P1 |
+| C12 | [Merge、Mutation、TTL、小 Part、磁盘与对象存储治理](./12-Merge-Mutation-TTL小Part磁盘与对象存储治理.md) | P1 |
+| C13 | [内存、线程、网络、并发、容量规划与 Benchmark](./13-内存线程网络并发容量规划与Benchmark.md) | P1 |
+| C14 | [备份恢复、权限、配额、升级与生产故障 Runbook](./14-备份权限配额升级与生产故障Runbook.md) | P1 |
+| C15 | [ClickHouse Client、System 表与运维命令手册](./15-ClickHouse-Client-System表与运维命令手册.md) | P0 |
 
 ## 3. 学习顺序
 
@@ -102,4 +100,4 @@ Benchmark：真实 Schema/分布/并发/聚合
 - [ClickHouse Source](https://github.com/ClickHouse/ClickHouse)
 - [ClickHouse Kubernetes Operator](https://github.com/Altinity/clickhouse-operator)
 
-ClickHouse 路线与现有 Trino/Doris/湖仓文章保持交叉链接，但会单独补齐从部署到生产故障的完整闭环。
+ClickHouse 应与 Trino、Doris 和湖仓技术对照学习，同时独立掌握部署、存储、查询、高可用、容量和生产故障处理。

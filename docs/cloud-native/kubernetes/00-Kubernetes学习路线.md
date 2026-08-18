@@ -14,43 +14,11 @@ categories: 云原生
 
 与 [Kubernetes GPU 集群专栏](../../gpu/cluster/00-Kubernetes-GPU集群学习路线.md) 可并行：本专栏打 K8s 底座，GPU 专栏侧重算力与推理。
 
-学习原理章节的同时，建议使用新增的 [Kubernetes 与容器命令参考库](./commands/00-Kubernetes与容器命令参考库学习路线.md)完成动手闭环。参考库包含 16 篇独立文章：前 6 篇把 `kubectl` 按 API 发现、查询、变更、Pod 调试、发布维护和权限/指标拆开，后 10 篇覆盖 Helm、Kustomize、kubeadm、etcdctl、crictl、ctr、nerdctl、Docker、Podman 工具链与 runc/OCI。原理文章解释系统为什么这样设计，命令文章负责把对象、参数、输出、安全边界和排障证据连起来。
+学习原理章节的同时，建议使用 [Kubernetes 与容器命令参考库](./commands/00-Kubernetes与容器命令参考库学习路线.md)完成动手闭环。参考库将 `kubectl` 的 API 发现、查询、变更、Pod 调试、发布维护和权限/指标，与 Helm、Kustomize、kubeadm、etcdctl、crictl、ctr、nerdctl、Docker、Podman 和 runc/OCI 工具链结合起来。原理文章解释系统为什么这样设计，命令文章负责把对象、参数、输出、安全边界和排障证据连起来。
 
-## 1. 当前进度 {/* #当前进度 */}
+## 1. Part I · 基础架构与核心抽象 {/* #part-i--基础架构与核心抽象 */}
 
-| 部分 | 状态 | 说明 |
-| --- | --- | --- |
-| Part I · Kubernetes 架构 | **已完成** | [架构 · 本章导读](./architecture/00-本章导读.md) |
-| Part I · 开放接口 | **已完成** | [开放接口 · 本章导读](./interfaces/00-本章导读.md) |
-| Part I · Pod | **已完成** | [Pod · 本章导读](./pods-workloads/00-本章导读.md) |
-| Part I · 集群资源管理 | **已完成** | [集群资源管理 · 本章导读](./scheduling/00-本章导读.md) |
-| Part I · 控制器 | **已完成** | [控制器 · 本章导读](./controllers/00-本章导读.md) |
-| Part I · 服务发现与路由 | **已完成** | [服务发现 · 本章导读](../../networking/kubernetes/service-routing/00-本章导读.md) |
-| Part I · 身份与权限认证 | **已完成** | [身份认证 · 本章导读](./security/identity/00-本章导读.md) |
-| Part I · 网络 | **已完成** | [网络 · 本章导读](../../networking/kubernetes/cni/00-本章导读.md) |
-| Part I · 存储 | **已完成** | [存储 · 本章导读](../../storage/kubernetes/volumes/00-本章导读.md) |
-| Part I | **已全部完成** | 见下方各章目录 |
-| Part II · 安全 | **已完成** | [安全 · 本章导读](./security/cluster/00-本章导读.md) |
-| Kubernetes 与容器命令参考库 | **已完成** | [16 篇命令与排障文章](./commands/00-Kubernetes与容器命令参考库学习路线.md) |
-| Part II · 访问集群 | **已完成** | [访问集群 · 本章导读](./operations/access/00-本章导读.md) |
-| Part II · 扩展 Kubernetes | **已完成** | [扩展 · 本章导读](./extensions/platform/00-本章导读.md) |
-| Part II · 多集群管理 | **已完成** | [多集群 · 本章导读](./multi-cluster/00-本章导读.md) |
-| Part II · 命令与调试 | **已完成** | [命令与调试 · 本章导读](./troubleshooting/00-本章导读.md) |
-| Part II · 集群运维 | **已完成** | [集群运维 · 本章导读](./operations/cluster/00-本章导读.md) |
-| Part II · 部署应用 | **已完成** | [部署应用 · 本章导读](./operations/application-delivery/00-本章导读.md) |
-| Part II · 可观测性 | **已完成** | [可观测性 · 本章导读](../../sre/observability/kubernetes/00-本章导读.md) |
-| Part II · 开发指南 | **已完成** | [开发指南 · 本章导读](./extensions/development/00-本章导读.md) |
-| Part II · 服务网格 | **已完成** | [服务网格 · 本章导读](../service-mesh/00-本章导读.md) |
-| Part II | **已全部完成** | 见下方各章目录 |
-| Part III · Serverless | **已完成** | [Serverless · 本章导读](../serverless-edge/serverless/00-本章导读.md) |
-| Part III · 边缘计算 | **已完成** | [边缘计算 · 本章导读](../serverless-edge/edge/00-本章导读.md) |
-| Part III · 云原生 | **已完成** | [云原生 · 本章导读](../fundamentals/00-本章导读.md) |
-| Part III · AI 原生 | **已完成** | [AI 原生 · 本章导读](./ai-native/00-本章导读.md) |
-| Part III | **已全部完成** | 见下方各章目录 |
-
-## 2. Part I · 基础架构与核心抽象 {/* #part-i--基础架构与核心抽象 */}
-
-### 2.1 Kubernetes 架构（已完成） {/* #kubernetes-架构已完成 */}
+### 1.1 Kubernetes 架构 {/* #kubernetes-架构已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -60,7 +28,7 @@ categories: 云原生
 | [Etcd 解析](./architecture/03-Etcd解析.md) | 存储与一致性 |
 | [资源对象](./architecture/04-资源对象.md) | 对象模型 |
 
-### 2.2 开放接口（已完成） {/* #开放接口已完成 */}
+### 1.2 开放接口 {/* #开放接口已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -70,7 +38,7 @@ categories: 云原生
 | [CNI](../../networking/kubernetes/interfaces/03-容器网络接口-CNI.md) | 容器网络接口 |
 | [CSI](../../storage/kubernetes/interfaces/04-容器存储接口-CSI.md) | 容器存储接口 |
 
-### 2.3 Pod（已完成） {/* #pod已完成 */}
+### 1.3 Pod {/* #pod已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -85,7 +53,7 @@ categories: 云原生
 | [中断预算](./pods-workloads/08-Pod中断预算.md) | PDB 与自愿中断 |
 | [探针](./pods-workloads/09-存活与就绪探针.md) | Liveness / Readiness / Startup |
 
-### 2.4 集群资源管理（已完成） {/* #集群资源管理已完成 */}
+### 1.4 集群资源管理 {/* #集群资源管理已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -100,7 +68,7 @@ categories: 云原生
 | [资源调度](./scheduling/08-资源调度.md) | 调度 |
 | [服务质量等级](./scheduling/09-服务质量等级.md) | QoS |
 
-### 2.5 控制器（已完成） {/* #控制器已完成 */}
+### 1.5 控制器 {/* #控制器已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -116,7 +84,7 @@ categories: 云原生
 | [HPA](./controllers/09-HPA.md) | 水平扩缩 |
 | [准入控制器](./controllers/10-准入控制器.md) | Admission |
 
-### 2.6 服务发现与路由（已完成） {/* #服务发现与路由已完成 */}
+### 1.6 服务发现与路由 {/* #服务发现与路由已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -129,7 +97,7 @@ categories: 云原生
 | [Gateway API 推理扩展](../../networking/kubernetes/service-routing/06-Gateway-API推理扩展.md) | 推理扩展 |
 | [迁移到 Gateway API](../../networking/kubernetes/service-routing/07-迁移到Gateway-API.md) | 从 Ingress 迁移 |
 
-### 2.7 身份与权限认证（已完成） {/* #身份与权限认证已完成 */}
+### 1.7 身份与权限认证 {/* #身份与权限认证已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -140,7 +108,7 @@ categories: 云原生
 | [SPIFFE](./security/identity/04-SPIFFE.md) | 工作负载身份 |
 | [SPIRE](./security/identity/05-SPIRE.md) | SPIFFE 运行时 |
 
-### 2.8 网络（已完成） {/* #网络已完成 */}
+### 1.8 网络 {/* #网络已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -150,7 +118,7 @@ categories: 云原生
 | [Calico](../../networking/kubernetes/cni/03-Calico.md) | 策略 / 非 Overlay |
 | [Cilium](../../networking/kubernetes/cni/04-Cilium.md) | eBPF 网络 |
 
-### 2.9 存储（已完成） {/* #存储已完成 */}
+### 1.9 存储 {/* #存储已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -165,11 +133,9 @@ categories: 云原生
 | [Storage Class](../../storage/kubernetes/volumes/08-StorageClass.md) | 动态供给 |
 | [本地持久化存储](../../storage/kubernetes/volumes/09-本地持久化存储.md) | Local PV |
 
-> **Part I 已全部完成。**
+## 2. Part II · 平台能力与生产实践 {/* #part-ii--平台能力与生产实践 */}
 
-## 3. Part II · 平台能力与生产实践 {/* #part-ii--平台能力与生产实践 */}
-
-### 3.1 安全（已完成） {/* #安全已完成 */}
+### 2.1 安全 {/* #安全已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -187,7 +153,7 @@ categories: 云原生
 | [用户与身份认证](./security/cluster/11-用户与身份认证.md) | 用户身份 |
 | [安全最佳实践](./security/cluster/12-Kubernetes安全最佳实践.md) | 最佳实践 |
 
-### 3.2 访问集群（已完成） {/* #访问集群已完成 */}
+### 2.2 访问集群 {/* #访问集群已完成 */}
 
 | 篇 | 内容 |
 | --- | --- |
@@ -203,7 +169,7 @@ categories: 云原生
 | [Devtron](./operations/access/09-Devtron.md) | 应用平台 |
 | [Dashboard](./operations/access/10-Kubernetes-Dashboard.md) | Web UI |
 
-### 3.3 扩展 Kubernetes（已完成） {/* #扩展-kubernetes已完成 */}
+### 2.3 扩展 Kubernetes {/* #扩展-kubernetes已完成 */}
 
 可与 [k8s-gpu 专栏](../../gpu/cluster/00-Kubernetes-GPU集群学习路线.md) 对照阅读 DRA / GPU 调度篇。
 
@@ -225,7 +191,7 @@ categories: 云原生
 | [DRA](./extensions/platform/13-动态资源分配-DRA.md) | 动态资源分配 |
 | [GPU 与 AI 调度](./extensions/platform/14-GPU与AI调度.md) | GPU / AI |
 
-### 3.4 多集群管理（已完成） {/* #多集群管理已完成 */}
+### 2.4 多集群管理 {/* #多集群管理已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -235,7 +201,7 @@ categories: 云原生
 | [Karmada](./multi-cluster/03-Karmada.md) | 多集群编排 |
 | [k0rdent](./multi-cluster/04-k0rdent.md) | 多集群控制平面 |
 
-### 3.5 命令与调试（已完成） {/* #命令与调试已完成 */}
+### 2.5 命令与调试 {/* #命令与调试已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -244,7 +210,7 @@ categories: 云原生
 | [kubectl 速查表](./troubleshooting/02-kubectl速查表.md) | 常用命令速查 |
 | [调试 Kubernetes](./troubleshooting/03-调试Kubernetes.md) | 排障流程 |
 
-### 3.6 集群运维（已完成） {/* #集群运维已完成 */}
+### 2.6 集群运维 {/* #集群运维已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -254,7 +220,7 @@ categories: 云原生
 | [集群生命周期管理](./operations/cluster/03-集群生命周期管理.md) | kubeadm 创建 / 升级 / 维护 |
 | [版本发布管理](./operations/cluster/04-版本发布管理.md) | 版本与发布 |
 
-### 3.7 部署应用（已完成） {/* #部署应用已完成 */}
+### 2.7 部署应用 {/* #部署应用已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -270,7 +236,7 @@ categories: 云原生
 | [Argo Rollout](./operations/application-delivery/09-Argo-Rollout.md) | 渐进式交付 |
 | [Volcano](./operations/application-delivery/10-Volcano.md) | 批处理调度 |
 
-### 3.8 可观测性（已完成） {/* #可观测性已完成 */}
+### 2.8 可观测性 {/* #可观测性已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -284,7 +250,7 @@ categories: 云原生
 | [告警系统](../../sre/observability/kubernetes/07-告警系统.md) | Alerting |
 | [OpenTelemetry](../../sre/observability/kubernetes/08-OpenTelemetry.md) | 可观测性标准 |
 
-### 3.9 开发指南（已完成） {/* #开发指南已完成 */}
+### 2.9 开发指南 {/* #开发指南已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -300,7 +266,7 @@ categories: 云原生
 | [社区贡献](./extensions/development/09-社区贡献.md) | 参与贡献 |
 | [Minikube](./extensions/development/10-Minikube.md) | 本地集群 |
 
-### 3.10 服务网格（已完成） {/* #服务网格已完成 */}
+### 2.10 服务网格 {/* #服务网格已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -313,11 +279,11 @@ categories: 云原生
 | [Envoy 构建模块](../service-mesh/06-Envoy构建模块.md) | Envoy 组件 |
 | [HTTP 连接管理器](../service-mesh/07-HTTP连接管理器.md) | HCM |
 
-## 4. Part III · 扩展机制与新范式 {/* #part-iii--扩展机制与新范式 */}
+## 3. Part III · 扩展机制与新范式 {/* #part-iii--扩展机制与新范式 */}
 
 与 GPU / AI 相关内容可与 [k8s-gpu 专栏](../../gpu/cluster/00-Kubernetes-GPU集群学习路线.md) 对照阅读。
 
-### 4.1 Serverless（已完成） {/* #serverless已完成 */}
+### 3.1 Serverless {/* #serverless已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -329,7 +295,7 @@ categories: 云原生
 | [Kubernetes 原生模式](../serverless-edge/serverless/05-Kubernetes原生Serverless模式.md) | 原生模式 |
 | [OpenFaaS](../serverless-edge/serverless/06-OpenFaaS.md) | OpenFaaS |
 
-### 4.2 边缘计算（已完成） {/* #边缘计算已完成 */}
+### 3.2 边缘计算 {/* #边缘计算已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -340,7 +306,7 @@ categories: 云原生
 | [OpenYurt](../serverless-edge/edge/04-OpenYurt.md) | 零侵入边缘平台 |
 | [SuperEdge](../serverless-edge/edge/05-SuperEdge.md) | 单集群多区域 |
 
-### 4.3 云原生（已完成） {/* #云原生已完成 */}
+### 3.3 云原生 {/* #云原生已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -355,7 +321,7 @@ categories: 云原生
 | [角色与分工](../fundamentals/08-角色与分工.md) | 角色 |
 | [规范模型](../fundamentals/09-云原生应用规范模型.md) | 规范 |
 
-### 4.4 AI 原生（已完成） {/* #ai-原生已完成 */}
+### 3.4 AI 原生 {/* #ai-原生已完成 */}
 
 | 篇 | 说明 |
 | --- | --- |
@@ -374,6 +340,6 @@ categories: 云原生
 | [设备插件](./ai-native/12-设备插件.md) | Device Plugin |
 | [AI 工作组](./ai-native/13-AI相关工作组.md) | 社区 WG |
 
-## 5. 参考资料 {/* #参考 */}
+## 4. 参考资料 {/* #参考 */}
 
 - [Kubernetes 官方文档](https://kubernetes.io/zh-cn/docs/home/)

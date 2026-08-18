@@ -8,7 +8,7 @@ tags: [Envoy, xDS, Proxy, Service Mesh, Gateway, 学习路线]
 
 # Envoy 从零到精通学习路线
 
-现有服务网格模块有 Envoy 入门和构建模块文章，但不足以形成独立掌握路径。本路线从一次 downstream 请求进入 Listener 开始，追踪 Filter Chain、HTTP Connection Manager、Route、Cluster、Endpoint、连接池、负载均衡和 upstream response，再进入 xDS、过载、热重启和源码。
+本路线从一次 downstream 请求进入 Listener 开始，追踪 Filter Chain、HTTP Connection Manager、Route、Cluster、Endpoint、连接池、负载均衡和 upstream response，再进入 xDS、过载保护、热重启与源码主路径。
 
 Envoy 发布节奏快，学习使用当前 stable minor，生产固定补丁镜像 digest，并检查版本支持和 API deprecation；`latest` 文档可能指向开发版本，不能直接当生产事实。
 
@@ -29,27 +29,25 @@ Downstream connection
   → access log / metrics / trace
 ```
 
-## 2. 篇文章规划 {/* #2-15-篇文章规划 */}
+## 2. 课程结构 {/* #2-15-篇文章规划 */}
 
-| 编号 | 文章 | 优先级 | 状态 |
-| --- | --- | --- | --- |
-| V00 | Envoy 从零到精通学习路线 | P0 | 已完成 |
-| V01 | [什么是 Envoy 与部署形态](../../../cloud-native/service-mesh/04-什么是Envoy.md) | P0 | 已完成 |
-| V02 | [Listener、Filter Chain、HCM、Route、Cluster 与请求生命周期](./02-Listener-Filter-HCM-Route-Cluster与请求生命周期.md) | P0 | 已完成 |
-| V03 | [Envoy 核心构建模块](../../../cloud-native/service-mesh/06-Envoy构建模块.md) | P0 | 已完成 |
-| V04 | [静态配置、Docker、systemd、Envoy Gateway 与 K8s 部署](./04-Envoy静态配置Docker-systemd-Envoy-Gateway与Kubernetes部署.md) | P0 | 已完成 |
-| V05 | [xDS、Bootstrap、ADS、SotW/Delta、ACK/NACK 与控制面](./05-xDS-Bootstrap-ADS-Delta与ACK-NACK.md) | P0 | 已完成 |
-| V06 | [DNS/EDS、Health Check、LB、Outlier、Circuit Breaker 与 Retry](./06-服务发现健康检查负载均衡异常检测与重试.md) | P0 | 已完成 |
-| V07 | [HTTP/1.1、HTTP/2、HTTP/3、gRPC、WebSocket 与 TCP/UDP](./07-HTTP-gRPC-WebSocket与TCP-UDP协议代理.md) | P1 | 已完成 |
-| V08 | [TLS、mTLS、SDS、Certificate Rotation、RBAC/JWT/ext_authz](./08-TLS-mTLS-SDS-RBAC-JWT与外部授权.md) | P1 | 已完成 |
-| V09 | [Stats、Access Log、Tracing、Admin、Tap 与请求调试](./09-Stats-AccessLog-Trace-Admin与请求调试.md) | P0 | 已完成 |
-| V10 | [Threading、Connection Pool、Buffer、Overload Manager 与性能](./10-线程连接池Buffer过载保护与性能.md) | P1 | 已完成 |
-| V11 | [Drain、Hot Restart、Runtime、灰度与无损升级](./11-Drain-Hot-Restart-Runtime与无损升级.md) | P1 | 已完成 |
-| V12 | [Native/Wasm/Dynamic Module 与 Filter 扩展开发](./12-Native-Wasm-Dynamic-Module与Filter扩展.md) | P2 | 已完成 |
-| V13 | [Sidecar、DaemonSet、Gateway、Service Mesh 与多级代理拓扑](./13-Sidecar-DaemonSet-Gateway与多级代理拓扑.md) | P1 | 已完成 |
-| V14 | [Envoy 源码、xDS NACK、503/504、内存与生产故障 Runbook](./14-源码xDS-NACK-503-504内存与生产故障Runbook.md) | P2 | 已完成 |
-
-当前完成 **15/15**，剩余 **0 篇**。
+| 编号 | 文章 | 优先级 |
+| --- | --- | --- |
+| V00 | Envoy 从零到精通学习路线 | P0 |
+| V01 | [什么是 Envoy 与部署形态](../../../cloud-native/service-mesh/04-什么是Envoy.md) | P0 |
+| V02 | [Listener、Filter Chain、HCM、Route、Cluster 与请求生命周期](./02-Listener-Filter-HCM-Route-Cluster与请求生命周期.md) | P0 |
+| V03 | [Envoy 核心构建模块](../../../cloud-native/service-mesh/06-Envoy构建模块.md) | P0 |
+| V04 | [静态配置、Docker、systemd、Envoy Gateway 与 K8s 部署](./04-Envoy静态配置Docker-systemd-Envoy-Gateway与Kubernetes部署.md) | P0 |
+| V05 | [xDS、Bootstrap、ADS、SotW/Delta、ACK/NACK 与控制面](./05-xDS-Bootstrap-ADS-Delta与ACK-NACK.md) | P0 |
+| V06 | [DNS/EDS、Health Check、LB、Outlier、Circuit Breaker 与 Retry](./06-服务发现健康检查负载均衡异常检测与重试.md) | P0 |
+| V07 | [HTTP/1.1、HTTP/2、HTTP/3、gRPC、WebSocket 与 TCP/UDP](./07-HTTP-gRPC-WebSocket与TCP-UDP协议代理.md) | P1 |
+| V08 | [TLS、mTLS、SDS、Certificate Rotation、RBAC/JWT/ext_authz](./08-TLS-mTLS-SDS-RBAC-JWT与外部授权.md) | P1 |
+| V09 | [Stats、Access Log、Tracing、Admin、Tap 与请求调试](./09-Stats-AccessLog-Trace-Admin与请求调试.md) | P0 |
+| V10 | [Threading、Connection Pool、Buffer、Overload Manager 与性能](./10-线程连接池Buffer过载保护与性能.md) | P1 |
+| V11 | [Drain、Hot Restart、Runtime、灰度与无损升级](./11-Drain-Hot-Restart-Runtime与无损升级.md) | P1 |
+| V12 | [Native/Wasm/Dynamic Module 与 Filter 扩展开发](./12-Native-Wasm-Dynamic-Module与Filter扩展.md) | P2 |
+| V13 | [Sidecar、DaemonSet、Gateway、Service Mesh 与多级代理拓扑](./13-Sidecar-DaemonSet-Gateway与多级代理拓扑.md) | P1 |
+| V14 | [Envoy 源码、xDS NACK、503/504、内存与生产故障 Runbook](./14-源码xDS-NACK-503-504内存与生产故障Runbook.md) | P2 |
 
 ## 3. 必须掌握的术语
 
@@ -68,7 +66,7 @@ Downstream connection
 
 1. V01～V04：静态配置跑通一条真实请求并逐层观察；
 2. V05～V06：理解控制面怎样动态改变数据面，以及负载均衡/异常检测的状态；
-3. V07～V09：补齐协议、安全与可观测；
+3. V07～V09：掌握协议、安全与可观测；
 4. V10～V11：处理内存、过载、排空和升级；
 5. V12～V14：扩展、拓扑、源码与生产 Runbook。
 
@@ -102,4 +100,4 @@ Kubernetes：Envoy Gateway / sidecar / edge gateway 对比
 - [Life of a Request](https://www.envoyproxy.io/docs/envoy/latest/intro/life_of_a_request.html)
 - [Envoy Source](https://github.com/envoyproxy/envoy)
 
-本路线会把每个 YAML 资源对应到运行时请求对象和源码管理器，避免把 Envoy 学成一堆互不相干的配置字段。
+学习每个 YAML 资源时，应同时追踪它对应的运行时请求对象和源码管理器，避免把 Envoy 理解成一组互不相干的配置字段。

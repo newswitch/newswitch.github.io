@@ -10,7 +10,7 @@ categories: 云原生
 
 # Gateway API Inference Extension：智能负载均衡原理与使用
 
-## 1. 第一篇：概览 {/* #第一篇概览 */}
+## 1. 第一部分：概览 {/* #第一篇概览 */}
 
 ## 2. 概述 {/* #一概述 */}
 
@@ -188,7 +188,7 @@ spec:
 | **发布方式** | 网关：对外暴露 **Gateway 的地址**。模型：通过 **HTTPRoute → InferencePool** 把路径绑定到池，再经 EPP 选 Pod，对外只暴露 Gateway 地址。 |
 | **请求经过的服务** | 客户端 → **网关** →（ext-proc）**EPP** → **模型 Pod**；网关做入口与转发，EPP 做路由/准入/选 Pod，模型 Pod 执行推理。 |
 
-## 3. 第二篇：原理（由整体到组件） {/* #第二篇原理由整体到组件 */}
+## 3. 第二部分：原理（由整体到组件） {/* #第二篇原理由整体到组件 */}
 
 ## 4. 智能负载均衡的整体数据流 {/* #二智能负载均衡的整体数据流 */}
 
@@ -416,7 +416,7 @@ PodLocator：按 InferencePool 得到候选 Pod 列表（并拉取各 Pod 的 me
 
 代码：`pkg/epp/framework/plugins/scheduling/picker/weighted_random_picker.go`。
 
-## 8. 第三篇：使用与配置 {/* #第三篇使用与配置 */}
+## 8. 第三部分：使用与配置 {/* #第三篇使用与配置 */}
 
 ## 9. 使用方式 {/* #六使用方式 */}
 
@@ -481,7 +481,7 @@ EPP 默认即带智能负载均衡（Prefix Cache Scorer、Predicted Latency 若
 
 以上多通过 EPP/InferencePool 的 Helm values 或 EndpointPickerConfig 等传递，具体字段以仓库当前配置为准。
 
-## 11. 第四篇：监控与其它 {/* #第四篇监控与其它 */}
+## 11. 第四部分：监控与运维 {/* #第四篇监控与其它 */}
 
 ## 12. 监控与可观测性 {/* #八监控与可观测性 */}
 

@@ -30,25 +30,23 @@ Client → LB → Higress Gateway Listener
   → response stream / observability
 ```
 
-## 2. 篇文章规划 {/* #2-13-篇文章规划 */}
+## 2. 课程结构 {/* #2-13-篇文章规划 */}
 
-| 编号 | 文章 | 优先级 | 核心问题 | 状态 |
-| --- | --- | --- | --- | --- |
-| H00 | Higress 从零到精通学习路线 | P0 | 建立控制面、数据面和插件地图 | 已完成 |
-| H01 | [Higress、Nginx、Envoy、Ingress 与 API Gateway 选型](./01-Higress-Nginx-Envoy-Ingress与API-Gateway选型.md) | P0 | 产品层次和场景边界 | 已完成 |
-| H02 | [Controller、Pilot/Config、Gateway/Envoy 与一次请求](./02-Higress控制面数据面与一次请求路径.md) | P0 | 配置怎样变成数据面路由 | 已完成 |
-| H03 | [Kind、Helm、Docker、标准 K8s 与生产 HA 部署](./03-Higress-Kind-Helm-Docker标准Kubernetes与生产HA部署.md) | P0 | 多种部署、入口和升级 | 已完成 |
-| H04 | [Ingress、Gateway API、Domain、Route 与 Backend](./04-Ingress-Gateway-API-Domain-Route与Backend.md) | P0 | 声明式路由模型 | 已完成 |
-| H05 | [Kubernetes、Nacos、DNS、Dubbo 服务发现](./05-Kubernetes-Nacos-DNS-Dubbo服务发现.md) | P0 | Endpoint 来源和同步故障 | 已完成 |
-| H06 | [负载均衡、重试、超时、熔断、健康与流量灰度](./06-负载均衡重试超时熔断健康与灰度.md) | P0 | 可靠流量治理边界 | 已完成 |
-| H07 | [TLS、mTLS、JWT/OIDC、Key Auth、WAF 与安全](./07-TLS-mTLS-JWT-OIDC-Key-Auth与WAF.md) | P1 | 边界认证和授权 | 已完成 |
-| H08 | [限流、限并发、配额、降级与多租户](./08-限流限并发配额降级与多租户.md) | P1 | 保护网关和上游 | 已完成 |
-| H09 | [Wasm Plugin、Go/Rust/JS SDK、生命周期与安全](./09-Wasm-Plugin与扩展开发.md) | P2 | 扩展怎样进入请求 Filter Chain | 已完成 |
-| H10 | [AI Gateway、SSE、模型路由、Token 限流、Fallback 与缓存](./10-AI-Gateway模型路由SSE与Token治理.md) | P1 | LLM 流量的专有问题 | 已完成 |
-| H11 | [Access Log、Metrics、Trace、Dashboard、容量与压测](./11-可观测性容量规划与压测.md) | P1 | 从请求到上游的可观测性 | 已完成 |
-| H12 | [配置不生效、503/504、流式中断、升级与源码 Runbook](./12-配置503-504流式中断升级与源码Runbook.md) | P2 | 控制面到数据面的故障定位 | 已完成 |
-
-当前完成 **13/13**，剩余 **0 篇**。
+| 编号 | 文章 | 优先级 | 核心问题 |
+| --- | --- | --- | --- |
+| H00 | Higress 从零到精通学习路线 | P0 | 建立控制面、数据面和插件地图 |
+| H01 | [Higress、Nginx、Envoy、Ingress 与 API Gateway 选型](./01-Higress-Nginx-Envoy-Ingress与API-Gateway选型.md) | P0 | 产品层次和场景边界 |
+| H02 | [Controller、Pilot/Config、Gateway/Envoy 与一次请求](./02-Higress控制面数据面与一次请求路径.md) | P0 | 配置怎样变成数据面路由 |
+| H03 | [Kind、Helm、Docker、标准 K8s 与生产 HA 部署](./03-Higress-Kind-Helm-Docker标准Kubernetes与生产HA部署.md) | P0 | 多种部署、入口和升级 |
+| H04 | [Ingress、Gateway API、Domain、Route 与 Backend](./04-Ingress-Gateway-API-Domain-Route与Backend.md) | P0 | 声明式路由模型 |
+| H05 | [Kubernetes、Nacos、DNS、Dubbo 服务发现](./05-Kubernetes-Nacos-DNS-Dubbo服务发现.md) | P0 | Endpoint 来源和同步故障 |
+| H06 | [负载均衡、重试、超时、熔断、健康与流量灰度](./06-负载均衡重试超时熔断健康与灰度.md) | P0 | 可靠流量治理边界 |
+| H07 | [TLS、mTLS、JWT/OIDC、Key Auth、WAF 与安全](./07-TLS-mTLS-JWT-OIDC-Key-Auth与WAF.md) | P1 | 边界认证和授权 |
+| H08 | [限流、限并发、配额、降级与多租户](./08-限流限并发配额降级与多租户.md) | P1 | 保护网关和上游 |
+| H09 | [Wasm Plugin、Go/Rust/JS SDK、生命周期与安全](./09-Wasm-Plugin与扩展开发.md) | P2 | 扩展怎样进入请求 Filter Chain |
+| H10 | [AI Gateway、SSE、模型路由、Token 限流、Fallback 与缓存](./10-AI-Gateway模型路由SSE与Token治理.md) | P1 | LLM 流量的专有问题 |
+| H11 | [Access Log、Metrics、Trace、Dashboard、容量与压测](./11-可观测性容量规划与压测.md) | P1 | 从请求到上游的可观测性 |
+| H12 | [配置不生效、503/504、流式中断、升级与源码 Runbook](./12-配置503-504流式中断升级与源码Runbook.md) | P2 | 控制面到数据面的故障定位 |
 
 ## 3. 学习重点
 

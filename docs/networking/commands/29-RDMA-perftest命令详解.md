@@ -77,4 +77,4 @@ perftest 会主动打满 NIC/PCIe/内存/GPU，属于 `[A/D]`。只在批准窗�
 
 - [linux-rdma/perftest README](https://github.com/linux-rdma/perftest)
 
-RDMA 主机命令补齐。返回 [网络命令参考库](./00-网络命令参考库学习路线.md)。
+关联学习：[网络命令参考库](./00-网络命令参考库学习路线.md)。

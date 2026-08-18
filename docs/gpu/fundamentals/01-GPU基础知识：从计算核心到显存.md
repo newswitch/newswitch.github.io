@@ -373,4 +373,4 @@ CUDA Core：通用算术；Tensor Core：矩阵与混合精度
 - [NVIDIA Tensor Cores](https://www.nvidia.com/en-us/data-center/tensor-cores/)
 - [NVIDIA System Management Interface（nvidia-smi）](https://developer.nvidia.com/system-management-interface)
 
-本文按上述官方材料整理，并按本系列学习路线做了结构与交叉链接调整。
+本文依据上述官方材料梳理 GPU 计算、执行和内存层次，并结合相关专题建立交叉索引。

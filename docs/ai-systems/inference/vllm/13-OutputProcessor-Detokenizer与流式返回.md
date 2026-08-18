@@ -10,7 +10,7 @@ tags: [vLLM, V1, OutputProcessor, Detokenizer, SSE, 源码分析]
 
 GPU 选出了 token，并不代表用户已经看到文字。它还要穿过 EngineCore、输出处理器、Detokenizer、OpenAI 协议适配与网络缓冲。
 
-本篇补齐一句话的最后一段路径：
+下面追踪一句话生成后的最后一段路径：
 
 ```text
 ModelRunnerOutput

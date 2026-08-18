@@ -408,4 +408,4 @@ docker pull nvcr.io/nvidia/k8s-device-plugin:v0.17.1
 
 ## 12. 参考与致谢 {/* #参考与致谢 */}
 
-本文内容整理自 [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) README，并按本系列学习路线做了中文结构化与交叉链接。版本说明以仓库当前发布为准。
+本文参考 [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) README，并结合 Device Plugin 的部署、配置与故障边界进行校订。版本说明以项目当前发布为准。

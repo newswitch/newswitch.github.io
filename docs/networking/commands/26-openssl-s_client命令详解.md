@@ -78,4 +78,4 @@ openssl s_client -connect api.example.com:443 \
 
 - [OpenSSL s_client](https://docs.openssl.org/master/man1/openssl-s_client/)
 
-HTTP/TLS 网络命令补齐。返回 [网络命令参考库](./00-网络命令参考库学习路线.md)。
+关联学习：[网络命令参考库](./00-网络命令参考库学习路线.md)。

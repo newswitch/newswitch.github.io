@@ -8,7 +8,7 @@ tags: [AI Infra, 学习路线, GPU, 网络, 存储, Kubernetes, vLLM, SRE]
 
 # AI Infra 技术模块学习地图
 
-这套博客不按“岗位职责”拆文章，也不把所有内容硬套进
+本学习体系不按“岗位职责”划分技术，也不把所有内容硬套进
 “GPU 计算 → 显存 → NVLink → 网卡 → 存储 → 调度”六个词中。
 
 更合适的方式是先分别掌握独立技术栈，再通过综合实战理解它们如何协同：
@@ -44,7 +44,7 @@ flowchart LR
 Linux 是计算、网络、存储和 Kubernetes 的共同运行底座。这里既要理解进程、权限、文件系统、网络栈和 cgroup，也要能准确使用命令获取证据、改变状态并判断退出结果。
 
 - [Linux 命令参考库：从命令行入门到生产故障排查](../linux/00-Linux命令参考库学习路线.md)
-- Linux 生产 SRE 核心命令库当前收录 203 篇技术文章和 11 篇分类导读，覆盖 Shell/帮助与安全自动化、归档同步校验、grep/sed/awk/jq、Namespace/cgroup/容器现场，以及 strace/perf/ftrace/eBPF 深度诊断；网络、存储、GPU、Kubernetes 和大数据产品命令继续在各自模块维护。
+- Linux 生产 SRE 核心命令库覆盖 Shell/帮助与安全自动化、归档同步校验、grep/sed/awk/jq、Namespace/cgroup/容器现场，以及 strace/perf/ftrace/eBPF 深度诊断；网络、存储、GPU、Kubernetes 和大数据产品命令分别结合对应技术栈学习。
 - 学习顺序采用“操作系统对象 → 命令完整参数 → 输出与退出码 → 安全实验 → 生产排障”，不把命令背成孤立单词。
 
 ## 2. 计算与加速器模块 {/* #1-计算与加速器模块 */}
@@ -56,7 +56,7 @@ Linux 是计算、网络、存储和 Kubernetes 的共同运行底座。这里�
 - 能解释模型权重、激活值和 KV Cache 为什么占用显存。
 - 能从硬件拓扑判断进程、GPU、网卡和 CPU 的合理绑定关系。
 
-### 2.2 已有内容 {/* #已有内容 */}
+### 2.2 核心内容 {/* #已有内容 */}
 
 - [GPU 基础知识：从计算核心到显存](../gpu/fundamentals/01-GPU基础知识：从计算核心到显存.md)
 - [HBM 显存原理](../gpu/memory/01-HBM显存原理：容量、带宽与访问效率.md)
@@ -65,7 +65,7 @@ Linux 是计算、网络、存储和 Kubernetes 的共同运行底座。这里�
 - [NVLink 与 NVSwitch 原理](../gpu/nvlink-nvswitch/01-NVLink与NVSwitch原理.md)
 - [PCIe 基本架构](../gpu/pcie-numa/01-PCIe总线学习（一）基本架构.md)
 - [GPU 与加速器命令参考库：从设备识别到分布式通信验证](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)
-- GPU 命令参考库包含 16 个主题：复用现有 `nvidia-smi`、`nsys`、`ncu` 三篇成熟文章，新补 13 篇，覆盖 DCGM、驱动证据采集、容器注入、CUDA 编译调试、二进制分析、Samples 基线与 NCCL 单机/多机验证；所有主动负载和状态变更操作均标注安全边界。
+- GPU 命令参考库覆盖 `nvidia-smi`、DCGM、驱动证据采集、容器注入、CUDA 编译调试、`nsys`、`ncu`、二进制分析、Samples 基线与 NCCL 单机/多机验证；所有主动负载和状态变更操作均标注安全边界。
 
 ### 2.3 P1 进阶内容 {/* #p1-进阶内容 */}
 
@@ -94,10 +94,10 @@ Linux 网络基础
   └─ NCCL / GPUDirect RDMA
 ```
 
-### 3.2 已有内容 {/* #已有内容-1 */}
+### 3.2 核心内容 {/* #已有内容-1 */}
 
 - [网络命令参考库：从主机配置到路径、DNS、防火墙、二层邻居与吞吐](../networking/commands/00-网络命令参考库学习路线.md)
-- 网络命令参考库当前收录 29 篇：除本机网络、路径、DNS、防火墙、配置所有权和二层拓扑外，还覆盖 `curl`/`openssl s_client` 的 HTTP/TLS 链路诊断，以及 `rdma`、verbs/GID 发现与 RDMA perftest，形成从 netdev 到 RoCE/InfiniBand 数据面的证据链。
+- 网络命令参考库覆盖本机网络、路径、DNS、防火墙、配置所有权和二层拓扑，并包括 `curl`/`openssl s_client` 的 HTTP/TLS 链路诊断，以及 `rdma`、verbs/GID 发现与 RDMA perftest，形成从 netdev 到 RoCE/InfiniBand 数据面的证据链。
 - [传统网络从零到精通学习路线](../networking/fundamentals/00-传统网络从零到精通学习路线.md)
 - [Linux 高性能网络详解](../networking/high-performance/01-linux高性能网络详解读书笔记（一）.md)
 - [RDMA 技术概述](../networking/rdma-roce/01-RDMA技术详解（一）：RDMA概述.md)
@@ -142,10 +142,10 @@ Linux 网络基础
   └─ 本地缓存、模型分发与冷启动
 ```
 
-### 4.2 已有内容 {/* #已有内容-2 */}
+### 4.2 核心内容 {/* #已有内容-2 */}
 
 - [存储命令参考库：从块设备到 NFS、Ceph 与 S3](../storage/commands/00-存储命令参考库学习路线.md)
-- 存储命令参考库当前收录 28 篇：覆盖块设备与挂载、文件系统容量、I/O 性能与介质健康、LVM/MD RAID、NFS/RPC、Ceph/RADOS/RBD/CephFS，以及 S3 API 和多工具数据搬运；所有修复、格式化、阵列、同步和删除动作都给出安全边界。
+- 存储命令参考库覆盖块设备与挂载、文件系统容量、I/O 性能与介质健康、LVM/MD RAID、NFS/RPC、Ceph/RADOS/RBD/CephFS，以及 S3 API 和多工具数据搬运；修复、格式化、阵列、同步和删除动作均需明确安全边界。
 - [Ceph 从零基础到生产运维学习路线](../storage/ceph/00-Ceph学习路线.md)
 - [NFS 在 AI 集群中的使用与性能分析](../storage/nfs/01-NFS在AI集群中的使用与性能分析.md)
 - [Ceph 三种接口在 AI 集群中的选型](../storage/ceph/08-ai-workloads/30-AI集群中的Ceph接口选型.md)
@@ -162,7 +162,6 @@ Linux 网络基础
 | P1 | [NFS 从零到生产学习路线](../storage/nfs/00-NFS学习路线.md) | 能独立部署并分析 stale handle、延迟、吞吐、HA 和 CSI |
 | P1 | [S3 Multipart、Range 与大模型分发](../storage/object-storage/01-S3%20Multipart、Range与模型分发.md) | 能设计并行下载、断点续传、完整性和回源保护 |
 | P1 | [NVMe 队列与 Namespace](../storage/local-storage/01-NVMe队列Namespace与性能模型.md) → [RAID/LVM/文件系统](../storage/local-storage/02-RAID%20LVM与文件系统选型.md) → [节点模型缓存](../storage/ai-workloads/08-节点模型缓存与容量水位治理.md) | 能设计可重建的本地高性能缓存层 |
-| P2 | Lustre / BeeGFS / JuiceFS 技术对比（待补） | 能按训练、推理、Checkpoint 场景选型 |
 
 ## 5. Kubernetes 与调度模块 {/* #4-kubernetes-与调度模块 */}
 
@@ -171,11 +170,11 @@ Linux 网络基础
 1. 工作负载为什么被放到这台机器？
 2. GPU、CPU、网卡、存储和拓扑条件如何同时满足？
 
-### 5.1 已有内容 {/* #已有内容-3 */}
+### 5.1 核心内容 {/* #已有内容-3 */}
 
 - [Kubernetes 学习路线](../cloud-native/kubernetes/00-Kubernetes学习路线.md)
 - [Kubernetes 与容器命令参考库：从 API 对象到 OCI 进程](../cloud-native/kubernetes/commands/00-Kubernetes与容器命令参考库学习路线.md)
-- Kubernetes 与容器命令参考库当前收录 16 篇：覆盖 `kubectl` API 发现、对象查询、声明式变更、Pod 调试、发布与节点维护、RBAC/指标/API，及 Helm、Kustomize、kubeadm、etcdctl、crictl、ctr、nerdctl、Docker、Podman/Buildah/Skopeo、runc；每篇都区分 API、CRI、containerd 与 OCI 对象，并标注读取、主动操作、写入和破坏性操作边界。
+- Kubernetes 与容器命令参考库覆盖 `kubectl` API 发现、对象查询、声明式变更、Pod 调试、发布与节点维护、RBAC/指标/API，以及 Helm、Kustomize、kubeadm、etcdctl、crictl、ctr、nerdctl、Docker、Podman/Buildah/Skopeo 和 runc；学习时需要区分 API、CRI、containerd 与 OCI 对象，并识别读取、主动操作、写入和破坏性操作边界。
 - [GPU 调度命令参考库：Volcano 与 Kueue](../gpu/commands/20-GPU调度命令参考库.md)
 - [Kubernetes 如何识别和管理 GPU](../gpu/cluster/device-management/01-Kubernetes%20如何识别和管理%20GPU.md)
 - [GPU 节点标签与调度策略](../gpu/cluster/scheduling/01-Kubernetes%20GPU%20节点标签与调度策略.md)
@@ -212,7 +211,7 @@ Transformer 推理基础
   → 扩缩容 / 发布 / 回滚
 ```
 
-### 6.2 已有内容 {/* #已有内容-4 */}
+### 6.2 核心内容 {/* #已有内容-4 */}
 
 - [AI 运行环境命令参考库](../ai-systems/runtime/commands/00-AI运行环境命令参考库.md)
 - [模型制品命令参考库](../ai-systems/models/commands/00-模型制品命令参考库.md)
@@ -240,7 +239,7 @@ Transformer 推理基础
 可靠性文章放在“可观测性”模块中，因为 SLO、错误预算和事件响应都必须建立在
 指标、日志和 Trace 的证据之上。
 
-### 7.1 已有内容 {/* #已有内容-5 */}
+### 7.1 核心内容 {/* #已有内容-5 */}
 
 - [可观测性命令参考库：promtool、amtool 与 logcli](../sre/observability/commands/00-可观测性命令参考库.md)
 - [可观测性本章导读](../sre/observability/kubernetes/00-本章导读.md)
@@ -311,7 +310,7 @@ Transformer 推理基础
 - [多机训练的完整路径](../projects/ai-infra-end-to-end/04-多机训练的完整路径.md)
 - [GPU、网卡、存储联合拓扑调度](../projects/ai-infra-end-to-end/05-GPU网卡存储联合拓扑调度.md)
 
-三篇综合实战已经串联完成：
+三项综合实战分别验证请求链路、模型加载链路和拓扑调度链路：
 
 1. [一次 LLM 请求从网关到 GPU 再到流式返回](../projects/ai-infra-end-to-end/06-一次LLM请求从网关到GPU再到流式返回.md)：网关 → Service → 模型实例 → GPU → 流式返回。
 2. [模型文件从存储加载到 GPU 显存的完整路径](../projects/ai-infra-end-to-end/02-模型文件从存储加载到GPU显存的完整路径.md)：对象存储/Ceph/NFS → 节点缓存 → 页缓存 → HBM。
@@ -319,7 +318,7 @@ Transformer 推理基础
 
 ## 11. 面向岗位学习时如何确定优先级 {/* #10-面向岗位学习时如何确定优先级 */}
 
-如果目标是 AI Infra SRE，建议按下面顺序补齐：
+如果目标是 AI Infra SRE，建议按下面顺序学习：
 
 | 阶段 | 模块 | 原因 |
 | --- | --- | --- |
@@ -327,9 +326,9 @@ Transformer 推理基础
 | P0-2 | 大模型推理 | 理解所运维服务的执行链路与瓶颈 |
 | P0-3 | 性能工程 | 能用工具证明瓶颈，而不是凭经验猜 |
 | P0-4 | 自动化与 MLOps | 把部署、诊断、发布和修复工程化 |
-| P1 | 网络、存储、调度进阶 | 在已有基础上补充生产深度 |
+| P1 | 网络、存储、调度进阶 | 形成生产级分析与治理能力 |
 
-模块优先级只决定学习先后，不改变博客的技术分类。比如错误预算文章归
+模块优先级只决定学习先后，不改变技术本身的分类。比如错误预算文章归
 “可观测性与可靠性”，不会因为面试岗位是 AI Infra SRE 就单独搬到岗位专栏。
 
 ## 12. 每个模块的完成标准 {/* #11-每个模块的完成标准 */}
