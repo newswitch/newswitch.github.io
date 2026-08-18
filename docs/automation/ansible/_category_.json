@@ -1,0 +1,9 @@
+{
+  "label": "Ansible",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "automation/ansible/Ansible从零到精通学习路线"
+  }
+}
