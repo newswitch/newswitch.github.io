@@ -1,0 +1,9 @@
+{
+  "label": "GitLab CI",
+  "position": 10,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "automation/gitlab-ci/GitLab-CI从零到精通学习路线"
+  }
+}

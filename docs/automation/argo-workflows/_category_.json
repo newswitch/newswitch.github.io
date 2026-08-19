@@ -1,0 +1,9 @@
+{
+  "label": "Argo Workflows",
+  "position": 13,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "automation/argo-workflows/ArgoWorkflows从零到精通学习路线"
+  }
+}

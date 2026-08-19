@@ -1,0 +1,9 @@
+{
+  "label": "SOPS / External Secrets",
+  "position": 16,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "automation/sops-external-secrets/SOPS-ExternalSecrets从零到精通学习路线"
+  }
+}

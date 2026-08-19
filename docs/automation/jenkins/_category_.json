@@ -1,0 +1,9 @@
+{
+  "label": "Jenkins",
+  "position": 9,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "automation/jenkins/Jenkins从零到精通学习路线"
+  }
+}

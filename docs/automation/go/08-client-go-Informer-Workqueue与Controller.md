@@ -1,7 +1,7 @@
 ---
 title: "client-go Informer、Workqueue 与 Controller"
-sidebar_label: "04. client-go Informer、Workqueue 与 Controller"
-sidebar_position: 4
+sidebar_label: "08. client-go Informer、Workqueue 与 Controller"
+sidebar_position: 8
 description: "从 List/Watch、Reflector、DeltaFIFO 和 Indexer 到 Rate-Limited Workqueue 与幂等 Reconcile，构建可恢复、低写放大的 Kubernetes Controller。"
 tags: [Kubernetes, client-go, Informer, Workqueue, Controller, Operator]
 ---
@@ -656,8 +656,8 @@ Leader 切换
 
 建议顺序：
 
-1. [client-go 示例](../cloud-native/kubernetes/extensions/development/04-client-go示例.md)
-2. [Informer 源码分析](../cloud-native/kubernetes/extensions/development/05-client-go-informer源码分析.md)
+1. [client-go 示例](../../cloud-native/kubernetes/extensions/development/04-client-go示例.md)
+2. [Informer 源码分析](../../cloud-native/kubernetes/extensions/development/05-client-go-informer源码分析.md)
 3. 本文的队列、Reconcile、缓存一致性与测试。
 4. Kubernetes 官方 `sample-controller`。
 

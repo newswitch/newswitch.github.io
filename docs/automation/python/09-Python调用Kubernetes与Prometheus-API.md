@@ -1,7 +1,7 @@
 ---
 title: "Python 调用 Kubernetes 与 Prometheus API"
-sidebar_label: "02. Python 调用 Kubernetes 与 Prometheus API"
-sidebar_position: 2
+sidebar_label: "09. Python 调用 Kubernetes 与 Prometheus API"
+sidebar_position: 9
 description: "正确处理 Kubernetes 认证、分页、List/Watch、resourceVersion 和 RBAC，并通过 Prometheus HTTP API 查询、验证和关联 AI Infra 证据。"
 tags: [Python, Kubernetes API, Prometheus, PromQL, List Watch, RBAC]
 ---

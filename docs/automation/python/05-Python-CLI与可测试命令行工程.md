@@ -1,7 +1,7 @@
 ---
 title: "Python CLI 与可测试命令行工程"
-sidebar_label: "01. Python CLI 与可测试命令行工程"
-sidebar_position: 1
+sidebar_label: "05. Python CLI 与可测试命令行工程"
+sidebar_position: 5
 description: "从命令边界、配置优先级、退出码、依赖注入、结构化输出、超时重试和安全性出发，构建可测试的生产级 Python CLI。"
 tags: [Python, CLI, argparse, 测试, 自动化, SRE]
 ---
