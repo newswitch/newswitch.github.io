@@ -1,0 +1,8 @@
+{
+  "label": "07. 生产运维与故障排查",
+  "position": 7,
+  "link": {
+    "type": "generated-index",
+    "description": "使用 Dashboard、State CLI、日志和指标定位 Ray 的内存、调度、节点、Actor 与生产发布问题。"
+  }
+}

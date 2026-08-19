@@ -1,0 +1,9 @@
+{
+  "label": "Ray 分布式计算",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/runtime/ray/Ray学习路线"
+  }
+}
