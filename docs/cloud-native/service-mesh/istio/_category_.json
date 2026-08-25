@@ -1,0 +1,9 @@
+{
+  "label": "Istio",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/service-mesh/istio/Istio从零到精通学习路线"
+  }
+}

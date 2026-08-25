@@ -1,0 +1,10 @@
+{
+  "label": "日志、链路追踪与 OpenTelemetry",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "sre/observability/telemetry/日志链路追踪与OpenTelemetry学习路线"
+  }
+}
+

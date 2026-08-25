@@ -527,6 +527,14 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 
 > 44～50 建议按故障排查类结构跟练：现象 → 证据 → 根因 → 临时恢复 → 永久修复 → 监控补充。
 
+#### 5.9.9 NVIDIA GPU 硬件故障进阶
+
+- [NVIDIA GPU ECC 错误与故障卡隔离](./troubleshooting/10-NVIDIA-GPU-ECC错误与故障卡隔离.md)
+- [NVIDIA GPU 掉卡、复位与节点恢复](./troubleshooting/11-NVIDIA-GPU掉卡复位与节点恢复.md)
+- [GPU 温度、功耗、降频与性能抖动](./troubleshooting/12-GPU温度功耗降频与性能抖动.md)
+
+这三篇处理“设备仍可访问但内存不可靠”“设备已经不可访问”和“设备可用但性能受限”三类不同问题。昇腾设备见[昇腾 NPU 与 CANN 学习路线](../ascend-npu/00-昇腾NPU与CANN学习路线.md)。
+
 ### 5.10 生产治理 / 多租户与队列（第 15 周） {/* #第十阶段生产治理--多租户与队列第-15-周 */}
 
 > 基础：[Kubernetes 多租户](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)（隔离、公平、嘈杂邻居）。队列与拓扑：[ClusterQueue](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/cluster_queue/)、[ResourceFlavor](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/)、[拓扑感知调度](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/topology_aware_scheduling/)。可与 Volcano Queue（16～18）对照。建议顺序：15 → 51 → 52 → 53 → 54。
@@ -563,7 +571,7 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 可选进阶（掌握 Device Plugin 后再学，**建议整条路线最后再读**）：
 
 - 见 **第十二阶段**：[61](./dra/01-Kubernetes%20DRA%20概念与核心%20API（v1.35+）.md)、[62](./dra/02-DRA%20集群安装与设备分配实践（v1.34+）.md)
-- AMD GPU / Ascend NPU（按需）
+- AMD GPU（按需）/[昇腾 NPU 与 CANN](../ascend-npu/00-昇腾NPU与CANN学习路线.md)
 
 ### 5.11 综合毕业项目（第 16 周） {/* #第十一阶段综合毕业项目第-16-周 */}
 

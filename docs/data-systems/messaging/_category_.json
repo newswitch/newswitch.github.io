@@ -4,6 +4,6 @@
   "collapsed": true,
   "link": {
     "type": "generated-index",
-    "description": "Kafka 与 RocketMQ：消息日志、消费、事务、复制、容量和灾备。"
+    "description": "Kafka、RocketMQ 与 RabbitMQ：消息日志、工作队列、路由、消费、事务、复制、容量和灾备。"
   }
 }

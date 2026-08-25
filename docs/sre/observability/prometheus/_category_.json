@@ -1,0 +1,10 @@
+{
+  "label": "Prometheus、Alertmanager 与 Grafana",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "sre/observability/prometheus/Prometheus监控体系学习路线"
+  }
+}
+

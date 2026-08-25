@@ -1,0 +1,10 @@
+{
+  "label": "RabbitMQ",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/messaging/rabbitmq/RabbitMQ从零到精通学习路线"
+  }
+}
+

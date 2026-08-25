@@ -1,0 +1,10 @@
+{
+  "label": "昇腾 NPU 与 CANN",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "gpu/ascend-npu/昇腾NPU与CANN学习路线"
+  }
+}
+

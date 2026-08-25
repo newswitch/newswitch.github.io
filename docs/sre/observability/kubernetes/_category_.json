@@ -1,6 +1,6 @@
 {
-  "label": "可观测性",
-  "position": 27,
+  "label": "Kubernetes 可观测性",
+  "position": 5,
   "collapsed": true,
   "link": {
     "type": "doc",

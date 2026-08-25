@@ -2,5 +2,8 @@
   "label": "对象存储与 S3",
   "position": 5,
   "collapsed": true,
-  "link": null
+  "link": {
+    "type": "generated-index",
+    "description": "S3 接口、MinIO 分布式对象存储、模型制品分发、完整性、容量与故障恢复。"
+  }
 }

@@ -1,0 +1,9 @@
+{
+  "label": "运行期性能与排障",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/inference/runtime-troubleshooting/模型服务运行期分析学习路线"
+  }
+}

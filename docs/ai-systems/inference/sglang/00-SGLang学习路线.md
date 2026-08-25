@@ -16,7 +16,13 @@ SGLang 是面向大语言模型与多模态模型的高性能推理服务框架�
 |---|---|---|
 | 1 | [SGLang 整体架构与请求生命周期](./01-SGLang整体架构与请求生命周期.md) | 一句话如何经过 TokenizerManager、Scheduler、TP Worker 和 DetokenizerManager 输出 |
 | 2 | [SGLang 生产参数参考](./02-SGLang生产参数参考.md) | 模型、内存、Radix Cache、调度、Graph、Kernel 和分布式参数怎样影响性能 |
-| 3 | [四大推理框架对比与选型](/docs/ai-systems/inference/vLLM-vLLM-Ascend-SGLang-MindIE框架对比与选型) | RadixAttention 与 vLLM Prefix Cache 的差异，什么时候选择 SGLang |
+| 3 | [RadixAttention 与 Radix Cache 源码原理](./03-RadixAttention与Radix-Cache源码原理.md) | Token前缀怎样进入Radix Tree，KV如何锁定、复用与淘汰 |
+| 4 | [Scheduler 与 Overlap Scheduler](./04-SGLang-Scheduler与Overlap-Scheduler.md) | Waiting/Running、Chunked Prefill、Retract和CPU-GPU流水怎样协作 |
+| 5 | [ModelRunner、CUDA Graph 与 Kernel Backend](./05-SGLang-ModelRunner-CUDA-Graph与Kernel-Backend.md) | ScheduleBatch怎样变成设备执行，Backend与Graph怎样影响热路径 |
+| 6 | [单机与 Kubernetes 生产部署](./06-SGLang单机与Kubernetes生产部署.md) | 如何配置GPU、共享内存、探针、网关、优雅退出和灰度 |
+| 7 | [性能分析与容量规划](./07-SGLang性能分析与容量规划.md) | 如何分层Benchmark并把Radix冷/热状态纳入SLO容量 |
+| 8 | [生产故障排查 Runbook](./08-SGLang生产故障排查Runbook.md) | 如何定位多进程、KV、Graph、NCCL、Kubernetes与返回链路事故 |
+| 9 | [四大推理框架对比与选型](/docs/ai-systems/inference/vLLM-vLLM-Ascend-SGLang-MindIE框架对比与选型) | RadixAttention 与 vLLM Prefix Cache 的差异，什么时候选择 SGLang |
 
 ## 2. 学习主线 {/* #学习主线 */}
 
@@ -70,6 +76,7 @@ TokenizerManager → SSE / JSON
 - 能解释 Radix Cache 命中为什么可能降低 Prefill 成本，也可能带来缓存占用和租户隔离问题。
 - 能根据真实 Token 分布和 SLO 配置静态内存、并发、Prefill Token Budget 与调度策略。
 - 能用同一请求集公平比较 SGLang 和 vLLM，而不是只看框架宣传吞吐。
+- 能从单机正确性基线走到Kubernetes部署、容量报告、故障演练与回滚。
 
 ## 6. 官方入口 {/* #官方入口 */}
 

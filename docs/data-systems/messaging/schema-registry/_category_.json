@@ -1,0 +1,9 @@
+{
+  "label": "Schema Registry",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/messaging/schema-registry/Schema-Registry定位与学习路线"
+  }
+}

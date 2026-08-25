@@ -1,0 +1,9 @@
+{
+  "label": "数据集成与 CDC",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "Debezium、CDC、Snapshot、Offset、Schema 演进、数据复制和生产故障治理。"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "label": "工作流与任务调度",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "Airflow、工作流编排、调度状态、Executor、补数、高可用和生产运维。"
+  }
+}

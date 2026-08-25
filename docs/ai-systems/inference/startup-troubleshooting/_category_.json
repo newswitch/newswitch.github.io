@@ -1,0 +1,9 @@
+{
+  "label": "启动与故障排查",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/inference/startup-troubleshooting/模型服务启动与故障排查学习路线"
+  }
+}

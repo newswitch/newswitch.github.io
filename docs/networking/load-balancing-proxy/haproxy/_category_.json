@@ -1,0 +1,9 @@
+{
+  "label": "HAProxy",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "networking/load-balancing-proxy/haproxy/HAProxy定位与学习路线"
+  }
+}

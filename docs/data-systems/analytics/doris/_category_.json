@@ -1,0 +1,9 @@
+{
+  "label": "Apache Doris",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "data-systems/analytics/doris/Doris定位与学习路线"
+  }
+}

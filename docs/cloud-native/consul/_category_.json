@@ -1,0 +1,9 @@
+{
+  "label": "Consul",
+  "position": 9,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "cloud-native/consul/Consul定位与学习路线"
+  }
+}

@@ -1,5 +1,9 @@
 {
   "label": "推理基础原理",
   "position": 1,
-  "collapsed": true
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/inference/fundamentals/推理基础原理学习路线"
+  }
 }
