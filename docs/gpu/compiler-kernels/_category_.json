@@ -1,0 +1,9 @@
+{
+  "label": "AI 编译器与 GPU Kernel",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "gpu/compiler-kernels/AI编译器与GPU-Kernel性能学习路线"
+  }
+}

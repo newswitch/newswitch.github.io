@@ -1,0 +1,9 @@
+{
+  "label": "Slurm 与 HPC 训练集群",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/training/slurm/Slurm与HPC训练集群从零到生产学习路线"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "label": "AI 平台安全",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "sre/security/AI平台安全从零到生产学习路线"
+  }
+}

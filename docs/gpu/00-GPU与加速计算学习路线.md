@@ -17,11 +17,14 @@ tags: [GPU, NPU, HBM, NUMA, PCIe, NVLink, CUDA, CANN]
 5. [CPU 与 GPU 之间的数据搬运](./pcie-numa/05-CPU与GPU之间的数据搬运.md)
 6. [NVLink 与 NVSwitch 原理](./nvlink-nvswitch/01-NVLink与NVSwitch原理.md)
 7. [PCIe 基本架构](./pcie-numa/01-PCIe总线学习（一）基本架构.md)
-8. [NVIDIA 驱动、CUDA 与容器运行时](./driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)
-9. [昇腾 NPU 与 CANN 学习路线](./ascend-npu/00-昇腾NPU与CANN学习路线.md)
-10. [GPU 与加速器命令参考库](./commands/00-GPU与加速器命令参考库学习路线.md)
+8. [GPU 裸金属与 Fleet 工程学习路线](./bare-metal-fleet/00-GPU裸金属与Fleet工程学习路线.md)
+9. [NVIDIA 驱动、CUDA 与容器运行时](./driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)
+10. [AI 编译器与 GPU Kernel 性能学习路线](./compiler-kernels/00-AI编译器与GPU-Kernel性能学习路线.md)
+11. [昇腾 NPU 与 CANN 学习路线](./ascend-npu/00-昇腾NPU与CANN学习路线.md)
+12. [Kubernetes GPU 集群学习路线](./cluster/00-Kubernetes-GPU集群学习路线.md)
+13. [GPU 与加速器命令参考库](./commands/00-GPU与加速器命令参考库学习路线.md)
 
-前九步建立 GPU 与 NPU 的硬件、内存、互联和软件栈地图，第十步把原理落到可执行的证据链。现有命令参考库以 NVIDIA GPU 为主，昇腾 NPU 命令结合 vLLM-Ascend 与设备故障专题学习。建议在读完对应原理后立即完成实验，而不是把命令参数与硬件原理分开背诵。
+前七步建立硬件执行和互联基础；裸金属、驱动和编译器章节继续覆盖服务器生命周期与算子执行；最后进入异构加速器、Kubernetes 集群和命令证据链。现有命令参考库以 NVIDIA GPU 为主，昇腾 NPU 命令结合 vLLM-Ascend 与设备故障专题学习。建议在读完对应原理后立即完成实验，而不是把命令参数与硬件原理分开背诵。
 
 ## 2. 学完后的能力 {/* #学完后的能力 */}
 
@@ -29,6 +32,8 @@ tags: [GPU, NPU, HBM, NUMA, PCIe, NVLink, CUDA, CANN]
 - 能根据 `nvidia-smi topo -m`、NUMA 和 PCIe 拓扑判断亲和性。
 - 能解释 PCIe、NVLink、NVSwitch 各自解决什么问题。
 - 能从驱动、CUDA、容器运行时到应用定位 GPU 软件栈兼容问题。
+- 能通过 BMC、固件、Burn-in 和 DCGM 管理 GPU 节点完整生命周期。
+- 能从 PyTorch Operator 追到编译器、Triton/CUDA Kernel 和设备指标。
 - 能解释 NPU、Ascend 910B、CANN、torch-npu、HCCL 和 vLLM-Ascend 的层次关系。
 - 能将 NVIDIA GPU/CUDA 与昇腾 NPU/CANN 映射到同一套硬件、驱动、运行时、框架和服务层次。
 - 能使用只读观察、主动诊断、程序调试和通信基准工具，把 GPU 故障定位到设备、驱动、容器、CUDA 程序、互联或网络层。

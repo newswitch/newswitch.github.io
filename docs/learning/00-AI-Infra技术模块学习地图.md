@@ -65,6 +65,8 @@ Linux 是计算、网络、存储和 Kubernetes 的共同运行底座。这里�
 - [NVLink 与 NVSwitch 原理](../gpu/nvlink-nvswitch/01-NVLink与NVSwitch原理.md)
 - [PCIe 基本架构](../gpu/pcie-numa/01-PCIe总线学习（一）基本架构.md)
 - [GPU 与加速器命令参考库：从设备识别到分布式通信验证](../gpu/commands/00-GPU与加速器命令参考库学习路线.md)
+- [GPU 裸金属与 Fleet 工程学习路线](../gpu/bare-metal-fleet/00-GPU裸金属与Fleet工程学习路线.md)
+- [AI 编译器与 GPU Kernel 性能学习路线](../gpu/compiler-kernels/00-AI编译器与GPU-Kernel性能学习路线.md)
 - GPU 命令参考库覆盖 `nvidia-smi`、DCGM、驱动证据采集、容器注入、CUDA 编译调试、`nsys`、`ncu`、二进制分析、Samples 基线与 NCCL 单机/多机验证；所有主动负载和状态变更操作均标注安全边界。
 
 ### 2.3 P1 进阶内容 {/* #p1-进阶内容 */}
@@ -107,6 +109,9 @@ Linux 网络基础
 - [Kubernetes AI 多网络架构](../networking/ai-fabric/production/01-Kubernetes-AI多网络架构.md)
 - [NCCL 通信原理与常见问题](../ai-systems/training/distributed/05-NCCL%20通信原理与常见问题.md)
 - [NCCL Timeout 排查流程](../gpu/cluster/troubleshooting/07-NCCL%20Timeout%20排查流程.md)
+- [NVSHMEM 与 GPU One-Sided 通信](../networking/rdma-roce/ai-cluster/11-NVSHMEM与GPU-One-Sided通信模型.md)
+- [UCX、UCC、SHARP 与集合通信卸载](../networking/rdma-roce/ai-cluster/12-UCX-UCC-SHARP与集合通信卸载.md)
+- [BlueField DPU、DOCA 与 AI 基础设施卸载](../networking/dpu/00-BlueField-DPU-DOCA与AI基础设施卸载.md)
 
 ### 3.3 P1 进阶内容 {/* #p1-进阶内容-1 */}
 
@@ -153,6 +158,7 @@ Linux 网络基础
 - [本地 NVMe 与 Local PV 实践](../storage/ai-workloads/03-本地NVMe与Local-PV实践.md)
 - [Kubernetes CSI 挂载链路与故障排查](../storage/ai-workloads/05-Kubernetes-CSI挂载链路与故障排查.md)
 - [模型文件从存储加载到 GPU 显存的完整路径](../projects/ai-infra-end-to-end/02-模型文件从存储加载到GPU显存的完整路径.md)
+- [AI 训练数据面从零到生产学习路线](../storage/training-data-plane/00-AI训练数据面从零到生产学习路线.md)
 
 ### 4.3 P1 进阶内容 {/* #p1-进阶内容-2 */}
 
@@ -183,6 +189,7 @@ Linux 网络基础
 - [GPU 集群拓扑感知调度](../gpu/cluster/scheduling/12-GPU%20集群拓扑感知调度.md)
 - [GPU、网卡、存储联合拓扑调度](../projects/ai-infra-end-to-end/05-GPU网卡存储联合拓扑调度.md)
 - [Kubernetes DRA 概念与核心 API](../gpu/cluster/dra/01-Kubernetes%20DRA%20概念与核心%20API（v1.35+）.md)
+- [AI 多集群技术学习路线](../cloud-native/kubernetes/multi-cluster/05-AI多集群技术学习路线.md)
 
 ### 5.2 P1 进阶内容 {/* #p1-进阶内容-3 */}
 
@@ -232,7 +239,15 @@ Transformer 推理基础
 | [Continuous Batching 与 Chunked Prefill](../ai-systems/inference/vllm/09-Continuous-Batching与Chunked-Prefill.md) | 调度预算、吞吐与尾延迟 |
 | [TP、PP、DP、EP 与 MoE 推理并行策略](../ai-systems/inference/vllm/10-TP-PP-DP-EP与MoE推理并行策略.md) | 通信量、拓扑和故障域 |
 | [推理网关、准入控制与过载保护](../ai-systems/inference/vllm/11-推理网关准入控制与过载保护.md) | 排队、Token 配额、超时、重试、路由和降级 |
-| KServe、vLLM 与 Triton 生产架构 | 控制面、数据面、扩缩容和发布 |
+| [TensorRT-LLM 从零到生产](../ai-systems/inference/tensorrt-llm/00-TensorRT-LLM从零到生产学习路线.md) | PyExecutor、调度、KV Cache、Engine、量化和性能 |
+| [Triton Inference Server 从零到生产](../ai-systems/inference/triton-server/00-Triton-Inference-Server从零到生产学习路线.md) | 模型仓库、Backend、Batcher、Ensemble 和模型实例 |
+| [KServe 从零到生产](../ai-systems/inference/kserve/00-KServe从零到生产学习路线.md) | InferenceService、LLMInferenceService、Gateway、EPP 和扩缩容 |
+| [PyTorch FSDP2 从零到生产](../ai-systems/training/fsdp2/00-PyTorch-FSDP2从零到生产学习路线.md) | DTensor、fully_shard、混合精度、Checkpoint 和排障 |
+| [Megatron Core 从零到生产](../ai-systems/training/megatron-core/00-Megatron-Core从零到生产学习路线.md) | TP、PP、CP、EP、MoE、分布式优化器和通信重叠 |
+| [Kubeflow Trainer 从零到生产](../ai-systems/training/kubeflow-trainer/00-Kubeflow-Trainer从零到生产学习路线.md) | TrainJob、Runtime、JobSet、训练启动和队列调度 |
+| [Slurm 与 HPC 训练集群](../ai-systems/training/slurm/00-Slurm与HPC训练集群从零到生产学习路线.md) | Partition、QOS、GRES/TRES、PMIx/MPI、NCCL/RDMA 和容器 |
+| [TorchTitan](../ai-systems/training/frontier/01-TorchTitan与PyTorch原生大模型训练架构.md) | PyTorch 原生可组合大模型训练栈 |
+| [JAX、XLA 与 PJRT](../ai-systems/training/frontier/02-JAX-XLA-PJRT与分布式训练执行模型.md) | 编译、设备 Runtime、Mesh 与 Sharding |
 
 ## 7. 可观测性与可靠性模块 {/* #6-可观测性与可靠性模块 */}
 
@@ -256,6 +271,7 @@ Transformer 推理基础
 | [Error Budget 与多窗口燃烧率告警](../sre/reliability/02-Error-Budget与多窗口燃烧率告警.md) | PromQL、recording rules、低流量处理 |
 | [AI 平台事件响应、证据链与 RCA](../sre/reliability/03-AI平台事件响应证据链与RCA.md) | 请求到 GPU/NIC/存储的关联分析 |
 | [Toil 量化与安全自动修复](../sre/reliability/04-Toil量化与安全自动修复.md) | 幂等、限速、审批、验证和回滚 |
+| [AI 平台安全从零到生产](../sre/security/00-AI平台安全从零到生产学习路线.md) | 工作负载身份、模型供应链、设备与 RDMA 隔离、接口和凭据安全 |
 
 ## 8. 性能工程模块 {/* #7-性能工程模块 */}
 
@@ -271,6 +287,9 @@ Transformer 推理基础
 | [Nsight Compute CUDA Kernel 分析](../sre/performance/04-Nsight-Compute-CUDA-Kernel分析.md) | Occupancy、Memory Throughput、Warp Stall |
 | [PyTorch Profiler 训练与推理分析](../sre/performance/05-PyTorch-Profiler训练与推理分析.md) | Operator、CUDA Kernel、Memory Timeline |
 | [LLM 压测、容量曲线与成本模型](../sre/performance/06-LLM压测容量曲线与成本模型.md) | TTFT/TPOT/QPS/token/s/并发/单请求成本 |
+| [AI 编译器与 GPU Kernel 性能](../gpu/compiler-kernels/00-AI编译器与GPU-Kernel性能学习路线.md) | Dispatcher、torch.compile、Inductor、Triton、CUDA Graph 与 Kernel |
+| [GPU 分配率、活跃率与有效利用率](../gpu/cluster/governance/07-GPU分配率活跃率SM利用率与有效利用率.md) | 资源分配、设备活动、Kernel 效率和 Goodput 统一口径 |
+| [GPU 成本归因与 Showback](../gpu/cluster/governance/08-GPU-Hour租户项目模型成本归因与Showback.md) | GPU-Hour、单位 Token/Step 成本、碎片和全生命周期成本 |
 
 ## 9. 自动化工程与 MLOps {/* #8-自动化工程与-mlops */}
 

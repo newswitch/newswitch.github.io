@@ -568,6 +568,15 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 - 日/周/月频率与分层清单
 - 含只读自动巡检脚本原则
 
+#### 5.10.7 GPU FinOps 与有效利用率进阶
+
+- [GPU 分配率、活跃率、SM 利用率与有效利用率](./governance/07-GPU分配率活跃率SM利用率与有效利用率.md)
+- [GPU-Hour、租户、项目、模型成本归因与 Showback](./governance/08-GPU-Hour租户项目模型成本归因与Showback.md)
+- [推理 Token 成本、副本成本与 SLO 成本模型](./governance/09-推理Token成本副本成本与SLO成本模型.md)
+- [训练 Step 成本、扩展效率与失败任务浪费](./governance/10-训练Step成本扩展效率与失败任务浪费分析.md)
+- [GPU 碎片、空闲资源与调度装箱效率](./governance/11-GPU碎片空闲资源与调度装箱效率.md)
+- [GPU/NPU 选型、功耗、能效与 TCO](./governance/12-GPU-NPU选型功耗能效CapEx与OpEx模型.md)
+
 可选进阶（掌握 Device Plugin 后再学，**建议整条路线最后再读**）：
 
 - 见 **第十二阶段**：[61](./dra/01-Kubernetes%20DRA%20概念与核心%20API（v1.35+）.md)、[62](./dra/02-DRA%20集群安装与设备分配实践（v1.34+）.md)
@@ -649,6 +658,7 @@ GPU 集群最关键的是：能部署、能观察、能制造故障、能定位�
 - MIG / Time-Slicing
 - RDMA / 拓扑调度
 - 多租户 / Kueue / 容量与成本（15、51～54）
+- GPU 有效利用率、单位 Token/Step 成本、碎片与全生命周期成本
 
 ### 6.3 P2（专项深入） {/* #p2第三批 */}
 

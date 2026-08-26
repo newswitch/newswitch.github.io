@@ -1,0 +1,9 @@
+{
+  "label": "Triton Inference Server",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/inference/triton-server/Triton-Inference-Server从零到生产学习路线"
+  }
+}

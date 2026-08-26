@@ -1,0 +1,9 @@
+{
+  "label": "PyTorch FSDP2",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/training/fsdp2/PyTorch-FSDP2从零到生产学习路线"
+  }
+}

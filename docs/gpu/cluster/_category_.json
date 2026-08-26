@@ -1,6 +1,6 @@
 {
   "label": "Kubernetes GPU 集群",
-  "position": 9,
+  "position": 11,
   "collapsed": true,
   "link": {
     "type": "doc",

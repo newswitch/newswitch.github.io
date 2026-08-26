@@ -1,0 +1,9 @@
+{
+  "label": "GPU 裸金属与 Fleet 工程",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "gpu/bare-metal-fleet/GPU裸金属与Fleet工程学习路线"
+  }
+}

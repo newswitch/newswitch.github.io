@@ -1,0 +1,9 @@
+{
+  "label": "KServe",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/inference/kserve/KServe从零到生产学习路线"
+  }
+}

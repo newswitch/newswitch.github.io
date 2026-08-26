@@ -1,0 +1,9 @@
+{
+  "label": "DPU 与基础设施卸载",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "networking/dpu/BlueField-DPU-DOCA与AI基础设施卸载"
+  }
+}

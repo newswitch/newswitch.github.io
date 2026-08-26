@@ -1,0 +1,9 @@
+{
+  "label": "前沿训练框架",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "TorchTitan 与 JAX/XLA/PJRT 等前沿训练执行栈。"
+  }
+}

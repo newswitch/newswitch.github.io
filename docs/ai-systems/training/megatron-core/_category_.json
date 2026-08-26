@@ -1,0 +1,9 @@
+{
+  "label": "Megatron Core",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/training/megatron-core/Megatron-Core从零到生产学习路线"
+  }
+}

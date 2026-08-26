@@ -15,6 +15,7 @@ tags: [SRE, 可观测性, 性能, 自动化, RCA]
 | [可观测性](./observability/00-可观测性学习路线.md) | 将用户请求、模型服务、GPU、网络、存储和调度指标关联起来 |
 | 可靠性 | 用 SLI/SLO、Error Budget、告警和应急流程管理风险 |
 | [性能工程](./performance/00-性能工程学习路线.md) | 通过基线、剖析工具和容量模型定位瓶颈 |
+| [AI 平台安全](./security/00-AI平台安全从零到生产学习路线.md) | 保护身份、模型制品、GPU/NPU、RDMA、容器和推理接口 |
 | [自动化工程](../automation/00-自动化工程学习路线.md) | 用 Python、Go、Kubernetes API 和 Prometheus API 消除重复操作 |
 | 故障案例与复盘 | 从真实事故中练习时间线、证据链、根因和改进项 |
 

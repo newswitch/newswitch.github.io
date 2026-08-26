@@ -1,0 +1,9 @@
+{
+  "label": "AI 训练数据面",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "storage/training-data-plane/AI训练数据面从零到生产学习路线"
+  }
+}
