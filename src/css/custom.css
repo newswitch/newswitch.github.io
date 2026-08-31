@@ -4,29 +4,403 @@
  * work well for content-centric websites.
  */
 
-/* You can override the default Infima variables here. */
+/* Global design tokens: engineering console outside, quiet reading surface inside. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --xyf-paper: #eef1f2;
+  --xyf-panel: #fbfcfc;
+  --xyf-ink: #10243f;
+  --xyf-muted: #596879;
+  --xyf-line: rgba(16, 36, 63, 0.22);
+  --xyf-grid-line: rgba(31, 73, 125, 0.07);
+  --xyf-grid-image:
+    linear-gradient(var(--xyf-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--xyf-grid-line) 1px, transparent 1px);
+  --xyf-blue: #174f8f;
+  --xyf-blue-bright: #2c6ca3;
+  --xyf-red: #c92f36;
+  --xyf-yellow: #f0c52e;
+  --xyf-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --xyf-cut-sm: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  --xyf-cut-lg: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+
+  --ifm-color-primary: #174f8f;
+  --ifm-color-primary-dark: #154780;
+  --ifm-color-primary-darker: #144379;
+  --ifm-color-primary-darkest: #103763;
+  --ifm-color-primary-light: #19579e;
+  --ifm-color-primary-lighter: #1a5ba5;
+  --ifm-color-primary-lightest: #1e67bb;
+  --ifm-background-color: var(--xyf-paper);
+  --ifm-background-surface-color: var(--xyf-panel);
+  --ifm-font-color-base: var(--xyf-ink);
+  --ifm-heading-color: var(--xyf-ink);
+  --ifm-navbar-background-color: var(--xyf-panel);
+  --ifm-footer-background-color: #10243f;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-global-radius: 0;
+  --ifm-card-border-radius: 0;
+  --docusaurus-highlighted-code-line-bg: rgba(44, 108, 163, 0.12);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --xyf-paper: #101a28;
+  --xyf-panel: #17263a;
+  --xyf-ink: #edf2f5;
+  --xyf-muted: #a5b3c1;
+  --xyf-line: rgba(203, 219, 233, 0.22);
+  --xyf-grid-line: rgba(108, 151, 199, 0.07);
+  --xyf-blue: #5597d8;
+  --xyf-blue-bright: #68a7df;
+  --xyf-red: #ff5c61;
+  --xyf-yellow: #ffd43d;
+
+  --ifm-color-primary: #68a7df;
+  --ifm-color-primary-dark: #4f98d9;
+  --ifm-color-primary-darker: #438fd6;
+  --ifm-color-primary-darkest: #2c75b7;
+  --ifm-color-primary-light: #81b6e5;
+  --ifm-color-primary-lighter: #8dbde8;
+  --ifm-color-primary-lightest: #b2d3ef;
+  --ifm-background-color: var(--xyf-paper);
+  --ifm-background-surface-color: var(--xyf-panel);
+  --ifm-font-color-base: var(--xyf-ink);
+  --ifm-heading-color: var(--xyf-ink);
+  --ifm-navbar-background-color: var(--xyf-panel);
+  --docusaurus-highlighted-code-line-bg: rgba(104, 167, 223, 0.16);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--xyf-ink);
+  background-color: var(--xyf-paper);
+  background-image: var(--xyf-grid-image);
+  background-size: 24px 24px;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  color: #10243f;
+  background: var(--xyf-yellow);
+}
+
+/* Navigation and footer keep the visual identity visible across every route. */
+.navbar {
+  min-height: 4rem;
+  border-bottom: 3px solid var(--xyf-yellow);
+  box-shadow: 0 3px 0 var(--xyf-blue), 0 5px 0 var(--xyf-red);
+}
+
+.navbar__brand {
+  color: var(--xyf-ink);
+  font-family: var(--xyf-font-mono);
+  letter-spacing: 0.04em;
+}
+
+.navbar__link {
+  font-weight: 700;
+}
+
+.navbar__link--active {
+  color: var(--xyf-red);
+}
+
+[data-theme='dark'] .navbar__link--active {
+  color: var(--xyf-yellow);
+}
+
+.navbar-sidebar {
+  background: var(--xyf-panel);
+}
+
+.footer {
+  position: relative;
+  border-top: 0;
+  background: #10243f;
+}
+
+.footer::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 0.45rem;
+  background: linear-gradient(90deg, #174f8f 0 62%, #f0c52e 62% 74%, #c92f36 74% 94%, #eef1f2 94%);
+  content: '';
+}
+
+.footer__title,
+.footer__copyright {
+  font-family: var(--xyf-font-mono);
+  letter-spacing: 0.04em;
+}
+
+.main-wrapper {
+  background-color: transparent;
+}
+
+/* Documentation shell. */
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--xyf-line) !important;
+  background: color-mix(in srgb, var(--xyf-panel) 96%, transparent);
+}
+
+.menu {
+  padding: 1rem 0.7rem !important;
+  font-size: 0.9rem;
+}
+
+.menu__link,
+.menu__caret {
+  border-radius: 0;
+}
+
+.menu__link {
+  padding-top: 0.48rem;
+  padding-bottom: 0.48rem;
+}
+
+.menu__link:hover {
+  color: var(--xyf-ink);
+  background: color-mix(in srgb, var(--xyf-yellow) 18%, transparent);
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  box-shadow: inset 0.28rem 0 0 var(--xyf-blue);
+  color: var(--xyf-blue);
+  background: color-mix(in srgb, var(--xyf-blue) 10%, transparent);
+  font-weight: 800;
+}
+
+.breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--xyf-blue);
+  background: color-mix(in srgb, var(--xyf-blue) 10%, transparent);
+  font-family: var(--xyf-font-mono);
+  font-size: 0.75rem;
+}
+
+.theme-doc-markdown,
+.blog-wrapper main article {
+  color: var(--xyf-ink);
+}
+
+[class*='docItemContainer_'] {
+  position: relative;
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+  padding: clamp(1.25rem, 3vw, 2.6rem);
+  border: 1px solid var(--xyf-line);
+  background: color-mix(in srgb, var(--xyf-panel) 97%, transparent);
+  box-shadow: 7px 7px 0 color-mix(in srgb, var(--xyf-blue) 14%, transparent);
+}
+
+[class*='docItemContainer_']::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 0.38rem;
+  background: linear-gradient(90deg, var(--xyf-blue) 0 68%, var(--xyf-yellow) 68% 82%, var(--xyf-red) 82%);
+  content: '';
+}
+
+.theme-doc-markdown > h1:first-child {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 4px solid var(--xyf-blue);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+
+.theme-doc-markdown h2 {
+  position: relative;
+  margin-top: 2.8rem;
+  padding-left: 0.8rem;
+  border-left: 0.42rem solid var(--xyf-red);
+  letter-spacing: -0.025em;
+}
+
+.theme-doc-markdown h2::after {
+  display: block;
+  width: min(7rem, 30%);
+  height: 0.18rem;
+  margin-top: 0.45rem;
+  background: linear-gradient(90deg, var(--xyf-yellow) 0 42%, var(--xyf-blue) 42%);
+  content: '';
+}
+
+.theme-doc-markdown h3 {
+  margin-top: 2rem;
+  padding-left: 0.65rem;
+  border-left: 0.25rem solid var(--xyf-yellow);
+}
+
+.theme-doc-markdown p,
+.theme-doc-markdown li {
+  line-height: 1.85;
+}
+
+.theme-doc-markdown blockquote {
+  border-left: 0.42rem solid var(--xyf-yellow);
+  color: var(--xyf-muted);
+  background: color-mix(in srgb, var(--xyf-yellow) 8%, var(--xyf-panel));
+}
+
+.theme-doc-markdown code:not(pre code) {
+  border: 1px solid color-mix(in srgb, var(--xyf-blue) 25%, transparent);
+  color: var(--xyf-red);
+  background: color-mix(in srgb, var(--xyf-blue) 7%, var(--xyf-panel));
+}
+
+.theme-code-block,
+.prism-code {
+  border-radius: 0 !important;
+}
+
+.theme-code-block {
+  border-left: 0.42rem solid var(--xyf-blue);
+  box-shadow: 5px 5px 0 color-mix(in srgb, var(--xyf-blue) 14%, transparent);
+  clip-path: var(--xyf-cut-sm);
+}
+
+.theme-doc-markdown table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--xyf-line);
+}
+
+.theme-doc-markdown table thead {
+  color: #fff;
+  background: #10243f;
+}
+
+.theme-doc-markdown table th,
+.theme-doc-markdown table td {
+  border-color: var(--xyf-line);
+}
+
+.alert {
+  border-radius: 0;
+  clip-path: var(--xyf-cut-sm);
+}
+
+.table-of-contents {
+  border-left: 2px solid var(--xyf-blue);
+  font-size: 0.78rem;
+}
+
+.table-of-contents__link--active {
+  color: var(--xyf-red);
+  font-weight: 800;
+}
+
+[data-theme='dark'] .table-of-contents__link--active {
+  color: var(--xyf-yellow);
+}
+
+.pagination-nav__link {
+  position: relative;
+  border: 1px solid var(--xyf-line);
+  border-radius: 0;
+  background: var(--xyf-panel);
+  clip-path: var(--xyf-cut-sm);
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--xyf-blue);
+  box-shadow: inset 0.32rem 0 0 var(--xyf-blue);
+}
+
+.pagination-nav__sublabel,
+.pagination-nav__label {
+  font-family: var(--xyf-font-mono);
+}
+
+/* Generated category cards keep their icons, but adopt the system-panel shape. */
+.theme-doc-markdown article.card {
+  position: relative;
+  border: 1px solid var(--xyf-line);
+  border-radius: 0;
+  background: var(--xyf-panel);
+  clip-path: var(--xyf-cut-sm);
+}
+
+.theme-doc-markdown article.card::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0.34rem;
+  background: var(--ifm-color-primary);
+  content: '';
+}
+
+.theme-doc-markdown article.card:hover {
+  border-color: var(--xyf-blue);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--xyf-yellow) 35%, transparent);
+  transform: translate(-2px, -2px);
+}
+
+/* Blog list and posts share the same evidence-card language. */
+.blog-wrapper main > article,
+.blog-wrapper main article.margin-bottom--xl {
+  position: relative;
+  margin-bottom: 2rem !important;
+  padding: clamp(1.15rem, 2.5vw, 2rem);
+  border: 1px solid var(--xyf-line);
+  border-left: 0.5rem solid var(--xyf-blue);
+  background: color-mix(in srgb, var(--xyf-panel) 97%, transparent);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--xyf-blue) 12%, transparent);
+  clip-path: var(--xyf-cut-sm);
+}
+
+.blog-wrapper main article.margin-bottom--xl:nth-of-type(2n) {
+  border-left-color: var(--xyf-red);
+}
+
+.blog-wrapper article header h1,
+.blog-wrapper article header h2 {
+  letter-spacing: -0.035em;
+}
+
+.blog-wrapper article header h2 a {
+  color: var(--xyf-ink);
+}
+
+.blog-wrapper article header h2 a:hover {
+  color: var(--xyf-blue);
+}
+
+.blog-wrapper article footer,
+.blog-wrapper article header time {
+  font-family: var(--xyf-font-mono);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 996px) {
+  [class*='docItemContainer_'] {
+    margin-top: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar { min-height: 3.75rem; }
+  .theme-doc-markdown > h1:first-child { font-size: 2rem; }
+  .theme-doc-markdown h2 { font-size: 1.5rem; }
+  [class*='docItemContainer_'] { padding: 1rem 0.85rem; border-right: 0; border-left: 0; }
+  .blog-wrapper main > article,
+  .blog-wrapper main article.margin-bottom--xl { padding: 1rem; box-shadow: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
 }
 
 /*

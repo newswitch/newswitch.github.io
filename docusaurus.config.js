@@ -5,7 +5,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'XYF',
-  tagline: '技术文档与笔记',
+  tagline: 'AI Infra 系统原理、工程实践与故障证据',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -127,7 +127,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} XYF. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} XYF · INFRA SYSTEMS LAB`,
       },
       prism: {
         theme: prismThemes.github,
