@@ -22,8 +22,6 @@ API。
 
 ## 1. 完整路径
 
-### 1.1 原有时序图
-
 ```mermaid
 sequenceDiagram
     participant C as Client
@@ -61,17 +59,6 @@ sequenceDiagram
     end
     A-->>C: finish_reason + [DONE]
 ```
-
-### 1.2 请求往返路径图
-
-下面将同一过程拆成“请求下行”和“Token 返回”两条主线，并把 KV Cache、TP 与 NCCL 放在支撑位置。节点中直接给出当前阶段发生的动作，也可以点击阶段查看补充说明。原有时序图继续保留，用于对照精确的交互顺序。
-
-<iframe
-  className="architecture-map-frame"
-  src="/diagrams/vllm-request-map.html"
-  title="vLLM 请求从 API 到 GPU Kernel 和 SSE 返回的交互式架构图"
-  loading="lazy"
-></iframe>
 
 从用户视角，关键时间点是：
 
