@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1700" viewBox="0 0 1200 1700" role="img" aria-labelledby="title desc">
+  <title id="title">GPU、SM、Warp、寄存器与显存的关系</title>
+  <desc id="desc">CUDA 软件把 Kernel 拆成 Grid、Block、Warp 和 Thread。Block 被分配到一个 SM，Warp Scheduler 调度 Warp，线程变量使用 SM 中的寄存器文件。SM 内还有 CUDA Core、Tensor Core、访存单元、Shared Memory 和 L1；所有 SM 通过共享 L2 和内存控制器访问 HBM 显存。</desc>
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#dce5ee" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#174f8f"/>
+    </marker>
+    <style>
+      .title{font:700 34px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#10243f}
+      .subtitle{font:400 19px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#596879}
+      .head{font:700 24px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#fff}
+      .section{font:700 25px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#10243f}
+      .label{font:700 23px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#10243f}
+      .small{font:400 18px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#334a62}
+      .tiny{font:400 16px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#596879}
+      .white{font:400 19px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#fff}
+      .panel{fill:#fbfcfc;stroke:#8fa1b3;stroke-width:2}
+      .blue{fill:#eaf2fa;stroke:#174f8f;stroke-width:2.5}
+      .yellow{fill:#fff5c7;stroke:#b68d00;stroke-width:2.5}
+      .red{fill:#fcebec;stroke:#c92f36;stroke-width:2.5}
+      .green{fill:#e9f7ef;stroke:#288754;stroke-width:2.5}
+      .neutral{fill:#f1f4f6;stroke:#718295;stroke-width:2}
+      .arrow{fill:none;stroke:#174f8f;stroke-width:3;marker-end:url(#arrow-blue)}
+      .dash{fill:none;stroke:#c92f36;stroke-width:3;stroke-dasharray:9 7}
+    </style>
+  </defs>
+
+  <rect width="1200" height="1700" fill="#eef1f2"/>
+  <rect width="1200" height="1700" fill="url(#grid)"/>
+  <text x="52" y="58" class="title">GPU 内部组件关系：从 Thread 到 HBM</text>
+  <text x="52" y="91" class="subtitle">逻辑结构示意；不同代际 GPU 的 SM 数量、执行单元数量和缓存组织会不同</text>
+
+  <!-- Software model -->
+  <rect x="50" y="120" width="1100" height="260" class="panel"/>
+  <rect x="50" y="120" width="1100" height="58" fill="#10243f"/>
+  <text x="78" y="158" class="head">① 软件怎样拆分一次 Kernel</text>
+
+  <rect x="80" y="215" width="220" height="100" class="blue"/>
+  <text x="190" y="254" text-anchor="middle" class="label">Grid</text>
+  <text x="190" y="285" text-anchor="middle" class="small">一次 Kernel 启动</text>
+
+  <path d="M300 265H340" class="arrow"/>
+  <rect x="350" y="215" width="220" height="100" class="red"/>
+  <text x="460" y="254" text-anchor="middle" class="label">Thread Block</text>
+  <text x="460" y="285" text-anchor="middle" class="small">整体驻留一个 SM</text>
+
+  <path d="M570 265H610" class="arrow"/>
+  <rect x="620" y="215" width="220" height="100" class="yellow"/>
+  <text x="730" y="254" text-anchor="middle" class="label">Warp</text>
+  <text x="730" y="285" text-anchor="middle" class="small">32 个 Thread</text>
+
+  <path d="M840 265H880" class="arrow"/>
+  <rect x="890" y="215" width="220" height="100" class="green"/>
+  <text x="1000" y="254" text-anchor="middle" class="label">Thread</text>
+  <text x="1000" y="285" text-anchor="middle" class="small">软件执行实例</text>
+
+  <text x="80" y="350" class="tiny">软件层描述任务怎样拆分；它不表示一个 Thread 会永久独占一个 CUDA Core。</text>
+
+  <!-- GPU hardware -->
+  <rect x="50" y="420" width="1100" height="1140" class="panel"/>
+  <rect x="50" y="420" width="1100" height="58" fill="#174f8f"/>
+  <text x="78" y="458" class="head">② 硬件怎样承载并执行这些任务</text>
+
+  <text x="85" y="525" class="section">GPU 芯片包含多个 GPC；每个 GPC 包含多个 SM</text>
+  <rect x="85" y="550" width="1030" height="740" fill="#f5f8fa" stroke="#174f8f" stroke-width="2.5"/>
+  <text x="115" y="590" class="section">GPC（Graphics Processing Cluster）</text>
+  <text x="115" y="620" class="tiny">下面展开一个 SM；其他 SM 可同时执行其他 Block</text>
+
+  <rect x="115" y="650" width="300" height="82" class="red"/>
+  <text x="265" y="683" text-anchor="middle" class="label">SM 0（展开）</text>
+  <text x="265" y="712" text-anchor="middle" class="small">某个 Block 驻留于此</text>
+  <rect x="450" y="650" width="300" height="82" class="neutral"/>
+  <text x="600" y="683" text-anchor="middle" class="label">SM 1</text>
+  <text x="600" y="712" text-anchor="middle" class="small">执行其他 Block</text>
+  <rect x="785" y="650" width="300" height="82" class="neutral"/>
+  <text x="935" y="683" text-anchor="middle" class="label">SM …</text>
+  <text x="935" y="712" text-anchor="middle" class="small">更多 SM</text>
+
+  <path d="M265 732V770" class="arrow"/>
+  <rect x="115" y="780" width="970" height="470" fill="#fff" stroke="#c92f36" stroke-width="3"/>
+  <text x="145" y="820" class="section">SM（Streaming Multiprocessor）内部</text>
+
+  <rect x="145" y="850" width="430" height="120" class="blue"/>
+  <text x="360" y="890" text-anchor="middle" class="label">Warp Scheduler + Dispatch</text>
+  <text x="360" y="922" text-anchor="middle" class="small">选择就绪 Warp</text>
+  <text x="360" y="950" text-anchor="middle" class="small">向执行管线发射指令</text>
+
+  <rect x="625" y="850" width="430" height="120" class="yellow"/>
+  <text x="840" y="890" text-anchor="middle" class="label">Register File（寄存器文件）</text>
+  <text x="840" y="922" text-anchor="middle" class="small">物理上属于 SM，按 Thread 分配</text>
+  <text x="840" y="950" text-anchor="middle" class="small">向执行单元提供操作数并接收结果</text>
+
+  <path d="M360 970V1058" class="arrow"/>
+  <path d="M840 970V1058" class="arrow"/>
+  <rect x="145" y="1070" width="210" height="82" class="green"/>
+  <text x="250" y="1103" text-anchor="middle" class="label">CUDA Core</text>
+  <text x="250" y="1133" text-anchor="middle" class="small">FP / INT</text>
+  <rect x="378" y="1070" width="210" height="82" class="green"/>
+  <text x="483" y="1103" text-anchor="middle" class="label">Tensor Core</text>
+  <text x="483" y="1133" text-anchor="middle" class="small">矩阵乘加</text>
+  <rect x="611" y="1070" width="210" height="82" class="green"/>
+  <text x="716" y="1103" text-anchor="middle" class="label">Load / Store</text>
+  <text x="716" y="1133" text-anchor="middle" class="small">访存单元</text>
+  <rect x="845" y="1070" width="210" height="82" class="green"/>
+  <text x="950" y="1103" text-anchor="middle" class="label">SFU</text>
+  <text x="950" y="1133" text-anchor="middle" class="small">特殊函数</text>
+
+  <rect x="145" y="1180" width="910" height="48" class="blue"/>
+  <text x="600" y="1212" text-anchor="middle" class="label">Shared Memory / L1 Cache（位于每个 SM 内）</text>
+
+  <path d="M600 1290V1325" class="arrow"/>
+  <rect x="145" y="1335" width="910" height="72" class="blue"/>
+  <text x="600" y="1367" text-anchor="middle" class="label">L2 Cache</text>
+  <text x="600" y="1395" text-anchor="middle" class="small">位于 GPU 芯片上，由所有 SM 共享</text>
+
+  <path d="M600 1407V1433" class="arrow"/>
+  <rect x="145" y="1440" width="910" height="72" class="neutral"/>
+  <text x="600" y="1472" text-anchor="middle" class="label">Memory Controller</text>
+  <text x="600" y="1500" text-anchor="middle" class="small">把缓存请求转换为对设备显存的读写</text>
+
+  <path d="M600 1512V1543" class="arrow"/>
+  <rect x="50" y="1575" width="1100" height="82" class="red"/>
+  <text x="600" y="1608" text-anchor="middle" class="label">HBM / GDDR：Global Memory（设备显存）</text>
+  <text x="600" y="1638" text-anchor="middle" class="small">保存模型权重、KV Cache、输入输出张量、激活、临时缓冲；容量大，但离执行单元更远</text>
+
+  <!-- Visual mapping hints -->
+  <path d="M460 315V390" class="dash"/>
+  <text x="475" y="351" class="tiny">Block → SM</text>
+  <path d="M730 315V390" class="dash"/>
+  <text x="745" y="351" class="tiny">Warp → Scheduler</text>
+  <path d="M1000 315V390" class="dash"/>
+  <text x="1015" y="351" class="tiny">Thread 变量 → Register</text>
+
+  <rect x="50" y="1670" width="1100" height="12" fill="#10243f"/>
+</svg>

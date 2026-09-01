@@ -70,6 +70,14 @@ GPU
 └── GPU 显存
 ```
 
+[![GPU、SM、Warp、Register 与显存的组件关系图](/img/gpu/gpu-sm-memory-hierarchy.svg)](/img/gpu/gpu-sm-memory-hierarchy.svg)
+
+> 图片在窄屏中会按比例缩放，可点击图片查看原尺寸结构图。
+
+读图时先区分两种关系：图的上半部分 Grid、Block、Warp、Thread 是**软件执行模型**；下半部分 SM、Register File、CUDA Core、Tensor Core、L1 / L2 与 HBM 是**硬件资源**。Kernel 的 Block 被调度到某个 SM，Block 再拆成 Warp；Warp Scheduler 选择就绪 Warp 并发射指令，Register File 提供操作数，执行单元完成计算。线程临时数据优先放在 Register，Block 复用的数据可放在 Shared Memory；全局访存和缓存未命中再通过 L2 到达 HBM。这是一组存储层次，不表示每次访问都必须依次经过所有层级。
+
+图中特别强调 Register 的位置：线程在编程模型中拥有自己的寄存器变量，但寄存器的物理载体是 **SM 内的 Register File**。线程被调度到哪个 SM，它的寄存器就从该 SM 的寄存器文件中分配；寄存器消耗过多会限制同一 SM 能同时驻留的 Warp 与 Block 数量。
+
 CUDA 官方把 GPU 看成多个 **SM** 的集合。每个 SM 内有寄存器、统一数据缓存以及计算功能单元；不同架构下，每 SM 的单元数量和缓存大小可能不同。
 
 ### 3.1 SM 是什么
