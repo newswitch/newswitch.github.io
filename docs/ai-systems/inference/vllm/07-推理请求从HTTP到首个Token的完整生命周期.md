@@ -22,6 +22,8 @@ API。
 
 ## 1. 完整路径
 
+### 1.1 原有时序图
+
 ```mermaid
 sequenceDiagram
     participant C as Client
@@ -59,6 +61,17 @@ sequenceDiagram
     end
     A-->>C: finish_reason + [DONE]
 ```
+
+### 1.2 交互式架构图预览
+
+下面使用分层架构图展示同一条请求路径。点击组件可以查看职责，并观察它在完整链路中的上下游位置。原有时序图保留，用于对照“交互顺序”和“组件分层”两种表达方式。
+
+<iframe
+  className="architecture-map-frame"
+  src="/diagrams/vllm-request-map.html"
+  title="vLLM 请求从 API 到 GPU Kernel 和 SSE 返回的交互式架构图"
+  loading="lazy"
+></iframe>
 
 从用户视角，关键时间点是：
 

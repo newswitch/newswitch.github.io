@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>vLLM 请求生命周期交互式架构图</title>
+    <style>
+      :root {
+        --bg: #f7f9fc;
+        --surface: #ffffff;
+        --surface-soft: #f1f5f9;
+        --text: #172033;
+        --muted: #687386;
+        --border: #dce3ec;
+        --shadow: 0 10px 28px rgba(20, 33, 61, 0.08);
+        --ingress: #2563eb;
+        --control: #7c3aed;
+        --runtime: #0891b2;
+        --device: #ea580c;
+        --output: #16a34a;
+        --selected: #172033;
+        --selected-text: #ffffff;
+      }
+
+      :root[data-theme='dark'] {
+        --bg: #111827;
+        --surface: #182235;
+        --surface-soft: #202c40;
+        --text: #edf2f7;
+        --muted: #aab5c5;
+        --border: #344158;
+        --shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+        --ingress: #60a5fa;
+        --control: #a78bfa;
+        --runtime: #22d3ee;
+        --device: #fb923c;
+        --output: #4ade80;
+        --selected: #f8fafc;
+        --selected-text: #111827;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", "Microsoft YaHei", sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .architecture-map {
+        width: min(1120px, 100%);
+        margin: 0 auto;
+        padding: 28px;
+      }
+
+      .map-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 22px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--control);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(24px, 4vw, 38px);
+        line-height: 1.18;
+        letter-spacing: -0.025em;
+      }
+
+      .subtitle {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .theme-toggle {
+        flex: 0 0 auto;
+        min-height: 40px;
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+      }
+
+      .theme-toggle:hover,
+      .theme-toggle:focus-visible {
+        border-color: var(--control);
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .legend-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--legend-color);
+      }
+
+      .map-canvas {
+        padding: 22px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background:
+          radial-gradient(circle at top right, color-mix(in srgb, var(--control) 8%, transparent), transparent 34%),
+          var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .lane {
+        display: grid;
+        grid-template-columns: 142px minmax(0, 1fr);
+        align-items: center;
+        gap: 16px;
+      }
+
+      .lane-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--lane-color);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .lane-index {
+        display: inline-grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--lane-color) 13%, transparent);
+        font-size: 12px;
+      }
+
+      .flow {
+        display: flex;
+        min-width: 0;
+        align-items: center;
+        gap: 9px;
+      }
+
+      .node {
+        min-height: 52px;
+        min-width: 0;
+        flex: 1 1 0;
+        padding: 10px 13px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface-soft);
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 650;
+        line-height: 1.3;
+        cursor: pointer;
+        transition:
+          opacity 160ms ease,
+          border-color 160ms ease,
+          background 160ms ease,
+          color 160ms ease,
+          transform 160ms ease;
+      }
+
+      .node:hover,
+      .node:focus-visible {
+        border-color: var(--lane-color, var(--control));
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .node[data-state='selected'] {
+        border-color: var(--selected);
+        background: var(--selected);
+        color: var(--selected-text);
+        transform: translateY(-2px);
+      }
+
+      .node[data-state='upstream'] {
+        opacity: 0.72;
+      }
+
+      .node[data-state='downstream'] {
+        opacity: 0.34;
+      }
+
+      .flow-arrow {
+        flex: 0 0 auto;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .downlink {
+        display: grid;
+        min-height: 38px;
+        grid-template-columns: 142px minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      .downlink-label {
+        justify-self: center;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .downlink-label::before,
+      .downlink-label::after {
+        width: 56px;
+        height: 1px;
+        background: var(--border);
+        content: "";
+      }
+
+      .down-arrow {
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .branch {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        margin-top: 9px;
+        padding-left: 158px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .branch .node {
+        flex: 0 1 250px;
+      }
+
+      .detail-panel {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 14px;
+        align-items: center;
+        min-height: 72px;
+        margin-top: 20px;
+        padding: 15px 17px;
+        border-left: 3px solid var(--control);
+        border-radius: 0 12px 12px 0;
+        background: var(--surface-soft);
+      }
+
+      .detail-title {
+        font-size: 14px;
+        font-weight: 750;
+        white-space: nowrap;
+      }
+
+      .detail-text {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .hint {
+        margin: 13px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+
+      @media (max-width: 680px) {
+        .architecture-map {
+          padding: 18px 14px;
+        }
+
+        .map-header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .theme-toggle {
+          align-self: flex-start;
+        }
+
+        .map-canvas {
+          padding: 18px 14px;
+        }
+
+        .lane {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .flow {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .flow-arrow {
+          text-align: center;
+          transform: rotate(90deg);
+        }
+
+        .downlink {
+          min-height: 48px;
+          grid-template-columns: 1fr;
+        }
+
+        .downlink-label::before,
+        .downlink-label::after {
+          width: 22px;
+        }
+
+        .branch {
+          padding-left: 0;
+          flex-wrap: wrap;
+        }
+
+        .branch .node {
+          flex-basis: 100%;
+        }
+
+        .detail-panel {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .detail-title {
+          white-space: normal;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .node {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="architecture-map">
+      <header class="map-header">
+        <div>
+          <p class="eyebrow">REQUEST MAP · vLLM V1</p>
+          <h1>一句话如何变成首个 Token</h1>
+          <p class="subtitle">从 HTTP 接入、Token 调度到 CUDA Kernel 与 SSE 返回</p>
+        </div>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换图表明暗主题">切换主题</button>
+      </header>
+
+      <div class="legend" aria-label="组件层级图例">
+        <span class="legend-item" style="--legend-color: var(--ingress)"><span class="legend-dot"></span>接入层</span>
+        <span class="legend-item" style="--legend-color: var(--control)"><span class="legend-dot"></span>控制面</span>
+        <span class="legend-item" style="--legend-color: var(--runtime)"><span class="legend-dot"></span>执行面</span>
+        <span class="legend-item" style="--legend-color: var(--device)"><span class="legend-dot"></span>加速器</span>
+        <span class="legend-item" style="--legend-color: var(--output)"><span class="legend-dot"></span>输出链</span>
+      </div>
+
+      <section class="map-canvas" aria-label="vLLM 请求生命周期架构图">
+        <div class="lane" style="--lane-color: var(--ingress)">
+          <div class="lane-label"><span class="lane-index">01</span><span>请求接入</span></div>
+          <div class="flow">
+            <button type="button" class="node" data-id="client" data-order="1">客户端</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="gateway" data-order="2">推理网关</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="api" data-order="3">OpenAI API Server</button>
+          </div>
+        </div>
+
+        <div class="downlink" aria-hidden="true"><span></span><div class="downlink-label"><span class="down-arrow">↓</span>HTTP JSON · messages</div></div>
+
+        <div class="lane" style="--lane-color: var(--control)">
+          <div class="lane-label"><span class="lane-index">02</span><span>输入与调度</span></div>
+          <div class="flow">
+            <button type="button" class="node" data-id="input" data-order="4">Input Processor</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="engine" data-order="5">EngineCore</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="scheduler" data-order="6">Scheduler</button>
+          </div>
+        </div>
+        <div class="branch" style="--lane-color: var(--control)">
+          <span aria-hidden="true">↳</span>
+          <button type="button" class="node" data-id="kv" data-order="6.5">KVCacheManager · BlockPool</button>
+          <span>分配、命中、释放与抢占</span>
+        </div>
+
+        <div class="downlink" aria-hidden="true"><span></span><div class="downlink-label"><span class="down-arrow">↓</span>SchedulerOutput · Token Budget</div></div>
+
+        <div class="lane" style="--lane-color: var(--runtime)">
+          <div class="lane-label"><span class="lane-index">03</span><span>分布式执行</span></div>
+          <div class="flow">
+            <button type="button" class="node" data-id="executor" data-order="7">Executor</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="worker" data-order="8">GPU Worker × TP Rank</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="runner" data-order="9">GPUModelRunner</button>
+          </div>
+        </div>
+
+        <div class="downlink" aria-hidden="true"><span></span><div class="downlink-label"><span class="down-arrow">↓</span>静态 Buffer · Graph / Eager</div></div>
+
+        <div class="lane" style="--lane-color: var(--device)">
+          <div class="lane-label"><span class="lane-index">04</span><span>设备计算</span></div>
+          <div class="flow">
+            <button type="button" class="node" data-id="model" data-order="10">Model Layers</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="attention" data-order="11">Attention Backend</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="kernel" data-order="12">CUDA Kernel</button>
+          </div>
+        </div>
+        <div class="branch" style="--lane-color: var(--device)">
+          <span aria-hidden="true">↳</span>
+          <button type="button" class="node" data-id="nccl" data-order="11.5">NCCL · NVLink / PCIe</button>
+          <span>TP Rank 间集合通信</span>
+        </div>
+
+        <div class="downlink" aria-hidden="true"><span></span><div class="downlink-label"><span class="down-arrow">↓</span>logits · sampled token</div></div>
+
+        <div class="lane" style="--lane-color: var(--output)">
+          <div class="lane-label"><span class="lane-index">05</span><span>结果返回</span></div>
+          <div class="flow">
+            <button type="button" class="node" data-id="sampler" data-order="13">Sampler</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="output" data-order="14">OutputProcessor</button>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <button type="button" class="node" data-id="sse" data-order="15">SSE 首 Token</button>
+          </div>
+        </div>
+
+        <div class="detail-panel" aria-live="polite">
+          <div class="detail-title" id="detail-title">点击任一组件</div>
+          <div class="detail-text" id="detail-text">查看它在请求链路中的职责，并突出显示其上游与下游。</div>
+        </div>
+        <p class="hint">颜色表示系统层次；选中节点后，上游保留、下游淡化。</p>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const nodes = [...document.querySelectorAll('.node')];
+        const title = document.getElementById('detail-title');
+        const text = document.getElementById('detail-text');
+        const descriptions = {
+          client: ['客户端', '发送 messages、Sampling 参数与流式标记，并持续消费 SSE。'],
+          gateway: ['推理网关', '完成认证、限流、准入控制、模型路由、超时与请求追踪。'],
+          api: ['OpenAI API Server', '解析兼容协议并将请求交给异步推理引擎。'],
+          input: ['Input Processor', '渲染 Chat Template、执行 Tokenize，并构造内部请求对象。'],
+          engine: ['EngineCore', '维护请求状态，驱动 Schedule、Execute 与 Update 主循环。'],
+          scheduler: ['Scheduler', '依据 Token Budget 选择 Prefill/Decode 请求并生成 SchedulerOutput。'],
+          kv: ['KVCacheManager · BlockPool', '处理 KV Block 分配、Prefix 命中、释放、缓存与抢占。'],
+          executor: ['Executor', '把调度结果分发到本地或分布式 Worker，并聚合执行结果。'],
+          worker: ['GPU Worker × TP Rank', '绑定设备、进程组与模型分片，保证各 TP Rank 同序执行。'],
+          runner: ['GPUModelRunner', '准备输入与 Attention Metadata，选择 Graph/Eager 路径并执行模型。'],
+          model: ['Model Layers', '执行 Attention、MLP/MoE、Norm 与残差等 Transformer 计算。'],
+          attention: ['Attention Backend', '按硬件、Dtype、Head Dim 与 KV 布局选择具体 Attention 实现。'],
+          kernel: ['CUDA Kernel', '在 SM、Tensor Core、寄存器、Shared Memory 与 HBM 上完成真实计算。'],
+          nccl: ['NCCL · NVLink / PCIe', '在 TP Rank 间执行 AllReduce、ReduceScatter 或 AllGather。'],
+          sampler: ['Sampler', '对 logits 执行温度、Top-k/Top-p、约束与 Token 抽样。'],
+          output: ['OutputProcessor', '更新请求状态、Detokenize，并生成增量文本与完成事件。'],
+          sse: ['SSE 首 Token', '把首 Token 和后续增量 Chunk 流式返回客户端。']
+        };
+
+        const preferredDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = preferredDark ? 'dark' : 'light';
+
+        toggle.addEventListener('click', () => {
+          root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        });
+
+        nodes.forEach((node) => {
+          node.addEventListener('click', () => {
+            const order = Number(node.dataset.order);
+            nodes.forEach((item) => {
+              const current = Number(item.dataset.order);
+              item.dataset.state = item === node ? 'selected' : current < order ? 'upstream' : 'downstream';
+            });
+            const detail = descriptions[node.dataset.id];
+            title.textContent = detail[0];
+            text.textContent = detail[1];
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
