@@ -702,6 +702,16 @@ Storage DMA/NIC RDMA → GPU HBM
 6. 画出服务器 GPU、NVMe、NIC 和 PCIe Root 拓扑。
 7. 选择一个模型，拆分文件读取、反序列化、H2D/GDS 和初始化时间。
 
+### 27.1 参考答案 {/* #参考答案 */}
+
+1. Control Path由CPU、文件系统、驱动和cuFile完成打开文件、注册Buffer、地址映射及提交IO；Data Path是数据在存储DMA Agent与GPU显存之间的实际搬运。
+2. Compatibility Mode保持cuFile API可用，但数据可能经过内核Page Cache或CPU Bounce Buffer再H2D；它证明功能兼容，不证明绕过CPU的直接数据路径生效。
+3. 本地NVMe通常由NVMe控制器作为DMA Agent；远端存储可能由支持RDMA的NIC/HCA承担数据搬运，但是否可直达取决于文件系统、驱动、拓扑与认证的软件栈。
+4. `O_DIRECT`绕过Page Cache，对Buffer地址、文件偏移和长度通常有块对齐要求。未对齐可能失败、降级或触发额外读改写，导致结果不是预期直接路径。
+5. 四组实验应固定文件、GPU、NUMA、块大小、队列深度和缓存条件：POSIX buffered、POSIX `O_DIRECT`、cuFile Compatibility、cuFile Direct。记录吞吐、P95、CPU、GPU Copy/DRAM指标与`gdscheck`结果。
+6. 用`lspci -tv`、`nvidia-smi topo -m`及NVMe/NIC BDF画出每个设备所属PCIe Switch、Root Complex和NUMA；优选GPU与NVMe/NIC同Root或最短路径，并标注ACS/IOMMU状态。
+7. 在应用中分别记录文件打开/读取完成、Tensor反序列化、数据到达GPU和引擎初始化完成时间；比较总时间与各阶段和，识别流水线重叠。GDS模式下仍需单独记录格式解析和Kernel初始化。
+
 ## 28. 参考与致谢 {/* #参考与致谢 */}
 
 - [GPUDirect Storage Documentation](https://docs.nvidia.com/gpudirect-storage/)

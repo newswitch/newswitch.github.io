@@ -854,6 +854,17 @@ Pool 是数据策略边界，CephX 是访问控制边界。
 7. 为什么 `ceph auth caps` 变更前要导出当前权限？
 8. 为一个只能访问指定 RBD Pool 的应用写出权限矩阵并完成负向测试。
 
+### 24.1 参考答案 {/* #参考答案 */}
+
+1. Pool是RADOS逻辑命名空间，拥有副本/EC、PG、CRUSH Rule、配额等策略；目录是文件系统命名空间对象。Pool通过CRUSH动态使用一组OSD，不等于固定分配若干磁盘。
+2. `size=3`表示期望保存3份副本；`min_size=2`表示至少2份可用时才继续处理IO。前者控制冗余目标，后者控制降级可用边界。
+3. Rule变化会重新计算PG的期望OSD集合，大量PG的Up Set随之变化，Ceph需要Backfill到新位置并删除旧副本，因此产生网络、磁盘和延迟压力。
+4. `on`允许autoscaler自动调整PG数；`warn`只给出建议/告警；`off`既不自动调整也不警告。生产切换到`on`前应评估变更规模和恢复窗口。
+5. Pool配额只限制特定Pool，不创造物理空间，也不预留Host故障恢复余量；其他Pool、分布倾斜和OSD full阈值仍可能让它提前不可写。
+6. CephX entity用于Ceph协议认证和caps授权；S3用户由RGW管理Access/Secret与Bucket策略；Linux用户由UID/GID和POSIX权限管理。它们可映射协作，但不是同一身份系统。
+7. `ceph auth caps`会整体替换该entity的caps，漏写一个Subsystem即可中断业务。变更前导出可用于差异审查和快速恢复，并应避免把Secret写入不安全日志。
+8. 示例矩阵：`mon 'profile rbd'`、`osd 'profile rbd pool=app-rbd'`、需要时加受限`mgr 'profile rbd pool=app-rbd'`。正向测试在`app-rbd`创建/读写/删除实验Image；负向测试访问另一个Pool必须返回权限拒绝，且不能使用`client.admin`完成验收。
+
 ## 25. 官方资料 {/* #官方资料 */}
 
 - [Ceph Pools](https://docs.ceph.com/en/latest/rados/operations/pools/)

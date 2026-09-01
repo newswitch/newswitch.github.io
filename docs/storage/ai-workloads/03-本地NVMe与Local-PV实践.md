@@ -508,6 +508,16 @@ Local PV 的优势是低延迟和高带宽，代价是位置绑定与运维复�
 6. 人为修改 Pod 的节点选择器，让它与 PV 冲突，记录调度事件。
 7. 测量共享存储首次加载和 NVMe 缓存命中后的加载时间。
 
+### 16.1 参考答案 {/* #参考答案 */}
+
+1. `hostPath`直接暴露任意节点路径，缺少PV对象、容量与调度约束；Local PV是Kubernetes持久卷资源，显式描述容量、访问模式和节点亲和性，仍不提供跨节点复制。
+2. Local PV的数据只存在于特定节点。节点亲和性让Scheduler把使用该PV的Pod放到同一节点，否则会出现卷可见但数据路径不存在的错误放置。
+3. `WaitForFirstConsumer`把卷选择/绑定推迟到Pod调度时，使Scheduler能够同时考虑Pod CPU/GPU约束和PV节点拓扑，避免先绑定到错误节点。
+4. 模型缓存可从对象/共享存储重新下载，丢失只影响启动时间；唯一Checkpoint包含不可重建训练状态，节点或盘故障会造成永久数据损失，因此必须有持久事实来源和复制/备份。
+5. 创建带`local.path`与`nodeAffinity`的10Gi PV、匹配PVC和Pod；验收为PVC Bound、Pod落在指定节点、挂载点可读写且重建Pod后数据仍在。删除PV前应先清理实验数据。
+6. 将Pod `nodeSelector`指向其他节点，预期事件包含`volume node affinity conflict`；恢复为PV节点后应成功调度。记录PVC/PV状态和Scheduler事件作为答案。
+7. 首次从共享存储下载并校验到NVMe，记录下载、校验和模型加载时间；第二次确认缓存revision/hash一致后直接加载。性能提升应分解为远端读取节省和本地读取耗时，避免把Page Cache误认为NVMe缓存收益。
+
 ## 17. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Volumes](https://kubernetes.io/docs/concepts/storage/volumes/)

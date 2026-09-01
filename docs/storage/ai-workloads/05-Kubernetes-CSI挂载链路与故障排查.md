@@ -631,6 +631,16 @@ PVC 请求
 6. 分别制造 StorageClass 名称错误和挂载权限错误，比较事件差异。
 7. 画出你所在集群从 PVC 到后端存储的真实调用链。
 
+### 20.1 参考答案 {/* #参考答案 */}
+
+1. CSI Controller通常以Deployment运行，负责创建/删除卷、Attach/Detach、Snapshot和扩容等集群级操作；Node Plugin通常以DaemonSet运行在每个节点，负责Stage、Publish、格式化和挂载到Pod。
+2. `CreateVolume`在后端创建卷；`NodeStageVolume`把卷准备到节点级暂存路径，可供多个Pod挂载复用；`NodePublishVolume`再把已准备的卷发布到某个Pod的目标路径。
+3. Scheduler必须同时满足GPU节点和卷可访问拓扑。即使某节点有空闲GPU，只要PV的Node/AZ拓扑不匹配，Pod仍会因Volume Node Affinity或CSI拓扑约束Pending。
+4. 正确时间线应包含PVC创建、StorageClass选择、Provisioning、PV生成、PVC Bound、Pod调度、VolumeAttachment（如需要）、Stage/Publish和Pod Running；用`kubectl get -w`和Events记录每步时间。
+5. 停止目标节点Node Plugin后，控制面卷可能已创建并Attach，但Kubelet在Stage/Publish阶段超时，Pod事件显示`FailedMount`。恢复DaemonSet并确认Node插件注册后挂载应继续完成。
+6. StorageClass错误通常让PVC长期Pending并出现找不到Class/Provisioner；权限错误通常PVC已Bound、Pod已调度，但NodePublish或应用访问报Permission denied。两者的对象阶段不同。
+7. 调用链应至少画出Pod/PVC、Scheduler、PV/StorageClass、external-provisioner/attacher、CSI Controller、目标节点Kubelet与Node Plugin、内核挂载客户端、网络和后端存储，并标出每层日志。
+
 ## 21. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)

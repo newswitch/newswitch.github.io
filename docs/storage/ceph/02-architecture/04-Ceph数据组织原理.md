@@ -527,6 +527,17 @@ PG 太多会增加内存、Peering 和管理开销。应结合 Autoscaler 和集
 7. Pool 不同是否代表底层一定使用不同物理磁盘？
 8. 如何查询某个对象映射到哪个 PG 和哪些 OSD？
 
+### 14.1 参考答案 {/* #参考答案 */}
+
+1. 业务数据被切成Object并属于某个Pool；对象名经哈希映射到该Pool的PG；CRUSH再把PG映射到一组OSD。关系是`Object → Pool内PG → Acting OSD集合`。
+2. 逐对象位置表会成为巨大中心元数据和扩容瓶颈。Ceph让客户端和OSD根据确定性哈希、OSDMap和CRUSH共同计算位置，只需维护集群拓扑与状态。
+3. 不可以。PG ID包含Pool ID和Pool内PG编号，属于唯一Pool；不同Pool即使编号后半部分相同也是不同PG。
+4. `size=3`的正常副本Pool通常有3个OSD：1个Primary和2个Replica，故障/恢复时集合可能暂时不足。
+5. Up Set是当前CRUSH按最新拓扑期望的OSD集合；Acting Set是当前实际承担该PG读写的集合。迁移、故障或临时映射期间两者可能不同。
+6. 通常仍可访问。`active`表示能服务IO，`degraded`表示副本/分片不完整，风险和恢复压力增大；是否允许写还受`min_size`影响。
+7. 不代表。Pool是逻辑边界，若使用同一CRUSH Rule和Device Class，仍可能落到相同OSD；物理隔离要靠CRUSH层级、Rule和设备集合。
+8. 先用`ceph osd pool ls detail`取得Pool ID，再用`ceph osd map <pool> <object-name>`查看对象对应PG、up和acting集合；进一步用`ceph pg <pgid> query`检查状态。
+
 ## 15. 参考资料 {/* #参考资料 */}
 
 - [Ceph 官方架构文档](https://docs.ceph.com/en/latest/architecture/)

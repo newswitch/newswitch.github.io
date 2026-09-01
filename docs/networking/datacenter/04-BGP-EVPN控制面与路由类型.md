@@ -181,6 +181,14 @@ ip -d link show type vxlan
 
 你应能在白板上从一个本地 MAC 开始，完整画出 Type 2 的生成、发布、导入和数据面转发过程；看到 Type 1～5 时，能够说清每一种在解决什么问题，而不是背编号。
 
+### 6.4 参考答案与验收标准
+
+**练习一**：Leaf1 与 RR 的 BGP 会话应为 Established，RR 的 EVPN RIB 中能看到携带 Leaf1 export RT 的 MAC/IP Type 2；Leaf2 因 import RT 不匹配，不会把该路由安装到目标 MAC-VRF/VNI，因此对应远端 MAC、ARP/ND 或转发表项缺失。把 Leaf2 import RT 改为与 Leaf1 export RT 相交后，确认路由进入本地 EVPN RIB、VXLAN FDB/邻居表出现远端项，最后以双向业务和抓包验证恢复。
+
+**练习二**：如果本地 VTEP 已导入远端 MAC-IP Type 2 且开启 ARP Suppression，本地 VTEP应直接代理回复，Underlay中不应看到该ARP请求被BUM复制到所有远端VTEP；若仍泛洪，应检查Type 2是否携带IP、VNI/VRF映射、代理功能和邻居表安装状态。
+
+**掌握标准答案**：本地学习MAC/IP后，VTEP生成Type 2并附加RD、RT、VNI及下一跳，经RR反射；远端VTEP按RT导入并安装到MAC-VRF，再通过VXLAN封装把已知单播送往发布该路由的VTEP。Type 1用于以太网自动发现和多归属，Type 2发布MAC/IP，Type 3建立BUM成员关系，Type 4完成以太网段多归属与DF相关控制，Type 5发布IP前缀。
+
 ## 7. 参考资料 {/* #参考资料 */}
 
 - [RFC 7432：BGP MPLS-Based Ethernet VPN](https://www.rfc-editor.org/rfc/rfc7432)

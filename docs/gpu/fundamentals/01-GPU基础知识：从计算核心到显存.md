@@ -366,6 +366,19 @@ CUDA Core：通用算术；Tensor Core：矩阵与混合精度
 9. 显存容量和显存带宽分别决定什么？
 10. 用 `nvidia-smi` 记录一张实际 GPU 的型号、显存、利用率、温度和功耗。
 
+### 14.1 参考答案 {/* #参考答案 */}
+
+1. **CUDA Core** 是执行通用标量/向量算术的硬件执行单元；**Tensor Core** 是面向矩阵乘加的专用单元；**CUDA Thread** 是软件并行执行实例，由 Warp 调度到 SM 的执行管线，两者不能按“一线程对应一核心”理解。
+2. Block 内线程需要通过 Shared Memory 和 `__syncthreads()` 协作，而 Shared Memory、寄存器配额和同步屏障都属于单个 SM 的资源，因此一个 Block 不能跨 SM 运行。
+3. Warp 通常包含 32 个线程，因此 `256 / 32 = 8` 个 Warp。
+4. 同一 Warp 的线程执行不同分支时，硬件通常要分批执行各分支并屏蔽不参与的线程，导致执行通道不能同时做有效工作。
+5. Shared Memory 位于 SM 附近、容量小、由同一 Block 共享、延迟低；Global Memory 是设备显存，容量大、所有线程可访问，但延迟更高并受访问合并和带宽限制。
+6. `Memory-Usage` 表示已经分配的显存容量；`Memory Util` 表示采样窗口内设备内存发生读写的忙碌时间比例，前者是空间，后者是活动度。
+7. 模型权重、CUDA 上下文、内存池和预留的 KV Cache 会长期驻留显存；没有请求只会让计算和读写活动下降，不会自动卸载这些对象。
+8. 性能还取决于架构代际、频率、Tensor Core 能力、显存带宽、缓存、功耗限制和软件优化，CUDA Core 数量不能跨架构直接换算吞吐。
+9. 显存容量决定能否放下权重、KV Cache、激活和临时空间；显存带宽决定单位时间能够搬运多少数据，常限制大模型 Decode 和访存密集算子。
+10. 参考命令：`nvidia-smi --query-gpu=name,memory.total,memory.used,utilization.gpu,utilization.memory,temperature.gpu,power.draw --format=csv`。答案应保存采样时间、GPU 空闲/负载状态和至少连续一分钟数据，避免只记录单个瞬时值。
+
 ## 15. 参考与致谢 {/* #参考与致谢 */}
 
 - [CUDA Programming Guide — Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html)（异构系统、SM、Thread Block、Warp、内存模型）

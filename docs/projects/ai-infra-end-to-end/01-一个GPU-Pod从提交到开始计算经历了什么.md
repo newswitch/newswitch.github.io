@@ -479,6 +479,16 @@ API 接收
 6. 为什么 readiness 不能只检查端口？
 7. 画出所在集群 GPU Pod 的真实组件和日志位置。
 
+### 19.1 参考答案 {/* #参考答案 */}
+
+1. `PodScheduled=True`只表示调度器已经绑定Node；镜像拉取、Sandbox创建、CNI、CSI挂载、设备注入、Container启动或Init Container仍可能失败。严格说绑定后通常不再是调度意义的Pending，而是Pod阶段仍显示Pending。
+2. Scheduler根据扩展资源、亲和性、污点和拓扑选择节点并扣减逻辑GPU资源；Device Plugin负责发现/上报设备，并在Kubelet启动容器时返回设备节点、挂载和环境变量等分配结果。
+3. CSI Node Plugin问题发生在目标节点的Stage/Publish挂载阶段，常见事件为`FailedMount`、`MountVolume`或超时；PVC可能已经Bound。
+4. 参考时间线：T0提交对象，T1准入完成，T2进入调度队列，T3过滤/打分，T4绑定，T5卷挂载，T6 Sandbox/CNI，T7镜像就绪，T8设备分配，T9容器启动，T10 readiness通过。时间戳来自事件、审计日志、Scheduler、Kubelet和应用日志。
+5. GPU不足表现为`FailedScheduling/Insufficient <gpu-resource>`；PVC错误多为PVC Pending、拓扑冲突或`FailedMount`；模型路径错误通常容器已启动后由应用报`ENOENT`并CrashLoop。三者所在层次不同。
+6. 端口打开只证明Socket监听，不能证明权重加载、Worker健康、TP通信和最小推理成功。Readiness至少应在引擎就绪后成功，必要时执行轻量模型健康检查。
+7. 图中应包含API Server、Scheduler、Device Plugin、Kubelet、Container Runtime、CNI、CSI、GPU Runtime和模型服务；为每层标注`kubectl events`、控制面日志、节点Journal、容器日志和GPU诊断入口。
+
 ## 20. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Scheduling Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/)

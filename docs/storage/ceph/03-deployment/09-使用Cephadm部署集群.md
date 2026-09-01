@@ -689,6 +689,17 @@ cephadm 部署流程可以概括为：
 7. 创建 OSD 前要核对哪些设备信息？
 8. 为什么 Zap 设备后可能自动重新创建 OSD？
 
+### 13.1 参考答案 {/* #参考答案 */}
+
+1. 主机需满足受支持OS/内核、时间同步、网络/主机名解析、Python、容器运行时、LVM2及SSH等要求；具体包和版本必须按目标Ceph版本的前置检查确认。
+2. Bootstrap至少创建首个MON和MGR，生成集群配置与管理Key，并启用cephadm编排；默认还可能部署Crash和监控栈，是否创建取决于版本及`--skip-monitoring-stack`等选项。
+3. `/etc/ceph/ceph.pub`是cephadm管理SSH公钥，应加入每台受管主机目标管理用户的`authorized_keys`，私钥不能被分发。
+4. `ceph orch apply mon <placement>`提交的是整个MON服务期望状态，不是“追加一台”。连续提交不同单Host placement会让后一次覆盖前一次，应一次声明完整placement或使用正确的add流程。
+5. `_admin`让cephadm把`ceph.conf`和管理员Keyring分发到该Host，便于执行管理命令。给所有Host添加会扩大高权限凭据暴露面，违反最小权限。
+6. 它创建持久DriveGroup/服务规格；以后出现新的“可用设备”或设备被zap重新变为空盘，协调器仍可能自动创建OSD，影响不是一次性的。
+7. 核对稳定设备ID/序列号、容量、介质类型、SMART、现有分区/签名、LVM、挂载、加密、是否承载系统/业务数据、Device Class和DB/WAL规划；不能只认`/dev/sdX`。
+8. 若仍存在匹配`--all-available-devices`或DriveGroup的声明式规格，zap后设备重新满足可用条件，cephadm会把它协调回OSD。应先修改/删除规格再执行破坏性操作。
+
 ## 14. 参考资料 {/* #参考资料 */}
 
 - [Using Cephadm to Deploy a New Ceph Cluster](https://docs.ceph.com/en/latest/cephadm/install/)

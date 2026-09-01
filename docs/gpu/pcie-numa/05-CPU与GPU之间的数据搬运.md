@@ -599,6 +599,16 @@ Reusable Pinned Buffer
 6. 使用 `bandwidthTest` 比较 Pageable/Pinned 和 H2D/D2H。
 7. 改变 DataLoader 的 `num_workers`、`pin_memory`，记录 GPU 等待时间和端到端吞吐。
 
+### 21.1 参考答案 {/* #参考答案 */}
+
+1. Pageable Memory 可能被换出或迁移，DMA 需要稳定的物理页。运行时通常先把数据复制到临时 Pinned Buffer，再由设备 DMA，因此多一次复制且难以稳定异步。
+2. Pinned Memory 不能被回收或换出，过量会挤压系统可用内存、增加页表和分配开销，并可能导致整个节点内存压力或 OOM。
+3. 需要 Pinned Host Memory、非阻塞复制、支持异步的 CUDA Stream、具备复制引擎的设备，并让 Kernel 与复制位于可并行的 Stream；数据依赖和隐式同步也必须消除。
+4. GPU 若连接在 Socket 0，而线程和内存位于 Socket 1，数据需跨 UPI/Infinity Fabric 后再进入 PCIe，增加延迟并争用跨 Socket 带宽。应绑定 CPU 和内存到 GPU 本地 NUMA 节点验证。
+5. `.item()` 把设备标量取回 CPU，通常要求等待之前的 GPU 工作完成；在训练循环中频繁调用会引入同步点，破坏异步流水线。
+6. 固定数据大小和迭代次数运行 `bandwidthTest`，分别记录 Pageable/Pinned 的 H2D、D2H。Pinned 通常更快且更稳定；结果必须附 GPU、PCIe 代际、NUMA 绑定和时钟状态。
+7. 使用相同数据、Batch 和训练步数，对 `num_workers` 做阶梯测试，并分别设置 `pin_memory=false/true`。记录 samples/s、GPU 空闲间隙、CPU、磁盘和 P95 Batch 准备时间；最佳值是吞吐平台点而非 Worker 最大值。
+
 ## 22. 参考与致谢 {/* #参考与致谢 */}
 
 - [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/)

@@ -518,6 +518,16 @@ NFS 的核心价值是共享 POSIX 目录；核心风险是所有客户端最终
 6. 同时启动 1、2、4 个读取 Pod，记录总吞吐和完成时间。
 7. 制造错误 UID/GID，使用事件、`id` 和 `stat` 定位权限问题。
 
+### 17.1 参考答案 {/* #参考答案 */}
+
+1. 不是。RWX只表示多个客户端可以挂载并读写，是否允许写模型目录还要由POSIX权限、只读挂载、发布流程和应用职责控制；生产模型revision通常应只读。
+2. 第二次读取可能命中客户端Page Cache、服务端缓存或节点本地缓存，后端没有再次提供同等IO。必须控制缓存状态并同时观察NFS服务端磁盘和网络指标。
+3. 不会。NFS CSI主要负责把已有NFS Export挂载给Pod，NFS Server本身的HA、复制、VIP和数据保护仍需独立建设。
+4. 创建RWX PVC和两个带不同节点亲和性的Pod，分别挂载同一目录；Pod A写入带时间戳文件，Pod B校验内容和inode属性。验收还应包含只读/读写权限是否符合设计。
+5. 两组总字节可相近，但十万个小文件会放大lookup、open、getattr和close，通常耗时更长、元数据RPC更多。记录总时间、文件/秒、RPC分布和服务端CPU。
+6. 固定文件、缓存状态和节点，分别并发1/2/4个Pod，记录单Pod与聚合吞吐、完成时间、NFS Server网卡/磁盘和P95。若聚合不再增长而单Pod下降，说明共享瓶颈已出现。
+7. 将容器运行UID/GID改为Export中文件不允许的身份；若挂载本身成功而读写失败，使用容器内`id`、`stat -c '%u:%g %a'`和服务端Export/root-squash配置核对身份映射。Kubernetes事件主要排除挂载阶段错误。
+
 ## 18. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Volumes — NFS](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)

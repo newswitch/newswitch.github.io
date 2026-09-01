@@ -900,6 +900,19 @@ Ceph 安全加固要形成完整闭环：
 9. 为什么 TPM 不能替代密钥灾备？
 10. 密钥泄露时如何兼顾快速吊销和业务连续性？
 
+### 36.1 参考答案 {/* #参考答案 */}
+
+1. CephX认证证明客户端/Daemon持有合法共享密钥并建立会话；capabilities规定该entity能访问哪些MON、MGR、Pool、Namespace或CephFS路径。认证成功不等于拥有全部权限。
+2. CephX用户是Ceph协议entity；CephFS POSIX用户是文件系统内UID/GID，由客户端提交并受POSIX权限约束；RGW用户拥有S3 Access/Secret、配额和Bucket策略。三套身份边界不同。
+3. 不限制Pool的`osd` caps可能让应用读写同集群其他租户数据，泄露影响从单业务扩大到全数据面。应进一步限制Pool、Namespace和操作类型。
+4. 该命令通常整体替换entity的caps，少写一段就会立即撤销原能力，写宽又会越权；必须先导出、差异审查、负向测试并准备恢复。
+5. 创建新entity/key可让旧新凭据并行，先灰度更新客户端并确认全部迁移，再吊销旧entity；原地覆盖共享key会让未同步更新的客户端同时断线，且难区分使用者。
+6. msgr2 `crc`提供CephX会话及传输校验，但消息负载不加密；`secure`对传输提供加密和更强的完整性/保密保护，代价是CPU与兼容性需评估。
+7. 配置可接受`crc`和`secure`时，双方可能协商到`crc`，因此不代表强制加密。要强制必须只允许secure，并逐类验证客户端和Daemon兼容。
+8. LUKS保护关机磁盘被拔走、报废或离线读取时的数据；系统在线且卷已解锁时，主机Root、被攻陷Daemon、Ceph凭据滥用和逻辑删除仍能访问数据。
+9. TPM可把解锁与特定主机启动状态绑定，降低密钥裸露，但主板/TPM损坏或策略变化时仍需恢复密钥；没有离线灾备密钥可能让合法数据永久不可读。
+10. 先创建受限新entity/key并分批切换客户端，监控旧entity连接归零；泄露风险极高时先在入口阻断并立即吊销。全程保留责任人、影响清单、回滚和强制重认证窗口。
+
 ## 37. 官方资料 {/* #官方资料 */}
 
 - [Ceph 用户与 Capabilities 管理](https://docs.ceph.com/en/latest/rados/operations/user-management/)

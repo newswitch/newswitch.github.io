@@ -531,6 +531,16 @@ NVSwitch 服务 NVLink Fabric，不承载普通 TCP/IP。
 6. 运行 `all_reduce_perf`，比较启用和禁用 P2P 的结果。
 7. 设计一个 8 卡 Tensor Parallel Pod 的节点选择与独占策略。
 
+### 21.1 参考答案 {/* #参考答案 */}
+
+1. PCIe P2P 复用 PCIe 层级，带宽和路径受 Root Complex、Switch 与 ACS/IOMMU 影响；NVLink 是 GPU 间专用高速互连，通常提供更高带宽和更低延迟，但可达关系取决于具体机器拓扑。
+2. NVSwitch 交换的是服务器内部 GPU/NVLink 流量，不运行以太网/IP/BGP，也不负责跨服务器网络转发；它解决的是多 GPU 间高带宽全互连或近似全互连。
+3. 每张 GPU 仍拥有独立地址空间和内存控制器。统一寻址只让地址可表达，框架仍需显式分片、复制、P2P 访问或集合通信，不能自动把容量合并成一块透明大显存。
+4. 执行 `nvidia-smi topo -m`，把 `NV#`、`PIX/PXB`、`PHB/SYS` 转成边；同时记录 CPU Affinity 和 NIC 列，图中应能指出每个 GPU Pair 的最短路径。
+5. 运行 CUDA Samples 的 `p2pBandwidthLatencyTest`，保存每个 Pair 的 P2P 可达性、单向/双向带宽和时延。相同拓扑的 Pair 应接近；异常 Pair 要结合 Xid、链路状态和 PCIe/NVLink 计数排查。
+6. 使用 `NCCL_P2P_DISABLE=0/1` 分别运行同规模 `all_reduce_perf`，保持消息大小、GPU 数和进程布局一致。比较 `algbw`、`busbw` 和尾部抖动；禁用后若回落到共享内存/PCIe，性能通常下降。
+7. Pod 请求8张整卡，使用节点标签锁定经过验证的8卡NVSwitch/NVLink机型，并通过反亲和或整机资源配额防止其他GPU任务混入；TP大小必须等于可见GPU数，部署后用拓扑和NCCL基线验收。
+
 ## 22. 参考与致谢 {/* #参考与致谢 */}
 
 - [NVIDIA Fabric Manager User Guide](https://docs.nvidia.com/hgx-platforms/fabric-manager-user-guide/)

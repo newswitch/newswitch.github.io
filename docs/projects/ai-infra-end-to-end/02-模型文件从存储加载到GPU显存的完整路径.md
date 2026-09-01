@@ -507,6 +507,16 @@ nsys profile <application>
 6. 比较 pageable 和 pinned memory 的 H2D。
 7. 计算 200 GiB 模型在 8 GiB/s 存储和 24 GiB/s H2D 下的串行理论下限。
 
+### 20.1 参考答案 {/* #参考答案 */}
+
+1. CSI完成的是卷在Pod中的可见性；模型还要经历文件读取、Page Cache、反序列化、CPU内存分配、分片、H2D以及GPU初始化，任何后续阶段都可能失败。
+2. Page Cache由内核缓存文件页；CPU Tensor是进程地址空间中的张量对象；Pinned Memory是不能换出的主机页，适合稳定DMA和异步H2D。三者可能相关但不是同一层对象。
+3. `mmap()`主要建立虚拟地址映射，文件页通常在首次访问时按需缺页读取；调用返回快只证明映射创建成功，不能证明所有内容已经从存储读入。
+4. 在应用中分别给Open/Read、反序列化、Host Tensor就绪、H2D完成和首个推理打单调时钟点；H2D计时必须用CUDA Event或显式同步，预热以首个成功请求与稳定后请求分别记录。
+5. 冷缓存测试需在隔离节点、可控缓存条件下进行；热缓存保留同一文件页。若热加载显著更快，差值主要来自后端IO/Page Cache，而不是GPU初始化。
+6. 固定字节数、Stream、NUMA和迭代次数，比较Pageable与Pinned H2D。Pinned通常带宽更高且可异步；同时观察过量Pinned对主机内存的影响。
+7. 存储读取下限为`200/8=25秒`，H2D下限为`200/24≈8.33秒`；完全串行为约`33.33秒`。实际还包含解析、校验、分片、初始化和不能完全重叠的开销。
+
 ## 21. 参考与致谢 {/* #参考与致谢 */}
 
 - [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/)

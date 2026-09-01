@@ -954,6 +954,19 @@ ceph_inspection_score 92
 9. 哪些动作不适合自动修复？
 10. 如何测试巡检脚本而不破坏生产集群？
 
+### 39.1 参考答案 {/* #参考答案 */}
+
+1. Prometheus擅长连续数值与实时告警；每日巡检还能核对拓扑漂移、长期Flags、版本混杂、备份可恢复性、证书/容量预测和需要关联工单的状态，两者互补。
+2. JSON字段有稳定结构和类型，能明确区分空值、数组和错误；解析人类表格容易受版本、列宽、本地化和空格变化影响，产生静默误判。
+3. Unknown表示采集失败、权限不足或格式变化，真实健康状态不可知；按OK处理会让监控失明。应单独告警并保留命令错误。
+4. HDD、SSD/NVMe及分离DB的正常apply/commit延迟差异很大，应按Device Class、型号/角色和负载时段建立P95/P99基线，再识别相对异常。
+5. `noout/nobackfill/norebalance/noscrub`可能是维护期间合理状态，也可能被遗忘。巡检必须关联工单、设置时间、Owner和到期解除条件，不能仅判断“是否存在”。
+6. 每个Image查询会放大MON/OSD/客户端请求和进程开销，大规模并发本身可能成为生产负载；应使用批量/分页、缓存、限速和抽样，并在低峰执行。
+7. 总分可能让一个致命项被多个正常项平均掉，例如PG inactive却得80分。Quorum丢失、full、inactive、备份失败等必须直接判为不通过。
+8. Prometheus抓取时如果恰好读到半写文件，会解析失败或读到混合数据；先写同目录临时文件并`rename`，利用文件系统原子替换保证每次只看到完整快照。
+9. 数据删除、`pg repair`、`mark_unfound_lost`、OSD out/destroy、提高full阈值、修改CRUSH和大规模重启都不适合无审批自动修复，因为判断错误不可逆或会扩大故障。
+10. 用保存的JSON Fixture、Mock命令和不同版本样本做单元测试；在测试集群注入nearfull/down/超时；生产只以只读、低并发、超时和最小权限运行，先Shadow报告不触发动作。
+
 ## 40. 官方资料 {/* #官方资料 */}
 
 - [Ceph 健康检查说明](https://docs.ceph.com/en/latest/rados/operations/health-checks/)

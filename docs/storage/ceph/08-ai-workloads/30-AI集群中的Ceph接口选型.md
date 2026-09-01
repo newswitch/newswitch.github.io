@@ -444,6 +444,15 @@ Ceph 系统学习入口：[Ceph 学习路线](../00-Ceph学习路线.md)。
 5. 同时启动多个 Pod 读取 CephFS 模型，记录 Ceph 和 GPU 指标。
 6. 人为停止一个 CSI Node Plugin，观察 Pod 事件并恢复。
 
+### 16.1 参考答案 {/* #参考答案 */}
+
+1. 普通RBD提供单机块设备语义，格式化为ext4/XFS后不能被多节点安全并发挂载；CephFS原生提供多客户端POSIX命名空间和RWX，适合多个节点读取同一模型目录。
+2. CephFS目录是有inode、权限、原子rename和MDS元数据管理的真实文件系统对象；RGW“目录”只是Object Key前缀的显示约定，没有POSIX目录和锁语义。
+3. 模型发布源可用RGW保存不可变revision，需POSIX共享加载时用CephFS；训练数据按访问模式选择RGW大对象或CephFS文件集；Checkpoint通常用CephFS或专用RBD以获得写入/快照语义；节点热点缓存用可重建的本地NVMe而非Ceph事实源。
+4. RBD PVC通常是RWO/ReadWriteOncePod，由一个节点映射块设备并挂载；CephFS PVC通常是RWX，可同时挂载到多个节点Pod。实验应验证第二个节点对RBD的调度/多Attach限制以及CephFS并发可见性。
+5. 以1/2/4/8 Pod阶梯并发读取相同模型，记录完成时间、CephFS MDS请求、OSD读吞吐/延迟、客户端网卡和GPU空闲时间；区分冷缓存与热缓存，判断存储是否拖延模型就绪。
+6. 停止目标节点的CSI Node Plugin后，新Pod应在NodeStage/NodePublish阶段出现`FailedMount`；保存事件和插件注册状态，恢复DaemonSet后确认Pod自动完成挂载，并做读写冒烟。不要在承载生产卷的节点直接演练。
+
 ## 17. 参考与致谢 {/* #参考与致谢 */}
 
 - [Ceph Architecture](https://docs.ceph.com/en/latest/architecture/)

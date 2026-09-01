@@ -869,6 +869,17 @@ Ceph 日常运维的核心不是记忆更多命令，而是建立稳定的工作
 7. 找出集群所有 OSD flags，并解释它们的设置原因和清理条件。
 8. 编写一个只读巡检脚本，将核心命令保存为带时间戳的 JSON。
 
+### 23.1 参考答案 {/* #参考答案 */}
+
+1. `up/down`表示OSD进程是否在线可达；`in/out`表示它是否参与CRUSH正常数据放置。两组状态组合表达“服务状态”和“数据布局状态”，不能混为一谈。
+2. nearfull按单个OSD容量判断。CRUSH不均、PG倾斜、不同Device Class或Pool热点可能让少数OSD先过阈值，即使集群总Raw仍有空间。
+3. Maintenance用于计划维护并保留Host/Daemon，操作后应重新加入；Drain把可迁移Daemon和OSD数据移出，面向退役或长期移除，耗时和风险更大。
+4. 短暂重启时立即out会触发不必要的大量Backfill；主机很快恢复后数据又可能迁回，形成双重扰动。应根据预计时长、`mon_osd_down_out_interval`和风险决定。
+5. 每台前检查Quorum、PG全`active+clean`、无恢复/slow ops、容量余量和`ok-to-stop`；一次只重启一台，等待Daemon恢复、PG重新clean和业务指标正常后再继续。任一PG inactive、Quorum风险或P99超阈值立即停止。
+6. 10块盘可按1～2块/批加入，首批作为金丝雀；每批确认OSD up+in、设备类型/CRUSH位置正确、Backfill完成、PG clean、网络/磁盘延迟和容量分布正常，再进入下一批。不要与升级同时进行。
+7. 使用`ceph osd dump -f json-pretty`和`ceph health detail`列出`noout/norebalance/nobackfill/noscrub/nodeep-scrub`等Flags；每项都必须关联设置时间、工单、责任人、用途和解除条件，过期即告警。
+8. 参考实现按时间戳创建只读目录，依次执行`ceph status -f json`、`ceph health detail -f json`、`ceph osd df tree -f json`、`ceph pg stat -f json`和`ceph orch ps --format json`，先写临时文件再原子rename。脚本不得调用`set/unset/out/reweight/repair`，失败项标记Unknown并返回非零。
+
 ## 24. 官方资料 {/* #官方资料 */}
 
 - [Cephadm Operations](https://docs.ceph.com/en/latest/cephadm/operations/)

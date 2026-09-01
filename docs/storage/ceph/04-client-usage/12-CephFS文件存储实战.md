@@ -938,6 +938,19 @@ CephFS 的数据路径可以概括为：
 9. CephFS Subvolume Clone 为什么需要查看异步状态？
 10. MDS Slow Request 应该从哪些层面排查？
 
+### 20.1 参考答案 {/* #参考答案 */}
+
+1. Metadata Pool保存inode、目录、能力和文件布局等元数据；Data Pool保存文件内容对象。分离后可为低延迟小更新和大容量数据分别选择副本、介质与CRUSH策略。
+2. 不必须。客户端向MDS查询并取得元数据/能力后，文件数据通常直接与OSD传输；MDS不在所有数据IO的转发路径中。
+3. Active MDS承担一个Rank的元数据请求；Standby用于Active故障后的接管；多Active Rank把命名空间负载分布到多个Rank，解决容量/吞吐扩展而非仅HA。
+4. CephFS元数据需要高频小块覆写、低延迟和强一致操作，普通EC Pool不适合作为Metadata Pool，且CephFS要求其使用副本池。
+5. 它让Subvolume数据进入独立RADOS Namespace，从底层对象命名空间增强租户隔离和精细CephX授权，而不仅是创建一个目录前缀。
+6. Kernel Client通常性能、页缓存和系统集成更好，但功能取决于内核版本；Ceph-FUSE升级独立、调试灵活但有用户态开销。应按协议特性、内核支持和实测选择。
+7. CephX的MDS caps可限制到路径；若客户端挂载或访问超出授权路径，即使Linux权限允许也会被Ceph拒绝。挂载根、Subvolume路径和caps必须一致。
+8. Quota限制某目录/Subvolume的逻辑文件字节或文件数，不会独占预留Raw空间，也不包含副本/EC开销；集群仍可能因整体/局部full先停止写入。
+9. Clone通常由后台异步复制/重建完成，命令返回只表示任务已提交。必须查询状态直到`complete`，并处理`pending/in-progress/failed`，否则业务可能读到未就绪目标。
+10. 从客户端延迟/挂载和网络、MDS请求队列/CPU/内存/缓存、Metadata Pool OSD slow ops、目录热点/大量小文件、日志与故障切换状态逐层排查，并用`ceph health detail`、`ceph fs status`和MDS perf指标对齐时间线。
+
 ## 21. 参考资料 {/* #参考资料 */}
 
 - [Ceph File System](https://docs.ceph.com/en/latest/cephfs/)

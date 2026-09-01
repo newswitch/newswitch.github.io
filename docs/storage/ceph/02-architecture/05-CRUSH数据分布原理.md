@@ -512,6 +512,17 @@ Pool 是逻辑隔离。只有配合 Device Class 和 CRUSH Rule，才能限制 P
 7. 新增 OSD 后为什么会出现 Backfill？
 8. Up Set 和 Acting Set 在什么情况下可能不同？
 
+### 15.1 参考答案 {/* #参考答案 */}
+
+1. CRUSH根据对象所属PG、集群拓扑、权重和Rule确定性计算OSD集合，客户端不需要查询逐对象中心位置表。
+2. CRUSH Map描述设备、Host/Rack等层级、权重和Rule集合；CRUSH Rule定义某类Pool从哪个Root选择、选择何种Device Class以及跨什么Failure Domain放置几份数据。
+3. 每个副本/EC分片应选择不同Host，避免同一Host故障同时丢失一个PG的多份拷贝；这要求实际拓扑标签正确且有足够Host。
+4. 从“副本分别位于不同Rack”的字面要求看，三副本至少需要3个Rack；若还要求一个Rack故障后仍有足够位置完成三副本恢复，则通常需要第4个Rack及容量余量。
+5. 不能。两个Pool若仍使用同一CRUSH Rule和Root，就会共享相同物理OSD；必须为它们配置不同Device Class、Root或定制Rule。
+6. CRUSH Weight通常反映设备相对容量并参与长期数据分布；OSD Reweight是OSDMap中的临时0～1修正，常用于应急降低某OSD承载。永久容量调整应修正CRUSH权重/拓扑。
+7. 新OSD改变CRUSH计算结果，一部分PG的期望位置发生变化，Ceph把对象复制到新Acting位置，这一数据迁移就是Backfill/Rebalance的一部分。
+8. OSD故障、临时`pg-upmap`、恢复/回填尚未完成或拓扑刚变更时，期望集合Up Set与当前服务集合Acting Set可能不同。
+
 ## 16. 参考资料 {/* #参考资料 */}
 
 - [Ceph 官方架构文档](https://docs.ceph.com/en/latest/architecture/)

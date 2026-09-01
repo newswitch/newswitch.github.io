@@ -852,6 +852,19 @@ PG 排障最重要的是读懂「组合状态」和它代表的数据阶段：
 9. `mark_unfound_lost delete` 实际上做了什么？
 10. 为什么不能为了恢复写入随便降低 `min_size`？
 
+### 26.1 参考答案 {/* #参考答案 */}
+
+1. PG ID格式通常为`<pool-id>.<pg-seed>`，前半部分就是数值Pool ID，可用`ceph osd lspools`映射到Pool名称，从而快速确定业务范围和策略。
+2. `active+degraded`仍能服务IO但冗余不足；`inactive`无法完成Peering/形成可服务集合，相关对象IO会阻塞或失败，业务优先级更高。
+3. Up Set是CRUSH当前计算的期望位置；Acting Set是实际负责该PG IO的OSD集合。差异可反映临时映射、故障或迁移未完成。
+4. 重点看Peering状态、`blocked_by`、缺失Interval/日志、`peer_info`、Past Intervals、所需OSD是否up以及状态进入时间；先找到它在等待哪个OSD或哪段历史。
+5. stale表示Primary长时间没有向MON报告，若大量stale PG共同指向同一Host/Rack，通常是该故障域的电源、网络或OSD进程整体失联。
+6. 它表示目标OSD达到backfillfull阈值，Ceph为防止目的盘被填满而停止回填；根因是容量/分布安全边界，而不仅是恢复速度慢。
+7. 不一致可能由源/副本介质读错或校验差异引起；先检查SMART、内核IO错误、OSD日志和不一致对象明细，确认哪份可信。否则repair可能传播损坏。
+8. `missing`表示当前PG缺少某对象版本但系统可能知道可从哪里恢复；`unfound`表示查询所有已知可能位置后仍找不到所需版本，无法自动恢复。
+9. 它把无法找到的对象标记为丢失并删除对应缺失记录，使PG继续恢复；业务层实际丢失这些对象/数据，属于不可逆数据损失处置。
+10. 降低`min_size`可能允许在唯一或不足副本上继续写，随后再故障即永久丢数据，还可能使历史更复杂。只有明确评估RPO、备份和审批后才可作为极端止损动作。
+
 ## 27. 官方资料 {/* #官方资料 */}
 
 - [PG 故障排查](https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-pg/)

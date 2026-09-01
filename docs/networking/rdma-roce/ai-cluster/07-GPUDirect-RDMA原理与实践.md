@@ -585,6 +585,16 @@ GPUDirect RDMA：GPU HBM ↔ NIC
 6. 使用 NCCL Debug 日志确认实际网络路径。
 7. 设计一个双节点八卡训练的 GPU/HCA 映射表。
 
+### 19.1 参考答案 {/* #参考答案 */}
+
+1. 普通RDMA通常在GPU与主机Pinned Memory之间复制，再由HCA DMA；GDR允许HCA直接DMA访问已注册的GPU显存，减少CPU参与和主机内存中转。
+2. GPU总显存是权重、激活等数据的存储容量；BAR1是CPU/PCIe设备映射GPU显存窗口的地址资源，容量和映射方式不等于整块显存容量。
+3. `nvidia-peermem` 为NVIDIA GPU显存与第三方RDMA设备建立Peer Memory注册/映射支持，使HCA能够对GPU内存执行RDMA DMA；新内核/驱动栈也可能使用DMA-BUF路径，需按实际版本确认。
+4. GDR数据仍经过GPU、PCIe Switch/Root Complex与HCA。跨Root或跨NUMA会多走互连、降低带宽并增加抖动，因此直连不代表拓扑无关。
+5. CPU Memory基线可用`ib_write_bw/ib_read_bw`；GPU Memory基线按工具版本使用支持CUDA Buffer的perftest或`gdrcopy`/通信基准。两组必须固定链路、MTU、队列深度和消息大小，并记录是否真正启用GPU Buffer。
+6. 设置`NCCL_DEBUG=INFO`和`NCCL_DEBUG_SUBSYS=INIT,NET,GRAPH`，确认日志选择`NET/IB`而非`NET/Socket`，并检查HCA、GDR/DMA-BUF、GPU Direct RDMA级别及每个Channel的GPU-HCA路径。
+7. 每节点4卡示例应优先把GPU0/1映射到同一PCIe根下的HCA0、GPU2/3映射到HCA1；两节点保持对称。表中至少包含Rank、GPU BDF、NUMA、HCA端口、网卡名、GID和交换网络，最后用Pair测试验证。
+
 ## 20. 参考与致谢 {/* #参考与致谢 */}
 
 - [GPUDirect RDMA Documentation](https://docs.nvidia.com/cuda/gpudirect-rdma/)

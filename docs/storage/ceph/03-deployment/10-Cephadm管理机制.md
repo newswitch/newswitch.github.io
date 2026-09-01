@@ -860,6 +860,19 @@ cephadm 持续协调实际状态
 9. Host Drain 为什么必须先检查容量和故障域？
 10. 一次变更应从哪些层面判断是否真正完成？
 
+### 16.1 参考答案 {/* #参考答案 */}
+
+1. Service是某类守护进程的期望部署规格，例如`mon`或`osd.all-available-devices`；Daemon是落在具体Host上的实例，例如`mon.node1`。一个Service可管理多个Daemon。
+2. 管理员声明期望数量、位置、镜像和配置，cephadm持续比较实际状态并创建、重配、重启或删除Daemon以收敛，而不是只执行一次命令就结束。
+3. `_admin`分发管理员配置和Keyring；`_no_schedule`禁止编排器在Host上新放置Daemon，但不会自动安全迁走已有Daemon。
+4. Placement可引用Host Label。修改标签会改变哪些Host匹配Service规格，协调器可能因此新增或删除Daemon，所以“普通标签”也属于生产变更。
+5. `ceph orch ps --refresh`要求编排器刷新Daemon实际状态，减少缓存信息导致的误判；它不修复Daemon本身故障。
+6. Reconfig把新配置应用给现有Daemon，通常不重建容器；Redeploy重新部署容器/单元以应用镜像、挂载或运行时层变化。是否重启应按具体变更确认。
+7. 直接重启容器绕过编排器状态和维护流程，容器名也可能变化；cephadm可能重新协调，且操作缺少健康检查与审计。应通过`ceph orch daemon`等受管接口操作。
+8. Maintenance用于主机计划维护并抑制/管理其Daemon影响；Drain用于把可迁移Daemon从Host移走并阻止新调度，常用于退役。两者都不自动保证数据恢复容量。
+9. Drain可能同时移除多个OSD或服务实例，引发大规模数据迁移并突破Host/Rack故障域；必须先用容量、`ok-to-stop`、PG状态和剩余放置位置验证。
+10. 至少检查编排状态、Daemon版本/运行状态、Ceph Health与PG、容量/恢复进度、客户端IO、延迟/错误率和预定验收项；“命令返回成功”只代表请求被接受。
+
 ## 17. 参考资料 {/* #参考资料 */}
 
 - [Host Management](https://docs.ceph.com/en/latest/cephadm/host-management/)

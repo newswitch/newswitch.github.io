@@ -911,6 +911,17 @@ RGW 节点也可能耗尽：
 7. 单集群多 RGW 与 Multisite 各自解决什么问题？
 8. 为什么不能使用 `rados rm` 代替 S3 API 删除业务对象？
 
+### 26.1 参考答案 {/* #参考答案 */}
+
+1. 对象和Bucket元数据持久化在后端RADOS Pool中，RGW实例主要提供协议、认证和索引操作；多个兼容实例可访问相同Realm/Zone和Pool，不依赖单实例本地数据。
+2. 它只是Object Key的一部分，例如`a/b/c`是一个字符串Key；控制台按`/`聚合显示成目录，但没有POSIX目录inode和原子目录操作。
+3. 仍需要负载均衡、健康检查、无单点DNS/VIP、会话/认证一致性和后端容量保护。两个实例都在同一Host或同一故障域也无法提供完整HA。
+4. 检查Access/Secret、请求时间漂移、签名版本、Region/Endpoint、Host头、代理改写、Bucket/User Policy、ACL、STS Token、对象加密权限和Bucket归属；403的响应Code与Request ID应保留。
+5. 用户配额只约束逻辑对象/容量，不能预留底层副本空间、恢复余量或防止其他Pool/用户耗尽OSD；还要监控Raw容量和增长。
+6. 版本控制在同一系统中保留对象历史，能恢复部分误删/覆盖，但版本仍共享故障域和权限；备份需要独立介质/账户/区域、保留策略和恢复验证。
+7. 单集群多RGW解决入口扩展和实例HA；Multisite在多个Zone/集群间异步复制，用于跨站点可用与灾备，但会引入同步延迟和冲突处理。
+8. RGW一个业务对象对应数据、Bucket Index、版本、Multipart和元数据等多个RADOS对象。直接`rados rm`绕过RGW事务会留下索引不一致或误删内部对象；必须通过S3/RGW管理API删除。
+
 ## 27. 官方资料 {/* #官方资料 */}
 
 - [Ceph RGW 介绍](https://docs.ceph.com/en/latest/radosgw/)

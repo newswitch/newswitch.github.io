@@ -1077,6 +1077,19 @@ Rook Ceph 的正确理解是：
 9. Rook upgrade 与 Ceph upgrade 为什么要分开？
 10. `cleanupPolicy` 应如何防止误操作？
 
+### 41.1 参考答案 {/* #参考答案 */}
+
+1. Rook Operator观察Kubernetes CR并生成/协调Ceph部署、配置和升级；MON、MGR、OSD、MDS、RGW等Ceph Daemon实际提供一致性、存储和数据服务。Operator不是数据面的代理。
+2. 内部模式中Ceph Daemon和应用共用Kubernetes/节点故障域，平台故障可能同时影响存储与计算；外部模式把Ceph生命周期放在独立集群，隔离更好但依赖跨集群网络、凭据和运维协同。
+3. 它会把所有被识别为空闲的设备持续纳入OSD，设备命名/清理错误、未来新盘或被zap的盘都可能被自动消费；生产应使用明确Device Filter、路径/型号和DriveGroup计划。
+4. PVC经StorageClass触发CSI external-provisioner创建后端卷和PV，Scheduler结合拓扑选择Node；需要时Controller Attach，目标节点Kubelet调用CSI Node Stage/Publish，最后容器看到挂载路径。
+5. 先看Pod Events和Scheduler原因：GPU/CPU不足、污点/亲和、PV拓扑冲突、AccessMode、多Attach、未绑定的其他PVC或配额。PVC Bound只证明已选定PV。
+6. Mount发生在Pod目标节点，由该节点Kubelet和CSI Node Plugin执行；应检查同一Node上的插件容器日志、驱动注册、内核模块、网络、Secret和挂载命令，而不是只看Controller。
+7. 删除PVC后，CSI可能立即删除后端RBD/CephFS资源，应用数据难以恢复。生产有状态数据常用`Retain`或快照/备份加受控回收流程。
+8. 存储节点承载OSD/MON等Daemon，普通`kubectl drain`不理解PG冗余和恢复容量，可能同时驱逐关键组件并触发数据迁移。需先Ceph健康检查、`ok-to-stop`、维护标志和逐台验收。
+9. Rook升级改变Operator/CRD/CSI控制逻辑，Ceph升级改变Daemon版本和数据格式。分开执行能缩小变量、按兼容矩阵验收并在每层故障时定位。
+10. `cleanupPolicy`的销毁确认字段应默认关闭，只在明确退役、备份验证、对象清单审批后临时设置；结合Git保护、双人评审、命名空间权限和节点磁盘清理确认，完成后撤销危险配置。
+
 ## 42. 官方资料 {/* #官方资料 */}
 
 - [Rook Ceph Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)

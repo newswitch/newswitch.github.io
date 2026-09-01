@@ -594,6 +594,16 @@ flowchart TD
 6. 制造 Local PV 与 GPU 节点冲突，记录调度事件。
 7. 对两种节点放置运行 nccl-tests，验证调度偏好是否有效。
 
+### 23.1 参考答案 {/* #参考答案 */}
+
+1. 调度决定Pod落在哪个GPU、NUMA、NIC和存储拓扑上；放置错误后，即使每个组件单独健康，端到端路径也可能跨Socket、跨交换域或无法挂载。
+2. GPU总数只表示容量，8张卡可能分属不同PCIe Root、没有完整NVLink或与目标NIC远离。TP依赖卡间高频通信，必须同时满足连接质量。
+3. 若模型只有本地缓存且无法远程获取，缓存命中是硬约束；若未命中可以从权威存储拉取，则更适合作为软偏好，并配合下载时间、磁盘水位和回收策略。
+4. Gang Scheduling保证一组Pod资源同时满足后再启动，避免部分Worker占住资源等待；拓扑调度选择GPU、NUMA、NIC、机架等更合适的位置。两者解决“齐不齐”和“放得好不好”。
+5. 单卡推理关注GPU型号、显存、模型缓存和延迟域；8卡TP要求同节点8卡、NVLink/NVSwitch和本地CPU/内存；4节点DDP还要求Gang、同高速网络域、对称HCA和存储带宽。
+6. 给Pod添加与Local PV `nodeAffinity`冲突的`nodeSelector`，预期`FailedScheduling`并提示Volume Node Affinity冲突；恢复选择器后Pod应绑定PV所在节点并成功挂载。
+7. 分别在优选拓扑和跨Root/较差拓扑运行同版本`nccl-tests`，比较`busbw`、P95和错误计数。只有优选放置稳定领先且调度事件符合策略，才能证明偏好有效。
+
 ## 24. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes Scheduler Configuration](https://kubernetes.io/docs/reference/scheduling/config/)

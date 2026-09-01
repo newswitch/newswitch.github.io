@@ -459,6 +459,16 @@ RGW 是访问网关。RGW 进程故障会影响对象接口，但对象数据仍
 6. RBD 客户端为什么要先连接 MON？
 7. 一次 RBD 写入过程中，哪个组件负责协调副本写入？
 
+### 14.1 参考答案 {/* #参考答案 */}
+
+1. MON维护集群Map、成员关系和Quorum等权威状态；MGR消费状态并提供统计、模块、Dashboard、Prometheus和编排扩展。MGR故障不等同于MON失去一致性仲裁。
+2. MON采用多数派Quorum。3个成员需要至少2票，故障1个还剩2个；故障2个只剩1个，无法形成多数派。
+3. `up/down`表示OSD进程是否可达；`in/out`表示CRUSH是否把数据放置到该OSD。`down+in`是暂时不可达但仍属于数据布局，`up+out`则进程在线但不承载正常放置。
+4. 不参与。RBD由客户端通过librbd/krbd直接访问RADOS/OSD，MDS只服务CephFS元数据。
+5. 不一定。RGW是无状态或弱状态网关层，多个实例可经负载均衡访问同一后端对象；单个RGW故障通常只影响该入口，数据仍在OSD中。但若只有一个入口，业务仍会中断。
+6. 客户端先从MON取得最新MonMap、OSDMap、Pool和认证信息，之后才能用CRUSH计算目标PG/OSD并直连数据面；MON不转发RBD数据。
+7. Acting Set中的Primary OSD负责接收客户端写入、排序并协调副本OSD确认；满足Pool写入规则后再向客户端完成确认。
+
 ## 15. 参考资料 {/* #参考资料 */}
 
 - [Ceph 官方架构文档](https://docs.ceph.com/en/latest/architecture/)
