@@ -279,19 +279,110 @@ NCCL/HCCL 是集合通信软件库，NVLink/HCCS/RoCE 是数据可能经过的�
 
 ## 12. 推理框架为什么要做硬件适配
 
-vLLM 的调度、KV Cache 和 API 设计可以跨设备复用，但模型执行层必须适配目标硬件：
+先记住结论：**可以复用的是请求管理和调度思想，必须适配的是在设备上真正执行模型的部分。** GPU 和 NPU 都能完成矩阵计算，但它们使用不同的运行时、算子实现、图执行机制、内存接口和集合通信库。CUDA Kernel 不能直接交给昇腾 NPU 执行，CANN 算子也不能直接在 NVIDIA GPU 上运行。
+
+### 12.1 把推理框架分成控制层和执行层
+
+```text
+控制层：大部分可以复用
+用户请求
+→ OpenAI API Server
+→ Tokenizer
+→ Scheduler / Continuous Batching
+→ 决定本轮运行哪些请求、使用哪些 KV Block
+
+执行层：必须适配硬件
+→ 创建并放置 Tensor
+→ 分配设备内存
+→ 执行 Attention、MatMul、RMSNorm 等算子
+→ 执行多卡集合通信
+→ 返回 Logits
+```
+
+Scheduler 只需要知道请求长度、优先级、可用 KV Block 和本轮 Batch，不必理解矩阵乘法最终使用哪种芯片指令；Model Runner 则需要真正申请设备内存、调用算子和启动通信，因此必须认识目标硬件。
+
+### 12.2 同一个 Token 在 GPU 和 NPU 上怎样执行
+
+两种后端共用上层请求路径，进入模型执行阶段后开始分叉：
+
+```text
+同一批请求和 KV Block Table
+                 │
+          Model Runner
+          ┌──────┴──────┐
+          │             │
+   NVIDIA GPU        昇腾 NPU
+   torch.cuda        torch_npu
+   CUDA Runtime      CANN / ACL Runtime
+   CUDA Kernel       CANN / ATB 等算子
+   CUDA Graph        ACLGraph / npugraph_ex 等图能力
+   NCCL              HCCL
+```
+
+例如 Python 层都可以表达 `attention(query, key, value)`，但继续向下执行时，NVIDIA 路径会选择适合 CUDA 的 Attention/融合 Kernel，昇腾路径则要选择适合 CANN 和 NPU 数据布局的算子。函数表达的数学目标相同，真正执行它的程序并不相同。这与同一份程序需要分别编译为 x86 和 ARM 指令是同一类问题。
+
+### 12.3 KV Cache 哪些部分能复用
+
+“KV Cache 可以跨设备复用”不是说同一套底层实现可以直接运行，而是指它的**管理思想**可以复用：
+
+| 可以复用的逻辑 | 必须适配的实现 |
+| --- | --- |
+| 请求需要多少 KV Block | KV Cache 分配在哪种设备内存中 |
+| Block 的占用、释放和复用 | 数据类型、对齐方式和物理布局 |
+| Prefix Cache 的命中关系 | Attention 算子怎样读取 Block Table |
+| Scheduler 何时回收 Block | 多卡场景怎样访问或交换 KV 数据 |
+
+因此更准确的说法是：**KV Cache 的块管理可以复用，KV Cache 的内存分配、数据布局和算子访问仍需硬件适配。**
+
+### 12.4 为什么启动参数看起来相似
+
+下面这些参数描述的是推理目标，而不是底层硬件指令：
+
+```bash
+--tensor-parallel-size 2
+--dtype bfloat16
+--max-model-len 32768
+--gpu-memory-utilization 0.85
+```
+
+例如 `--tensor-parallel-size 2` 都表示使用两个设备执行 Tensor Parallel，但后端动作不同：
 
 ```text
 原生 vLLM
-→ CUDA Worker / GPUModelRunner
-→ CUDA Graph、FlashAttention、CUDA Kernel、NCCL
+→ 创建 CUDA Worker
+→ 在 GPU 上分片模型
+→ 使用 NCCL 完成集合通信
 
 vLLM-Ascend
-→ NPU Worker / NPUModelRunner
-→ ACLGraph/npugraph_ex、Ascend Attention/ATB、CANN Kernel、HCCL
+→ 创建 NPU Worker
+→ 在 NPU 上分片模型
+→ 使用 HCCL 完成集合通信
 ```
 
-因此原生 vLLM 与 vLLM-Ascend 的命令大部分相似，但镜像、版本矩阵、算子、图模式、通信、性能特征和故障日志不同。详细差异见[昇腾 910B、vLLM-Ascend 与原生 vLLM 源码差异](../../ai-systems/inference/vllm/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md)。
+同理，`bfloat16` 在两种环境里表达相同的数据精度目标，但算子支持、内存布局、图编译和性能表现仍需分别验证。参数名字相近只能说明上层使用方式相似，不能说明底层实现相同。
+
+### 12.5 没有适配层会发生什么
+
+直接在昇腾机器上运行只包含 CUDA 后端的原生 vLLM，可能在不同阶段失败：
+
+```text
+设备初始化：找不到 CUDA Device 或 CUDA Runtime
+加载阶段：CUDA 自定义算子无法加载
+执行阶段：Attention、量化或融合算子没有 NPU 实现
+图模式：CUDA Graph 无法用于 NPU
+多卡阶段：NCCL 无法管理 HCCL 设备和链路
+```
+
+即使通用 PyTorch 算子能够让部分模型运行，缺少设备专用融合算子和图优化时也可能出现吞吐很低、时延很高或显存/HBM利用不合理。因此硬件适配不仅解决“能不能启动”，还决定执行是否正确、性能是否可用以及故障是否能够定位。
+
+最终可以这样理解：
+
+```text
+vLLM 核心框架负责决定“这轮算哪些请求”
+硬件适配层负责完成“这些计算怎样在目标设备上执行”
+```
+
+所以原生 vLLM 与 vLLM-Ascend 的命令大部分相似，但镜像、版本矩阵、算子、图模式、通信、性能特征和故障日志不同。详细差异见[昇腾 910B、vLLM-Ascend 与原生 vLLM 源码差异](../../ai-systems/inference/vllm/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md)。
 
 ## 13. 常见命令对照
 
