@@ -89,8 +89,13 @@ body {
 /* Navigation and footer keep the visual identity visible across every route. */
 .navbar {
   min-height: 4rem;
-  border-bottom: 3px solid var(--xyf-yellow);
-  box-shadow: 0 3px 0 var(--xyf-blue), 0 5px 0 var(--xyf-red);
+  border-bottom: 1px solid color-mix(in srgb, var(--xyf-ink) 14%, transparent);
+  box-shadow: 0 5px 16px rgba(16, 36, 63, 0.07);
+}
+
+[data-theme='dark'] .navbar {
+  border-bottom-color: color-mix(in srgb, var(--xyf-ink) 16%, transparent);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
 }
 
 .navbar__brand {
