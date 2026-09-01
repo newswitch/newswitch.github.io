@@ -1,6 +1,6 @@
 {
   "label": "Kubeflow Trainer",
-  "position": 4,
+  "position": 5,
   "link": {
     "type": "doc",
     "id": "ai-systems/training/kubeflow-trainer/Kubeflow-Trainer从零到生产学习路线"

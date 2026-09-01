@@ -209,6 +209,7 @@ GPUModelRunner、Kernel、NCCL 或输出层。
 | 05 | [Scheduler、Batch、KV Cache 与抢占实验](./18-Scheduler-Batch-KVCache与抢占性能实验.md) | 用控制变量确定调度参数的 SLO 安全区 |
 | 06 | [GPUModelRunner、CUDA Graph 与 Kernel 空洞](./19-GPUModelRunner-CUDAGraph与Kernel空洞分析.md) | 用 CPU-GPU Timeline 区分上游饥饿和 Kernel 瓶颈 |
 | 07 | [TP 慢 Rank、NVLink 与 NCCL 排障](./20-TP慢Rank-NVLink与NCCL推理故障排查.md) | 定位多卡慢 rank、链路、拓扑与 collective 问题 |
+| 08 | [CUDA Graph、TP与通信融合稳定性分析](./26-CUDA-Graph-TP与通信融合稳定性分析.md) | 区分Graph触发条件与地址、Stream、Collective和自定义通信根因 |
 
 一次调优必须固定模型 Revision、镜像、硬件、并行策略、真实输入/输出 Token 联合分布、
 到达模型、Prefix 命中和 Scheduler 参数。结果同时比较 TTFT/TPOT/E2E P50/P95/P99、
@@ -272,6 +273,7 @@ TP=2, DP=4
 - [ ] 能回答 GPU 利用率 30% 但 TTFT 超标可能在哪一层，并用时间戳和 Timeline 证明。
 - [ ] 能按真实 Token 联合分布计算单副本容量，并覆盖 N-1 与冷启动。
 - [ ] 能把一次异常从指标映射到 V1 组件、源码入口和可逆缓解动作。
+- [ ] 能用TP/Graph/通信消融矩阵解释多卡卡死，证明Graph是根因还是触发条件。
 
 ## 13. 官方资料
 

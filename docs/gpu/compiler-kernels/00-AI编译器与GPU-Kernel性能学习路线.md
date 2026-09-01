@@ -31,6 +31,9 @@ Python Model
 5. [CUTLASS、GEMM、FlashAttention 与融合算子](./05-CUTLASS-GEMM-FlashAttention与融合算子.md)；
 6. [CUDA Graph、自定义算子与执行图优化](./06-CUDA-Graph自定义算子与执行图优化.md)；
 7. [编译缓存、冷启动、Nsight 与算子到 Kernel 定位](./07-编译缓存冷启动Nsight与算子到Kernel性能定位.md)。
+8. [并行归约、Split-K 与确定性 Router GEMM](./08-并行归约-SplitK与确定性Router-GEMM.md)；
+9. [Decode 融合算子与 HBM 流量优化](./09-Decode融合算子与HBM流量优化.md)；
+10. [单算子、算子链与端到端性能归因](./10-单算子-算子链与端到端性能归因.md)。
 
 ## 2. 三类性能问题
 
@@ -51,5 +54,8 @@ GPU Utilization 是时间占用近似，不能告诉你 Kernel 是否有效利�
 - 能说明 CUDA Graph 的静态地址和重放约束；
 - 能把冷启动拆成模型加载、Graph Capture、代码生成、编译和 Autotune；
 - 能用 Profiler/Nsight 给出证据而不是只看 GPU 利用率。
+- 能解释 Split-K、Atomic 和归约顺序为什么影响确定性，并为小 M 选择动态 Kernel 或回退路径；
+- 能用 HBM 字节账本解释 Decode 融合的收益与寄存器、Occupancy 边界；
+- 能把单 Kernel、算子链、模型 Step 与在线 SLO 分开测量，避免错误归因。
 
 参考：[PyTorch Compiler](https://docs.pytorch.org/docs/stable/torch.compiler.html)、[Triton Documentation](https://triton-lang.org/main/index.html)。
