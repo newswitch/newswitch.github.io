@@ -34,7 +34,7 @@
   <text x="52" y="91" class="subtitle">逻辑结构示意；不同代际 GPU 的 SM 数量、执行单元数量和缓存组织会不同</text>
 
   <!-- Software model -->
-  <rect x="50" y="120" width="1100" height="260" class="panel"/>
+  <rect x="50" y="120" width="1100" height="285" class="panel"/>
   <rect x="50" y="120" width="1100" height="58" fill="#10243f"/>
   <text x="78" y="158" class="head">① 软件怎样拆分一次 Kernel</text>
 
@@ -57,7 +57,7 @@
   <text x="1000" y="254" text-anchor="middle" class="label">Thread</text>
   <text x="1000" y="285" text-anchor="middle" class="small">软件执行实例</text>
 
-  <text x="80" y="350" class="tiny">软件层描述任务怎样拆分；它不表示一个 Thread 会永久独占一个 CUDA Core。</text>
+  <text x="80" y="392" class="tiny">软件层描述任务怎样拆分；它不表示一个 Thread 会永久独占一个 CUDA Core。</text>
 
   <!-- GPU hardware -->
   <rect x="50" y="420" width="1100" height="1140" class="panel"/>
@@ -127,12 +127,12 @@
   <text x="600" y="1638" text-anchor="middle" class="small">保存模型权重、KV Cache、输入输出张量、激活、临时缓冲；容量大，但离执行单元更远</text>
 
   <!-- Visual mapping hints -->
-  <path d="M460 315V390" class="dash"/>
-  <text x="475" y="351" class="tiny">Block → SM</text>
-  <path d="M730 315V390" class="dash"/>
-  <text x="745" y="351" class="tiny">Warp → Scheduler</text>
-  <path d="M1000 315V390" class="dash"/>
-  <text x="1015" y="351" class="tiny">Thread 变量 → Register</text>
+  <path d="M460 315V340" class="dash"/>
+  <text x="460" y="363" text-anchor="middle" class="tiny">Block → SM</text>
+  <path d="M730 315V340" class="dash"/>
+  <text x="730" y="363" text-anchor="middle" class="tiny">Warp → Scheduler</text>
+  <path d="M1000 315V340" class="dash"/>
+  <text x="1000" y="363" text-anchor="middle" class="tiny">Thread 变量 → Register</text>
 
   <rect x="50" y="1670" width="1100" height="12" fill="#10243f"/>
 </svg>
