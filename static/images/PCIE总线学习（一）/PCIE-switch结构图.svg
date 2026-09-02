@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">PCIe Switch 内部结构</title><desc id="desc">PCIe Switch 上行端口、内部交换结构以及多个下行端口的逻辑关系。</desc>
+  <defs>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dbe5ef"/></pattern>
+    <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#102740" flood-opacity=".14"/></filter>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#13263d}.h{font-size:30px;font-weight:700;fill:#fff}.t{font-size:23px;font-weight:700}.s{font-size:17px;fill:#4c657d}.box{stroke-width:2.5;rx:14;filter:url(#shadow)}.line{stroke:#2b5f94;stroke-width:4;fill:none;stroke-linecap:round}.hint{font-size:18px;font-weight:700;fill:#2b5f94}</style>
+  </defs>
+  <rect width="1200" height="720" fill="#f8fbfd"/><rect y="82" width="1200" height="638" fill="url(#grid)" opacity=".6"/><rect width="1200" height="82" fill="#102740"/><text class="h" x="42" y="52">PCIe Switch：端口在软件中表现为虚拟桥</text>
+  <rect class="box" x="420" y="116" width="360" height="86" fill="#e7f1fb" stroke="#2b6fae"/><text class="t" x="600" y="151" text-anchor="middle">上游设备：Root Port / Switch</text><text class="s" x="600" y="180" text-anchor="middle">请求由 Upstream Port 进入</text>
+  <path class="line" d="M600 202V244"/>
+  <rect class="box" x="405" y="244" width="390" height="88" fill="#e9f7ef" stroke="#2c8c5e"/><text class="t" x="600" y="280" text-anchor="middle">Upstream Port</text><text class="s" x="600" y="309" text-anchor="middle">Type 1 Header · 一个虚拟 PCI-to-PCI Bridge</text>
+  <path class="line" d="M600 332V374"/>
+  <rect class="box" x="255" y="374" width="690" height="100" fill="#fff3ca" stroke="#b88a00"/><text class="t" x="600" y="414" text-anchor="middle">内部交换结构（Switching Fabric）</text><text class="s" x="600" y="446" text-anchor="middle">依据路由规则转发 TLP；不是共享 PCI 并行总线</text>
+  <path class="line" d="M600 474V512H205V544"/><path class="line" d="M600 512H470V544"/><path class="line" d="M600 512H735V544"/><path class="line" d="M600 512H995V544"/>
+  <g><rect class="box" x="90" y="544" width="230" height="92" fill="#fcebec" stroke="#ca3d4b"/><text class="t" x="205" y="580" text-anchor="middle">Downstream Port 1</text><text class="s" x="205" y="610" text-anchor="middle">虚拟桥 → Endpoint</text></g>
+  <g><rect class="box" x="355" y="544" width="230" height="92" fill="#fcebec" stroke="#ca3d4b"/><text class="t" x="470" y="580" text-anchor="middle">Downstream Port 2</text><text class="s" x="470" y="610" text-anchor="middle">虚拟桥 → Endpoint</text></g>
+  <g><rect class="box" x="620" y="544" width="230" height="92" fill="#fcebec" stroke="#ca3d4b"/><text class="t" x="735" y="580" text-anchor="middle">Downstream Port 3</text><text class="s" x="735" y="610" text-anchor="middle">虚拟桥 → Switch</text></g>
+  <g><rect class="box" x="885" y="544" width="220" height="92" fill="#fcebec" stroke="#ca3d4b"/><text class="t" x="995" y="580" text-anchor="middle">Downstream Port N</text><text class="s" x="995" y="610" text-anchor="middle">继续扩展拓扑</text></g>
+  <text class="hint" x="600" y="686" text-anchor="middle">数据面由交换结构转发；配置空间中每个端口仍作为一个 Bridge Function 被枚举</text>
+</svg>

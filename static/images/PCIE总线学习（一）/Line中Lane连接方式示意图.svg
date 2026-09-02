@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 690" role="img" aria-labelledby="title desc">
+  <title id="title">PCIe Link 中 Lane 的连接方式</title><desc id="desc">对比标准顺序连接和整组 Lane 反转连接，强调每条 Lane 都由独立发送和接收差分对组成。</desc>
+  <defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dbe5ef"/></pattern><filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#102740" flood-opacity=".12"/></filter><style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#13263d}.h{font-size:30px;font-weight:700;fill:#fff}.t{font-size:23px;font-weight:700}.s{font-size:17px;fill:#4c657d}.dev{fill:#e7f1fb;stroke:#2b6fae;stroke-width:2.5;rx:14;filter:url(#shadow)}.lane{stroke-width:5;fill:none;stroke-linecap:round}.ok{font-size:19px;font-weight:700;fill:#278454}.note{font-size:18px;fill:#49647e}</style></defs>
+  <rect width="1200" height="690" fill="#f8fbfd"/><rect y="82" width="1200" height="608" fill="url(#grid)" opacity=".6"/><rect width="1200" height="82" fill="#102740"/><text class="h" x="42" y="52">PCIe Link 与 Lane：顺序连接和整组反转</text>
+  <text class="t" x="60" y="128">① 标准连接（x4）</text><text class="ok" x="1140" y="128" text-anchor="end">链路训练识别 ✓</text>
+  <rect class="dev" x="80" y="158" width="250" height="195"/><rect class="dev" x="870" y="158" width="250" height="195"/>
+  <text class="t" x="205" y="195" text-anchor="middle">Device A</text><text class="t" x="995" y="195" text-anchor="middle">Device B</text>
+  <g class="s"><text x="285" y="234" text-anchor="end">Lane 0</text><text x="285" y="268" text-anchor="end">Lane 1</text><text x="285" y="302" text-anchor="end">Lane 2</text><text x="285" y="336" text-anchor="end">Lane 3</text><text x="915" y="234">Lane 0</text><text x="915" y="268">Lane 1</text><text x="915" y="302">Lane 2</text><text x="915" y="336">Lane 3</text></g>
+  <path class="lane" stroke="#2b6fae" d="M330 228H870"/><path class="lane" stroke="#2c8c5e" d="M330 262H870"/><path class="lane" stroke="#b88a00" d="M330 296H870"/><path class="lane" stroke="#ca3d4b" d="M330 330H870"/>
+  <text class="t" x="60" y="418">② 整组 Lane 反转（Lane Reversal）</text><text class="ok" x="1140" y="418" text-anchor="end">双方支持时可用 ✓</text>
+  <rect class="dev" x="80" y="448" width="250" height="174"/><rect class="dev" x="870" y="448" width="250" height="174"/>
+  <text class="t" x="205" y="484" text-anchor="middle">Device A</text><text class="t" x="995" y="484" text-anchor="middle">Device B</text>
+  <g class="s"><text x="285" y="520" text-anchor="end">Lane 0</text><text x="285" y="550" text-anchor="end">Lane 1</text><text x="285" y="580" text-anchor="end">Lane 2</text><text x="285" y="610" text-anchor="end">Lane 3</text><text x="915" y="520">Lane 3</text><text x="915" y="550">Lane 2</text><text x="915" y="580">Lane 1</text><text x="915" y="610">Lane 0</text></g>
+  <path class="lane" stroke="#2b6fae" d="M330 514C520 514 680 604 870 604"/><path class="lane" stroke="#2c8c5e" d="M330 544C520 544 680 574 870 574"/><path class="lane" stroke="#b88a00" d="M330 574C520 574 680 544 870 544"/><path class="lane" stroke="#ca3d4b" d="M330 604C520 604 680 514 870 514"/>
+  <text class="note" x="600" y="662" text-anchor="middle">每条 Lane = 一对发送差分线（TX±）+ 一对接收差分线（RX±）；宽度由链路训练协商</text>
+</svg>

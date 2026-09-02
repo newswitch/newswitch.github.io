@@ -20,16 +20,16 @@ PCIe协议中，是通过一个16 位整数来表示一个节点BDF的，该整�
 
 ### 1.1 PCIe bus {/* #pcie-bus */}
 PCIe总线可以由PCIe桥设备派生，这些桥设备会被包含在RC及switch中，如在RC中就包含一个host桥以及多个虚拟P2P桥，其连接方式如下图所示：
-![PCIE-Bus-RC连接方式](/images/PCIE总线学习（二）/PCIE-Bus-RC连接方式.png)
+![Root Complex 中 Host Bridge 与 Root Port 派生 PCIe Bus 的关系](/images/PCIE总线学习（二）/PCIE-Bus-RC连接方式.svg)
 
 Host桥是整个PCIe的根，它会派生编号为0的总线，并可在该总线上连接多个虚拟P2P桥，这些桥首先作为Bus 0上的设备，同时又能派生出新的总线，如上图中的Bus 1。Switch的结构与RC类似，它会包含一个连接upstream的虚拟P2P桥，以及多个连接downstream的虚拟P2P桥，其中下图为其相应的连接方式：
 
-![PCIE-bus-switch连接方式](/images/PCIE总线学习（二）/PCIE-bus-switch连接方式.png)
+![PCIe Switch 的 Upstream Port 与 Downstream Port 派生子总线](/images/PCIE总线学习（二）/PCIE-bus-switch连接方式.svg)
 在该图中，upstream端口的桥设备派生了一条总线Bus X，并在该总线上连接了4个虚拟P2P桥作为downstream的端口，它们又会分别派生出一条新的总线，如第一个桥会派生出Bus X+1总线等
 
 ### 1.2 PCIe device {/* #pcie-device */}
 上一节中的P2P虚拟桥就是一种连接在总线上的设备，此外switch的downstream端口还可以直接连接EP设备，其中每条总线最多可以连接32个设备。以下为其示例连接方式：
-![PCIE连接方式](/images/PCIE总线学习（二）/PCIE连接方式.png)
+![PCIe 树中的 Bus、Device、Function 编号示例](/images/PCIE总线学习（二）/PCIE连接方式.svg)
 该图中一共包括9条总线，其中bus 0、2、6上都连接了两个设备，bus 1、3、4、5、7和8上各连接了一个设备。并且每条总线上的第一个设备编号为0，其余设备编号依次增加
 
 ### 1.3 PCIe funtction {/* #pcie-funtction */}
@@ -37,19 +37,19 @@ Host桥是整个PCIe的根，它会派生编号为0的总线，并可在该总�
 
 ## 2. PCIe配置空间 {/* #pcie配置空间 */}
 PCIe事务层支持一种通过BDF号访问设备function的事务，它主要被用于获取设备信息、配置设备参数等，因此被称为配置事务。这些配置信息就是被保存在配置空间中的，在传统PCI设备中每个function会包含一个256字节的配置空间，而PCIe将其扩展到了4K字节。为了保持与传统PCI设备的兼容，PCIe配置空间的前256字节定义与PCI设备相同，而在其之后的定义则是PCIe设备所特有的。其中以下为PCI配置空间的定义：
-![PCIE配置空间](/images/PCIE总线学习（二）/PCIE配置空间.png)
+![PCI 配置空间 Type 0 与 Type 1 Header 的关键字段](/images/PCIE总线学习（二）/PCIE配置空间.svg)
 
 它包括64字节的配置头空间和192字节的设备能力空间，而设备头又被分为Type0和Type1两种类型。其中Type 0头被用于普通的EP设备，而Type 1头则被用于桥设备。PCIe在兼容以上结构的基础上，对配置空间进行了进一步的扩展，以下为其相应的结构：
 
-![PCIE配置空间-2](/images/PCIE总线学习（二）/PCIE配置空间-2.png)
+![PCIe 4KB 配置空间中的 Header、Capability 与 Extended Capability](/images/PCIE总线学习（二）/PCIE配置空间-2.svg)
 
 从上面配置空间的定义可知，设备头包括该设备对应的device id、vendor id、class code及revision id等属性信息，以用于识别该设备的厂商及设备类型。command寄存器用于配置该设备的一些功能，以下为其相关定义：
 
-![PCIE配置空间-3](/images/PCIE总线学习（二）/PCIE配置空间-3.png)
+![PCI Command Register 常用控制位](/images/PCIE总线学习（二）/PCIE配置空间-3.svg)
 
 其中bit 0和bit 1用于配置其是否IO及MMIO访问，bit 2用于配置其是否能发起或转发master请求等。status寄存器则用于表示该设备的一些状态信息，以下为其相关定义
 
-![PCIE配置空间-4](/images/PCIE总线学习（二）/PCIE配置空间-4.png)
+![PCI Status Register 的能力链、INTx 与错误状态位](/images/PCIE总线学习（二）/PCIE配置空间-4.svg)
 
 它主要用于指示设备当前INTx类型的中断状态信息，以及一些错误状态，如数据parity错误，data abort错误等
 
@@ -65,7 +65,7 @@ PCIe事务层支持一种通过BDF号访问设备function的事务，它主要�
 
 所有BAR寄存器的bit 0都是只读的，且被用于确定该BAR是属于IO空间还是内存空间，其中该值为0表示其为内存空间，为1则表示其为IO空间。对于内存空间，寄存器的bit 1和bit 2表示其地址长度是32位还是64位，若其为64位，则需要使用两个相邻的32位BAR寄存器来表示一个64位地址。最后，bit 3用于表示这段地址是否是可预取的。以下为其定义：
 
-![PCIE-bar空间](/images/PCIE总线学习（二）/PCIE-bar空间.png)
+![PCIe Memory BAR、I/O BAR 与 CPU MMIO 映射关系](/images/PCIE总线学习（二）/PCIE-bar空间.svg)
 
 当确定了BAR空间的类型和地址长度后，就可以为其分配地址了。在PCIe中，是通过将某些BAR寄存器的bit设为只读来确定其所占空间长度的。因此BAR空间长度可通过以下流程获取：
 

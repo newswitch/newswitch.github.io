@@ -80,7 +80,12 @@ PCIe 链路没有真正的并行 INTx 引脚，因此用 Assert_INTx/Deassert_IN
 经过 PCIe Bridge 时还可能根据 Device Number 做 Interrupt Swizzling，让设备尽量分散到四个
 入口。
 
-![INTX中断](/images/PCIE总线学习（三）/INTX中断.png)
+![INTx 经 PCIe Bridge 执行 Interrupt Swizzling](/images/PCIE总线学习（三）/INTX中断.svg)
+
+下面的映射表把轮转规律展开。`D mod 4` 表示设备号除以 4 的余数；同一个设备的
+INTA#～INTD# 会保持相对顺序，只是从不同的上游入口开始。
+
+![INTx Swizzling 的设备号与上游 PIRQ 映射表](/images/PCIE总线学习（三）/INTX中断-2.svg)
 
 INTx 的主要限制：
 
@@ -112,9 +117,9 @@ MSI Capability 位于 PCI 配置空间的 Capability 链中，包含：
 - Multiple Message Capable / Enable；
 - 可选的 Per-Vector Mask/Pending。
 
-![MSI中断-1](/images/PCIE总线学习（三）/MSI中断-1.png)
+![MSI Capability 在传统配置空间能力链中的位置与字段](/images/PCIE总线学习（三）/MSI中断-1.svg)
 
-![MSI中断-2](/images/PCIE总线学习（三）/MSI中断-2.png)
+![从 34h Capabilities Pointer 遍历 PCI Capability 链](/images/PCIE总线学习（三）/MSI中断-2.svg)
 
 一个设备可申请多个 MSI 向量，但数量和布局限制比 MSI-X 更强。对大量硬件队列，MSI-X 通常
 更灵活。

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">PCIe 4KB 配置空间布局</title><desc id="desc">PCIe Function 的 4KB 配置空间由传统 256 字节区域和 PCIe 扩展能力区域组成。</desc>
+  <defs><pattern id="g" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dbe5ef"/></pattern><style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#13263d}.h{font-size:30px;font-weight:700;fill:#fff}.t{font-size:22px;font-weight:700}.m{font-size:17px;fill:#49647e}.off{font:700 17px Consolas,monospace;fill:#49647e}.brace{fill:none;stroke-width:3;stroke-linecap:round}.lab{font-size:18px;font-weight:700}</style></defs>
+  <rect width="1200" height="600" fill="#f8fbfd"/><rect y="82" width="1200" height="518" fill="url(#g)" opacity=".6"/><rect width="1200" height="82" fill="#102740"/><text class="h" x="42" y="52">PCIe 配置空间：从传统 256B 扩展到每个 Function 4KB</text>
+  <g transform="translate(150 145)">
+    <text class="off" x="-22" y="48" text-anchor="end">000h</text><rect x="0" y="0" width="900" height="92" rx="12" fill="#e7f1fb" stroke="#2b6fae" stroke-width="2.5"/><text class="t" x="450" y="39" text-anchor="middle">标准配置头（Header）</text><text class="m" x="450" y="68" text-anchor="middle">00h–3Fh · Type 0 Endpoint / Type 1 Bridge</text>
+    <text class="off" x="-22" y="146" text-anchor="end">040h</text><rect x="0" y="98" width="900" height="116" rx="12" fill="#e9f7ef" stroke="#2c8c5e" stroke-width="2.5"/><text class="t" x="450" y="142" text-anchor="middle">传统 Capability 链</text><text class="m" x="450" y="174" text-anchor="middle">40h–FFh · MSI / MSI-X / PCI Express Capability 等</text><text class="m" x="450" y="198" text-anchor="middle">由 Capabilities Pointer 和每项 Next Pointer 串联</text>
+    <text class="off" x="-22" y="276" text-anchor="end">100h</text><rect x="0" y="220" width="900" height="150" rx="12" fill="#fff3ca" stroke="#b88a00" stroke-width="2.5"/><text class="t" x="450" y="273" text-anchor="middle">PCIe Extended Capability 链</text><text class="m" x="450" y="307" text-anchor="middle">100h–FFFh · AER / ACS / SR-IOV / Resizable BAR 等</text><text class="m" x="450" y="334" text-anchor="middle">每项扩展头中包含 Capability ID、Version 与 Next Offset</text>
+    <text class="off" x="-22" y="370" text-anchor="end">FFFh</text>
+  </g>
+  <path class="brace" stroke="#2b6fae" d="M1080 145h24v214h-24"/><text class="lab" x="1118" y="252" transform="rotate(90 1118 252)" text-anchor="middle" fill="#2b6fae">Legacy-compatible 256B</text>
+  <path class="brace" stroke="#b88a00" d="M1080 365h24v150h-24"/><text class="lab" x="1118" y="440" transform="rotate(90 1118 440)" text-anchor="middle" fill="#b88a00">PCIe 扩展区</text>
+  <text class="m" x="600" y="566" text-anchor="middle">ECAM 可让 CPU 通过 MMIO 按 Segment:Bus:Device.Function 访问完整 4KB 配置空间</text>
+</svg>

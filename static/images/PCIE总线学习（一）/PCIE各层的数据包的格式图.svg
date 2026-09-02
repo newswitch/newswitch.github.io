@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">PCIe 数据包逐层封装格式</title><desc id="desc">事务层形成 TLP，数据链路层增加序列号和 LCRC，物理层再添加物理层相关的边界或编码信息。</desc>
+  <defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dbe5ef"/></pattern><style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#13263d}.h{font-size:30px;font-weight:700;fill:#fff}.t{font-size:19px;font-weight:700}.s{font-size:16px;fill:#49647e}.seg{stroke:#fff;stroke-width:3}.brace{stroke-width:3;fill:none;stroke-linecap:round}.lab{font-size:18px;font-weight:700}</style></defs>
+  <rect width="1200" height="500" fill="#f8fbfd"/><rect y="82" width="1200" height="418" fill="url(#grid)" opacity=".6"/><rect width="1200" height="82" fill="#102740"/><text class="h" x="42" y="52">PCIe 数据包：TLP 被链路层与物理层逐级封装</text>
+  <g transform="translate(50 150)">
+    <rect class="seg" x="0" y="0" width="95" height="94" rx="8" fill="#f7efff"/><text class="t" x="47" y="42" text-anchor="middle">物理层</text><text class="s" x="47" y="67" text-anchor="middle">边界*</text>
+    <rect class="seg" x="95" y="0" width="120" height="94" fill="#e9f7ef"/><text class="t" x="155" y="42" text-anchor="middle">序列号</text><text class="s" x="155" y="67" text-anchor="middle">Sequence</text>
+    <rect class="seg" x="215" y="0" width="210" height="94" fill="#e7f1fb"/><text class="t" x="320" y="42" text-anchor="middle">TLP Header</text><text class="s" x="320" y="67" text-anchor="middle">路由与事务属性</text>
+    <rect class="seg" x="425" y="0" width="300" height="94" fill="#dbeafe"/><text class="t" x="575" y="42" text-anchor="middle">Data（可选）</text><text class="s" x="575" y="67" text-anchor="middle">请求或完成数据</text>
+    <rect class="seg" x="725" y="0" width="120" height="94" fill="#e7f1fb"/><text class="t" x="785" y="42" text-anchor="middle">ECRC</text><text class="s" x="785" y="67" text-anchor="middle">可选</text>
+    <rect class="seg" x="845" y="0" width="120" height="94" fill="#e9f7ef"/><text class="t" x="905" y="42" text-anchor="middle">LCRC</text><text class="s" x="905" y="67" text-anchor="middle">链路校验</text>
+    <rect class="seg" x="965" y="0" width="95" height="94" rx="8" fill="#f7efff"/><text class="t" x="1012" y="42" text-anchor="middle">物理层</text><text class="s" x="1012" y="67" text-anchor="middle">边界*</text>
+  </g>
+  <path class="brace" stroke="#2b6fae" d="M265 275v18h630v-18"/><text class="lab" x="580" y="320" text-anchor="middle" fill="#2b6fae">事务层：TLP = Header + Data（可选）+ ECRC（可选）</text>
+  <path class="brace" stroke="#2c8c5e" d="M145 337v18h870v-18"/><text class="lab" x="580" y="382" text-anchor="middle" fill="#2c8c5e">数据链路层：Sequence Number + TLP + LCRC</text>
+  <path class="brace" stroke="#8153b7" d="M50 397v18h1060v-18"/><text class="lab" x="580" y="442" text-anchor="middle" fill="#8153b7">物理层：把链路层数据编码并发送到 Lane</text>
+  <text class="s" x="600" y="478" text-anchor="middle">* 物理层的具体 Framing/编码方式随 PCIe 代际变化；此图表达职责边界，不等同于所有代际的逐位线格式</text>
+</svg>

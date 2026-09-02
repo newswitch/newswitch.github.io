@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+  <title id="title">PCIe Gen1 和 Gen2 的 8b/10b 编码流程</title><desc id="desc">发送端将 8 位数据或控制字符编码成 10 位符号并串行发送，接收端完成时钟恢复、解码和错误检查。</desc>
+  <defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dbe5ef"/></pattern><filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#102740" flood-opacity=".12"/></filter><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0l10 5-10 5z" fill="#2b5f94"/></marker><style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#13263d}.h{font-size:30px;font-weight:700;fill:#fff}.t{font-size:22px;font-weight:700}.s{font-size:17px;fill:#49647e}.box{stroke-width:2.5;rx:14;filter:url(#shadow)}.line{stroke:#2b5f94;stroke-width:4;fill:none;marker-end:url(#a)}.bits{font-family:Consolas,monospace;font-size:23px;font-weight:700;letter-spacing:4px}.note{font-size:18px;font-weight:700}</style></defs>
+  <rect width="1200" height="640" fill="#f8fbfd"/><rect y="82" width="1200" height="558" fill="url(#grid)" opacity=".6"/><rect width="1200" height="82" fill="#102740"/><text class="h" x="42" y="52">8b/10b：用 20% 编码开销换取时钟恢复与直流平衡</text>
+  <text class="t" x="68" y="135">发送端（TX）</text>
+  <rect class="box" x="60" y="165" width="220" height="120" fill="#e7f1fb" stroke="#2b6fae"/><text class="t" x="170" y="202" text-anchor="middle">8-bit 输入</text><text class="bits" x="170" y="244" text-anchor="middle">D/K + abcdefgh</text><text class="s" x="170" y="270" text-anchor="middle">数据字节或控制字符</text>
+  <path class="line" d="M280 225H345"/>
+  <rect class="box" x="345" y="165" width="260" height="120" fill="#e9f7ef" stroke="#2c8c5e"/><text class="t" x="475" y="202" text-anchor="middle">8b/10b Encoder</text><text class="s" x="475" y="235" text-anchor="middle">5b/6b + 3b/4b</text><text class="s" x="475" y="264" text-anchor="middle">维护 Running Disparity</text>
+  <path class="line" d="M605 225H670"/>
+  <rect class="box" x="670" y="165" width="205" height="120" fill="#fff3ca" stroke="#b88a00"/><text class="t" x="772" y="202" text-anchor="middle">10-bit 符号</text><text class="bits" x="772" y="245" text-anchor="middle">abcdei fghj</text>
+  <path class="line" d="M875 225H940"/>
+  <rect class="box" x="940" y="165" width="205" height="120" fill="#fcebec" stroke="#ca3d4b"/><text class="t" x="1042" y="202" text-anchor="middle">SerDes / Lane</text><text class="s" x="1042" y="235" text-anchor="middle">并串转换后发送</text><text class="s" x="1042" y="264" text-anchor="middle">嵌入时钟信息</text>
+  <text class="t" x="68" y="354">接收端（RX）</text>
+  <rect class="box" x="940" y="384" width="205" height="120" fill="#fcebec" stroke="#ca3d4b"/><text class="t" x="1042" y="421" text-anchor="middle">CDR / Deserializer</text><text class="s" x="1042" y="454" text-anchor="middle">恢复时钟</text><text class="s" x="1042" y="483" text-anchor="middle">串并转换</text>
+  <path class="line" d="M940 444H875"/>
+  <rect class="box" x="640" y="384" width="235" height="120" fill="#e9f7ef" stroke="#2c8c5e"/><text class="t" x="757" y="421" text-anchor="middle">10b/8b Decoder</text><text class="s" x="757" y="454" text-anchor="middle">符号解码</text><text class="s" x="757" y="483" text-anchor="middle">检测非法码与 Disparity</text>
+  <path class="line" d="M640 444H575"/>
+  <rect class="box" x="340" y="384" width="235" height="120" fill="#e7f1fb" stroke="#2b6fae"/><text class="t" x="457" y="421" text-anchor="middle">8-bit 输出</text><text class="s" x="457" y="454" text-anchor="middle">恢复 D/K 与原始字节</text><text class="s" x="457" y="483" text-anchor="middle">交给上层逻辑</text>
+  <rect x="60" y="548" width="1085" height="58" rx="12" fill="#fff3ca" stroke="#b88a00" stroke-width="2"/><text class="note" x="602" y="583" text-anchor="middle">适用范围：PCIe Gen1/Gen2 使用 8b/10b；Gen3 及以后改用效率更高的 128b/130b 编码</text>
+</svg>

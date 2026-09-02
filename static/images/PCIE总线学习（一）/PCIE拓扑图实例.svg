@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">PCIe 树形拓扑结构</title>
+  <desc id="desc">CPU 和内存通过 Root Complex 连接直连端点、PCIe 转 PCI 桥和 PCIe Switch，Switch 下游再连接多个端点。</desc>
+  <defs>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dbe5ef" stroke-width="1"/></pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f2742" flood-opacity=".12"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0l10 5-10 5z" fill="#2b5f94"/></marker>
+    <style>
+      text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#13263d}.h{font-size:30px;font-weight:700;fill:#fff}.t{font-size:24px;font-weight:700}.s{font-size:18px;fill:#49647e}.box{stroke-width:2.5;rx:14;filter:url(#shadow)}.line{fill:none;stroke:#2b5f94;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.tag{font-size:17px;font-weight:700;fill:#2b5f94}
+    </style>
+  </defs>
+  <rect width="1200" height="820" fill="#f8fbfd"/><rect y="82" width="1200" height="738" fill="url(#grid)" opacity=".65"/>
+  <rect width="1200" height="82" fill="#102740"/><text class="h" x="42" y="52">PCIe 树形拓扑：根、桥、交换机与端点</text>
+  <rect class="box" x="120" y="122" width="250" height="94" fill="#e7f1fb" stroke="#2b6fae"/>
+  <text class="t" x="245" y="160" text-anchor="middle">CPU / SoC</text><text class="s" x="245" y="190" text-anchor="middle">发起 MMIO 与配置访问</text>
+  <rect class="box" x="830" y="122" width="250" height="94" fill="#fff3ca" stroke="#b88a00"/>
+  <text class="t" x="955" y="160" text-anchor="middle">系统内存</text><text class="s" x="955" y="190" text-anchor="middle">DMA 的主要目标空间</text>
+  <rect class="box" x="430" y="276" width="340" height="112" fill="#e9f7ef" stroke="#2c8c5e"/>
+  <text class="t" x="600" y="322" text-anchor="middle">Root Complex（根复合体）</text><text class="s" x="600" y="354" text-anchor="middle">连接 CPU/内存域与 PCIe 域</text>
+  <path class="line" d="M245 216V250H520V276"/><path class="line" d="M955 216V250H680V276"/>
+  <path class="line" d="M510 388V452H185V500"/><path class="line" d="M600 388V500"/><path class="line" d="M690 388V452H1015V500"/>
+  <text class="tag" x="185" y="478" text-anchor="middle">直接链路</text><text class="tag" x="600" y="478" text-anchor="middle">兼容分支</text><text class="tag" x="1015" y="478" text-anchor="middle">扩展分支</text>
+  <rect class="box" x="65" y="500" width="240" height="94" fill="#e7f1fb" stroke="#2b6fae"/>
+  <text class="t" x="185" y="538" text-anchor="middle">PCIe Endpoint</text><text class="s" x="185" y="568" text-anchor="middle">GPU / NIC / NVMe</text>
+  <rect class="box" x="460" y="500" width="280" height="94" fill="#fcebec" stroke="#ca3d4b"/>
+  <text class="t" x="600" y="538" text-anchor="middle">PCIe-to-PCI Bridge</text><text class="s" x="600" y="568" text-anchor="middle">连接传统 PCI 总线</text>
+  <rect class="box" x="865" y="500" width="300" height="94" fill="#fff3ca" stroke="#b88a00"/>
+  <text class="t" x="1015" y="538" text-anchor="middle">PCIe Switch</text><text class="s" x="1015" y="568" text-anchor="middle">一个上行端口，多个下行端口</text>
+  <path class="line" d="M600 594V654H500V692"/><path class="line" d="M600 654H700V692"/>
+  <rect class="box" x="390" y="692" width="220" height="76" fill="#f7efff" stroke="#8153b7"/><text class="t" x="500" y="740" text-anchor="middle">Legacy PCI</text>
+  <rect class="box" x="620" y="692" width="160" height="76" fill="#f7efff" stroke="#8153b7"/><text class="t" x="700" y="740" text-anchor="middle">设备</text>
+  <path class="line" d="M1015 594V646H865V692"/><path class="line" d="M1015 646H1015V692"/><path class="line" d="M1015 646H1155V692"/>
+  <rect class="box" x="795" y="692" width="140" height="76" fill="#e7f1fb" stroke="#2b6fae"/><text class="t" x="865" y="740" text-anchor="middle">EP 1</text>
+  <rect class="box" x="945" y="692" width="140" height="76" fill="#e7f1fb" stroke="#2b6fae"/><text class="t" x="1015" y="740" text-anchor="middle">EP 2</text>
+  <rect class="box" x="1095" y="692" width="100" height="76" fill="#e7f1fb" stroke="#2b6fae"/><text class="t" x="1145" y="740" text-anchor="middle">…</text>
+</svg>
