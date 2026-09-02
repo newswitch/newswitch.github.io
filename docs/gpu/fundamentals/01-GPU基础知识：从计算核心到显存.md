@@ -80,7 +80,7 @@ GPU
 
 CUDA 官方把 GPU 看成多个 **SM** 的集合。每个 SM 内有寄存器、统一数据缓存以及计算功能单元；不同架构下，每 SM 的单元数量和缓存大小可能不同。
 
-### 3.1 SM 是什么
+### 3.1 SM（流式多处理器）是什么 {/* #sm-是什么 */}
 
 ```text
 Streaming Multiprocessor（流式多处理器）
@@ -90,7 +90,7 @@ SM 是 GPU 执行和调度线程的核心单元。Kernel 启动后，大量线�
 
 注意：**SM 数量 ≠ GPU「核心数」**。一个 SM 还包含多个 CUDA Core、Tensor Core、寄存器、调度器和缓存。
 
-## 4. CUDA Core 是什么
+## 4. CUDA Core（CUDA 核心）是什么 {/* #cuda-core-是什么 */}
 
 CUDA Core 是执行普通算术指令的硬件计算单元，主要处理浮点/整数运算、逻辑运算、地址计算等。
 
@@ -104,7 +104,7 @@ CUDA Core 是执行普通算术指令的硬件计算单元，主要处理浮点/
 
 Thread 是软件执行上下文，CUDA Core 是硬件执行单元；GPU 在大量线程之间调度硬件资源。因此只比 CUDA Core 数量不够，还要看架构、频率、Tensor Core、显存带宽、数据类型、功耗限制和实际负载。
 
-## 5. Tensor Core 是什么
+## 5. Tensor Core（张量核心）是什么 {/* #tensor-core-是什么 */}
 
 Tensor Core 专为矩阵运算加速，深度学习里的全连接、Attention、卷积、训练与推理等，很多都能落到矩阵乘加。它支持混合精度，具体格式取决于架构，常见包括 FP32、TF32、FP16、BF16、FP8、INT8、INT4 等。
 
@@ -116,7 +116,7 @@ Tensor Core 专为矩阵运算加速，深度学习里的全连接、Attention�
 
 大模型性能不能只看 CUDA Core，还要看目标精度下 Tensor Core 是否可用。同一模型用 FP32 / FP16 / BF16 / INT8 / INT4，吞吐、显存和精度可能完全不同。
 
-## 6. Thread、Block、Grid 和 Warp
+## 6. Thread（线程）、Thread Block（线程块）、Grid（网格）和 Warp（线程束） {/* #threadblockgrid-和-warp */}
 
 ```text
 Grid
@@ -124,19 +124,19 @@ Grid
     └── Thread
 ```
 
-### 6.1 Thread
+### 6.1 Thread（线程） {/* #thread */}
 
 最小的软件执行单位。例如处理一百万个数据，可建一百万个线程，每线程负责一个元素。
 
-### 6.2 Thread Block
+### 6.2 Thread Block（线程块） {/* #thread-block */}
 
 同一 Block 中的线程：在同一 SM 上运行；可共享 Shared Memory；可同步；可协作完成局部任务。
 
-### 6.3 Grid
+### 6.3 Grid（网格） {/* #grid */}
 
 多个 Block 组成 Grid。一次 Kernel 启动通常对应一个 Grid。CUDA 可启动极大规模的线程与 Block，GPU 按可用 SM 逐批调度。
 
-### 6.4 Warp
+### 6.4 Warp（线程束） {/* #warp */}
 
 GPU 通常不以单个 Thread 为单位执行，而是按 Warp 组织。NVIDIA CUDA 中：
 
@@ -186,7 +186,7 @@ blockDim         → 本次Kernel实际启动的逻辑核实例配置
 
 参考：[Ascend C Kernel函数与blockDim](https://www.hiascend.com/document/detail/zh/canncommercial/850/opdevg/Ascendcopdevg/atlas_ascendc_10_0014.html)、[Ascend AI Core硬件架构](https://www.hiascend.com/document/detail/en/canncommercial/850/opdevg/Ascendcopdevg/atlas_ascendc_10_0008.html)。
 
-### 6.5 Warp Divergence
+### 6.5 Warp Divergence（线程束分支发散） {/* #warp-divergence */}
 
 同一 Warp 内线程走不同分支时发生 Warp Divergence：
 
@@ -218,23 +218,23 @@ Host Memory（主机内存）
 
 CUDA 主要内存空间包括 Global、Constant、Shared、Local、Register。Global 对所有线程可见；Shared 在 Block 内共享；Register / Local 在逻辑上属于单线程。
 
-### 7.1 Register
+### 7.1 Register（寄存器） {/* #register */}
 
 位于 SM 内，保存临时变量、索引、中间结果等。极快但容量有限；每线程占用过多会降低 SM 能同时容纳的线程数（影响 Occupancy）。
 
-### 7.2 Shared Memory
+### 7.2 Shared Memory（共享内存） {/* #shared-memory */}
 
 Block 内共享，用于线程间交换、缓存复用数据、矩阵分块、减少对显存的重复访问。比全局显存更近计算单元，但容量有限，且由当前 SM 上多个 Block 竞争。
 
-### 7.3 L1 与 L2 Cache
+### 7.3 L1 与 L2 Cache（缓存） {/* #l1-与-l2-cache */}
 
 每 SM 通常有 L1；L2 由 GPU 内各 SM 共享。命中率取决于访问模式、复用程度、连续性与工作集大小。
 
-### 7.4 Global Memory
+### 7.4 Global Memory（全局内存） {/* #global-memory */}
 
 即常见所说的 GPU 显存（如 16 / 24 / 48 / 80 GiB），存放模型权重、KV Cache、输入输出张量、激活、梯度、优化器状态、CUDA Context、临时缓冲等。独立 GPU 通常有自己的 Device Memory。
 
-### 7.5 Local Memory
+### 7.5 Local Memory（局部内存） {/* #local-memory */}
 
 名字易误解：逻辑上属单线程，物理上常落在设备内存。寄存器不足时可能「溢出」到 Local Memory，性能可能明显下降。
 
@@ -267,7 +267,7 @@ CUDA 与临时缓冲：2 GiB
 - **Compute Bound**：计算单元长期忙碌
 - **Memory Bound**：计算单元经常等数据
 
-### 8.3 显存占用与 Memory Utilization
+### 8.3 显存占用与 Memory Utilization（显存活动率） {/* #显存占用与-memory-utilization */}
 
 `nvidia-smi` 里两个指标易混：
 
