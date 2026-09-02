@@ -1,0 +1,9 @@
+{
+  "label": "FunASR 语音识别",
+  "position": 7.5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/inference/funasr/FunASR从零到生产学习路线"
+  }
+}

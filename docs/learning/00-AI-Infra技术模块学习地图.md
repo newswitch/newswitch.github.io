@@ -159,6 +159,7 @@ Linux 网络基础
 - [Kubernetes CSI 挂载链路与故障排查](../storage/ai-workloads/05-Kubernetes-CSI挂载链路与故障排查.md)
 - [模型文件从存储加载到 GPU 显存的完整路径](../projects/ai-infra-end-to-end/02-模型文件从存储加载到GPU显存的完整路径.md)
 - [AI 训练数据面从零到生产学习路线](../storage/training-data-plane/00-AI训练数据面从零到生产学习路线.md)
+- [MindIO ACP从零到生产学习路线](../storage/ai-workloads/mindio/00-MindIO-ACP从零到生产学习路线.md)：理解Checkpoint从训练内存、异步缓冲到可靠存储的保存、加载、容量与恢复链路。
 
 ### 4.3 P1 进阶内容 {/* #p1-进阶内容-2 */}
 
@@ -224,6 +225,7 @@ Transformer 推理基础
 - [模型制品命令参考库](../ai-systems/models/commands/00-模型制品命令参考库.md)
 - [分布式训练命令参考库](../ai-systems/training/commands/00-分布式训练命令参考库.md)
 - [推理服务命令参考库](../ai-systems/inference/commands/00-推理服务命令参考库.md)
+- [PyTorch、Transformers从模型目录到GPU Kernel的完整执行链路](../ai-systems/inference/fundamentals/08-PyTorch-Transformers从模型目录到GPU-Kernel完整执行链路.md)
 - [vLLM 整体代码架构](../ai-systems/inference/vllm/91-vLLM学习笔记（一）整体代码架构.md)
 - [vLLM 调度器策略](../ai-systems/inference/vllm/93-vLLM学习笔记（三）vLLM调度器策略.md)
 - [vLLM Tensor Parallel 多卡部署](../ai-systems/inference/serving/03-vLLM%20Tensor%20Parallel%20多卡部署.md)
@@ -242,6 +244,7 @@ Transformer 推理基础
 | [TensorRT-LLM 从零到生产](../ai-systems/inference/tensorrt-llm/00-TensorRT-LLM从零到生产学习路线.md) | PyExecutor、调度、KV Cache、Engine、量化和性能 |
 | [Triton Inference Server 从零到生产](../ai-systems/inference/triton-server/00-Triton-Inference-Server从零到生产学习路线.md) | 模型仓库、Backend、Batcher、Ensemble 和模型实例 |
 | [KServe 从零到生产](../ai-systems/inference/kserve/00-KServe从零到生产学习路线.md) | InferenceService、LLMInferenceService、Gateway、EPP 和扩缩容 |
+| [FunASR 从零到生产](../ai-systems/inference/funasr/00-FunASR从零到生产学习路线.md) | 音频、VAD、ASR、标点、ITN、离线/在线/两遍识别与语音服务运维 |
 | [PyTorch FSDP2 从零到生产](../ai-systems/training/fsdp2/00-PyTorch-FSDP2从零到生产学习路线.md) | DTensor、fully_shard、混合精度、Checkpoint 和排障 |
 | [Megatron Core 从零到生产](../ai-systems/training/megatron-core/00-Megatron-Core从零到生产学习路线.md) | TP、PP、CP、EP、MoE、分布式优化器和通信重叠 |
 | [Kubeflow Trainer 从零到生产](../ai-systems/training/kubeflow-trainer/00-Kubeflow-Trainer从零到生产学习路线.md) | TrainJob、Runtime、JobSet、训练启动和队列调度 |
