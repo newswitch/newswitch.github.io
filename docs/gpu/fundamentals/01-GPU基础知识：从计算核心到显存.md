@@ -146,6 +146,46 @@ GPU 通常不以单个 Thread 为单位执行，而是按 Warp 组织。NVIDIA C
 
 Warp 内线程通常执行相同指令，称为 **SIMT**（Single Instruction, Multiple Threads）。Block 内线程按每 32 个划成一个 Warp。例如 256 线程的 Block → `256 ÷ 32 = 8` 个 Warp。
 
+#### 6.4.1 昇腾 910B 中“一个 Warp 是多少” {/* #昇腾-910b-中一个-warp-是多少 */}
+
+**昇腾 910B 没有与 CUDA Warp 一一对应的固定线程组，因此不能写成“1 Warp = N 个 Thread”。** Warp、Thread、Thread Block 和 SM 是 CUDA 编程与执行模型中的术语；把它们直接套到昇腾上，会把两套不同的硬件抽象混为一谈。
+
+Atlas A2/Ascend 910B使用Cube Core与Vector Core分离的架构。Ascend C启动Kernel时，通过`blockDim`指定参与执行的**逻辑核实例数**，每个实例使用`block_idx`区分自己处理的数据分片。进入核内以后，由Scalar单元负责循环、地址计算和指令发射，Cube、Vector与DMA单元分别执行矩阵计算、向量计算和数据搬运。
+
+```text
+NVIDIA CUDA
+Grid → Thread Block → Warp（固定32个Thread）→ 执行管线
+
+Ascend 910B / Ascend C
+数据切分 → blockDim个逻辑核实例 → AIC/AIV → Cube、Vector、DMA流水
+```
+
+两者的关键差异如下：
+
+| 对比项 | NVIDIA CUDA | Ascend 910B / Ascend C |
+|---|---|---|
+| Kernel并行划分 | Grid、Block、Thread | Tiling、`blockDim`、`block_idx` |
+| 核心调度对象 | Warp | 逻辑AIC/AIV核实例 |
+| 固定执行宽度 | 1 Warp固定为32个Thread | 没有公开的“1 Warp = N个Thread”对应关系 |
+| 核内计算 | Warp指令发往CUDA/Tensor等执行管线 | Scalar发射指令，Cube/Vector/DMA异步执行 |
+| 数量获取 | CUDA设备属性提供SM、Warp等属性 | 使用`GetCoreNumAic()`、`GetCoreNumAiv()`等平台接口获取可用核数 |
+
+在910B的混合Kernel中，可以配置`1个AIC + 2个AIV`等核组合。例如`blockDim=10`配合`KERNEL_TYPE_MIX_AIC_1_2`表示启动10个Cube Core和20个Vector Core。这里的`1:2`描述的是**两类物理计算核的组合比例**，不是一个逻辑核包含多少线程，也不能换算成“一个Warp有多少线程”。其他Kernel还可能选择纯AIC、纯AIV或不同组合，实际值应由Kernel类型、Tiling结果和设备平台信息共同确定。
+
+现场分析时不要猜测910B的核数，可从当前CANN安装的SoC配置和算子平台接口读取：
+
+```text
+GetCoreNumAic() → 当前平台可用Cube Core数量
+GetCoreNumAiv() → 当前平台可用Vector Core数量
+blockDim         → 本次Kernel实际启动的逻辑核实例配置
+```
+
+因此最简洁的记忆方式是：
+
+> NVIDIA用“32线程组成一个Warp”理解SIMT调度；910B用“数据Tiling后分配给AIC/AIV逻辑核，由Cube、Vector和DMA流水执行”理解并行。
+
+参考：[Ascend C Kernel函数与blockDim](https://www.hiascend.com/document/detail/zh/canncommercial/850/opdevg/Ascendcopdevg/atlas_ascendc_10_0014.html)、[Ascend AI Core硬件架构](https://www.hiascend.com/document/detail/en/canncommercial/850/opdevg/Ascendcopdevg/atlas_ascendc_10_0008.html)。
+
 ### 6.5 Warp Divergence
 
 同一 Warp 内线程走不同分支时发生 Warp Divergence：
