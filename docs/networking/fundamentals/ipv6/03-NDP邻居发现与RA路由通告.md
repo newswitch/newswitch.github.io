@@ -101,6 +101,8 @@ NUD 证明的是**邻居这一跳**。网关可以正常回答 NA，但它上游
 
 另一方面，允许 NDP 也不等于无需安全边界。恶意或错误 RA 可能改变主机默认路由；NDP 的 Hop Limit 检查可以限制非本链路注入，却不能认证同一链路上的发送者。RA Guard、接入控制和协议消息过滤需要按角色设计，不能用一个“全允许”或“全拒绝”代替。[RFC 4890](https://www.rfc-editor.org/rfc/rfc4890.html) 给出了 ICMPv6 过滤的协议层考量。
 
+RA Guard、DHCPv6 Shield 与地址绑定分别保护什么，见 [IPv6 接入保护与二层地址绑定](../../security/layer2-security/01-地址绑定DHCP-Snooping-DAI与IPv6接入保护.md)。
+
 ## 8. 思考与解答
 
 **拿到 DHCPv6 地址，但没有默认路由，是否矛盾？**

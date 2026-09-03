@@ -47,7 +47,7 @@ Option 82 是 Relay Agent Information Option，中继代理信息选项，常见
 
 但 Option 82 本身不是客户端的密码或数字签名。若不可信终端能够伪造并被无条件接受，它就不能作为可靠授权依据。接入边界需要明确由谁插入、是否允许保留已有信息，以及服务器信任哪些中继。
 
-这与后续的 DHCP Snooping 有联系，但不是同一个功能：中继负责报文跨链路交互，Snooping 负责在接入交换边界观察和约束 DHCP 行为。
+这与 [DHCP Snooping 与地址绑定](../../security/layer2-security/01-地址绑定DHCP-Snooping-DAI与IPv6接入保护.md)有联系，但不是同一个功能：中继负责报文跨链路交互，Snooping 负责在接入交换边界观察和约束 DHCP 行为。
 
 ## 4. 地址池、租约库和 IPAM 各管一部分
 

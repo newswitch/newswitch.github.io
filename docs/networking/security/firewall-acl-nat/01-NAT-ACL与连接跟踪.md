@@ -1,7 +1,7 @@
 ---
 title: "NAT、ACL、状态防火墙与连接跟踪"
-sidebar_label: "08. NAT、ACL、状态防火墙与连接跟踪"
-sidebar_position: 8
+sidebar_label: "01. NAT、ACL、状态防火墙与连接跟踪"
+sidebar_position: 1
 description: "理解无状态过滤、状态防火墙、Netfilter Hook、连接跟踪和 SNAT/DNAT 的真实数据路径。"
 tags: [NAT, ACL, Firewall, Conntrack, nftables]
 ---
@@ -14,7 +14,7 @@ tags: [NAT, ACL, Firewall, Conntrack, nftables]
 | --- | --- | --- | --- |
 | ACL | 地址、协议、端口、方向 | 通常否 | 否 |
 | 状态防火墙 | 五元组、方向、连接状态 | 是 | 通常不必 |
-| NAT | 地址和端口映射 | 依赖连接状态 | 是 |
+| NAT | 地址和端口映射 | 常见有状态 NAT 维护映射，也存在无状态转换 | 是 |
 | 路由 | 目的前缀、策略 | 否 | 通常不改地址 |
 
 它们可能位于同一设备，但处理目的不同。排障必须明确包在哪一步被路由、过滤或改写。
@@ -206,7 +206,7 @@ DNS 视图管理成本。
 
 四层负载均衡可能使用：
 
-- Full NAT：入站 DNAT、返回 SNAT，路径稳定但设备处理双向流量。
+- Full NAT：请求同时改写源与目的，响应按映射执行逆向转换；通常要求设备处理双向流量。
 - DR/DSR：请求经负载均衡，响应由后端直接返回，性能高但地址和路由要求复杂。
 - Tunnel 模式：使用 IPIP/VXLAN 等封装送往后端。
 
@@ -236,4 +236,4 @@ DNS 视图管理成本。
 - [nftables Wiki](https://wiki.nftables.org/)
 - [RFC 3022: Traditional IP Network Address Translator](https://www.rfc-editor.org/rfc/rfc3022)
 
-[下一篇：MPLS、VRF 与 L3VPN →](./09-MPLS-VRF与L3VPN.md)
+[继续阅读：MPLS、VRF 与 L3VPN →](../../routing-switching/09-MPLS-VRF与L3VPN.md)

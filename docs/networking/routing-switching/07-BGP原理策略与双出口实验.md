@@ -732,4 +732,4 @@ router bgp 65000
 - [RFC 7454: BGP Operations and Security](https://www.rfc-editor.org/rfc/rfc7454)
 - [FRRouting BGP Documentation](https://docs.frrouting.org/en/latest/bgp.html)
 
-[下一篇：NAT、ACL 与连接跟踪 →](./08-NAT-ACL与连接跟踪.md)
+[下一篇：NAT、ACL 与连接跟踪 →](../security/firewall-acl-nat/01-NAT-ACL与连接跟踪.md)

@@ -1,0 +1,6 @@
+{
+  "label": "IGMP、PIM 与组播",
+  "position": 11,
+  "collapsed": true,
+  "link": {"type": "doc", "id": "networking/routing-switching/multicast/组播学习路线"}
+}

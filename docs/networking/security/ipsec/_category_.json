@@ -1,0 +1,6 @@
+{
+  "label": "IPsec VPN",
+  "position": 4,
+  "collapsed": true,
+  "link": {"type": "doc", "id": "networking/security/ipsec/IPsec学习路线"}
+}

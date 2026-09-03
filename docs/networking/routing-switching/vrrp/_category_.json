@@ -1,0 +1,6 @@
+{
+  "label": "VRRP 与网关冗余",
+  "position": 10,
+  "collapsed": true,
+  "link": {"type": "doc", "id": "networking/routing-switching/vrrp/VRRP学习路线"}
+}
