@@ -64,7 +64,7 @@ Leaf-2 AS 65102
 IGP 适合团队已有成熟经验的场景：
 
 - 邻接简单。
-- Link-State 能看到完整拓扑。
+- Link-State 能看到相应区域/Level/拓扑实例内的链路状态，而非无条件拥有全网明细。
 - ECMP 与快速收敛成熟。
 
 需要控制：
@@ -76,6 +76,8 @@ IGP 适合团队已有成熟经验的场景：
 
 选择 eBGP 还是 IGP 不是“新旧技术之争”。应比较规模、团队能力、平台实现、
 故障模型和自动化成熟度。
+
+协议机制分别见 [OSPF、ECMP 与 BFD](../routing-switching/06-OSPF-ECMP与BFD.md) 和 [IS-IS 层次邻接、泛洪与 SPF](../routing-switching/12-IS-IS层次邻接泛洪与SPF.md)。如果承载还需要受约束路径与本地快速保护，继续理解 [SR-MPLS/SRv6](../routing-switching/13-Segment-Routing-SR-MPLS与SRv6.md)，但不要把 SR 当成“不再需要 Underlay 可达性”。
 
 ## 5. eBGP 配置示例
 
@@ -161,7 +163,7 @@ Outer Ethernet
 + Inner Ethernet/IP/TCP
 ```
 
-VXLAN 常增加约 50 字节 IPv4 外层开销，具体还受 VLAN、IPv6 和其他封装影响。
+在无额外 VLAN、IPv4 无选项的普通 VXLAN 模型中，1500 字节客户 IP 包需要容纳 1550 字节外层 IP 包的承载空间。这里必须计入内层以太网头，不能把 IP MTU 与整个外层帧尺寸混为一谈；逐层计算见 [VXLAN MTU](./03-VXLAN数据面与隧道实验.md#6-mtu)。IPv6 和额外封装还会改变所需空间。
 
 策略：
 

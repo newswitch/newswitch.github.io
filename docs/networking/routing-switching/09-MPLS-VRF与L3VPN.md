@@ -110,6 +110,8 @@ IGP 路由不通
 现代网络也可能使用 Segment Routing MPLS 替代 LDP，但“先建立到出口 PE 的传输路径”
 这一逻辑仍然适用。
 
+标签分发与路径指令的区别，继续见 [Segment Routing：SR-MPLS 与 SRv6](./13-Segment-Routing-SR-MPLS与SRv6.md)。SR 传输段仍需与业务标签、VRF 和出口交付配合。
+
 ### 4.1 LDP 建邻与标签绑定不是同一张表
 
 LDP 的常见链路发现使用 Hello，随后建立用于交换标签映射等信息的会话。基础发现与会话分别涉及 UDP 和 TCP 646；Targeted Discovery 等有不同范围和条件，不能只看一个 Hello 就确认全部 LDP 状态建立。
