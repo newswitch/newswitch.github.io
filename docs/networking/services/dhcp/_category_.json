@@ -1,0 +1,9 @@
+{
+  "label": "DHCP",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "networking/services/dhcp/DHCP学习路线"
+  }
+}

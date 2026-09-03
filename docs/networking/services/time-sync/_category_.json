@@ -1,0 +1,9 @@
+{
+  "label": "NTP 与 PTP 时间同步",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "networking/services/time-sync/时间同步学习路线"
+  }
+}

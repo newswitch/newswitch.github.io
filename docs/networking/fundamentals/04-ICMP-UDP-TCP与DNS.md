@@ -156,6 +156,9 @@ resolvectl status
 - 权威记录正确但递归缓存是否仍持有旧 TTL。
 - DNS 返回地址后，后续 TCP/TLS/HTTP 是否成功。
 
+递归与权威的分工、委派与 Glue、TTL 与负缓存，以及 DNSSEC、DoT/DoH 的差异，
+可继续阅读 [DNS 原理系列](../services/dns/00-DNS学习路线.md)。
+
 ## 6. 最小连接实验
 
 服务端：

@@ -1,0 +1,9 @@
+{
+  "label": "IPv6 与双栈网络",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "networking/fundamentals/ipv6/IPv6学习路线"
+  }
+}
