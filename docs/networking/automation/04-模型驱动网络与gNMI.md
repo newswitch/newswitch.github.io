@@ -192,6 +192,56 @@ STREAM 订阅中的 Sample、On-Change 等行为取决于服务端支持。采�
 
 并能解释模型支持不完整、Replace 误覆盖和状态验证缺失会造成什么风险。
 
+### 10.1 路径中的键、缺省值与类型决定操作边界
+
+`interface[name=Ethernet1]` 是 list 中的一个实例，`name` 是键，不是展示文本。替换该实例与替换整个 `/interfaces` 子树，删除范围完全不同。OpenConfig 与 Native Model 还可能在 origin、模块命名和默认值上不同，不能只看路径末尾都叫 enabled 就认为是同一对象。
+
+缺少字段可能代表未配置、使用默认值、权限不可见或不支持，不能统一转换为 false／零。`config false` 说明不能当配置写入，不代表该值一定实时新鲜。JSON_IETF 中部分 64 位整数使用字符串编码，采集端若不经类型模型强转浮点数，会损失大计数器精度。见 [YANG JSON 编码](https://www.rfc-editor.org/rfc/rfc7951.html)。
+
+### 10.2 NETCONF 候选提交的成功分几层
+
+`edit-config` 修改 candidate，不表示 running 已改变；`validate` 检查设备支持范围内的约束，不验证远端业务；`commit confirmed` 临时激活配置，随后确认才避免按规则回退。
+
+若提交后响应丢失，不应立即再次执行整段编辑。先通过相应会话、提交标识和可读状态判断配置所在阶段。非 persistent confirmed commit 的会话失效与带 persist 的行为不同；设备支持独立 startup 时，保存到重启配置又是单独动作。
+
+candidate 锁并不表示其他管理入口和全部 datastore 都被永久封锁。需要确认锁作用域、共享写者和设备能力，避免回退覆盖他人变更。参见 [NETCONF Candidate 与 Confirmed Commit](https://www.rfc-editor.org/rfc/rfc6241.html#section-8.4)。
+
+### 10.3 gNMI Set 的原子性不等于整张网络同时收敛
+
+普通 SetRequest 按 delete、replace、update 的定义顺序处理，不能依赖客户端任意排列字段改变执行语义。支持 `union_replace` 的版本还可先联合内容再替换，但该请求不能混入 delete、replace、update，须核对目标支持。符合规范的目标应将该请求作为事务，要么全部接受，要么失败回退。
+
+这个原子边界是一个目标上的相应配置事务，不代表十台设备同时提交，也不代表接口、邻居和 FIB 同时完成收敛。`SetResponse` 成功后仍需检查 state 与数据面。若响应丢失，客户端也可能不知道事务结果，需重新读取而不是推断未生效。见 [gNMI Set 规范](https://openconfig.net/docs/gnmi/gnmi-specification/#34-modifying-state)。
+
+### 10.4 订阅是维护状态树，而不只是接收数字
+
+普通订阅先收到各路径初始值，再以 `sync_response=true` 标记本轮初始数据发送完成；它不是跨设备同一时刻的强一致快照。启用 `updates_only` 时还会跳过初始数据，此时收到同步标记不能证明客户端已经持有完整基线。
+
+后续 Notification 包含 update 和 delete。只消费 update 不处理 delete，会把已删除接口永远留在采集器状态树里。ON_CHANGE 的沉默可能是没变化，也可能是连接断了；需要结合流状态、心跳或周期对账。重连应建立新采集会话并恢复基线，不能默认协议自动重放所有离线事件。见 [gNMI Subscribe](https://openconfig.net/docs/gnmi/gnmi-specification/#35-subscribing-to-telemetry-updates)。
+
+Notification 带 `atomic=true` 时，内容表达其 prefix 下的完整状态，省略的旧叶子也会失效，而不仅处理显式 delete。例如原来有 A/B，新原子通知只给 A，则不能继续保留旧 B。普通增量 update 则不具有这种全子树替换含义。
+
+Get、Subscribe 与 Set 各有语义；配置事务原子、Notification 的 atomic 标志和跨设备观测一致性也不同，不能用一个“原子”覆盖三者。
+
+### 10.5 思考与解答及实验判定
+
+**支持 OpenConfig，是否说明任意标准路径都能读写？**
+
+不是。需核对模型、版本、支持子集、权限及 deviations 等实现信息，并验证实际路径。
+
+**Set 成功但 oper-status 为 DOWN，事务失败了吗？**
+
+不一定，可能已成功配置为 enabled，但介质或对端不满足 Up 条件。配置接受和运行状态必须分别验收。
+
+**断线后只接收变化值，能恢复完整接口列表吗？**
+
+不保证。离线期间可能新增或删除对象，需初始同步或完整对账；updates_only 不提供历史重放。
+
+**replace 接口实例与 replace 接口容器有什么差别？**
+
+前者限制到指定实例，后者可能覆盖全部子树，省略的其他接口配置也可能被删除或复位。先确认目标路径才有意义。
+
+前述只读实验应保留 Capabilities、配置与状态样本、同步标记和断连区间。接口断开预期影响 oper-state，不应伪造 config.enabled=false；重连后如未恢复完整基线，结果标记不完整而非健康。
+
 ## 11. 参考资料 {/* #参考资料 */}
 
 - [RFC 7950：YANG 1.1](https://www.rfc-editor.org/rfc/rfc7950)

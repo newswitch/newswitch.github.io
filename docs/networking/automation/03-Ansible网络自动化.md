@@ -76,6 +76,8 @@ all:
 
 示例展示结构，不绑定具体厂商模块：
 
+`vendor.platform` 是占位 Collection，不可直接执行。下面为避免否定词误匹配，假设示例平台状态命令只返回规范化单词 `synchronized`；真实平台应使用结构化字段和对应版本解析器替换，而不是复制该文本判断。
+
 ```yaml
 ---
 - name: Configure NTP safely
@@ -105,7 +107,7 @@ all:
         command: show ntp status
       register: ntp_status
       changed_when: false
-      failed_when: "'synchronized' not in ntp_status.stdout"
+      failed_when: "(ntp_status.stdout | trim | lower) != 'synchronized'"
 ```
 
 关键点：
@@ -193,6 +195,53 @@ Schema 校验
 ## 9. 掌握标准
 
 你应能解释一个资源模块每种状态可能删除什么；能够在执行前看到设备级差异，在执行中限制故障域，在执行后用运行状态验收，而不是只看 Play Recap 的 `failed=0`。
+
+### 9.1 用对象集合解释资源模块状态
+
+假设设备拥有接口 A 和 B，某资源模块管理地址子集；A 有 IPv4 和旧 IPv6，意图只声明 A 的新 IPv6。以下为常见语义模型，不替代具体模块的参数和默认值：
+
+| 状态 | 对 A 的影响 | 对未声明 B 的影响 |
+| --- | --- | --- |
+| merged | 合并指定字段／成员，通常保留未管理内容 | 通常不动 |
+| replaced | 替换声明的 A 资源子集，省略字段可能被删除或回默认 | 通常保留 B |
+| overridden | 使模块管理的整个资源集合符合输入 | B 的该类配置可能被移除或复位 |
+| deleted | 删除指定或文档定义范围内的资源配置 | 取决于目标范围，不能空参猜测 |
+
+`overridden` 不等于重置整台设备，也不保证只改一个对象；它的边界是**模块所管理的资源集合**。`merged` 对 list 是追加、按键合并还是替换字段，需要看模块实现，不能笼统理解为永不删除。官方说明见 [Network Resource Modules](https://docs.ansible.com/projects/ansible/latest/network/user_guide/network_resource_modules.html)。
+
+### 9.2 模块如何从数据走到 CLI 或 RPC
+
+资源模块一般先获取受管配置，转换为结构化 before，再把输入目标与 before 比较，生成操作并返回 after 或命令结果。设备默认值、字段顺序、缩写与列表键都会影响规范化和差异。
+
+这解释了为什么两次执行仍出现 changed 需要检查模型、默认值和渲染稳定性，而不只是看 YAML 是否一样。反过来，changed=False 也可能只是模块判断无需改配置，不能证明链路 Up、NTP 已同步或路由已安装。
+
+Inventory 的“站点→角色→设备”是组织方式，不是 Ansible 对任何变量都固定使用的优先级算法。实际还涉及 group/host vars、变量插件、任务变量与 extra vars 等来源；发布前应固化最终解析输入。见 [变量优先级](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html#understanding-variable-precedence)。
+
+### 9.3 批次、并发、救援与回滚的边界
+
+`serial` 定义一次处理的主机批次，forks 约束 worker 并发，throttle 可以进一步约束特定任务；它们不是同一开关。停止条件触发时，已经开始的远端命令不一定被撤回。
+
+`block/rescue` 处理部分任务失败，不自动生成逆向变更，也不是跨设备事务。某些不可达和定义错误不进入普通 rescue 路径。配置回滚后还要重新采集与验证，并考虑是否覆盖了其他合法写入。见 [Ansible Blocks](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_blocks.html)。
+
+### 9.4 实验的参考结果与思考解答
+
+前述四台 Leaf 的实验应输出每台的 before、目标、diff、after 和运行验证结果；第二次运行受管配置无差异，不代表可以省略 NTP/Syslog 验证。不兼容版本应在能力或模块校验阶段阻断；若已写入部分配置，结果应标明部分改变而非“未发生变更”。
+
+**replaced 与 overridden 最关键的区别是什么？**
+
+前者通常针对声明对象的资源子集，后者针对模块受管的整个集合，可能影响未声明对象。以具体模块边界为准。
+
+**为什么不能用包含 synchronized 判断同步成功？**
+
+因为 `unsynchronized` 或 `not synchronized` 同样包含该片段，会造成假成功。应解析完整状态或使用严格规范化值。
+
+**check mode 通过，能证明管理连接不会被改断吗？**
+
+不能，它不完整模拟真实运行。管理路径保护、设备事务与发布后验证仍需要独立机制。
+
+**rescue 执行了恢复命令，就等于事务回滚成功吗？**
+
+不等于。恢复可能失败或遗漏部分状态，且需要重新读取配置和业务状态验证。
 
 ## 10. 参考资料 {/* #参考资料 */}
 

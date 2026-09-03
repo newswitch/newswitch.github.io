@@ -36,6 +36,12 @@ tags: [VPC, Route Table, Security Group, NAT Gateway, Load Balancer]
 
 厂商行为存在差异，使用时必须查对应产品文档。但上表提供了一套不依赖厂商名称的分析框架。
 
+### 1.1 不能把 AWS 对象直接当成所有云的规则
+
+本文涉及 Internet Gateway、公网 NAT Gateway、子网 Network ACL 的具体路径，以 AWS 常见 IPv4 模型为例。AWS 子网具有可用区范围，Security Group 常采用有状态允许规则，Network ACL 则按规则序号进行无状态允许／拒绝匹配。
+
+Azure 的 NSG 同样有状态，但支持优先级、允许／拒绝和默认规则，并不等价于 AWS Security Group。子网、可用区、隐式路由与端点也不能逐字映射。跨云分析应先复用“路由、策略、转换、回程”的问题，再查目标产品的处理方式。见 [AWS 安全组](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html) 与 [Azure NSG](https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview)。
+
 ## 2. 最长前缀匹配仍然是第一原则
 
 假设路由表为：
@@ -51,6 +57,8 @@ tags: [VPC, Route Table, Security Group, NAT Gateway, Load Balancer]
 - 访问公网地址使用 NAT Gateway。
 
 不能因为存在默认路由，就认为所有地址都会走默认路由。先用最长前缀选中路由，再检查下一跳和策略。
+
+对于同一前缀，还需遵循平台规定的静态／传播路由优先级；更具体的 blackhole 路由也不能一概理解成会自动回落默认路由。AWS 的具体规则见 [路由优先级](https://docs.aws.amazon.com/vpc/latest/userguide/route-tables-priority.html)。
 
 ## 3. 四条必须能独立分析的路径
 
@@ -144,6 +152,21 @@ Client
 
 因此安全策略、访问日志和审计系统必须使用同一套“源身份”定义。
 
+### 5.1 把 NAT 前后端点写出来
+
+AWS 公网 NAT Gateway 的示例逻辑路径如下，地址均为文档或私网地址：
+
+| 位置 | 源端点 | 目的端点 |
+| --- | --- | --- |
+| 私网实例发出 | `10.0.1.10:51000` | `203.0.113.80:443` |
+| NAT Gateway 内侧转换后 | NAT 私网地址及映射端口 | `203.0.113.80:443` |
+| 经 IGW 的公网侧 | NAT 关联公网地址及对应端口 | `203.0.113.80:443` |
+| 返回并完成逆向转换后 | `203.0.113.80:443` | `10.0.1.10:51000` |
+
+每次过滤需要说明看到哪一层地址。NACL 的回包目标是临时端口，不是服务器 443；有状态规则的自动回包许可也不取消其他独立策略层。公网／私网 NAT 差异见 [AWS NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html)。
+
+七层 LB 通常是两条独立连接，健康检查是第三类流；四层 LB 是否保留客户端 IP则取决于产品、目标类型和模式。Flow Logs 中的 ACCEPT 只能说明记录范围内的处理结果，不能证明应用返回成功。入口日志、后端日志和实际五元组应共同关联。
+
 ## 6. 云网络排障模板
 
 ### 6.1 第一步：固定五元组和时间 {/* #第一步固定五元组和时间 */}
@@ -197,6 +220,36 @@ Internet → Public LB → Web Subnet → App Subnet → DB Subnet
 - Flow Logs、LB 日志和告警指标。
 
 验收时不仅证明“该通的通”，还要证明“不该通的确实被拒绝”。
+
+### 7.1 设计题参考答案与边界
+
+以下是概念方案，不是可直接部署的全量配置。选用双可用区 AWS IPv4 模型：VPC `10.0.0.0/16`，每区分别划分公网入口、Web、App、DB 子网，子网使用不重叠 `/24`；另一可用区分配另一组 `/24`。
+
+- 公网子网具备 IGW 路由；需要公网出站的 Web/App 私网子网经所在可用区 NAT；DB 只保留必要内部路径，不默认开放互联网出口。
+- LB 放行授权公网 HTTPS 来源；Web 业务端口仅允许 LB 安全组；App 仅允许 Web；DB 仅允许 App 指定数据库端口。运维通过独立受控入口，不让租户网直接到管理端口。
+- 健康检查端口和路径必须纳入后端策略；备份、解析、时间同步及私网端点等依赖另列规则，不能为省事全放行。
+- NACL 若用于额外子网隔离，要同时列请求与回包；若不承担细粒度策略，应明确由安全组承担，而不是重复写一套容易冲突的规则。
+- 多可用区部署减少单区依赖，但连接状态和数据库 HA 不由网络自动复制；私有 DNS 视图须与实际入口和解析网络一致。
+
+五条应允许流可取：客户端→LB 443、LB→Web 业务端口、Web→App API、App→DB 数据库端口、App→批准外部服务。五条应拒绝流可取：公网→DB、公网→App、Web→DB、DB→任意公网、未授权租户→管理网。判定依据是每条流的路由与策略矩阵，不能只用一条 ping 代表全部。
+
+### 7.2 思考与解答
+
+**同 VPC 有 local 路由就应互通吗？**
+
+不应。安全组、ACL、主机防火墙与监听仍是独立条件。
+
+**Flow Logs 显示 ACCEPT，能证明数据库查询成功吗？**
+
+不能，它不验证认证、SQL 执行和应用响应，需要目标端与应用层证据。
+
+**两个 Peering 经第三个 VPC 自动传递吗？**
+
+在 AWS VPC Peering 模型下不能把 A↔B、B↔C 推导为 A↔C 中转，需明确支持转接的架构。见 [VPC Peering 边界](https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-basics.html)。
+
+**健康检查通过但客户端失败，优先补什么证据？**
+
+客户端→入口、入口→后端、健康检查→后端三类流的协议、Host/SNI、端口和策略。它们可能根本不是同一连接条件。
 
 ## 8. 参考资料 {/* #参考资料 */}
 

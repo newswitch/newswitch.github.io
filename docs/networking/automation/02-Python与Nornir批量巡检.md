@@ -70,13 +70,24 @@ class InterfaceState:
 检查函数不应依赖 CLI 原文：
 
 ```python
-def interface_is_healthy(state: InterfaceState) -> bool:
-    if not state.admin_up:
-        return True
-    return state.oper_up and state.input_errors == 0
+def interface_check(
+    state: InterfaceState,
+    error_delta: int | None,
+    *,
+    expected_admin_up: bool = True,
+) -> str:
+    if not expected_admin_up:
+        return "SKIPPED"
+    if not state.admin_up or not state.oper_up:
+        return "VIOLATION"
+    if error_delta is None:
+        return "UNKNOWN"
+    return "PASS" if error_delta == 0 else "VIOLATION"
 ```
 
-这样可以用单元测试验证，不需要每次连接真实设备。
+示例使用 Python 3.10+ 类型写法。`expected_admin_up` 来自意图，不是从设备当前状态复制：只有意图明确允许该接口不工作，才跳过“在用接口健康”这一项；生产上联意外 Admin Down 应报告异常，不能伪装成维护豁免。
+
+这里假设 `error_delta` 已由同一接口、同一计数周期的两个样本正确计算；缺少前样本、计数重置或接口身份改变时传入 `None`。这只是单项检查，意图与配置一致性还应另行检查。可用固定样本单独测试，不必每次连接设备。
 
 ## 3. Nornir 的角色
 
@@ -144,6 +155,14 @@ results = targets.run(task=collect_bgp)
 
 ## 5. 并发不是越大越好
 
+### 5.1 Runner 并行的是主机任务，不是所有语句
+
+典型 ThreadedRunner 可以并行处理多个 host；单个 host 的组合任务中，普通 `task.run` 子任务按调用顺序执行。线程数不会自动把同一设备里的每条 CLI 都同时运行。
+
+返回结构要沿层级读取：`AggregatedResult[主机名]` 是该主机的 `MultiResult`，其中保存父任务及子任务 `Result`；既要看聚合 failed，也要保留实际异常的子任务、exception 和原始输出。只打印最外层 result 字符串会丢失失败位置。见 [Nornir 结果模型](https://nornir.readthedocs.io/en/latest/tutorial/task_results.html)。
+
+### 5.2 并发上限不等于每秒请求上限
+
 并发上限同时受以下约束：
 
 - 自动化节点 CPU、内存和文件描述符；
@@ -155,6 +174,10 @@ results = targets.run(task=collect_bgp)
 
 从小批量测基线，逐步增加。对控制平面敏感命令设置更低并发，避免“巡检本身导致设备 CPU 升高”。
 
+若平均一台采集 2 秒、20 个 worker 且没有其他瓶颈，稳态吞吐约为 10 台/秒，不是 20 台/秒。若每台再发 5 条命令，设备请求量还需按任务内容计算。连接池、AAA 限流和大表解析都可能改变这个估算。
+
+连接超时、单命令读取超时和整台任务截止时间分别覆盖不同等待阶段。外层等待超时也不一定终止底层阻塞线程；应让连接插件设置自己的有界超时，并在后续步骤检查截止时间。
+
 ## 6. 正确处理异常
 
 结果要区分：
@@ -164,10 +187,15 @@ PASS          检查执行并符合规则
 VIOLATION     检查执行成功，但发现异常
 COLLECT_ERROR 无法采集
 PARSE_ERROR   已采集但无法结构化
+UNKNOWN       数据不完整或计数不连续，无法判定该项
 SKIPPED       维护状态或不适用
 ```
 
 `COLLECT_ERROR` 不能被统计为健康，也不能因为整批有一台失败就丢掉其他结果。
+
+Nornir 默认会记录失败主机，后续顶层任务可能跳过它们。`on_failed`、`recover_host` 或重置失败集合会改变后续资格，但不证明设备真的恢复。采集 BGP 失败后，希望继续独立采集 NTP，就要明确异常隔离策略；不能把跳过的 NTP 当成成功。见 [失败任务处理](https://nornir.readthedocs.io/en/latest/tutorial/failed_tasks.html)。
+
+解析成功也不等于事实完整：空列表可能表示确实没有邻居，也可能是模板未覆盖当前版本。把模板未命中的原始字符串当成空结果，会将 PARSE_ERROR 错报为“邻居数量为零”。输出类型、必需字段、解析器版本和设备型号应一同校验。
 
 示意汇总：
 
@@ -177,6 +205,7 @@ summary = {
     "violation": [],
     "collect_error": [],
     "parse_error": [],
+    "unknown": [],
     "skipped": [],
 }
 ```
@@ -218,6 +247,19 @@ summary = {
 
 错误输出也要作为 Fixture，否则异常路径永远没有被测试。
 
+### 8.1 巡检项目参考判定
+
+| 输入 | 合理输出 |
+| --- | --- |
+| 20 台中 3 台连接超时 | 17 台保留结果，3 台 COLLECT_ERROR，不能报全网健康 |
+| 预期 4 个邻居，实际获取完整列表只有 3 个 | VIOLATION，并保存缺失邻居身份 |
+| CLI 正常返回但解析模板未命中 | PARSE_ERROR，不把文本长度当邻居数 |
+| 历史错误为 100，本周期仍为 100 | 增量为 0，不因累计值非零直接判当前劣化 |
+| 计数从 100 变 5，同时设备重启 | 标记不连续，不计算负速率 |
+| 接口符合维护豁免 | SKIPPED，注明原因，不混入 PASS 分母 |
+
+报告至少同时给出检查覆盖率和已完成样本中的异常率。17 个已采集全正常不等于 20 台全部正常。计数连续性还可参考[网络遥测](./07-网络可观测性与Telemetry.md)。
+
 ## 9. 掌握标准
 
 你应能写出一个巡检器，满足：
@@ -229,6 +271,24 @@ summary = {
 - 密码不出现在代码、Inventory 和日志；
 - 核心检查有单元测试；
 - 报告能让值班人员直接找到证据。
+
+### 9.1 思考与解答
+
+**changed=False 就是巡检成功吗？**
+
+不是，它只描述是否报告变更，仍须看 failed、exception、数据有效性和检查结果。
+
+**为什么第二次顶层任务没有某台设备的结果？**
+
+它可能已被记入 failed hosts、被过滤或不适用；应记录跳过原因，而不是假定健康。
+
+**20 个 worker 就是每秒 20 台吗？**
+
+不是，吞吐还取决于每台耗时和共享资源限制。并发和速率是不同量。
+
+**空邻居列表应当 PASS 还是 VIOLATION？**
+
+先确认采集与解析完整，再与预期比较。若设备本来不应有邻居，可不适用；预期有邻居才是违规，解析失败则是另一种错误。
 
 ## 10. 参考资料 {/* #参考资料 */}
 

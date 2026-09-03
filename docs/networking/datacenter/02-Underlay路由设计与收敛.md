@@ -14,7 +14,7 @@ tags: [Underlay, eBGP, OSPF, ECMP, BFD, FRRouting]
 
 > 所有 VTEP Loopback 之间具有稳定、可收敛、支持 ECMP 的 IP 可达性。
 
-Underlay 不应理解租户 MAC、VNI 或业务安全策略。它是 Overlay 的传输网络。
+逻辑上的 Underlay 转发主要依据外层 IP，不依赖租户 MAC 或 VNI 才能选路。设备可以同时承担租户与承载角色，也可能解析内层字段辅助散列；这不改变两个路由上下文应明确分离的原则。
 
 ## 2. 地址对象
 
@@ -129,7 +129,7 @@ Underlay 通常只需要发布：
 
 ```text
 入方向：只接受对端角色允许的前缀长度和数量
-出方向：只发布本机 Loopback/明确汇总
+出方向：Leaf 发布本机 Loopback/明确汇总；Spine 按拓扑转发允许的其他 Leaf 前缀
 最大前缀：异常时告警或关闭邻居
 下一跳：验证递归和接口状态
 ```
@@ -233,6 +233,52 @@ VTEP 小 Ping 可能成功，Overlay 大包失败。用 DF 大包、接口 Drop 
 ### 11.4 错误路由泄漏 {/* #错误路由泄漏 */}
 
 向 Underlay 注入大量租户前缀，验证 Prefix List/Maximum Prefix 是否阻断。
+
+### 11.5 一条 VTEP 路由怎样逐层形成
+
+设 Leaf1 的 VTEP 为 `10.255.1.1/32`，Leaf2 为 `10.255.2.1/32`，两者通过两个 Spine：
+
+1. Leaf2 将自己的 VTEP 前缀发布给两个 Spine。
+2. Spine 经入口过滤接受，选择候选，并向 Leaf1 通告；不能把“仅发布本机 Loopback”的 Leaf 策略照搬到 Spine，否则失去中转传播。
+3. Leaf1 为远端 VTEP 建立一个含可用 Spine 下一跳的 ECMP 组。
+4. 发送 VXLAN 包时，外层目的为远端 VTEP；实际链路交付解析的是本地 Spine 邻居。
+5. 远端 Leaf 解封装后，才在租户上下文继续查 MAC 或 IP。
+
+因此远端 VTEP 地址、BGP 通告下一跳和当前以太网邻居是不同对象。到远端 Loopback 的小包成功，只验证了承载的一部分，不验证 VNI/租户导入，也不验证封装后的尺寸。
+
+### 11.6 Unnumbered 没有消除地址与邻居
+
+接口式 eBGP 邻接可使用 IPv6 链路本地地址，减少逐条分配 IPv4 `/31` 的工作。但对端仍由地址与接口上下文标识，并非完全“不用 IP”。
+
+若要经 IPv6 下一跳承载 IPv4 路由，还涉及扩展下一跳能力、邻居发现与平台转发支持。BGP 会话 Established 不等于所需 IPv4 地址族及这种下一跳编码已协商。有关能力见 [RFC 5549](https://www.rfc-editor.org/rfc/rfc5549.html)、[RFC 8950](https://www.rfc-editor.org/rfc/rfc8950.html) 和 [FRR BGP](https://docs.frrouting.org/en/latest/bgp.html)。
+
+Loopback 上建立多跳 BGP 又要求先有抵达对端 Loopback 的承载路径，不能用尚未建立的会话来提供它自身唯一的启动路径。直连邻接与 Loopback 多跳邻接的依赖不同。
+
+### 11.7 检测到了，不代表全部硬件同时更新
+
+链路 Down/BFD、路由撤销、RIB 最佳候选和 ASIC 下一跳更新是不同事件。即使控制面很快报告撤销，部分包仍可能在旧成员上损失；重哈希还可能让流转向拥塞的幸存路径。
+
+一般路由拓扑中，各节点 FIB 更新顺序不同可形成瞬态微环路；简单 Clos 的常见单链路故障可能主要体现为旧成员黑洞与容量下降，不应声称每次 ECMP 更新都必然微环路。
+
+GR 保留陈旧状态的前提是数据面仍可用。BFD 已发现不可转发时，GR 是否仍保留路由取决于双方能力和实现策略，不能只看“GR 已开启”。此处应联合检查会话、stale 标记、真实 FIB 和数据面，机制见 [BGP Graceful Restart](https://www.rfc-editor.org/rfc/rfc4724.html)。
+
+### 11.8 思考与解答
+
+**Spine 也只发布自己的 Loopback，Leaf 之间还能互通吗？**
+
+若没有其他有效传播路径就不能。Spine 必须按拓扑传播允许的远端 Leaf 前缀，出口过滤应按角色定义。
+
+**Unnumbered BGP Established，就能确认 IPv4 VTEP 可达吗？**
+
+不能。还要看地址族、扩展下一跳能力、路由安装和数据面支持。
+
+**BFD Down 后业务仍丢包，是 BFD 没作用吗？**
+
+未必。BFD 只完成检测，后面还有撤销、FIB 更新、重哈希和幸存链路容量等阶段。
+
+**开启 GR 为什么可能延长中断？**
+
+数据面也失效时，保留的 stale 路由仍可能吸引流量进入黑洞；它只适合符合其前提的重启情境。
 
 ## 12. 参考资料
 

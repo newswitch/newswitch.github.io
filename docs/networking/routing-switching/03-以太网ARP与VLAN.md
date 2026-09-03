@@ -25,7 +25,15 @@ VLAN + 目的 MAC → 出端口
 5. 广播：在同一 VLAN 内泛洪。
 6. 目的 MAC 位于入端口：过滤，不再原路发回。
 
-因此，MAC 表是通过数据面流量学习的，会老化；它不是路由协议发布的全局目录。
+这是普通动态学习的模型。FDB 还可以包含静态条目与 EVPN 等控制面安装的条目，不能说它只能从数据面建立。端口状态、VLAN 成员资格和安全策略还会限制学习与转发。
+
+### 1.1 源 MAC 学位置，目的 MAC 决定出口
+
+VLAN 10 的 A 在 p1、B 在 p2，FDB 初始为空。A 发给 B 时，交换机学到 `VLAN10 + A → p1`，并在允许转发该 VLAN 的其他端口泛洪。B 回复时学到 `VLAN10 + B → p2`，再按 A 的已知位置单播发回。
+
+B 长时间不发送导致动态条目老化后，发给它的帧可重新成为未知单播，不代表 B 的 IP 被删除。ARP 表与 FDB 的生命周期相互独立。
+
+泛洪受 VLAN、端口状态和 flood 属性约束，不是向全部物理端口复制。同端口过滤也有例外，如 Linux bridge hairpin 模式允许特定场景回送。见 [Linux Bridge](https://docs.kernel.org/networking/bridge.html)。
 
 ## 2. 以太网帧
 
@@ -75,6 +83,20 @@ ip neigh show
 连续 `FAILED` 优先检查 VLAN、端口状态、掩码、对端地址是否存在，而不是手工永久
 写静态邻居表掩盖问题。
 
+### 3.1 STALE 不等于不能发包
+
+Linux 邻居状态可以沿下面的依赖理解：
+
+```text
+无解析结果 → INCOMPLETE → 有效回应 → REACHABLE
+确认变旧 → STALE → 再次使用 → DELAY → 必要时 PROBE
+获得确认 → REACHABLE；探测持续失败 → FAILED
+```
+
+STALE 通常仍保存可用 MAC，可以先发送，再确认可达性；INCOMPLETE 则尚无完整链路层地址，等待报文只能有限排队。不能见到 STALE 就清表。
+
+ARP 询问当前链路的 IPv4 邻居，不逐跳搜索远端服务器。代理 ARP 可以代答，但后续交付仍依赖代答设备的路由与策略。见 [RFC 826](https://www.rfc-editor.org/rfc/rfc826) 与 [ip-neighbour](https://man7.org/linux/man-pages/man8/ip-neighbour.8.html)。
+
 ## 4. VLAN 是广播域隔离
 
 VLAN 将一套物理交换网络拆成多个逻辑广播域。同一个 MAC 可以在不同 VLAN 中出现，
@@ -93,6 +115,20 @@ VLAN 将一套物理交换网络拆成多个逻辑广播域。同一个 MAC 可�
 - Native/PVID 处理因厂商而异，错配会导致泄漏或单向通信。
 
 VLAN 只提供二层隔离。不同 VLAN 互通仍需要三层网关和路由策略。
+
+### 4.3 VLAN 有入站分类、转发查询和出站交付
+
+| 阶段 | 判断对象 | 示例 |
+| --- | --- | --- |
+| 入站 | 帧标签或端口 PVID | 无标签帧在 p1 归入 VLAN 10 |
+| 查询 | VLAN 与目的 MAC | 查 VLAN 10 的 FDB 上下文，不查 VLAN 20 的同名 MAC |
+| 出站 | 成员资格、转发状态、标签规则 | Trunk 带 VID 10，终端口按规则去标签 |
+
+PVID 决定相应入站帧属于哪个 VLAN，`untagged` 决定相应 VLAN 从端口发出时的标签形式，在 Linux bridge 中是两个属性。
+
+Trunk 一端把无标签帧归入 VLAN 10，另一端归入 VLAN 20，即使双方都 Up，也可能把同一帧解释到不同广播域。只检查 allowed VLAN 列表不足以排除 Native/PVID 错配。
+
+普通 802.1Q 标签的 VID 占 12 位；VID 0 用于优先级标记而非普通独立 VLAN，4095 保留，通常配置使用 1～4094。PCP 标记还需 QoS 策略解释，不自带带宽保证。
 
 ## 5. Linux Bridge 心智模型
 
@@ -213,6 +249,24 @@ BUM 代表 Broadcast、Unknown Unicast、Multicast。规模扩大后，BUM 泛�
 | 单向通信 | Native VLAN 错配、ACL、非对称链路、MAC 学习错误 |
 | 改线后短暂黑洞 | 旧 FDB、ARP 缓存、环路保护或收敛延迟 |
 | 广播异常升高 | 二层环路、未知单播、故障网卡或地址扫描 |
+
+### 9.1 思考与解答 {/* #思考与解答 */}
+
+**两个主机同属 /24 但位于不同 VLAN，为什么 ARP 不通？**
+
+地址前缀不打通二层隔离，广播留在各自 VLAN。普通三层路由器不替它把 ARP 广播延伸到另一 VLAN。
+
+**ARP 正确但 FDB 指向旧端口，会怎样？**
+
+主机可以构造正确目的 MAC，交换网络仍可能交付到错误位置。必须分别验证 IP→MAC 与 VLAN/MAC→端口。
+
+**A 发给 B 的帧能让交换机直接学到 B 的位置吗？**
+
+普通学习依据源 MAC，因此只直接学到 A。B 的位置要由 B 发包、控制面安装或其他明确机制获得。
+
+**实验把 p20 改到 VLAN 10 后，还要改 IP 吗？**
+
+给定两主机同一 `/24` 且无额外策略时不需要。它恢复了 ARP 广播域一致性；仍需成功完成邻居解析。
 
 ## 10. 参考资料
 
