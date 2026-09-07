@@ -126,7 +126,7 @@ NUMA Node 1
 
 1. **CPU 访问本地内存**：CPU Core → LLC / 片上互联 → IMC → DDR 通道 → 本地 DIMM；跨 Socket 访问另一侧内存时还要经过 UPI / xGMI。
 2. **CPU 驱动 GPU**：CPU 内的 PCIe Root Complex → Root Port / PCIe Switch → GPU Endpoint。PCIe 既承载控制访问，也承载 DMA 数据传输。
-3. **GPU 间通信**：有 NVLink 时可走 GPU 间高速链路；没有合适的直连路径时，可能经过 PCIe Switch、Root Complex，甚至跨 Socket 互联。是否允许 P2P 还需查询能力。
+3. **GPU 间通信**：同组 GPU 有 NVLink 时可直接走 NVLink；同一 PCIe 域也可能经 PCIe Switch 完成 P2P。跨 Socket 路径可沿图追踪为 GPU → PCIe Switch → Root Port / PCIe Root Complex → 片上互联 → UPI / xGMI → 对端片上互联 → PCIe Root Complex → PCIe Switch → GPU。这里经过的是 CPU 封装内的 I/O 控制器与片上互联，并不表示数据交给 CPU Core 复制；若硬件或运行时不支持直接 P2P，才可能改由主机内存中转。是否允许 P2P 仍需查询能力并实测。
 4. **GPU 与网卡 / NVMe**：NIC、GPU、NVMe 都是 PCIe Endpoint。GPUDirect RDMA 希望 NIC 与 GPU 具有较近的 PCIe / NUMA 路径，但“同 NUMA”不等于一定经过同一个 PCIe Switch。
 5. **主机管理链路**：BMC 通过 eSPI、LPC、PCIe、I²C / SMBus、PMBus 和 GPIO 等旁带接口完成带外管理、传感器读取、风扇与电源控制；这些链路通常不承载模型推理数据。
 
