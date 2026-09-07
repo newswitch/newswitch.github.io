@@ -1,0 +1,303 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1320" role="img" aria-labelledby="title desc">
+  <title id="title">双路 GPU 服务器主板逻辑拓扑与通信方式</title>
+  <desc id="desc">图中展示两个 NUMA 节点中的 CPU 核心、缓存、内存控制器、PCIe 根复合体、DIMM、GPU、NVLink、PCIe Switch、网卡和 NVMe，以及 PCH、BIOS、TPM、USB、SATA、BMC、CPLD、传感器、管理网口、供电和时钟复位关系。</desc>
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#dbe5ef" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f2742" flood-opacity=".12"/>
+    </filter>
+    <marker id="arrow-pcie" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0 0L9 4.5 0 9z" fill="#2563a7"/>
+    </marker>
+    <marker id="arrow-upi" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto-start-reverse">
+      <path d="M0 0L9 4.5 0 9z" fill="#7252b3"/>
+    </marker>
+    <marker id="arrow-mgmt" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0 0L9 4.5 0 9z" fill="#b47415"/>
+    </marker>
+    <style>
+      text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#152b43}
+      .header{font-size:31px;font-weight:700;fill:#fff}
+      .subtitle{font-size:17px;fill:#d8e7f5}
+      .zone-title{font-size:23px;font-weight:700}
+      .box-title{font-size:20px;font-weight:700}
+      .box-sub{font-size:15px;fill:#48647e}
+      .tiny{font-size:13px;fill:#55718b}
+      .chip-label{font-size:15px;font-weight:700;text-anchor:middle}
+      .wire-label{font-size:14px;font-weight:700;text-anchor:middle}
+      .legend{font-size:14px;fill:#314e69}
+      .zone{stroke-width:2;rx:18}
+      .box{stroke-width:2;rx:12;filter:url(#shadow)}
+      .inner{stroke-width:1.5;rx:8}
+      .pcie{fill:none;stroke:#2563a7;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+      .ddr{fill:none;stroke:#27835c;stroke-width:5;stroke-linecap:round}
+      .nvlink{fill:none;stroke:#c43e55;stroke-width:7;stroke-linecap:round}
+      .upi{fill:none;stroke:#7252b3;stroke-width:6;stroke-linecap:round}
+      .lowio{fill:none;stroke:#247f87;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .mgmt{fill:none;stroke:#b47415;stroke-width:3;stroke-dasharray:9 7;stroke-linecap:round;stroke-linejoin:round}
+      .power{fill:none;stroke:#66798d;stroke-width:3;stroke-dasharray:3 7;stroke-linecap:round}
+      .neutral{fill:none;stroke:#71879d;stroke-width:2.5;stroke-linecap:round}
+    </style>
+  </defs>
+
+  <rect width="1600" height="1320" fill="#f8fbfd"/>
+  <rect y="96" width="1600" height="1224" fill="url(#grid)" opacity=".52"/>
+  <rect width="1600" height="96" fill="#102942"/>
+  <text class="header" x="42" y="43">双路 GPU 服务器主板：组件、总线与管理链路</text>
+  <text class="subtitle" x="42" y="74">常见逻辑结构示例 · 连线表示通信关系，不等同于主板上的实际物理走线</text>
+
+  <g aria-label="通信类型图例">
+    <line class="ddr" x1="48" y1="124" x2="102" y2="124"/>
+    <text class="legend" x="112" y="129">DDR：CPU ↔ DIMM</text>
+    <line class="pcie" x1="290" y1="124" x2="344" y2="124"/>
+    <text class="legend" x="354" y="129">PCIe：CPU ↔ 高速设备</text>
+    <line class="nvlink" x1="590" y1="124" x2="644" y2="124"/>
+    <text class="legend" x="654" y="129">NVLink：GPU ↔ GPU</text>
+    <line class="upi" x1="865" y1="124" x2="919" y2="124"/>
+    <text class="legend" x="929" y="129">UPI/xGMI：Socket ↔ Socket</text>
+    <line class="lowio" x1="1215" y1="124" x2="1269" y2="124"/>
+    <text class="legend" x="1279" y="129">PCH 低速 I/O</text>
+    <line class="mgmt" x1="1430" y1="124" x2="1484" y2="124"/>
+    <text class="legend" x="1494" y="129">管理/旁带</text>
+  </g>
+
+  <!-- NUMA zones -->
+  <rect class="zone" x="30" y="158" width="750" height="606" fill="#edf6fd" stroke="#4f83b3"/>
+  <rect class="zone" x="820" y="158" width="750" height="606" fill="#f1effb" stroke="#7865aa"/>
+  <text class="zone-title" x="56" y="190">NUMA Node 0</text>
+  <text class="tiny" x="214" y="190">本地 CPU、内存与 I/O 域</text>
+  <text class="zone-title" x="846" y="190">NUMA Node 1</text>
+  <text class="tiny" x="1004" y="190">本地 CPU、内存与 I/O 域</text>
+
+  <!-- Connections behind components: node 0 -->
+  <path class="ddr" d="M248 293H574"/>
+  <text class="wire-label" x="407" y="282" fill="#27835c">DDR4 / DDR5 通道</text>
+  <path class="pcie" d="M681 343V432H500V463"/>
+  <text class="wire-label" x="589" y="422" fill="#2563a7">PCIe x16/x32 上行</text>
+  <path class="pcie" d="M681 343H716V445H151V468"/>
+  <text class="wire-label" x="302" y="438" fill="#2563a7">PCIe x16 · NIC 直连 Root Port</text>
+  <path class="pcie" d="M700 343H748V733H151V704"/>
+  <text class="wire-label" x="632" y="727" fill="#2563a7">PCIe x4 · 本地 NVMe</text>
+  <path class="pcie" d="M500 543V574H385V609"/>
+  <path class="pcie" d="M500 574H645V609"/>
+  <path class="nvlink" d="M487 663H543"/>
+  <text class="wire-label" x="515" y="650" fill="#c43e55">NVLink</text>
+
+  <!-- Connections behind components: node 1 -->
+  <path class="ddr" d="M1026 293H1352"/>
+  <text class="wire-label" x="1190" y="282" fill="#27835c">DDR4 / DDR5 通道</text>
+  <path class="pcie" d="M898 343V432H1095V463"/>
+  <text class="wire-label" x="996" y="422" fill="#2563a7">PCIe x16/x32 上行</text>
+  <path class="pcie" d="M898 343H862V445H1449V468"/>
+  <text class="wire-label" x="1298" y="438" fill="#2563a7">PCIe x16 · NIC 直连 Root Port</text>
+  <path class="pcie" d="M878 343H834V733H1449V704"/>
+  <text class="wire-label" x="967" y="727" fill="#2563a7">PCIe x4 · 本地 NVMe</text>
+  <path class="pcie" d="M1095 543V574H945V609"/>
+  <path class="pcie" d="M1095 574H1205V609"/>
+  <path class="nvlink" d="M1047 663H1103"/>
+  <text class="wire-label" x="1075" y="650" fill="#c43e55">NVLink</text>
+
+  <!-- Cross-socket link -->
+  <path class="upi" d="M600 383H1010" marker-start="url(#arrow-upi)" marker-end="url(#arrow-upi)"/>
+  <rect x="735" y="358" width="130" height="32" rx="8" fill="#f8fbfd" stroke="#7252b3" stroke-width="1.5"/>
+  <text class="wire-label" x="800" y="379" fill="#7252b3">UPI / xGMI</text>
+
+  <!-- Node 0 components -->
+  <rect class="box" x="54" y="220" width="194" height="145" fill="#e5f3e9" stroke="#27835c"/>
+  <text class="box-title" x="151" y="252" text-anchor="middle">DIMM 内存</text>
+  <rect class="inner" x="75" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <rect class="inner" x="116" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <rect class="inner" x="157" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <rect class="inner" x="198" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <text class="tiny" x="151" y="355" text-anchor="middle">Memory 0 · 本地页</text>
+
+  <rect class="box" x="284" y="205" width="452" height="222" fill="#e6eff9" stroke="#366fa5"/>
+  <text class="box-title" x="510" y="238" text-anchor="middle">CPU Socket 0</text>
+  <rect class="inner" x="304" y="259" width="100" height="83" fill="#d3e5f5" stroke="#5585b1"/>
+  <text class="chip-label" x="354" y="288">CPU Core</text><text class="tiny" x="354" y="315" text-anchor="middle">Core / SMT</text>
+  <rect class="inner" x="414" y="259" width="70" height="83" fill="#d3e5f5" stroke="#5585b1"/>
+  <text class="chip-label" x="449" y="288">LLC</text><text class="tiny" x="449" y="315" text-anchor="middle">L3 Cache</text>
+  <rect class="inner" x="494" y="259" width="70" height="83" fill="#d3e5f5" stroke="#5585b1"/>
+  <text class="chip-label" x="529" y="288">Mesh</text><text class="tiny" x="529" y="315" text-anchor="middle">片上互联</text>
+  <rect class="inner" x="574" y="259" width="60" height="83" fill="#d9efe6" stroke="#27835c"/>
+  <text class="chip-label" x="604" y="287">IMC</text><text class="tiny" x="604" y="315" text-anchor="middle">内存控制器</text>
+  <rect class="inner" x="644" y="259" width="72" height="83" fill="#dae8f7" stroke="#2563a7"/>
+  <text class="chip-label" x="680" y="286">PCIe</text><text class="tiny" x="680" y="308" text-anchor="middle">Root</text><text class="tiny" x="680" y="327" text-anchor="middle">Complex</text>
+  <rect class="inner" x="500" y="358" width="100" height="48" fill="#e7def6" stroke="#7252b3"/>
+  <text class="chip-label" x="550" y="387">UPI Ctrl</text>
+  <path class="neutral" d="M404 300H414M484 300H494M564 300H574M634 300H644M529 342V358"/>
+
+  <rect class="box" x="60" y="468" width="182" height="102" fill="#e3f1f3" stroke="#247f87"/>
+  <text class="box-title" x="151" y="501" text-anchor="middle">NIC 0 / DPU</text>
+  <text class="box-sub" x="151" y="528" text-anchor="middle">Ethernet / RoCE / IB</text>
+  <text class="tiny" x="151" y="552" text-anchor="middle">RDMA Engine · DMA</text>
+
+  <rect class="box" x="60" y="609" width="182" height="96" fill="#fff2d8" stroke="#b77a20"/>
+  <text class="box-title" x="151" y="644" text-anchor="middle">NVMe 0</text>
+  <text class="box-sub" x="151" y="672" text-anchor="middle">PCIe Endpoint · DMA</text>
+
+  <rect class="box" x="395" y="463" width="210" height="80" fill="#fff1d1" stroke="#b77a20"/>
+  <text class="box-title" x="500" y="496" text-anchor="middle">PCIe Switch 0（可选）</text>
+  <text class="box-sub" x="500" y="523" text-anchor="middle">1 个上行 · 多个下行</text>
+
+  <rect class="box" x="284" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
+  <text class="box-title" x="385" y="642" text-anchor="middle">GPU 0</text>
+  <text class="box-sub" x="385" y="669" text-anchor="middle">GPU Die · HBM</text>
+  <text class="tiny" x="385" y="695" text-anchor="middle">PCIe Endpoint / DMA</text>
+  <rect class="box" x="543" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
+  <text class="box-title" x="645" y="642" text-anchor="middle">GPU 1</text>
+  <text class="box-sub" x="645" y="669" text-anchor="middle">GPU Die · HBM</text>
+  <text class="tiny" x="645" y="695" text-anchor="middle">PCIe Endpoint / DMA</text>
+
+  <!-- Node 1 components -->
+  <rect class="box" x="1352" y="220" width="194" height="145" fill="#e5f3e9" stroke="#27835c"/>
+  <text class="box-title" x="1449" y="252" text-anchor="middle">DIMM 内存</text>
+  <rect class="inner" x="1370" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <rect class="inner" x="1411" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <rect class="inner" x="1452" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <rect class="inner" x="1493" y="270" width="32" height="68" fill="#cfe7d7" stroke="#27835c"/>
+  <text class="tiny" x="1449" y="355" text-anchor="middle">Memory 1 · 本地页</text>
+
+  <rect class="box" x="864" y="205" width="452" height="222" fill="#ece8f8" stroke="#7252b3"/>
+  <text class="box-title" x="1090" y="238" text-anchor="middle">CPU Socket 1</text>
+  <rect class="inner" x="884" y="259" width="72" height="83" fill="#dae8f7" stroke="#2563a7"/>
+  <text class="chip-label" x="920" y="286">PCIe</text><text class="tiny" x="920" y="308" text-anchor="middle">Root</text><text class="tiny" x="920" y="327" text-anchor="middle">Complex</text>
+  <rect class="inner" x="966" y="259" width="60" height="83" fill="#d9efe6" stroke="#27835c"/>
+  <text class="chip-label" x="996" y="287">IMC</text><text class="tiny" x="996" y="315" text-anchor="middle">内存控制器</text>
+  <rect class="inner" x="1036" y="259" width="70" height="83" fill="#ded7ef" stroke="#7252b3"/>
+  <text class="chip-label" x="1071" y="288">Mesh</text><text class="tiny" x="1071" y="315" text-anchor="middle">片上互联</text>
+  <rect class="inner" x="1116" y="259" width="70" height="83" fill="#ded7ef" stroke="#7252b3"/>
+  <text class="chip-label" x="1151" y="288">LLC</text><text class="tiny" x="1151" y="315" text-anchor="middle">L3 Cache</text>
+  <rect class="inner" x="1196" y="259" width="100" height="83" fill="#ded7ef" stroke="#7252b3"/>
+  <text class="chip-label" x="1246" y="288">CPU Core</text><text class="tiny" x="1246" y="315" text-anchor="middle">Core / SMT</text>
+  <rect class="inner" x="1010" y="358" width="100" height="48" fill="#e7def6" stroke="#7252b3"/>
+  <text class="chip-label" x="1060" y="387">UPI Ctrl</text>
+  <path class="neutral" d="M956 300H966M1026 300H1036M1106 300H1116M1186 300H1196M1071 342V358"/>
+
+  <rect class="box" x="1358" y="468" width="182" height="102" fill="#e3f1f3" stroke="#247f87"/>
+  <text class="box-title" x="1449" y="501" text-anchor="middle">NIC 1 / DPU</text>
+  <text class="box-sub" x="1449" y="528" text-anchor="middle">Ethernet / RoCE / IB</text>
+  <text class="tiny" x="1449" y="552" text-anchor="middle">RDMA Engine · DMA</text>
+
+  <rect class="box" x="1358" y="609" width="182" height="96" fill="#fff2d8" stroke="#b77a20"/>
+  <text class="box-title" x="1449" y="644" text-anchor="middle">NVMe 1</text>
+  <text class="box-sub" x="1449" y="672" text-anchor="middle">PCIe Endpoint · DMA</text>
+
+  <rect class="box" x="990" y="463" width="210" height="80" fill="#fff1d1" stroke="#b77a20"/>
+  <text class="box-title" x="1095" y="496" text-anchor="middle">PCIe Switch 1（可选）</text>
+  <text class="box-sub" x="1095" y="523" text-anchor="middle">1 个上行 · 多个下行</text>
+
+  <rect class="box" x="844" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
+  <text class="box-title" x="945" y="642" text-anchor="middle">GPU 2</text>
+  <text class="box-sub" x="945" y="669" text-anchor="middle">GPU Die · HBM</text>
+  <text class="tiny" x="945" y="695" text-anchor="middle">PCIe Endpoint / DMA</text>
+  <rect class="box" x="1103" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
+  <text class="box-title" x="1205" y="642" text-anchor="middle">GPU 3</text>
+  <text class="box-sub" x="1205" y="669" text-anchor="middle">GPU Die · HBM</text>
+  <text class="tiny" x="1205" y="695" text-anchor="middle">PCIe Endpoint / DMA</text>
+
+  <!-- PCH and local IO -->
+  <rect class="zone" x="30" y="785" width="1540" height="205" fill="#eef7f6" stroke="#3e8589"/>
+  <text class="zone-title" x="56" y="816">平台 I/O 与启动链路</text>
+  <text class="tiny" x="274" y="816">PCH 连接方式依 CPU 平台和主板设计而异</text>
+  <path class="pcie" d="M680 343H774V775H653V835"/>
+  <text class="wire-label" x="710" y="774" fill="#2563a7">DMI / PCIe</text>
+
+  <path class="lowio" d="M577 870H490"/>
+  <path class="lowio" d="M577 945H490"/>
+  <path class="lowio" d="M577 850H530V828H153V838"/>
+  <path class="lowio" d="M577 960H530V980H153V974"/>
+  <path class="lowio" d="M1023 870H1110"/>
+  <path class="lowio" d="M1023 945H1110"/>
+  <path class="lowio" d="M1023 850H1068V828H1455V838"/>
+
+  <rect class="box" x="56" y="838" width="194" height="70" fill="#fff2d8" stroke="#b77a20"/>
+  <text class="box-title" x="153" y="868" text-anchor="middle">BIOS / UEFI Flash</text>
+  <text class="box-sub" x="153" y="893" text-anchor="middle">SPI</text>
+  <rect class="box" x="56" y="916" width="194" height="58" fill="#f0eafa" stroke="#7252b3"/>
+  <text class="box-title" x="153" y="943" text-anchor="middle">TPM 2.0</text>
+  <text class="box-sub" x="153" y="964" text-anchor="middle">SPI / I²C</text>
+
+  <rect class="box" x="280" y="838" width="210" height="70" fill="#e7f4f5" stroke="#247f87"/>
+  <text class="box-title" x="385" y="868" text-anchor="middle">SATA SSD / HDD</text>
+  <text class="box-sub" x="385" y="893" text-anchor="middle">SATA · AHCI</text>
+  <rect class="box" x="280" y="916" width="210" height="58" fill="#e7f4f5" stroke="#247f87"/>
+  <text class="box-title" x="385" y="943" text-anchor="middle">USB 设备 / KVM</text>
+  <text class="box-sub" x="385" y="964" text-anchor="middle">USB 2.0 / 3.x</text>
+
+  <rect class="box" x="577" y="835" width="446" height="135" fill="#dff1ef" stroke="#247f87"/>
+  <text class="box-title" x="800" y="868" text-anchor="middle">PCH（Platform Controller Hub）</text>
+  <rect class="inner" x="606" y="891" width="82" height="50" fill="#cce8e7" stroke="#247f87"/>
+  <text class="chip-label" x="647" y="922">SATA</text>
+  <rect class="inner" x="700" y="891" width="82" height="50" fill="#cce8e7" stroke="#247f87"/>
+  <text class="chip-label" x="741" y="922">USB</text>
+  <rect class="inner" x="794" y="891" width="82" height="50" fill="#cce8e7" stroke="#247f87"/>
+  <text class="chip-label" x="835" y="922">SPI</text>
+  <rect class="inner" x="888" y="891" width="106" height="50" fill="#cce8e7" stroke="#247f87"/>
+  <text class="chip-label" x="941" y="913">eSPI/LPC</text><text class="tiny" x="941" y="934" text-anchor="middle">低速控制</text>
+
+  <rect class="box" x="1110" y="838" width="238" height="70" fill="#e7f4f5" stroke="#247f87"/>
+  <text class="box-title" x="1229" y="868" text-anchor="middle">Super I/O</text>
+  <text class="box-sub" x="1229" y="893" text-anchor="middle">eSPI / LPC · UART / GPIO</text>
+  <rect class="box" x="1110" y="916" width="238" height="58" fill="#e7f4f5" stroke="#247f87"/>
+  <text class="box-title" x="1229" y="943" text-anchor="middle">串口 / 前面板</text>
+  <text class="box-sub" x="1229" y="964" text-anchor="middle">UART / GPIO</text>
+  <rect class="box" x="1368" y="838" width="174" height="136" fill="#fff2d8" stroke="#b77a20"/>
+  <text class="box-title" x="1455" y="878" text-anchor="middle">M.2 启动盘</text>
+  <text class="box-sub" x="1455" y="906" text-anchor="middle">PCIe x4 / NVMe</text>
+  <text class="tiny" x="1455" y="938" text-anchor="middle">也可能直连 CPU</text>
+
+  <!-- Management and board services -->
+  <rect class="zone" x="30" y="1008" width="1540" height="272" fill="#fff7e8" stroke="#b98537"/>
+  <text class="zone-title" x="56" y="1040">管理、监控、供电与时钟</text>
+  <text class="tiny" x="322" y="1040">BMC 链路不承载正常的 GPU 计算数据流</text>
+
+  <path class="mgmt" d="M800 970V1070" marker-end="url(#arrow-mgmt)"/>
+  <text class="wire-label" x="858" y="1028" fill="#b47415">eSPI / LPC / PCIe</text>
+  <path class="mgmt" d="M620 1125H557" marker-end="url(#arrow-mgmt)"/>
+  <text class="tiny" x="588" y="1116" text-anchor="middle">I²C/JTAG</text>
+  <path class="mgmt" d="M348 1125H290" marker-end="url(#arrow-mgmt)"/>
+  <text class="tiny" x="319" y="1116" text-anchor="middle">PMBus</text>
+  <path class="mgmt" d="M980 1125H1043" marker-end="url(#arrow-mgmt)"/>
+  <text class="tiny" x="1012" y="1116" text-anchor="middle">RGMII/NC-SI</text>
+  <path class="mgmt" d="M1265 1125H1315" marker-end="url(#arrow-mgmt)"/>
+  <text class="tiny" x="1290" y="1116" text-anchor="middle">Ethernet</text>
+  <path class="mgmt" d="M800 1182V1212" marker-end="url(#arrow-mgmt)"/>
+
+  <rect class="box" x="54" y="1068" width="236" height="114" fill="#f5ead6" stroke="#b98537"/>
+  <text class="box-title" x="172" y="1101" text-anchor="middle">VRM / 风扇 / 传感器</text>
+  <text class="box-sub" x="172" y="1128" text-anchor="middle">PMBus / I²C / SMBus</text>
+  <text class="tiny" x="172" y="1154" text-anchor="middle">PWM / Tach · 温度/电压</text>
+
+  <rect class="box" x="348" y="1068" width="209" height="114" fill="#f3e9d8" stroke="#b98537"/>
+  <text class="box-title" x="452" y="1101" text-anchor="middle">CPLD / FPGA</text>
+  <text class="box-sub" x="452" y="1128" text-anchor="middle">上电时序 · Reset · Mux</text>
+  <text class="tiny" x="452" y="1154" text-anchor="middle">I²C / JTAG / GPIO</text>
+
+  <rect class="box" x="620" y="1055" width="360" height="127" fill="#fff0cf" stroke="#b47415"/>
+  <text class="box-title" x="800" y="1091" text-anchor="middle">BMC 管理控制器</text>
+  <text class="box-sub" x="800" y="1119" text-anchor="middle">IPMI / Redfish · 远程 KVM · 事件日志</text>
+  <text class="tiny" x="800" y="1146" text-anchor="middle">通过旁带总线读取传感器、控制电源与复位</text>
+
+  <rect class="box" x="1043" y="1068" width="222" height="114" fill="#e3f1f3" stroke="#247f87"/>
+  <text class="box-title" x="1154" y="1101" text-anchor="middle">管理网 PHY / NIC</text>
+  <text class="box-sub" x="1154" y="1128" text-anchor="middle">专用口或 NC-SI 共享口</text>
+  <text class="tiny" x="1154" y="1154" text-anchor="middle">不等同于业务/RDMA NIC</text>
+
+  <rect class="box" x="1315" y="1068" width="228" height="114" fill="#e6eff9" stroke="#366fa5"/>
+  <text class="box-title" x="1429" y="1101" text-anchor="middle">带外管理网络</text>
+  <text class="box-sub" x="1429" y="1128" text-anchor="middle">交换机 → 运维终端</text>
+  <text class="tiny" x="1429" y="1154" text-anchor="middle">HTTPS / SSH / Redfish</text>
+
+  <rect class="inner" x="55" y="1200" width="502" height="62" fill="#edf0f3" stroke="#66798d"/>
+  <text class="chip-label" x="306" y="1226">PSU → 板级 VRM → CPU / DIMM</text>
+  <text class="tiny" x="306" y="1249" text-anchor="middle">GPU 经插槽、供电线或模组 VRM 取电（不是数据总线）</text>
+  <rect class="inner" x="620" y="1210" width="360" height="48" fill="#edf0f3" stroke="#66798d"/>
+  <text class="chip-label" x="800" y="1240">时钟 / Reset / PERST#（参考时钟与旁带信号）</text>
+  <rect class="inner" x="1043" y="1210" width="500" height="48" fill="#edf0f3" stroke="#66798d"/>
+  <text class="chip-label" x="1293" y="1240">板卡 Presence / Hot-plug / FRU EEPROM（SMBus / GPIO）</text>
+
+  <text class="tiny" x="800" y="1302" text-anchor="middle">注意：具体服务器可能没有独立 PCH，或改用 PCIe Retimer、CXL、NVSwitch、OCP NIC、RAID/HBA 等组件；以厂商 Block Diagram、lspci 与拓扑命令为准。</text>
+</svg>

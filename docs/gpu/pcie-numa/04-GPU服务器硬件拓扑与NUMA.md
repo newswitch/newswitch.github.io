@@ -114,6 +114,24 @@ NUMA Node 1
 - GPU0 读 NUMA 1 的数据可能发生远端内存访问；
 - 网卡所在 NUMA 也会影响 GPU↔RDMA 路径。
 
+### 3.1 双路 GPU 服务器主板逻辑拓扑
+
+下面把 CPU 内部控制器、高速数据面、平台低速 I/O 和带外管理链路放到同一张图中。它表示一种常见双路服务器的**逻辑关系**，不表示元器件在 PCB 上的实际位置，也不代表所有厂商都采用完全相同的连接方式。为了同时说明可选 PCIe Switch，本图不是第 1.1 节教学实例的逐项复刻。
+
+[![双路 GPU 服务器主板上的 CPU、NUMA 内存、PCIe、GPU、网卡、NVMe、PCH、BMC 与管理链路](/images/GPU服务器硬件拓扑与NUMA/双路GPU服务器主板逻辑拓扑.svg)](/images/GPU服务器硬件拓扑与NUMA/双路GPU服务器主板逻辑拓扑.svg)
+
+图中信息较多，可以点击图片打开原图查看各条总线标签。
+
+按下面五条路径读图：
+
+1. **CPU 访问本地内存**：CPU Core → LLC / 片上互联 → IMC → DDR 通道 → 本地 DIMM；跨 Socket 访问另一侧内存时还要经过 UPI / xGMI。
+2. **CPU 驱动 GPU**：CPU 内的 PCIe Root Complex → Root Port / PCIe Switch → GPU Endpoint。PCIe 既承载控制访问，也承载 DMA 数据传输。
+3. **GPU 间通信**：有 NVLink 时可走 GPU 间高速链路；没有合适的直连路径时，可能经过 PCIe Switch、Root Complex，甚至跨 Socket 互联。是否允许 P2P 还需查询能力。
+4. **GPU 与网卡 / NVMe**：NIC、GPU、NVMe 都是 PCIe Endpoint。GPUDirect RDMA 希望 NIC 与 GPU 具有较近的 PCIe / NUMA 路径，但“同 NUMA”不等于一定经过同一个 PCIe Switch。
+5. **主机管理链路**：BMC 通过 eSPI、LPC、PCIe、I²C / SMBus、PMBus 和 GPIO 等旁带接口完成带外管理、传感器读取、风扇与电源控制；这些链路通常不承载模型推理数据。
+
+图中的 DDR、PCIe、NVLink 和 UPI / xGMI 是高速数据路径；PCH 主要汇聚启动、USB、SATA、SPI 与传统低速 I/O；BMC、CPLD、VRM、传感器和管理网口组成管理与板级控制路径。供电、参考时钟与 Reset 信号被单独标出，因为它们影响设备能否工作，但不是应用传输数据所走的总线。
+
 ## 4. PCIe、NVLink 和 NVSwitch
 
 ### 4.1 PCIe
@@ -661,6 +679,10 @@ lscpu / numactl -H：主机有几个节点，各自有哪些 CPU 和内存？
 - [NUMA Memory Performance — Linux Kernel](https://docs.kernel.org/admin-guide/mm/numaperf.html)
 - [NUMA Memory Policy — Linux Kernel](https://docs.kernel.org/admin-guide/mm/numa_memory_policy.html)
 - [NVIDIA System Management Interface（nvidia-smi）](https://docs.nvidia.com/deploy/nvidia-smi/index.html)
+- [NVIDIA GPUDirect RDMA](https://docs.nvidia.com/cuda/gpudirect-rdma/)
+- [Intel Ultra Path Interconnect（UPI）](https://edc.intel.com/content/www/us/en/design/products-and-solutions/processors-and-chipsets/eagle-stream/platform-electrical-data-sheet/intel-ultra-path-interconnect-intel-upi/)
+- [AMD EPYC 9005 双路 Infinity Fabric / xGMI](https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/tuning-guides/58466-amd-epyc-9005-tg-cloud-datacenter.pdf)
+- [DMTF Redfish Specification](https://www.dmtf.org/sites/default/files/standards/documents/DSP0266_1.19.0.html)
 - [lscpu — util-linux](https://man7.org/linux/man-pages/man1/lscpu.1.html)
 - [lspci — pciutils](https://man7.org/linux/man-pages/man8/lspci.8.html)
 - [numactl](https://man7.org/linux/man-pages/man8/numactl.8.html)、[numastat](https://man7.org/linux/man-pages/man8/numastat.8.html)、[taskset](https://man7.org/linux/man-pages/man1/taskset.1.html)
