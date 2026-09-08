@@ -116,19 +116,20 @@ NUMA Node 1
 
 ### 3.1 双路 GPU 服务器主板逻辑拓扑
 
-下面把 CPU 内部控制器、高速数据面、平台低速 I/O 和带外管理链路放到同一张图中。它表示一种常见双路服务器的**逻辑关系**，不表示元器件在 PCB 上的实际位置，也不代表所有厂商都采用完全相同的连接方式。为了同时说明可选 PCIe Switch，本图不是第 1.1 节教学实例的逐项复刻。
+下面把 CPU 内部控制器、高速数据面、平台低速 I/O 和带外管理链路放到同一张图中。它表示一种常见双路服务器的**逻辑关系**，不表示元器件在 PCB 上的实际位置，也不代表所有厂商都采用完全相同的连接方式。为了同时对照可选 PCIe Switch、GPU 间直连 NVLink 和 NVSwitch Fabric，图中画出了不一定在同一机型同时存在的路径，因此不是第 1.1 节教学实例的逐项复刻。
 
-[![双路 GPU 服务器主板上的 CPU、NUMA 内存、PCIe、GPU、网卡、NVMe、PCH、BMC 与管理链路](/images/GPU服务器硬件拓扑与NUMA/双路GPU服务器主板逻辑拓扑.svg)](/images/GPU服务器硬件拓扑与NUMA/双路GPU服务器主板逻辑拓扑.svg)
+[![双路 GPU 服务器主板上的 CPU、NUMA 内存、PCIe、GPU、直连 NVLink、NVSwitch Fabric、网卡、NVMe、PCH、BMC 与管理链路](/images/GPU服务器硬件拓扑与NUMA/双路GPU服务器主板逻辑拓扑.svg)](/images/GPU服务器硬件拓扑与NUMA/双路GPU服务器主板逻辑拓扑.svg)
 
 图中信息较多，可以点击图片打开原图查看各条总线标签。
 
-按下面五条路径读图：
+按下面六条路径读图：
 
 1. **CPU 访问本地内存**：CPU Core → LLC / 片上互联 → IMC → DDR 通道 → 本地 DIMM；跨 Socket 访问另一侧内存时还要经过 UPI / xGMI。
 2. **CPU 驱动 GPU**：CPU 内的 PCIe Root Complex → Root Port / PCIe Switch → GPU Endpoint。PCIe 既承载控制访问，也承载 DMA 数据传输。
-3. **GPU 间通信**：同组 GPU 有 NVLink 时可直接走 NVLink；同一 PCIe 域也可能经 PCIe Switch 完成 P2P。跨 Socket 路径可沿图追踪为 GPU → PCIe Switch → Root Port / PCIe Root Complex → 片上互联 → UPI / xGMI → 对端片上互联 → PCIe Root Complex → PCIe Switch → GPU。这里经过的是 CPU 封装内的 I/O 控制器与片上互联，并不表示数据交给 CPU Core 复制；若硬件或运行时不支持直接 P2P，才可能改由主机内存中转。是否允许 P2P 仍需查询能力并实测。
-4. **GPU 与网卡 / NVMe**：NIC、GPU、NVMe 都是 PCIe Endpoint。GPUDirect RDMA 希望 NIC 与 GPU 具有较近的 PCIe / NUMA 路径，但“同 NUMA”不等于一定经过同一个 PCIe Switch。
-5. **主机管理链路**：BMC 通过 eSPI、LPC、PCIe、I²C / SMBus、PMBus 和 GPIO 等旁带接口完成带外管理、传感器读取、风扇与电源控制；这些链路通常不承载模型推理数据。
+3. **GPU 间直连通信**：一组 GPU 的 NVLink 端口可以直接互连；同一 PCIe 域也可能经 PCIe Switch 完成 P2P。跨 Socket 路径可沿图追踪为 GPU → PCIe Switch → Root Port / PCIe Root Complex → 片上互联 → UPI / xGMI → 对端片上互联 → PCIe Root Complex → PCIe Switch → GPU。这里经过的是 CPU 封装内的 I/O 控制器与片上互联，并不表示数据交给 CPU Core 复制；若硬件或运行时不支持直接 P2P，才可能改由主机内存中转。
+4. **GPU 经 NVSwitch 通信**：高密度平台可以让多张 GPU 的 NVLink 连接 NVSwitch Fabric。此时典型数据路径是 GPU 0 HBM → GPU 0 NVLink → NVSwitch → GPU 3 NVLink → GPU 3 HBM，不经过 CPU Core，也不需要先复制到主机内存。PCIe 仍用于枚举、控制和其他数据路径；是否存在 NVSwitch、Fabric 是否可用以及通信库是否选中该路径，需要通过设备、Fabric Manager、拓扑命令和带宽实测共同确认。
+5. **GPU 与网卡 / NVMe**：NIC、GPU、NVMe 都是 PCIe Endpoint。GPUDirect RDMA 希望 NIC 与 GPU 具有较近的 PCIe / NUMA 路径，但“同 NUMA”不等于一定经过同一个 PCIe Switch。
+6. **主机管理链路**：BMC 通过 eSPI、LPC、PCIe、I²C / SMBus、PMBus 和 GPIO 等旁带接口完成带外管理、传感器读取、风扇与电源控制；这些链路通常不承载模型推理数据。
 
 图中的 DDR、PCIe、NVLink 和 UPI / xGMI 是高速数据路径；PCH 主要汇聚启动、USB、SATA、SPI 与传统低速 I/O；BMC、CPLD、VRM、传感器和管理网口组成管理与板级控制路径。供电、参考时钟与 Reset 信号被单独标出，因为它们影响设备能否工作，但不是应用传输数据所走的总线。
 
@@ -144,7 +145,19 @@ NVIDIA 的 GPU 高速互联。有 NVLink 时可减轻部分 GPU 间通信对 PCI
 
 ### 4.3 NVSwitch
 
-用于连接更多 GPU，形成更高带宽互联。
+NVSwitch 是 NVLink Fabric 中的交换芯片，不是以太网交换机。多张 GPU 的多个 NVLink 端口可以接入一颗或多颗 NVSwitch，交换 Fabric 再把 GPU 之间的流量转发到目标链路。它解决的是节点内 GPU 高带宽互联，不负责 IP、RoCE 或 InfiniBand 网络转发。
+
+典型路径为：
+
+~~~text
+GPU 0 HBM
+  → GPU 0 NVLink
+  → NVSwitch Fabric
+  → GPU 3 NVLink
+  → GPU 3 HBM
+~~~
+
+这条路径不经过 CPU Core 或主机内存，但服务器仍需要 PCIe 完成设备枚举、控制与未走 NVLink 的访问。图中的直连 NVLink 和 NVSwitch 虚线路径用于比较两类产品形态，不能据此判断一台具体服务器同时拥有两种连接。
 
 > 有多张 GPU ≠ 一定有 NVLink。必须用拓扑命令确认。
 
