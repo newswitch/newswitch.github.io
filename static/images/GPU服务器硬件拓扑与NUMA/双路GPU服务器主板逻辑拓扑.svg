@@ -78,7 +78,7 @@
 
   <!-- Connections behind components: node 0 -->
   <path class="ddr" d="M248 300H494"/>
-  <text class="wire-label" x="407" y="282" fill="#27835c">DDR4 / DDR5 通道</text>
+  <text class="wire-label" x="266" y="290" fill="#27835c">DDR</text>
   <path class="pcie" d="M716 278H748V432H500V463"/>
   <text class="wire-label" x="589" y="422" fill="#2563a7">PCIe x16/x32 上行</text>
   <path class="pcie" d="M716 300H758V445H151V468"/>
@@ -94,7 +94,7 @@
 
   <!-- Connections behind components: node 1 -->
   <path class="ddr" d="M1060 300H1352"/>
-  <text class="wire-label" x="1190" y="282" fill="#27835c">DDR4 / DDR5 通道</text>
+  <text class="wire-label" x="1334" y="290" fill="#27835c">DDR</text>
   <path class="pcie" d="M884 278H852V432H1095V463"/>
   <text class="wire-label" x="996" y="422" fill="#2563a7">PCIe x16/x32 上行</text>
   <path class="pcie" d="M884 300H842V445H1449V468"/>
@@ -154,11 +154,11 @@
 
   <rect class="box" x="284" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
   <text class="box-title" x="385" y="642" text-anchor="middle">GPU 0</text>
-  <text class="box-sub" x="385" y="669" text-anchor="middle">GPU Die（SM / Tensor Core）</text>
+  <text class="box-sub" x="385" y="669" text-anchor="middle">GPU Die · SM · Tensor Core</text>
   <text class="tiny" x="385" y="695" text-anchor="middle">HBM · PCIe · NVLink · DMA</text>
   <rect class="box" x="543" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
   <text class="box-title" x="645" y="642" text-anchor="middle">GPU 1</text>
-  <text class="box-sub" x="645" y="669" text-anchor="middle">GPU Die（SM / Tensor Core）</text>
+  <text class="box-sub" x="645" y="669" text-anchor="middle">GPU Die · SM · Tensor Core</text>
   <text class="tiny" x="645" y="695" text-anchor="middle">HBM · PCIe · NVLink · DMA</text>
 
   <!-- Node 1 components -->
@@ -202,32 +202,32 @@
 
   <rect class="box" x="844" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
   <text class="box-title" x="945" y="642" text-anchor="middle">GPU 2</text>
-  <text class="box-sub" x="945" y="669" text-anchor="middle">GPU Die（SM / Tensor Core）</text>
+  <text class="box-sub" x="945" y="669" text-anchor="middle">GPU Die · SM · Tensor Core</text>
   <text class="tiny" x="945" y="695" text-anchor="middle">HBM · PCIe · NVLink · DMA</text>
   <rect class="box" x="1103" y="609" width="203" height="106" fill="#fce7eb" stroke="#c43e55"/>
   <text class="box-title" x="1205" y="642" text-anchor="middle">GPU 3</text>
-  <text class="box-sub" x="1205" y="669" text-anchor="middle">GPU Die（SM / Tensor Core）</text>
+  <text class="box-sub" x="1205" y="669" text-anchor="middle">GPU Die · SM · Tensor Core</text>
   <text class="tiny" x="1205" y="695" text-anchor="middle">HBM · PCIe · NVLink · DMA</text>
 
   <!-- Two alternative GPU interconnect topologies -->
   <rect class="zone" x="30" y="785" width="1540" height="135" fill="#fff0f4" stroke="#b83b55"/>
-  <text class="zone-title" x="56" y="818">GPU 高速互联：直连 NVLink 与 NVSwitch Fabric</text>
-  <text class="tiny" x="555" y="818">两种典型形态用于对照；实线为 GPU 直连，虚线为经 NVSwitch，具体平台不一定同时存在</text>
-  <path class="nvswitch-link" d="M385 715V772H650V838"/>
-  <path class="nvswitch-link" d="M645 715V786H750V838"/>
-  <path class="nvswitch-link" d="M945 715V786H850V838"/>
-  <path class="nvswitch-link" d="M1205 715V772H950V838"/>
-  <rect class="box" x="600" y="838" width="400" height="64" fill="#f8dce3" stroke="#9d174d"/>
-  <text class="box-title" x="800" y="866" text-anchor="middle">NVSwitch Fabric（可选）</text>
-  <text class="box-sub" x="800" y="890" text-anchor="middle">GPU → NVLink → NVSwitch → NVLink → GPU</text>
+  <text class="zone-title" x="56" y="816">GPU 高速互联：直连 NVLink 与 NVSwitch Fabric</text>
+  <text class="tiny" x="800" y="840" text-anchor="middle">两种典型形态用于对照：实线为 GPU 直连，虚线为经 NVSwitch；具体平台不一定同时存在</text>
+  <path class="nvswitch-link" d="M385 715V772H650V852"/>
+  <path class="nvswitch-link" d="M645 715V786H750V852"/>
+  <path class="nvswitch-link" d="M945 715V786H850V852"/>
+  <path class="nvswitch-link" d="M1205 715V772H950V852"/>
+  <rect class="box" x="600" y="852" width="400" height="58" fill="#f8dce3" stroke="#9d174d"/>
+  <text class="box-title" x="800" y="879" text-anchor="middle">NVSwitch Fabric（可选）</text>
+  <text class="box-sub" x="800" y="901" text-anchor="middle">GPU → NVLink → NVSwitch → NVLink → GPU</text>
 
   <g transform="translate(0 150)">
   <!-- PCH and local IO -->
   <rect class="zone" x="30" y="785" width="1540" height="205" fill="#eef7f6" stroke="#3e8589"/>
   <text class="zone-title" x="56" y="816">平台 I/O 与启动链路</text>
-  <text class="tiny" x="274" y="816">PCH 连接方式依 CPU 平台和主板设计而异</text>
+  <text class="tiny" x="320" y="816">PCH 连接方式依 CPU 平台和主板设计而异</text>
   <path class="pcie" d="M716 180H768V600H550V835H653"/>
-  <text class="wire-label" x="550" y="774" fill="#2563a7">DMI / PCIe</text>
+  <text class="wire-label" x="550" y="798" fill="#2563a7">DMI / PCIe</text>
 
   <path class="lowio" d="M577 870H490"/>
   <path class="lowio" d="M577 945H490"/>
@@ -276,7 +276,7 @@
   <!-- Management and board services -->
   <rect class="zone" x="30" y="1008" width="1540" height="272" fill="#fff7e8" stroke="#b98537"/>
   <text class="zone-title" x="56" y="1040">管理、监控、供电与时钟</text>
-  <text class="tiny" x="322" y="1040">BMC 链路不承载正常的 GPU 计算数据流</text>
+  <text class="tiny" x="350" y="1040">BMC 链路不承载正常的 GPU 计算数据流</text>
 
   <path class="mgmt" d="M800 970V1070" marker-end="url(#arrow-mgmt)"/>
   <text class="wire-label" x="858" y="1028" fill="#b47415">eSPI / LPC / PCIe</text>
