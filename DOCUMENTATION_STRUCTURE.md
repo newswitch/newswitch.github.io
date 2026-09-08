@@ -86,6 +86,7 @@ data-systems/
 ├── databases/           # 关系数据库
 │   ├── mysql/           # MySQL
 │   └── postgresql/      # PostgreSQL
+├── database-reliability/# 数据库备份、PITR、高可用与容灾
 ├── cache/               # 缓存与内存数据
 │   └── redis/           # Redis
 ├── messaging/           # 消息与事件
@@ -127,6 +128,7 @@ sre/
 | Kubernetes 通用能力与扩展 | `cloud-native/kubernetes/` |
 | AI 训练、推理、模型制品和 MLOps | `ai-systems/` |
 | MySQL、PostgreSQL | `data-systems/databases/` |
+| 数据库备份、PITR、高可用与容灾通用原理 | `data-systems/database-reliability/` |
 | Redis | `data-systems/cache/` |
 | Kafka、RocketMQ | `data-systems/messaging/` |
 | Elasticsearch、Milvus | `data-systems/search/`、`data-systems/vector-databases/` |
