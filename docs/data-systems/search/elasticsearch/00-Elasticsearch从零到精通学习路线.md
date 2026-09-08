@@ -34,7 +34,7 @@ Search request
 
 写入 ACK、数据可搜索、Translog 持久、Segment 提交和副本完成不是同一个概念。
 
-## 2. 课程结构 {/* #2-17-篇文章规划 */}
+## 2. 课程结构 {/* #2-18-篇文章规划 */}
 
 | 编号 | 文章 | 优先级 | 核心问题 |
 | --- | --- | --- | --- |
@@ -55,6 +55,7 @@ Search request
 | E14 | [TLS、RBAC、API Key、审计与多租户安全](./14-TLS-RBAC-API-Key审计与多租户安全.md) | P1 | 默认安全之外怎样最小授权 |
 | E15 | [Snapshot、Restore、CCR、跨集群搜索与灾备](./15-Snapshot-Restore-CCR与跨集群灾备.md) | P1 | 副本为何不是备份、怎样恢复 |
 | E16 | [监控、滚动升级、红黄集群与生产故障 Runbook](./16-Elasticsearch监控滚动升级与故障Runbook.md) | P1 | 从 SLO 到 shard/node/JVM/磁盘定位 |
+| E17 | [SLM、Repository、CCR 与完整灾难恢复专项](./17-Elasticsearch-SLM-CCR与完整灾难恢复专项.md) | P1 | 自动快照、跨集群容灾和恢复验证 |
 
 ## 3. 学习顺序
 
@@ -86,7 +87,7 @@ Ingest node：执行 ingest pipeline
 
 ### 3.4 生产 SRE {/* #第四阶段生产-sre */}
 
-学习 E12～E16。重点从业务查询延迟向下定位到 coordinating、shard fan-out、thread pool、heap/GC、page cache、磁盘、merge、recovery 和网络。
+学习 E12～E17。重点从业务查询延迟向下定位到 coordinating、shard fan-out、thread pool、heap/GC、page cache、磁盘、merge、recovery 和网络，并完成快照恢复与跨集群切换演练。
 
 ## 4. P0 验收题
 
