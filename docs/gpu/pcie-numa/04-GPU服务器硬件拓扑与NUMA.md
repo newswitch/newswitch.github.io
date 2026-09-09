@@ -329,6 +329,27 @@ cat /sys/bus/pci/devices/0000:17:00.0/numa_node
 nvidia-smi topo -m
 ```
 
+下面延续第 1.1 节的四卡教学拓扑，并额外假设 NIC0、NIC1 分别位于 NUMA Node 0、NUMA Node 1。GPU 与同侧网卡需要跨同一 NUMA Node 内的 PCIe Host Bridge，因此示例中显示为 `NODE`；真实服务器可能显示为 `PIX`、`PXB` 或 `PHB`。
+
+```text
+        GPU0  GPU1  GPU2  GPU3  NIC0  NIC1  CPU Affinity  NUMA Affinity  GPU NUMA ID
+GPU0      X   NV12   SYS   SYS  NODE   SYS          0-31              0          N/A
+GPU1    NV12     X   SYS   SYS  NODE   SYS          0-31              0          N/A
+GPU2     SYS   SYS     X  NV12   SYS  NODE         32-63              1          N/A
+GPU3     SYS   SYS  NV12     X   SYS  NODE         32-63              1          N/A
+NIC0    NODE  NODE   SYS   SYS     X   SYS
+NIC1     SYS   SYS  NODE  NODE   SYS     X
+
+Legend:
+  X    = Self
+  SYS  = Path crosses PCIe and the socket-to-socket interconnect
+  NODE = Path crosses PCIe host bridges inside one NUMA node
+  PHB  = Path crosses a PCIe host bridge
+  PXB  = Path crosses multiple PCIe switches
+  PIX  = Path crosses at most one PCIe switch
+  NV#  = Path uses a bonded set of # NVLinks
+```
+
 展示 GPU、网卡连接矩阵及 CPU / 内存亲和。主要标记：
 
 | 标记 | 含义 |
@@ -343,22 +364,13 @@ nvidia-smi topo -m
 
 这些标记描述连接路径，不是带宽测试分数。通常 NVLink 路径值得优先考虑，但不能脱离链路代际、宽度、共享上行与负载，机械地把标记排成固定性能榜。
 
-示例输出（为便于阅读，仅保留 GPU 行列及亲和列；完整输出可能还含 NIC 与英文图例）：
-
-```text
-        GPU0  GPU1  GPU2  GPU3  CPU Affinity  NUMA Affinity  GPU NUMA ID
-GPU0      X   NV12   SYS   SYS       0-31              0          N/A
-GPU1    NV12     X   SYS   SYS       0-31              0          N/A
-GPU2     SYS   SYS     X  NV12      32-63              1          N/A
-GPU3     SYS   SYS  NV12     X      32-63              1          N/A
-```
-
 沿 GPU0 所在行读取：
 
 1. GPU0 → GPU1 为 `NV12`：本例两卡之间存在绑定的 NVLink 连接；`12` 不是 GPU 数量，也不是 PCIe x12。
 2. GPU0 → GPU2 为 `SYS`：拓扑显示跨 CPU / NUMA 互联路径；应用是否能直接 P2P、是否改用主机内存中转，还要看第 8 节与运行时行为。
-3. `CPU Affinity: 0-31`：这些 CPU 与 GPU0 有亲和关系，**不表示进程已经绑到这些 CPU，也不表示这些 CPU 已被独占分配**。
-4. `NUMA Affinity: 0`：GPU0 靠近主机 Node 0。`GPU NUMA ID: N/A` 则表示此设备没有适用的 GPU 自身 NUMA ID；这与主机侧亲和信息不是一回事，不代表 GPU 损坏。
+3. GPU0 → NIC0 为 `NODE`：两者靠近同一 NUMA Node，但示例路径仍跨 PCIe Host Bridge；若真实机器显示 `PIX`，说明路径更近，通常处于同一 PCIe Switch 下。
+4. `CPU Affinity: 0-31`：这些 CPU 与 GPU0 有亲和关系，**不表示进程已经绑到这些 CPU，也不表示这些 CPU 已被独占分配**。
+5. `NUMA Affinity: 0`：GPU0 靠近主机 Node 0。`GPU NUMA ID: N/A` 则表示此设备没有适用的 GPU 自身 NUMA ID；这与主机侧亲和信息不是一回事，不代表 GPU 损坏。
 
 最后把 GPU2/3 的 `32-63`、Node `1` 与 `lscpu` 对照，就能形成一致的映射。矩阵和亲和查询的定义见 [NVIDIA nvidia-smi 拓扑说明](https://docs.nvidia.com/deploy/nvidia-smi/index.html#topology)。
 
