@@ -250,6 +250,21 @@ Legend:
 | `SYS` | System Interconnect | 除 PCIe 外还要跨 NUMA Node 或 CPU Socket 互联，例如 Intel UPI/QPI、AMD xGMI/Infinity Fabric | GPU0 → CPU0 → Socket 互联 → CPU1 → GPU2 |
 | `NV#` | Bonded set of # NVLinks | 设备对之间使用由 `#` 条 NVLink 组成的路径，例如 `NV2`、`NV4`、`NV12` | GPU0 → NVLink 直连或 NVSwitch Fabric → GPU1 |
 
+#### 9.1.1 NV 后面的数字表示什么 {/* #nv-后面的数字表示什么 */}
+
+`NV#` 中的 `#` 是驱动报告的聚合 NVLink 数量：
+
+| 输出 | 表示什么 | 不表示什么 |
+| --- | --- | --- |
+| `NV1` | 路径使用一条 NVLink | 不是第一代 NVLink |
+| `NV2` | 路径使用两条聚合的 NVLink | 不是两张 GPU，也不是 PCIe x2 |
+| `NV4` | 路径使用四条聚合的 NVLink | 不是固定的 4 GB/s 或四倍端到端性能 |
+| `NV12` | 路径使用十二条聚合的 NVLink | 不是第十二代 NVLink，也不表示两块 GPU 之间有十二根直连线缆 |
+
+点对点直连系统中，这个数字通常可以理解为两块 GPU 之间参与通信的 NVLink 数量；NVSwitch 系统中，它描述经 NVLink Fabric 形成的聚合路径，不能把它画成每一对 GPU 之间都有同等数量的独立直连线。
+
+只有在 NVLink 代际、单 Link 速率和统计方向都相同的前提下，理论链路带宽才可以粗略理解为“单 Link 带宽 × Link 数量”。实际有效带宽还会受到协议开销、NVSwitch、路由、并发流量、GPU 内存带宽和通信库实现影响，因此仍需用 CUDA Samples 或 `nccl-tests` 验证。
+
 如果只比较 PCIe 拓扑距离，通常可以先按 `PIX → PXB → PHB → NODE → SYS` 理解为路径逐渐变远。但这不是严格的性能排名：PCIe 代际、链路宽度、交换芯片上行是否共享、CPU 互联带宽和并发负载都会改变实测结果。`NV#` 属于另一类 GPU 高速互联，也不能只凭数字直接换算带宽。
 
 ### 9.2 NIC0 是什么
