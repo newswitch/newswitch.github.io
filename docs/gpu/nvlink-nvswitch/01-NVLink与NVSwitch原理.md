@@ -304,6 +304,41 @@ GPU0 → NIC1 = SYS
 
 因此，“同一 NUMA Node”的直接收益是即使发生主机内存中转，通常也能使用本地内存并避免跨 Socket；只有再确认 P2P 或 GPUDirect RDMA 可用，才能判断业务数据是否真正绕过主机内存。
 
+#### 9.2.2 不同 NUMA Node 是否一定由 CPU 传数据 {/* #不同-numa-node-是否一定由-cpu-传数据 */}
+
+不一定。`NUMA` 是 Non-Uniform Memory Access（非一致内存访问），`NUMA Node` 是操作系统描述硬件距离的拓扑域，不是一块负责转发消息的芯片，也不是一种通信协议。
+
+典型双路服务器可以先这样理解：
+
+```text
+NUMA Node 0                                      NUMA Node 1
+┌──────────────────────────────┐                 ┌──────────────────────────────┐
+│ CPU0 Core                    │                 │ CPU1 Core                    │
+│ Memory Controller → DRAM0    │                 │ Memory Controller → DRAM1    │
+│ PCIe Root → GPU0、NIC0       │                 │ PCIe Root → GPU1、NIC1       │
+└──────────────┬───────────────┘                 └──────────────┬───────────────┘
+               └──────── UPI/QPI/xGMI 等 Socket 互联 ──────────┘
+```
+
+Node 0 中的 CPU Core 访问 DRAM0 属于本地内存访问；访问 DRAM1 时，请求需要穿过 Socket 间互联，属于远端内存访问，通常具有更高时延和更低的有效带宽。GPU、NIC 等 PCIe 设备也有拓扑归属，靠近哪个 PCIe Root 和内存控制器，就会显示相应的 NUMA Affinity。
+
+“跨 NUMA 数据经过 CPU”需要拆成三个不同问题：
+
+| 问题 | 可能的答案 |
+| --- | --- |
+| 数据是否经过 CPU Socket 内的 PCIe Root、I/O Fabric 或 Socket 互联 | `SYS` 路径通常会经过，但这是硬件数据通路 |
+| 数据是否在主机 DRAM 中落地中转 | 只有直接 P2P/GPUDirect RDMA 不可用或框架选择中转路径时才需要 |
+| CPU Core 是否亲自执行 `memcpy` | 不一定；很多搬运由 GPU/NIC DMA Engine 完成，CPU Core 只提交和协调操作 |
+
+不同 NUMA Node 下常见的四种情况是：
+
+1. **存在 NVLink/NVSwitch**：GPU 即使分别靠近不同 CPU，也可能直接经 NVLink Fabric 交换 HBM 数据，不经过主机内存。
+2. **跨 Root 的 PCIe P2P 可用**：数据可以由设备 DMA 直接传输，但可能穿过 CPU Socket 的 I/O Fabric；是否支持以及性能如何取决于主板、Root Complex、ACS/IOMMU 和驱动。
+3. **跨 NUMA 的 GPUDirect RDMA 可用**：GPU 与远端 NIC 可以直接 DMA，但路径可能显示 `SYS`，通常不如同侧 GPU-NIC 组合理想。
+4. **直接访问不可用**：框架可能使用 `GPU → 主机 DRAM → Socket 互联 → GPU/NIC` 的中转路径，此时会消耗主机内存带宽，CPU 仍主要负责控制两段 DMA，也可能参与内存复制。
+
+因此，`SYS` 只能证明路径跨 NUMA/Socket，不能单独证明数据经过主机内存。判断时要分三步：用 `topo -m` 看物理路径，用 `topo -p2p r/w/p/n` 看驱动报告的直接访问能力，最后用 CUDA Samples、NCCL 日志和带宽测试确认实际运行路径。一个 CPU Socket 也可能因 SNC/NPS 等配置被拆成多个 NUMA Node，因此“一个 Node 就等于一颗 CPU”只能作为入门近似。
+
 当 GPUDirect RDMA 条件满足时，理想数据路径是：
 
 ```text
