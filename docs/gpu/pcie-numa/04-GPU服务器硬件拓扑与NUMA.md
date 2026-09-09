@@ -412,14 +412,24 @@ NUMA IDs of closest memory: 0
 nvidia-smi topo -p2p r
 ```
 
-示例输出（省略英文图例）：
+完整输出示例：
 
 ```text
+P2P Connectivity Matrix
         GPU0  GPU1  GPU2  GPU3
 GPU0      X    OK   CNS   CNS
 GPU1     OK     X   CNS   CNS
 GPU2    CNS   CNS     X    OK
 GPU3    CNS   CNS    OK     X
+
+Legend:
+  X    = Self
+  OK   = Status Ok
+  CNS  = Chipset not supported
+  GNS  = GPU not supported
+  TNS  = Topology not supported
+  NS   = Not supported
+  U    = Unknown
 ```
 
 查询 P2P Write：
@@ -428,14 +438,24 @@ GPU3    CNS   CNS    OK     X
 nvidia-smi topo -p2p w
 ```
 
-示例输出：
+完整输出示例：
 
 ```text
+P2P Connectivity Matrix
         GPU0  GPU1  GPU2  GPU3
 GPU0      X    OK   CNS   CNS
 GPU1     OK     X   CNS   CNS
 GPU2    CNS   CNS     X    OK
 GPU3    CNS   CNS    OK     X
+
+Legend:
+  X    = Self
+  OK   = Status Ok
+  CNS  = Chipset not supported
+  GNS  = GPU not supported
+  TNS  = Topology not supported
+  NS   = Not supported
+  U    = Unknown
 ```
 
 查询 NVLink P2P：
@@ -465,8 +485,11 @@ GPU3     NS    NS    OK     X
 | `TNS` | 拓扑不支持该能力 | 不等于两张 GPU 完全不能交换数据 |
 | `NS` | 该能力不受支持 | 需结合查询的是 Read、Write 还是 NVLink 判断 |
 | `U` | 状态未知 | 不能当作 `OK` |
+| `DR` | 该能力被注册表或驱动配置禁用，部分较新驱动才显示 | 不能直接判断为硬件不支持 |
 
-本例 Read 与 Write 恰好相同，但不能只查一个就代替另一个。`-p2p n` 的跨组 `NS` 只针对 NVLink 能力；其他机器即使没有 NVLink，仍可能支持 PCIe P2P。即便直接 P2P 不可用，框架也可能采用其他中转路径，只是性能和资源开销不同。
+本例 Read 与 Write 恰好相同，但不能只查一个就代替另一个。应把每个行列交点都视为一个待验证的设备对，不能预设矩阵必然对称。较新驱动的图例还可能出现 `DR`，表示该能力被注册表或驱动配置禁用；应以本机输出和驱动文档为准。
+
+`-p2p n` 的跨组 `NS` 只针对 NVLink 能力；其他机器即使没有 NVLink，仍可能支持 PCIe P2P。即便直接 P2P 不可用，框架也可能采用其他中转路径，只是性能和资源开销不同。
 
 这些命令查询能力状态，不运行带宽基准，也不会替应用启用 Peer Access。状态符号可对照 [NVIDIA MNNVL 拓扑状态说明](https://docs.nvidia.com/multi-node-nvlink-systems/mnnvl-user-guide/mnnvl-user-guide.pdf)；本文只借用其状态定义，不把该指南的整机拓扑当成本例拓扑。
 
