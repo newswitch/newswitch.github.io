@@ -252,7 +252,47 @@ Legend:
 
 如果只比较 PCIe 拓扑距离，通常可以先按 `PIX → PXB → PHB → NODE → SYS` 理解为路径逐渐变远。但这不是严格的性能排名：PCIe 代际、链路宽度、交换芯片上行是否共享、CPU 互联带宽和并发负载都会改变实测结果。`NV#` 属于另一类 GPU 高速互联，也不能只凭数字直接换算带宽。
 
-### 9.2 三个 Affinity 字段
+### 9.2 NIC0 是什么
+
+`NIC` 是 Network Interface Card/Controller，即网卡或网络接口控制器。`NIC0` 是 `nvidia-smi` 在拓扑矩阵中为第一组网卡设备分配的索引标签，`NIC1` 是第二组。它们通常对应服务器中的高速以太网、RoCE 或 InfiniBand 适配器。
+
+`NIC0` 不是以下概念：
+
+- 它不一定等于 Linux 中的 `eth0`、`ens5f0` 或 `ib0`；操作系统接口名与 `nvidia-smi` 的拓扑编号属于两套命名。
+- 它不是 Kubernetes CNI，也不是 Pod 虚拟网卡。
+- 它不一定表示第一块插入主板的物理网卡；编号取决于驱动和 NVML 枚举结果。
+- 它出现在矩阵中不代表 GPUDirect RDMA 一定可用，只说明工具识别到了可参与拓扑展示的网卡设备。
+
+在本节示例中：
+
+```text
+GPU0 → NIC0 = NODE
+GPU0 → NIC1 = SYS
+```
+
+`NODE` 表示 GPU0 与 NIC0 位于同一个 NUMA Node，但两者之间仍要跨 PCIe Host Bridge；`SYS` 表示 GPU0 到 NIC1 还要跨 CPU Socket 互联。因此，如果一个分布式训练进程使用 GPU0，通常应优先选择拓扑更近的 NIC0，而不是跨 Socket 使用 NIC1。
+
+当 GPUDirect RDMA 条件满足时，理想数据路径是：
+
+```text
+GPU HBM
+→ GPU PCIe/NVLink 接口
+→ 同侧 PCIe Root/Switch
+→ NIC 的 DMA/RDMA Engine
+→ InfiniBand 或 RoCE 网络
+```
+
+如果 GPUDirect RDMA 不可用，数据可能先进入主机内存再交给 NIC，增加 PCIe 搬运、CPU/内存带宽占用和时延。`topo -m` 只能告诉你物理距离，不能单独证明实际通信已经走 GPUDirect RDMA。
+
+如果本机驱动支持，可以用下面的命令查看更明确的 NIC 映射；旧版本则需要结合 PCI 地址、Linux 网卡名和 RDMA 设备名核对：
+
+```bash
+nvidia-smi topo -nic
+ibdev2netdev
+lspci -Dnn | grep -Ei 'Ethernet|Network|InfiniBand'
+```
+
+### 9.3 三个 Affinity 字段
 
 矩阵右侧的三列不是设备间路径，而是 GPU 与主机 CPU、主机内存以及 NUMA 拓扑的关系：
 
@@ -288,7 +328,7 @@ GPU3    NV12  NV12  NV12     X
 
 这些符号是拓扑类别，不是带宽分数。`NV12` 通常比跨 Socket 的 `SYS` 更适合高频 GPU 通信，但最终仍要结合 NVLink 代际、链路状态以及带宽测试验证。准确含义以当前 `nvidia-smi topo -h` 为准。
 
-### 9.3 检查 P2P Read
+### 9.4 检查 P2P Read
 
 ```bash
 nvidia-smi topo -p2p r
@@ -316,7 +356,7 @@ Legend:
 
 这里的 `OK` 只说明驱动报告该设备对具备 Read 能力，不等于带宽、时延已经达到预期。`CNS` 说明平台或芯片组没有提供该能力，不表示 GPU 已经掉卡。
 
-### 9.4 检查 P2P Write
+### 9.5 检查 P2P Write
 
 ```bash
 nvidia-smi topo -p2p w
@@ -344,7 +384,7 @@ Legend:
 
 不能因为本例两张矩阵相同，就只检查其中一项。P2P 能力可能受 GPU 型号、PCIe Root、ACS/IOMMU、虚拟化、驱动和运行模式影响，也不应预设矩阵一定对称。
 
-### 9.5 状态码与判断边界
+### 9.6 状态码与判断边界
 
 | 状态 | 含义 | 不能直接推出的结论 |
 | --- | --- | --- |
