@@ -236,17 +236,35 @@ Legend:
   NV#  = Path uses a bonded set of # NVLinks
 ```
 
-常见矩阵符号可能包括：
+### 9.1 Legend 中文解释
 
-| 符号 | 常见含义 |
-| --- | --- |
-| `X` | 当前设备自身 |
-| `NV#` | 通过若干 NVLink 连接 |
-| `PIX` | 最多经过一个 PCIe Bridge |
-| `PXB` | 经过多个 PCIe Bridge |
-| `PHB` | 经过 PCIe Host Bridge |
-| `NODE` | 跨 PCIe Host Bridge，但在同 NUMA Node |
-| `SYS` | 跨 NUMA/CPU 互联 |
+`Legend` 就是矩阵中路径缩写的图例。它描述两个设备之间需要经过哪些硬件，不是性能测试结果。
+
+| 标记 | 英文含义 | 中文解释 | 简化数据路径 |
+| --- | --- | --- | --- |
+| `X` | Self | 行与列指向同一个设备，因此无需判断设备间路径 | GPU0 → GPU0 |
+| `PIX` | Single PCIe Switch | 两个设备之间最多经过一个 PCIe Switch，通常是距离较近的 PCIe 路径 | GPU0 → PCIe Switch → GPU1/NIC |
+| `PXB` | Multiple PCIe Switches | 路径经过多个 PCIe Switch，但没有穿过 CPU 的 PCIe Host Bridge | GPU0 → Switch A → Switch B → GPU1 |
+| `PHB` | PCIe Host Bridge | 路径需要经过 PCIe Host Bridge，通常就是 CPU 提供的 PCIe Root Complex | GPU0 → PCIe Switch/Root Port → CPU I/O → GPU1/NIC |
+| `NODE` | Same NUMA Node | 路径跨越同一 NUMA Node 内的多个 PCIe Host Bridge，但不跨 CPU Socket | GPU0 → Host Bridge A → CPU 内部 I/O 互联 → Host Bridge B → NIC |
+| `SYS` | System Interconnect | 除 PCIe 外还要跨 NUMA Node 或 CPU Socket 互联，例如 Intel UPI/QPI、AMD xGMI/Infinity Fabric | GPU0 → CPU0 → Socket 互联 → CPU1 → GPU2 |
+| `NV#` | Bonded set of # NVLinks | 设备对之间使用由 `#` 条 NVLink 组成的路径，例如 `NV2`、`NV4`、`NV12` | GPU0 → NVLink 直连或 NVSwitch Fabric → GPU1 |
+
+如果只比较 PCIe 拓扑距离，通常可以先按 `PIX → PXB → PHB → NODE → SYS` 理解为路径逐渐变远。但这不是严格的性能排名：PCIe 代际、链路宽度、交换芯片上行是否共享、CPU 互联带宽和并发负载都会改变实测结果。`NV#` 属于另一类 GPU 高速互联，也不能只凭数字直接换算带宽。
+
+### 9.2 三个 Affinity 字段
+
+矩阵右侧的三列不是设备间路径，而是 GPU 与主机 CPU、主机内存以及 NUMA 拓扑的关系：
+
+| 字段 | 中文含义 | 示例值如何理解 | 容易误解的地方 |
+| --- | --- | --- | --- |
+| `CPU Affinity` | CPU 亲和范围 | `0-31` 表示逻辑 CPU 0～31 在拓扑上更靠近这块 GPU | 只表示硬件距离，不代表进程已经绑核，也不代表这些 CPU 被 GPU 独占 |
+| `NUMA Affinity` | 主机内存 NUMA 亲和节点 | `0` 表示从 NUMA Node 0 的主机内存访问该 GPU 通常路径更近 | 它描述主机内存节点，不是 GPU 编号，也不是 GPU 自身 NUMA ID |
+| `GPU NUMA ID` | GPU 自身的 NUMA Node ID | 某些平台会把 GPU 或 GPU 内存作为独立 NUMA Node 暴露；普通服务器常见 `N/A` | `N/A` 表示该字段不适用，不表示 GPU 故障，也不能把它当成 Node 0 |
+
+`CPU Affinity` 回答“哪些 CPU 离这块 GPU 较近”，`NUMA Affinity` 回答“哪一个主机内存节点离它较近”，`GPU NUMA ID` 回答“操作系统是否给 GPU 自身分配了 NUMA ID”。三者描述的是不同对象。
+
+NIC 行通常不会填写这三个 GPU 亲和字段，所以示例中 NIC0、NIC1 行的右侧为空。容器中的 CPUSet、设备可见范围和驱动版本也可能影响实际展示，排查时应同时记录宿主机的 `lscpu`、`numactl -H` 和容器资源限制。
 
 沿 GPU0 所在行读取：
 
@@ -270,7 +288,7 @@ GPU3    NV12  NV12  NV12     X
 
 这些符号是拓扑类别，不是带宽分数。`NV12` 通常比跨 Socket 的 `SYS` 更适合高频 GPU 通信，但最终仍要结合 NVLink 代际、链路状态以及带宽测试验证。准确含义以当前 `nvidia-smi topo -h` 为准。
 
-### 9.1 检查 P2P Read
+### 9.3 检查 P2P Read
 
 ```bash
 nvidia-smi topo -p2p r
@@ -298,7 +316,7 @@ Legend:
 
 这里的 `OK` 只说明驱动报告该设备对具备 Read 能力，不等于带宽、时延已经达到预期。`CNS` 说明平台或芯片组没有提供该能力，不表示 GPU 已经掉卡。
 
-### 9.2 检查 P2P Write
+### 9.4 检查 P2P Write
 
 ```bash
 nvidia-smi topo -p2p w
@@ -326,7 +344,7 @@ Legend:
 
 不能因为本例两张矩阵相同，就只检查其中一项。P2P 能力可能受 GPU 型号、PCIe Root、ACS/IOMMU、虚拟化、驱动和运行模式影响，也不应预设矩阵一定对称。
 
-### 9.3 状态码与判断边界
+### 9.5 状态码与判断边界
 
 | 状态 | 含义 | 不能直接推出的结论 |
 | --- | --- | --- |
