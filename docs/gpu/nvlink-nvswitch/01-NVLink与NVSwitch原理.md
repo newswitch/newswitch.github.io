@@ -207,10 +207,33 @@ Fabric 未正确初始化时可能出现：
 - NCCL 初始化失败
 - GPU Fabric 状态异常
 
-## 9. 读懂 `nvidia-smi topo -m`
+## 9. 读懂 `nvidia-smi topo -m` {/* #读懂-nvidia-smi-topo */}
+
+本节使用一台四卡双路服务器作为教学示例：GPU0 与 GPU1 通过两条聚合 NVLink 相连，GPU2 与 GPU3 同样相连，两组 GPU 分属不同 NUMA Node。NIC0、NIC1 分别靠近两侧 CPU，但与同侧 GPU 不在同一个 PCIe Switch 下。真实服务器的 GPU 数量、`NV#` 数字和 PCIe 路径会不同。
 
 ```bash
 nvidia-smi topo -m
+```
+
+示例输出：
+
+```text
+        GPU0  GPU1  GPU2  GPU3  NIC0  NIC1  CPU Affinity  NUMA Affinity  GPU NUMA ID
+GPU0      X    NV2   SYS   SYS  NODE   SYS          0-31              0          N/A
+GPU1     NV2     X   SYS   SYS  NODE   SYS          0-31              0          N/A
+GPU2     SYS   SYS     X   NV2   SYS  NODE         32-63              1          N/A
+GPU3     SYS   SYS   NV2     X   SYS  NODE         32-63              1          N/A
+NIC0    NODE  NODE   SYS   SYS     X   SYS
+NIC1     SYS   SYS  NODE  NODE   SYS     X
+
+Legend:
+  X    = Self
+  SYS  = Path crosses PCIe and the socket-to-socket interconnect
+  NODE = Path crosses PCIe host bridges inside one NUMA node
+  PHB  = Path crosses a PCIe host bridge
+  PXB  = Path crosses multiple PCIe switches
+  PIX  = Path crosses a single PCIe switch
+  NV#  = Path uses a bonded set of # NVLinks
 ```
 
 常见矩阵符号可能包括：
@@ -225,17 +248,107 @@ nvidia-smi topo -m
 | `NODE` | 跨 PCIe Host Bridge，但在同 NUMA Node |
 | `SYS` | 跨 NUMA/CPU 互联 |
 
-准确含义以当前 `nvidia-smi topo -h` 为准。
+沿 GPU0 所在行读取：
 
-同时查看 CPU 和 NIC 亲和：
+1. GPU0 → GPU1 是 `NV2`，表示两卡之间有一组由两条 NVLink 聚合而成的路径；`2` 不是两张 GPU，也不是 PCIe x2。
+2. GPU0 → GPU2 是 `SYS`，表示路径需要跨 PCIe 和 CPU 间互联；它描述物理路径，不直接证明 CUDA P2P 一定可用或不可用。
+3. GPU0 → NIC0 是 `NODE`，表示设备处于同一 NUMA Node，但路径仍跨 PCIe Host Bridge。若显示 `PIX`，通常说明 GPU 与 NIC 的 PCIe 路径更近。
+4. `CPU Affinity 0-31` 和 `NUMA Affinity 0` 表示 GPU0 靠近 Node 0，不表示应用进程已经完成 CPU 绑定。
+5. `GPU NUMA ID N/A` 表示没有适用的 GPU 自身 NUMA ID，与主机侧的 `NUMA Affinity 0` 并不矛盾。
+
+在 NVSwitch 服务器上，多块 GPU 经过同一个 NVLink Fabric 互联，GPU 子矩阵可能呈现大量相同的 `NV#`。例如某类平台截取前四卡后可能类似：
+
+```text
+        GPU0  GPU1  GPU2  GPU3
+GPU0      X   NV12  NV12  NV12
+GPU1    NV12     X  NV12  NV12
+GPU2    NV12  NV12     X  NV12
+GPU3    NV12  NV12  NV12     X
+```
+
+这表示设备对之间存在由若干 NVLink 组成的 Fabric 路径，不表示每一对 GPU 都用 12 根线直接相连。不同代际和机型可能显示其他 `NV#`，必须以本机矩阵为准。
+
+这些符号是拓扑类别，不是带宽分数。`NV12` 通常比跨 Socket 的 `SYS` 更适合高频 GPU 通信，但最终仍要结合 NVLink 代际、链路状态以及带宽测试验证。准确含义以当前 `nvidia-smi topo -h` 为准。
+
+### 9.1 检查 P2P Read
 
 ```bash
-nvidia-smi topo -m
 nvidia-smi topo -p2p r
+```
+
+参数 `r` 查询 GPU 对之间的 P2P Read 能力。延续上面的示例，组内支持、跨组因平台限制不支持时，输出可能如下：
+
+```text
+P2P Connectivity Matrix
+        GPU0  GPU1  GPU2  GPU3
+GPU0      X    OK   CNS   CNS
+GPU1     OK     X   CNS   CNS
+GPU2    CNS   CNS     X    OK
+GPU3    CNS   CNS    OK     X
+
+Legend:
+  X    = Self
+  OK   = Status Ok
+  CNS  = Chipset not supported
+  GNS  = GPU not supported
+  TNS  = Topology not supported
+  NS   = Not supported
+  U    = Unknown
+```
+
+这里的 `OK` 只说明驱动报告该设备对具备 Read 能力，不等于带宽、时延已经达到预期。`CNS` 说明平台或芯片组没有提供该能力，不表示 GPU 已经掉卡。
+
+### 9.2 检查 P2P Write
+
+```bash
 nvidia-smi topo -p2p w
 ```
 
-不同驱动版本支持的 `-p2p` 选项可能不同。
+参数 `w` 查询 P2P Write 能力。当前教学示例的 Read 与 Write 结果恰好相同：
+
+```text
+P2P Connectivity Matrix
+        GPU0  GPU1  GPU2  GPU3
+GPU0      X    OK   CNS   CNS
+GPU1     OK     X   CNS   CNS
+GPU2    CNS   CNS     X    OK
+GPU3    CNS   CNS    OK     X
+
+Legend:
+  X    = Self
+  OK   = Status Ok
+  CNS  = Chipset not supported
+  GNS  = GPU not supported
+  TNS  = Topology not supported
+  NS   = Not supported
+  U    = Unknown
+```
+
+不能因为本例两张矩阵相同，就只检查其中一项。P2P 能力可能受 GPU 型号、PCIe Root、ACS/IOMMU、虚拟化、驱动和运行模式影响，也不应预设矩阵一定对称。
+
+### 9.3 状态码与判断边界
+
+| 状态 | 含义 | 不能直接推出的结论 |
+| --- | --- | --- |
+| `X` | 当前设备自身 | 不是检查失败 |
+| `OK` | 所查询的能力可用 | 不等于实测带宽正常 |
+| `CNS` | 芯片组或平台不支持 | 不等于 GPU 故障 |
+| `GNS` | GPU 不支持 | 不能靠重启将硬件能力变为支持 |
+| `TNS` | 当前拓扑不支持 | 不等于两卡完全无法交换数据 |
+| `NS` | 该能力不受支持 | 要结合查询的是 Read、Write、NVLink 还是 PCIe 判断 |
+| `U` | 状态未知 | 不能当成 `OK` |
+| `DR` | 能力被注册表或驱动配置禁用，部分较新驱动显示 | 不等于硬件本身不支持 |
+
+还可以继续查询：
+
+```bash
+nvidia-smi topo -p2p n  # NVLink P2P 能力
+nvidia-smi topo -p2p p  # PCIe P2P 能力，是否支持取决于驱动版本
+```
+
+`topo -m` 回答设备之间通过什么路径连接，`topo -p2p r/w` 回答驱动是否报告相应访问能力；它们都不是性能压测。要确认实际通信是否健康，还需要运行 `p2pBandwidthLatencyTest` 和 `nccl-tests`，比较不同 GPU Pair 的带宽、时延与集合通信结果。
+
+不同驱动版本支持的 `-p2p` 能力选项和状态码可能不同，先以本机 `nvidia-smi topo -h` 为准。
 
 ## 10. CUDA P2P
 
@@ -543,6 +656,7 @@ NVSwitch 服务 NVLink Fabric，不承载普通 TCP/IP。
 
 ## 22. 参考与致谢 {/* #参考与致谢 */}
 
+- [NVIDIA System Management Interface：Topology](https://docs.nvidia.com/deploy/nvidia-smi/index.html#topology)
 - [NVIDIA Fabric Manager User Guide](https://docs.nvidia.com/hgx-platforms/fabric-manager-user-guide/)
 - [NCCL Documentation](https://docs.nvidia.com/deeplearning/nccl/index.html)
 - [NCCL Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)
