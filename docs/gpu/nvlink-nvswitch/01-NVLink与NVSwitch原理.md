@@ -287,6 +287,23 @@ GPU0 → NIC1 = SYS
 
 `NODE` 表示 GPU0 与 NIC0 位于同一个 NUMA Node，但两者之间仍要跨 PCIe Host Bridge；`SYS` 表示 GPU0 到 NIC1 还要跨 CPU Socket 互联。因此，如果一个分布式训练进程使用 GPU0，通常应优先选择拓扑更近的 NIC0，而不是跨 Socket 使用 NIC1。
 
+#### 9.2.1 同一 NUMA Node 是否代表不用 CPU 传数据 {/* #同一-numa-node-是否代表不用-cpu-传数据 */}
+
+不代表。需要把“物理路径经过 CPU 提供的 I/O 结构”和“由 CPU Core 复制业务数据”分开理解：
+
+- `PHB`、`NODE` 可能经过 CPU 封装中的 PCIe Root Complex 或内部 I/O Fabric，但数据可以由 GPU/NIC 的 DMA Engine 直接搬运，不需要 CPU Core 逐字节复制。
+- CPU 通常仍负责创建队列、提交描述符、启动 Kernel、建立通信和处理中断；所谓“绕过 CPU”一般只是指数据面不经 CPU Core 复制或不在主机内存中转，不是 CPU 完全不参与。
+- 是否需要主机内存中转取决于 P2P 或 GPUDirect RDMA 是否真正可用，不能仅凭两个设备属于同一 NUMA Node 判断。
+
+| 场景 | 简化数据路径 | CPU Core 是否复制数据 | 是否经过主机内存 |
+| --- | --- | --- | --- |
+| GPU 间 NVLink 可用 | GPU0 HBM → NVLink/NVSwitch → GPU1 HBM | 通常不复制，只负责控制 | 否 |
+| 同 NUMA 且 PCIe P2P/GPUDirect RDMA 可用 | GPU HBM → PCIe Switch/Root → GPU 或 NIC DMA | 通常不复制，只负责控制 | 否 |
+| 同 NUMA 但直接访问不可用 | GPU HBM → Node 0 主机内存 → GPU/NIC | 视框架实现而定，至少需要 CPU 协调两段 DMA | 是 |
+| 跨 NUMA 且直接访问不可用 | GPU HBM → 本地 PCIe/内存 → Socket 互联 → 远端设备 | 视实现而定，控制开销更高 | 通常是 |
+
+因此，“同一 NUMA Node”的直接收益是即使发生主机内存中转，通常也能使用本地内存并避免跨 Socket；只有再确认 P2P 或 GPUDirect RDMA 可用，才能判断业务数据是否真正绕过主机内存。
+
 当 GPUDirect RDMA 条件满足时，理想数据路径是：
 
 ```text
