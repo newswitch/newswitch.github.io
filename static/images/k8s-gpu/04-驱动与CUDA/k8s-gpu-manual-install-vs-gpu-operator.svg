@@ -8,14 +8,14 @@
     <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
       <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#18324d" flood-opacity="0.13"/>
     </filter>
-    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#2563a7"/>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10">
+      <path d="M0,1 L10,5 L0,9 z" fill="#2563a7"/>
     </marker>
-    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#21865b"/>
+    <marker id="arrow-green" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10">
+      <path d="M0,1 L10,5 L0,9 z" fill="#21865b"/>
     </marker>
-    <marker id="arrow-navy" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#173b63"/>
+    <marker id="arrow-navy" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10">
+      <path d="M0,1 L10,5 L0,9 z" fill="#173b63"/>
     </marker>
     <style>
       text { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif; fill: #132f4c; }
@@ -164,11 +164,11 @@
   <text x="1383" y="850" class="node-title" text-anchor="middle">GPU 执行</text>
   <text x="1383" y="878" class="small" text-anchor="middle">Kernel / HBM</text>
 
-  <line x1="266" y1="860" x2="297" y2="860" stroke="#173b63" stroke-width="4" marker-end="url(#arrow-navy)"/>
-  <line x1="495" y1="860" x2="526" y2="860" stroke="#173b63" stroke-width="4" marker-end="url(#arrow-navy)"/>
-  <line x1="744" y1="860" x2="775" y2="860" stroke="#173b63" stroke-width="4" marker-end="url(#arrow-navy)"/>
-  <line x1="1003" y1="860" x2="1034" y2="860" stroke="#173b63" stroke-width="4" marker-end="url(#arrow-navy)"/>
-  <line x1="1252" y1="860" x2="1283" y2="860" stroke="#173b63" stroke-width="4" marker-end="url(#arrow-navy)"/>
+  <line x1="266" y1="860" x2="297" y2="860" stroke="#173b63" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <line x1="495" y1="860" x2="526" y2="860" stroke="#173b63" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <line x1="744" y1="860" x2="775" y2="860" stroke="#173b63" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <line x1="1003" y1="860" x2="1034" y2="860" stroke="#173b63" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <line x1="1252" y1="860" x2="1283" y2="860" stroke="#173b63" stroke-width="3" marker-end="url(#arrow-navy)"/>
 
   <!-- Hybrid mode -->
   <rect x="48" y="970" width="1504" height="48" rx="12" fill="#fff8df" stroke="#d2a326" stroke-width="2"/>
