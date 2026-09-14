@@ -298,9 +298,9 @@ docker run --rm --gpus all \
 
 手动安装与 GPU Operator 对比：
 
-![手动安装 vs GPU Operator](/images/k8s-gpu/04-驱动与CUDA/k8s-gpu-manual-install-vs-gpu-operator.png)
+![手动管理与 GPU Operator 的软件栈、组件落点和运行时数据路径对比](/images/k8s-gpu/04-驱动与CUDA/k8s-gpu-manual-install-vs-gpu-operator.svg)
 
-*图：左为手动安装 Device Plugin + 监控；右为 GPU Operator 统一管理。本篇先看左侧。*
+*图：两种方式的主要差异是组件生命周期由谁管理；驱动最终仍落在宿主机，Pod 使用 GPU 的运行时路径相同。本篇先看左侧的手动管理方式。*
 
 ### 4.1 工作流程
 
