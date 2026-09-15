@@ -399,7 +399,7 @@ CUDA Core：通用算术；Tensor Core：矩阵与混合精度
 
 分析性能时同时看：GPU Util、显存占用、Memory Util、功耗、温度、频率，以及业务吞吐与延迟。
 
-显存原理补充：[HBM 显存原理：容量、带宽与访问效率](../memory/01-HBM显存原理：容量、带宽与访问效率.md)；下一篇：[GPU 服务器硬件拓扑与 NUMA](../pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)；动手命令优先：[nvidia-smi 常用命令与指标说明](../commands/01-nvidia-smi常用命令与指标说明.md)；组件链路：[NVIDIA 驱动、CUDA 与容器运行时的关系](../driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)。
+主流架构案例：[NVIDIA 主流 GPU 架构解剖](./03-Tesla-P100与GP100架构解剖.md)；显存原理补充：[HBM 显存原理：容量、带宽与访问效率](../memory/01-HBM显存原理：容量、带宽与访问效率.md)；拓扑基础：[GPU 服务器硬件拓扑与 NUMA](../pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)；动手命令优先：[nvidia-smi 常用命令与指标说明](../commands/01-nvidia-smi常用命令与指标说明.md)；组件链路：[NVIDIA 驱动、CUDA 与容器运行时的关系](../driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md)。
 
 ## 14. 课后练习
 

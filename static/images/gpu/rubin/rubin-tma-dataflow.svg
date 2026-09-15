@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Rubin 增强 TMA 与 MoE 数据流</title>
+  <desc id="desc">从 HBM4 中多个 Expert Tensor，经共享布局描述符和运行时地址更新，由 TMA 搬入 Shared Memory，再由 Tensor Core 计算。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7fbff"/>
+      <stop offset="1" stop-color="#f4faf6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#102a43" flood-opacity="0.12"/>
+    </filter>
+    <marker id="blueArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2368a2"/>
+    </marker>
+    <marker id="greenArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#23845d"/>
+    </marker>
+    <style>
+      .cn { font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #102a43; }
+      .title { font-size: 34px; font-weight: 700; fill: #fff; }
+      .subtitle { font-size: 17px; fill: #cfe2f3; }
+      .section { font-size: 24px; font-weight: 700; }
+      .label { font-size: 19px; font-weight: 700; }
+      .small { font-size: 15px; fill: #486581; }
+      .tiny { font-size: 13px; fill: #627d98; }
+      .step { font-size: 16px; font-weight: 700; fill: #2368a2; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect x="18" y="18" width="1564" height="90" rx="16" fill="#102a43"/>
+  <text class="cn title" x="54" y="60">Rubin Enhanced TMA：MoE Expert Tensor 怎样进入计算管线</text>
+  <text class="cn subtitle" x="54" y="89">Descriptor 描述“怎样解释数据”，Pointer 指向“这次数据在哪里”</text>
+
+  <g class="cn">
+    <rect x="55" y="150" width="360" height="560" rx="24" fill="#e7f6ec" stroke="#23845d" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="235" y="190" text-anchor="middle">HBM4（全局内存）</text>
+    <text class="small" x="235" y="220" text-anchor="middle">多个 Expert 共享形状与 Layout</text>
+
+    <rect x="88" y="258" width="294" height="92" rx="14" fill="#fff" stroke="#58a77f" stroke-width="2"/>
+    <text class="label" x="235" y="291" text-anchor="middle">Expert 0 Weight</text>
+    <text class="small" x="235" y="321" text-anchor="middle">Pointer = 0xA000 · Stride = S0</text>
+    <rect x="88" y="378" width="294" height="92" rx="14" fill="#fff" stroke="#58a77f" stroke-width="2"/>
+    <text class="label" x="235" y="411" text-anchor="middle">Expert 1 Weight</text>
+    <text class="small" x="235" y="441" text-anchor="middle">Pointer = 0xB000 · Stride = S1</text>
+    <rect x="88" y="498" width="294" height="92" rx="14" fill="#fff" stroke="#58a77f" stroke-width="2"/>
+    <text class="label" x="235" y="531" text-anchor="middle">Expert N Weight</text>
+    <text class="small" x="235" y="561" text-anchor="middle">Pointer = 0xN000 · Stride = SN</text>
+    <text class="tiny" x="235" y="635" text-anchor="middle">Tensor 数据本体</text>
+    <text class="tiny" x="235" y="661" text-anchor="middle">权重、激活或其他多维 Tile</text>
+  </g>
+
+  <g class="cn">
+    <rect x="485" y="150" width="380" height="250" rx="24" fill="#f3ebff" stroke="#7b3fc7" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="675" y="190" text-anchor="middle">共享 TMA Descriptor</text>
+    <text class="small" x="675" y="221" text-anchor="middle">描述公共 Layout，不保存所有数据</text>
+    <rect x="521" y="254" width="308" height="108" rx="14" fill="#fff" stroke="#a579d3" stroke-width="2"/>
+    <text class="label" x="675" y="287" text-anchor="middle">Rank · Shape · Element Type</text>
+    <text class="small" x="675" y="316" text-anchor="middle">Tile · Boundary · Swizzle/Layout</text>
+    <text class="tiny" x="675" y="342" text-anchor="middle">多个相同布局的 Expert 可以复用</text>
+
+    <rect x="485" y="460" width="380" height="250" rx="24" fill="#fff0d9" stroke="#c47a13" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="675" y="500" text-anchor="middle">Inline Descriptor Update</text>
+    <text class="small" x="675" y="531" text-anchor="middle">TMA 指令运行时覆盖动态字段</text>
+    <rect x="521" y="564" width="308" height="104" rx="14" fill="#fff" stroke="#d99b43" stroke-width="2"/>
+    <text class="label" x="675" y="598" text-anchor="middle">① Router 选中 Expert</text>
+    <text class="label" x="675" y="630" text-anchor="middle">Pointer / Stride = Runtime</text>
+    <text class="tiny" x="675" y="653" text-anchor="middle">Router 每轮选择不同 Expert</text>
+  </g>
+
+  <g class="cn">
+    <rect x="945" y="150" width="600" height="560" rx="24" fill="#e9f3ff" stroke="#2368a2" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="1245" y="190" text-anchor="middle">Rubin SM 内的数据流水线</text>
+
+    <rect x="990" y="250" width="210" height="120" rx="16" fill="#fff" stroke="#4a8cc7" stroke-width="2"/>
+    <text class="label" x="1095" y="288" text-anchor="middle">Enhanced TMA</text>
+    <text class="small" x="1095" y="317" text-anchor="middle">地址生成</text>
+    <text class="small" x="1095" y="343" text-anchor="middle">异步搬运 Tensor Tile</text>
+
+    <rect x="1290" y="250" width="210" height="120" rx="16" fill="#fff" stroke="#4a8cc7" stroke-width="2"/>
+    <text class="label" x="1395" y="288" text-anchor="middle">Shared Memory</text>
+    <text class="small" x="1395" y="317" text-anchor="middle">片上 Tile Buffer</text>
+    <text class="small" x="1395" y="343" text-anchor="middle">Producer / Consumer 同步</text>
+
+    <rect x="990" y="470" width="210" height="120" rx="16" fill="#fff" stroke="#4a8cc7" stroke-width="2"/>
+    <text class="label" x="1095" y="508" text-anchor="middle">Warp Scheduler</text>
+    <text class="small" x="1095" y="537" text-anchor="middle">安排就绪 Warp</text>
+    <text class="small" x="1095" y="563" text-anchor="middle">隐藏搬运与执行延迟</text>
+
+    <rect x="1290" y="470" width="210" height="120" rx="16" fill="#fff" stroke="#4a8cc7" stroke-width="2"/>
+    <text class="label" x="1395" y="508" text-anchor="middle">Tensor Core</text>
+    <text class="small" x="1395" y="537" text-anchor="middle">Expert GEMM / Attention</text>
+    <text class="small" x="1395" y="563" text-anchor="middle">消费已就绪 Tile</text>
+
+    <path d="M1200 310 H1290" fill="none" stroke="#2368a2" stroke-width="5" marker-end="url(#blueArrow)"/>
+    <path d="M1395 370 V470" fill="none" stroke="#2368a2" stroke-width="5" marker-end="url(#blueArrow)"/>
+    <path d="M1200 530 H1290" fill="none" stroke="#2368a2" stroke-width="5" marker-end="url(#blueArrow)"/>
+    <text class="step" x="1245" y="292" text-anchor="middle">异步 Copy</text>
+    <text class="step" x="1430" y="427">Tile 就绪</text>
+    <text class="step" x="1245" y="512" text-anchor="middle">发射计算</text>
+  </g>
+
+  <path d="M415 424 H455 V585 H485" fill="none" stroke="#23845d" stroke-width="5" marker-end="url(#greenArrow)"/>
+  <path d="M675 400 V460" fill="none" stroke="#7b3fc7" stroke-width="5" marker-end="url(#blueArrow)"/>
+  <text class="cn step" x="705" y="438">② 复用布局</text>
+  <path d="M865 585 H905 V310 H990" fill="none" stroke="#2368a2" stroke-width="5" marker-end="url(#blueArrow)"/>
+  <text class="cn step" x="1095" y="226" text-anchor="middle">③ 更新地址后发起 TMA</text>
+
+  <rect x="55" y="756" width="1490" height="102" rx="18" fill="#fff" stroke="#a8bac9" stroke-width="2"/>
+  <text class="cn label" x="800" y="793" text-anchor="middle">关键收益：不必为每个 Expert 重建一份完整 Descriptor，减少动态元数据与地址管理开销</text>
+  <text class="cn small" x="800" y="826" text-anchor="middle">TMA 优化的是片内搬运与流水线；Expert 跨 GPU Dispatch/Combine 仍由 NVLink 6 与通信软件承担</text>
+</svg>

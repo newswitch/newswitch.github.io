@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">P100 SXM2 的 HBM2 与 CoWoS 封装</title>
+  <desc id="desc">左侧展示 GP100 与四组 HBM2 通过硅中介层连接，右侧展示一个四层 HBM2 Stack 的 DRAM Die、TSV、Logic Base、Interposer 和 Package Substrate。</desc>
+  <defs>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dce6ef" stroke-width="1" opacity=".7"/></pattern>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#18324d" flood-opacity=".13"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10"><path d="M0 1L10 5 0 9Z" fill="#235b91"/></marker>
+    <style>text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;fill:#132f4c}.title{font-size:34px;font-weight:700;fill:#fff}.subtitle{font-size:18px;fill:#c9d8e8}.section{font-size:23px;font-weight:700}.heading{font-size:20px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#55708a}.micro{font-size:13px;font-weight:700}</style>
+  </defs>
+  <rect width="1600" height="900" fill="#f8fbfd"/><rect y="100" width="1600" height="800" fill="url(#grid)"/>
+  <rect width="1600" height="100" fill="#102b49"/><text x="48" y="47" class="title">P100 SXM2：HBM2 怎样连接 GP100</text><text x="48" y="77" class="subtitle">宽接口、低频率、同封装 · 四组 4-Die HBM2 Stack</text>
+
+  <text x="48" y="145" class="section">① 封装俯视逻辑关系</text><text x="1010" y="145" class="section">② 单组 HBM2 Stack 剖面</text>
+  <rect x="48" y="168" width="900" height="548" rx="18" fill="#fff" stroke="#91a8bc" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="1010" y="168" width="542" height="548" rx="18" fill="#fff" stroke="#91a8bc" stroke-width="2" filter="url(#shadow)"/>
+
+  <!-- Plan view -->
+  <rect x="96" y="212" width="804" height="456" rx="18" fill="#e5edf3" stroke="#718aa0" stroke-width="2"/>
+  <text x="498" y="646" class="small" text-anchor="middle">Silicon Interposer（硅中介层）· 提供超宽短距离布线</text>
+  <rect x="310" y="300" width="376" height="270" rx="20" fill="#dbeeff" stroke="#347db9" stroke-width="3"/>
+  <text x="498" y="378" class="section" text-anchor="middle">GP100 GPU Die</text>
+  <rect x="352" y="412" width="292" height="62" rx="11" fill="#fff" stroke="#347db9" stroke-width="2"/><text x="498" y="438" class="heading" text-anchor="middle">8 × Memory Controller</text><text x="498" y="461" class="small" text-anchor="middle">合计 4096-bit 接口</text>
+  <text x="498" y="520" class="body" text-anchor="middle">L2 Cache ↔ HBM2</text>
+
+  <g>
+    <rect x="116" y="230" width="176" height="120" rx="13" fill="#eaf8f2" stroke="#338b65" stroke-width="2"/><text x="204" y="266" class="heading" text-anchor="middle">HBM2 Stack 0</text><text x="204" y="294" class="body" text-anchor="middle">4 GB</text><text x="204" y="320" class="small" text-anchor="middle">1024-bit</text>
+    <rect x="704" y="230" width="176" height="120" rx="13" fill="#eaf8f2" stroke="#338b65" stroke-width="2"/><text x="792" y="266" class="heading" text-anchor="middle">HBM2 Stack 1</text><text x="792" y="294" class="body" text-anchor="middle">4 GB</text><text x="792" y="320" class="small" text-anchor="middle">1024-bit</text>
+    <rect x="116" y="504" width="176" height="120" rx="13" fill="#eaf8f2" stroke="#338b65" stroke-width="2"/><text x="204" y="540" class="heading" text-anchor="middle">HBM2 Stack 2</text><text x="204" y="568" class="body" text-anchor="middle">4 GB</text><text x="204" y="594" class="small" text-anchor="middle">1024-bit</text>
+    <rect x="704" y="504" width="176" height="120" rx="13" fill="#eaf8f2" stroke="#338b65" stroke-width="2"/><text x="792" y="540" class="heading" text-anchor="middle">HBM2 Stack 3</text><text x="792" y="568" class="body" text-anchor="middle">4 GB</text><text x="792" y="594" class="small" text-anchor="middle">1024-bit</text>
+  </g>
+  <g stroke="#338b65" stroke-width="7" opacity=".9"><line x1="292" y1="300" x2="310" y2="352"/><line x1="704" y1="300" x2="686" y2="352"/><line x1="292" y1="570" x2="310" y2="520"/><line x1="704" y1="570" x2="686" y2="520"/></g>
+
+  <!-- Cross section -->
+  <text x="1281" y="213" class="small" text-anchor="middle">一组 4-Die Stack，不是 8-Die Stack</text>
+  <g>
+    <rect x="1132" y="245" width="298" height="57" rx="8" fill="#dff4e9" stroke="#338b65" stroke-width="2"/><text x="1281" y="280" class="heading" text-anchor="middle">DRAM Die 3</text>
+    <rect x="1132" y="314" width="298" height="57" rx="8" fill="#dff4e9" stroke="#338b65" stroke-width="2"/><text x="1281" y="349" class="heading" text-anchor="middle">DRAM Die 2</text>
+    <rect x="1132" y="383" width="298" height="57" rx="8" fill="#dff4e9" stroke="#338b65" stroke-width="2"/><text x="1281" y="418" class="heading" text-anchor="middle">DRAM Die 1</text>
+    <rect x="1132" y="452" width="298" height="57" rx="8" fill="#dff4e9" stroke="#338b65" stroke-width="2"/><text x="1281" y="487" class="heading" text-anchor="middle">DRAM Die 0</text>
+    <rect x="1112" y="523" width="338" height="62" rx="9" fill="#fff2d8" stroke="#c99118" stroke-width="2"/><text x="1281" y="550" class="heading" text-anchor="middle">Logic Base</text><text x="1281" y="573" class="small" text-anchor="middle">命令、I/O 与通道逻辑</text>
+    <rect x="1050" y="603" width="462" height="44" rx="8" fill="#dce7ef" stroke="#718aa0" stroke-width="2"/><text x="1281" y="632" class="body" text-anchor="middle">Silicon Interposer</text>
+    <rect x="1033" y="660" width="496" height="34" rx="7" fill="#f1edfb" stroke="#7356ae" stroke-width="2"/><text x="1281" y="684" class="small" text-anchor="middle">Package Substrate</text>
+  </g>
+  <g stroke="#bb4c61" stroke-width="3" stroke-dasharray="7 5"><line x1="1195" y1="255" x2="1195" y2="585"/><line x1="1281" y1="255" x2="1281" y2="585"/><line x1="1367" y1="255" x2="1367" y2="585"/></g>
+  <text x="1456" y="410" class="body">TSV</text><text x="1456" y="434" class="small">硅通孔纵向连接</text>
+
+  <rect x="48" y="754" width="1504" height="102" rx="16" fill="#fff7dc" stroke="#d1a022" stroke-width="2"/>
+  <text x="80" y="790" class="heading">③ P100 SXM2 16 GB 的带宽计算</text>
+  <text x="80" y="826" class="body">4 Stack × 1024 bit = 4096 bit　　4096 ÷ 8 × 1.43 Gbit/s ≈ 732 GB/s</text>
+  <text x="1518" y="826" class="small" text-anchor="end">峰值接口带宽 ≠ 任意 Kernel 的持续有效带宽</text>
+</svg>

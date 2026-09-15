@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Vera Rubin NVL72 从芯片到机架和 Scale-Out 的层次</title>
+  <desc id="desc">Rubin GPU 通过 NVLink-C2C 与 Vera CPU 协同，计算托盘中的 GPU 通过 NVLink 6 接入交换托盘，18 个计算托盘和 9 个交换托盘组成 NVL72，再通过网络扩展到多机架。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#eef7f4"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#102a43" flood-opacity="0.12"/>
+    </filter>
+    <marker id="blueArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2368a2"/>
+    </marker>
+    <marker id="greenArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#23845d"/>
+    </marker>
+    <style>
+      .cn { font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #102a43; }
+      .title { font-size: 34px; font-weight: 700; fill: #fff; }
+      .subtitle { font-size: 17px; fill: #cfe2f3; }
+      .section { font-size: 24px; font-weight: 700; }
+      .label { font-size: 19px; font-weight: 700; }
+      .small { font-size: 15px; fill: #486581; }
+      .tiny { font-size: 13px; fill: #627d98; }
+      .metric { font-size: 18px; font-weight: 700; fill: #174f77; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect x="18" y="18" width="1564" height="90" rx="16" fill="#102a43"/>
+  <text class="cn title" x="54" y="60">Vera Rubin NVL72：芯片、Compute Tray、NVLink Fabric 与 Scale-Out</text>
+  <text class="cn subtitle" x="54" y="89">Scale-Up 连接紧耦合 GPU 域；Scale-Out 把多个机架扩展为更大集群</text>
+
+  <g class="cn">
+    <rect x="55" y="150" width="460" height="342" rx="24" fill="#fff" stroke="#8faabd" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="285" y="190" text-anchor="middle">单个计算组合</text>
+
+    <rect x="90" y="235" width="170" height="100" rx="15" fill="#fff0d9" stroke="#c47a13" stroke-width="2"/>
+    <text class="label" x="175" y="272" text-anchor="middle">Vera CPU</text>
+    <text class="small" x="175" y="301" text-anchor="middle">Host / 调度 / 数据准备</text>
+
+    <rect x="310" y="235" width="170" height="100" rx="15" fill="#e9f3ff" stroke="#2368a2" stroke-width="2"/>
+    <text class="label" x="395" y="272" text-anchor="middle">Rubin GPU</text>
+    <text class="small" x="395" y="301" text-anchor="middle">SM / Tensor / HBM4</text>
+
+    <path d="M260 285 H310" fill="none" stroke="#7b3fc7" stroke-width="7" marker-start="url(#blueArrow)" marker-end="url(#blueArrow)"/>
+    <text class="small" x="285" y="363" text-anchor="middle">NVLink-C2C · 最高 1.8 TB/s · 一致性 CPU-GPU 互联</text>
+    <text class="tiny" x="285" y="398" text-anchor="middle">不是 PCIe，也不是连接机架内所有 GPU 的 NVLink 6 Fabric</text>
+    <rect x="90" y="426" width="390" height="42" rx="10" fill="#f3ebff" stroke="#7b3fc7" stroke-width="1.5"/>
+    <text class="small" x="285" y="453" text-anchor="middle">逻辑层次：CPU-GPU 协同，不表示实际封装或 Tray 布线</text>
+  </g>
+
+  <g class="cn">
+    <rect x="565" y="150" width="420" height="342" rx="24" fill="#fff" stroke="#8faabd" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="775" y="190" text-anchor="middle">Compute Tray × 18</text>
+    <rect x="600" y="233" width="350" height="190" rx="18" fill="#eaf5ff" stroke="#2368a2" stroke-width="2"/>
+    <text class="label" x="775" y="270" text-anchor="middle">每个 Tray 的合计关系</text>
+    <text class="metric" x="775" y="310" text-anchor="middle">2 × Vera CPU</text>
+    <text class="metric" x="775" y="346" text-anchor="middle">4 × Rubin GPU</text>
+    <text class="small" x="775" y="382" text-anchor="middle">18 Tray → 36 CPU + 72 GPU</text>
+    <text class="tiny" x="775" y="409" text-anchor="middle">GPU 向上接入 NVLink 6 Switch Fabric</text>
+    <text class="small" x="775" y="458" text-anchor="middle">计算、供电、液冷和机架管理共同设计</text>
+  </g>
+
+  <g class="cn">
+    <rect x="1035" y="150" width="510" height="342" rx="24" fill="#fff" stroke="#8faabd" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="1290" y="190" text-anchor="middle">NVLink Switch Tray × 9</text>
+    <rect x="1075" y="233" width="430" height="190" rx="18" fill="#e7f6ec" stroke="#23845d" stroke-width="2"/>
+    <text class="label" x="1290" y="270" text-anchor="middle">NVLink 6 Switch Fabric</text>
+    <text class="metric" x="1290" y="310" text-anchor="middle">3.6 TB/s 双向聚合 / GPU</text>
+    <text class="metric" x="1290" y="346" text-anchor="middle">约 260 TB/s 机架聚合</text>
+    <text class="small" x="1290" y="382" text-anchor="middle">72 GPU 全互联 Scale-Up Domain</text>
+    <text class="tiny" x="1290" y="409" text-anchor="middle">不是任意 GPU Pair 的单次传输带宽</text>
+    <text class="small" x="1290" y="458" text-anchor="middle">承载 TP、EP、PP 与机架内 Collective</text>
+  </g>
+
+  <path d="M985 322 H1035" fill="none" stroke="#23845d" stroke-width="7" marker-end="url(#greenArrow)"/>
+  <text class="cn small" x="1010" y="301" text-anchor="middle">NVLink 6</text>
+
+  <g class="cn">
+    <rect x="55" y="550" width="1490" height="255" rx="28" fill="#fff" stroke="#6f8799" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="800" y="592" text-anchor="middle">Vera Rubin NVL72：一个机架级 Scale-Up 执行域</text>
+
+    <rect x="90" y="635" width="315" height="115" rx="16" fill="#eaf5ff" stroke="#2368a2" stroke-width="2"/>
+    <text class="label" x="248" y="672" text-anchor="middle">72 × Rubin GPU</text>
+    <text class="small" x="248" y="703" text-anchor="middle">合计约 20.7 TB HBM4</text>
+    <text class="tiny" x="248" y="729" text-anchor="middle">仍是分布在各 GPU 的本地显存</text>
+
+    <rect x="445" y="635" width="315" height="115" rx="16" fill="#fff0d9" stroke="#c47a13" stroke-width="2"/>
+    <text class="label" x="603" y="672" text-anchor="middle">36 × Vera CPU</text>
+    <text class="small" x="603" y="703" text-anchor="middle">主机计算与 GPU 协同</text>
+    <text class="tiny" x="603" y="729" text-anchor="middle">经 NVLink-C2C 连接 Rubin</text>
+
+    <rect x="800" y="635" width="315" height="115" rx="16" fill="#e7f6ec" stroke="#23845d" stroke-width="2"/>
+    <text class="label" x="958" y="672" text-anchor="middle">NVLink 6 Fabric</text>
+    <text class="small" x="958" y="703" text-anchor="middle">全互联、Collective、重路由</text>
+    <text class="tiny" x="958" y="729" text-anchor="middle">Scale-Up 网络</text>
+
+    <rect x="1155" y="635" width="355" height="115" rx="16" fill="#f3ebff" stroke="#7b3fc7" stroke-width="2"/>
+    <text class="label" x="1333" y="672" text-anchor="middle">电力 · 45°C 液冷 · RAS</text>
+    <text class="small" x="1333" y="703" text-anchor="middle">Power Smoothing 与 Tray 维护</text>
+    <text class="tiny" x="1333" y="729" text-anchor="middle">性能和可用性属于机架级问题</text>
+  </g>
+
+  <path d="M775 492 V530 H800 V550" fill="none" stroke="#2368a2" stroke-width="5" marker-end="url(#blueArrow)"/>
+  <path d="M1290 492 V530 H800 V550" fill="none" stroke="#23845d" stroke-width="5" marker-end="url(#greenArrow)"/>
+
+  <g class="cn">
+    <rect x="305" y="858" width="990" height="102" rx="22" fill="#eaf5ff" stroke="#2368a2" stroke-width="2" filter="url(#shadow)"/>
+    <text class="section" x="800" y="897" text-anchor="middle">Scale-Out：ConnectX-9 / BlueField-4 / Spectrum-X 或 InfiniBand</text>
+    <text class="small" x="800" y="929" text-anchor="middle">把多个服务器或 NVL72 机架连接成更大集群 · 与 NVLink 6 的 Scale-Up 职责不同</text>
+  </g>
+  <path d="M800 805 V858" fill="none" stroke="#2368a2" stroke-width="6" marker-end="url(#blueArrow)"/>
+</svg>

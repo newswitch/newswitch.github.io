@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1360" viewBox="0 0 1800 1360" role="img" aria-labelledby="title desc">
+  <title id="title">NVIDIA 主流 GPU 架构演进与产品分支</title>
+  <desc id="desc">从 Pascal、Volta、Turing、Ampere 到 Hopper、Ada 和 Blackwell，展示长期不变的 CUDA 骨架，以及数据中心计算和通用图形产品分支。</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#e7edf3" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#18344f" flood-opacity="0.14"/>
+    </filter>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#28679f"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2d8663"/>
+    </marker>
+    <style>
+      .title{font:700 46px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#fff}
+      .subtitle{font:400 22px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#bfd0df}
+      .section{font:700 29px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#132f4c}
+      .cardTitle{font:700 28px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#132f4c}
+      .chip{font:700 18px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#fff}
+      .body{font:400 19px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#274764}
+      .small{font:400 17px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#5b7690}
+      .flow{font:700 20px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#173652}
+      .year{font:700 18px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#28679f}
+    </style>
+  </defs>
+
+  <rect width="1800" height="1360" fill="#f8fbfd"/>
+  <rect y="132" width="1800" height="1228" fill="url(#grid)"/>
+  <rect width="1800" height="132" fill="#112e4c"/>
+  <text x="56" y="61" class="title">NVIDIA 主流 GPU 架构：共同骨架与两条产品分支</text>
+  <text x="58" y="101" class="subtitle">架构名决定一代基础能力，芯片与 SKU 决定最终保留的计算、显存、互联和媒体资源</text>
+
+  <rect x="48" y="166" width="1704" height="188" rx="20" fill="#fff" stroke="#8da7bc" stroke-width="2" filter="url(#shadow)"/>
+  <text x="78" y="210" class="section">① 长期复用的 CUDA 骨架</text>
+  <text x="1720" y="208" class="small" text-anchor="end">数量、容量和专用单元会变，基本执行与存储层次仍可迁移</text>
+
+  <g>
+    <rect x="76" y="240" width="174" height="70" rx="12" fill="#eaf4ff" stroke="#3d82bd" stroke-width="2"/>
+    <text x="163" y="270" class="flow" text-anchor="middle">Kernel / Grid</text><text x="163" y="296" class="small" text-anchor="middle">软件任务</text>
+    <rect x="286" y="240" width="174" height="70" rx="12" fill="#eaf4ff" stroke="#3d82bd" stroke-width="2"/>
+    <text x="373" y="270" class="flow" text-anchor="middle">Block / Warp</text><text x="373" y="296" class="small" text-anchor="middle">Warp = 32 Thread</text>
+    <rect x="496" y="240" width="174" height="70" rx="12" fill="#eaf4ff" stroke="#3d82bd" stroke-width="2"/>
+    <text x="583" y="270" class="flow" text-anchor="middle">SM</text><text x="583" y="296" class="small" text-anchor="middle">主要执行单元</text>
+    <rect x="706" y="240" width="246" height="70" rx="12" fill="#f0ebfb" stroke="#7356ae" stroke-width="2"/>
+    <text x="829" y="270" class="flow" text-anchor="middle">Register / Shared / L1</text><text x="829" y="296" class="small" text-anchor="middle">线程与 Block 的片内数据</text>
+    <rect x="988" y="240" width="174" height="70" rx="12" fill="#f0ebfb" stroke="#7356ae" stroke-width="2"/>
+    <text x="1075" y="270" class="flow" text-anchor="middle">L2 Cache</text><text x="1075" y="296" class="small" text-anchor="middle">全芯片共享</text>
+    <rect x="1198" y="240" width="210" height="70" rx="12" fill="#eaf8f2" stroke="#338b65" stroke-width="2"/>
+    <text x="1303" y="270" class="flow" text-anchor="middle">HBM / GDDR</text><text x="1303" y="296" class="small" text-anchor="middle">Global Memory</text>
+    <rect x="1444" y="240" width="272" height="70" rx="12" fill="#fdecef" stroke="#bb475d" stroke-width="2"/>
+    <text x="1580" y="270" class="flow" text-anchor="middle">PCIe / NVLink</text><text x="1580" y="296" class="small" text-anchor="middle">Host 与 Peer 互联</text>
+  </g>
+  <g stroke="#28679f" stroke-width="3" fill="none" marker-end="url(#arrow-blue)">
+    <line x1="250" y1="275" x2="276" y2="275"/><line x1="460" y1="275" x2="486" y2="275"/><line x1="670" y1="275" x2="696" y2="275"/>
+    <line x1="952" y1="275" x2="978" y2="275"/><line x1="1162" y1="275" x2="1188" y2="275"/><line x1="1408" y1="275" x2="1434" y2="275"/>
+  </g>
+
+  <text x="58" y="407" class="section">② 代际演进：先形成共同主干，再按工作负载分化</text>
+
+  <g filter="url(#shadow)">
+    <rect x="58" y="438" width="514" height="176" rx="18" fill="#edf6ff" stroke="#3d82bd" stroke-width="2"/>
+    <rect x="80" y="459" width="110" height="32" rx="16" fill="#28679f"/><text x="135" y="482" class="chip" text-anchor="middle">2016 · 6.x</text>
+    <text x="80" y="529" class="cardTitle">Pascal</text><text x="542" y="529" class="year" text-anchor="end">P100 · GTX 10</text>
+    <text x="80" y="561" class="body">packed FP16 · HBM2 · NVLink 1</text>
+    <text x="80" y="590" class="small">P100 建立本文的完整解剖样本</text>
+
+    <rect x="643" y="438" width="514" height="176" rx="18" fill="#edf6ff" stroke="#3d82bd" stroke-width="2"/>
+    <rect x="665" y="459" width="110" height="32" rx="16" fill="#28679f"/><text x="720" y="482" class="chip" text-anchor="middle">2017 · 7.0</text>
+    <text x="665" y="529" class="cardTitle">Volta</text><text x="1127" y="529" class="year" text-anchor="end">V100 · Titan V</text>
+    <text x="665" y="561" class="body">首代 Tensor Core · 独立线程调度</text>
+    <text x="665" y="590" class="small">矩阵乘加进入专用执行管线</text>
+
+    <rect x="1228" y="438" width="514" height="176" rx="18" fill="#edf6ff" stroke="#3d82bd" stroke-width="2"/>
+    <rect x="1250" y="459" width="110" height="32" rx="16" fill="#28679f"/><text x="1305" y="482" class="chip" text-anchor="middle">2018 · 7.5</text>
+    <text x="1250" y="529" class="cardTitle">Turing</text><text x="1712" y="529" class="year" text-anchor="end">T4 · RTX 20</text>
+    <text x="1250" y="561" class="body">Tensor Core 2 · INT8/4 · RT Core</text>
+    <text x="1250" y="590" class="small">推理、光追、媒体和图形汇合</text>
+  </g>
+  <g stroke="#28679f" stroke-width="4" fill="none" marker-end="url(#arrow-blue)">
+    <line x1="572" y1="526" x2="631" y2="526"/><line x1="1157" y1="526" x2="1216" y2="526"/>
+  </g>
+
+  <rect x="58" y="654" width="1684" height="182" rx="18" fill="#fff7e4" stroke="#cf8a19" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="82" y="676" width="128" height="32" rx="16" fill="#bb7610"/><text x="146" y="699" class="chip" text-anchor="middle">2020 · 8.x</text>
+  <text x="82" y="748" class="cardTitle">Ampere：同一代开始出现非常清晰的芯片分支</text>
+  <line x1="900" y1="686" x2="900" y2="812" stroke="#ddb15f" stroke-width="2"/>
+  <text x="82" y="784" class="body">GA100 / CC 8.0：A100、A30</text><text x="82" y="814" class="small">HBM · TF32/BF16 · 稀疏 · MIG · NVLink 3</text>
+  <text x="936" y="748" class="body">GA10x / CC 8.6：A10、A40、RTX A、RTX 30</text><text x="936" y="784" class="small">GDDR · 图形/RT · 显示与媒体 · 产品级互联差异</text>
+
+  <g stroke-width="4" fill="none">
+    <path d="M900 836 L900 870 L458 870 L458 900" stroke="#28679f" marker-end="url(#arrow-blue)"/>
+    <path d="M900 836 L900 870 L1342 870 L1342 900" stroke="#2d8663" marker-end="url(#arrow-green)"/>
+  </g>
+
+  <text x="76" y="891" class="year">数据中心训练 / HPC / Scale-Up</text>
+  <text x="960" y="891" class="year" fill="#2d8663">通用推理 / 图形 / 视频 / 工作站</text>
+
+  <g filter="url(#shadow)">
+    <rect x="58" y="910" width="800" height="168" rx="18" fill="#eaf4ff" stroke="#3d82bd" stroke-width="2"/>
+    <rect x="82" y="932" width="118" height="32" rx="16" fill="#28679f"/><text x="141" y="955" class="chip" text-anchor="middle">2022 · 9.0</text>
+    <text x="82" y="1002" class="cardTitle">Hopper</text><text x="828" y="1002" class="year" text-anchor="end">H100 · H200 · GH200</text>
+    <text x="82" y="1035" class="body">Transformer Engine · FP8 · TMA · Block Cluster</text>
+    <text x="82" y="1063" class="small">HBM3/HBM3e · Distributed Shared Memory · NVLink 4</text>
+
+    <rect x="942" y="910" width="800" height="168" rx="18" fill="#eaf8f2" stroke="#338b65" stroke-width="2"/>
+    <rect x="966" y="932" width="118" height="32" rx="16" fill="#2d8663"/><text x="1025" y="955" class="chip" text-anchor="middle">2022 · 8.9</text>
+    <text x="966" y="1002" class="cardTitle">Ada Lovelace</text><text x="1712" y="1002" class="year" text-anchor="end">L4 · L40S · RTX 40</text>
+    <text x="966" y="1035" class="body">Tensor Core 4 · FP8 · RT Core 3 · 大容量 L2</text>
+    <text x="966" y="1063" class="small">GDDR6/6X · AV1 与多路编解码 · 高能效推理</text>
+  </g>
+
+  <g stroke-width="4" fill="none">
+    <line x1="458" y1="1078" x2="458" y2="1118" stroke="#28679f" marker-end="url(#arrow-blue)"/>
+    <line x1="1342" y1="1078" x2="1342" y2="1118" stroke="#2d8663" marker-end="url(#arrow-green)"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="58" y="1128" width="800" height="174" rx="18" fill="#edf3ff" stroke="#315f9d" stroke-width="2"/>
+    <rect x="82" y="1150" width="150" height="32" rx="16" fill="#315f9d"/><text x="157" y="1173" class="chip" text-anchor="middle">2024+ · 10.x</text>
+    <text x="82" y="1220" class="cardTitle">Blackwell 数据中心</text><text x="828" y="1220" class="year" text-anchor="end">B200/B300 · GB200/GB300</text>
+    <text x="82" y="1253" class="body">Tensor Core 5 · NVFP4 · 双 Die · HBM3e</text>
+    <text x="82" y="1282" class="small">NVLink 5 · 机柜级 NVLink Fabric · 更强 RAS</text>
+
+    <rect x="942" y="1128" width="800" height="174" rx="18" fill="#ebf8f2" stroke="#2d8663" stroke-width="2"/>
+    <rect x="966" y="1150" width="150" height="32" rx="16" fill="#2d8663"/><text x="1041" y="1173" class="chip" text-anchor="middle">2025+ · 12.0</text>
+    <text x="966" y="1220" class="cardTitle">RTX Blackwell</text><text x="1712" y="1220" class="year" text-anchor="end">RTX PRO · GeForce RTX 50</text>
+    <text x="966" y="1253" class="body">Tensor Core 5 · RT Core 4 · GDDR7</text>
+    <text x="966" y="1282" class="small">神经渲染 · 图形/显示/媒体，不等于 B200 路线</text>
+  </g>
+
+  <text x="900" y="1338" class="small" text-anchor="middle">读图原则：先确认架构和芯片分支，再确认具体 SKU、板卡形态、显存、互联与 Compute Capability</text>
+</svg>

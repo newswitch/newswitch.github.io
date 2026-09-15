@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="930" viewBox="0 0 1600 930" role="img" aria-labelledby="title desc">
+  <title id="title">P100 系统中的 PCIe 与 NVLink 数据路径</title>
+  <desc id="desc">比较 PCIe P2P、主机内存中转与 NVLink P2P，说明 PCIe 仍承担枚举控制和主机数据搬运，并解释 NVLink 单向与双向聚合带宽。</desc>
+  <defs>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#dce6ef" stroke-width="1" opacity=".7"/></pattern>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#18324d" flood-opacity=".13"/></filter>
+    <marker id="blue" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10"><path d="M0 1L10 5 0 9Z" fill="#235b91"/></marker>
+    <marker id="red" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10"><path d="M0 1L10 5 0 9Z" fill="#bb475d"/></marker>
+    <style>text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;fill:#132f4c}.title{font-size:34px;font-weight:700;fill:#fff}.subtitle{font-size:18px;fill:#c9d8e8}.section{font-size:23px;font-weight:700}.heading{font-size:20px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#55708a}.blue{fill:#235b91}.red{fill:#bb475d}</style>
+  </defs>
+  <rect width="1600" height="930" fill="#f8fbfd"/><rect y="100" width="1600" height="830" fill="url(#grid)"/>
+  <rect width="1600" height="100" fill="#102b49"/><text x="48" y="47" class="title">P100：PCIe 路径与 NVLink 路径怎样共存</text><text x="48" y="77" class="subtitle">高速 Peer Data Path 不会取消 PCIe 的枚举、控制和 Host Transfer 职责</text>
+
+  <text x="48" y="145" class="section">① PCIe：控制、主机搬运，也可以承载 GPU P2P</text>
+  <rect x="48" y="168" width="730" height="428" rx="18" fill="#edf6ff" stroke="#3d82bd" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="272" y="199" width="282" height="70" rx="12" fill="#fff" stroke="#3d82bd" stroke-width="2"/><text x="413" y="228" class="heading" text-anchor="middle">CPU / PCIe Root Complex</text><text x="413" y="253" class="small" text-anchor="middle">枚举、BAR、命令与 Host Transfer</text>
+  <rect x="298" y="314" width="230" height="67" rx="12" fill="#fff" stroke="#3d82bd" stroke-width="2"/><text x="413" y="342" class="heading" text-anchor="middle">PCIe Switch / Fabric</text><text x="413" y="365" class="small" text-anchor="middle">根据平台拓扑转发</text>
+  <rect x="83" y="433" width="242" height="93" rx="13" fill="#fdecf0" stroke="#bb475d" stroke-width="2"/><text x="204" y="468" class="heading" text-anchor="middle">GPU 0 + HBM2</text><text x="204" y="497" class="small" text-anchor="middle">Peer DMA 发起端</text>
+  <rect x="501" y="433" width="242" height="93" rx="13" fill="#fdecf0" stroke="#bb475d" stroke-width="2"/><text x="622" y="468" class="heading" text-anchor="middle">GPU 1 + HBM2</text><text x="622" y="497" class="small" text-anchor="middle">Peer DMA 目标端</text>
+  <rect x="574" y="202" width="166" height="64" rx="11" fill="#fff5d8" stroke="#c99118" stroke-width="2"/><text x="657" y="228" class="heading" text-anchor="middle">Host Memory</text><text x="657" y="252" class="small" text-anchor="middle">中转仅在需要时</text>
+  <g stroke="#235b91" stroke-width="3" fill="none" marker-end="url(#blue)"><line x1="413" y1="269" x2="413" y2="306"/><path d="M413 381V405H204V425"/><path d="M413 381V405H622V425"/></g>
+  <line x1="325" y1="480" x2="493" y2="480" stroke="#235b91" stroke-width="4" marker-end="url(#blue)"/>
+  <text x="413" y="546" class="small" text-anchor="middle">PCIe P2P：支持时无需 CPU Core 复制</text>
+  <path d="M204 433V288H657V274" fill="none" stroke="#c99118" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#blue)"/>
+  <path d="M657 274V288H622V425" fill="none" stroke="#c99118" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#blue)"/>
+  <text x="657" y="294" class="small" text-anchor="middle">P2P 不可用时可能 Host Staging</text>
+  <text x="83" y="566" class="body">PCIe 3.0 x16：约 16 GB/s/方向，约 32 GB/s 双向聚合</text>
+
+  <text x="822" y="145" class="section">② NVLink：GPU 间高速点对点数据路径</text>
+  <rect x="822" y="168" width="730" height="428" rx="18" fill="#fff3f5" stroke="#bb475d" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="994" y="199" width="386" height="68" rx="12" fill="#fff" stroke="#3d82bd" stroke-width="2"/><text x="1187" y="227" class="heading" text-anchor="middle">CPU / PCIe Root Complex</text><text x="1187" y="251" class="small" text-anchor="middle">PCIe 仍保留：控制与主机数据搬运</text>
+  <rect x="867" y="375" width="250" height="122" rx="14" fill="#fff" stroke="#bb475d" stroke-width="2"/><text x="992" y="411" class="heading" text-anchor="middle">GPU 0</text><rect x="905" y="431" width="174" height="42" rx="8" fill="#eaf8f2" stroke="#338b65"/><text x="992" y="458" class="body" text-anchor="middle">Local HBM2</text>
+  <rect x="1257" y="375" width="250" height="122" rx="14" fill="#fff" stroke="#bb475d" stroke-width="2"/><text x="1382" y="411" class="heading" text-anchor="middle">GPU 1</text><rect x="1295" y="431" width="174" height="42" rx="8" fill="#eaf8f2" stroke="#338b65"/><text x="1382" y="458" class="body" text-anchor="middle">Remote HBM2</text>
+  <g stroke="#235b91" stroke-width="2.5" fill="none" marker-end="url(#blue)"><path d="M1110 267V320H992V367"/><path d="M1264 267V320H1382V367"/></g>
+  <line x1="1117" y1="436" x2="1249" y2="436" stroke="#bb475d" stroke-width="5" marker-end="url(#red)"/>
+  <line x1="1257" y1="463" x2="1125" y2="463" stroke="#bb475d" stroke-width="5" marker-end="url(#red)"/>
+  <text x="1187" y="412" class="heading red" text-anchor="middle">NVLink 1.0 × N</text>
+  <text x="1187" y="527" class="body" text-anchor="middle">直接 Peer Access · 不等于两张卡的显存自动合并</text>
+  <text x="856" y="566" class="body">每条 Link：20 GB/s/方向，40 GB/s 双向聚合</text>
+
+  <!-- Bandwidth section -->
+  <rect x="48" y="636" width="1504" height="230" rx="18" fill="#fff" stroke="#91a8bc" stroke-width="2"/>
+  <text x="78" y="675" class="section">③ 统一口径比较带宽</text>
+  <rect x="82" y="705" width="650" height="104" rx="13" fill="#eaf4ff" stroke="#3d82bd" stroke-width="2"/>
+  <text x="112" y="740" class="heading">PCIe 3.0 x16</text><text x="112" y="775" class="body">单方向约 16 GB/s　|　双向聚合约 32 GB/s</text>
+  <rect x="868" y="705" width="650" height="104" rx="13" fill="#fdecef" stroke="#bb475d" stroke-width="2"/>
+  <text x="898" y="740" class="heading">P100 的 4 条 NVLink 1.0 全部合计</text><text x="898" y="775" class="body">单方向 80 GB/s　|　双向聚合 160 GB/s</text>
+  <text x="800" y="840" class="body" text-anchor="middle">160 ÷ 32 ≈ 5 倍；一次单向复制只能使用单方向带宽，且 GPU Pair 可用 Link 数由实际布线决定。</text>
+  <g transform="translate(55 890)"><line x1="0" y1="0" x2="52" y2="0" stroke="#235b91" stroke-width="3"/><text x="65" y="6" class="small">PCIe</text><line x1="160" y1="0" x2="212" y2="0" stroke="#bb475d" stroke-width="4"/><text x="225" y="6" class="small">NVLink</text><line x1="330" y1="0" x2="382" y2="0" stroke="#c99118" stroke-width="2.5" stroke-dasharray="8 6"/><text x="395" y="6" class="small">可能的 Host Memory 中转</text></g>
+</svg>
