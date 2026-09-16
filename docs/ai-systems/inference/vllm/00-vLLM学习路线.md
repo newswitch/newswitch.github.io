@@ -210,6 +210,7 @@ GPUModelRunner、Kernel、NCCL 或输出层。
 | 06 | [GPUModelRunner、CUDA Graph 与 Kernel 空洞](./19-GPUModelRunner-CUDAGraph与Kernel空洞分析.md) | 用 CPU-GPU Timeline 区分上游饥饿和 Kernel 瓶颈 |
 | 07 | [TP 慢 Rank、NVLink 与 NCCL 排障](./20-TP慢Rank-NVLink与NCCL推理故障排查.md) | 定位多卡慢 rank、链路、拓扑与 collective 问题 |
 | 08 | [CUDA Graph、TP与通信融合稳定性分析](./26-CUDA-Graph-TP与通信融合稳定性分析.md) | 区分Graph触发条件与地址、Stream、Collective和自定义通信根因 |
+| 09 | [服务日志定位吞吐断崖与并发拐点](./27-vLLM服务日志定位吞吐断崖与并发拐点.md) | 用 Running、Waiting、KV、Prefill/Decode 吞吐和延迟曲线建立假设并完成控制实验 |
 
 一次调优必须固定模型 Revision、镜像、硬件、并行策略、真实输入/输出 Token 联合分布、
 到达模型、Prefix 命中和 Scheduler 参数。结果同时比较 TTFT/TPOT/E2E P50/P95/P99、
