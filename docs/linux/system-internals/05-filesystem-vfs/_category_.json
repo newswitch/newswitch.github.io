@@ -1,0 +1,9 @@
+{
+  "label": "05. 文件系统与 VFS",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/filesystem-vfs/文件系统与VFS导读"
+  }
+}

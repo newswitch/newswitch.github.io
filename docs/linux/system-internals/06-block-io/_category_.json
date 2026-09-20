@@ -1,0 +1,9 @@
+{
+  "label": "06. 块设备与 Linux I/O",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/block-io/块设备与Linux-IO导读"
+  }
+}
