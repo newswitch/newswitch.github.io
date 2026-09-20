@@ -1,0 +1,9 @@
+{
+  "label": "Linux 系统原理",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/Linux系统原理学习路线"
+  }
+}

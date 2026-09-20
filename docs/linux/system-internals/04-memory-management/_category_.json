@@ -1,0 +1,9 @@
+{
+  "label": "04. 内存管理",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/memory-management/Linux内存管理导读"
+  }
+}

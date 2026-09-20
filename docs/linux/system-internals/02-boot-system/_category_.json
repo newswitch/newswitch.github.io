@@ -1,0 +1,9 @@
+{
+  "label": "02. 系统启动",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/boot-system/Linux系统启动导读"
+  }
+}

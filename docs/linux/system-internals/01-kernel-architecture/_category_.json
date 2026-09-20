@@ -1,0 +1,9 @@
+{
+  "label": "01. 内核架构",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/kernel-architecture/内核架构导读"
+  }
+}
