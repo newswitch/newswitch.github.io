@@ -56,6 +56,19 @@ flowchart TB
 - [块设备与 Linux IO 导读](./06-block-io/00-块设备与Linux-IO导读.md)
 - [Linux 网络栈导读](./07-network-stack/00-Linux网络栈导读.md)
 
+### 3.3 多核、硬件与隔离边界 {/* #第三阶段多核硬件与隔离边界 */}
+
+- [中断、时间与内核并发导读](./08-interrupts-concurrency/00-中断时间与内核并发导读.md)
+- [设备模型与驱动导读](./09-devices-drivers/00-设备模型与驱动导读.md)
+- [Namespace、cgroup 与容器原理导读](./10-isolation-containers/00-Namespace-cgroup与容器原理导读.md)
+- [Linux 安全机制导读](./11-security/00-Linux安全机制导读.md)
+
+### 3.4 观测、性能与源码实验 {/* #第四阶段观测性能与源码实验 */}
+
+- [Linux 可观测性导读](./12-observability/00-Linux可观测性导读.md)
+- [性能工程与可靠性导读](./13-performance-reliability/00-性能工程与可靠性导读.md)
+- [内核源码与实验导读](./14-source-labs/00-内核源码与实验导读.md)
+
 ## 4. 阅读源码的约束
 
 文章引用源码时给出子系统、文件和函数名，而不是依赖容易变化的行号。需要先确认正在运行的内核配置和发行版补丁：
@@ -71,13 +84,19 @@ grep -E 'CONFIG_(PREEMPT|NUMA|CGROUP|TRANSPARENT_HUGEPAGE)=' /boot/config-"$(una
 
 ## 5. 掌握标准
 
-完成第一阶段后，应能独立解释：
+完成整套路线后，应能独立解释：
 
 - CPU 如何从用户态进入内核态并返回。
 - 固件如何把控制权交给内核，内核如何启动第一个用户态进程。
 - `fork`、`execve`、调度、上下文切换和进程状态怎样衔接。
 - 虚拟地址如何映射到物理页，缺页、回收、Swap 和 OOM 为什么发生。
 - `top`、`vmstat`、`pidstat`、`free`、PSI 等输出分别在观察什么，而不是只记阈值。
+- 中断、软中断、工作队列、锁、RCU 和内存屏障如何共同保证多核并发正确性。
+- 设备怎样被发现、匹配驱动、建立 DMA 和中断通道，并通过内核子系统向用户态提供接口。
+- Namespace 隔离了什么、cgroup 限制了什么，OCI 运行时如何把两者组合为容器。
+- DAC、capability、LSM、seccomp 与 Audit 分别处在哪一层，为什么容器不是天然安全边界。
+- 如何从指标形成假设，再用日志、trace、profile 和源码定位到具体等待点或执行路径。
+- 如何在隔离实验环境中编译内核、修改配置、复现问题、采集证据并恢复现场。
 
 ## 6. 官方资料
 

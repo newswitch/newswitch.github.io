@@ -1,0 +1,9 @@
+{
+  "label": "10. 隔离、cgroup 与容器",
+  "position": 10,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/isolation-containers/Namespace-cgroup与容器原理导读"
+  }
+}

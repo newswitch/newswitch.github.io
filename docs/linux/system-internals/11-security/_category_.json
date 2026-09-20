@@ -1,0 +1,9 @@
+{
+  "label": "11. Linux 安全机制",
+  "position": 11,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/security/Linux安全机制导读"
+  }
+}

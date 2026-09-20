@@ -1,0 +1,9 @@
+{
+  "label": "12. Linux 可观测性",
+  "position": 12,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "linux/system-internals/observability/Linux可观测性导读"
+  }
+}
