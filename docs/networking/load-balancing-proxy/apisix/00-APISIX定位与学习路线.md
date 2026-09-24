@@ -15,7 +15,8 @@ Apache APISIX 是动态、插件化的 API Gateway。Nginx/OpenResty 承载请�
 1. 本文建立定位和选型框架；
 2. [Nginx、Lua、etcd、Route、Service、Upstream 与请求路径](./01-APISIX-Nginx-Lua-etcd-Route-Service-Upstream与请求路径.md)理解原理；
 3. [部署、Admin API、插件、认证、可观测性与 Kubernetes](./02-APISIX部署-Admin-API-插件-认证-可观测性与Kubernetes.md)完成实践；
-4. [性能容量、升级、选型与故障 Runbook](./03-APISIX性能容量-升级-选型与故障Runbook.md)掌握生产边界。
+4. [性能容量、升级、选型与故障 Runbook](./03-APISIX性能容量-升级-选型与故障Runbook.md)掌握生产边界；
+5. [OpenResty、LuaJIT 与火焰图](./04-OpenResty-LuaJIT性能分析与火焰图.md)从 Nginx phase 追踪到 Lua、JIT、C 和内核热点。
 
 ## 2. 技术边界
 

@@ -1,636 +1,302 @@
 ---
-title: "Gateway API 推理扩展"
+title: "Gateway API 推理扩展：HTTPRoute、InferencePool 与 EPP"
 sidebar_label: "06. Gateway API 推理扩展"
 sidebar_position: 6
-description: "Gateway API 推理扩展"
-tags: [Kubernetes, 服务发现, 学习路线]
+description: "从网络转发视角解释 Gateway API Inference Extension 的稳定 API、请求路径、端点选择、故障语义和排障方法。"
+tags: [Kubernetes, Gateway API, InferencePool, EPP, LLM, 推理路由]
 ---
 
-# Gateway API 推理扩展
+# Gateway API 推理扩展：HTTPRoute、InferencePool 与 EPP
 
-> Gateway API Inference Extension 为 Kubernetes AI/ML 推理工作负载提供了标准化、声明式的流量管理和智能路由能力，极大提升了模型服务的可扩展性与可维护性。
+普通 Service 能根据 Ready Endpoint 转发请求，却不知道某个 vLLM Pod 正在排队、KV Cache 接近满载、已经缓存了相同前缀，或者加载了目标 LoRA。推理扩展在 Gateway API 的路由模型中加入 `InferencePool`，让网关在真正转发前取得面向推理负载的端点选择结果。
 
-## 1. 引言 {/* #引言 */}
+## 1. 先确认当前版本边界
 
-本文系统介绍了 Kubernetes Gateway API Inference Extension 的架构、核心组件、关键资源、请求处理流程、调度算法及最佳实践，帮助读者全面理解其在 AI 推理场景下的应用价值。
+截至 2026 年 9 月，阅读资料时应区分三个层次：
 
-## 2. 什么是 Gateway API Inference Extension {/* #什么是-gateway-api-inference-extension */}
-
-Gateway API Inference Extension 是 Kubernetes Gateway API 的一个扩展，专为 AI/ML 推理工作负载设计。它提供标准化 API，便于管理 AI 模型服务的路由、负载均衡和流量控制。
-
-### 2.1 核心特性 {/* #核心特性 */}
-
-- 模型路由：基于模型名称、版本等进行路由
-- 负载均衡：AI 推理服务的智能负载均衡
-- 流量分割：支持金丝雀发布和 A/B 测试
-- 服务发现：自动发现和注册 AI 服务
-- 安全控制：API 密钥管理和访问控制
-
-## 3. 架构概述 {/* #架构概述 */}
-
-下图展示了 Gateway API Inference Extension 的整体架构：
-
-```mermaid
-graph TB
-    subgraph "客户端层"
-        CLIENT["AI/ML 应用<br/>(OpenAI-compatible client)"]
-    end
-
-    subgraph "网关层"
-        GW["Gateway<br/>(Envoy-based proxy)"]
-        HR["HTTPRoute<br/>(gateway.networking.k8s.io/v1)"]
-    end
-
-    subgraph "扩展层"
-        BBR["Body-Based Router<br/>(pkg/bbr)"]
-        EPP["Endpoint Picker Proxy<br/>(cmd/epp)"]
-    end
-
-    subgraph "控制平面"
-        POOL["InferencePool CRD<br/>(apis/v1/inferencepool_types.go)"]
-        OBJ["InferenceObjective CRD<br/>(apis/v1alpha2/inferenceobjective_types.go)"]
-    end
-
-    subgraph "后端层"
-        MS1["Model Server Pod 1<br/>(vLLM, Triton, SGLang)"]
-        MS2["Model Server Pod 2"]
-        MS3["Model Server Pod N"]
-    end
-
-    CLIENT -->|"HTTP POST /v1/completions"| GW
-    GW -->|"ext-proc gRPC stream"| BBR
-    BBR -->|"adds X-Gateway-Model-Name header"| GW
-    GW -->|"matches HTTPRoute"| HR
-    HR -->|"backendRef: InferencePool"| POOL
-    GW -->|"ext-proc gRPC stream"| EPP
-    EPP -->|"watches"| POOL
-    EPP -->|"watches"| OBJ
-    EPP -->|"selects optimal pod"| MS1
-    EPP -.->|"alternative selection"| MS2
-    EPP -.->|"alternative selection"| MS3
-    MS1 -->|"inference response"| CLIENT
-```
-
-![系统架构总览](/images/k8s/service-discovery/gateway-api-inference/abaa6a57579f530656c7b442710119d1.svg)
-
-### 3.1 组件说明 {/* #组件说明 */}
-
-- Gateway：入口网关，处理外部请求
-- InferencePool：推理服务池，管理多个模型服务
-- InferenceExtension：推理扩展，提供 AI 特定功能
-- Model Servers：实际的模型推理服务
-
-## 4. 核心组件详解 {/* #核心组件详解 */}
-
-Gateway API Inference Extension 由四个主要组件协同工作，提供智能推理路由能力。
-
-### 4.1 Gateway {/* #gateway */}
-
-Gateway 是支持 Gateway API 且实现 ext-proc 的 Kubernetes 代理。常见实现包括 GKE Gateway、Istio、Kgateway 和 Agentgateway。Gateway 负责 L4-L7 路由，并通过 gRPC 流与扩展组件集成。
-
-### 4.2 Body-Based Router (BBR) {/* #body-based-router-bbr */}
-
-BBR 是可选 ext-proc 服务器，从 OpenAI 格式请求体中提取 `model` 字段，并注入 `X-Gateway-Model-Name` 头部，便于 HTTPRoute 按模型名称路由。
-
-### 4.3 Endpoint Picker Proxy (EPP) {/* #endpoint-picker-proxy-epp */}
-
-EPP 是核心智能组件，实现调度和路由逻辑。其主要子模块包括：
-
-- StreamingServer：处理 Envoy 的双向 gRPC 协议
-- Director：协调请求生命周期和插件执行
-- Scheduler：执行 Filter → Score → Pick 流水线
-- Datastore：缓存 Kubernetes 资源和 Pod 指标
-- Controllers：协调 InferencePool、InferenceObjective 和 Pod 资源
-
-### 4.4 Model Servers {/* #model-servers */}
-
-后端 Pod 运行推理服务器（如 vLLM、Triton、SGLang），需实现协议以公开调度决策指标。
-
-## 5. 核心 Kubernetes 资源 {/* #核心-kubernetes-资源 */}
-
-下表总结了扩展引入的自定义 Kubernetes 资源及其作用：
-
-| 资源 | API 版本 | 目的 |
+| 层次 | 状态 | 含义 |
 | --- | --- | --- |
-| InferencePool | inference.networking.k8s.io/v1 | 定义模型服务器 Pod 池并引用 EPP 服务进行端点选择 |
-| InferenceObjective | inference.networking.x-k8s.io/v1alpha2 | 为模型指定请求优先级和路由策略 |
-| Gateway | gateway.networking.k8s.io/v1 | 标准 Gateway API 资源，通过 EPP 集成扩展 |
-| HTTPRoute | gateway.networking.k8s.io/v1 | 将流量路由到 InferencePool 后端而非标准 Service |
+| `InferencePool` API | 自 v1.0.0 起进入 `v1`，GA | API Schema 具有稳定性承诺 |
+| `InferencePoolImport` | Alpha | 用于多集群导入，仍可能破坏性变化 |
+| EPP、BBR、延迟预测实现 | 实现快速演进 | 参考 EPP 已向 llm-d-router 汇聚，具体网关也可实现自己的扩展 |
 
-下图展示了资源之间的关系：
+这意味着“`InferencePool` 已稳定”不等于所有调度插件、Helm 参数和网关实现都已稳定。部署时必须锁定 Gateway Controller、扩展 Chart、CRD 和模型服务协议版本。
 
-```mermaid
-graph LR
-    subgraph "标准 Gateway API"
-        GW["Gateway"]
-        HR["HTTPRoute"]
-    end
+旧资料中的 `InferenceRoute` 不是当前核心请求链。标准路由使用 `HTTPRoute`，其 `backendRef` 指向 `InferencePool`。
 
-    subgraph "Inference Extension CRDs"
-        POOL["InferencePool<br/>inference.networking.k8s.io/v1"]
-        OBJ["InferenceObjective<br/>inference.networking.x-k8s.io/v1alpha2"]
-    end
+## 2. 核心请求路径
 
-    subgraph "Core Kubernetes"
-        SVC["Service<br/>(EPP ext-proc)"]
-        POD["Pods<br/>(model servers)"]
-    end
-
-    HR -->|"backendRef"| POOL
-    POOL -->|"endpointPickerRef"| SVC
-    POOL -->|"selector.matchLabels"| POD
-    OBJ -->|"references"| POOL
-    GW -->|"parent of"| HR
+```text
+Client
+  → Gateway listener
+    → HTTPRoute 匹配 host/path/header
+      → backendRef: InferencePool
+        → Gateway 调用 Endpoint Picker Extension
+          → Filter 不合格 Pod
+          → Scorer 根据队列、KV、前缀、LoRA 等打分
+          → Picker 选择 endpoint
+        → Gateway 把原请求转发到模型 Pod
+          → 流式响应经 Gateway 返回 Client
 ```
 
-![Kubernetes 资源关系图](/images/k8s/service-discovery/gateway-api-inference/3bcf808bd36880367d58e3734d7ffd75.svg)
+EPP 是决策点，不必成为实际请求数据面的串行代理。典型实现使用 Envoy `ext-proc` 让 Gateway 把请求信息交给 EPP，EPP 返回目标端点和必要的元数据，真正承载请求与流式响应的仍是 Gateway。
 
-## 6. 请求处理流程 {/* #请求处理流程 */}
+## 3. 为什么 Service 负载均衡不够
 
-推理请求的处理流程如下图所示：
-
-```mermaid
-sequenceDiagram
-    participant Client as "AI/ML Client"
-    participant Envoy as "Gateway/Envoy"
-    participant BBR as "BBR ExtProc<br/>(pkg/bbr)"
-    participant SS as "StreamingServer<br/>(pkg/epp/extproc)"
-    participant Dir as "Director<br/>(pkg/epp/director)"
-    participant Sched as "Scheduler<br/>(pkg/epp/scheduler)"
-    participant DS as "Datastore<br/>(pkg/epp/datastore)"
-    participant Pod as "Model Server Pod"
-
-    Client->>Envoy: POST /v1/completions<br/>{"model": "llama-3.1-8b", ...}
-    Envoy->>BBR: ProcessingRequest(headers, body)
-    BBR->>BBR: Extract model from JSON body
-    BBR->>Envoy: Add X-Gateway-Model-Name header
-
-    Envoy->>Envoy: Match HTTPRoute by header
-    Note over Envoy: Route to InferencePool backend
-
-    Envoy->>SS: ProcessingRequest(headers, body)
-    SS->>Dir: HandleRequest(requestContext)
-
-    Dir->>DS: ObjectiveGet(modelName)
-    DS-->>Dir: InferenceObjective (priority)
-
-    Dir->>DS: PodList(selector)
-    DS-->>Dir: List of candidate pods + metrics
-
-    Dir->>Dir: Check SaturationDetector
-
-    alt System saturated AND priority < 0
-        Dir-->>SS: Error 429 TooManyRequests
-        SS-->>Envoy: ImmediateResponse(429)
-        Envoy-->>Client: 429 system saturated
-    else Accept request
-        Dir->>Sched: Schedule(request, candidates)
-        Sched->>Sched: Filter → Score → Pick
-        Sched-->>Dir: SchedulingResult(selected pod)
-        Dir-->>SS: Target endpoint
-        SS-->>Envoy: ProcessingResponse(headers)
-        Envoy->>Pod: Forward to selected pod
-        Pod-->>Envoy: Inference response
-        Envoy-->>Client: 200 OK + response
-    end
-```
-
-![推理请求处理时序图](/images/k8s/service-discovery/gateway-api-inference/46cae61c36ec843180be107955f06afb.svg)
-
-**关键阶段说明：**
-
-1. Body Parsing：BBR 从请求体提取模型名称
-2. Route Matching：Gateway 根据头部匹配 HTTPRoute
-3. Endpoint Selection：EPP Director 协调 Scheduler 选择最佳 Pod
-4. Saturation Detection：检查系统是否过载
-5. Scheduling：三阶段调度选择最佳 Pod
-
-## 7. 关键概念和术语 {/* #关键概念和术语 */}
-
-- **Inference Gateway (IGW)**：与 Endpoint Picker 耦合的代理/负载均衡器，基于实时指标智能路由。
-- **Endpoint Picker Extension (EPP)**：推理调度器实现，扩展 Envoy 以注入路由决策。
-- **指标和能力**：如队列深度、KV 缓存利用率、前缀缓存、LoRA 适配器等。
-- **饱和检测**：EPP 监控系统负载，丢弃低优先级请求，相关阈值可配置。
-
-## 8. EPP 内部组件 {/* #epp-内部组件 */}
-
-下图展示了 EPP 应用的主要子系统及其关系：
-
-```mermaid
-graph TB
-    subgraph "EPP 进程"
-        MAIN["main()<br/>(cmd/epp/main.go)"]
-        RUNNER["Runner<br/>(pkg/epp/runner/runner.go)"]
-    end
-
-    subgraph "gRPC 服务器"
-        HEALTH["Health Server<br/>:9003<br/>(pkg/epp/health)"]
-        EXTPROC["ExtProc Server<br/>:9002<br/>(pkg/epp/extproc)"]
-        METRICS["Metrics Server<br/>:9090<br/>(pkg/epp/metrics)"]
-    end
-
-    subgraph "请求管道"
-        SS["StreamingServer<br/>(streaming_server.go)"]
-        DIR["Director<br/>(director.go)"]
-        SD["SaturationDetector<br/>(saturationdetector/)"]
-        SCHED["Scheduler<br/>(scheduler.go)"]
-    end
-
-    subgraph "数据层"
-        DS["Datastore<br/>(datastore.go)"]
-        POOL_CTL["InferencePoolReconciler<br/>(controllers/)"]
-        OBJ_CTL["InferenceObjectiveReconciler"]
-        POD_CTL["PodReconciler"]
-    end
-
-    subgraph "插件系统"
-        PLUGINS["Plugin Registry<br/>(plugins/)"]
-        SCORERS["Scorers<br/>(kvcache, queue, lora)"]
-        PICKERS["Pickers<br/>(maxscore, random)"]
-    end
-
-    MAIN --> RUNNER
-    RUNNER --> HEALTH
-    RUNNER --> EXTPROC
-    RUNNER --> METRICS
-    RUNNER --> DIR
-    RUNNER --> DS
-
-    EXTPROC --> SS
-    SS --> DIR
-    DIR --> SD
-    DIR --> SCHED
-    DIR --> DS
-
-    SCHED --> PLUGINS
-    PLUGINS --> SCORERS
-    PLUGINS --> PICKERS
-
-    POOL_CTL --> DS
-    OBJ_CTL --> DS
-    POD_CTL --> DS
-```
-
-![EPP 内部组件结构](/images/k8s/service-discovery/gateway-api-inference/3f9c01b2eb0fe5995400c99e2f1d0088.svg)
-
-**主要职责：**
-
-- Runner：初始化和启动所有子系统
-- StreamingServer：实现 Envoy 双向流协议
-- Director：协调请求生命周期和插件执行
-- Scheduler：执行调度流水线
-- Datastore：缓存 Kubernetes 资源
-- Controllers：同步 CRD 到数据存储
-- Plugins：可扩展评分和选择策略
-
-## 9. 调度算法 {/* #调度算法 */}
-
-EPP 采用三阶段调度算法，受 Kubernetes 调度器启发：
-
-```mermaid
-graph LR
-    CANDIDATES["候选 Pods<br/>(来自 InferencePool 选择器)"]
-
-    subgraph "阶段 1: 过滤"
-        F1["HeaderBasedTestingFilter<br/>(plugins/headerbasedtesting)"]
-    end
-
-    subgraph "阶段 2: 评分"
-        S1["KVCacheUtilizationScorer<br/>(plugins/kvcache)"]
-        S2["QueueScorer<br/>(plugins/queue)"]
-        S3["LoraAffinityScorer<br/>(plugins/loraaffinity)"]
-        S4["PrefixCachePlugin<br/>(plugins/prefixcache)"]
-    end
-
-    subgraph "阶段 3: 选择"
-        P1["MaxScorePicker<br/>(plugins/maxscore)"]
-    end
-
-    RESULT["选定的 Pod IP:Port"]
-
-    CANDIDATES --> F1
-    F1 -->|"过滤后的候选"| S1
-    S1 --> S2
-    S2 --> S3
-    S3 --> S4
-    S4 -->|"评分后的候选"| P1
-    P1 --> RESULT
-```
-
-![三阶段调度算法流程](/images/k8s/service-discovery/gateway-api-inference/11fa63dd41fd3cb38c6667ea0f165881.svg)
-
-**评分权重说明：**
-
-- KV 缓存：利用率越低分数越高
-- 队列深度：请求越少分数越高
-- LoRA 亲和：已加载适配器分数高
-- 前缀缓存：命中前缀分数高
-
-## 10. 支持的平台 {/* #支持的平台 */}
-
-### 10.1 Gateway 提供商 {/* #gateway-提供商 */}
-
-| 提供商 | 状态 | 备注 |
+| 维度 | Service/L4 负载均衡 | 推理感知选择 |
 | --- | --- | --- |
-| GKE Gateway | 稳定 | 原生 Google Cloud 集成，支持 HealthCheckPolicy |
-| Istio | 实验性 | 需 Istio 1.28-dev+，启用 ENABLE_GATEWAY_API_INFERENCE_EXTENSION |
-| Kgateway | 技术预览 | v2.1.0+ 滚动发布支持 |
-| Agentgateway | 技术预览 | Kgateway 控制平面 AI 优化代理 |
+| Endpoint 可用性 | Ready/NotReady | Ready 加模型服务运行状态 |
+| 当前压力 | 通常不感知 | running、waiting queue、KV 使用率 |
+| 请求内容 | 不读取 body 中的 model/prompt | 可结合模型、前缀和目标 SLO |
+| 缓存 | 不知道 KV/Prefix Cache | 可优先命中已有前缀的实例 |
+| LoRA | 不知道 Adapter | 可选择已加载目标 LoRA 的实例 |
+| 目标 | 连接或报文分散 | TTFT、TPOT、吞吐和缓存命中综合优化 |
 
-### 10.2 模型服务器 {/* #模型服务器 */}
+它不能创造算力。所有 Pod 都饱和时，智能路由最多选择相对较好的端点，还需要准入、排队、限流、扩容和容量规划。
 
-| 服务器 | 支持级别 | 协议合规性 |
-| --- | --- | --- |
-| vLLM | 增强 | 与 llm-d 集成的完整协议支持 |
-| Triton Inference Server | 支持 | 需协议合规指标 |
-| SGLang | 支持 | 需协议合规指标 |
+## 4. 资源关系
 
-## 11. 安装与配置 {/* #安装与配置 */}
-
-### 11.1 安装 Gateway API {/* #安装-gateway-api */}
-
-以下命令用于安装 Gateway API 及 Inference Extension：
-
-```bash
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/gateway-api.yaml
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/v0.1.0/inference-extension.yaml
+```text
+GatewayClass
+  └─ Gateway
+      └─ HTTPRoute
+          └─ backendRef: InferencePool
+              ├─ selector → model server Pods
+              ├─ targetPorts → 模型服务端口
+              └─ endpointPickerRef → EPP Service（典型实现）
 ```
 
-### 11.2 创建 InferencePool {/* #创建-inferencepool */}
-
-以下 YAML 示例定义了一个 InferencePool：
-
-```yaml
-apiVersion: inference.networking.x-k8s.io/v1alpha1
-kind: InferencePool
-metadata:
-  name: llama-pool
-spec:
-  selector:
-    matchLabels:
-      app: llama-model
-  targetPortNumber: 8000
-  endpointPicker:
-    type: Random
-```
-
-### 11.3 配置 Gateway {/* #配置-gateway */}
+### 4.1 HTTPRoute
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
+kind: HTTPRoute
 metadata:
-  name: ai-gateway
-  annotations:
-    inference.networking.x-k8s.io/enabled: "true"
-spec:
-  gatewayClassName: inference-gateway
-  listeners:
-  - name: http
-    hostname: ai.example.com
-    port: 80
-    protocol: HTTP
-```
-
-### 11.4 创建 InferenceRoute {/* #创建-inferenceroute */}
-
-```yaml
-apiVersion: inference.networking.x-k8s.io/v1alpha1
-kind: InferenceRoute
-metadata:
-  name: chat-route
+  name: qwen-route
+  namespace: ai-serving
 spec:
   parentRefs:
-  - name: ai-gateway
-  rules:
-  - matches:
-    - method: POST
-      path:
-        type: PathPrefix
-        value: /v1/chat/completions
-    backendRefs:
-    - kind: InferencePool
-      name: llama-pool
-      weight: 100
-```
-
-## 12. 高级路由功能 {/* #高级路由功能 */}
-
-### 12.1 模型版本路由 {/* #模型版本路由 */}
-
-通过 headers 匹配实现模型版本路由：
-
-```yaml
-apiVersion: inference.networking.x-k8s.io/v1alpha1
-kind: InferenceRoute
-metadata:
-  name: versioned-route
-spec:
-  rules:
-  - matches:
-    - headers:
-      - name: x-model-version
-        value: v2
-    backendRefs:
-    - kind: InferencePool
-      name: llama-v2-pool
-      weight: 100
-  - matches:
-    - headers:
-      - name: x-model-version
-        value: v1
-    backendRefs:
-    - kind: InferencePool
-      name: llama-v1-pool
-      weight: 100
-```
-
-### 12.2 流量分割 {/* #流量分割 */}
-
-```yaml
-spec:
+  - name: inference-gateway
   rules:
   - matches:
     - path:
         type: PathPrefix
-        value: /v1/chat/completions
+        value: /v1
     backendRefs:
-    - kind: InferencePool
-      name: llama-v2-pool
-      weight: 90
-    - kind: InferencePool
-      name: llama-v1-pool
-      weight: 10
+    - group: inference.networking.k8s.io
+      kind: InferencePool
+      name: qwen-pool
 ```
 
-### 12.3 地理位置路由 {/* #地理位置路由 */}
+`HTTPRoute` 决定请求属于哪个后端池，不直接决定最终 Pod。
+
+### 4.2 InferencePool
 
 ```yaml
-apiVersion: inference.networking.x-k8s.io/v1alpha1
-kind: InferenceRoute
-metadata:
-  name: geo-route
-spec:
-  rules:
-  - matches:
-    - headers:
-      - name: x-region
-        value: us-west
-    backendRefs:
-    - kind: InferencePool
-      name: us-west-pool
-  - matches:
-    - headers:
-      - name: x-region
-        value: eu-central
-    backendRefs:
-    - kind: InferencePool
-      name: eu-central-pool
-```
-
-## 13. 负载均衡策略 {/* #负载均衡策略 */}
-
-### 13.1 轮询负载均衡 {/* #轮询负载均衡 */}
-
-```yaml
-apiVersion: inference.networking.x-k8s.io/v1alpha1
+apiVersion: inference.networking.k8s.io/v1
 kind: InferencePool
 metadata:
-  name: round-robin-pool
+  name: qwen-pool
+  namespace: ai-serving
 spec:
-  endpointPicker:
-    type: RoundRobin
+  selector:
+    matchLabels:
+      app: qwen-vllm
+  targetPorts:
+  - number: 8000
+  endpointPickerRef:
+    name: qwen-epp
+    kind: Service
+    port:
+      number: 9002
 ```
 
-### 13.2 最小连接数 {/* #最小连接数 */}
-
-```yaml
-spec:
-  endpointPicker:
-    type: LeastConnections
-```
-
-### 13.3 基于权重的负载均衡 {/* #基于权重的负载均衡 */}
-
-```yaml
-spec:
-  endpointPicker:
-    type: WeightedRoundRobin
-    weights:
-      endpoint-1: 70
-      endpoint-2: 30
-```
-
-## 14. 安全与访问控制 {/* #安全与访问控制 */}
-
-### 14.1 API 密钥验证 {/* #api-密钥验证 */}
-
-```yaml
-apiVersion: inference.networking.x-k8s.io/v1alpha1
-kind: InferenceRoute
-metadata:
-  name: secured-route
-  annotations:
-    inference.networking.x-k8s.io/auth-type: api-key
-spec:
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /v1/chat/completions
-    filters:
-    - type: RequestHeaderModifier
-      requestHeaderModifier:
-        add:
-        - name: Authorization
-          value: Bearer ${API_KEY}
-```
-
-### 14.2 速率限制 {/* #速率限制 */}
-
-```yaml
-filters:
-- type: RateLimit
-  rateLimit:
-    requestsPerUnit: 100
-    unit: Minute
-    burst: 20
-```
-
-## 15. 监控与可观测性 {/* #监控与可观测性 */}
-
-Inference Extension 自动收集请求延迟、吞吐量、错误率、推理池健康状态等指标。
-
-### 15.1 集成 Prometheus {/* #集成-prometheus */}
-
-以下为 Prometheus 集成配置示例：
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: inference-gateway-config
-data:
-  gateway-config.yaml: |
-    apiVersion: gateway.networking.k8s.io/v1
-    kind: Gateway
-    metadata:
-      name: ai-gateway
-      annotations:
-        inference.networking.x-k8s.io/metrics-enabled: "true"
-        inference.networking.x-k8s.io/prometheus-port: "9090"
-```
-
-## 16. 最佳实践 {/* #最佳实践 */}
-
-- 多副本部署，确保高可用
-- 配置健康检查与自动故障转移
-- 优化连接池与缓存策略，提升性能
-- 启用 TLS 加密与细粒度访问控制
-- 开启审计日志，便于安全追踪
-
-## 17. 故障排除 {/* #故障排除 */}
-
-常见问题及调试命令：
-
-- 路由不生效：检查 InferenceRoute 配置和标签选择器
-- 负载不均衡：验证 endpoint picker 配置
-- 性能问题：检查资源限制和网络配置
+应以实际安装 CRD 的 OpenAPI Schema 为准：
 
 ```bash
-kubectl get inferencepool
-kubectl describe inferenceroute chat-route
-kubectl logs -l app=gateway-api-controller
+kubectl explain inferencepool
+kubectl explain inferencepool.spec
+kubectl get crd inferencepools.inference.networking.k8s.io -o yaml
 ```
 
-## 18. 快速开始 {/* #快速开始 */}
+不同发布版中 `endpointPickerRef` 的必填性和扩展集成方式可能不同，不能只复制网上 YAML。
 
-1. 部署模型服务器（GPU/CPU/模拟器）
-2. 安装 CRDs
-3. 安装 InferencePool + EPP
-4. 部署 Gateway
-5. 发送推理请求
+## 5. EPP 如何选择端点
+
+一个典型调度框架包含三步：
+
+```text
+候选 Pods
+  → Filter
+  → Scorer(s)
+  → Picker
+  → endpoint
+```
+
+### 5.1 Filter
+
+过滤不应接收本次请求的端点，例如：
+
+- Pod 未 Ready 或模型尚未就绪；
+- 端口/协议不匹配；
+- 没有目标模型或 Adapter；
+- 达到实现定义的硬性容量边界；
+- 指标过期且策略要求 fail closed。
+
+### 5.2 Scorer
+
+常见信号包括：
+
+| 信号 | 倾向 | 局限 |
+| --- | --- | --- |
+| Waiting Queue | 避开排队较长实例 | 不知道每个请求 Token 规模 |
+| KV Cache Usage | 避开接近耗尽实例 | 低使用率不等于计算空闲 |
+| Prefix Affinity | 命中已有前缀缓存 | 索引可能近似或过期 |
+| LoRA Affinity | 选择已加载 Adapter 的实例 | 要求模型服务暴露可靠状态 |
+| Predicted Latency | 预测 TTFT/TPOT | 模型漂移和特征质量影响结果 |
+| Running Requests | 平衡正在执行的请求 | 长短请求成本差异很大 |
+
+多个分数如何归一化、加权和处理缺失值，是具体实现的职责，不属于 `InferencePool` API 的稳定语义。
+
+### 5.3 Picker
+
+直接选择最高分可能让所有新请求瞬间涌向同一 Pod，形成振荡。实现可使用加权随机、带滞回的选择或其他算法。验证时要观察请求分布随时间的变化，而不只是单次选择结果。
+
+## 6. 指标新鲜度比指标存在更重要
+
+```text
+模型服务指标
+→ 抓取/上报
+→ EPP 数据存储
+→ 调度求值
+```
+
+任一步延迟都会让 EPP 用旧状态选择。至少监控：
+
+- 每个 endpoint 指标年龄；
+- EPP 调用延迟、错误和超时；
+- 候选、过滤后、最终选择的端点数；
+- 各 Pod 实际请求数、队列和 KV 使用率；
+- Gateway 到模型 Pod 的连接/请求失败；
+- 调度结果与真实 TTFT/TPOT 的偏差。
+
+“Prometheus 能查到指标”不能证明 EPP 本次决策使用的是新鲜样本。
+
+## 7. FailOpen 与 FailClose
+
+EPP 不可用时需要明确故障语义：
+
+| 模式 | 行为 | 适合场景 | 风险 |
+| --- | --- | --- | --- |
+| FailOpen | Gateway 使用普通选择或实现兜底继续转发 | 可用性优先 | 可能过载、缓存命中下降、SLO 恶化 |
+| FailClose | 请求失败，不绕过 EPP | 严格准入或安全边界 | EPP 成为可用性依赖 |
+
+FailOpen 不是“没有影响”。应为降级路径单独设置告警，并证明兜底负载均衡不会把全部流量压到少数 Pod。
+
+## 8. 一次完整验收
+
+### 8.1 CRD 和 Controller
 
 ```bash
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/latest/download/manifests.yaml
-helm install vllm-llama3-8b-instruct oci://registry.k8s.io/gateway-api-inference-extension/charts/inferencepool
-curl ${IP}:${PORT}/v1/completions -d '{"model": "...", "prompt": "..."}'
+kubectl get crd | grep inference.networking
+kubectl api-resources | grep -i inference
+kubectl get gatewayclass
 ```
 
-## 19. 项目状态 {/* #项目状态 */}
+### 8.2 Gateway 与路由
 
-该项目目前处于 alpha 阶段，API 及功能可能有重大变更。最新版本特性包括：
+```bash
+kubectl get gateway,httproute -n ai-serving
+kubectl describe gateway inference-gateway -n ai-serving
+kubectl describe httproute qwen-route -n ai-serving
+```
 
-- InferencePool v1 API（稳定）
-- InferenceObjective v1alpha2 API（Alpha）
-- 生产级 EPP 可插拔调度框架
-- GKE Gateway 稳定支持
-- Istio、Kgateway、Agentgateway 实验性支持
+检查 `Accepted`、`Programmed` 和 `ResolvedRefs` 等 Condition；具体 Condition 以资源版本和实现为准。
 
-## 20. 总结 {/* #总结 */}
+### 8.3 InferencePool
 
-Gateway API Inference Extension 为 AI 推理服务带来了声明式、可扩展的流量管理与智能调度能力。通过标准化的 Kubernetes 资源和灵活的路由策略，极大提升了 AI 服务的可维护性与可观测性，是构建现代 AI 平台的重要基础设施组件。
+```bash
+kubectl get inferencepool -n ai-serving
+kubectl describe inferencepool qwen-pool -n ai-serving
+kubectl get pod -n ai-serving -l app=qwen-vllm -o wide
+kubectl get endpointslice -n ai-serving
+```
 
-## 21. 参考资料 {/* #参考 */}
+核对 selector、Pod label、端口、EPP 引用和状态。
 
-- [Gateway API Inference Extension](https://gateway-api-inference-extension.sigs.k8s.io/)
+### 8.4 端到端请求
+
+```bash
+curl -N -sS \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"Qwen","messages":[{"role":"user","content":"hello"}],"stream":true}' \
+  'http://<gateway-address>/v1/chat/completions'
+```
+
+同时采集 Gateway access log、EPP decision log/metrics、模型服务请求日志和 TTFT/TPOT，使用 request ID 串联。
+
+## 9. 故障排查
+
+### 9.1 HTTPRoute 不生效
+
+```text
+Gateway listener
+→ parentRefs
+→ namespace/ReferenceGrant
+→ backendRef group/kind/name
+→ InferencePool Condition
+```
+
+不要去查不存在的 `InferenceRoute`。
+
+### 9.2 没有候选端点
+
+核对：
+
+- InferencePool selector 与 Pod label；
+- Pod readiness 与模型 readiness；
+- `targetPorts` 和容器监听端口；
+- EPP RBAC/List-Watch；
+- 模型服务协议和指标端点。
+
+### 9.3 流量仍不均衡
+
+“副本请求数相等”不一定是正确目标。先比较每个 Pod 的 Token 数、运行/等待请求、KV、TTFT/TPOT 和硬件拓扑。若确实异常，再检查指标时效、Scorer 权重、Picker 随机性和重试是否改变分布。
+
+### 9.4 EPP 正常但请求 5xx
+
+EPP 只负责选择；还需检查 Gateway 到 endpoint 的网络、端口、协议、TLS、NetworkPolicy 和模型服务自身错误。选择成功不等于转发成功。
+
+## 10. 不要混淆的概念
+
+- `InferencePool` 不是模型 Deployment；它选择并描述一组服务实例。
+- EPP 不是 Kubernetes Scheduler；它为请求选模型端点，不为 Pod 选择 Node。
+- 推理网关不替代 vLLM/SGLang 的内部连续批处理调度。
+- Prefix affinity 不能保证 KV 一定命中，缓存可能被逐出或索引过期。
+- 低 GPU Util 不代表某个 Pod 应继续接流量，瓶颈可能在队列、CPU、显存容量、通信或 TTFT SLO。
+
+## 11. 练习与答案
+
+**问题 1：HTTPRoute 为什么不直接指向模型 Service？**
+
+指向 Service 时，网关只能使用普通后端选择；指向 InferencePool 才能进入推理感知端点选择流程。
+
+**问题 2：EPP 选择了 Pod A，请求数据一定经过 EPP 转发吗？**
+
+不一定。典型 ext-proc 架构中 EPP 返回决策，实际请求由 Gateway 直接转发给 Pod A。
+
+**问题 3：InferencePool v1 已 GA，为什么部署仍需锁版本？**
+
+GA 约束的是 API Schema。Gateway Controller、EPP、调度插件、Chart、模型服务协议及实验 API 仍可能演进。
+
+**问题 4：EPP 超时时采用 FailOpen，系统就算健康吗？**
+
+不是。请求可能继续成功，但退化为普通负载均衡，导致缓存命中下降、过载和延迟恶化。必须监控降级状态。
+
+## 12. 延伸阅读
+
+- [Gateway API Inference Extension：智能负载均衡原理与使用](../../../cloud-native/kubernetes/extensions/ecosystem/01-Gateway-API-Inference-Extension.md)
+- [Gateway API Inference Extension API Overview](https://gateway-api-inference-extension.sigs.k8s.io/concepts/api-overview/)
+- [InferencePool](https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepool/)
+- [InferencePoolImport](https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepoolimport/)
+- [项目 FAQ 与迁移计划](https://gateway-api-inference-extension.sigs.k8s.io/faq/)

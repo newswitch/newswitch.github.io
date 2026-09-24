@@ -29,7 +29,7 @@ Publisher → Config API → persistence / consistency
   → application refresh
 ```
 
-## 2. 课程结构 {/* #2-13-篇文章学习清单 */}
+## 2. 课程结构
 
 | 编号 | 文章 | 优先级 | 核心问题 |
 | --- | --- | --- | --- |
@@ -46,6 +46,7 @@ Publisher → Config API → persistence / consistency
 | N10 | [服务数、实例数、配置数、推送连接与容量压测](./10-服务实例配置推送与容量压测.md) | P1 | Server/JVM/DB/网络怎样估算 |
 | N11 | [监控、日志、备份、升级、迁移与多集群](./11-Nacos监控日志备份升级迁移与多集群.md) | P1 | 生命周期和灾备 |
 | N12 | [源码、注册丢失、配置不生效、选主/数据库异常 Runbook](./12-Nacos源码与生产故障Runbook.md) | P2 | 从客户端到协议和存储排障 |
+| N13 | [Nacos 3.x Admin API 与自动化运维](./13-Nacos-3x-Admin-API与自动化运维.md) | P1 | API 边界、鉴权、巡检、配置/实例管理与变更保护 |
 
 是否掌握应以能追踪注册与配置传播、验证客户端缓存、完成网络分区实验并证明恢复收敛为准。
 
