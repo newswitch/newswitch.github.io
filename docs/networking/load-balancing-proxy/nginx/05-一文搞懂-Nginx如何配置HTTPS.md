@@ -10,6 +10,8 @@ tags: [Nginx, HTTPS, TLS, 证书]
 
 在日常部署 Web 服务时，Nginx 经常被放在系统的最前面，用来承担静态资源访问、反向代理、负载均衡、HTTPS 证书卸载等职责。
 
+本章聚焦 Nginx 配置。TLS 1.3 握手、证书链、文件格式、mTLS、轮换和抓包原理统一参见 [TLS 与 PKI 从零到生产学习路线](../../security/tls-pki/00-TLS与PKI从零到生产学习路线.md)。
+
 对于很多刚接触 HTTPS 配置的人来说，最容易混淆的问题有几个：
 
 - HTTP 和 HTTPS 到底分别监听什么端口？

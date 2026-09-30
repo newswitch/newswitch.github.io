@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <style>.t{font-family:Inter,'Microsoft YaHei',sans-serif;fill:#102a43}.h{font-size:34px;font-weight:700}.b{font-size:23px}.s{font-size:19px;fill:#486581}.box{rx:18;stroke-width:2}.line{stroke:#2563eb;stroke-width:3;marker-end:url(#arrow)}.dash{stroke:#94a3b8;stroke-width:2;stroke-dasharray:8 8}</style>
+  </defs>
+  <rect width="1440" height="900" fill="#f8fafc"/>
+  <rect x="35" y="30" width="1370" height="75" rx="18" fill="#102a43"/><text x="70" y="79" class="t h" fill="#fff">TLS 1.3 完整握手：身份、密钥与加密边界</text>
+  <rect x="85" y="140" width="330" height="90" class="box" fill="#dbeafe" stroke="#2563eb"/><text x="250" y="185" text-anchor="middle" class="t h">客户端</text><text x="250" y="214" text-anchor="middle" class="t s">Browser / SDK / Gateway</text>
+  <rect x="1025" y="140" width="330" height="90" class="box" fill="#dcfce7" stroke="#16a34a"/><text x="1190" y="185" text-anchor="middle" class="t h">服务端</text><text x="1190" y="214" text-anchor="middle" class="t s">Nginx / Envoy / Application</text>
+  <line x1="250" y1="245" x2="250" y2="835" class="dash"/><line x1="1190" y1="245" x2="1190" y2="835" class="dash"/>
+  <line x1="270" y1="290" x2="1170" y2="290" class="line"/><text x="720" y="275" text-anchor="middle" class="t b">ClientHello：版本、套件、SNI、ALPN、Key Share</text>
+  <line x1="1170" y1="370" x2="270" y2="370" class="line"/><text x="720" y="355" text-anchor="middle" class="t b">ServerHello：选择版本、套件和服务端 Key Share</text>
+  <rect x="450" y="405" width="540" height="68" class="box" fill="#fef3c7" stroke="#d97706"/><text x="720" y="435" text-anchor="middle" class="t b">双方计算相同 ECDHE Shared Secret</text><text x="720" y="461" text-anchor="middle" class="t s">HKDF 派生 Handshake Traffic Keys</text>
+  <line x1="1170" y1="520" x2="270" y2="520" class="line"/><text x="720" y="502" text-anchor="middle" class="t b">{EncryptedExtensions + Certificate}</text><text x="720" y="545" text-anchor="middle" class="t s">服务端发送证书链；客户端验证 SAN、用途、时间和信任路径</text>
+  <line x1="1170" y1="610" x2="270" y2="610" class="line"/><text x="720" y="592" text-anchor="middle" class="t b">{CertificateVerify + Finished}</text><text x="720" y="635" text-anchor="middle" class="t s">私钥签名证明身份；Finished 绑定完整握手历史</text>
+  <line x1="270" y1="690" x2="1170" y2="690" class="line"/><text x="720" y="675" text-anchor="middle" class="t b">{Client Finished}</text>
+  <rect x="450" y="725" width="540" height="72" class="box" fill="#ede9fe" stroke="#7c3aed"/><text x="720" y="756" text-anchor="middle" class="t b">切换到 Application Traffic Keys</text><text x="720" y="784" text-anchor="middle" class="t s">客户端写密钥与服务端写密钥彼此独立</text>
+  <line x1="270" y1="840" x2="1170" y2="840" stroke="#16a34a" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/><text x="720" y="825" text-anchor="middle" class="t b">{HTTP / Application Data：AEAD 加密与完整性保护}</text>
+</svg>

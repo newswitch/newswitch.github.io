@@ -1,355 +1,253 @@
 ---
-title: "管理集群中的 TLS"
+title: "管理 Kubernetes 集群中的 TLS"
 sidebar_label: "05. 管理集群中的 TLS"
 sidebar_position: 5
-description: "详细介绍 Kubernetes 集群中 TLS 证书的管理机制，包括集群根证书颁发机构（CA）的工作原理、证书签名请求（CSR）的创建和批准流程，以及如何在 Pod 中建立 TLS 信任关系。"
-tags: [Kubernetes, 安全, PartII, 学习路线]
+description: "区分 Kubernetes 控制面 CA、etcd CA、Front Proxy CA、ServiceAccount 签名密钥、Kubelet Bootstrap 与业务证书。"
+tags: [Kubernetes, TLS, PKI, CSR, Kubelet]
 ---
 
-# 管理集群中的 TLS
+# 管理 Kubernetes 集群中的 TLS
 
-在使用二进制文件部署 Kubernetes 集群时，TLS 证书配置往往是最容易出错的环节。理解 Kubernetes 集群中 TLS 证书的管理机制，对于构建安全可靠的集群至关重要。
+Kubernetes 不是“只有一个根 CA”。实际部署可能分别使用集群 CA、etcd CA、Front Proxy CA 和外部业务 CA；ServiceAccount Token 签名密钥又是另一套用途。混用这些私钥会扩大信任和故障范围。
 
-## 1. 集群 TLS 架构概述 {/* #集群-tls-架构概述 */}
+通用握手、X.509 字段、证书文件和路径验证见 [TLS 与 PKI 从零到生产学习路线](../../../../networking/security/tls-pki/00-TLS与PKI从零到生产学习路线.md)。本章只讨论 Kubernetes 控制面和节点身份。
 
-每个 Kubernetes 集群都有一个集群根证书颁发机构（CA），它是整个集群安全通信的基础。集群中的各个组件通过这个 CA 来建立相互信任：
-
-- **API Server 验证**：集群组件使用 CA 来验证 API Server 的证书
-- **客户端验证**：API Server 验证 kubelet 等客户端证书
-- **证书分发**：CA 证书包被分发到集群中的每个节点
-- **服务账户集成**：CA 证书作为 Secret 自动挂载到默认 Service Account
-
-应用程序可以通过 `certificates.k8s.io` API 请求证书签名，这类似于 [ACME 协议](https://datatracker.ietf.org/doc/html/rfc8555)的工作方式。
-
-## 2. 在 Pod 中建立 TLS 信任 {/* #在-pod-中建立-tls-信任 */}
-
-### 2.1 自动挂载的 CA 证书 {/* #自动挂载的-ca-证书 */}
-
-Kubernetes 会自动将 CA 证书包挂载到每个 Pod 中：
-
-- **挂载路径**：`/var/run/secrets/kubernetes.io/serviceaccount/ca.crt`
-- **适用范围**：使用默认 Service Account 的 Pod
-- **自动更新**：证书轮换时自动更新
-
-### 2.2 在应用程序中使用 CA 证书 {/* #在应用程序中使用-ca-证书 */}
-
-以 Go 语言为例，可以这样加载 CA 证书：
-
-```go
-package main
-
-import (
-  "crypto/tls"
-  "crypto/x509"
-  "io/ioutil"
-  "log"
-)
-
-func loadCACert() *x509.CertPool {
-  caCert, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  caCertPool := x509.NewCertPool()
-  caCertPool.AppendCertsFromPEM(caCert)
-
-  return caCertPool
-}
-
-func main() {
-  tlsConfig := &tls.Config{
-    RootCAs: loadCACert(),
-  }
-  // 使用 tlsConfig 进行 HTTPS 通信
-}
-```
-
-### 2.3 自定义 Service Account {/* #自定义-service-account */}
-
-如果不使用默认 Service Account，需要：
-
-1. 创建包含 CA 证书的 ConfigMap
-2. 将 ConfigMap 挂载到 Pod 中
-3. 在应用程序中指定正确的证书路径
-
-## 3. 创建和管理证书签名请求 {/* #创建和管理证书签名请求 */}
-
-### 3.1 环境准备 {/* #环境准备 */}
-
-安装必要的工具：
-
-```bash
-# 安装 cfssl
-curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64 -o cfssl
-curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64 -o cfssljson
-chmod +x cfssl cfssljson
-sudo mv cfssl cfssljson /usr/local/bin/
-```
-
-### 3.2 生成私钥和证书签名请求 {/* #生成私钥和证书签名请求 */}
-
-创建配置文件并生成 CSR：
-
-```bash
-cat <<EOF | cfssl genkey - | cfssljson -bare server
-{
-  "hosts": [
-  "my-svc.my-namespace.svc.cluster.local",
-  "my-pod.my-namespace.pod.cluster.local",
-  "172.168.0.24",
-  "10.0.34.2"
-  ],
-  "CN": "my-pod.my-namespace.pod.cluster.local",
-  "key": {
-  "algo": "ecdsa",
-  "size": 256
-  },
-  "names": [
-  {
-    "C": "CN",
-    "ST": "Beijing",
-    "L": "Beijing",
-    "O": "example",
-    "OU": "example"
-  }
-  ]
-}
-EOF
-```
-
-**配置说明**：
-
-- `hosts`：包含服务 DNS 名称、Pod DNS 名称和 IP 地址
-- `CN`：通用名称，通常使用主要的 DNS 名称
-- `key`：密钥算法和长度
-- `names`：证书主体信息
-
-生成成功后会看到类似输出：
+## 1. 信任域总图
 
 ```text
-2023/10/21 06:48:17 [INFO] generate received request
-2023/10/21 06:48:17 [INFO] received CSR
-2023/10/21 06:48:17 [INFO] generating key: ecdsa-256
-2023/10/21 06:48:17 [INFO] encoded CSR
+cluster CA
+  ├─ kube-apiserver serving certificate
+  ├─ kube-controller-manager client certificate
+  ├─ kube-scheduler client certificate
+  ├─ admin client certificate
+  └─ kubelet client/serving certificate（按部署方式）
+
+etcd CA
+  ├─ etcd server/peer certificate
+  └─ apiserver-etcd client certificate
+
+front-proxy CA
+  └─ front-proxy client certificate
+
+ServiceAccount signing key pair
+  └─ 签名 JWT，不是 TLS CA
+
+business/public CA
+  └─ Ingress、Gateway、业务 Service 证书
 ```
 
-### 3.3 提交证书签名请求 {/* #提交证书签名请求 */}
+具体证书是否共用 CA 取决于安装工具和组织设计。生产环境应记录每个 CA 的用途、私钥位置、有效期、轮换责任人和恢复方法。
 
-创建 CSR 资源并提交到 Kubernetes API：
-
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: certificates.k8s.io/v1
-kind: CertificateSigningRequest
-metadata:
-  name: my-svc.my-namespace
-spec:
-  request: $(cat server.csr | base64 | tr -d '\n')
-  signerName: kubernetes.io/kubelet-serving
-  usages:
-  - digital signature
-  - key encipherment
-  - server auth
-EOF
-```
-
-**重要变更**：
-
-- 在 Kubernetes 1.19+ 版本中，必须指定 `signerName`
-- 常用的 signer 包括：
-  - `kubernetes.io/kube-apiserver-client`：客户端证书
-  - `kubernetes.io/kubelet-serving`：服务端证书
-  - `kubernetes.io/legacy-unknown`：兼容性 signer
-
-### 3.4 查看证书签名请求状态 {/* #查看证书签名请求状态 */}
-
-以下是相关的代码示例：
-
-```bash
-kubectl get csr my-svc.my-namespace
-
-kubectl describe csr my-svc.my-namespace
-```
-
-输出示例：
+## 2. 一次 kubectl 请求
 
 ```text
-Name:         my-svc.my-namespace
-Labels:       <none>
-Annotations:  <none>
-CreationTimestamp:  Tue, 21 Oct 2023 07:03:51 +0800
-Requesting User:    system:node:worker-1
-Requested Signers:  kubernetes.io/kubelet-serving
-Status:             Pending
-Subject:
-  Common Name:    my-pod.my-namespace.pod.cluster.local
-  Serial Number:
-Subject Alternative Names:
-  DNS Names:     my-svc.my-namespace.svc.cluster.local
-         my-pod.my-namespace.pod.cluster.local
-  IP Addresses:  172.168.0.24
-         10.0.34.2
-Events:          <none>
+kubectl
+  ├─ 用 kubeconfig 中 CA 验证 apiserver Serving Certificate
+  └─ 用 Client Certificate、Bearer Token 或 Exec Credential 认证自己
+          ↓
+kube-apiserver
+  ├─ 验证客户端身份
+  ├─ 执行 Authentication / Authorization / Admission
+  └─ 作为客户端使用独立证书连接 etcd、kubelet 或聚合 API
 ```
 
-## 4. 证书批准和使用 {/* #证书批准和使用 */}
+TLS 客户端认证成功只得到用户名和组，RBAC 仍决定是否允许某个 API 动作。
 
-### 4.1 手动批准证书 {/* #手动批准证书 */}
+## 3. kubeadm 常见文件
 
-具有适当权限的管理员可以手动批准或拒绝 CSR：
+典型控制平面目录 `/etc/kubernetes/pki` 可能包含：
+
+| 文件 | 用途 |
+| --- | --- |
+| `ca.crt` / `ca.key` | Kubernetes Cluster CA 证书/私钥 |
+| `apiserver.crt` / `apiserver.key` | API Server 服务端身份 |
+| `apiserver-kubelet-client.*` | API Server 调 Kubelet 的客户端身份 |
+| `front-proxy-ca.*` | 聚合层代理 CA |
+| `front-proxy-client.*` | RequestHeader Proxy Client |
+| `sa.key` / `sa.pub` | ServiceAccount Token 签名/验证 |
+| `etcd/ca.*` | etcd CA |
+| `etcd/server.*`、`peer.*` | etcd Client/Peer TLS |
+| `apiserver-etcd-client.*` | API Server 连接 etcd |
+
+CA 私钥并非所有控制平面节点都必须长期在线保存。高可用设计要在自动签发能力与私钥暴露面之间做选择。
+
+## 4. API Server Serving Certificate
+
+证书 SAN 必须覆盖客户端实际访问的名称和地址，例如：
+
+- Kubernetes Service DNS；
+- ClusterIP；
+- 控制平面节点名称/IP；
+- 负载均衡 VIP/DNS；
+- 组织额外配置的 API Endpoint。
+
+新增 VIP 后若证书没有相应 SAN，TCP 可以成功但 Kubectl 会报主机名不匹配。应重新签发证书，而不是在 Kubeconfig 中跳过验证。
+
+## 5. Pod 内访问 API Server
+
+启用 ServiceAccount Token 自动挂载时，投射卷通常包含：
+
+```text
+/var/run/secrets/kubernetes.io/serviceaccount/token
+/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+/var/run/secrets/kubernetes.io/serviceaccount/namespace
+```
+
+这对自定义 ServiceAccount 同样成立，除非 Pod 或 ServiceAccount 禁用了 `automountServiceAccountToken`。这里的 `ca.crt` 用于建立到 Kubernetes API 的信任，不是让业务 Pod 签发任意证书的 CA 私钥。
+
+## 6. CSR API 与 Signer
+
+CSR 对象包含：
+
+- DER CSR 的 Base64；
+- `signerName`；
+- 请求用途；
+- 申请者 Kubernetes 身份；
+- Approval/Denial Condition；
+- 签发后的证书。
+
+内置 Signer 有明确用途：
+
+| Signer | 典型用途 |
+| --- | --- |
+| `kubernetes.io/kube-apiserver-client-kubelet` | Kubelet 客户端身份 |
+| `kubernetes.io/kubelet-serving` | Kubelet HTTPS Serving 身份 |
+| `kubernetes.io/kube-apiserver-client` | API Server 客户端证书 |
+| `kubernetes.io/legacy-unknown` | 兼容历史用途，是否签发取决于部署 |
+
+`kubernetes.io/kubelet-serving` 不是通用 Service 证书签发器。提交任意 DNS SAN 的业务 CSR 并人工 Approve，不保证内置 Signer 会签发，也会违反其身份约束。Ingress/Service 证书应使用 cert-manager、Vault PKI 或组织 CA。
+
+## 7. Kubelet TLS Bootstrap
+
+新节点常用 Bootstrap Token 进行初始认证：
+
+```text
+Bootstrap Kubeconfig
+  → Kubelet 创建 Client CSR
+  → Approver 检查请求者、CN、Group、Usage
+  → Signer 签发 Kubelet Client Certificate
+  → Kubelet 写入并轮换客户端证书
+```
+
+Serving Certificate 是另一条 CSR 和审批策略。自动批准 Serving CSR 会允许节点声明访问者要验证的地址，必须有可靠的 Node/SAN 约束，不能简单批准所有 Pending CSR。
+
+## 8. 查看 CSR
 
 ```bash
-# 批准证书
-kubectl certificate approve my-svc.my-namespace
-
-# 拒绝证书
-kubectl certificate deny my-svc.my-namespace
+kubectl get csr
+kubectl describe csr <name>
+kubectl get csr <name> -o jsonpath='{.spec.request}' |
+  base64 -d |
+  openssl req -noout -text -verify
 ```
 
-### 4.2 获取签名证书 {/* #获取签名证书 */}
+批准前检查：
 
-证书批准后，可以提取签名证书：
+1. Requesting User/Groups；
+2. Signer Name；
+3. Subject CN/O；
+4. SAN；
+5. Usages；
+6. 请求来源与节点登记信息；
+7. 是否已有重复、异常或高频请求。
 
 ```bash
-kubectl get csr my-svc.my-namespace -o jsonpath='{.status.certificate}' | base64 -d > server.crt
+kubectl certificate approve <name>
+kubectl certificate deny <name>
 ```
 
-### 4.3 验证证书 {/* #验证证书 */}
+Approval 是授权决策，不等于签发已经成功。继续观察 `.status.certificate` 和 Signer 日志。
 
-验证生成的证书内容：
+## 9. 到期与轮换
+
+kubeadm 管理的控制面证书可先检查：
 
 ```bash
-openssl x509 -in server.crt -text -noout
+sudo kubeadm certs check-expiration
 ```
 
-### 4.4 使用证书 {/* #使用证书 */}
+不要直接执行全量 Renew。先确认：
 
-现在可以使用 `server.crt` 和 `server-key.pem` 启动 HTTPS 服务：
+- 当前集群是否由 kubeadm 管理；
+- 外部 CA 模式还是本地 CA；
+- 高可用节点之间怎样同步；
+- 静态 Pod/进程何时重新加载；
+- Kubeconfig 是否嵌入旧客户端证书；
+- etcd Peer/Client Certificate 的轮换顺序；
+- 回滚材料和快照是否验证。
+
+轮换后从真实 Endpoint 检查证书序列号，并验证控制器、调度器、Kubelet、etcd 和聚合 API。
+
+## 10. 故障排查
+
+### 10.1 API Server 证书
 
 ```bash
-# 启动简单的 HTTPS 服务器
-openssl s_server -cert server.crt -key server-key.pem -port 8443
+openssl s_client -connect api.example.com:6443 \
+  -servername api.example.com \
+  -CAfile /etc/kubernetes/pki/ca.crt \
+  -verify_hostname api.example.com \
+  -verify_return_error </dev/null
 ```
 
-## 5. 自动化证书管理 {/* #自动化证书管理 */}
-
-### 5.1 自动批准策略 {/* #自动批准策略 */}
-
-Kubernetes 提供了几种自动批准机制：
-
-1. **内置批准器**：
-   - `csrapproving` controller 自动批准符合条件的 CSR
-   - 主要用于 kubelet 客户端证书
-
-2. **自定义批准器**：
-   - 基于策略的自动批准
-   - 集成外部 CA 系统
-
-### 5.2 CSR 批准最佳实践 {/* #csr-批准最佳实践 */}
-
-批准 CSR 时需要验证两个关键要求：
-
-1. **私钥控制验证**：
-   - 确认请求者拥有对应的私钥
-   - 防止第三方伪造请求
-
-2. **授权验证**：
-   - 确认请求者有权获取该证书
-   - 验证证书用途的合法性
-
-### 5.3 示例：自动批准脚本 {/* #示例自动批准脚本 */}
-
-以下是相关的示例代码：
+### 10.2 Kubeconfig
 
 ```bash
-#!/bin/bash
-# 简单的 CSR 批准脚本
-
-CSR_NAME=$1
-if [ -z "$CSR_NAME" ]; then
-  echo "Usage: $0 <csr-name>"
-  exit 1
-fi
-
-# 检查 CSR 状态
-STATUS=$(kubectl get csr $CSR_NAME -o jsonpath='{.status.conditions[0].type}' 2>/dev/null)
-
-if [ "$STATUS" = "Pending" ]; then
-  echo "Approving CSR: $CSR_NAME"
-  kubectl certificate approve $CSR_NAME
-else
-  echo "CSR $CSR_NAME is not in Pending state: $STATUS"
-fi
+kubectl config view --raw
+kubectl --v=8 get --raw=/readyz
 ```
 
-## 6. 集群管理员配置 {/* #集群管理员配置 */}
+谨慎处理 `--raw` 输出，其中可能含嵌入式凭据；不要粘贴完整 Kubeconfig 到公共工单。
 
-### 6.1 Controller Manager 配置 {/* #controller-manager-配置 */}
-
-要启用内置的证书签名功能，需要配置 Controller Manager：
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: kube-controller-manager
-spec:
-  containers:
-  - name: kube-controller-manager
-  image: k8s.gcr.io/kube-controller-manager:v1.28.0
-  command:
-  - kube-controller-manager
-  - --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt
-  - --cluster-signing-key-file=/etc/kubernetes/pki/ca.key
-  - --cluster-signing-duration=8760h  # 1 年有效期
-  volumeMounts:
-  - name: ca-certs
-    mountPath: /etc/kubernetes/pki
-    readOnly: true
-  volumes:
-  - name: ca-certs
-  hostPath:
-    path: /etc/kubernetes/pki
-```
-
-### 6.2 证书轮换策略 {/* #证书轮换策略 */}
-
-建议配置合理的证书轮换策略：
-
-- **证书有效期**：通常设置为 1 年
-- **轮换时间**：在证书到期前 30 天开始轮换
-- **自动化程度**：尽可能实现自动化轮换
-
-## 7. 故障排查 {/* #故障排查 */}
-
-### 7.1 常见问题 {/* #常见问题 */}
-
-1. **CSR 长时间处于 Pending 状态**：
-   - 检查 Controller Manager 配置
-   - 验证 CA 证书和私钥路径
-
-2. **证书验证失败**：
-   - 检查 SAN（Subject Alternative Names）配置
-   - 确认 DNS 名称和 IP 地址正确
-
-3. **权限问题**：
-   - 确认用户有创建 CSR 的权限
-   - 检查 RBAC 配置
-
-### 7.2 调试命令 {/* #调试命令 */}
-
-以下是相关的代码示例：
+### 10.3 Kubelet
 
 ```bash
-# 查看 CSR 详细信息
-kubectl describe csr <csr-name>
-
-# 查看 Controller Manager 日志
-kubectl logs -n kube-system kube-controller-manager-<node-name>
-
-# 验证证书链
-openssl verify -CAfile /etc/kubernetes/pki/ca.crt server.crt
+journalctl -u kubelet --since '-30 min'
+ls -l /var/lib/kubelet/pki
+openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem \
+  -noout -subject -issuer -serial -dates
 ```
 
-通过合理配置和管理 TLS 证书，可以确保 Kubernetes 集群的安全通信，为应用程序提供可靠的加密基础。
+### 10.4 常见模式
+
+| 现象 | 重点检查 |
+| --- | --- |
+| `x509: certificate has expired` | 是客户端还是服务端证书、进程是否加载旧文件 |
+| `certificate signed by unknown authority` | CA Bundle、链、错误 Endpoint |
+| `certificate is valid for ..., not ...` | API VIP/DNS 是否在 SAN |
+| Kubelet CSR Pending | RBAC、Approver、Signer、请求字段 |
+| 一台控制平面异常 | 证书同步、静态 Pod Reload、时间与权限 |
+| etcd Peer 失败 | Peer CA、SAN、双向证书和成员地址 |
+
+## 11. 备份边界
+
+必须区分：
+
+- etcd 数据快照；
+- CA 私钥与证书；
+- ServiceAccount 签名密钥；
+- Kubeconfig；
+- 加密配置及 KMS 依赖。
+
+拥有 Cluster CA 私钥或 ServiceAccount 签名私钥可能足以伪造高权限身份。备份必须加密、隔离、审计，并定期恢复验证。
+
+## 12. 练习与答案
+
+**问题：** ServiceAccount 的 `sa.key` 是不是集群 TLS 根 CA 私钥？
+
+不是。它用于签名 ServiceAccount JWT；Cluster CA 私钥用于签发相应 X.509 证书，二者用途不同。
+
+**问题：** CSR 被 Approved 后一直没有证书，为什么？
+
+Approve 只表示授权。还要有负责该 `signerName` 的 Signer，且请求满足其字段约束并能访问签名材料。
+
+**问题：** 能否用 Kubelet Serving Signer 给普通 Web Service 签证书？
+
+不应这样做。该 Signer 的身份和用途面向 Kubelet，业务服务应使用专门 PKI。
+
+## 13. 参考资料
+
+- [Kubernetes PKI Certificates and Requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
+- [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
+- [Kubelet TLS Bootstrapping](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/)
+- [kubeadm Certificate Management](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
