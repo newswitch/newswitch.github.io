@@ -2,13 +2,13 @@
 title: "Nginx 从零到精通学习路线"
 sidebar_label: "00. Nginx 从零到精通学习路线"
 sidebar_position: 0
-description: "从配置与反向代理深入 Master/Worker、事件循环、HTTP 阶段、Upstream、TLS、缓存、性能容量、热升级和源码。"
-tags: [Nginx, 反向代理, 负载均衡, 源码, 学习路线]
+description: "从配置与 HTTP/Stream 数据路径，深入事件循环、Upstream、TLS、缓存、动态服务发现、Kubernetes、性能容量、扩展模块和源码。"
+tags: [Nginx, HTTP, Stream, 反向代理, 负载均衡, Kubernetes, 源码, 学习路线]
 ---
 
 # Nginx 从零到精通学习路线
 
-本路线从请求路径出发，依次讲解部署、配置解析、反向代理、负载均衡、缓存、HTTPS、安全、性能分析、生产运维与故障排查，并把大模型网关日志和源码数据结构放回完整请求链路中理解。
+本路线从请求路径出发，依次讲解部署、配置解析、HTTP/1.1/2/3、反向代理、负载均衡、缓存、HTTPS、WebSocket/SSE/gRPC、TCP/UDP Stream、安全、动态服务发现、Kubernetes、性能分析、生产运维与故障排查，并把脚本扩展和源码数据结构放回完整请求链路中理解。
 
 版本选择遵循 Nginx 官方 stable/mainline 支持策略，生产固定批准补丁和模块构建清单；不能只记录 `nginx/1.x`。
 
@@ -25,7 +25,7 @@ Client TCP/TLS
   → proxy response / filter / log
 ```
 
-## 2. 课程结构 {/* #2-15-篇文章规划 */}
+## 2. 课程结构
 
 | 编号 | 文章 | 优先级 |
 | --- | --- | --- |
@@ -44,20 +44,27 @@ Client TCP/TLS
 | G12 | [高可用、Keepalived/LB、热升级、灰度与故障 Runbook](./12-Nginx高可用Keepalived热升级灰度与Runbook.md) | P1 |
 | G13 | [Nginx 源码架构与基础数据结构](./13-nginx源码分析-基础数据结构.md) | P2 |
 | G14 | [Nginx 内存池与基础数据结构实现](./14-nginx源码解析-基础数据结构（一）.md) | P2 |
+| G15 | [HTTP/1.1、HTTP/2、HTTP/3 请求解析、连接与流控](./15-Nginx-HTTP1-HTTP2-HTTP3请求解析连接与流控.md) | P0 |
+| G16 | [WebSocket、SSE、gRPC、FastCGI 与流式代理](./16-Nginx-WebSocket-SSE-gRPC-FastCGI与流式代理.md) | P0 |
+| G17 | [DNS、Resolver、动态 Upstream 与服务发现](./17-Nginx-DNS-Resolver动态Upstream与服务发现.md) | P1 |
+| G18 | [Stream、TCP/UDP、TLS Preread 与 PROXY Protocol](./18-Nginx-Stream-TCP-UDP-TLS-Preread与PROXY-Protocol.md) | P1 |
+| G19 | [日志、指标、Tracing、调试与故障排查](./19-Nginx日志指标Tracing调试与故障排查.md) | P0 |
+| G20 | [Kubernetes Ingress、Gateway API 与生产运维](./20-Nginx-Kubernetes-Ingress-Gateway与生产运维.md) | P1 |
+| G21 | [模块、动态模块、njs、Lua/OpenResty 与扩展边界](./21-Nginx模块动态模块njs-Lua-OpenResty与扩展边界.md) | P2 |
 
 ## 3. 学习阶段
 
 ### 3.1 配置和数据路径 {/* #配置和数据路径 */}
 
-完成 G01～G06。要能通过 `nginx -T` 还原最终配置，解释 server/location 选择、请求头改写、upstream 重试和响应 Buffer，而不是只会粘贴 location 片段。
+完成 G01～G06、G15～G18。要能通过 `nginx -T` 还原最终配置，解释 server/location 选择、HTTP 版本差异、请求头改写、Upstream 重试、DNS 更新、流式 Buffer 和 Stream 四层代理，而不是只会粘贴 Location 片段。
 
 ### 3.2 内核与源码 {/* #内核与源码 */}
 
-完成 G07～G08、G13～G14。重点理解一个 Worker 通过事件循环服务大量连接，CPU 密集模块或阻塞调用为何仍会卡住该 Worker。
+完成 G07～G08、G13～G14、G21。重点理解一个 Worker 通过事件循环服务大量连接，HTTP Phase/Filter 怎样执行，以及 CPU 密集模块或阻塞脚本为何仍会卡住该 Worker。
 
 ### 3.3 生产治理 {/* #生产治理 */}
 
-完成 G09～G12。建立并发连接、请求率、响应大小、上下行带宽、TLS CPU、upstream 延迟、Buffer/Cache 和日志量的容量模型。
+完成 G09～G12、G19～G20。建立并发连接、请求率、响应大小、上下行带宽、TLS CPU、Upstream 延迟、Buffer/Cache、日志量和 Kubernetes 滚动排空的容量模型。
 
 ## 4. P0 验收题
 
@@ -66,9 +73,16 @@ Client TCP/TLS
 - `proxy_pass` 是否带 URI 时转发路径有什么差异？
 - Upstream 返回 500、连接超时、读超时是否都应重试？
 - Buffering 为什么既能保护慢客户端，也可能增加磁盘和延迟？
+- `proxy_cache_bypass` 与 `proxy_no_cache` 分别控制什么？
+- HTTP/2 Connection 与 Stream 为什么要分别限额？
+- SSE、WebSocket、gRPC 的 Buffer 和超时边界有什么不同？
+- DNS 已更新，Nginx 为什么仍可能访问旧 Pod？
+- TLS Preread 为什么能按 SNI 路由，却不能按 HTTP Path 路由？
 - Keepalive 是客户端连接、Upstream 连接还是两者？
 - CPU 低但请求排队，应看 Worker connection、accept、upstream 还是网络？
 - Nginx Active 很低但业务 P99 高，怎样分离网关时间与上游时间？
+- Ingress 对象存在，为什么数据面可能仍未生成对应路由？
+- Lua 使用协程后，哪些调用仍可能阻塞 Worker？
 
 ## 5. 与 Higress/Envoy 的边界
 
