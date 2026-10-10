@@ -36,7 +36,7 @@ Application/Infrastructure
 ## 2. P1：部署、关联与生产运维
 
 11. [Agent、DaemonSet、Sidecar、Gateway 与分层 Collector 部署](./11-Agent-DaemonSet-Sidecar-Gateway与分层Collector部署.md)
-12. [Loki 单体、Simple Scalable、Microservices 与 Kubernetes 部署](./12-Loki单体-Simple-Scalable-Microservices与Kubernetes部署.md)
+12. [Loki 单体、高可用单体、Microservices 与 Kubernetes 部署](./12-Loki单体-Simple-Scalable-Microservices与Kubernetes部署.md)
 13. [Tempo/Jaeger 部署、TraceQL、Span Metrics 与 Service Graph](./13-Tempo-Jaeger部署-TraceQL-Span-Metrics与Service-Graph.md)
 14. [Metrics、Logs、Traces、Exemplar 与 Profile 关联分析](./14-Metrics-Logs-Traces-Exemplar与Profile关联分析.md)
 15. [基数、采样、背压、容量、安全、多租户、升级与故障 Runbook](./15-基数-采样-背压-容量-安全-多租户-升级与故障Runbook.md)
