@@ -21,7 +21,7 @@ Terraform 和 OpenTofu 用声明式配置描述资源期望状态，通过 Provi
 | 5 | [Plan、Apply、Refresh 与 Destroy](./05-Plan-Apply-Refresh与Destroy.md) | 建立审查、保存 Plan 和销毁门禁 |
 | 6 | [State、Backend、锁与恢复](./06-State-Backend锁与恢复.md) | 治理共享 State、并发、备份和恢复 |
 | 7 | [Module、环境、版本与复用](./07-Module环境版本与复用.md) | 设计小接口 Module 和环境边界 |
-| 8 | [Import、Moved、重构与漂移](./08-Import-Moved重构与漂移.md) | 安全接管资源并迁移地址 |
+| 8 | [Import、Moved、Removed、重构与漂移](./08-Import-Moved重构与漂移.md) | 安全接管资源、迁移地址并交接所有权 |
 | 9 | [测试、CI、Policy 与安全](./09-测试CI-Policy与安全.md) | 建立自动检查、权限和变更门禁 |
 | 10 | [性能、升级与故障排查](./10-性能升级与故障排查.md) | 定位锁、Provider、API 和图瓶颈 |
 | 11 | [Terraform、Ansible 与 Kubernetes 综合项目](./11-Terraform-Ansible-Kubernetes综合项目.md) | 串联资源创建、配置和应用交付 |
@@ -51,7 +51,8 @@ flowchart LR
 - [ ] 能从资源地址解释 State 与远端对象映射。
 - [ ] Provider 和 Module 版本锁定且来源可信。
 - [ ] Plan 与 Apply 使用同一源码、变量和锁文件。
-- [ ] State 远程存储、访问最小化、加密、锁和备份明确。
+- [ ] State 远程存储、访问最小化、加密、锁、版本和恢复演练明确。
+- [ ] 能解释 Terraform 与 OpenTofu 在加密、测试和临时值等能力上的版本边界。
 - [ ] `sensitive` 不被误解为 State 加密。
 - [ ] 重构使用 Moved/Import 等受控机制，不靠手工改 State。
 - [ ] 漂移、部分 Apply、锁遗留和 Provider 升级都有 Runbook。
