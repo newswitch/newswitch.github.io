@@ -58,4 +58,28 @@ GPU Utilization 是时间占用近似，不能告诉你 Kernel 是否有效利�
 - 能用 HBM 字节账本解释 Decode 融合的收益与寄存器、Occupancy 边界；
 - 能把单 Kernel、算子链、模型 Step 与在线 SLO 分开测量，避免错误归因。
 
+## 4. 理论推导与阅读检查
+
+如果以理论为主，可按 01 → 02 → 03 → 04 → 05 → 06 → 08 → 09 → 10 阅读；已有实践章节不必作为前置任务。按下面的推导检验理解，不以记住术语数量衡量掌握程度：
+
+| 章节 | 理论主线 | 不看原文应能完成 |
+| --- | --- | --- |
+| 01 | Dispatch Key、redispatch、Autograd 累积与生命周期 | 解释 wrapper 递归反例，推导菱形图梯度 |
+| 02 | Guard、路径特化、动态尺寸、Bucket 与编译摊销 | 区分缓存不命中与 Graph Break；计算 Padding 与回本次数 |
+| 03 | Saved Tensor、函数式更新、Loop IR 与 Layout Lowering | 推导别名版本和具体地址，证明输出 ownership |
+| 04 | Program/线程映射、Stride、Mask、资源驻留与流水 | 手算尾块、事务跨度、寄存器/Shared 上限 |
+| 05 | GEMM Tile、Online Softmax、FA2/FA3、Dropout/GQA 后向 | 合并 Softmax，画异步缓冲代次，推导共享 KV 梯度 |
+| 06 | 私有池、静态地址、RNG 与异步使用权 | 指出并发/乱序重放和过早释放的反例 |
+| 08 | 舍入误差、Split-K workspace、persistent 调度 | 手算归约深度、任务数和归约流量 |
+| 09 | Decode 权重/KV 账、融合流量、量化元数据、Amdahl | 区分容量和流量，解释为什么压缩比不等于加速比 |
+| 10 | 关键路径、重叠执行、流水吞吐与排队 | 计算瓶颈切换，区分局部 duration 与墙钟收益 |
+
+05 是 Online Softmax 与 Attention 梯度的主要理论归属；Context Parallel 章节只解释其跨 Rank 应用。Roofline 的通用定义仍以 [性能模型](../performance/01-GPU-Roofline性能模型.md)为主，不在各章复制整套定义。
+
+## 5. 模型边界与进一步阅读
+
+上述编译、Attention、执行图与归约缺口已有对应推导。学习时仍须区别三层结论：数学恒等式、明确假设下的教学成本模型、具体版本的实现契约。前两层帮助解释机制，不能直接替代第三层的源码和架构约束。
+
+更进一步可沿目标版本源码追踪实际 IR pass、指令布局与同步协议，用反例检验自己的推导；这是对实现的专门研究，不是这里仍待补写的一套通用公式。跨系统的理论阅读入口见[理论推导阅读与掌握检查](../../learning/03-理论推导阅读与掌握检查.md)。
+
 参考：[PyTorch Compiler](https://docs.pytorch.org/docs/stable/torch.compiler.html)、[Triton Documentation](https://triton-lang.org/main/index.html)。

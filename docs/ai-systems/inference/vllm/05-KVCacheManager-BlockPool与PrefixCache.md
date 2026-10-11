@@ -280,7 +280,41 @@ RUNNING
    - 谁决定 token budget；
    - 分配失败后请求如何处理。
 
-固定版本源码：
+### 10.1 空闲队列为何不用普通 deque {/* #块池源码 */}
+
+`kv_cache_utils.py` 中的 `FreeKVCacheBlockQueue` 用 Block 对象自身的 `prev_free_block`、`next_free_block` 组成双向链表。与只能高效处理两端的普通队列相比，它可以在已经知道 Block 对象时 O(1) 摘除中间块；操作链指针也不必为每次摘取创建新的队列节点。[空闲块队列](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/kv_cache_utils.py#L165)
+
+为什么需要中间摘除？缓存命中可能落到空闲队列中的任意块，`BlockPool.touch` 会在 ref_cnt 为 0 时先把它摘出，再增加引用。若只改引用计数而仍留在空闲队列里，另一个请求可能把正在使用的物理块重新分配。这个结构优化服务的是所有权转换，不是让 Attention 的 FLOPs 变少。[命中块保活](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/block_pool.py#L402)
+
+### 10.2 用一个 Block 手推命中与复用
+
+下面限定普通缓存块，不包含 null block、显式缓存失效与外部 KV Connector：
+
+| 步骤 | 引用数 | 在空闲队列 | 旧哈希可查 | 允许覆盖内容 |
+| --- | --- | --- | --- | --- |
+| A 使用已缓存块 X | 1 | 否 | 是 | 否 |
+| A 释放，`free_blocks` | 0 | 是 | 是 | 只能先办理重新分配 |
+| B 命中 X，`touch` | 1 | 否 | 是 | 否 |
+| B 释放 | 0 | 是 | 是 | 只能先办理重新分配 |
+| C 需要不同内容，`get_new_blocks` 取到 X | 1 | 否 | 否 | 新所有者可写 |
+
+`free_blocks` 减引用，只把降到 0 的普通块归还队列；不顺便抹掉缓存身份。`get_new_blocks` 从队列取块后调用 `_maybe_evict_cached_block` 移除旧哈希映射、重置哈希，再增加引用。旧内容在物理内存中存在，不代表旧身份在重新分配后仍有效。[释放与重新分配](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/block_pool.py#L333)
+
+假设错误实现先覆盖 X，再删除旧哈希，期间命中旧前缀的请求就可能取得已被改变的 KV。真正要学的是“内容保留、可回收性、缓存身份”三者独立，以及它们的顺序；不是把空闲块解释成清零过的显存。共享引用也只允许安全地复用已确定的缓存内容，不能任意改写共享块。
+
+### 10.3 完全命中为什么还可能重算一块
+
+在 v0.23.0 的 `get_computed_blocks` 中，为获得最后 token 的 logits，最大命中长度设为 `request.num_tokens-1`；分配接口又要求命中边界按块对齐。对普通 Full Attention、Block Size=16、Prompt 恰为 32 token 的教学例子，即使两块 KV 都在缓存，允许命中的完整边界通常只有 16 token，剩余一块要重算，而不是直接复用 32 token。[最后 token 与对齐限制](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/kv_cache_manager.py#L196)
+
+这个例子不覆盖特殊 Attention 分组、跨机 KV 和跳过缓存读取的请求。`skip_reading_prefix_cache` 还会使相应请求绕过查命中。缓存节省的是符合复用边界的 Prefill 工作，并不缓存一个对任意采样请求都能直接返回的完整答案。
+
+### 10.4 为什么哈希必须包含此前上下文
+
+`hash_block_tokens` 的输入包含父块哈希、当前块 token 和 extra keys。若两条序列只有后面的 token 块相同、前面的上下文不同，当前块的 KV 通常也不同；只对当前 token 块做无上下文哈希会错误复用。链式哈希正是把前缀依赖带进缓存身份。[块哈希输入](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/kv_cache_utils.py#L563)
+
+哈希不是数学上的零碰撞保证，模型、LoRA、多模态和租户隔离也不能只靠 token 相同推断。块大小、哈希成本、尾部浪费及命中分布共同决定收益；固定块管理主要减少分配浪费并方便复用，不能直接证明每次 GPU Kernel 都更快。
+
+固定版本源码与设计资料：
 
 - [kv_cache_manager.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/kv_cache_manager.py)
 - [block_pool.py（v0.23.0）](https://github.com/vllm-project/vllm/blob/v0.23.0/vllm/v1/core/block_pool.py)

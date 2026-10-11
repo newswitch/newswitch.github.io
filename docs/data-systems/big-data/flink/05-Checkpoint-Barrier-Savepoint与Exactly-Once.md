@@ -23,11 +23,36 @@ flowchart LR
 
 Coordinator 触发 checkpoint，source 在流中插入 barrier并记录位置。多输入算子需形成一致切面：对齐式等待其他输入 barrier，并暂缓已到 barrier 的 channel；state 异步写到持久存储，完成后向 coordinator ACK。
 
+### 1.1 两输入为什么需要对齐
+
+设两个有序 channel 的记录如下，`|42|` 是 checkpoint 42 的 barrier：
+
+```text
+A: a1 |42| a2
+B: b1 b2 |42| b3
+```
+
+算子已应用 a1、b1，然后先收到 A 的 barrier。Aligned 模式暂停 A 的后续输入，继续处理 B 的 b2；B 的 barrier 到达后，快照含 a1、b1、b2，不含 a2、b3。Source 快照位置与这个切面一致，恢复后从 barrier 之后继续。
+
+如果先把 a2 应用到 state，却仍从 checkpoint 42 的 A 位置恢复，a2 会被 source 重放而再次进入 state。问题不是“快照时间差一点”，而是 state 与输入位置不属于同一因果切面。异步上传只允许将已经固定的快照持久化，不能边上传边读取任意变化中的 live state。[Flink 1.20 fault tolerance](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/learn-flink/fault_tolerance/)
+
 ## 2. 对齐与非对齐
 
 反压下 barrier 传播和 alignment 可能很慢。Unaligned checkpoint把部分 in-flight buffer 一并快照，降低等待，但增加快照字节和恢复复杂度。它不是解决 sink 永久慢的办法；若 checkpoint I/O 本身已饱和，更多 channel state 可能更糟。
 
 依据 alignment/start delay、checkpoint bytes、持久存储吞吐和恢复时间决定，不盲开。
+
+### 2.1 非对齐把缺口放进 channel state
+
+仍用上例。第一条 barrier 到达时，若 state 只应用了 a1、b1，而 b2 还在 B 的传输缓冲中，则可固定这个较早的 operator state，并将属于切面之前、尚未被应用的 b2 记录到 channel state。Source 的 B 位置已经跨过 b2，因此恢复不能再要求 source 重新发送 b2，必须由 channel state 补回一次。
+
+```text
+一致恢复 = operator state 已反映的记录
+         + channel state 中尚未应用的切面前记录
+         + source 从切面后的重放
+```
+
+同一条记录不能同时被视为“state 已应用”“channel 待重放”而重复生效，也不能既不在 state/channel 中又被 source 位置跨过。真实快照还可能保存输出 channel 等在途数据；这是逻辑解释，不是只对一个输入缓冲拍照。非对齐的版本限制、并发 checkpoint 条件和 connector 支持需按目标版本核对。[Checkpointing under backpressure](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/ops/state/checkpointing_under_backpressure/)
 
 ## 3. Checkpoint 配置取舍
 
@@ -44,6 +69,20 @@ Coordinator 触发 checkpoint，source 在流中插入 barrier并记录位置。
 Source 必须可回退到 checkpoint 位置；算子 state 回到同一快照；sink 需要事务、两阶段提交或幂等协议。若 process function 调用无幂等 HTTP，checkpoint 回滚会再次调用。
 
 Iceberg/Kafka connector 的具体语义和配置随版本核对。业务用 event ID、金额守恒和 snapshot/transaction ID 做验证。
+
+### 4.1 State 完成与 Sink 提交之间的故障窗口
+
+以参与两阶段提交的 sink 为例，Tx42 在收到 checkpoint 42 时 pre-commit，并把事务恢复信息写入快照；所有必要 subtask ACK 后，coordinator 持久化 checkpoint 完成状态，再通知 sink 提交 Tx42。新记录进入新的事务，不能继续写已经冻结的 Tx42。不同 connector 的 API 不同，但必须解决这几个逻辑阶段。
+
+| 故障点 | 恢复到的切面 | Sink 的义务 |
+| --- | --- | --- |
+| Tx42 已 pre-commit，checkpoint 42 尚未完成 | 最近已完成的 41 | 不暴露未获提交决定的 Tx42，按协议清理或中止 |
+| checkpoint 42 已完成，commit 通知丢失 | 42 | 从恢复状态完成 Tx42 的提交 |
+| Tx42 已提交，提交 ACK 丢失 | 42 | 再次确认或提交必须幂等，不重复产生业务效果 |
+
+因此外部事务必须支持故障后的识别、重复 commit/abort 的安全性以及足够的存活时间。仅实现“收到 barrier 就写一批文件”不等于两阶段提交。这里借用 Flink 1.20 的经典 `TwoPhaseCommitSinkFunction` 说明契约，新的 Sink API 和 connector 有独立实现。[TwoPhaseCommitSinkFunction 恢复接口](https://nightlies.apache.org/flink/flink-docs-release-1.20/api/java/org/apache/flink/streaming/api/functions/sink/TwoPhaseCommitSinkFunction.html)
+
+Exactly-Once 约束恢复后的 state 和外部可见效果，不保证用户函数只运行一次。函数可能执行多次；随机数、处理时间或 HTTP 返回值若影响结果，还需要状态化或其他一致协议。无幂等外部调用即使放在“每条记录只处理一次”的代码分支里，也无法跨进程故障保证一次效果。
 
 ## 5. Savepoint 与升级
 
@@ -73,6 +112,8 @@ Savepoint 用于有计划停止、升级、迁移、rescale 和回滚。可靠�
 - 说明非对齐快照包含什么和代价；
 - 明确 source/state/sink 的 EOS 条件；
 - 完成可回滚的有状态升级演练。
+- 手算两输入 barrier 先后到达时哪些记录属于 state、channel state 和 source 重放；
+- 解释 pre-commit 后失败与 commit ACK 丢失为何需要不同恢复动作。
 
 上一篇：[Flink State](./04-Keyed-State-Operator-State与State-Backend.md)　下一篇：[反压、倾斜、状态膨胀与性能调优](./06-反压数据倾斜状态膨胀与性能调优.md)
 

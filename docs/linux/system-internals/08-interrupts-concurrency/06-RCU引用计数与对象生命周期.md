@@ -34,6 +34,42 @@ RCU 读侧通常极轻，但写侧要复制/更新、等待并延后回收。它
 
 常见组合是：在 RCU 读侧查表，成功增加非零引用，离开 RCU 后继续使用；删除方摘表并释放初始引用，最终引用归零再销毁。
 
+### 3.1 把可达性、临时读者和长期持有者分开
+
+以下是不可变对象的一个教学协议：初始化字段与引用后，用 `rcu_assign_pointer` 或所用容器相应的 RCU 发布原语入表，表持有初始引用 1，写者由同一锁串行化；所有无引用读者仅在普通 RCU 读侧区内访问，长期使用者必须在该区内取得非零引用；零引用后的实际释放延迟到 RCU Callback。对象不会在宽限期前复用，也不使用 `SLAB_TYPESAFE_BY_RCU` 的特殊复用模式。
+
+```c
+/* 读者：found 来自 RCU 保护的查找 */
+rcu_read_lock();
+p = rcu_dereference(found);
+if (p && !refcount_inc_not_zero(&p->refs))
+        p = NULL;
+rcu_read_unlock();
+/* p 非空时可在区外使用；最后以 put 释放引用 */
+
+/* 删除者：持有写者锁，摘表后放弃表引用 */
+remove_from_table_rcu(p);
+put(p);
+
+/* put 的最终路径 */
+if (refcount_dec_and_test(&p->refs))
+        call_rcu(&p->rcu, free_object_callback);
+```
+
+这是所有权伪代码，不是可以直接粘进任意容器的完整函数；实际查找、移除和 Callback 必须符合所用数据结构及 RCU flavor。[RCU 定义](https://docs.kernel.org/RCU/whatisRCU.html)和 [refcount 顺序契约](https://docs.kernel.org/core-api/refcount-vs-atomic.html)分别负责读侧保护与引用操作，不能互相替代。
+
+### 3.2 两种竞争顺序为什么都安全
+
+顺序 A：读者先成功将引用 1→2；写者摘表、put 使 2→1；宽限期结束后读者仍可凭引用使用对象，最后 put 到 0，再排队延迟释放。宽限期结束并不意味着长期引用已经结束。
+
+顺序 B：写者先摘表并 put 到 0，Callback 尚未执行；旧读者在读侧区内仍可能有指针，但 `inc_not_zero` 失败，不能把 0 复活为 1，退出后也不能再使用。该读侧区结束之前，Callback 不得把存储真正释放。反例是把零引用直接 `kfree`：旧读者连检查 refs 的地址都可能失效。
+
+### 3.3 更新并发与地址复用的边界
+
+RCU 本身不串行化两个写者，也不保证对同一对象原地改写多个字段的原子快照。本例不可变对象可复制出新版本后替换；可变字段另需锁或适合的原子协议。
+
+若使用允许同地址快速复用的 slab 模式，成功增加引用之后仍可能取得另一个逻辑对象，须重新核对 Key、版本及查找位置；“地址相同且引用成功”不够。[内核 hlist_nulls 示例](https://docs.kernel.org/RCU/rculist_nulls.html)讨论了这类验证。卸载模块前还要确保已排队 Callback 不会继续进入被卸载代码；等待一个 Grace Period 不等同于所有历史 Callback 都执行完毕。
+
 ## 4. ABA 与对象复用
 
 指针地址相同不代表还是同一逻辑对象。释放后 slab 可能迅速把地址分配给新对象；只比较指针的无锁算法可能遭遇 ABA。内核使用版本、引用、RCU、锁或更严格所有权避免。

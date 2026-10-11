@@ -87,6 +87,42 @@ epoll_wait
 
 一个 Handler 长时间执行 CPU 计算、同步 DNS、磁盘阻塞或第三方模块阻塞时，该 Worker 内其他就绪连接都要等待。
 
+### 5.1 从源码解释高并发的来源 {/* #事件循环源码 */}
+
+源码基线为 Nginx `release-1.26.3`，限定 Linux epoll 与 HTTP/1 普通读请求路径。`ngx_process_events_and_timers` 先确定本次等待时间，再调用事件后端；之后处理 posted accept、超时及 posted 普通事件。epoll 后端取得本轮就绪列表，按连接的 read/write event 找到 handler，直接调用或加入 posted 队列。[事件循环](https://github.com/nginx/nginx/blob/release-1.26.3/src/event/ngx_event.c#L195)、[epoll 分发](https://github.com/nginx/nginx/blob/release-1.26.3/src/event/modules/ngx_epoll_module.c#L784)
+
+关键是“等数据”的状态存放在连接与请求对象中，而不是为每个等待请求保留独占的执行线程。一个 Worker 可以在大量连接间推进状态机，处理完当前可做的工作就返回事件循环。posted 队列也不是另一套业务线程池，后续仍由相应事件循环推进。
+
+### 5.2 半包怎样暂停和继续
+
+假设请求行 `GET /a HTTP/1.1\r\n` 分两次到达，第一次只收到 `GET /a HT`。`ngx_http_process_request_line` 调用读取和解析函数；数据不完整时解析状态及缓冲位置仍属于 request。`ngx_http_read_request_header` 在暂时无数据时返回 `NGX_AGAIN`，配置等待事件和必要定时器，handler 返回，而不是在 Worker 上一直等完整请求行。[请求行状态机](https://github.com/nginx/nginx/blob/release-1.26.3/src/http/ngx_http_request.c#L1106)、[继续读取与等待](https://github.com/nginx/nginx/blob/release-1.26.3/src/http/ngx_http_request.c#L1580)
+
+第二段到达后，从保存的解析状态和字节位置继续；不必让新线程重新开始解析。底层 `ngx_unix_recv` 把暂时不可读转换成 `NGX_AGAIN`，并调整 ready 状态。`NGX_AGAIN` 是状态机的暂停信号，不是要求立即重试到成功的忙等信号。[非阻塞 recv](https://github.com/nginx/nginx/blob/release-1.26.3/src/os/unix/ngx_recv.c#L184)
+
+以下教学伪代码只表达暂停关系，不替代 HTTP/TLS 的真实分支：
+
+```text
+收到就绪通知
+  → 使用连接中保存的 handler
+  → 消费当前字节，更新 request 状态
+  → 完成则进入下一阶段
+  → 暂时不可继续则保存状态并返回
+下次就绪或超时
+  → 继续处理，或者终止请求
+```
+
+### 5.3 连接复用为什么还需要事件身份检查
+
+一个读 handler 可能关闭连接，而当前 epoll 返回列表中还包含该连接的写事件。源码从 event data 中取出 connection 指针及 instance 标记，发现 fd 已关闭或 instance 不匹配时跳过；调用读 handler 后，在写 handler 前还会再次检查。这样不把本轮已失效的事件误用到已经关闭或复用的连接上。[失效事件检查](https://github.com/nginx/nginx/blob/release-1.26.3/src/event/modules/ngx_epoll_module.c#L839)
+
+这说明复用对象的性能设计必须同时有身份与生命周期保护；仅仅“缓存 connection 对象”并不足够。instance 是这一事件实现的标记，不是可以任意移植到其他并发回收场景的通用代次证明。
+
+### 5.4 高连接数不等于无限计算容量
+
+设某 Worker 每秒能用于 handler 的 CPU 预算是 1 秒，每个请求实际消耗 100 μs，忽略其他开销，则该 Worker 的计算侧上界只是 `1 / 100 μs = 10000 请求/秒`。十万条等待连接不必对应十万个线程，但十万条请求同时要做 TLS、压缩或脚本时，CPU 工作量不会消失。
+
+若一个同步 handler 占用 50 ms，这个 Worker 在该期间不能正常推进其他 handler，超时回调也可能延后。这里应学习的是非阻塞状态机如何降低等待成本，而不是由 epoll 的名称推导 CPU、磁盘和尾延迟都不再受限。
+
 ## 6. Connection 对象
 
 每条下游和上游 Socket 都会消耗 Connection 及关联内存。一次反向代理请求通常至少涉及：

@@ -19,7 +19,7 @@ RadixAttention不是新的Attention数学公式，而是一套跨请求管理和
 → 内存不足时按策略淘汰未被引用节点
 ```
 
-## 1. 为什么普通哈希不够
+## 1. 为什么整段 Prompt 哈希不够
 
 两个请求可能只共享一部分前缀：
 
@@ -40,6 +40,8 @@ Radix Tree可以表达公共路径和分叉：
 ```
 
 节点Key是Token片段，Value指向对应KV位置。压缩边使一段连续Token不必逐Token建立对象。
+
+这里对比的是“只对整段 Prompt 做一次哈希”，不是说哈希不能实现前缀复用。vLLM 的[块级链式哈希](../vllm/05-KVCacheManager-BlockPool与PrefixCache.md#块池源码)同样表达此前上下文；应比较匹配粒度、分配单位和所有权转换，不能把 Tree 的收益归因于哈希表本身没有前缀能力。
 
 ## 2. 一次请求的Cache生命周期
 
@@ -132,6 +134,35 @@ LPM可能优先A/C
 | Req对象 | 已缓存、未缓存和输出状态 |
 
 建议用三个请求做断点/日志实验，而不是一开始阅读整个仓库。
+
+### 8.1 匹配为什么也会拆树节点 {/* #前缀树源码 */}
+
+源码基线为 SGLang `v0.4.6` 的基础 `RadixCache`，先取 `page_size=1`、固定模型与 Tokenizer，不包含 HiCache 等扩展路径。假设树里已有边 `key=[1,2,3,4]`，对应 KV Slot 索引 `value=[10,11,12,13]`，新请求是 `[1,2,3,9]`。`_match_prefix_helper` 得到公共长度 3，调用 `_split_node` 将边拆为：
+
+```text
+root
+└─ key=[1,2,3], value=[10,11,12]
+   ├─ key=[4], value=[13]          已有后缀
+   └─ key=[9], value=[新 Slot]    新后缀计算后插入
+```
+
+拆分时改变的是 token 片段、KV Slot 索引片段和父子关系，不重新计算已有 K/V，也不把整个 HBM KV 数据搬成两个新副本。新公共节点继承旧子节点的 `lock_ref`，因为旧请求仍使用这段前缀；若错误地设成 0，正在使用的公共内容就可能变成淘汰候选。[匹配和节点拆分](https://github.com/sgl-project/sglang/blob/v0.4.6/python/sglang/srt/mem_cache/radix_cache.py#L324)
+
+这也解释了 `match_prefix` 不是严格只读查询：最长前缀可能落在压缩边的中间，需要创建一个可引用的节点边界。`torch.cat` 等索引拼接还有自己的成本，不能因为没有重算 KV 就说匹配完全零拷贝、零分配。
+
+### 8.2 锁定祖先与淘汰叶子如何配合
+
+`inc_lock_ref` 从命中末端沿 parent 一直走向根，对路径节点加引用；从 0 变为受保护时，将该节点的容量从 evictable 计数转到 protected。`dec_lock_ref` 做反方向的计数转换。这种 lock_ref 主要表达缓存的使用资格，不能直接理解为线程互斥锁。[路径引用与容量计数](https://github.com/sgl-project/sglang/blob/v0.4.6/python/sglang/srt/mem_cache/radix_cache.py#L276)
+
+例如公共节点 P 被 A、B 两条运行路径引用，P 的引用数为 2；A 结束后为 1，仍不可淘汰；B 结束后降到 0，才成为可回收候选。实际淘汰还要满足树形条件：`evict` 先收集叶子，按访问时间建堆，跳过仍受引用的节点，释放叶子 Slot 并删除边；父节点没有其他子节点后才成为新的叶子候选。[叶子淘汰](https://github.com/sgl-project/sglang/blob/v0.4.6/python/sglang/srt/mem_cache/radix_cache.py#L253)
+
+先删冷后缀、再逐步回收祖先，有利于保留仍有其他后缀使用的公共前缀。这是根据结构推导的复用优势，不是任意流量下的命中率保证。该版本收集叶子、建堆和父路径遍历也有成本；大树和低共享流量仍可能让 CPU 管理成本突出。
+
+### 8.3 匹配粒度和计算收益的边界
+
+`match_prefix` 在 page_size 不为 1 时先截到完整页边界，匹配函数也按页比较。设 page_size=4，共有 6 个相同 token，并不自动等于能复用 6 个 token；基础匹配只能认到允许的完整页边界。页对齐、请求剩余计算和 logits 需求还要由调度层共同确定。[匹配粒度](https://github.com/sgl-project/sglang/blob/v0.4.6/python/sglang/srt/mem_cache/radix_cache.py#L128)
+
+因此，学习 RadixAttention 应能解释“怎样找到并保护可复用前缀”，而不是只背“树比哈希快”。它省掉部分重复 Prefill，但仍要为新后缀分配 Slot，Decode 仍要访问上下文；队列或 Decode 主导时，前缀命中增加也未必改善端到端延迟。
 
 ## 9. 三请求实验
 

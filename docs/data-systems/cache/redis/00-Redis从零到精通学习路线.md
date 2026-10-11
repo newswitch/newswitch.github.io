@@ -37,7 +37,7 @@ Application
 | R02 | [RESP、客户端连接、Pipeline、事务与 Lua](./02-RESP客户端连接Pipeline事务与Lua.md) | P0 | 网络往返、原子性和阻塞从哪里产生 |
 | R03 | [String、Hash、List、Set、ZSet 与底层编码](./03-Redis核心数据结构与底层编码.md) | P0 | 数据结构选型、复杂度和内存代价 |
 | R04 | [Bitmap、HyperLogLog、Geo、JSON、Search 与 Vector](./04-Bitmap-HyperLogLog-Geo-JSON-Search与Vector.md) | P1 | 特殊结构和模块能力的适用边界 |
-| R05 | [事件循环、I/O Threads、命令执行与源码主路径](./05-Redis事件循环IO-Threads命令执行与源码主路径.md) | P2 | Redis 为什么快、哪里仍是串行瓶颈 |
+| R05 | [事件循环、I/O Threads、命令执行与源码主路径](./05-Redis事件循环IO-Threads命令执行与源码主路径.md) | P0 | 用固定版本源码解释 Redis 为什么快及串行瓶颈 |
 | R06 | [jemalloc、对象共享、过期删除与内存淘汰](./06-Redis内存过期与淘汰.md) | P0 | used_memory、RSS、碎片和 OOM 如何解释 |
 | R07 | [RDB、AOF、多段 AOF、fork 与 Copy-on-Write](./07-Redis-RDB-AOF-fork与Copy-on-Write.md) | P0 | 持久化时间点、恢复和磁盘风险 |
 | R08 | [主从复制、PSYNC、Replication Backlog 与一致性](./08-Redis主从复制PSYNC与一致性.md) | P0 | 全量/部分同步和数据丢失边界 |
@@ -66,6 +66,8 @@ Application
 - fork 时延和 COW 为什么可能导致内存翻倍；
 - RDB、AOF everysec 与操作系统刷盘之间的 RPO；
 - `used_memory` 不高但 RSS 很高的原因。
+
+学习“为什么快”时，先读 R03 的[编码源码](./03-Redis核心数据结构与底层编码.md#编码源码)，再读 R05 的[性能路径](./05-Redis事件循环IO-Threads命令执行与源码主路径.md#为什么快)。两处以 Redis 8.0.0 固定实现解释对象布局、哈希迁移和客户端交接；部署版本应另选受支持补丁，学习基线不是生产版本推荐。
 
 ### 3.3 阶段三：理解分布式 {/* #阶段三理解分布式 */}
 

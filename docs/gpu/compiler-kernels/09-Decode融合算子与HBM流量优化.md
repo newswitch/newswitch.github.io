@@ -35,6 +35,35 @@ Decode 优化不能只问“FLOPS 提高了多少”，还要问一次 Token 在
 
 GPU Util 高低都不能直接回答这些问题。要看 Kernel 时间线、HBM 带宽、Tensor Core 使用率、Launch 间隙和实际 Shape。
 
+### 1.1 用线性层推导权重复用
+
+设 BF16 线性层 `X[M,K] × W[K,N]`，忽略 Bias、额外转换、重复请求和 Cache，权重每次调用读一次：
+
+```text
+FLOPs = 2MKN
+逻辑流量 = 2KN + 2MK + 2MN bytes
+AI = 2MKN / [2KN + 2M(K+N)]
+当权重项占主导时：AI ≈ M FLOP/Byte
+```
+
+取 K=N=4096：W 为 32 MiB。M=1 时有约 33.55 MFLOP，X/O 共 16 KiB，AI 约 1；M=8 时约 268.44 MFLOP，X/O 共 128 KiB，AI 约 7.97；M=64 时 AI 约 62.06。Batch 的作用是让同一批权重服务更多 Token，不是让权重矩阵变小。
+
+这不意味着增大 Batch 就会线性变快：Tensor Core Shape、SM 任务数量、带宽屋顶及调度延迟都会限制收益；权重如果已命中 L2，按 HBM 计的 AI 也会改变。基础定义和上界见 [Roofline](../performance/01-GPU-Roofline性能模型.md)，不要把这里的逻辑字节当成实测 DRAM 流量。
+
+### 1.2 历史 KV 是另一张账
+
+设 B 条活动序列、各有 s 个历史 Token，每层 h_kv 个 KV Head，Head Dim 为 d，每个 KV 元素 b_kv 字节。理想地每个历史 K/V 只读一次：
+
+```text
+历史 KV 读取 = 2Bsh_kv d b_kv bytes / 层 / Decode Step
+本步新增 KV 写入 = 2Bh_kv d b_kv bytes / 层
+长度不同时，将 Bs 换成各序列历史长度之和
+```
+
+B=8、s=4096、h_kv=8、d=128、BF16 时，每层历史读取为 128 MiB，新增写入仅 32 KiB。它与权重账本是不同来源：权重可跨 Batch 复用，各序列的历史 KV 通常不同，Batch 增大时 KV 总量也增大。若假设可持续带宽为十进制 2 TB/s，128 MiB 完全来自 HBM 的传输下界约 67.1 μs；这不是包含计算、启动及其他层的 TPOT 预测。
+
+GQA 的容量按 h_kv 算，不按 Query Head 数 h_q 算；计算仍涉及 h_q 个 Query。不同 Query Head 能否共用一次 KV 加载，是实现的复用能力，而不是由 GQA 名字保证。分页、非连续布局、重复加载及量化元数据也可能增加实际请求量。FlashAttention 可以避免分数/概率物化，但不能让所有历史 KV 依赖消失，推导见 [Attention 的分块流量](./05-CUTLASS-GEMM-FlashAttention与融合算子.md#44-逻辑流量账消掉中间矩阵不等于只读一次-kv)。
+
 ## 2. 融合的本质
 
 假设原始路径：
@@ -97,18 +126,27 @@ Kernel C读取Z → 写O到HBM
 
 ## 4. 用字节账本判断值不值得融合
 
-对候选算子链列出：
+### 4.1 三个逐元素 Kernel 的完整算例
+
+设 `X→Y→Z→O` 的三个操作都是逐元素，不含额外 Tensor 输入，不向其他消费者暴露 Y/Z，也不需要为后向保存它们；所有 Tensor 均有 T 个 BF16 元素。融合后中间值确实留在片上且无 Spill。账本为：
 
 | 项目 | 融合前 | 融合后 |
 | --- | ---: | ---: |
-| 输入读取 |  |  |
-| 中间 Tensor 写入 |  |  |
-| 中间 Tensor 读取 |  |  |
-| 最终输出写入 |  |  |
-| Kernel Launch 数 |  |  |
-| Workspace |  |  |
+| X 读取 | 2T 字节 | 2T 字节 |
+| Y/Z 写入 | 4T 字节 | 0 |
+| Y/Z 读取 | 4T 字节 | 0 |
+| O 写入 | 2T 字节 | 2T 字节 |
+| 合计逻辑流量 | 12T 字节 | 4T 字节 |
+| Kernel Launch 数 | 3 | 1 |
+| 中间 Tensor 容量 | Y/Z 各 2T 字节；峰值依生命周期 | 无完整 Y/Z，仍有片上暂存 |
 
-例如 BF16 中间 Tensor 有 `T` 个元素，一次完整“写回再读出”至少产生近似 `4T` 字节的显存流量，尚未包含 Cache Line、对齐和元数据。若 Tensor 本来能稳定驻留 L2，实际 HBM 节省会低于这个上界，因此仍需 Profiler 验证。
+T=1,048,576 时，逻辑流量从 12 MiB 降到 4 MiB，减少 8 MiB。若它是带宽主导的串行链，且两种实现达到同样带宽，流量模型给出约 3 倍的链加速；不能把它写成任何设备上的保证。BF16 中间 Tensor 的一次“写回再读出”为 `4T` 逻辑字节，若在 L2 中完成，实际 HBM 节省会小于这个数；Spill 又可能带回流量。
+
+### 4.2 省字节、省容量与省时间不能互相替代
+
+Y 的 2 MiB 容量不等于它的 4 MiB 写读流量；Y/Z 总分配容量也不等于任何时刻的活跃峰值。若其他消费者仍需要 Y，或后向必须保存 Z，对应完整物化不能凭空取消。Norm 还涉及跨元素归约，其融合应满足 [编译器依赖边界](./03-AOTAutograd-Inductor与Triton代码生成链路.md#41-从索引和依赖判断能否融合)。
+
+粗略地，串行链耗时可拆成可见启动开销与各阶段受限耗时；不能把可重叠的 Host Launch 时间逐个机械相加。融合之后即使少两次启动，也可能因寄存器压力降低带宽。若原路径已用 CUDA Graph 减少 Host 开销，省流量的收益仍可能存在，省启动的空间却已经变小。
 
 ## 5. 为什么融合后反而可能更慢
 
@@ -162,6 +200,19 @@ W4A16 常把以下步骤融合：
 
 如果反量化单独落地完整 BF16 权重，压缩带来的 HBM 优势会被削弱。反过来，融合反量化会增加指令和寄存器压力，必须针对目标 Shape 调优。
 
+### 8.1 INT4 的字节不能只除以四
+
+假设 P 个权重，采用对称 INT4、每 128 个权重共享一个 FP16 Scale，无 Zero Point，且 P 可整除 128：
+
+```text
+压缩读取 = P/2 + 2P/128 bytes
+BF16 读取 = 2P bytes
+```
+
+对 `P=4096²`，压缩权重为 8 MiB，Scale 为 0.25 MiB，合计 8.25 MiB，约为 BF16 的 1/3.88，不是严格 1/4。若先完整反量化并物化 BF16，再调用矩阵乘，这张逻辑账是 `8.25 MiB 读 + 32 MiB 写 + 32 MiB 再读 = 72.25 MiB`；片上按 Tile 解包可避免完整 BF16 中间矩阵，但仍有转换、Scale 运算与重复请求的代价。非对称量化、Padding、不同 Group Size 要另加相应字节。
+
+融合反量化的性能条件不是“位数更低”，而是省下的可见传输耗时足以抵消额外解包/缩放、资源与数值代价。Decode 权重受限时可能获益；计算主导时可能受转换限制，不能从压缩比直接推导加速比。
+
 量化与融合一起上线时，应做四组实验：
 
 ```text
@@ -182,7 +233,9 @@ TP 线性层之间常伴随 AllReduce/ReduceScatter/AllGather。候选优化包�
 - ReduceScatter 后只处理本地 Shard；
 - 用 Custom AllReduce 减少小消息开销。
 
-但 Collective 要求所有 Rank 在相同顺序参与。把通信纳入 CUDA Graph 或自定义融合后，Rank 间 Shape、Graph 模式和 Buffer 地址必须一致；否则可能出现卡死，而不只是数值回归。
+但 Collective 要求参与 Rank 以兼容的调用顺序、类型和计数等协议参与。对于常见 AllReduce，各 Rank 必须满足对应 Tensor/计数约定；不能把不同 Rank 的不同分片形状一概要求为完全相同。
+
+把通信纳入 CUDA Graph 时，参与同一 NCCL 操作的 Rank 对该操作是否被捕获必须一致，见 [NCCL CUDA Graph 约束](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/cudagraph.html)。Graph 使用的指针需满足各进程自己的捕获/重放生命周期约束，**不要求不同 Rank 的数值地址相同**。协议或依赖错误可能卡死；仅在本地融合了两个算子，并没有证明分布式通信协议仍正确。
 
 ## 10. 一套分析流程
 
@@ -241,6 +294,8 @@ Decode 每条活动序列每轮只增加一个 Token，矩阵 `M` 小，权重�
 ### 12.3 为什么融合 Kernel 的时间下降，TPOT 可能不变？
 
 该 Kernel 可能只占 Decode Step 的很小比例，或节省时间被 Attention、TP Collective、调度和同步抵消。必须测算子链与端到端，并应用 Amdahl 定律理解上限。
+
+假设该算子链占原 Step 时间的 20%，融合令它加速 3 倍，其余时间不变且不考虑重叠变化，则新时间比例为 `0.8+0.2/3=0.8667`，整体约加速 1.154 倍。即使该链瞬间完成，上限也只有 `1/0.8=1.25` 倍。这个串行占比模型不能把 Profiler 中重叠 Kernel 时长直接相加作为原 Step 时间。
 
 ### 12.4 如何判断一次融合值得保留？
 

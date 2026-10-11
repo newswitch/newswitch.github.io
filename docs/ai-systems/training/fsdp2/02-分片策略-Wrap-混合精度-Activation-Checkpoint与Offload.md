@@ -2,62 +2,200 @@
 title: "FSDP2 分片策略、Wrap、混合精度、Activation Checkpoint 与 Offload"
 sidebar_label: "02. 显存与通信优化"
 sidebar_position: 2
-description: "从模型状态和激活显存出发，选择分片拓扑、Wrap 粒度、精度、重算和 CPU Offload。"
+description: "推导 FSDP2 的持久状态与物化峰值、Ring 通信量、HSDP 成本，以及重算和 Offload 的适用边界。"
 tags: [FSDP2, Mixed Precision, Activation Checkpoint, CPU Offload]
 ---
 
 # FSDP2 分片策略、Wrap、混合精度、Activation Checkpoint 与 Offload
 
+FSDP2 的核心交换是：用重复取回完整参数的通信，换取模型状态不必完整常驻。所谓“省显存”和“通信被隐藏”，只有在给出 dtype、分片组大小、单元粒度与时序后才有确定含义。
+
+先读懂上一章的[参数生命周期](./01-DTensor-DeviceMesh-fully-shard与一次训练Step.md)。本章的公式都是容量与时间模型，不是框架对实际峰值或吞吐的保证。
+
 ## 1. 显存账本
 
+### 1.1 持久状态不能只算计算权重
+
+定义 P 为全模型参数元素数，S 为 shard 组大小，Q 为一个通信单元的参数元素数。先假设均匀分片、无 Offload，原始参数为 FP32，使用 FP32 梯度与两个 FP32 Adam 状态，计算时临时物化 BF16 参数：
+
+| 对象 | 全模型字节数 | 每 Rank 持久字节数 |
+| --- | --- | --- |
+| 原始 FP32 参数 | `4P` | `4P/S` |
+| FP32 梯度分片 | `4P` | `4P/S` |
+| Adam 一阶矩与二阶矩 | `8P` | `8P/S` |
+| 合计 | `16P` | `16P/S` |
+
+这里没有再添加一份 FP32 Master Weight：原始 FP32 分片本身就是优化器更新的高精度参数。若换成 BF16 持久参数、另存 FP32 主参数的实现，账本必须重新列项，不能重复计数或漏算。[FSDP2 混合精度定义](https://docs.pytorch.org/docs/2.8/distributed.fsdp.fully_shard.html#torch.distributed.fsdp.MixedPrecisionPolicy)明确区分原始分片 dtype 与临时完整参数 dtype。
+
+梯度可能在清空后暂未分配，优化器状态也可能在第一次更新时才创建。这张表用于稳态预算，不表示每个对象从程序启动起都同时存在。其他精度账本见 [ZeRO 的模型状态分析](<../distributed/03-DeepSpeed ZeRO 与 GPU 显存优化.md>)。
+
+### 1.2 物化峰值由同时存活的单元决定
+
+把实际时刻 t 的显存拆成互不重复的对象：
+
 ```text
-峰值显存
-= 参数Shard与临时完整参数
-+ 梯度Shard
-+ Optimizer State Shard
-+ 激活
-+ 通信Buffer
-+ CUDA Context/Allocator碎片
+M(t) = 持久分片(t)
+     + 临时完整参数(t)
+     + 尚未释放的完整梯度(t)
+     + 保存的激活(t)
+     + 额外通信/转换/算子Workspace(t)
+     + Runtime与分配器开销(t)
+
+M_peak = max_t M(t)
 ```
 
-全分片主要压缩模型状态；长序列训练中激活可能成为最大项，需要 Activation Checkpoint 或 Sequence/Context Parallel。
+当前单元含 Q 个参数，BF16 完整参数需要 `2Q` 字节。如果还预取同样大的下一单元，完整参数项变成 `4Q`。不能因为长期参数只占 `4P/S`，就认为所有临时对象也会除以 S。
 
-## 2. Wrap 粒度
+给一个保守预算例子，使用十进制 GB：P 为十亿、S 为 4，每单元 Q 为一亿；预留两个 BF16 完整单元、一个 FP32 完整梯度单元、2 GB 激活以及 0.5 GB 其他开销：
 
-| 粒度 | 优点 | 代价 |
+```text
+状态预算      = 16 × 10^9 / 4 = 4.0 GB
+完整参数预算  = 2 × 2 × 10^8 = 0.4 GB
+完整梯度预算  = 4 × 10^8     = 0.4 GB
+总预算        = 4.0 + 0.4 + 0.4 + 2.0 + 0.5 = 7.3 GB
+```
+
+这是指定驻留假设的预算，不是精确峰值：完整梯度与梯度分片的转换可能复用存储，也可能需要额外缓冲；多组 ReduceScatter 未结束则可能同时保留更多梯度。精确峰值要用对象的存活区间，而不是无条件相加所有对象的各自最大值。
+
+若只 Wrap 整模型，Q 就等于 P，单次物化项会扩大十倍。若激活占主导，继续增大 S 只能压缩状态项，不能解决全部 OOM。
+
+## 2. Wrap 粒度与通信成本 {/* #2-wrap-粒度 */}
+
+### 2.1 一次 AllGather 和 ReduceScatter 要传多少
+
+设单元完整计算参数大小为 B 字节，完整归约梯度大小为 G 字节。在理想均匀 Ring 模型中，每个 Rank 一次 AllGather 的发送量与接收量分别为：
+
+```text
+V_AG_send = V_AG_recv = (S-1)/S × B
+V_RS_send = V_RS_recv = (S-1)/S × G
+```
+
+ReduceScatter 虽然最后只保留 G/S 字节，却需要参与其他区间的归约，因此传输量不是 G/S。这里统计的是每 Rank 单向量；若统计发送加接收，需再乘二，不能混用口径。实际算法、填充和分层拓扑会改变物理链路流量，见 [NCCL 算法与协议](../../../networking/rdma-roce/ai-cluster/02-NCCL集合通信算法与协议.md)。
+
+对 Forward 后重分片、Backward 后同步的一次普通单元执行：
+
+```text
+两次参数 AllGather + 一次梯度 ReduceScatter
+V_send ≈ (S-1)/S × (2B + G)
+```
+
+例：S=4，B=200 MB，G=400 MB。两次参数通信各发送 150 MB，梯度通信发送 300 MB，合计 600 MB。若不在 Forward 后重分片，省去第二次参数 AllGather，变为 450 MB，但完整参数需要跨越 Forward 与 Backward 之间的间隔。
+
+这不是整步的固定常数：Root 的策略、梯度累积、重算与缓存、HSDP 的复制维同步，都可能改变通信次数。
+
+### 2.2 为什么小组过多反而慢
+
+设 α 是 Ring 每一轮的启动与推进开销，β 是有效链路每传一字节的时间。忽略竞争与归约计算成本：
+
+```text
+T_AG ≈ (S-1)α + (S-1)/S × Bβ
+T_RS ≈ (S-1)α + (S-1)/S × Gβ
+```
+
+把同样多的参数分成更多组，带宽项的总和大致不变，启动项却重复出现。假设 S=8、α=10 μs、有效带宽为 25 GiB/s：
+
+| 完整参数消息 B | 启动项 | 带宽项 | 一次 AllGather 估计 |
+| --- | --- | --- | --- |
+| 1 MiB | 70 μs | 约 34 μs | 约 104 μs |
+| 128 MiB | 70 μs | 约 4.375 ms | 约 4.445 ms |
+
+把 128 MiB 切成 128 个 1 MiB 小组，纯通信估计约 13.3 ms，而一大组约 4.445 ms。小组可能降低峰值、提供更多重叠机会，但不是通信本身变少。
+
+### 2.3 重叠受依赖而不只受 Stream 限制
+
+假设计算当前组耗时 C，取回下一组耗时 A，两者无资源争用且可及时启动，稳态相邻组推进周期的理想下界接近 `max(C, A)`。若不能重叠，则接近 `C + A`。
+
+第一组没有前序计算可隐藏取回时间，最后的梯度归约也可能没有后续计算来覆盖。Backward 中，归约必须等梯度产生；取回参数必须在使用它的算子之前完成。多个 Stream 只能提供并发机会，不能消除这些依赖。
+
+| 分组方式 | 主要收益 | 主要代价 |
 | --- | --- | --- |
-| 整模型 | 配置简单 | AllGather 大、峰值高、重叠差 |
-| Transformer Block | 通信和释放粒度均衡 | 常用生产基线 |
-| 过细子层 | 单次 Buffer 小 | Collective 数量多、启动开销高 |
-
-选择标准是“单元参数量能否让通信与当前/相邻计算重叠”，不是越细越省显存。
+| 整模型 | 启动次数少 | 物化峰值大，首个等待长 |
+| Block 级 | 参数驻留与计算窗口较易匹配 | 需要判断各 Block 的大小与耗时 |
+| 很细的子层 | 单次物化较小 | 延迟项增多，计算可能短到无法覆盖通信 |
 
 ## 3. 1D FSDP 与 HSDP
 
-1D 在所有 DP Rank 间 Shard，单卡状态最少，但 AllGather/ReduceScatter 穿过全局网络。HSDP 在节点内 Shard、节点间 Replicate，减少跨节点通信频率，但每个复制组保留一份状态。
+HSDP 的关键是区分 shard 大小 S 与 replicate 大小 R：
 
 ```text
-world_size = replicate_size × shard_size
+N = R × S
+HSDP 每 Rank 状态预算 ≈ 16P/S
+1D FSDP 每 Rank 状态预算 ≈ 16P/N
 ```
 
-选择 HSDP 时同时计算故障域、Checkpoint 副本、跨节点带宽和每卡显存。
+HSDP 有 R 份模型状态副本，所以增加 R 不会继续降低每 Rank 的状态显存。若 N=8、R=2、S=4，HSDP 的持久状态约是八 Rank 全分片的两倍。
+
+在上一章的二维布局中，参数 AllGather 和梯度 ReduceScatter 留在行内；随后对大小约 G/S 的梯度分片，在列内做 AllReduce。若行内是节点高速互联，跨节点不再反复取回完整参数，而主要交换归约后的梯度分片。
+
+用理想 Ring 的单向发送口径，列内 AllReduce 约为：
+
+```text
+V_replica_send ≈ 2 × (R-1)/R × G/S
+```
+
+收益是改变跨节点消息的类型、大小与路径，不是天然减少同步频率。未采用延迟同步时，每个梯度组仍可能需要列内同步；瓶颈也可能从跨节点参数传输转移到节点内互联、复制维归约或显存。
+
+因此选择不是“1D 更先进”或“HSDP 必然更快”，而是判断是否愿意用更多状态副本，换取更适合物理拓扑的通信。
 
 ## 4. 混合精度
 
-参数计算 dtype、Reduce dtype、Buffer dtype 和 Optimizer Master Weight 可以不同。BF16 通常比 FP16 更不易溢出，但具体硬件和模型决定。Reduce 使用 FP32 更稳定但通信字节增加。
+需要把三个 dtype 分开：原始分片决定持久参数与 Optimizer Step 精度，`param_dtype` 决定临时完整参数和参数 AllGather 精度，`reduce_dtype` 决定梯度同步精度。计算 dtype 降低不意味着 Adam 的状态也自动变成低精度。
 
-需要监控 Loss Scale、NaN/Inf、梯度范数和溢出 Rank。训练不报错但 Loss 漂移同样是失败。
+BF16 与 FP16 都占两字节，但 BF16 给指数更多位、尾数更少位：它的数值范围更大，局部表示精度却更粗。“不易溢出”不等于“数值更精确”。FP32 归约能减轻累加误差，但不能修复在低精度计算中已经产生的 Inf 或 NaN。
+
+在 B 固定为 BF16 权重时，把梯度通信从 BF16 改成 FP32 会让 G 加倍，并不会让全部通信都加倍，因为参数 AllGather 的字节数没变。前面 S=4 的例子中，G 从 200 MB 变为 400 MB，单元单向总量从 450 MB 变为 600 MB。
 
 ## 5. Activation Checkpoint
 
-不保存部分 Forward 激活，在 Backward 时重算。它以额外计算换显存，适合激活占比高的 Block。对随机操作必须保证 RNG 状态正确；重算范围过大可能使 Step Time 显著上升。
+反向传播需要若干 Forward 中间值。Activation Checkpoint 保存边界输入，丢弃区域内部分中间值；Backward 时重新计算它们。它压缩的是激活项，不是 Adam 状态项。
+
+考虑 L 个等大小层，每层通常保存 a 字节内部激活。若每 k 层形成一个重算段，段边界状态每份约 a 字节，反向一次只重建一段，并忽略其他工作区，则一个教学内存模型为：
+
+```text
+普通保存：               A ≈ L × a
+分段重算：               A ≈ (L/k + k) × a
+连续近似下最小值出现在： k ≈ sqrt(L)
+```
+
+两项分别是保存所有段边界和重建当前段内部值。真实 Transformer 的边界张量与内部张量大小不同，选择性重算也不必重建整段，因此平方根只是该假设模型的结论，不是 FSDP 的推荐配置。
+
+再假设完整 Forward 耗时 F、Backward 耗时 2F，重算增加一次完整 Forward：总计算从 3F 变为 4F，增加约三分之一。选择性重算、提前停止和通信重叠会改变实际代价；若重复 Forward 引发额外参数物化，还要计入通信。
+
+随机操作必须重现相应随机状态；区域中的可变全局状态、计数器或外部副作用，也可能让第二次 Forward 不等价。有关 RNG 保存与重算模式的约束见 [PyTorch Activation Checkpoint](https://docs.pytorch.org/docs/2.8/checkpoint.html)。
 
 ## 6. CPU Offload
 
-把参数/梯度/Optimizer 移到 Host 可进一步降低 GPU 显存，但受 PCIe、Pinned Memory、NUMA 和 Host RAM 约束。Offload 不是免费扩容：若每层都等待 PCIe，GPU 会长期空闲。
+在 FSDP2 的 CPU Offload 模型中，本地参数分片从 Host 搬到 GPU 后参与 AllGather，梯度分片搬回 Host，CPU 更新优化器状态。它减少 GPU 持久状态，但没有取消 GPU 计算前的完整参数物化。
 
-## 7. 调参顺序
+若某次执行需搬运 H 字节到 GPU、D 字节回 Host，有效带宽分别为 U 和 V：
 
-先建立 BF16、固定 Wrap 的正确性基线；再逐一启用混合精度、Activation Checkpoint、Prefetch/HSDP/Offload；每次记录峰值显存、Step Time、通信占比和 Loss。不要同时修改所有参数后只比较吞吐。
+```text
+串行传输时间下界 ≈ H/U + D/V
+可完全双向并发时的带宽下界 ≈ max(H/U, D/V)
+```
 
-参考：[FSDP Notes](https://docs.pytorch.org/docs/stable/notes/fsdp.html)、[Activation Checkpointing](https://docs.pytorch.org/docs/stable/checkpoint.html)。
+这些下界还没算 CPU Adam、转换、排队和同步。预取若来不及，Host 传输就在关键路径上；预取太多，又增加 GPU 临时驻留和 Pinned Memory 压力。总数据量相同，也可能因 NUMA 路径和其他作业竞争而得到不同有效带宽。
+
+Offload 适合讨论“能否容纳模型”与“代价是否可接受”，不能作为无损扩容。若 OOM 的主要来源是完整单元或激活，迁移优化器状态仍可能不够。
+
+## 7. 从瓶颈推导设计取舍 {/* #7-调参顺序 */}
+
+| 主导项 | 可以改变什么 | 无法自动解决什么 |
+| --- | --- | --- |
+| 持久模型状态 | 增大 S、Offload | 完整单元和激活峰值 |
+| 完整参数驻留 | 减小组、限制预取、及时重分片 | 过小消息的延迟成本 |
+| 激活 | 重算、减小 Microbatch、SP/CP | 优化器状态 |
+| 参数通信等待 | 拓扑、分组、预取、保留完整参数 | 依赖与资源争用 |
+| Host 传输等待 | 减少搬运、扩大覆盖窗口 | CPU 和 PCIe 带宽下界 |
+
+每个选择都至少移动两项账本。保留完整参数省通信但涨显存；重算省激活但涨计算；HSDP 改善跨节点路径但增加副本；Offload 降 GPU 状态但增加 Host 数据路径。
+
+## 8. 纸面自检
+
+1. S 从 4 增到 8，显存会减半吗？只有可均匀分片的持久项接近减半，激活和完整单元不随 S 同比例下降。
+2. 同样 128 MiB 权重分成 128 组，传输量是否减少？理想带宽项大致不变，启动项增加；收益只能来自驻留和重叠改变。
+3. 八卡 HSDP 采用 R=2、S=4，状态按几卡切？按四卡切，不是八卡。
+4. 计算参数为 BF16，能直接按两字节估计全部训练状态吗？不能；原始分片、梯度、Adam 状态及临时对象要分别计数。
+5. 重算让保存激活少了，Step 一定变慢吗？计算工作增加，但如果避免 Offload 或改变重叠与容量瓶颈，端到端时间未必增加。
+
+继续学习 [Checkpoint 与性能排障](./03-Distributed-Checkpoint-性能调优-监控与故障排查.md)时，应先用上述模型提出能被 Timeline 验证的解释，而不是从配置项名称猜测原因。

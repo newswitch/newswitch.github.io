@@ -30,6 +30,24 @@ Megatron Core 的分片 Checkpoint 描述 ShardedTensor/ShardedObject，可在�
 
 异步保存能隐藏部分存储时间，但 Host 内存必须容纳 Staging Buffer，且训练继续时 Checkpoint 的一致性边界要明确。最终完成标志之前不能被恢复端选择。
 
+### 2.1 参数的逻辑身份独立于物理 Rank
+
+ShardedTensor 用参数身份、全局 shape、局部 shape 和 global offset 描述“这块值属于哪个全局张量的哪一段”。例如线性权重 W 的逻辑形状为 4×4，若沿列用 TP=2 切为 `[:,0:2]`、`[:,2:4]`，改 TP=4 后每个 Rank 读取一列。Adam 的逐元素一、二阶状态也要跟随对应 W 切片，而不是把旧 optimizer bucket 序号当永久身份。[Megatron Core 0.16.1 ShardedTensor mapping](https://docs.nvidia.com/megatron-core/developer-guide/0.16.1/apidocs/core/core.dist_checkpointing.mapping.html)
+
+PP 改变层属于哪个 Stage，不改变层在全局模型中的逻辑名字；EP 改变哪个 Rank 持有 expert，不应把 Expert ID 重新解释为旧 Rank ID。张量 reshape、QKV interleave 或新的 flatten 布局则必须通过真实元数据和格式转换处理，不能仅靠重命名文件。
+
+ShardedObject 可表达对象分片，但 RNG、sampler、scheduler 等非张量状态不一定能像参数一样任意切成新拓扑。可恢复的并行变化取决于模型 sharded state dict、optimizer 保存布局、loader strategy 与版本兼容，不能笼统保证所有 TP/PP/EP 组合随意变更。
+
+### 2.2 一致性切面与异步发布
+
+保存模型、optimizer 和 consumed samples 必须来自同一个逻辑更新边界；后台上传之前要隔离后续更新。完整状态机、混合版本反例和区间 reshard 推导统一见[Checkpoint 一致性切面](../fsdp2/03-Distributed-Checkpoint-性能调优-监控与故障排查.md#checkpoint-cut)、[异步 staging](../fsdp2/03-Distributed-Checkpoint-性能调优-监控与故障排查.md#checkpoint-staging)与[重分片](../fsdp2/03-Distributed-Checkpoint-性能调优-监控与故障排查.md#checkpoint-reshard)。这些是通用协议义务，Megatron 与 PyTorch 的具体实现接口仍须分别核对。
+
+### 2.3 通信重叠必须保留更新依赖
+
+Backward 的某个梯度 bucket 就绪后可以启动其通信，与后续层计算重叠；但对应参数的 optimizer 更新必须等待该 bucket 的归约结果，下一轮 forward 又必须等待更新和必要参数 gather。把通信移到另一 stream 不自动满足这些依赖。
+
+双缓冲可让下一份工作不覆盖通信尚在读取的 buffer，代价是额外容量；过早释放、reuse 或 zero_grad 会造成竞态。重叠收益用[关键路径模型](../../../gpu/compiler-kernels/10-单算子-算子链与端到端性能归因.md#critical-path)分析，不能把 NCCL kernel duration 全计为 Step 的串行占比，也不能因为它与计算重叠就认定没有资源争用。
+
 ## 3. 容量基线
 
 每次实验固定：模型 Config、Token 数、Global/Micro Batch、Sequence Length、并行维度、精度、Activation Recomputation 和硬件拓扑。
