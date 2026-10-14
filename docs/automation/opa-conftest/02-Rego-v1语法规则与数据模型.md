@@ -66,3 +66,106 @@ decision := {
 ## 7. 学习验收
 
 为镜像 Digest、资源上限和禁止特权分别编写规则；输入合法时 `allow=true`，每种不合法输入都返回稳定、可定位的原因。
+
+## 8. Complete Rule 与 Multi-value Rule
+
+Complete Rule 产生一个确定文档：
+
+```rego
+default allow := false
+
+allow if {
+  input.subject.role == "admin"
+}
+```
+
+Multi-value Rule 用 `contains` 产生集合元素：
+
+```rego
+deny contains {"id": "IMG-001", "name": c.name} if {
+  c := input.spec.containers[_]
+  not contains(c.image, "@sha256:")
+}
+```
+
+OPA 1.x 默认使用 Rego v1 语法；在需要同时兼容较旧 OPA 的源码中保留 `import rego.v1` 可以明确意图。Bundle Manifest 也应声明 `rego_version`，避免运行时用错误语法解释策略。
+
+## 9. `:=`、`==` 与 `=`
+
+- `:=`：为当前规则中的局部变量赋值，重复赋值会报错；
+- `==`：比较两侧已知值；
+- `=`：统一，让求值器寻找能使两侧相等的变量绑定。
+
+```rego
+container := input.spec.containers[i]
+container.name == "api"
+[x, "prod"] = input.path
+```
+
+团队代码优先使用 `:=` 和 `==` 表达清晰意图，仅在确实需要模式匹配/统一时使用 `=`。
+
+## 10. `some`、`every` 与集合关系
+
+```rego
+some c in input.spec.containers
+c.image == "repo/api:v1"
+```
+
+这表示存在一个满足条件的容器。若要求全部元素满足，可使用 `every` 或通过 Deny 集合表达违规项。空集合上的“全部满足”可能为真，因此还要单独判断“至少存在一个容器”等业务前提。
+
+集合适合成员测试：
+
+```rego
+allowed := {"team-a", "team-b"}
+
+allow if input.team in allowed
+```
+
+大允许列表放入 `data` 中的 Object/Set 结构，避免每次线性扫描 Array。
+
+## 11. 函数与公共库
+
+```rego
+is_digest(image) if {
+  contains(image, "@sha256:")
+}
+
+deny contains msg if {
+  c := input.spec.containers[_]
+  not is_digest(c.image)
+  msg := sprintf("%s must use digest", [c.name])
+}
+```
+
+公共函数只封装稳定语义，不读取与名字无关的大量全局数据。函数出现多个可能输出时要理解 Rego 的关系式语义，避免误以为它像命令式语言那样只执行一次并返回首个结果。
+
+## 12. Metadata 与可解释性
+
+使用 OPA Metadata 给 Package/Rule 标记 Title、Description、Severity、Owner 和 Entrypoint。当前 OPA 决策日志还可记录命中规则合并后的 Labels，便于按规则归因；Conftest 也可从 Metadata 生成策略文档。
+
+元数据不能替代稳定违规 ID。规则重命名或拆分时要维护兼容映射，否则历史报表和例外会失效。
+
+## 13. 常见错误
+
+| 错误 | 后果 |
+| --- | --- |
+| 把规则书写顺序当执行顺序 | 错误理解求值结果 |
+| 多个 Complete Rule 产生冲突值 | 求值冲突或 Undefined |
+| 默认 `allow=true` 再补黑名单 | 新字段/新类型容易漏放 |
+| 依赖 Object/Set 顺序 | 输出不稳定 |
+| Deny 只返回自然语言 | 无法稳定做例外和统计 |
+
+## 14. 练习与答案
+
+**问题：两个 `allow if` 规则，一个成立、一个不成立，结果是什么？**
+
+答案：同名布尔规则表达“任一规则能证明 allow”。一个成立时 `allow=true`；不成立的规则不会覆盖它。显式 Deny 模型要通过最终决策规则组合。
+
+**问题：为什么建议 Deny 返回对象而不是纯字符串？**
+
+答案：对象可携带稳定 ID、Severity、资源和字段路径，便于 CI Annotation、例外、报表和自动修复；自然语言可作为 Message 独立变化。
+
+参考资料：
+
+- [Rego policy language](https://www.openpolicyagent.org/docs/policy-language)
+- [Rego v1](https://www.openpolicyagent.org/projects/regal/rules/imports/use-rego-v1)

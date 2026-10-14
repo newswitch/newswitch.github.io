@@ -34,7 +34,17 @@ Open Policy Agent（OPA）是通用策略决策引擎：业务系统提供结构
 - Policy、基础数据、例外和 OPA/Conftest 版本都要可追溯。
 - 安全策略需要阻断，成本/规范策略可先告警；等级由风险决定。
 
-## 3. 官方资料
+## 3. 学习完成后的验证
+
+- 能区分 PDP、PEP、控制面和 Decision Log，并说明故障时谁负责执行；
+- 能用 Rego v1 编写稳定结构化决策，正确处理 Undefined、Set 和 Data；
+- 能为 Policy 编写单元、Schema、Golden Input、覆盖率和性能测试；
+- 能构建、签名、灰度和回滚 Bundle，并通过 Status 判断 Revision 收敛；
+- 能解释 Conftest Parser、Namespace、Warning/Failure/Exception 和退出码；
+- 能对 Terraform Plan 的 Unknown/Replace 和 Kubernetes AdmissionReview 编写策略；
+- 能沿 PEP、Input、Policy、Data、Bundle、Runtime 分层排障并重放决策。
+
+## 4. 官方资料
 
 - [Open Policy Agent Documentation](https://www.openpolicyagent.org/docs/latest/)
 - [Conftest Documentation](https://www.conftest.dev/)
