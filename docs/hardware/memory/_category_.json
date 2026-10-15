@@ -1,0 +1,9 @@
+{
+  "label": "03. 内存与 DIMM",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "hardware/memory/服务器内存硬件学习路线"
+  }
+}

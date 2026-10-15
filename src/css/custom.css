@@ -530,6 +530,11 @@ body {
   --sidebar-domain-icon: url('/img/sidebar/linux.svg');
 }
 
+.sidebar-domain--hardware {
+  --sidebar-domain-color: #0891b2;
+  --sidebar-domain-icon: url('/img/sidebar/hardware.svg');
+}
+
 .sidebar-domain--gpu {
   --sidebar-domain-color: #5f9400;
   --sidebar-domain-icon: url('/img/sidebar/gpu.svg');
@@ -577,6 +582,10 @@ body {
 
 [data-theme='dark'] .sidebar-domain--linux {
   --sidebar-domain-color: #e5e7eb;
+}
+
+[data-theme='dark'] .sidebar-domain--hardware {
+  --sidebar-domain-color: #67e8f9;
 }
 
 @media (max-width: 576px) {

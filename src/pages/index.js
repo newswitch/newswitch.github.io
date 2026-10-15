@@ -22,6 +22,14 @@ const DOMAINS = [
   },
   {
     id: '02',
+    label: 'HARDWARE',
+    title: '服务器硬件',
+    note: 'CPU · DIMM · PCIe · BMC',
+    to: '/docs/hardware/服务器硬件学习路线',
+    tone: 'cyan',
+  },
+  {
+    id: '03',
     label: 'COMPUTE',
     title: 'GPU 与加速计算',
     note: 'CUDA · CANN · HBM · NVLink',
@@ -29,7 +37,7 @@ const DOMAINS = [
     tone: 'lime',
   },
   {
-    id: '03',
+    id: '04',
     label: 'FABRIC',
     title: '网络',
     note: 'TCP/IP · BGP · RDMA · RoCE',
@@ -37,7 +45,7 @@ const DOMAINS = [
     tone: 'blue',
   },
   {
-    id: '04',
+    id: '05',
     label: 'STORAGE',
     title: '存储',
     note: 'NVMe · NFS · Ceph · CSI',
@@ -45,7 +53,7 @@ const DOMAINS = [
     tone: 'teal',
   },
   {
-    id: '05',
+    id: '06',
     label: 'CONTROL',
     title: '容器与 Kubernetes',
     note: 'Runtime · Scheduler · Operator · Mesh',
@@ -53,7 +61,7 @@ const DOMAINS = [
     tone: 'cyan',
   },
   {
-    id: '06',
+    id: '07',
     label: 'RUNTIME',
     title: 'AI 训练与推理',
     note: 'PyTorch · vLLM · SGLang · MLOps',
@@ -61,7 +69,7 @@ const DOMAINS = [
     tone: 'orange',
   },
   {
-    id: '07',
+    id: '08',
     label: 'DATA',
     title: '数据系统',
     note: 'Database · Cache · Queue · OLAP',
@@ -69,7 +77,7 @@ const DOMAINS = [
     tone: 'green',
   },
   {
-    id: '08',
+    id: '09',
     label: 'SIGNALS',
     title: '可观测性与 SRE',
     note: 'Metrics · Logs · Traces · SLO',
@@ -77,7 +85,7 @@ const DOMAINS = [
     tone: 'red',
   },
   {
-    id: '09',
+    id: '10',
     label: 'AUTOMATE',
     title: '自动化与 DevOps',
     note: 'Ansible · Python · Go · GitOps',
@@ -85,7 +93,7 @@ const DOMAINS = [
     tone: 'amber',
   },
   {
-    id: '10',
+    id: '11',
     label: 'PROJECTS',
     title: '综合项目',
     note: '端到端链路 · GPU 集群 · 异构资源池',

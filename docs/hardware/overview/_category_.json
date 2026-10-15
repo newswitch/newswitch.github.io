@@ -1,0 +1,9 @@
+{
+  "label": "01. 整机架构与数据路径",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "hardware/overview/服务器整体架构导读"
+  }
+}

@@ -15,6 +15,7 @@ docs/
 ├── intro.mdx            # 全站导读
 ├── learning/            # 全站与跨模块学习地图
 ├── linux/               # Linux 与操作系统
+├── hardware/            # CPU、内存、主板、总线与服务器硬件
 ├── gpu/                 # GPU 与加速计算
 ├── networking/          # 网络
 ├── storage/             # 存储
@@ -31,6 +32,18 @@ docs/
 ```text
 linux/
 └── commands/            # 按文件、权限、进程、内核、容器等分类的命令库
+
+hardware/
+├── overview/            # 服务器整体架构、上电与数据路径
+├── cpu/                 # CPU 微架构、缓存一致性、Socket 与 NUMA
+├── memory/              # DDR、DIMM、Channel、Rank、ECC 与 RAS
+├── motherboard-bus/     # 主板平台、PCIe 物理链路、Retimer 与 CXL
+├── storage-devices/     # HDD、SSD、NAND、FTL 与 NVMe 硬件
+├── network-devices/     # NIC、MAC、PHY、SerDes、光模块与线缆
+├── switching-hardware/  # 交换 ASIC、Pipeline、TCAM、Buffer 与队列
+├── power-cooling/       # PSU、VRM、PDU、风冷、液冷与功率预算
+├── firmware-management/ # BIOS、BMC、CPLD、FRU 与固件生命周期
+└── reliability/         # MCE、EDAC、AER、SMART、SEL、Burn-in 与 RMA
 
 gpu/
 ├── fundamentals/        # GPU 架构与计算基础
@@ -120,6 +133,7 @@ sre/
 | 内容 | 唯一主归属 |
 | --- | --- |
 | GPU 架构、显存、PCIe、NUMA、NVLink、CUDA | `gpu/` |
+| 通用 CPU、DIMM、主板、硬件总线、供电与硬件可靠性 | `hardware/` |
 | GPU 设备管理、调度、切分、DRA、治理 | `gpu/cluster/` |
 | TCP/IP、数据中心网络、RDMA、AI Fabric | `networking/` |
 | Kubernetes 网络与 NetworkPolicy | `networking/kubernetes/` |

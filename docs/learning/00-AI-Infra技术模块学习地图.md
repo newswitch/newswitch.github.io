@@ -60,6 +60,7 @@ Linux 是计算、网络、存储和 Kubernetes 的共同运行底座。这里�
 
 ### 2.2 核心内容 {/* #已有内容 */}
 
+- [服务器硬件从零到精通学习路线](../hardware/00-服务器硬件学习路线.md)：先掌握 CPU、DIMM、主板、PCIe/CXL、BMC 与整机数据路径，再进入 GPU 和加速计算。
 - [GPU 基础知识：从计算核心到显存](../gpu/fundamentals/01-GPU基础知识：从计算核心到显存.md)
 - [HBM 显存原理](../gpu/memory/01-HBM显存原理：容量、带宽与访问效率.md)
 - [GPU 服务器硬件拓扑与 NUMA](../gpu/pcie-numa/04-GPU服务器硬件拓扑与NUMA.md)
