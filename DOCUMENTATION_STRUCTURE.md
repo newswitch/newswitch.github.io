@@ -43,7 +43,8 @@ hardware/
 ├── switching-hardware/  # 交换 ASIC、Pipeline、TCAM、Buffer 与队列
 ├── power-cooling/       # PSU、VRM、PDU、风冷、液冷与功率预算
 ├── firmware-management/ # BIOS、BMC、CPLD、FRU 与固件生命周期
-└── reliability/         # MCE、EDAC、AER、SMART、SEL、Burn-in 与 RMA
+├── reliability/         # MCE、EDAC、AER、SMART、SEL、Burn-in 与 RMA
+└── call-paths/          # CPU、I/O、网络、模型加载与 GPU 的跨层调用链
 
 gpu/
 ├── fundamentals/        # GPU 架构与计算基础
