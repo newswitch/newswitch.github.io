@@ -2,8 +2,8 @@
 title: "CPU 硬件原理从零到精通学习路线"
 sidebar_label: "00. CPU 硬件学习路线"
 sidebar_position: 0
-description: "从流水线、乱序执行和分支预测，到 Cache、TLB、一致性、Socket 互联与 NUMA 的 CPU 硬件学习路线。"
-tags: [CPU, 微架构, Cache, TLB, MESI, NUMA]
+description: "从 ISA、微架构、封装和动态功耗，到流水线、Cache、TLB、一致性、Socket 互联与 NUMA 的 CPU 硬件学习路线。"
+tags: [CPU, ISA, 微架构, Cache, TLB, MESI, NUMA, P-State]
 ---
 
 # CPU 硬件原理从零到精通学习路线
@@ -15,11 +15,13 @@ CPU 利用率只表示调度器观察到线程在运行，不表示每个周期�
 1. [CPU 流水线、乱序执行与分支预测](./01-CPU流水线乱序执行与分支预测.md)
 2. [Cache、Cache Line、TLB 与 MESI 一致性](./02-Cache-CacheLine-TLB与MESI一致性.md)
 3. [Socket、IMC、UPI、xGMI 与 NUMA](./03-Socket-IMC-UPI-xGMI与NUMA.md)
-4. [Linux 进程、线程与 task_struct](../../linux/system-internals/03-process-scheduling/01-进程线程与task_struct.md)
-5. [上下文切换与调度延迟](../../linux/system-internals/03-process-scheduling/06-上下文切换与调度延迟.md)
-6. [CPU 性能：利用率之外的瓶颈](../../linux/system-internals/13-performance-reliability/04-CPU性能-利用率之外的瓶颈.md)
+4. [x86、ARM、RISC-V、ISA、微架构、封装与服务器 CPU 选型](./04-x86-ARM-RISC-V-ISA微架构封装与服务器CPU选型.md)
+5. [CPU 频率、Turbo、P-State、C-State 与功耗控制](./05-CPU频率-Turbo-P-State-C-State与功耗控制.md)
+6. [Linux 进程、线程与 task_struct](../../linux/system-internals/03-process-scheduling/01-进程线程与task_struct.md)
+7. [上下文切换与调度延迟](../../linux/system-internals/03-process-scheduling/06-上下文切换与调度延迟.md)
+8. [CPU 性能：利用率之外的瓶颈](../../linux/system-internals/13-performance-reliability/04-CPU性能-利用率之外的瓶颈.md)
 
-前三篇解释硬件怎样执行，后三篇解释 Linux 怎样调度和观测。两者合起来才能判断问题来自应用、调度器还是微架构。
+前五篇解释 CPU 类型、硬件执行和功耗状态，后三篇解释 Linux 怎样调度和观测。两者合起来才能判断问题来自应用、调度器、平台策略还是微架构。
 
 ## 2. 从 ISA 到微架构
 
@@ -74,9 +76,12 @@ perf stat -e cycles,instructions,branches,branch-misses,cache-misses -- <command
 ## 7. 学习验收
 
 - 能解释为什么 CPU 100% 但 IPC 很低；
+- 能区分 ISA、ABI、微架构、Core、Die、Chiplet、Package 和 SKU；
+- 能比较 x86、Arm 和 RISC-V 的软件兼容与平台边界；
 - 能区分 Core、SMT Thread、Socket 和 NUMA Node；
 - 能判断 Branch Miss、LLC Miss、TLB Miss 和远端内存的影响；
 - 能解释 False Sharing 与锁竞争为什么产生 Cache Line 抖动；
+- 能联合频率、P-State、C-State、功耗和温度解释降频；
 - 能把线程、内存、IRQ 和 PCIe 设备绑定到合理 NUMA Node。
 
 ## 8. 练习与答案
