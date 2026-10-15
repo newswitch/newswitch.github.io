@@ -41,9 +41,10 @@ HTTP / SSE 协议
 这些文章适合学习设计思想和历史实现，但不能把所有类名、默认值和执行流程直接套到
 当前 V1。
 
-V1 源码主线固定以 **vLLM v0.23.0** 为阅读基线，并在文章末尾链接对应 tag 的源码。
-这可以避免 `main` 分支开发中的目录和类名变化影响学习。工程概念仍尽量使用稳定边界；阅读其他
-版本时，先比较 Release Note 和实际源码，再更新调用链。执行实验前仍要：
+V1 源码主线固定以 **vLLM v0.23.0** 为阅读基线，并在文章末尾链接对应 tag 的源码；
+参数专题固定以较新的稳定版 **vLLM v0.31.0** 为基线。两者用途不同：源码文章用于理解已经
+校验过的组件调用链，参数专题用于学习当前 Serve、Engine、请求、环境变量和 Benchmark。
+这可以避免把 `main` 分支、历史源码和生产参数混成一个版本。执行实验前仍要：
 
 ```bash
 vllm --version
@@ -97,6 +98,28 @@ vllm serve --help
 | [vLLM Serve 生产参数参考](./25-vLLM-Serve生产参数参考.md) | 能将服务、模型、显存、调度、并行、编译和请求参数映射到组件、资源预算与 SLO |
 
 这篇文章不是重复部署步骤，而是将已有 V1 源码主线映射到昇腾 910B 执行面。阅读后应能判断一个问题属于共同的 API/EngineCore/Scheduler 层，还是属于 vLLM-Ascend、torch_npu、CANN、ACLGraph 或 HCCL 层。
+
+### 3.2 v0.31 参数深度解析
+
+先用总览建立参数地图，再按组件阅读。参数默认值和枚举仍以目标镜像中的
+`vllm serve --help=all` 为最终事实来源。
+
+| 顺序 | 文章 | 学习成果 |
+| --- | --- | --- |
+| 01 | [v0.31 参数体系、配置优先级与版本审计](./28-vLLM-v0.31参数体系与版本审计.md) | 区分 Serve、Engine、请求、环境变量和 Benchmark，建立升级差异审计 |
+| 02 | [Serve 前端、协议、工具调用与安全参数](./29-Serve前端协议工具调用与安全参数.md) | 理解 API 进程、TLS、模板、Tokenizer、Reasoning/Tool Parser 和流式输出 |
+| 03 | [模型、Tokenizer、权重加载与 Attention 参数](./30-模型Tokenizer权重加载与Attention参数.md) | 理解 ModelConfig、LoadConfig、AttentionConfig 与加载峰值 |
+| 04 | [KV Cache、内存、调度与连续批处理参数](./31-KV-Cache内存调度与连续批处理参数.md) | 区分 Block Size、Batch Size、序列预算和 Token Budget |
+| 05 | [TP、PP、DP、DCP、PCP、EP 与通信参数](./32-TP-PP-DP-DCP-PCP-EP与通信参数.md) | 能把并行参数映射到 Rank、拓扑、Collective 与慢 Rank |
+| 06 | [torch.compile、CUDA Graph 与运行时内存参数](./33-torch-compile-CUDA-Graph与运行时参数.md) | 理解编译、Graph Shape、Eager 回退、Sleep Mode 和 cuMem |
+| 07 | [多模态、LoRA、投机解码与结构化输出参数](./34-多模态LoRA投机解码与结构化输出参数.md) | 掌握高级能力的资源模型和组合风险 |
+| 08 | [KV Transfer、P/D 分离与外部缓存参数](./35-KV-Transfer-PD分离与外部缓存参数.md) | 理解 Connector、KV Event、传输、外部缓存与失败语义 |
+| 09 | [日志、指标、Tracing 与环境变量](./36-日志指标Tracing与环境变量参数.md) | 能证明参数是否生效，并区分 CLI、内部端口和运行时变量 |
+| 10 | [Bench 参数、负载模型与容量实验](./37-vLLM-Bench参数与容量实验.md) | 区分请求率、并发、长度、Batch 和 Goodput |
+| 11 | [请求级 Sampling、结构化输出与 Tool 参数](./38-请求级Sampling结构化输出与Tool参数.md) | 理解单请求参数如何改变输出分布、KV、成本和协议 |
+
+旧版 [参数使用](./96-vLLM学习笔记（六）参数使用.md)只用于复现 v0.6.3 V0 和观察历史演进，
+不再作为新部署的参数入口。
 
 ## 4. 第二阶段：一次推理到底发生了什么
 
@@ -278,10 +301,10 @@ TP=2, DP=4
 
 ## 13. 官方资料
 
-- [vLLM V1 User Guide](https://docs.vllm.ai/en/latest/getting_started/v1_user_guide.html)
-- [vLLM OpenAI-Compatible Server](https://docs.vllm.ai/en/stable/serving/openai_compatible_server.html)
-- [vLLM Production Metrics](https://docs.vllm.ai/en/stable/usage/metrics/)
-- [vLLM Parallelism and Scaling](https://docs.vllm.ai/en/stable/serving/parallelism_scaling/)
+- [vLLM v0.31.0 CLI](https://docs.vllm.ai/en/v0.31.0/cli/)
+- [vLLM v0.31.0 Serve](https://docs.vllm.ai/en/v0.31.0/cli/serve/)
+- [vLLM v0.31.0 Production Metrics](https://docs.vllm.ai/en/v0.31.0/usage/metrics/)
+- [vLLM v0.31.0 Parallelism and Scaling](https://docs.vllm.ai/en/v0.31.0/serving/parallelism_scaling/)
 
 官方文档和 CLI 是版本事实来源；本系列负责把零散参数和组件串成可理解、可验证的
 工程路径。

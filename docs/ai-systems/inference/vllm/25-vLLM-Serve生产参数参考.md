@@ -1,16 +1,18 @@
 ---
-title: "vLLM Serve 生产参数参考"
-sidebar_label: "25. vLLM Serve 生产参数参考"
+title: "vLLM v0.31 Serve 生产参数总览"
+sidebar_label: "25. vLLM v0.31 参数总览"
 sidebar_position: 25
 description: "按服务、模型、显存、调度、并行、编译、量化和请求层解释 vLLM 参数的作用、因果关系与生产调优方法。"
 tags: [vLLM, 参数, vllm serve, KV Cache, Scheduler, CUDA Graph]
 ---
 
-# vLLM Serve 生产参数参考
+# vLLM v0.31 Serve 生产参数总览
 
 这不是一张需要背诵的参数表，而是一张“参数如何改变请求路径和资源预算”的地图。
 
-vLLM CLI 演进很快。文章以 V1 架构和当前 `vllm serve` 参数族为主，执行时必须以目标镜像为事实来源：
+本文总览固定使用 **vLLM v0.31.0**。详细解释已经按组件拆到
+[v0.31 参数体系与版本审计](./28-vLLM-v0.31参数体系与版本审计.md)及后续专题。
+执行时仍必须以目标镜像为事实来源：
 
 ```bash
 vllm --version
@@ -500,8 +502,8 @@ Graph 调优至少记录：
 
 ## 27. 官方资料 {/* #官方资料 */}
 
-- [vLLM CLI Guide](https://docs.vllm.ai/en/latest/cli/)
-- [vLLM serve 完整参数](https://docs.vllm.ai/en/latest/cli/serve/)
-- [Engine Arguments](https://docs.vllm.ai/en/latest/configuration/engine_args/)
-- [OpenAI-compatible Server](https://docs.vllm.ai/en/latest/serving/openai_compatible_server/)
-- [Sampling Parameters API](https://docs.vllm.ai/en/latest/api/vllm/sampling_params/)
+- [vLLM v0.31.0 CLI Guide](https://docs.vllm.ai/en/v0.31.0/cli/)
+- [vLLM v0.31.0 Serve 完整参数](https://docs.vllm.ai/en/v0.31.0/cli/serve/)
+- [vLLM v0.31.0 Engine Arguments](https://docs.vllm.ai/en/v0.31.0/configuration/engine_args/)
+- [vLLM v0.31.0 OpenAI-compatible Server](https://docs.vllm.ai/en/v0.31.0/serving/openai_compatible_server/)
+- [vLLM v0.31.0 Sampling Parameters API](https://docs.vllm.ai/en/v0.31.0/api/vllm/sampling_params/)
