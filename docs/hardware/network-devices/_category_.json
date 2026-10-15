@@ -1,0 +1,9 @@
+{
+  "label": "06. 网卡、PHY 与光互联",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "hardware/network-devices/网络设备硬件学习路线"
+  }
+}

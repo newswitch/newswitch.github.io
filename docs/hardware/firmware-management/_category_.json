@@ -1,0 +1,9 @@
+{
+  "label": "09. 固件与启动安全",
+  "position": 9,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "hardware/firmware-management/服务器固件管理学习路线"
+  }
+}

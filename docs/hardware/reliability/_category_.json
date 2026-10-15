@@ -1,0 +1,9 @@
+{
+  "label": "10. 硬件可靠性与 RMA",
+  "position": 10,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "hardware/reliability/硬件可靠性与故障诊断学习路线"
+  }
+}

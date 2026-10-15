@@ -1,0 +1,9 @@
+{
+  "label": "08. 供电与散热",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "hardware/power-cooling/服务器供电与散热学习路线"
+  }
+}
