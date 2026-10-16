@@ -191,3 +191,5 @@ JDK、依赖获取、仓库证书、网络、插件和平台仍可能不同。�
 
 - [Java 与 JVM 学习路线](../00-Java与JVM学习路线.md)
 - [线程、生命周期与中断](../03-concurrency/01-Thread生命周期中断与退出.md)
+- [字节码、Class 文件与方法执行](../04-jvm/01-字节码Class文件与方法执行.md)
+- [JDK 诊断工具、Attach 与证据采集](../06-diagnostics/01-JDK诊断工具Attach与证据采集.md)

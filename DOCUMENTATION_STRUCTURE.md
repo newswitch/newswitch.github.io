@@ -155,7 +155,9 @@ projects/
 
 代码示例保存在 `examples/java/first-batch/` 与 `examples/java/second-batch/`，不进入文档侧边栏。`scripts/verify-java-examples.mjs` 验证工具链与 Maven 示例，`scripts/verify-java-standard-library.mjs` 验证语言进阶和标准库示例；两者都检查文章与源码一致，并可使用 JDK 25 编译、运行和测试。`target/` 与 `out/` 构建产物不提交。
 
-`examples/java/third-batch/` 保存构建、测试和并发示例。`scripts/verify-java-concurrency.mjs` 验证并发程序和协调边界，`scripts/verify-java-builds.mjs` 在临时工作区验证 Maven/Gradle、测试失败门禁、多模块分发与可复现归档。Java 的网站专题与本地 `01-language`、`02-standard-library`、`03-concurrency`、`05-build-testing` 目录一一对应；JVM 与诊断专题随正文发布再建立。
+`examples/java/third-batch/` 保存构建、测试和并发示例。`scripts/verify-java-concurrency.mjs` 验证并发程序和协调边界，`scripts/verify-java-builds.mjs` 在临时工作区验证 Maven/Gradle、测试失败门禁、多模块分发与可复现归档。
+
+`examples/java/fourth-batch/` 保存 JVM 与诊断的 11 个完整程序。`scripts/verify-java-runtime.mjs` 检查文章与源码一致，验证字节码、类初始化、内存、G1/ZGC、JIT、AppCDS/AOT、自定义 JFR，并只 Attach 自己启动的有界诊断进程，覆盖线程、NMT、JFR 与 jstat。实验文件在忽略的 `.java-article-checks/` 中生成并清理；Linux cgroups、native profiler 与 Arthas 不包含在该 Windows/JDK 自动实测范围。Java 网站专题与本地 `01-language`、`02-standard-library`、`03-concurrency`、`04-jvm`、`05-build-testing`、`06-diagnostics` 目录一一对应。
 
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
