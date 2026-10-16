@@ -17,11 +17,13 @@ CPU 利用率只表示调度器观察到线程在运行，不表示每个周期�
 3. [Socket、IMC、UPI、xGMI 与 NUMA](./03-Socket-IMC-UPI-xGMI与NUMA.md)
 4. [x86、ARM、RISC-V、ISA、微架构、封装与服务器 CPU 选型](./04-x86-ARM-RISC-V-ISA微架构封装与服务器CPU选型.md)
 5. [CPU 频率、Turbo、P-State、C-State 与功耗控制](./05-CPU频率-Turbo-P-State-C-State与功耗控制.md)
-6. [Linux 进程、线程与 task_struct](../../linux/system-internals/03-process-scheduling/01-进程线程与task_struct.md)
-7. [上下文切换与调度延迟](../../linux/system-internals/03-process-scheduling/06-上下文切换与调度延迟.md)
-8. [CPU 性能：利用率之外的瓶颈](../../linux/system-internals/13-performance-reliability/04-CPU性能-利用率之外的瓶颈.md)
+6. [CPU Uncore、IMC、UPI、xGMI 与内存带宽性能分析](./06-CPU-Uncore-IMC-UPI-xGMI与内存带宽性能分析.md)
+7. [Intel RDT、AMD QoS 与 resctrl 共享资源隔离](./07-Intel-RDT-AMD-QoS与resctrl共享资源隔离.md)
+8. [Linux 进程、线程与 task_struct](../../linux/system-internals/03-process-scheduling/01-进程线程与task_struct.md)
+9. [上下文切换与调度延迟](../../linux/system-internals/03-process-scheduling/06-上下文切换与调度延迟.md)
+10. [CPU 性能：利用率之外的瓶颈](../../linux/system-internals/13-performance-reliability/04-CPU性能-利用率之外的瓶颈.md)
 
-前五篇解释 CPU 类型、硬件执行和功耗状态，后三篇解释 Linux 怎样调度和观测。两者合起来才能判断问题来自应用、调度器、平台策略还是微架构。
+前五篇解释 CPU 类型、硬件执行和功耗状态，第六、七篇进入共享 Uncore、内存带宽与硬件资源隔离，最后三篇解释 Linux 怎样调度和观测。组合起来才能判断问题来自应用、调度器、平台策略、微架构还是 Socket 级共享资源。
 
 ## 2. 从 ISA 到微架构
 
@@ -83,6 +85,8 @@ perf stat -e cycles,instructions,branches,branch-misses,cache-misses -- <command
 - 能解释 False Sharing 与锁竞争为什么产生 Cache Line 抖动；
 - 能联合频率、P-State、C-State、功耗和温度解释降频；
 - 能把线程、内存、IRQ 和 PCIe 设备绑定到合理 NUMA Node。
+- 能区分 Core PMU 与 Uncore PMU，并联合 IMC、UPI/xGMI 和 IIO 解释共享瓶颈；
+- 能说明 CPUSet、Cgroup 与 resctrl 分别隔离哪些资源，以及 CAT/MBA 的边界。
 
 ## 8. 练习与答案
 

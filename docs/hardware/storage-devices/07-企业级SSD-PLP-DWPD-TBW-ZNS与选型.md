@@ -184,6 +184,16 @@ nvme id-ctrl /dev/nvme0
 nvme list
 ```
 
+不同发行版携带的 `nvme-cli` 版本可能不同。较新的 3.x 版本正在把部分顶层命令整理到 `nvme log`、`nvme id` 等命令组中，传统的 `smart-log`、`error-log`、`id-ctrl` 仍可能作为兼容别名存在。排障前先确认本机版本和实际语法：
+
+```bash
+nvme version
+nvme help
+nvme log --help       # 仅在当前版本提供该命令组时使用
+```
+
+本文保留生产环境中仍广泛存在的 2.x 风格命令，不能据此假设所有主机的子命令完全相同。
+
 重点字段包括：
 
 | 字段 | 含义 | 判断方式 |
@@ -198,6 +208,121 @@ nvme list
 | error_log_entries | 错误日志累计数 | 读取 Error Log 确认状态码 |
 
 健康值正常不代表设备一定无故障；错误计数不增长也不代表背板、PCIe 链路或上游 Controller 没问题。
+
+### 10.1 SMART/Health 只是第一层
+
+NVMe SMART/Health Log 适合回答“设备当前健康摘要和累计趋势怎样”，但不能完整解释一次超时、Controller Reset 或尾延迟抖动。
+
+```text
+SMART/Health
+├── 温度与 Critical Warning
+├── Available Spare / Percentage Used
+├── Host Read/Write 累计量
+├── Media/Data Integrity Error
+├── Unsafe Shutdown
+└── Error Log Entry 数量
+```
+
+需要定期保存原始值并计算增量。只在故障后执行一次命令，会丢失“什么时候开始增长”和“是否仍持续增长”两个关键信息。
+
+### 10.2 Error Information Log 解释命令失败
+
+```bash
+nvme error-log /dev/nvme0
+```
+
+Error Log 常包含 Submission Queue ID、Command ID、Status Field、LBA 和 Namespace 等上下文。分析时要注意：
+
+- `error_log_entries` 是累计计数，不等于当前有同样数量的活动故障；
+- 某些状态来自主机提交了无效或不支持的命令，不一定是介质损坏；
+- 多路径环境要确认错误属于哪个 Controller/Path；
+- LBA/Namespace 线索要与文件系统、RAID、LVM 或数据库日志关联；
+- Controller Reset 后 Ring 中的旧条目可能被覆盖，需尽早采集。
+
+### 10.3 Persistent Event Log 保留时间线事件
+
+较新的 NVMe 设备可能支持 Persistent Event Log（PEL），用于记录 Reset、Firmware Commit、Namespace 变化、Sanitize、Telemetry 创建等事件。它采用“建立读取上下文、读取、释放上下文”一类动作，不能把它当成普通文本日志随意读取。
+
+PEL 是否可用同时取决于 Controller、NVMe 规范版本和 `nvme-cli` 构建方式。不同版本可能通过顶层子命令、新版 `nvme log` 命令组、厂商插件或底层 Get Log Page 暴露，因此先检查本机能力：
+
+```bash
+nvme version
+nvme help
+# 只有帮助列表中存在该子命令时，再查看它的精确参数
+nvme persistent-event-log --help
+```
+
+不要从其他版本复制 `--action` 数值或名称直接执行：错误的上下文动作可能只得到空数据，也可能释放尚未保存的读取上下文。应依据当前主机的 `--help`、设备支持位和厂商手册完成读取。PEL 的价值是补充“设备此前发生过什么”，不是无限期审计日志；其保留范围、事件类型和读取方式均取决于 Controller 与规范版本。
+
+### 10.4 Telemetry Log 用于厂商深度诊断
+
+Telemetry 分为两类思想：
+
+- Host-Initiated：主机请求设备生成当前诊断快照；
+- Controller-Initiated：Controller 检测到内部事件后主动准备诊断数据。
+
+典型入口：
+
+```bash
+nvme telemetry-log --help
+nvme telemetry-log /dev/nvme0 --host-generate=1 --output-file=nvme0-telemetry.bin
+```
+
+Telemetry Payload 经常包含厂商自定义数据区，`nvme-cli` 未必能直接解释。生产故障中应：
+
+1. 保留原始二进制和采集时间；
+2. 记录型号、序列号、Firmware 和 Namespace；
+3. 记录采集前是否发生 Reset/Power Cycle；
+4. 使用厂商离线解析工具或交给支持团队；
+5. 不把“成功导出文件”误认为已确认根因。
+
+### 10.5 NVMe-MI 是带外管理路径
+
+NVMe Management Interface（NVMe-MI）允许管理实体经平台支持的带外路径获取设备信息或执行管理操作，常见承载涉及 BMC、MCTP、SMBus/I²C 或 PCIe Vendor-Defined Message。它与操作系统内的普通 NVMe I/O 路径不同：
+
+```text
+业务 I/O：应用 → Kernel NVMe Driver → PCIe → Controller
+带外管理：BMC/Management Controller → MCTP/SMBus/PCIe VDM → NVMe-MI
+```
+
+它的价值是在 Host OS 异常或设备未被正常挂载时仍保留部分管理能力，但前提是服务器背板、BMC Firmware 和 SSD 都实现并启用了对应能力。支持 NVMe 协议不等于自动支持可用的 NVMe-MI。
+
+### 10.6 Firmware、热状态与 PCIe 必须联合检查
+
+```bash
+nvme id-ctrl /dev/nvme0
+nvme fw-log /dev/nvme0
+nvme list-subsys
+lspci -s <BDF> -vv
+dmesg -T | grep -Ei 'nvme|pcie|aer|timeout|reset'
+```
+
+将证据分层：
+
+| 现象 | 可能层次 |
+| --- | --- |
+| Media Error 增长 | NAND/数据完整性/介质路径 |
+| Controller Busy、Command Timeout | Firmware、队列、Controller 或 PCIe |
+| AER Corrected Error 增长 | PCIe Link、Retimer、背板、插槽或信号 |
+| 温度升高后吞吐下降 | SSD Thermal Throttling、风道或邻近热源 |
+| 单 Path 消失 | 双端口、线缆、Expander/Switch 或 Controller Path |
+| Reset 后短暂恢复 | 不能证明已修复，需继续确定触发条件 |
+
+SMART 全绿而 Kernel 持续出现 AER/Reset 时，不能判定 SSD 健康；反过来，Error Log 有历史条目也不能忽略当前链路和业务是否稳定。
+
+### 10.7 一次故障的证据采集顺序
+
+```text
+确认影响面与数据安全
+→ 记录时间、设备名、BDF、Namespace、挂载和上层业务
+→ 保存 dmesg/journal 与 AER/Reset 时间线
+→ 读取 SMART、Error Log、PEL、Firmware Log
+→ 必要时导出 Telemetry
+→ 检查温度、PCIe Speed/Width、背板和供电
+→ 再决定 Reset、下线、固件升级、换槽或 RMA
+```
+
+Reset、Firmware Commit、格式化和 Sanitize 都可能改变现场或数据，不能为了“看看能否恢复”在证据采集前盲目执行。
 
 ## 11. 数据完整性与可用性能力
 
@@ -249,8 +374,10 @@ Firmware 兼容、遥测、RMA 和安全擦除
 3. 保存初始健康基线；
 4. 用业务模型做稳态压测和断电语义验证；
 5. 监控温度、Percentage Used、Media Error、Unsafe Shutdown；
-6. 固件升级先验证兼容和回滚；
-7. 报废前执行受支持的 Sanitize 并验证结果。
+6. 持续采集 Error Log 增量、Controller Reset 与 PCIe AER；
+7. 重大故障保留 PEL、Telemetry、Kernel Log 与 BMC 时间线；
+8. 固件升级先验证兼容、灰度、断电边界和回滚；
+9. 报废前执行受支持的 Sanitize 并验证结果。
 
 ## 14. 练习与答案
 
@@ -266,9 +393,20 @@ Firmware 兼容、遥测、RMA 和安全擦除
 
 答案：上层按 Zone 顺序写并把生命周期相近的数据放在一起，减少设备为随机覆盖执行的映射和有效数据搬移。但收益依赖支持 ZNS 的完整软件栈。
 
+**问题：SMART 没有 Critical Warning，是否可以排除 NVMe 故障？**
+
+答案：不能。SMART 是健康摘要，PCIe AER、Controller Reset、Command Timeout、Firmware Bug、热降频和背板问题可能尚未形成 Critical Warning。需要联合 Error Log、PEL、Telemetry、Kernel Log 和实际延迟分析。
+
+**问题：Telemetry Log 与普通 Error Log 有什么区别？**
+
+答案：Error Log 更偏向命令级错误记录；Telemetry 是面向深度诊断的设备数据快照，可能包含大量厂商自定义信息。后者通常需要保存原始文件并使用厂商工具解析。
+
 ## 15. 参考资料
 
 - [NVM Express：Zoned Namespace Command Set](https://nvmexpress.org/specification/nvme-zoned-namespaces-zns-command-set-specification/)
 - [NVM Express：NVMe Command Line Interface](https://nvmexpress.org/open-source-nvme-management-utility-nvme-command-line-interface-nvme-cli/)
 - [NVM Express：How SSDs Fail and NVMe Error Reporting](https://nvmexpress.org/how-ssds-fail-nvme-ssd-management-error-reporting-and-logging-capabilities/)
+- [NVM Express Base Specification 2.0e](https://nvmexpress.org/wp-content/uploads/NVM-Express-Base-Specification-2.0e-2024.07.29-Ratified.pdf)
+- [nvme-cli：版本变化记录](https://github.com/linux-nvme/nvme-cli/blob/master/NEWS.md)
+- [nvme-cli：Telemetry Log 命令说明](https://github.com/linux-nvme/nvme-cli/blob/master/Documentation/nvme-telemetry-log.1)
 - [SNIA：NVMe SSD Classification](https://www.snia.org/node/13864)
