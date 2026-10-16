@@ -32,7 +32,7 @@ const fileMoves = new Map([
   ['docs/data-systems/commands/05-Flink-CLI-REST-Checkpoint与Savepoint命令手册.md', 'docs/data-systems/big-data/flink/90-Flink-CLI-REST-Checkpoint与Savepoint命令手册.md'],
   ['docs/data-systems/commands/06-Iceberg-Spark-SQL快照与维护命令手册.md', 'docs/data-systems/big-data/lakehouse/90-Iceberg-Spark-SQL快照与维护命令手册.md'],
   ['docs/data-systems/commands/07-Trino-CLI-EXPLAIN-System表与查询排障.md', 'docs/data-systems/analytics/olap/90-Trino-CLI-EXPLAIN-System表与查询排障.md'],
-  ['docs/data-systems/commands/08-ClickHouse-Client-System表与运维命令手册.md', 'docs/data-systems/analytics/clickhouse/15-ClickHouse-Client-System表与运维命令手册.md'],
+  ['docs/data-systems/commands/08-ClickHouse-Client-System表与运维命令手册.md', 'docs/data-systems/analytics/clickhouse/04-production/15-ClickHouse-Client-System表与运维命令手册.md'],
   ['docs/data-systems/commands/09-Doris-SQL-Load-Tablet与诊断命令手册.md', 'docs/data-systems/analytics/olap/91-Doris-SQL-Load-Tablet与诊断命令手册.md'],
   ['docs/data-systems/commands/10-Airflow-DAG-Task-Backfill与恢复命令手册.md', 'docs/data-systems/big-data/engineering-governance/90-Airflow-DAG-Task-Backfill与恢复命令手册.md'],
 ]);

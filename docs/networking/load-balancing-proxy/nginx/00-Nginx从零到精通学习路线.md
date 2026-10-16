@@ -30,27 +30,27 @@ Client TCP/TLS
 | 编号 | 文章 | 优先级 |
 | --- | --- | --- |
 | G00 | Nginx 从零到精通学习路线 | P0 |
-| G01 | [Nginx 解决什么问题与一次请求完整路径](./01-Nginx解决什么问题与一次请求完整路径.md) | P0 |
-| G02 | [Package、源码、Docker 与 Kubernetes 多种部署](./02-Nginx-Package源码Docker与Kubernetes部署.md) | P0 |
-| G03 | [配置上下文、指令继承、变量、Location 与 Reload](./03-Nginx配置上下文指令继承变量Location与Reload.md) | P0 |
-| G04 | [Reverse Proxy、Upstream、负载均衡、健康与重试](./04-Nginx反向代理Upstream负载均衡健康与重试.md) | P0 |
-| G05 | [Nginx HTTPS、TLS 握手、证书与性能](./05-一文搞懂-Nginx如何配置HTTPS.md) | P0 |
-| G06 | [静态文件、Sendfile、Buffer、Compression 与 Cache](./06-Nginx静态文件Sendfile-Buffer压缩与Cache.md) | P0 |
-| G07 | [Master/Worker、Event Loop、Accept、连接与定时器](./07-Nginx-Master-Worker事件循环连接与定时器.md) | P0 |
-| G08 | [HTTP Phase、Module、Subrequest、Filter 与变量源码](./08-Nginx-HTTP-Phase-Module-Subrequest与Filter源码.md) | P2 |
-| G09 | [限流、限连、鉴权、WAF 边界与安全加固](./09-Nginx限流限连鉴权WAF与安全加固.md) | P1 |
-| G10 | [Nginx 大模型网关日志配置与请求观测](./10-Nginx大模型网关日志配置实践.md) | P1 |
-| G11 | [Worker、连接、CPU、内存、带宽与容量压测](./11-Nginx-Worker连接CPU内存带宽与容量压测.md) | P1 |
-| G12 | [高可用、Keepalived/LB、热升级、灰度与故障 Runbook](./12-Nginx高可用Keepalived热升级灰度与Runbook.md) | P1 |
-| G13 | [Nginx 源码架构与基础数据结构](./13-nginx源码分析-基础数据结构.md) | P2 |
-| G14 | [Nginx 内存池与基础数据结构实现](./14-nginx源码解析-基础数据结构（一）.md) | P2 |
-| G15 | [HTTP/1.1、HTTP/2、HTTP/3 请求解析、连接与流控](./15-Nginx-HTTP1-HTTP2-HTTP3请求解析连接与流控.md) | P0 |
-| G16 | [WebSocket、SSE、gRPC、FastCGI 与流式代理](./16-Nginx-WebSocket-SSE-gRPC-FastCGI与流式代理.md) | P0 |
-| G17 | [DNS、Resolver、动态 Upstream 与服务发现](./17-Nginx-DNS-Resolver动态Upstream与服务发现.md) | P1 |
-| G18 | [Stream、TCP/UDP、TLS Preread 与 PROXY Protocol](./18-Nginx-Stream-TCP-UDP-TLS-Preread与PROXY-Protocol.md) | P1 |
-| G19 | [日志、指标、Tracing、调试与故障排查](./19-Nginx日志指标Tracing调试与故障排查.md) | P0 |
-| G20 | [Kubernetes Ingress、Gateway API 与生产运维](./20-Nginx-Kubernetes-Ingress-Gateway与生产运维.md) | P1 |
-| G21 | [模块、动态模块、njs、Lua/OpenResty 与扩展边界](./21-Nginx模块动态模块njs-Lua-OpenResty与扩展边界.md) | P2 |
+| G01 | [Nginx 解决什么问题与一次请求完整路径](./01-core/01-Nginx解决什么问题与一次请求完整路径.md) | P0 |
+| G02 | [Package、源码、Docker 与 Kubernetes 多种部署](./02-proxy-content/02-Nginx-Package源码Docker与Kubernetes部署.md) | P0 |
+| G03 | [配置上下文、指令继承、变量、Location 与 Reload](./01-core/03-Nginx配置上下文指令继承变量Location与Reload.md) | P0 |
+| G04 | [Reverse Proxy、Upstream、负载均衡、健康与重试](./02-proxy-content/04-Nginx反向代理Upstream负载均衡健康与重试.md) | P0 |
+| G05 | [Nginx HTTPS、TLS 握手、证书与性能](./02-proxy-content/05-一文搞懂-Nginx如何配置HTTPS.md) | P0 |
+| G06 | [静态文件、Sendfile、Buffer、Compression 与 Cache](./02-proxy-content/06-Nginx静态文件Sendfile-Buffer压缩与Cache.md) | P0 |
+| G07 | [Master/Worker、Event Loop、Accept、连接与定时器](./01-core/07-Nginx-Master-Worker事件循环连接与定时器.md) | P0 |
+| G08 | [HTTP Phase、Module、Subrequest、Filter 与变量源码](./01-core/08-Nginx-HTTP-Phase-Module-Subrequest与Filter源码.md) | P2 |
+| G09 | [限流、限连、鉴权、WAF 边界与安全加固](./04-production/09-Nginx限流限连鉴权WAF与安全加固.md) | P1 |
+| G10 | [Nginx 大模型网关日志配置与请求观测](./04-production/10-Nginx大模型网关日志配置实践.md) | P1 |
+| G11 | [Worker、连接、CPU、内存、带宽与容量压测](./04-production/11-Nginx-Worker连接CPU内存带宽与容量压测.md) | P1 |
+| G12 | [高可用、Keepalived/LB、热升级、灰度与故障 Runbook](./04-production/12-Nginx高可用Keepalived热升级灰度与Runbook.md) | P1 |
+| G13 | [Nginx 源码架构与基础数据结构](./01-core/13-nginx源码分析-基础数据结构.md) | P2 |
+| G14 | [Nginx 内存池与基础数据结构实现](./01-core/14-nginx源码解析-基础数据结构（一）.md) | P2 |
+| G15 | [HTTP/1.1、HTTP/2、HTTP/3 请求解析、连接与流控](./03-protocols/15-Nginx-HTTP1-HTTP2-HTTP3请求解析连接与流控.md) | P0 |
+| G16 | [WebSocket、SSE、gRPC、FastCGI 与流式代理](./03-protocols/16-Nginx-WebSocket-SSE-gRPC-FastCGI与流式代理.md) | P0 |
+| G17 | [DNS、Resolver、动态 Upstream 与服务发现](./03-protocols/17-Nginx-DNS-Resolver动态Upstream与服务发现.md) | P1 |
+| G18 | [Stream、TCP/UDP、TLS Preread 与 PROXY Protocol](./03-protocols/18-Nginx-Stream-TCP-UDP-TLS-Preread与PROXY-Protocol.md) | P1 |
+| G19 | [日志、指标、Tracing、调试与故障排查](./04-production/19-Nginx日志指标Tracing调试与故障排查.md) | P0 |
+| G20 | [Kubernetes Ingress、Gateway API 与生产运维](./04-production/20-Nginx-Kubernetes-Ingress-Gateway与生产运维.md) | P1 |
+| G21 | [模块、动态模块、njs、Lua/OpenResty 与扩展边界](./01-core/21-Nginx模块动态模块njs-Lua-OpenResty与扩展边界.md) | P2 |
 
 ## 3. 学习阶段
 

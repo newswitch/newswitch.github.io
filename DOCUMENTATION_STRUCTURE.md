@@ -149,6 +149,28 @@ projects/
     └── 90-appendix/     # 模板、清单、PromQL 与 SOP
 ```
 
+## 产品级专题目录
+
+文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
+
+| 产品或专题 | 二级专题 |
+| --- | --- |
+| Nginx | 架构与源码、代理与内容服务、协议与服务发现、安全与生产运维 |
+| TLS 与 PKI | TLS 协议、证书与文件、身份与自动化、分析与故障排查 |
+| PostgreSQL | 基础与 SQL、存储与事务、性能、HA/DR、内核与运维 |
+| Elasticsearch | 搜索与存储、集群与数据生命周期、向量与性能、安全与灾备 |
+| Milvus | 向量与数据模型、Segment 与索引、部署与扩展、性能与运维 |
+| Redis | 客户端与数据结构、执行与持久化、HA 与集群、应用模式与运维 |
+| ClickHouse | 数据模型与存储、查询与写入、集群与复制、性能与运维 |
+| RocketMQ、RabbitMQ | 架构与消息语义、部署与可靠性、容量与生产运维 |
+| Airflow | 架构与调度、部署与 HA、治理与容量、升级与排障 |
+| Prometheus | 指标与查询、告警与可视化、部署与长期存储、生产治理 |
+| OpenTelemetry | 统一证据链、日志、链路追踪、部署与生产治理 |
+| Ansible、Python 自动化 | 基础工程、复用或远程调用、规模化与质量、交付与综合项目 |
+| Istio | 架构与数据面、流量治理、安全与观测、多集群与生产运维 |
+| Kubernetes 扩展 | API 与 Operator、Admission、调度扩展与 DRA |
+| Linux 网络栈 | 收发路径、路由与传输层、Netfilter 与队列、虚拟网络与排障 |
+
 ## 跨模块归档规则
 
 | 内容 | 唯一主归属 |
@@ -201,5 +223,6 @@ npm run build
 - `scripts/migrate-topic-structure.mjs`：本次主题式目录迁移脚本，包含文件映射、分类入口更新和 Markdown 链接重写逻辑。
 - `scripts/migrate-data-systems-taxonomy.mjs`：将数据系统拆分为数据库、缓存、消息、搜索、向量、分析和大数据工程，并重写全站相对链接。
 - `scripts/restructure-navigation-2026.mjs`：将 vLLM 与异构集群长列表拆成可定位的专题目录，并重新计算全站相对链接。
+- `scripts/restructure-product-directories-2026.mjs`：将文章较多的产品与专题目录拆分为原理、核心能力、部署扩展和生产运维等专题，并重写全站引用。
 
 这些脚本用于审计历史迁移，不应在已经迁移完成的目录上重复执行。

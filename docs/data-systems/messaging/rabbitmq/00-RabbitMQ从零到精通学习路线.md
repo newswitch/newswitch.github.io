@@ -25,28 +25,28 @@ Producer
 
 ## 1. P0：消息路径与可靠性
 
-1. [RabbitMQ 解决什么问题与一条消息的完整路径](./01-RabbitMQ解决什么问题与一条消息的完整路径.md)
-2. [AMQP、Exchange、Queue、Binding 与 Virtual Host](./02-AMQP-Exchange-Queue-Binding与Virtual-Host.md)
-3. [消息持久化、Publisher Confirm 与消费者 ACK](./03-消息持久化-Publisher-Confirm与消费者ACK.md)
-4. [Prefetch、并发消费、顺序与重投递](./04-Prefetch-并发消费-顺序与重投递.md)
-5. [TTL、死信、重试、延迟消息与毒消息隔离](./05-TTL-死信-重试-延迟消息与毒消息隔离.md)
-6. [Classic Queue、Quorum Queue、Stream 与 Super Stream](./06-Classic-Queue-Quorum-Queue-Stream与Super-Stream.md)
+1. [RabbitMQ 解决什么问题与一条消息的完整路径](./01-model-delivery/01-RabbitMQ解决什么问题与一条消息的完整路径.md)
+2. [AMQP、Exchange、Queue、Binding 与 Virtual Host](./01-model-delivery/02-AMQP-Exchange-Queue-Binding与Virtual-Host.md)
+3. [消息持久化、Publisher Confirm 与消费者 ACK](./01-model-delivery/03-消息持久化-Publisher-Confirm与消费者ACK.md)
+4. [Prefetch、并发消费、顺序与重投递](./01-model-delivery/04-Prefetch-并发消费-顺序与重投递.md)
+5. [TTL、死信、重试、延迟消息与毒消息隔离](./01-model-delivery/05-TTL-死信-重试-延迟消息与毒消息隔离.md)
+6. [Classic Queue、Quorum Queue、Stream 与 Super Stream](./02-queues-cluster/06-Classic-Queue-Quorum-Queue-Stream与Super-Stream.md)
 
 完成 P0 后，应能解释：消息什么时候只到达 Broker、什么时候进入队列、什么时候可以认为消费完成，以及每个阶段故障会不会造成丢失或重复。
 
 ## 2. P1：部署、集群与生产运维
 
-7. [RabbitMQ 节点、集群元数据、Quorum 与网络分区](./07-RabbitMQ节点-集群元数据-Quorum与网络分区.md)
-8. [Package、Docker、Compose、Kubernetes Operator 与生产部署](./08-Package-Docker-Compose-Kubernetes-Operator与生产部署.md)
-9. [用户、Virtual Host、Permission、TLS 与多租户隔离](./09-用户-Virtual-Host-Permission-TLS与多租户隔离.md)
-10. [内存水位、磁盘水位、流控、容量规划与压测](./10-内存水位-磁盘水位-流控-容量规划与压测.md)
-11. [Prometheus、Management API、日志、告警与 SLO](./11-Prometheus-Management-API-日志-告警与SLO.md)
-12. [定义备份、消息恢复、滚动升级与跨集群迁移](./12-定义备份-消息恢复-滚动升级与跨集群迁移.md)
+7. [RabbitMQ 节点、集群元数据、Quorum 与网络分区](./02-queues-cluster/07-RabbitMQ节点-集群元数据-Quorum与网络分区.md)
+8. [Package、Docker、Compose、Kubernetes Operator 与生产部署](./03-deployment-security/08-Package-Docker-Compose-Kubernetes-Operator与生产部署.md)
+9. [用户、Virtual Host、Permission、TLS 与多租户隔离](./03-deployment-security/09-用户-Virtual-Host-Permission-TLS与多租户隔离.md)
+10. [内存水位、磁盘水位、流控、容量规划与压测](./04-production/10-内存水位-磁盘水位-流控-容量规划与压测.md)
+11. [Prometheus、Management API、日志、告警与 SLO](./04-production/11-Prometheus-Management-API-日志-告警与SLO.md)
+12. [定义备份、消息恢复、滚动升级与跨集群迁移](./04-production/12-定义备份-消息恢复-滚动升级与跨集群迁移.md)
 
 ## 3. P2：客户端、命令与故障处理
 
-13. [rabbitmqctl、rabbitmq-diagnostics、rabbitmq-queues 与 HTTP API](./13-rabbitmqctl-rabbitmq-diagnostics-rabbitmq-queues与HTTP-API.md)
-14. [RabbitMQ 生产故障 Runbook 与故障演练](./14-RabbitMQ生产故障Runbook与故障演练.md)
+13. [rabbitmqctl、rabbitmq-diagnostics、rabbitmq-queues 与 HTTP API](./04-production/13-rabbitmqctl-rabbitmq-diagnostics-rabbitmq-queues与HTTP-API.md)
+14. [RabbitMQ 生产故障 Runbook 与故障演练](./04-production/14-RabbitMQ生产故障Runbook与故障演练.md)
 
 ## 4. RabbitMQ 与相邻系统怎样选
 

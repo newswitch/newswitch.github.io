@@ -35,22 +35,22 @@ Embedding Model
 | 编号 | 文章 | 优先级 | 核心问题 |
 | --- | --- | --- | --- |
 | M00 | Milvus 从零到精通学习路线 | P0 | 建立向量检索和分布式组件地图 |
-| M01 | [Embedding、距离度量、Top-K 与 ANN 基础](./01-Embedding距离度量TopK与ANN基础.md) | P0 | 余弦/IP/L2、精确与近似检索 |
-| M02 | [Milvus Lite、Standalone、Distributed 与一次请求路径](./02-Milvus-Lite-Standalone-Distributed与一次请求路径.md) | P0 | 三种形态和组件边界 |
-| M03 | [Collection、Schema、Primary Key、Partition 与 Dynamic Field](./03-Milvus-Collection-Schema主键分区与Dynamic-Field.md) | P0 | 数据建模、租户和过滤边界 |
-| M04 | [Insert、Upsert、Delete、Timestamp 与一致性级别](./04-Milvus写入删除Timestamp与一致性级别.md) | P0 | 写入可见性、删除和 Session/Bounded Consistency |
-| M05 | [Growing/Sealed Segment、Flush、Compaction 与 Garbage Collection](./05-Growing-Sealed-Segment-Flush-Compaction与GC.md) | P0 | 数据怎样从实时变成历史 |
-| M06 | [FLAT、IVF、HNSW、DISKANN、SCANN 与索引参数](./06-FLAT-IVF-HNSW-DISKANN-SCANN与索引参数.md) | P0 | 索引选择、构建、内存和召回 |
-| M07 | [Scalar Filter、Hybrid Search、Sparse/Dense、Rerank 与 Grouping](./07-Scalar-Filter混合检索Sparse-Dense与Rerank.md) | P0 | 多路召回和过滤执行顺序 |
-| M08 | [Proxy、Coordinator、Streaming、Query、Data Node 源码职责](./08-Milvus组件源码职责与请求主路径.md) | P2 | 控制面、数据面和调度主路径 |
-| M09 | [etcd、WAL/Woodpecker 与 S3/MinIO 依赖原理](./09-etcd-Woodpecker与S3-MinIO依赖原理.md) | P0 | 元数据、日志和大对象分别保存什么 |
-| M10 | [Lite、Compose Standalone、Helm/K8s Distributed 多种部署](./10-Milvus-Lite-Compose-Helm与Kubernetes生产部署.md) | P0 | 从本地到生产集群交付 |
-| M11 | [Shard、Replica、Resource Group、Load/Release 与弹性扩缩](./11-Shard-Replica-Resource-Group与弹性扩缩.md) | P1 | 查询资源隔离和伸缩 |
-| M12 | [向量维度、Segment、索引、QPS、内存与容量规划](./12-向量维度Segment索引QPS与容量规划.md) | P1 | 如何估算节点、对象存储和构建资源 |
-| M13 | [Benchmark、Recall、P95/P99、监控与性能调优](./13-Milvus-Benchmark-Recall监控与性能调优.md) | P1 | 正确性与性能怎样一起测 |
-| M14 | [备份、Snapshot、升级、迁移、安全与多租户](./14-Milvus备份升级迁移安全与多租户.md) | P1 | 数据恢复和变更边界 |
-| M15 | [写入积压、加载失败、OOM、慢查询与生产故障 Runbook](./15-Milvus生产故障Runbook.md) | P1 | 从 API 到依赖逐层排查 |
-| M16 | [Snapshot、Milvus Backup 与一致性恢复专项](./16-Milvus-Snapshot-Backup与一致性恢复专项.md) | P1 | 元数据、对象和日志状态怎样形成可恢复闭包 |
+| M01 | [Embedding、距离度量、Top-K 与 ANN 基础](./01-foundations-data/01-Embedding距离度量TopK与ANN基础.md) | P0 | 余弦/IP/L2、精确与近似检索 |
+| M02 | [Milvus Lite、Standalone、Distributed 与一次请求路径](./01-foundations-data/02-Milvus-Lite-Standalone-Distributed与一次请求路径.md) | P0 | 三种形态和组件边界 |
+| M03 | [Collection、Schema、Primary Key、Partition 与 Dynamic Field](./01-foundations-data/03-Milvus-Collection-Schema主键分区与Dynamic-Field.md) | P0 | 数据建模、租户和过滤边界 |
+| M04 | [Insert、Upsert、Delete、Timestamp 与一致性级别](./01-foundations-data/04-Milvus写入删除Timestamp与一致性级别.md) | P0 | 写入可见性、删除和 Session/Bounded Consistency |
+| M05 | [Growing/Sealed Segment、Flush、Compaction 与 Garbage Collection](./02-storage-index/05-Growing-Sealed-Segment-Flush-Compaction与GC.md) | P0 | 数据怎样从实时变成历史 |
+| M06 | [FLAT、IVF、HNSW、DISKANN、SCANN 与索引参数](./02-storage-index/06-FLAT-IVF-HNSW-DISKANN-SCANN与索引参数.md) | P0 | 索引选择、构建、内存和召回 |
+| M07 | [Scalar Filter、Hybrid Search、Sparse/Dense、Rerank 与 Grouping](./02-storage-index/07-Scalar-Filter混合检索Sparse-Dense与Rerank.md) | P0 | 多路召回和过滤执行顺序 |
+| M08 | [Proxy、Coordinator、Streaming、Query、Data Node 源码职责](./02-storage-index/08-Milvus组件源码职责与请求主路径.md) | P2 | 控制面、数据面和调度主路径 |
+| M09 | [etcd、WAL/Woodpecker 与 S3/MinIO 依赖原理](./02-storage-index/09-etcd-Woodpecker与S3-MinIO依赖原理.md) | P0 | 元数据、日志和大对象分别保存什么 |
+| M10 | [Lite、Compose Standalone、Helm/K8s Distributed 多种部署](./03-deployment-scaling/10-Milvus-Lite-Compose-Helm与Kubernetes生产部署.md) | P0 | 从本地到生产集群交付 |
+| M11 | [Shard、Replica、Resource Group、Load/Release 与弹性扩缩](./03-deployment-scaling/11-Shard-Replica-Resource-Group与弹性扩缩.md) | P1 | 查询资源隔离和伸缩 |
+| M12 | [向量维度、Segment、索引、QPS、内存与容量规划](./04-performance-operations/12-向量维度Segment索引QPS与容量规划.md) | P1 | 如何估算节点、对象存储和构建资源 |
+| M13 | [Benchmark、Recall、P95/P99、监控与性能调优](./04-performance-operations/13-Milvus-Benchmark-Recall监控与性能调优.md) | P1 | 正确性与性能怎样一起测 |
+| M14 | [备份、Snapshot、升级、迁移、安全与多租户](./04-performance-operations/14-Milvus备份升级迁移安全与多租户.md) | P1 | 数据恢复和变更边界 |
+| M15 | [写入积压、加载失败、OOM、慢查询与生产故障 Runbook](./04-performance-operations/15-Milvus生产故障Runbook.md) | P1 | 从 API 到依赖逐层排查 |
+| M16 | [Snapshot、Milvus Backup 与一致性恢复专项](./04-performance-operations/16-Milvus-Snapshot-Backup与一致性恢复专项.md) | P1 | 元数据、对象和日志状态怎样形成可恢复闭包 |
 
 ## 3. 学习阶段
 

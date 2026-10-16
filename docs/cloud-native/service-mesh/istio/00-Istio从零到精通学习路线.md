@@ -23,28 +23,28 @@ Ambient模式：Application Pod
 
 ## 1. P0：架构和请求路径
 
-1. [Istio 解决什么问题与一次请求的完整路径](./01-Istio解决什么问题与一次请求的完整路径.md)
-2. [Istiod、Envoy、xDS、配置下发与状态收敛](./02-Istiod-Envoy-xDS-配置下发与状态收敛.md)
-3. [`istioctl`、Helm、Profiles、Revision 与生产安装验收](./03-istioctl-Helm-Profiles-Revision与生产安装验收.md)
-4. [Sidecar 注入、iptables/CNI、Ambient、ztunnel 与 Waypoint](./04-Sidecar注入-iptables-CNI-Ambient-ztunnel与Waypoint.md)
+1. [Istio 解决什么问题与一次请求的完整路径](./01-architecture-install/01-Istio解决什么问题与一次请求的完整路径.md)
+2. [Istiod、Envoy、xDS、配置下发与状态收敛](./01-architecture-install/02-Istiod-Envoy-xDS-配置下发与状态收敛.md)
+3. [`istioctl`、Helm、Profiles、Revision 与生产安装验收](./01-architecture-install/03-istioctl-Helm-Profiles-Revision与生产安装验收.md)
+4. [Sidecar 注入、iptables/CNI、Ambient、ztunnel 与 Waypoint](./01-architecture-install/04-Sidecar注入-iptables-CNI-Ambient-ztunnel与Waypoint.md)
 
 完成 P0 后，应能分别画出 Sidecar 和 Ambient 请求路径，并区分“CR 已创建、Istiod 已接受、Proxy 已同步、真实流量已生效”四个不同状态。
 
 ## 2. P1：流量、安全与可观测性
 
-5. [VirtualService、DestinationRule、Gateway API、ServiceEntry 与配置作用域](./05-VirtualService-DestinationRule-Gateway-API-ServiceEntry与作用域.md)
-6. [负载均衡、超时、重试、熔断、故障注入、金丝雀与流量镜像](./06-负载均衡-超时-重试-熔断-故障注入-金丝雀与镜像.md)
-7. [Ingress Gateway、Egress Gateway、外部服务和出口控制](./07-Ingress-Egress-Gateway-外部服务与出口控制.md)
-8. [SPIFFE 身份、证书签发、mTLS、PeerAuthentication 与 DestinationRule](./08-SPIFFE身份-证书签发-mTLS-PeerAuthentication与DestinationRule.md)
-9. [RequestAuthentication、AuthorizationPolicy、JWT 与外部授权](./09-RequestAuthentication-AuthorizationPolicy-JWT与外部授权.md)
-10. [Metrics、Access Log、Trace、Telemetry API、Prometheus、Grafana 与 Kiali](./10-Metrics-Access-Log-Trace-Telemetry-Prometheus-Grafana与Kiali.md)
-11. [Proxy 资源、配置规模、连接、TLS、容量规划与性能压测](./11-Proxy资源-配置规模-连接-TLS-容量规划与性能压测.md)
+5. [VirtualService、DestinationRule、Gateway API、ServiceEntry 与配置作用域](./02-traffic/05-VirtualService-DestinationRule-Gateway-API-ServiceEntry与作用域.md)
+6. [负载均衡、超时、重试、熔断、故障注入、金丝雀与流量镜像](./02-traffic/06-负载均衡-超时-重试-熔断-故障注入-金丝雀与镜像.md)
+7. [Ingress Gateway、Egress Gateway、外部服务和出口控制](./02-traffic/07-Ingress-Egress-Gateway-外部服务与出口控制.md)
+8. [SPIFFE 身份、证书签发、mTLS、PeerAuthentication 与 DestinationRule](./03-security-observability/08-SPIFFE身份-证书签发-mTLS-PeerAuthentication与DestinationRule.md)
+9. [RequestAuthentication、AuthorizationPolicy、JWT 与外部授权](./03-security-observability/09-RequestAuthentication-AuthorizationPolicy-JWT与外部授权.md)
+10. [Metrics、Access Log、Trace、Telemetry API、Prometheus、Grafana 与 Kiali](./03-security-observability/10-Metrics-Access-Log-Trace-Telemetry-Prometheus-Grafana与Kiali.md)
+11. [Proxy 资源、配置规模、连接、TLS、容量规划与性能压测](./04-production/11-Proxy资源-配置规模-连接-TLS-容量规划与性能压测.md)
 
 ## 3. P2：多集群、升级和故障处理
 
-12. [多集群、多网络、East-West Gateway、服务发现与故障域](./12-多集群-多网络-East-West-Gateway-服务发现与故障域.md)
-13. [Revision/Tag、金丝雀升级、Sidecar/Ambient 迁移、兼容与回滚](./13-Revision-Tag-金丝雀升级-Sidecar-Ambient迁移与回滚.md)
-14. [`istioctl`、Envoy Admin、日志、xDS 与生产故障 Runbook](./14-istioctl-Envoy-Admin-xDS与生产故障Runbook.md)
+12. [多集群、多网络、East-West Gateway、服务发现与故障域](./04-production/12-多集群-多网络-East-West-Gateway-服务发现与故障域.md)
+13. [Revision/Tag、金丝雀升级、Sidecar/Ambient 迁移、兼容与回滚](./04-production/13-Revision-Tag-金丝雀升级-Sidecar-Ambient迁移与回滚.md)
+14. [`istioctl`、Envoy Admin、日志、xDS 与生产故障 Runbook](./04-production/14-istioctl-Envoy-Admin-xDS与生产故障Runbook.md)
 
 ## 4. 必做实验
 

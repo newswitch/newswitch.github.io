@@ -161,4 +161,4 @@ cat /proc/interrupts
 
 答案：不一定。也可能是 Completion 处理不及时、IRQ/CPU 问题、PCIe 异常、Driver/NIC Reset 或特定 Queue 热点。
 
-延伸阅读：[发送路径：send 到 NIC TX](../../linux/system-internals/07-network-stack/02-发送路径-send到NIC-TX.md)。
+延伸阅读：[发送路径：send 到 NIC TX](../../linux/system-internals/07-network-stack/01-packet-path/02-发送路径-send到NIC-TX.md)。

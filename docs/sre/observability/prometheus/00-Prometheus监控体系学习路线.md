@@ -23,27 +23,27 @@ Application / Exporter
 
 ## 1. P0：指标模型与告警链路
 
-1. [Prometheus 解决什么问题与一条指标的完整路径](./01-Prometheus解决什么问题与一条指标的完整路径.md)
-2. [Counter、Gauge、Histogram、Summary 与标签基数](./02-Counter-Gauge-Histogram-Summary与标签基数.md)
-3. [Instrumentation、Exporter、文本格式、Scrape 与服务发现](./03-Instrumentation-Exporter-文本格式-Scrape与服务发现.md)
-4. [Prometheus TSDB、Head、WAL、Block、Compaction 与 Retention](./04-Prometheus-TSDB-Head-WAL-Block-Compaction与Retention.md)
-5. [PromQL：Selector、Range、Rate、聚合、Join、Subquery 与 Histogram](./05-PromQL-Selector-Range-Rate-聚合-Join-Subquery与Histogram.md)
-6. [Recording Rule、Alerting Rule、`for`、`keep_firing_for` 与规则测试](./06-Recording-Rule-Alerting-Rule-for-keep_firing_for与规则测试.md)
-7. [Alertmanager 分组、路由、抑制、Silence、HA 与通知模板](./07-Alertmanager分组-路由-抑制-Silence-HA与通知模板.md)
-8. [Grafana Data Source、Dashboard、Variable、Annotation 与告警联动](./08-Grafana-Data-Source-Dashboard-Variable-Annotation与告警联动.md)
+1. [Prometheus 解决什么问题与一条指标的完整路径](./01-model-query/01-Prometheus解决什么问题与一条指标的完整路径.md)
+2. [Counter、Gauge、Histogram、Summary 与标签基数](./01-model-query/02-Counter-Gauge-Histogram-Summary与标签基数.md)
+3. [Instrumentation、Exporter、文本格式、Scrape 与服务发现](./01-model-query/03-Instrumentation-Exporter-文本格式-Scrape与服务发现.md)
+4. [Prometheus TSDB、Head、WAL、Block、Compaction 与 Retention](./01-model-query/04-Prometheus-TSDB-Head-WAL-Block-Compaction与Retention.md)
+5. [PromQL：Selector、Range、Rate、聚合、Join、Subquery 与 Histogram](./01-model-query/05-PromQL-Selector-Range-Rate-聚合-Join-Subquery与Histogram.md)
+6. [Recording Rule、Alerting Rule、`for`、`keep_firing_for` 与规则测试](./02-alerting-visualization/06-Recording-Rule-Alerting-Rule-for-keep_firing_for与规则测试.md)
+7. [Alertmanager 分组、路由、抑制、Silence、HA 与通知模板](./02-alerting-visualization/07-Alertmanager分组-路由-抑制-Silence-HA与通知模板.md)
+8. [Grafana Data Source、Dashboard、Variable、Annotation 与告警联动](./02-alerting-visualization/08-Grafana-Data-Source-Dashboard-Variable-Annotation与告警联动.md)
 
 ## 2. P1：部署、扩展与生产运维
 
-9. [二进制、systemd、Docker、Helm、Prometheus Operator 与 kube-prometheus-stack](./09-二进制-systemd-Docker-Helm-Prometheus-Operator与kube-prometheus-stack.md)
-10. [Kubernetes ServiceMonitor、PodMonitor、Probe 与抓取故障](./10-Kubernetes-ServiceMonitor-PodMonitor-Probe与抓取故障.md)
-11. [Federation、Remote Write、Agent Mode、Thanos 与 Mimir 选型](./11-Federation-Remote-Write-Agent-Mode-Thanos与Mimir选型.md)
-12. [Series、Samples、WAL、查询并发、容量规划与性能优化](./12-Series-Samples-WAL-查询并发-容量规划与性能优化.md)
-13. [TLS、认证、NetworkPolicy、Secret、租户和指标数据安全](./13-TLS-认证-NetworkPolicy-Secret-租户与指标数据安全.md)
-14. [Snapshot、备份、升级、迁移、版本兼容与回滚](./14-Snapshot-备份-升级-迁移-版本兼容与回滚.md)
+9. [二进制、systemd、Docker、Helm、Prometheus Operator 与 kube-prometheus-stack](./03-deployment-scaling/09-二进制-systemd-Docker-Helm-Prometheus-Operator与kube-prometheus-stack.md)
+10. [Kubernetes ServiceMonitor、PodMonitor、Probe 与抓取故障](./03-deployment-scaling/10-Kubernetes-ServiceMonitor-PodMonitor-Probe与抓取故障.md)
+11. [Federation、Remote Write、Agent Mode、Thanos 与 Mimir 选型](./03-deployment-scaling/11-Federation-Remote-Write-Agent-Mode-Thanos与Mimir选型.md)
+12. [Series、Samples、WAL、查询并发、容量规划与性能优化](./04-production/12-Series-Samples-WAL-查询并发-容量规划与性能优化.md)
+13. [TLS、认证、NetworkPolicy、Secret、租户和指标数据安全](./04-production/13-TLS-认证-NetworkPolicy-Secret-租户与指标数据安全.md)
+14. [Snapshot、备份、升级、迁移、版本兼容与回滚](./04-production/14-Snapshot-备份-升级-迁移-版本兼容与回滚.md)
 
 ## 3. P2：故障与工程化
 
-15. [Prometheus、Alertmanager、Grafana 生产故障 Runbook](./15-Prometheus-Alertmanager-Grafana生产故障Runbook.md)
+15. [Prometheus、Alertmanager、Grafana 生产故障 Runbook](./04-production/15-Prometheus-Alertmanager-Grafana生产故障Runbook.md)
 
 ## 4. 学习时始终回答四个问题
 

@@ -44,20 +44,20 @@ CPU 总利用率低时仍可能一个 RX queue/softirq CPU 饱和；带宽低时
 
 ## 3. 本模块文章
 
-1. [Socket 对象与缓冲区](./01-Socket对象与缓冲区.md)
-2. [发送路径：从 send 到 NIC TX](./02-发送路径-send到NIC-TX.md)
-3. [接收路径：DMA、IRQ、NAPI 与协议栈](./03-接收路径-DMA-IRQ-NAPI.md)
-4. [sk_buff 生命周期](./04-sk_buff生命周期.md)
-5. [路由、策略路由与邻居子系统](./05-路由策略路由与邻居子系统.md)
-6. [TCP 连接生命周期](./06-TCP连接生命周期.md)
-7. [TCP 可靠性、流控与拥塞控制](./07-TCP可靠性流控与拥塞控制.md)
-8. [UDP、分片与 ICMP 错误](./08-UDP分片与ICMP错误.md)
-9. [Netfilter、Conntrack 与 NAT](./09-Netfilter-Conntrack与NAT.md)
-10. [网络队列与 Backlog](./10-网络队列与Backlog.md)
-11. [qdisc 与流量控制](./11-qdisc与流量控制.md)
-12. [多队列、RSS、RPS、XPS 与卸载](./12-多队列RSS-RPS-XPS与卸载.md)
-13. [Network Namespace、veth、Bridge 与 VXLAN](./13-Network-Namespace-veth-Bridge与VXLAN.md)
-14. [丢包、重传与延迟分层排查](./14-丢包重传与延迟分层排查.md)
+1. [Socket 对象与缓冲区](./01-packet-path/01-Socket对象与缓冲区.md)
+2. [发送路径：从 send 到 NIC TX](./01-packet-path/02-发送路径-send到NIC-TX.md)
+3. [接收路径：DMA、IRQ、NAPI 与协议栈](./01-packet-path/03-接收路径-DMA-IRQ-NAPI.md)
+4. [sk_buff 生命周期](./01-packet-path/04-sk_buff生命周期.md)
+5. [路由、策略路由与邻居子系统](./02-routing-transport/05-路由策略路由与邻居子系统.md)
+6. [TCP 连接生命周期](./02-routing-transport/06-TCP连接生命周期.md)
+7. [TCP 可靠性、流控与拥塞控制](./02-routing-transport/07-TCP可靠性流控与拥塞控制.md)
+8. [UDP、分片与 ICMP 错误](./02-routing-transport/08-UDP分片与ICMP错误.md)
+9. [Netfilter、Conntrack 与 NAT](./03-netfilter-queues/09-Netfilter-Conntrack与NAT.md)
+10. [网络队列与 Backlog](./03-netfilter-queues/10-网络队列与Backlog.md)
+11. [qdisc 与流量控制](./03-netfilter-queues/11-qdisc与流量控制.md)
+12. [多队列、RSS、RPS、XPS 与卸载](./03-netfilter-queues/12-多队列RSS-RPS-XPS与卸载.md)
+13. [Network Namespace、veth、Bridge 与 VXLAN](./04-virtual-troubleshooting/13-Network-Namespace-veth-Bridge与VXLAN.md)
+14. [丢包、重传与延迟分层排查](./04-virtual-troubleshooting/14-丢包重传与延迟分层排查.md)
 
 ## 4. 观察点必须标明 Namespace
 
@@ -75,4 +75,4 @@ cat /proc/net/softnet_stat
 
 能画出包在主机内的发送/接收路径；能区分 Socket 队列、qdisc、NIC Ring 和 conntrack；能说明 TCP ACK、应用 read 和业务成功的边界；能用计数器、抓包和内核路径定位丢包究竟发生在哪一层。
 
-下一篇：[Socket 对象与缓冲区](./01-Socket对象与缓冲区.md)
+下一篇：[Socket 对象与缓冲区](./01-packet-path/01-Socket对象与缓冲区.md)

@@ -159,4 +159,4 @@ nstat
 
 答案：不能。RX Ring、No Buffer、XDP、Netfilter、Socket Buffer 和应用处理都可能丢弃或阻塞。
 
-延伸阅读：[接收路径：DMA、IRQ 与 NAPI](../../linux/system-internals/07-network-stack/03-接收路径-DMA-IRQ-NAPI.md)。
+延伸阅读：[接收路径：DMA、IRQ 与 NAPI](../../linux/system-internals/07-network-stack/01-packet-path/03-接收路径-DMA-IRQ-NAPI.md)。

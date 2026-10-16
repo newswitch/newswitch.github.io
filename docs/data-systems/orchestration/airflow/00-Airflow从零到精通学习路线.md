@@ -23,26 +23,26 @@ DAG Bundle
 
 ## 1. P0：架构、时间和状态
 
-1. [Airflow 解决什么问题与一次 DAG Run 的完整路径](./01-Airflow解决什么问题与一次DAG-Run的完整路径.md)
-2. [API Server、Scheduler、DAG Processor、Triggerer、Executor 与 Metadata DB](./02-API-Server-Scheduler-DAG-Processor-Triggerer-Executor与Metadata-DB.md)
-3. [Logical Date、Data Interval、Timetable、Catchup、Backfill 与手工触发](./03-Logical-Date-Data-Interval-Timetable-Catchup与Backfill.md)
-4. [Task Instance 状态机、依赖、Retry、XCom、Dataset/Asset 与幂等](./04-Task-Instance状态机-依赖-Retry-XCom-Asset与幂等.md)
+1. [Airflow 解决什么问题与一次 DAG Run 的完整路径](./01-architecture-semantics/01-Airflow解决什么问题与一次DAG-Run的完整路径.md)
+2. [API Server、Scheduler、DAG Processor、Triggerer、Executor 与 Metadata DB](./01-architecture-semantics/02-API-Server-Scheduler-DAG-Processor-Triggerer-Executor与Metadata-DB.md)
+3. [Logical Date、Data Interval、Timetable、Catchup、Backfill 与手工触发](./01-architecture-semantics/03-Logical-Date-Data-Interval-Timetable-Catchup与Backfill.md)
+4. [Task Instance 状态机、依赖、Retry、XCom、Dataset/Asset 与幂等](./01-architecture-semantics/04-Task-Instance状态机-依赖-Retry-XCom-Asset与幂等.md)
 
 ## 2. P1：执行、部署和高可用
 
-5. [LocalExecutor、CeleryExecutor、KubernetesExecutor 与多 Executor 选型](./05-LocalExecutor-CeleryExecutor-KubernetesExecutor与多Executor选型.md)
-6. [Standalone、Docker Compose、systemd、官方 Helm Chart 与生产部署](./06-Standalone-Docker-Compose-systemd-Helm与生产部署.md)
-7. [Metadata DB 表、连接池、迁移、清理、备份与灾难恢复](./07-Metadata-DB-表-连接池-迁移-清理-备份与恢复.md)
-8. [多 Scheduler、DAG Bundle/序列化、HA、故障域与状态协调](./08-多Scheduler-DAG-Bundle-序列化-HA与状态协调.md)
-9. [KubernetesExecutor、Worker Pod Template、日志、镜像和故障排查](./09-KubernetesExecutor-Worker-Pod-Template-日志-镜像与排障.md)
-10. [Pool、Queue、Priority、并发、Deferrable Operator 与 Triggerer](./10-Pool-Queue-Priority-并发-Deferrable-Operator与Triggerer.md)
-11. [RBAC、API 认证、Connection、Variable、Secrets Backend 与多租户边界](./11-RBAC-API认证-Connection-Variable-Secrets-Backend与多租户.md)
-12. [Scheduler Lag、DAG Parse、Task Queue、SLA、容量、监控和成本](./12-Scheduler-Lag-DAG-Parse-Task-Queue-SLA-容量-监控与成本.md)
+5. [LocalExecutor、CeleryExecutor、KubernetesExecutor 与多 Executor 选型](./01-architecture-semantics/05-LocalExecutor-CeleryExecutor-KubernetesExecutor与多Executor选型.md)
+6. [Standalone、Docker Compose、systemd、官方 Helm Chart 与生产部署](./02-deployment-ha/06-Standalone-Docker-Compose-systemd-Helm与生产部署.md)
+7. [Metadata DB 表、连接池、迁移、清理、备份与灾难恢复](./02-deployment-ha/07-Metadata-DB-表-连接池-迁移-清理-备份与恢复.md)
+8. [多 Scheduler、DAG Bundle/序列化、HA、故障域与状态协调](./02-deployment-ha/08-多Scheduler-DAG-Bundle-序列化-HA与状态协调.md)
+9. [KubernetesExecutor、Worker Pod Template、日志、镜像和故障排查](./02-deployment-ha/09-KubernetesExecutor-Worker-Pod-Template-日志-镜像与排障.md)
+10. [Pool、Queue、Priority、并发、Deferrable Operator 与 Triggerer](./03-governance-capacity/10-Pool-Queue-Priority-并发-Deferrable-Operator与Triggerer.md)
+11. [RBAC、API 认证、Connection、Variable、Secrets Backend 与多租户边界](./03-governance-capacity/11-RBAC-API认证-Connection-Variable-Secrets-Backend与多租户.md)
+12. [Scheduler Lag、DAG Parse、Task Queue、SLA、容量、监控和成本](./03-governance-capacity/12-Scheduler-Lag-DAG-Parse-Task-Queue-SLA-容量-监控与成本.md)
 
 ## 3. P2：升级和故障处理
 
-13. [Airflow 2→3、Provider、Metadata Migration、DAG 兼容、升级与回滚](./13-Airflow-2到3-Provider-Metadata-Migration-DAG兼容-升级与回滚.md)
-14. [Airflow 生产故障 Runbook](./14-Airflow生产故障Runbook.md)
+13. [Airflow 2→3、Provider、Metadata Migration、DAG 兼容、升级与回滚](./04-upgrade-troubleshooting/13-Airflow-2到3-Provider-Metadata-Migration-DAG兼容-升级与回滚.md)
+14. [Airflow 生产故障 Runbook](./04-upgrade-troubleshooting/14-Airflow生产故障Runbook.md)
 
 ## 4. 已有补充阅读
 

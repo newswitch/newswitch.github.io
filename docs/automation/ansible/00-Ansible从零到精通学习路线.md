@@ -38,21 +38,21 @@ Ansible 的入门门槛是写出一段 YAML，生产门槛则是证明它只改�
 
 | 阶段 | 文章 | 学完后的能力 |
 | --- | --- | --- |
-| 1 | [架构、安装与安全实验环境](./01-架构安装与安全实验环境.md) | 解释控制端、插件、模块和目标端的真实执行路径 |
-| 2 | [Inventory、主机模式、连接与变量](./02-Inventory主机模式连接与变量.md) | 准确回答“最终会改哪些主机、以谁的身份连接” |
-| 3 | [Ad-hoc、模块与返回结果](./03-AdHoc模块与返回结果.md) | 用 FQCN 执行只读检查并理解 changed/failed |
-| 4 | [Playbook、Task、Handler 与执行模型](./04-Playbook-Task-Handler与执行模型.md) | 把操作拆成有状态、可通知和可复跑的任务 |
-| 5 | [变量、Facts、条件、循环与错误控制](./05-变量Facts条件循环与错误控制.md) | 控制数据来源、分支、循环和失败传播 |
-| 6 | [Jinja2 模板、Filter 与配置发布](./06-Jinja2模板Filter与配置发布.md) | 生成、校验并原子发布配置 |
-| 7 | [Role、Collection 与 Galaxy](./07-Role-Collection与Galaxy.md) | 构建可复用、可版本化的自动化制品 |
-| 8 | [Vault、Become 与 Secret 治理](./08-Vault-Become与Secret治理.md) | 管理最小权限和敏感数据边界 |
-| 9 | [幂等、Check/Diff、滚动发布与回滚](./09-幂等Check-Diff滚动发布与回滚.md) | 建立生产变更门禁和爆炸半径控制 |
-| 10 | [动态 Inventory、云、Kubernetes 与网络](./10-动态Inventory云Kubernetes与网络.md) | 连接动态资源和非 Linux 设备 |
-| 11 | [ansible.cfg、并发与大规模性能](./11-ansible-cfg并发与大规模性能.md) | 定位控制端、连接和目标端瓶颈 |
-| 12 | [ansible-lint、Molecule 与 CI](./12-ansible-lint-Molecule与CI.md) | 自动验证语法、语义、幂等和场景 |
-| 13 | [AWX/AAP 控制面](./13-AWX-AAP作业模板RBAC与执行环境.md) | 将凭据、审批、调度和执行环境平台化 |
-| 14 | [可观测、审计与故障排查](./14-可观测审计与故障排查.md) | 按解析、连接、权限、模块和业务层定位故障 |
-| 15 | [Linux 基线批量治理综合项目](./15-Linux基线批量治理综合项目.md) | 完成可测试、可灰度、可回退的真实项目 |
+| 1 | [架构、安装与安全实验环境](./01-foundations-playbook/01-架构安装与安全实验环境.md) | 解释控制端、插件、模块和目标端的真实执行路径 |
+| 2 | [Inventory、主机模式、连接与变量](./01-foundations-playbook/02-Inventory主机模式连接与变量.md) | 准确回答“最终会改哪些主机、以谁的身份连接” |
+| 3 | [Ad-hoc、模块与返回结果](./01-foundations-playbook/03-AdHoc模块与返回结果.md) | 用 FQCN 执行只读检查并理解 changed/failed |
+| 4 | [Playbook、Task、Handler 与执行模型](./01-foundations-playbook/04-Playbook-Task-Handler与执行模型.md) | 把操作拆成有状态、可通知和可复跑的任务 |
+| 5 | [变量、Facts、条件、循环与错误控制](./01-foundations-playbook/05-变量Facts条件循环与错误控制.md) | 控制数据来源、分支、循环和失败传播 |
+| 6 | [Jinja2 模板、Filter 与配置发布](./01-foundations-playbook/06-Jinja2模板Filter与配置发布.md) | 生成、校验并原子发布配置 |
+| 7 | [Role、Collection 与 Galaxy](./02-reuse-security/07-Role-Collection与Galaxy.md) | 构建可复用、可版本化的自动化制品 |
+| 8 | [Vault、Become 与 Secret 治理](./02-reuse-security/08-Vault-Become与Secret治理.md) | 管理最小权限和敏感数据边界 |
+| 9 | [幂等、Check/Diff、滚动发布与回滚](./03-production-scale/09-幂等Check-Diff滚动发布与回滚.md) | 建立生产变更门禁和爆炸半径控制 |
+| 10 | [动态 Inventory、云、Kubernetes 与网络](./03-production-scale/10-动态Inventory云Kubernetes与网络.md) | 连接动态资源和非 Linux 设备 |
+| 11 | [ansible.cfg、并发与大规模性能](./03-production-scale/11-ansible-cfg并发与大规模性能.md) | 定位控制端、连接和目标端瓶颈 |
+| 12 | [ansible-lint、Molecule 与 CI](./04-quality-platform/12-ansible-lint-Molecule与CI.md) | 自动验证语法、语义、幂等和场景 |
+| 13 | [AWX/AAP 控制面](./04-quality-platform/13-AWX-AAP作业模板RBAC与执行环境.md) | 将凭据、审批、调度和执行环境平台化 |
+| 14 | [可观测、审计与故障排查](./03-production-scale/14-可观测审计与故障排查.md) | 按解析、连接、权限、模块和业务层定位故障 |
+| 15 | [Linux 基线批量治理综合项目](./04-quality-platform/15-Linux基线批量治理综合项目.md) | 完成可测试、可灰度、可回退的真实项目 |
 
 ## 3. 命令参考
 

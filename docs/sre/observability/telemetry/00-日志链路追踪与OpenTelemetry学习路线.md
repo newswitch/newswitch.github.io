@@ -22,24 +22,24 @@ Application/Infrastructure
 
 ## 1. P0：统一证据链
 
-1. [日志、指标、Trace 与一次请求的统一证据链](./01-日志指标Trace与一次请求的统一证据链.md)
-2. [OpenTelemetry SDK、OTLP 与 Collector 数据管道](./02-OpenTelemetry-SDK-OTLP与Collector数据管道.md)
-3. [Trace、Span、Context、Baggage、Resource 与 Semantic Conventions](./03-Trace-Span-Context-Baggage-Resource与Semantic-Conventions.md)
-4. [自动埋点、手工埋点、Context Propagation 与异步任务](./04-自动埋点-手工埋点-Context-Propagation与异步任务.md)
-5. [Collector Receiver、Processor、Exporter、Connector 与 Extension](./05-Collector-Receiver-Processor-Exporter-Connector与Extension.md)
-6. [结构化日志、时间戳、级别、堆栈、Request ID 与敏感数据](./06-结构化日志-时间戳-级别-堆栈-Request-ID与敏感数据.md)
-7. [Loki Label、Stream、Chunk、Index、对象存储与写读路径](./07-Loki-Label-Stream-Chunk-Index-对象存储与写读路径.md)
-8. [LogQL Selector、Parser、Filter、Metric Query 与告警](./08-LogQL-Selector-Parser-Filter-Metric-Query与告警.md)
-9. [Trace、Span、Status、Event、Link、Head/Tail Sampling 与错误归因](./09-Trace-Span-Status-Event-Link-Head-Tail-Sampling与错误归因.md)
-10. [Tempo、Jaeger、对象存储、查询和部署模式](./10-Tempo-Jaeger-对象存储-查询与部署模式.md)
+1. [日志、指标、Trace 与一次请求的统一证据链](./01-otel-foundations/01-日志指标Trace与一次请求的统一证据链.md)
+2. [OpenTelemetry SDK、OTLP 与 Collector 数据管道](./01-otel-foundations/02-OpenTelemetry-SDK-OTLP与Collector数据管道.md)
+3. [Trace、Span、Context、Baggage、Resource 与 Semantic Conventions](./01-otel-foundations/03-Trace-Span-Context-Baggage-Resource与Semantic-Conventions.md)
+4. [自动埋点、手工埋点、Context Propagation 与异步任务](./01-otel-foundations/04-自动埋点-手工埋点-Context-Propagation与异步任务.md)
+5. [Collector Receiver、Processor、Exporter、Connector 与 Extension](./01-otel-foundations/05-Collector-Receiver-Processor-Exporter-Connector与Extension.md)
+6. [结构化日志、时间戳、级别、堆栈、Request ID 与敏感数据](./02-logging/06-结构化日志-时间戳-级别-堆栈-Request-ID与敏感数据.md)
+7. [Loki Label、Stream、Chunk、Index、对象存储与写读路径](./02-logging/07-Loki-Label-Stream-Chunk-Index-对象存储与写读路径.md)
+8. [LogQL Selector、Parser、Filter、Metric Query 与告警](./02-logging/08-LogQL-Selector-Parser-Filter-Metric-Query与告警.md)
+9. [Trace、Span、Status、Event、Link、Head/Tail Sampling 与错误归因](./03-tracing/09-Trace-Span-Status-Event-Link-Head-Tail-Sampling与错误归因.md)
+10. [Tempo、Jaeger、对象存储、查询和部署模式](./03-tracing/10-Tempo-Jaeger-对象存储-查询与部署模式.md)
 
 ## 2. P1：部署、关联与生产运维
 
-11. [Agent、DaemonSet、Sidecar、Gateway 与分层 Collector 部署](./11-Agent-DaemonSet-Sidecar-Gateway与分层Collector部署.md)
-12. [Loki 单体、高可用单体、Microservices 与 Kubernetes 部署](./12-Loki单体-Simple-Scalable-Microservices与Kubernetes部署.md)
-13. [Tempo/Jaeger 部署、TraceQL、Span Metrics 与 Service Graph](./13-Tempo-Jaeger部署-TraceQL-Span-Metrics与Service-Graph.md)
-14. [Metrics、Logs、Traces、Exemplar 与 Profile 关联分析](./14-Metrics-Logs-Traces-Exemplar与Profile关联分析.md)
-15. [基数、采样、背压、容量、安全、多租户、升级与故障 Runbook](./15-基数-采样-背压-容量-安全-多租户-升级与故障Runbook.md)
+11. [Agent、DaemonSet、Sidecar、Gateway 与分层 Collector 部署](./04-production/11-Agent-DaemonSet-Sidecar-Gateway与分层Collector部署.md)
+12. [Loki 单体、高可用单体、Microservices 与 Kubernetes 部署](./02-logging/12-Loki单体-Simple-Scalable-Microservices与Kubernetes部署.md)
+13. [Tempo/Jaeger 部署、TraceQL、Span Metrics 与 Service Graph](./03-tracing/13-Tempo-Jaeger部署-TraceQL-Span-Metrics与Service-Graph.md)
+14. [Metrics、Logs、Traces、Exemplar 与 Profile 关联分析](./04-production/14-Metrics-Logs-Traces-Exemplar与Profile关联分析.md)
+15. [基数、采样、背压、容量、安全、多租户、升级与故障 Runbook](./04-production/15-基数-采样-背压-容量-安全-多租户-升级与故障Runbook.md)
 
 ## 3. 学习完成标准
 

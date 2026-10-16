@@ -39,23 +39,23 @@ Search request
 | 编号 | 文章 | 优先级 | 核心问题 |
 | --- | --- | --- | --- |
 | E00 | Elasticsearch 从零到精通学习路线 | P0 | 建立 Lucene、分片和集群地图 |
-| E01 | [Elasticsearch、Lucene 与一次请求的完整路径](./01-Elasticsearch-Lucene与一次请求的完整路径.md) | P0 | 搜索引擎与关系库/OLAP 的边界 |
-| E02 | [倒排索引、Term Dictionary、Postings 与 Doc Values](./02-倒排索引Term-Dictionary-Postings与Doc-Values.md) | P0 | 文本搜索、过滤、排序和聚合为何不同 |
-| E03 | [Mapping、字段类型、Analyzer、Tokenizer 与相关性](./03-Mapping字段类型Analyzer与相关性.md) | P0 | 写入前如何设计可搜索文档 |
-| E04 | [Query DSL、BM25、Filter、Aggregation 与 Profile](./04-Query-DSL-BM25-Filter-Aggregation与Profile.md) | P0 | 查询怎样执行、怎样解释相关性与代价 |
-| E05 | [Index、Refresh、Translog、Flush、Segment 与 Merge](./05-Index-Refresh-Translog-Flush-Segment与Merge.md) | P0 | 写入、可见性、持久性和 I/O 放大 |
-| E06 | [Node、Cluster State、Master 选举与发布机制](./06-Node-Cluster-State-Master选举与发布机制.md) | P0 | 控制面怎样维护一致拓扑 |
-| E07 | [Primary/Replica Shard、路由、分配、恢复与 Rebalance](./07-Primary-Replica-Shard路由分配恢复与Rebalance.md) | P0 | 数据面怎样分片和容错 |
-| E08 | [RPM/DEB、Docker 三节点、ECK 与托管部署](./08-Elasticsearch-RPM-DEB-Docker三节点与ECK部署.md) | P0 | 多种部署方式、TLS 和首次引导 |
-| E09 | [Index Template、Data Stream、ILM 与 Hot-Warm-Cold-Frozen](./09-Index-Template-Data-Stream-ILM与冷热分层.md) | P1 | 时序数据怎样控制成本和生命周期 |
-| E10 | [Bulk、Ingest Pipeline、Logstash、Beats 与数据建模](./10-Bulk-Ingest-Pipeline-Logstash-Beats与数据建模.md) | P1 | 高吞吐摄取、重试和失败队列 |
-| E11 | [Dense Vector、ANN、HNSW、Hybrid Search 与 RAG](./11-Dense-Vector-ANN-HNSW-Hybrid-Search与RAG.md) | P1 | 向量/关键词混合召回和内存代价 |
-| E12 | [JVM Heap、GC、Page Cache、Circuit Breaker 与 Cache](./12-JVM-Heap-GC-Page-Cache-Circuit-Breaker与Cache.md) | P0 | 内存为什么不能只看 JVM |
-| E13 | [Shard Sizing、吞吐、延迟、容量规划与基准测试](./13-Shard-Sizing容量规划与基准测试.md) | P1 | 分片数、节点数、磁盘和查询并发如何计算 |
-| E14 | [TLS、RBAC、API Key、审计与多租户安全](./14-TLS-RBAC-API-Key审计与多租户安全.md) | P1 | 默认安全之外怎样最小授权 |
-| E15 | [Snapshot、Restore、CCR、跨集群搜索与灾备](./15-Snapshot-Restore-CCR与跨集群灾备.md) | P1 | 副本为何不是备份、怎样恢复 |
-| E16 | [监控、滚动升级、红黄集群与生产故障 Runbook](./16-Elasticsearch监控滚动升级与故障Runbook.md) | P1 | 从 SLO 到 shard/node/JVM/磁盘定位 |
-| E17 | [SLM、Repository、CCR 与完整灾难恢复专项](./17-Elasticsearch-SLM-CCR与完整灾难恢复专项.md) | P1 | 自动快照、跨集群容灾和恢复验证 |
+| E01 | [Elasticsearch、Lucene 与一次请求的完整路径](./01-search-storage/01-Elasticsearch-Lucene与一次请求的完整路径.md) | P0 | 搜索引擎与关系库/OLAP 的边界 |
+| E02 | [倒排索引、Term Dictionary、Postings 与 Doc Values](./01-search-storage/02-倒排索引Term-Dictionary-Postings与Doc-Values.md) | P0 | 文本搜索、过滤、排序和聚合为何不同 |
+| E03 | [Mapping、字段类型、Analyzer、Tokenizer 与相关性](./01-search-storage/03-Mapping字段类型Analyzer与相关性.md) | P0 | 写入前如何设计可搜索文档 |
+| E04 | [Query DSL、BM25、Filter、Aggregation 与 Profile](./01-search-storage/04-Query-DSL-BM25-Filter-Aggregation与Profile.md) | P0 | 查询怎样执行、怎样解释相关性与代价 |
+| E05 | [Index、Refresh、Translog、Flush、Segment 与 Merge](./01-search-storage/05-Index-Refresh-Translog-Flush-Segment与Merge.md) | P0 | 写入、可见性、持久性和 I/O 放大 |
+| E06 | [Node、Cluster State、Master 选举与发布机制](./02-cluster-data/06-Node-Cluster-State-Master选举与发布机制.md) | P0 | 控制面怎样维护一致拓扑 |
+| E07 | [Primary/Replica Shard、路由、分配、恢复与 Rebalance](./02-cluster-data/07-Primary-Replica-Shard路由分配恢复与Rebalance.md) | P0 | 数据面怎样分片和容错 |
+| E08 | [RPM/DEB、Docker 三节点、ECK 与托管部署](./02-cluster-data/08-Elasticsearch-RPM-DEB-Docker三节点与ECK部署.md) | P0 | 多种部署方式、TLS 和首次引导 |
+| E09 | [Index Template、Data Stream、ILM 与 Hot-Warm-Cold-Frozen](./02-cluster-data/09-Index-Template-Data-Stream-ILM与冷热分层.md) | P1 | 时序数据怎样控制成本和生命周期 |
+| E10 | [Bulk、Ingest Pipeline、Logstash、Beats 与数据建模](./02-cluster-data/10-Bulk-Ingest-Pipeline-Logstash-Beats与数据建模.md) | P1 | 高吞吐摄取、重试和失败队列 |
+| E11 | [Dense Vector、ANN、HNSW、Hybrid Search 与 RAG](./03-vector-performance/11-Dense-Vector-ANN-HNSW-Hybrid-Search与RAG.md) | P1 | 向量/关键词混合召回和内存代价 |
+| E12 | [JVM Heap、GC、Page Cache、Circuit Breaker 与 Cache](./03-vector-performance/12-JVM-Heap-GC-Page-Cache-Circuit-Breaker与Cache.md) | P0 | 内存为什么不能只看 JVM |
+| E13 | [Shard Sizing、吞吐、延迟、容量规划与基准测试](./03-vector-performance/13-Shard-Sizing容量规划与基准测试.md) | P1 | 分片数、节点数、磁盘和查询并发如何计算 |
+| E14 | [TLS、RBAC、API Key、审计与多租户安全](./04-security-operations/14-TLS-RBAC-API-Key审计与多租户安全.md) | P1 | 默认安全之外怎样最小授权 |
+| E15 | [Snapshot、Restore、CCR、跨集群搜索与灾备](./04-security-operations/15-Snapshot-Restore-CCR与跨集群灾备.md) | P1 | 副本为何不是备份、怎样恢复 |
+| E16 | [监控、滚动升级、红黄集群与生产故障 Runbook](./04-security-operations/16-Elasticsearch监控滚动升级与故障Runbook.md) | P1 | 从 SLO 到 shard/node/JVM/磁盘定位 |
+| E17 | [SLM、Repository、CCR 与完整灾难恢复专项](./04-security-operations/17-Elasticsearch-SLM-CCR与完整灾难恢复专项.md) | P1 | 自动快照、跨集群容灾和恢复验证 |
 
 ## 3. 学习顺序
 

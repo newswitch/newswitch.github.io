@@ -33,25 +33,25 @@ HTTP/3 使用 QUIC 承载 HTTP，TLS 1.3 握手被集成进 QUIC，而不是先�
 
 | 阶段 | 文章 | 读完需要回答的问题 |
 | --- | --- | --- |
-| 原理 | [TLS 解决什么问题与安全边界](./01-TLS解决什么问题与安全边界.md) | TLS 防住什么，端点失陷后为什么仍可能泄露 |
-| 原理 | [对称加密、非对称加密、签名、哈希、HMAC 与 AEAD](./02-对称加密非对称加密签名哈希HMAC与AEAD.md) | 认证、密钥协商和数据加密为什么使用不同原语 |
-| 原理 | [TLS Record 记录层、状态机与报文结构](./03-TLS-Record记录层状态机与报文结构.md) | Handshake、Alert 和 Application Data 怎样承载 |
-| 原理 | [TLS 1.3 完整握手与密钥派生](./04-TLS13完整握手与密钥派生.md) | 每条消息负责什么，密钥从哪里来 |
-| 兼容 | [TLS 1.2 与 TLS 1.3 的差异](./05-TLS12与TLS13握手密码套件及兼容性差异.md) | Cipher Suite 语义和握手轮次怎样变化 |
-| 高级 | [Session Resumption、PSK、Session Ticket 与 0-RTT](./06-Session-Resumption-PSK-Session-Ticket与0RTT.md) | 恢复怎样提速，0-RTT 为什么可能重放 |
-| PKI | [X.509 证书字段、SAN、Key Usage 与 EKU](./07-X509证书字段SAN-KeyUsage-EKU与证书身份.md) | 证书声明了什么，CN 为什么不能代替 SAN |
-| PKI | [根 CA、中间 CA、证书链与路径验证](./08-根CA中间CA证书链信任库与路径验证.md) | 服务端发什么，客户端信任什么 |
-| 文件 | [PEM、DER、CRT、KEY、CSR、P12、PFX 与 JKS](./09-PEM-DER-CRT-KEY-CSR-P12-PFX与JKS文件详解.md) | 每个文件保存什么、是否保密、如何转换 |
-| 实验 | [使用 OpenSSL 建立 CA、签发、验证与吊销证书](./10-使用OpenSSL建立CA签发验证与吊销证书.md) | 怎样亲手构造完整信任链并验证失败场景 |
-| 架构 | [TLS 终止、透传、重新加密与端到端边界](./11-TLS终止透传重新加密与端到端加密架构.md) | 私钥放在哪里，哪一段是明文 |
-| 协议 | [SNI、ALPN、HTTPS、HTTP/2、HTTP/3 与 QUIC](./12-SNI-ALPN-HTTPS-HTTP2-HTTP3与QUIC的关系.md) | 同一 IP 怎样选择证书与应用协议 |
-| 身份 | [mTLS、客户端证书、服务身份与 SPIFFE](./13-mTLS客户端证书服务身份与SPIFFE.md) | 传输身份怎样映射为授权主体 |
-| 自动化 | [ACME、cert-manager 与 Vault PKI 证书自动化](./14-ACME-cert-manager与Vault-PKI证书自动化.md) | 如何申请、续期、分发和轮换证书 |
-| 云原生 | [Kubernetes Secret、Ingress、Gateway 与证书轮换](./15-Kubernetes-Secret-Ingress-Gateway与证书轮换.md) | 集群内证书对象怎样到达真实进程 |
-| 观测 | [使用 OpenSSL、Curl、Tcpdump 与 Wireshark 分析 TLS](./16-openssl-curl-tcpdump与Wireshark分析TLS.md) | 如何把“握手失败”转化为报文证据 |
-| 性能 | [TLS 握手性能、会话复用、容量规划与加速](./17-TLS握手性能会话复用容量规划与加速.md) | CPU、RTT、证书链和连接复用怎样影响延迟 |
-| 排障 | [TLS 证书与握手故障排查 Runbook](./18-TLS证书与握手故障排查Runbook.md) | 如何按 TCP、协商、证书、mTLS、HTTP 分层定位 |
-| 源码 | [OpenSSL 组件、状态机、BIO、EVP 与一次握手调用链](./19-OpenSSL组件状态机BIO-EVP与一次握手调用链.md) | 配置最终怎样进入密码算法和 Socket I/O |
+| 原理 | [TLS 解决什么问题与安全边界](./01-protocol/01-TLS解决什么问题与安全边界.md) | TLS 防住什么，端点失陷后为什么仍可能泄露 |
+| 原理 | [对称加密、非对称加密、签名、哈希、HMAC 与 AEAD](./01-protocol/02-对称加密非对称加密签名哈希HMAC与AEAD.md) | 认证、密钥协商和数据加密为什么使用不同原语 |
+| 原理 | [TLS Record 记录层、状态机与报文结构](./01-protocol/03-TLS-Record记录层状态机与报文结构.md) | Handshake、Alert 和 Application Data 怎样承载 |
+| 原理 | [TLS 1.3 完整握手与密钥派生](./01-protocol/04-TLS13完整握手与密钥派生.md) | 每条消息负责什么，密钥从哪里来 |
+| 兼容 | [TLS 1.2 与 TLS 1.3 的差异](./01-protocol/05-TLS12与TLS13握手密码套件及兼容性差异.md) | Cipher Suite 语义和握手轮次怎样变化 |
+| 高级 | [Session Resumption、PSK、Session Ticket 与 0-RTT](./01-protocol/06-Session-Resumption-PSK-Session-Ticket与0RTT.md) | 恢复怎样提速，0-RTT 为什么可能重放 |
+| PKI | [X.509 证书字段、SAN、Key Usage 与 EKU](./02-pki-certificates/07-X509证书字段SAN-KeyUsage-EKU与证书身份.md) | 证书声明了什么，CN 为什么不能代替 SAN |
+| PKI | [根 CA、中间 CA、证书链与路径验证](./02-pki-certificates/08-根CA中间CA证书链信任库与路径验证.md) | 服务端发什么，客户端信任什么 |
+| 文件 | [PEM、DER、CRT、KEY、CSR、P12、PFX 与 JKS](./02-pki-certificates/09-PEM-DER-CRT-KEY-CSR-P12-PFX与JKS文件详解.md) | 每个文件保存什么、是否保密、如何转换 |
+| 实验 | [使用 OpenSSL 建立 CA、签发、验证与吊销证书](./02-pki-certificates/10-使用OpenSSL建立CA签发验证与吊销证书.md) | 怎样亲手构造完整信任链并验证失败场景 |
+| 架构 | [TLS 终止、透传、重新加密与端到端边界](./03-architecture-automation/11-TLS终止透传重新加密与端到端加密架构.md) | 私钥放在哪里，哪一段是明文 |
+| 协议 | [SNI、ALPN、HTTPS、HTTP/2、HTTP/3 与 QUIC](./03-architecture-automation/12-SNI-ALPN-HTTPS-HTTP2-HTTP3与QUIC的关系.md) | 同一 IP 怎样选择证书与应用协议 |
+| 身份 | [mTLS、客户端证书、服务身份与 SPIFFE](./03-architecture-automation/13-mTLS客户端证书服务身份与SPIFFE.md) | 传输身份怎样映射为授权主体 |
+| 自动化 | [ACME、cert-manager 与 Vault PKI 证书自动化](./03-architecture-automation/14-ACME-cert-manager与Vault-PKI证书自动化.md) | 如何申请、续期、分发和轮换证书 |
+| 云原生 | [Kubernetes Secret、Ingress、Gateway 与证书轮换](./03-architecture-automation/15-Kubernetes-Secret-Ingress-Gateway与证书轮换.md) | 集群内证书对象怎样到达真实进程 |
+| 观测 | [使用 OpenSSL、Curl、Tcpdump 与 Wireshark 分析 TLS](./04-operations/16-openssl-curl-tcpdump与Wireshark分析TLS.md) | 如何把“握手失败”转化为报文证据 |
+| 性能 | [TLS 握手性能、会话复用、容量规划与加速](./04-operations/17-TLS握手性能会话复用容量规划与加速.md) | CPU、RTT、证书链和连接复用怎样影响延迟 |
+| 排障 | [TLS 证书与握手故障排查 Runbook](./04-operations/18-TLS证书与握手故障排查Runbook.md) | 如何按 TCP、协商、证书、mTLS、HTTP 分层定位 |
+| 源码 | [OpenSSL 组件、状态机、BIO、EVP 与一次握手调用链](./04-operations/19-OpenSSL组件状态机BIO-EVP与一次握手调用链.md) | 配置最终怎样进入密码算法和 Socket I/O |
 
 ## 3. 文件关系总图
 

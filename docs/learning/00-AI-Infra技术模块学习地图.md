@@ -312,8 +312,8 @@ Transformer 推理基础
 | --- | --- |
 | [软件开发学习路线](../development/00-软件开发学习路线.md) | 程序执行、成本模型、模块边界、API、并发、生命周期、测试与 Profiling |
 | [自动化工程学习路线](../automation/00-自动化工程学习路线.md) | 语言工具、配置与 IaC、CI/CD、制品与 Secret、策略、门户、Runbook 和持久化工作流 |
-| [Python CLI 与可测试命令行工程](../automation/python/05-Python-CLI与可测试命令行工程.md) | 配置、退出码、依赖注入、超时、测试与安全 |
-| [Python 调用 Kubernetes 与 Prometheus API](../automation/python/09-Python调用Kubernetes与Prometheus-API.md) | 分页、List/Watch、ResourceVersion、PromQL 和证据关联 |
+| [Python CLI 与可测试命令行工程](../automation/python/02-cli-api-remote/05-Python-CLI与可测试命令行工程.md) | 配置、退出码、依赖注入、超时、测试与安全 |
+| [Python 调用 Kubernetes 与 Prometheus API](../automation/python/02-cli-api-remote/09-Python调用Kubernetes与Prometheus-API.md) | 分页、List/Watch、ResourceVersion、PromQL 和证据关联 |
 | [Go 自动化从零到精通学习路线](../automation/go/00-Go自动化从零到精通学习路线.md) | 工具链、并发、可靠网络调用、任务队列、client-go 与生产 Agent |
 | [client-go Informer、Workqueue 与 Controller](../automation/go/08-client-go-Informer-Workqueue与Controller.md) | 缓存、队列、幂等 Reconcile、限速和故障恢复 |
 | [AI Infra 诊断工具综合项目](../automation/05-AI-Infra诊断工具综合项目.md) | Kubernetes、GPU、网络、存储和指标的只读证据工具 |
