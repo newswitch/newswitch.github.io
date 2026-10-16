@@ -260,6 +260,7 @@ mvn -B dependency:tree
 
 ## 10. 资料与继续阅读
 
+- [Maven 生命周期、插件绑定与集成测试](./02-Maven生命周期插件与集成测试.md)
 - [Maven 生命周期](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
 - [Maven 依赖机制](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html)
 - [Compiler Plugin release](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html)

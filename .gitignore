@@ -11,6 +11,9 @@
 # Java article example build products
 /examples/java/**/target/
 /examples/java/**/out/
+/examples/java/**/build/
+/examples/java/**/.gradle/
+/.java-article-checks/
 
 # Misc
 .DS_Store

@@ -66,6 +66,31 @@ Maven 入门也可以在第 2 篇之后先完成环境部分，学习对象后�
 | 13 | [Socket、HttpClient、DNS 与 TLS](./02-standard-library/13-Socket-HttpClient-DNS与TLS.md) | 请求在哪个阶段等待，如何约束资源 |
 | 14 | [反射、注解与动态代理](./02-standard-library/14-反射注解与动态代理.md) | 框架怎样读取元数据并改变调用路径 |
 
+构建与测试在能够编写业务类后继续深入：
+
+| 顺序 | 文章 | 核心问题 |
+| --- | --- | --- |
+| 1 | [第一个 Maven 工程](./05-build-testing/01-Maven工程编译运行依赖与测试.md) | 从源码得到可测试、可运行 JAR |
+| 2 | [生命周期、插件与集成测试](./05-build-testing/02-Maven生命周期插件与集成测试.md) | 哪些检查实际执行，失败何时阻止交付 |
+| 3 | [依赖、Scope、BOM 与冲突](./05-build-testing/03-Maven依赖Scope-BOM与冲突定位.md) | 声明、解析、打包和实际加载为什么可能不同 |
+| 4 | [JUnit 参数化、隔离与测试边界](./05-build-testing/04-JUnit参数化测试隔离与测试边界.md) | 如何分别验证规则、入口和真实进程 |
+| 5 | [多模块、JAR 与运行分发](./05-build-testing/05-Maven多模块JAR与运行分发.md) | 聚合、继承和依赖如何形成完整交付物 |
+| 6 | [Gradle、Toolchain 与可复现构建](./05-build-testing/06-Gradle-Toolchain与可复现构建.md) | 工具链、任务图、版本锁和产物字节如何控制 |
+
+并发按线程生命周期、共享状态、协调工具和任务编排逐步学习：
+
+| 顺序 | 文章 | 核心问题 |
+| --- | --- | --- |
+| 1 | [Thread 生命周期、中断与退出](./03-concurrency/01-Thread生命周期中断与退出.md) | 谁启动线程，如何观察完成与请求退出 |
+| 2 | [JMM、volatile 与安全发布](./03-concurrency/02-JMM-volatile与安全发布.md) | 哪条同步关系保证读者看见正确数据 |
+| 3 | [synchronized、Monitor 与条件等待](./03-concurrency/03-synchronized-Monitor与条件等待.md) | 互斥、状态条件和通知怎样协作 |
+| 4 | [Lock、Condition、AQS 与同步器](./03-concurrency/04-Lock-Condition-AQS与同步器.md) | 锁、许可和阶段协调有什么区别 |
+| 5 | [CAS、原子类与并发容器](./03-concurrency/05-CAS原子类与并发容器.md) | 单点原子更新为何不等于业务事务 |
+| 6 | [线程池、队列、拒绝与关闭](./03-concurrency/06-线程池队列拒绝与关闭.md) | 过载在哪里等待，如何限制和退出 |
+| 7 | [Future、CompletableFuture 与超时取消](./03-concurrency/07-Future-CompletableFuture与超时取消.md) | 结果状态、停止等待和工作退出如何区分 |
+| 8 | [ThreadLocal、ScopedValue 与上下文](./03-concurrency/08-ThreadLocal-ScopedValue与上下文.md) | 上下文属于哪个线程和生命周期 |
+| 9 | [虚拟线程、载体线程与资源上限](./03-concurrency/09-虚拟线程载体线程与资源上限.md) | 线程成本降低后，瓶颈转移到哪里 |
+
 ## 3. 完整专题范围
 
 规划包含 56 篇技术专题和本学习路线。下表区分已发布内容与后续学习范围，未发布专题不提供空链接。
@@ -74,9 +99,9 @@ Maven 入门也可以在第 2 篇之后先完成环境部分，学习对象后�
 | --- | --- | --- | --- |
 | `01-language` | 12 | 12 | 已覆盖本专题范围 |
 | `02-standard-library` | 14 | 14 | 已覆盖本专题范围 |
-| `03-concurrency` | 9 | 0 | Thread、JMM、Monitor、Lock、CAS、线程池、Future、ThreadLocal、虚拟线程 |
+| `03-concurrency` | 9 | 9 | 已覆盖本专题范围 |
 | `04-jvm` | 9 | 0 | 字节码、类加载、内存、分配、G1、ZGC、JIT、容器资源、CDS/AOT |
-| `05-build-testing` | 6 | 1 | Maven 生命周期、依赖冲突与 BOM、JUnit、多模块与 JAR、Gradle 与可复现构建 |
+| `05-build-testing` | 6 | 6 | 已覆盖本专题范围 |
 | `06-diagnostics` | 6 | 0 | JDK 工具、JFR/Profile、线程与锁、Heap/Native Memory、GC 日志、Arthas |
 
 每个标准库专题既解释用法，也解释资源和行为。例如 HashMap 需要讲清楚键的契约、容量与扩容；线程池需要观察排队和拒绝；文件与网络客户端需要明确关闭者、超时和失败结果。
@@ -101,9 +126,10 @@ Maven 入门也可以在第 2 篇之后先完成环境部分，学习对象后�
 | --- | --- |
 | 语言和运行时 | JDK 25，关闭 Preview 功能 |
 | 构建入门 | Maven 3.9.14；插件、测试依赖在 POM 固定版本 |
+| 构建对照 | Gradle 9.1.0；与 Maven 共用业务和测试源码，理解任务图及 Toolchain |
 | 主实验系统 | Windows PowerShell 或 Linux；分别给出必要的路径和命令差异 |
 | 输出 | 确定性结果给出完整输出；路径、耗时、补丁号等明确为示例 |
-| 工程 | 工具链与 Maven 示例位于 `examples/java/first-batch/`；语言进阶与标准库示例位于 `examples/java/second-batch/` |
+| 工程 | `examples/java/first-batch/` 为工具链与入门工程；`second-batch/` 为语言进阶和标准库；`third-batch/` 为构建、测试和并发 |
 
 JDK 发行版、完整版本、CPU 架构和构建工具要一同记录。`--release 25` 是编译目标与 API 约束，不会帮助旧 JDK 获得 Java 25 编译能力。
 

@@ -155,6 +155,8 @@ projects/
 
 代码示例保存在 `examples/java/first-batch/` 与 `examples/java/second-batch/`，不进入文档侧边栏。`scripts/verify-java-examples.mjs` 验证工具链与 Maven 示例，`scripts/verify-java-standard-library.mjs` 验证语言进阶和标准库示例；两者都检查文章与源码一致，并可使用 JDK 25 编译、运行和测试。`target/` 与 `out/` 构建产物不提交。
 
+`examples/java/third-batch/` 保存构建、测试和并发示例。`scripts/verify-java-concurrency.mjs` 验证并发程序和协调边界，`scripts/verify-java-builds.mjs` 在临时工作区验证 Maven/Gradle、测试失败门禁、多模块分发与可复现归档。Java 的网站专题与本地 `01-language`、`02-standard-library`、`03-concurrency`、`05-build-testing` 目录一一对应；JVM 与诊断专题随正文发布再建立。
+
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
 | 产品或专题 | 二级专题 |
@@ -218,6 +220,8 @@ projects/
 ```bash
 npm run build
 ```
+
+Windows 本地重建若在 Rspack 打包阶段长期无 CPU 与输出进展，可在独立 PowerShell 会话中临时设置 `$env:DOCUSAURUS_NO_PERSISTENT_CACHE='true'` 排除持久缓存影响；本次验证同时使用 `$env:DOCUSAURUS_SSG_WORKER_THREAD_COUNT='2'`、`$env:DOCUSAURUS_SSR_CONCURRENCY='4'` 限制页面生成并发。它们仅用于本地诊断，不修改站点配置或 CI；不要把任意构建失败都归因于缓存。
 
 构建成功后推送到 `main`，GitHub Actions 自动部署 GitHub Pages。
 
