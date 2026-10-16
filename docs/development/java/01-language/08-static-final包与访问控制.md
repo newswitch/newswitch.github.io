@@ -164,6 +164,7 @@ static 字段初始化器和静态初始化块在相应类初始化过程中执�
 
 ## 8. 资料与继续阅读
 
+- [Object、相等性与 hashCode](./09-Object相等性与hashCode契约.md)
 - [JLS 包与模块](https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html)
 - [JLS 访问控制](https://docs.oracle.com/javase/specs/jls/se25/html/jls-6.html#jls-6.6)
 - [JLS 类初始化](https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.4)

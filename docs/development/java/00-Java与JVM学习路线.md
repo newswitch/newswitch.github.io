@@ -39,9 +39,32 @@ JDK 与工具链
 | 6 | [类、对象、构造方法与封装](./01-language/06-类对象构造方法与封装.md) | 用对象保护状态和合法迁移 |
 | 7 | [继承、接口与多态调用](./01-language/07-继承接口与多态调用.md) | 解释声明类型、实际类型和依赖替换 |
 | 8 | [static、final、包与访问控制](./01-language/08-static-final包与访问控制.md) | 组织包边界，辨别共享状态与只读引用 |
-| 9 | [Maven 工程、编译、运行、依赖与测试](./05-build-testing/01-Maven工程编译运行依赖与测试.md) | 构建 JAR，执行测试并识别构建和运行的区别 |
+| 9 | [Object、相等性与 hashCode](./01-language/09-Object相等性与hashCode契约.md) | 定义稳定身份，解释集合查找与去重 |
+| 10 | [异常传播与资源关闭](./01-language/10-异常传播与资源关闭.md) | 区分主异常、cause、suppressed 与处理边界 |
+| 11 | [Enum、Record、Sealed 与模式匹配](./01-language/11-Enum-Record-Sealed与模式匹配.md) | 表达有限状态、数据载体与封闭结果类型 |
+| 12 | [不可变对象、组合与依赖边界](./01-language/12-不可变对象组合与依赖边界.md) | 保护快照，使用构造器装配可替换依赖 |
+| 13 | [Maven 工程、编译、运行、依赖与测试](./05-build-testing/01-Maven工程编译运行依赖与测试.md) | 构建 JAR，执行测试并识别构建和运行的区别 |
 
 Maven 入门也可以在第 2 篇之后先完成环境部分，学习对象后再阅读其中的业务类和测试。
+
+标准库按类型、容器、行为、外部资源的顺序阅读：
+
+| 顺序 | 文章 | 核心问题 |
+| --- | --- | --- |
+| 1 | [泛型、通配符与类型擦除](./02-standard-library/01-泛型通配符与类型擦除.md) | 编译器能保证什么，运行时又保留什么 |
+| 2 | [字符串、Unicode、编码与正则](./02-standard-library/02-字符串Unicode编码与正则.md) | 代码单元、码点和字节如何区分 |
+| 3 | [ArrayList 与 LinkedList](./02-standard-library/03-ArrayList与LinkedList结构与选型.md) | 定位、移动、扩容和遍历各有多少成本 |
+| 4 | [HashMap、LinkedHashMap 与 HashSet](./02-standard-library/04-HashMap-LinkedHashMap与HashSet.md) | 哈希查找、键相等与顺序有什么关系 |
+| 5 | [TreeMap、TreeSet 与 Comparator](./02-standard-library/05-TreeMap-TreeSet与Comparator.md) | 排序怎样定义键相等与范围 |
+| 6 | [Queue、Deque 与 PriorityQueue](./02-standard-library/06-Queue-Deque与PriorityQueue.md) | FIFO、LIFO、优先级与容量怎样分别控制 |
+| 7 | [迭代器、集合视图与工具类](./02-standard-library/07-迭代器集合视图与工具类.md) | 副本、视图与不可修改究竟差在哪里 |
+| 8 | [Lambda、方法引用与函数式接口](./02-standard-library/08-Lambda方法引用与函数式接口.md) | 行为何时执行，捕获会保留什么 |
+| 9 | [Stream、Collector 与 Optional](./02-standard-library/09-Stream-Collector与Optional.md) | 惰性、归约、并行与缺失如何表达 |
+| 10 | [BigDecimal 与 java.time](./02-standard-library/10-BigDecimal与java-time.md) | 精度、舍入、时间点与时区如何定义 |
+| 11 | [Path、Files 与文件 I/O](./02-standard-library/11-Path-Files与文件IO.md) | 编码、关闭、原子可见与持久化如何区分 |
+| 12 | [NIO、Buffer、Channel 与 Selector](./02-standard-library/12-NIO-Buffer-Channel与Selector.md) | 缓冲状态、部分读写与就绪事件怎样协同 |
+| 13 | [Socket、HttpClient、DNS 与 TLS](./02-standard-library/13-Socket-HttpClient-DNS与TLS.md) | 请求在哪个阶段等待，如何约束资源 |
+| 14 | [反射、注解与动态代理](./02-standard-library/14-反射注解与动态代理.md) | 框架怎样读取元数据并改变调用路径 |
 
 ## 3. 完整专题范围
 
@@ -49,8 +72,8 @@ Maven 入门也可以在第 2 篇之后先完成环境部分，学习对象后�
 
 | 目录 | 技术文章规划 | 已有 | 后续范围 |
 | --- | --- | --- | --- |
-| `01-language` | 12 | 8 | Object 与相等性、异常与资源关闭、Enum/Record/Sealed、不可变对象与组合 |
-| `02-standard-library` | 14 | 0 | 泛型、字符串与编码、集合、Lambda/Stream、数值与时间、I/O/NIO、网络客户端、反射与代理 |
+| `01-language` | 12 | 12 | 已覆盖本专题范围 |
+| `02-standard-library` | 14 | 14 | 已覆盖本专题范围 |
 | `03-concurrency` | 9 | 0 | Thread、JMM、Monitor、Lock、CAS、线程池、Future、ThreadLocal、虚拟线程 |
 | `04-jvm` | 9 | 0 | 字节码、类加载、内存、分配、G1、ZGC、JIT、容器资源、CDS/AOT |
 | `05-build-testing` | 6 | 1 | Maven 生命周期、依赖冲突与 BOM、JUnit、多模块与 JAR、Gradle 与可复现构建 |
@@ -80,7 +103,7 @@ Maven 入门也可以在第 2 篇之后先完成环境部分，学习对象后�
 | 构建入门 | Maven 3.9.14；插件、测试依赖在 POM 固定版本 |
 | 主实验系统 | Windows PowerShell 或 Linux；分别给出必要的路径和命令差异 |
 | 输出 | 确定性结果给出完整输出；路径、耗时、补丁号等明确为示例 |
-| 工程 | 配套源码位于仓库 `examples/java/first-batch/` |
+| 工程 | 工具链与 Maven 示例位于 `examples/java/first-batch/`；语言进阶与标准库示例位于 `examples/java/second-batch/` |
 
 JDK 发行版、完整版本、CPU 架构和构建工具要一同记录。`--release 25` 是编译目标与 API 约束，不会帮助旧 JDK 获得 Java 25 编译能力。
 

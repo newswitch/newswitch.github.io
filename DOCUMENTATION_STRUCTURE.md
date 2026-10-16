@@ -153,7 +153,7 @@ projects/
 
 软件开发按具体语言与框架建立独立入口。`development/java/` 保存 Java、标准库、并发、JVM、构建和排障；`development/spring/` 保存容器、AOP、事务、Web 和源码调用链；`development/spring-boot/` 保存启动配置、服务、数据接入、安全及生产运行。每个系列保留学习路线，专题文件夹随正文发布逐步建立，网站不维护另一套虚拟目录。
 
-代码示例保存在 `examples/java/first-batch/`，不进入文档侧边栏。`scripts/verify-java-examples.mjs` 校验文章代码与配套源文件一致，并可使用 JDK 25 编译、运行和测试；`target/` 与 `out/` 构建产物不提交。
+代码示例保存在 `examples/java/first-batch/` 与 `examples/java/second-batch/`，不进入文档侧边栏。`scripts/verify-java-examples.mjs` 验证工具链与 Maven 示例，`scripts/verify-java-standard-library.mjs` 验证语言进阶和标准库示例；两者都检查文章与源码一致，并可使用 JDK 25 编译、运行和测试。`target/` 与 `out/` 构建产物不提交。
 
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
