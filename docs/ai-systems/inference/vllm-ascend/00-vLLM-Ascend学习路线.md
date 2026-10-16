@@ -29,8 +29,8 @@ vLLM-Ascend 不是一套与 vLLM 毫无关系的新引擎，也不是把 `cuda` 
 | 11 | [HCCL、HCCS 与 TP 慢 Rank 排查](./12-HCCL-HCCS与TP慢Rank故障排查.md) | 区分Rank迟到、设备计算慢和通信链路慢 |
 | 12 | [生产故障排查 Runbook](./13-vLLM-Ascend生产故障排查Runbook.md) | 如何处理启动、OOM、UCE、HCCL、性能和模型存储事故 |
 | 13 | [Qwen3.5-27B Worker_TP1 UCE 排障记录](./03-Qwen3.5-27B-Worker-TP1-UCE-ERROR排障记录.md) | 将前述方法应用到一份仍需继续补证据的真实事故 |
-| 14 | [昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别](../vllm/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md) | 从源码、算子、图、通信、量化和性能工具解释两套执行面 |
-| 15 | [在昇腾机器部署 vLLM-Ascend](../../../projects/heterogeneous-cluster/23-在昇腾机器部署vLLM-Ascend.md) | 把模块知识放进异构集群项目并完成服务验收 |
+| 14 | [昇腾 910B 的 vLLM-Ascend 与原生 vLLM 有什么区别](../vllm/02-execution/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md) | 从源码、算子、图、通信、量化和性能工具解释两套执行面 |
+| 15 | [在昇腾机器部署 vLLM-Ascend](../../../projects/heterogeneous-cluster/06-inference/23-在昇腾机器部署vLLM-Ascend.md) | 把模块知识放进异构集群项目并完成服务验收 |
 | 16 | [四大推理框架对比与选型](/docs/ai-systems/inference/vLLM-vLLM-Ascend-SGLang-MindIE框架对比与选型) | 判断业务应该选择 vLLM、vLLM-Ascend、SGLang 还是 MindIE |
 
 ## 2. 必须先掌握的 upstream 概念 {/* #必须先掌握的-upstream-概念 */}

@@ -38,7 +38,7 @@ vllm collect-env
 | Ascend 插件层 | `--additional-config '{...}'` | NPU 编译、Graph、调度扩展、MoE、CPU 绑定和融合优化 |
 | 运行时层 | `ASCEND_RT_VISIBLE_DEVICES`、HCCL、CANN、Allocator | 设备可见性、通信、内存和执行队列 |
 
-公共参数的完整机制见 [vLLM Serve 生产参数参考](../vllm/25-vLLM-Serve生产参数参考.md)。本文重点解释这些参数在 Ascend 上的落地和插件专属字段。
+公共参数的完整机制见 [vLLM Serve 生产参数参考](../vllm/04-parameters/25-vLLM-Serve生产参数参考.md)。本文重点解释这些参数在 Ascend 上的落地和插件专属字段。
 
 ## 2. 最小启动基线
 

@@ -173,7 +173,7 @@ model_alias
 
 ## 13. 延伸阅读 {/* #延伸阅读 */}
 
-- [多卡多机推理：NCCL 与 HCCL](../../../../projects/heterogeneous-cluster/24-多卡多机NCCL路线与HCCL路线.md)
+- [多卡多机推理：NCCL 与 HCCL](../../../../projects/heterogeneous-cluster/06-inference/24-多卡多机NCCL路线与HCCL路线.md)
 - [异构大模型集群专栏目录](../../../../projects/heterogeneous-cluster/00-专栏目录.md)
 - [vLLM Ascend：使用 Ray 多机部署](https://docs.vllm.ai/projects/ascend/en/main/tutorials/features/ray.html)
 - [vLLM Ascend 安装与多机通信](https://docs.vllm.ai/projects/ascend/en/latest/installation.html)

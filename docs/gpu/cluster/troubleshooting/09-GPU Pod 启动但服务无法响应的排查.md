@@ -52,7 +52,7 @@ Client
 关联阅读：
 
 - [大模型服务 Kubernetes 探针设计](../../../ai-systems/inference/serving/04-大模型服务%20Kubernetes%20探针设计.md)
-- [推理请求从 HTTP 到首个 Token](../../../ai-systems/inference/vllm/07-推理请求从HTTP到首个Token的完整生命周期.md)
+- [推理请求从 HTTP 到首个 Token](../../../ai-systems/inference/vllm/01-architecture/07-推理请求从HTTP到首个Token的完整生命周期.md)
 - [Calico 数据路径与排查](../../../networking/kubernetes/cni/03-Calico.md)
 
 ## 2. 先把“无响应”写成可测现象

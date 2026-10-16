@@ -31,7 +31,7 @@ const DOMAINS = [
   {
     id: '03',
     label: 'COMPUTE',
-    title: 'GPU 与加速计算',
+    title: 'GPU、NPU 与加速计算',
     note: 'CUDA · CANN · HBM · NVLink',
     to: '/docs/gpu/GPU与加速计算学习路线',
     tone: 'lime',
@@ -55,7 +55,7 @@ const DOMAINS = [
   {
     id: '06',
     label: 'CONTROL',
-    title: '容器与 Kubernetes',
+    title: '云原生与平台工程',
     note: 'Runtime · Scheduler · Operator · Mesh',
     to: '/docs/cloud-native/云原生与平台工程学习路线',
     tone: 'cyan',
@@ -63,7 +63,7 @@ const DOMAINS = [
   {
     id: '07',
     label: 'RUNTIME',
-    title: 'AI 训练与推理',
+    title: 'AI 训练、推理与 MLOps',
     note: 'PyTorch · vLLM · SGLang · MLOps',
     to: '/docs/ai-systems/大模型系统学习地图',
     tone: 'orange',
@@ -87,7 +87,7 @@ const DOMAINS = [
   {
     id: '10',
     label: 'SIGNALS',
-    title: '可观测性与 SRE',
+    title: '可观测性、性能与 SRE',
     note: 'Metrics · Logs · Traces · SLO',
     to: '/docs/sre/SRE与生产工程学习路线',
     tone: 'red',

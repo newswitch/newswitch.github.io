@@ -228,7 +228,7 @@ ITL < 50 ms
 → API 与 EngineCore IPC 是否堵塞？
 ```
 
-相关完整案例见[TTFT 超标但 GPU 利用率低](../vllm/15-TTFT超标但GPU利用率低完整排查案例.md)。
+相关完整案例见[TTFT 超标但 GPU 利用率低](../vllm/03-performance/15-TTFT超标但GPU利用率低完整排查案例.md)。
 
 ## 13. 直方图和分位数
 
@@ -301,4 +301,4 @@ per-rank step/communication time
 - [vLLM Production Metrics](https://docs.vllm.ai/en/latest/design/metrics/)
 - [NVIDIA GenAI-Perf Metrics](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html)
 - [GenAI-Perf Goodput](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/docs/goodput.html)
-- [vLLM 性能分析总论](../vllm/14-vLLM性能分析总论-TTFT-TPOT-吞吐与GPU利用率.md)
+- [vLLM 性能分析总论](../vllm/03-performance/14-vLLM性能分析总论-TTFT-TPOT-吞吐与GPU利用率.md)

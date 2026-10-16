@@ -382,7 +382,7 @@ vLLM 核心框架负责决定“这轮算哪些请求”
 硬件适配层负责完成“这些计算怎样在目标设备上执行”
 ```
 
-所以原生 vLLM 与 vLLM-Ascend 的命令大部分相似，但镜像、版本矩阵、算子、图模式、通信、性能特征和故障日志不同。详细差异见[昇腾 910B、vLLM-Ascend 与原生 vLLM 源码差异](../../ai-systems/inference/vllm/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md)。
+所以原生 vLLM 与 vLLM-Ascend 的命令大部分相似，但镜像、版本矩阵、算子、图模式、通信、性能特征和故障日志不同。详细差异见[昇腾 910B、vLLM-Ascend 与原生 vLLM 源码差异](../../ai-systems/inference/vllm/02-execution/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md)。
 
 ## 13. 常见命令对照
 

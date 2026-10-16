@@ -32,8 +32,8 @@ Prompt
 
 建议先读：
 
-- [vLLM V1整体架构与组件职责](../../inference/vllm/01-vLLM-V1整体架构与组件职责.md)
-- [TP、PP、DP、EP与MoE推理并行策略](../../inference/vllm/10-TP-PP-DP-EP与MoE推理并行策略.md)
+- [vLLM V1整体架构与组件职责](../../inference/vllm/01-architecture/01-vLLM-V1整体架构与组件职责.md)
+- [TP、PP、DP、EP与MoE推理并行策略](../../inference/vllm/02-execution/10-TP-PP-DP-EP与MoE推理并行策略.md)
 - [Megatron Core流水线、长上下文与MoE](../megatron-core/02-PP-Microbatch-1F1B-CP-EP-MoE与Distributed-Optimizer.md)
 - [Checkpoint与断点恢复](../distributed/04-训练任务%20Checkpoint%20与断点恢复.md)
 

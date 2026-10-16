@@ -199,4 +199,4 @@ kubectl exec -n <namespace> <pod> -- npu-smi info
 - [Atlas 800I A2产品文档入口](https://www.hiascend.com/hardware/product)
 - [vLLM-Ascend Installation](https://docs.vllm.ai/projects/ascend/en/latest/installation.html)
 - [vLLM-Ascend CPU Binding](https://docs.vllm.ai/projects/ascend/en/latest/user_guide/feature_guide/cpu_binding.html)
-- [多卡多机NCCL路线与HCCL路线](../../../projects/heterogeneous-cluster/24-多卡多机NCCL路线与HCCL路线.md)
+- [多卡多机NCCL路线与HCCL路线](../../../projects/heterogeneous-cluster/06-inference/24-多卡多机NCCL路线与HCCL路线.md)

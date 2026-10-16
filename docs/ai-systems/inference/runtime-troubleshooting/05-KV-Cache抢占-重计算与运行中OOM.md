@@ -243,7 +243,7 @@ OOM / ECC / Xid / UCE
 
 ## 16. 延伸阅读
 
-- [Prefill、Decode 与 KV Cache 资源模型](../vllm/08-Prefill-Decode与KV-Cache资源模型.md)
-- [Scheduler、Batch、KV Cache 与抢占实验](../vllm/18-Scheduler-Batch-KVCache与抢占性能实验.md)
+- [Prefill、Decode 与 KV Cache 资源模型](../vllm/02-execution/08-Prefill-Decode与KV-Cache资源模型.md)
+- [Scheduler、Batch、KV Cache 与抢占实验](../vllm/03-performance/18-Scheduler-Batch-KVCache与抢占性能实验.md)
 - [vLLM GPU 显存组成与容量规划](../serving/02-vLLM%20GPU%20显存组成与容量规划.md)
 - [CUDA OOM 排查与优化](../../../gpu/cluster/troubleshooting/05-CUDA%20OOM%20排查与优化.md)

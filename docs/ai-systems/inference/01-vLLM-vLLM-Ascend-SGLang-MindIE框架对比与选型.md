@@ -471,7 +471,7 @@ TTFT P95 < X，TPOT P95 < Y，不触发 KV 抢占。
 
 | 框架 | 参数参考 |
 |---|---|
-| vLLM | [vLLM Serve 生产参数参考](./vllm/25-vLLM-Serve生产参数参考.md) |
+| vLLM | [vLLM Serve 生产参数参考](./vllm/04-parameters/25-vLLM-Serve生产参数参考.md) |
 | vLLM-Ascend | [vLLM-Ascend 生产参数参考](./vllm-ascend/02-vLLM-Ascend生产参数参考.md) |
 | SGLang | [SGLang 生产参数参考](./sglang/02-SGLang生产参数参考.md) |
 | MindIE | [MindIE config.json 生产参数参考](./mindie/02-MindIE-config生产参数参考.md) |

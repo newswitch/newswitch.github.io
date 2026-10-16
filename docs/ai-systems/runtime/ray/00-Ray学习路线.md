@@ -77,7 +77,7 @@ Kubernetes 版本和完整配置。文章中的字段和默认值必须与目标
 
 - [Kubernetes 部署 vLLM 推理服务](../../inference/serving/01-Kubernetes%20部署%20vLLM%20推理服务.md)
 - [vLLM Tensor Parallel 多卡部署](../../inference/serving/03-vLLM%20Tensor%20Parallel%20多卡部署.md)
-- [多卡多机推理：NCCL 与 HCCL](../../../projects/heterogeneous-cluster/24-多卡多机NCCL路线与HCCL路线.md)
+- [多卡多机推理：NCCL 与 HCCL](../../../projects/heterogeneous-cluster/06-inference/24-多卡多机NCCL路线与HCCL路线.md)
 
 ## 3. 第一阶段：建立 Ray 心智模型
 

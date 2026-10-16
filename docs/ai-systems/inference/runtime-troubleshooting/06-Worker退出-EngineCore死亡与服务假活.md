@@ -243,6 +243,6 @@ Segmentation Fault、非法内存访问或原生扩展崩溃时，Python 日志�
 ## 16. 延伸阅读
 
 - [Kubernetes 模型服务启动失败排查](../startup-troubleshooting/08-Kubernetes模型服务启动失败排查.md)
-- [vLLM 生产故障排查 Runbook](../vllm/23-vLLM生产故障排查Runbook.md)
+- [vLLM 生产故障排查 Runbook](../vllm/05-operations/23-vLLM生产故障排查Runbook.md)
 - [vLLM-Ascend 生产故障排查 Runbook](../vllm-ascend/13-vLLM-Ascend生产故障排查Runbook.md)
 - [GPU Pod 启动但服务无法响应](../../../gpu/cluster/troubleshooting/09-GPU%20Pod%20启动但服务无法响应的排查.md)

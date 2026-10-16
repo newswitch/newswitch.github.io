@@ -229,8 +229,8 @@ Transformer 推理基础
 - [分布式训练命令参考库](../ai-systems/training/commands/00-分布式训练命令参考库.md)
 - [推理服务命令参考库](../ai-systems/inference/commands/00-推理服务命令参考库.md)
 - [PyTorch、Transformers从模型目录到GPU Kernel的完整执行链路](../ai-systems/inference/fundamentals/08-PyTorch-Transformers从模型目录到GPU-Kernel完整执行链路.md)
-- [vLLM 整体代码架构](../ai-systems/inference/vllm/91-vLLM学习笔记（一）整体代码架构.md)
-- [vLLM 调度器策略](../ai-systems/inference/vllm/93-vLLM学习笔记（三）vLLM调度器策略.md)
+- [vLLM 整体代码架构](../ai-systems/inference/vllm/90-source-notes/91-vLLM学习笔记（一）整体代码架构.md)
+- [vLLM 调度器策略](../ai-systems/inference/vllm/90-source-notes/93-vLLM学习笔记（三）vLLM调度器策略.md)
 - [vLLM Tensor Parallel 多卡部署](../ai-systems/inference/serving/03-vLLM%20Tensor%20Parallel%20多卡部署.md)
 - [大模型推理服务性能指标设计](../ai-systems/inference/serving/06-大模型推理服务性能指标设计.md)
 - [大模型冷启动优化](../storage/ai-workloads/07-大模型冷启动优化.md)
@@ -239,11 +239,11 @@ Transformer 推理基础
 
 | 文章 | 技术重点 |
 | --- | --- |
-| [推理请求从 HTTP 到首个 Token 的完整生命周期](../ai-systems/inference/vllm/07-推理请求从HTTP到首个Token的完整生命周期.md) | API Server、Tokenizer、Scheduler、Worker、流式返回 |
-| [Prefill、Decode 与 KV Cache 资源模型](../ai-systems/inference/vllm/08-Prefill-Decode与KV-Cache资源模型.md) | 算力、带宽、显存和延迟之间的关系 |
-| [Continuous Batching 与 Chunked Prefill](../ai-systems/inference/vllm/09-Continuous-Batching与Chunked-Prefill.md) | 调度预算、吞吐与尾延迟 |
-| [TP、PP、DP、EP 与 MoE 推理并行策略](../ai-systems/inference/vllm/10-TP-PP-DP-EP与MoE推理并行策略.md) | 通信量、拓扑和故障域 |
-| [推理网关、准入控制与过载保护](../ai-systems/inference/vllm/11-推理网关准入控制与过载保护.md) | 排队、Token 配额、超时、重试、路由和降级 |
+| [推理请求从 HTTP 到首个 Token 的完整生命周期](../ai-systems/inference/vllm/01-architecture/07-推理请求从HTTP到首个Token的完整生命周期.md) | API Server、Tokenizer、Scheduler、Worker、流式返回 |
+| [Prefill、Decode 与 KV Cache 资源模型](../ai-systems/inference/vllm/02-execution/08-Prefill-Decode与KV-Cache资源模型.md) | 算力、带宽、显存和延迟之间的关系 |
+| [Continuous Batching 与 Chunked Prefill](../ai-systems/inference/vllm/02-execution/09-Continuous-Batching与Chunked-Prefill.md) | 调度预算、吞吐与尾延迟 |
+| [TP、PP、DP、EP 与 MoE 推理并行策略](../ai-systems/inference/vllm/02-execution/10-TP-PP-DP-EP与MoE推理并行策略.md) | 通信量、拓扑和故障域 |
+| [推理网关、准入控制与过载保护](../ai-systems/inference/vllm/05-operations/11-推理网关准入控制与过载保护.md) | 排队、Token 配额、超时、重试、路由和降级 |
 | [TensorRT-LLM 从零到生产](../ai-systems/inference/tensorrt-llm/00-TensorRT-LLM从零到生产学习路线.md) | PyExecutor、调度、KV Cache、Engine、量化和性能 |
 | [Triton Inference Server 从零到生产](../ai-systems/inference/triton-server/00-Triton-Inference-Server从零到生产学习路线.md) | 模型仓库、Backend、Batcher、Ensemble 和模型实例 |
 | [KServe 从零到生产](../ai-systems/inference/kserve/00-KServe从零到生产学习路线.md) | InferenceService、LLMInferenceService、Gateway、EPP 和扩缩容 |

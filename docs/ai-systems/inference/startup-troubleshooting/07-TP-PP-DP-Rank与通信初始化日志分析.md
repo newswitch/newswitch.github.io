@@ -259,7 +259,7 @@ nvidia-smi topo -p2p r
 - TP 增加后吞吐是否提升，还是通信占比过高。
 - 跨节点放置是否符合设计。
 
-相关案例见[TP 慢 Rank、NVLink 与 NCCL 推理故障排查](../vllm/20-TP慢Rank-NVLink与NCCL推理故障排查.md)和
+相关案例见[TP 慢 Rank、NVLink 与 NCCL 推理故障排查](../vllm/03-performance/20-TP慢Rank-NVLink与NCCL推理故障排查.md)和
 [HCCL、HCCS 与 TP 慢 Rank 故障排查](../vllm-ascend/12-HCCL-HCCS与TP慢Rank故障排查.md)。
 
 ## 15. 参考资料

@@ -1,5 +1,5 @@
 {
-  "label": "存储",
+  "label": "Volume、PV/PVC 与 StorageClass",
   "position": 9,
   "collapsed": true,
   "link": {

@@ -16,15 +16,17 @@ docs/
 ├── learning/            # 全站与跨模块学习地图
 ├── linux/               # Linux 与操作系统
 ├── hardware/            # CPU、内存、主板、总线与服务器硬件
-├── gpu/                 # GPU 与加速计算
+├── gpu/                 # GPU、NPU 与加速计算
 ├── networking/          # 网络
 ├── storage/             # 存储
-├── cloud-native/        # 容器与 Kubernetes
+├── cloud-native/        # 云原生与平台工程
 ├── ai-systems/          # AI 训练、推理与 MLOps
 ├── data-systems/        # 数据库、缓存、消息、搜索、分析与大数据工程
+├── development/         # 软件开发、接口、并发、测试与工程质量
 ├── sre/                 # 可观测性、可靠性、性能与事故复盘
 ├── automation/          # 自动化与 DevOps
-└── projects/            # 综合项目
+├── personal-projects/   # 独立作品与项目说明
+└── projects/            # 跨技术域综合项目
 ```
 
 ## 主题目录
@@ -93,7 +95,14 @@ ai-systems/
 ├── runtime/             # Python、环境和动态链接库
 ├── models/              # 模型与数据制品
 ├── training/            # 分布式训练、通信与训练命令
-├── inference/           # 推理原理、vLLM、服务与压测命令
+├── inference/           # 推理原理、框架、服务、性能与压测命令
+│   └── vllm/
+│       ├── 01-architecture/ # 架构、启动与请求生命周期
+│       ├── 02-execution/    # 调度、KV Cache、执行与并行
+│       ├── 03-performance/  # 性能、容量、通信与故障分析
+│       ├── 04-parameters/   # Serve、Engine、请求与 Bench 参数
+│       ├── 05-operations/   # 准入控制与生产 Runbook
+│       └── 90-source-notes/ # 旧版源码学习笔记
 └── mlops/               # 模型生命周期、发布与供应链
 
 data-systems/
@@ -127,6 +136,17 @@ sre/
 ├── reliability/         # SLI、SLO、Error Budget 与自动修复
 ├── performance/         # 系统、GPU 与模型服务性能工程
 └── incidents/           # 故障案例与复盘
+
+projects/
+└── heterogeneous-cluster/
+    ├── 01-foundations/  # 双资源池原理与总体架构
+    ├── 02-planning/     # 资产、兼容矩阵与容量规划
+    ├── 03-cluster/      # 集群和 GPU/NPU 资源池部署
+    ├── 04-scheduling/   # 调度、配额、隔离与共享
+    ├── 05-storage/      # 模型存储、分发、缓存与预热
+    ├── 06-inference/    # 推理服务、网关、扩缩容与切流
+    ├── 07-operations/   # 运维、监控、排障与演练
+    └── 90-appendix/     # 模板、清单、PromQL 与 SOP
 ```
 
 ## 跨模块归档规则
@@ -180,5 +200,6 @@ npm run build
 - `scripts/restructure-docs.mjs`：第一次知识域迁移的历史脚本。
 - `scripts/migrate-topic-structure.mjs`：本次主题式目录迁移脚本，包含文件映射、分类入口更新和 Markdown 链接重写逻辑。
 - `scripts/migrate-data-systems-taxonomy.mjs`：将数据系统拆分为数据库、缓存、消息、搜索、向量、分析和大数据工程，并重写全站相对链接。
+- `scripts/restructure-navigation-2026.mjs`：将 vLLM 与异构集群长列表拆成可定位的专题目录，并重新计算全站相对链接。
 
 这些脚本用于审计历史迁移，不应在已经迁移完成的目录上重复执行。

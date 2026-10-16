@@ -7,7 +7,7 @@ const SYSTEMS = [
   {
     id: '01',
     label: 'COMPUTE',
-    title: 'GPU 与加速计算',
+    title: 'GPU、NPU 与加速计算',
     note: 'CUDA · CANN · HBM · NVLink',
     to: '/docs/gpu/GPU与加速计算学习路线',
     className: styles.compute,

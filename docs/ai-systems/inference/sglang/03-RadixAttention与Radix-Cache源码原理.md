@@ -41,7 +41,7 @@ Radix Tree可以表达公共路径和分叉：
 
 节点Key是Token片段，Value指向对应KV位置。压缩边使一段连续Token不必逐Token建立对象。
 
-这里对比的是“只对整段 Prompt 做一次哈希”，不是说哈希不能实现前缀复用。vLLM 的[块级链式哈希](../vllm/05-KVCacheManager-BlockPool与PrefixCache.md#块池源码)同样表达此前上下文；应比较匹配粒度、分配单位和所有权转换，不能把 Tree 的收益归因于哈希表本身没有前缀能力。
+这里对比的是“只对整段 Prompt 做一次哈希”，不是说哈希不能实现前缀复用。vLLM 的[块级链式哈希](../vllm/02-execution/05-KVCacheManager-BlockPool与PrefixCache.md#块池源码)同样表达此前上下文；应比较匹配粒度、分配单位和所有权转换，不能把 Tree 的收益归因于哈希表本身没有前缀能力。
 
 ## 2. 一次请求的Cache生命周期
 

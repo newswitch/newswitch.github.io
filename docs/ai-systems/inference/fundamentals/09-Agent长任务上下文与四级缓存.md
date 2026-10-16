@@ -167,7 +167,7 @@ Token 计算新状态并追加到缓存。
 具体关系，不能把一个线性公式机械套给所有模型。
 
 KV 的容量公式、GQA/MQA、PagedAttention 和显存预算已经在
-[Prefill、Decode 与 KV Cache 资源模型](../vllm/08-Prefill-Decode与KV-Cache资源模型.md)中展开。
+[Prefill、Decode 与 KV Cache 资源模型](../vllm/02-execution/08-Prefill-Decode与KV-Cache资源模型.md)中展开。
 
 ## 4. Prefix Cache：跨请求复用精确前缀的 KV
 
@@ -201,7 +201,7 @@ block_hash = hash(parent_hash, block_tokens, extra_keys)
 
 `extra_keys` 还可能包含 LoRA、多模态内容摘要和租户隔离 Salt。源码层的 BlockPool、引用计数、
 淘汰与分配过程见
-[KVCacheManager、BlockPool 与 Prefix Cache](../vllm/05-KVCacheManager-BlockPool与PrefixCache.md)。
+[KVCacheManager、BlockPool 与 Prefix Cache](../vllm/02-execution/05-KVCacheManager-BlockPool与PrefixCache.md)。
 
 ### 4.2 “文本相同”为什么仍可能不命中
 
@@ -838,10 +838,10 @@ Prompt Cache 是服务商提供的产品契约，调用方依据 API 中的断�
 - [Anthropic Prompt Caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
 - [Hugging Face KV Cache Strategies](https://huggingface.co/docs/transformers/main/kv_cache)
 - [Redis Semantic Cache](https://redis.io/docs/latest/develop/use-cases/semantic-cache/)
-- [Prefill、Decode 与 KV Cache 资源模型](../vllm/08-Prefill-Decode与KV-Cache资源模型.md)
-- [KVCacheManager、BlockPool 与 Prefix Cache](../vllm/05-KVCacheManager-BlockPool与PrefixCache.md)
-- [推理网关、准入控制与过载保护](../vllm/11-推理网关准入控制与过载保护.md)
-- [按真实 Token 分布完成单副本容量规划](../vllm/21-按真实Token分布完成单副本容量规划.md)
+- [Prefill、Decode 与 KV Cache 资源模型](../vllm/02-execution/08-Prefill-Decode与KV-Cache资源模型.md)
+- [KVCacheManager、BlockPool 与 Prefix Cache](../vllm/02-execution/05-KVCacheManager-BlockPool与PrefixCache.md)
+- [推理网关、准入控制与过载保护](../vllm/05-operations/11-推理网关准入控制与过载保护.md)
+- [按真实 Token 分布完成单副本容量规划](../vllm/03-performance/21-按真实Token分布完成单副本容量规划.md)
 
 最终需要形成的判断不是“应该打开哪个 Cache 开关”，而是：先确定本轮真正需要什么上下文，
 再判断哪些工作能够精确复用，哪些答案能够安全复用，最后用任务成功率、端到端时间和错误复用率

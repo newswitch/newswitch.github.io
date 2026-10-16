@@ -40,7 +40,7 @@ Atlas服务器
 ## 2. 推理框架与运行链路
 
 1. [vLLM-Ascend 学习路线](../../ai-systems/inference/vllm-ascend/00-vLLM-Ascend学习路线.md)
-2. [昇腾 910B、vLLM-Ascend 与原生 vLLM 源码差异](../../ai-systems/inference/vllm/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md)
+2. [昇腾 910B、vLLM-Ascend 与原生 vLLM 源码差异](../../ai-systems/inference/vllm/02-execution/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md)
 3. [Ascend Device Plugin 资源发现与 Pod 设备注入](../../ai-systems/inference/vllm-ascend/06-Ascend-Device-Plugin资源发现与Pod设备注入.md)
 4. [ACLGraph 与 npugraph_ex 源码执行路径](../../ai-systems/inference/vllm-ascend/08-ACLGraph与npugraph_ex源码执行路径.md)
 5. [Qwen3.5 混合模型在 910B 上的内存结构](../../ai-systems/inference/vllm-ascend/09-Qwen3.5混合模型在910B上的内存结构.md)
