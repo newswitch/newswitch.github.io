@@ -306,8 +306,11 @@ Transformer 推理基础
 
 ### 9.1 自动化工程模块 {/* #自动化工程模块 */}
 
+自动化代码同样需要稳定的软件工程基础。先通过[软件开发学习路线](../development/00-软件开发学习路线.md)掌握程序执行、模块接口、API 契约、并发背压、服务生命周期、测试调试和性能工程，再进入具体语言和自动化平台。
+
 | 文章 | 技术重点 |
 | --- | --- |
+| [软件开发学习路线](../development/00-软件开发学习路线.md) | 程序执行、成本模型、模块边界、API、并发、生命周期、测试与 Profiling |
 | [自动化工程学习路线](../automation/00-自动化工程学习路线.md) | 语言工具、配置与 IaC、CI/CD、制品与 Secret、策略、门户、Runbook 和持久化工作流 |
 | [Python CLI 与可测试命令行工程](../automation/python/05-Python-CLI与可测试命令行工程.md) | 配置、退出码、依赖注入、超时、测试与安全 |
 | [Python 调用 Kubernetes 与 Prometheus API](../automation/python/09-Python调用Kubernetes与Prometheus-API.md) | 分页、List/Watch、ResourceVersion、PromQL 和证据关联 |

@@ -565,6 +565,11 @@ body {
   --sidebar-domain-icon: url('/img/sidebar/data.svg');
 }
 
+.sidebar-domain--development {
+  --sidebar-domain-color: #4f46e5;
+  --sidebar-domain-icon: url('/img/sidebar/development.svg');
+}
+
 .sidebar-domain--sre {
   --sidebar-domain-color: #e11d48;
   --sidebar-domain-icon: url('/img/sidebar/sre.svg');

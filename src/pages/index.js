@@ -78,6 +78,14 @@ const DOMAINS = [
   },
   {
     id: '09',
+    label: 'DEVELOP',
+    title: '软件开发',
+    note: 'Program · API · Concurrency · Testing',
+    to: '/docs/development/软件开发学习路线',
+    tone: 'violet',
+  },
+  {
+    id: '10',
     label: 'SIGNALS',
     title: '可观测性与 SRE',
     note: 'Metrics · Logs · Traces · SLO',
@@ -85,7 +93,7 @@ const DOMAINS = [
     tone: 'red',
   },
   {
-    id: '10',
+    id: '11',
     label: 'AUTOMATE',
     title: '自动化与 DevOps',
     note: 'Ansible · Python · Go · GitOps',
@@ -93,7 +101,7 @@ const DOMAINS = [
     tone: 'amber',
   },
   {
-    id: '11',
+    id: '12',
     label: 'PROJECTS',
     title: '综合项目',
     note: '端到端链路 · GPU 集群 · 异构资源池',
