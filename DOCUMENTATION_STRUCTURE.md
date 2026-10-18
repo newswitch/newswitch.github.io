@@ -161,6 +161,8 @@ projects/
 
 `examples/spring/container-lab/` 保存 Spring 容器专题的 7 个演示、Maven 工程、属性资源与 JUnit 边界测试。`scripts/verify-spring-container.mjs` 检查 9 个文章代码/资源文件与源码一致，在独立临时工程验证测试报告、Spring 模块版本，以及每个示例 3 次独立进程的输出。纯 Spring 示例不引入 Boot、不启动网络服务或后台 Worker；`target/`、`out/` 与临时工作区不提交。网站的容器专题来自本地 `development/spring/01-container/`。
 
+`examples/spring/transactions-lab/` 保存 AOP、JDBC 与事务专题实验。`scripts/verify-spring-transactions.mjs` 检查 10 个文章源码文件、JUnit 报告、Spring/H2/AspectJ 固定依赖和 7 个主类各 3 次运行输出。H2 为独立进程内内存库，锁等待与线程有上限，示例关闭自己的连接与执行器，不连接已有数据库或启动服务端。对应网站与本地目录为 `development/spring/02-aop-transactions/`。
+
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
 | 产品或专题 | 二级专题 |

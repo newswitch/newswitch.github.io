@@ -145,3 +145,4 @@ getObjectType 应尽量准确报告产品类型，帮助类型匹配，避免因
 
 - [Environment、PropertySource、Profile 与条件配置](./06-Environment-PropertySource-Profile与条件配置.md)
 - [BeanDefinition、BeanFactory 与 ApplicationContext](./03-BeanDefinition-BeanFactory与ApplicationContext.md)
+- [JDK 动态代理、CGLIB 与调用边界](../02-aop-transactions/01-JDK动态代理CGLIB与调用边界.md)

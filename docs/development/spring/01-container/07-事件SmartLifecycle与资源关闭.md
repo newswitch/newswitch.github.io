@@ -156,5 +156,7 @@ shutdown=context:closed,worker:stop,worker:destroy
 ## 9. 继续阅读
 
 - [Spring Framework 学习路线](../00-Spring学习路线.md)
+- [JDK 动态代理、CGLIB 与调用边界](../02-aop-transactions/01-JDK动态代理CGLIB与调用边界.md)
+- [编程式事务、事务事件与提交后动作](../02-aop-transactions/07-编程式事务事务事件与提交后动作.md)
 - [服务生命周期、配置、健康检查与优雅退出](../../02-services/03-服务生命周期配置健康检查与优雅退出.md)
 - [线程池、队列、拒绝与关闭](../../java/03-concurrency/06-线程池队列拒绝与关闭.md)
