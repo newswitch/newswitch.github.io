@@ -34,13 +34,13 @@ flowchart LR
 
 ## 3. 四个专题与 28 篇技术文章
 
-容器、AOP 与事务两个专题的 14 篇正文已提供；Web、源码专题按阶段继续展开。
+容器、AOP 与事务、Web 三个专题的 21 篇正文已提供；源码专题按阶段继续展开。
 
 | 目录 | 篇数 | 已有 | 学习问题 |
 | --- | --- | --- | --- |
 | `01-container` | 7 | 7 | 对象如何定义、创建、注入、共享、初始化和关闭 |
 | `02-aop-transactions` | 7 | 7 | 代理如何包住调用，事务何时生效和结束 |
-| `03-web` | 7 | 0 | Servlet/MVC 与响应式请求分别怎样运行 |
+| `03-web` | 7 | 7 | Servlet/MVC 与响应式请求分别怎样运行 |
 | `04-internals` | 7 | 0 | 用源码验证容器、代理、事务和 Web 的状态变化 |
 
 ### 3.1 容器
@@ -73,13 +73,15 @@ flowchart LR
 
 ### 3.3 Web
 
-1. Servlet、Tomcat、线程与请求生命周期。
-2. DispatcherServlet、HandlerMapping 与 HandlerAdapter。
-3. 参数绑定、消息转换、校验与异常处理。
-4. Filter、Interceptor、ControllerAdvice 与 AOP。
-5. 异步请求、SSE 与 WebSocket。
-6. Reactor、背压、Scheduler 与取消。
-7. WebFlux、Netty 与 WebClient。
+| 顺序 | 文章 | 核心问题 |
+| --- | --- | --- |
+| 1 | [Servlet、Tomcat、线程与请求生命周期](./03-web/01-Servlet-Tomcat线程与请求生命周期.md) | 连接、请求、线程与 Servlet 分别由谁管理 |
+| 2 | [DispatcherServlet、映射与请求执行链](./03-web/02-DispatcherServlet映射与请求执行链.md) | 映射、参数、方法调用和响应写出怎样衔接 |
+| 3 | [参数绑定、消息转换、校验与异常处理](./03-web/03-参数绑定消息转换校验与异常处理.md) | 输入在哪一阶段失败，怎样返回正确错误语义 |
+| 4 | [Filter、Interceptor、ControllerAdvice 与 AOP](./03-web/04-Filter-Interceptor-ControllerAdvice与AOP.md) | 四种扩展点各覆盖哪里，异常后哪些回调执行 |
+| 5 | [Servlet 异步请求、SSE 与 WebSocket](./03-web/05-异步请求SSE与WebSocket.md) | 释放线程、单向事件流和双向消息有何区别 |
+| 6 | [Reactor、背压、Scheduler 与取消](./03-web/06-Reactor背压Scheduler与取消.md) | 需求、订阅、线程、上下文与取消怎样协作 |
+| 7 | [WebFlux、Netty 与 WebClient 执行链](./03-web/07-WebFlux-Netty与WebClient执行链.md) | 网络事件、路由、编解码与客户端资源如何衔接 |
 
 MVC 与 WebFlux分别沿自己的执行路径分析。响应式 API 返回类型不能证明整个调用链没有阻塞，还需要核对线程、数据库驱动和外部客户端。
 
@@ -102,6 +104,8 @@ MVC 与 WebFlux分别沿自己的执行路径分析。响应式 API 返回类型
 容器独立示例固定 Spring Framework 7.0.9、JDK 25、Maven 3.9.14，使用正式功能，工程见 `examples/spring/container-lab/`。每篇提供完整源文件、运行结果和练习答案，边界测试验证装配失败、生命周期及配置行为。
 
 AOP 与事务工程位于 `examples/spring/transactions-lab/`，使用相同 Spring/JDK 基线，并固定 AspectJ 1.9.25、H2 2.4.240。数据库实验只创建独立内存库，通过连接、数据与异常验证边界，不把 H2 行为当成所有生产数据库的兼容承诺。
+
+Web 工程位于 `examples/spring/web-lab/`，固定 Tomcat 11.0.24、Jackson 3.0.4 与 Reactor BOM 2025.0.7。Servlet、MVC、异步通信与 WebFlux 示例使用本机临时端口；参数校验与调用顺序使用 MockMvc；Reactor 协议测试不依赖网络。它们分别验证不同边界，不能互相替代。所有练习附答案，实验结束关闭自有服务器、执行器和连接池。
 
 Boot 工程以其 BOM 管理兼容依赖，不能为了让版本号看起来更新而单独替换核心 JAR。纯 Spring 的 PropertySource、Profile 与事件也不等于 Boot 的全部配置和启动机制。
 

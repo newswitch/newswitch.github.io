@@ -163,6 +163,8 @@ projects/
 
 `examples/spring/transactions-lab/` 保存 AOP、JDBC 与事务专题实验。`scripts/verify-spring-transactions.mjs` 检查 10 个文章源码文件、JUnit 报告、Spring/H2/AspectJ 固定依赖和 7 个主类各 3 次运行输出。H2 为独立进程内内存库，锁等待与线程有上限，示例关闭自己的连接与执行器，不连接已有数据库或启动服务端。对应网站与本地目录为 `development/spring/02-aop-transactions/`。
 
+`examples/spring/web-lab/` 保存 Servlet、MVC、异步通信与 Reactor/WebFlux 专题。`scripts/verify-spring-web.mjs` 对照 11 个文章源文件，验证 40 项 JUnit 边界测试与 7 个主类各 3 次运行结果。真实 HTTP、SSE、WebSocket 与模拟 Servlet 测试明确分开；真实服务器仅绑定 `127.0.0.1` 临时端口，使用有界线程、连接池与超时，并关闭自有资源。Web 专题由本地 `development/spring/03-web/` 自动生成，分类默认折叠。运行验证脚本需要 JDK 25、Maven 3.9.14；`--check-sources` 只检查文章和示例一致性，不启动服务。
+
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
 | 产品或专题 | 二级专题 |
