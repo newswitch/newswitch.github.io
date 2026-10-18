@@ -159,6 +159,8 @@ projects/
 
 `examples/java/fourth-batch/` 保存 JVM 与诊断的 11 个完整程序。`scripts/verify-java-runtime.mjs` 检查文章与源码一致，验证字节码、类初始化、内存、G1/ZGC、JIT、AppCDS/AOT、自定义 JFR，并只 Attach 自己启动的有界诊断进程，覆盖线程、NMT、JFR 与 jstat。实验文件在忽略的 `.java-article-checks/` 中生成并清理；Linux cgroups、native profiler 与 Arthas 不包含在该 Windows/JDK 自动实测范围。Java 网站专题与本地 `01-language`、`02-standard-library`、`03-concurrency`、`04-jvm`、`05-build-testing`、`06-diagnostics` 目录一一对应。
 
+`examples/spring/container-lab/` 保存 Spring 容器专题的 7 个演示、Maven 工程、属性资源与 JUnit 边界测试。`scripts/verify-spring-container.mjs` 检查 9 个文章代码/资源文件与源码一致，在独立临时工程验证测试报告、Spring 模块版本，以及每个示例 3 次独立进程的输出。纯 Spring 示例不引入 Boot、不启动网络服务或后台 Worker；`target/`、`out/` 与临时工作区不提交。网站的容器专题来自本地 `development/spring/01-container/`。
+
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
 | 产品或专题 | 二级专题 |

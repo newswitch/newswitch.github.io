@@ -14,6 +14,8 @@
 /examples/java/**/build/
 /examples/java/**/.gradle/
 /.java-article-checks/
+/examples/spring/**/target/
+/examples/spring/**/out/
 
 # Misc
 .DS_Store

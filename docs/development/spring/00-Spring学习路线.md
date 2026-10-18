@@ -34,24 +34,26 @@ flowchart LR
 
 ## 3. 四个专题与 28 篇技术文章
 
-当前发布本学习路线；下列正文按阶段逐步提供。
+容器专题的 7 篇正文已提供；AOP 与事务、Web、源码专题按阶段继续展开。
 
-| 目录 | 篇数 | 学习问题 |
-| --- | --- | --- |
-| `01-container` | 7 | 对象如何定义、创建、注入、共享、初始化和关闭 |
-| `02-aop-transactions` | 7 | 代理如何包住调用，事务何时生效和结束 |
-| `03-web` | 7 | Servlet/MVC 与响应式请求分别怎样运行 |
-| `04-internals` | 7 | 用源码验证容器、代理、事务和 Web 的状态变化 |
+| 目录 | 篇数 | 已有 | 学习问题 |
+| --- | --- | --- | --- |
+| `01-container` | 7 | 7 | 对象如何定义、创建、注入、共享、初始化和关闭 |
+| `02-aop-transactions` | 7 | 0 | 代理如何包住调用，事务何时生效和结束 |
+| `03-web` | 7 | 0 | Servlet/MVC 与响应式请求分别怎样运行 |
+| `04-internals` | 7 | 0 | 用源码验证容器、代理、事务和 Web 的状态变化 |
 
 ### 3.1 容器
 
-1. 从手动创建对象到 IoC 与依赖注入。
-2. 配置类、组件扫描、自动注入与依赖选择。
-3. BeanDefinition、BeanFactory 与 ApplicationContext。
-4. Bean 生命周期、Scope 与线程安全。
-5. BeanFactoryPostProcessor、BeanPostProcessor 与 FactoryBean。
-6. Environment、PropertySource、Profile 与配置条件。
-7. 事件、容器生命周期与资源关闭。
+| 顺序 | 文章 | 核心问题 |
+| --- | --- | --- |
+| 1 | [从手动装配到 IoC 与依赖注入](./01-container/01-从手动装配到IoC与依赖注入.md) | 业务对象与装配入口怎样分离，如何建立普通 Spring 工程 |
+| 2 | [配置类、组件扫描与依赖选择](./01-container/02-配置类组件扫描与依赖选择.md) | 定义从哪里来，单值、限定、集合与延迟依赖怎样解析 |
+| 3 | [BeanDefinition、BeanFactory 与 ApplicationContext](./01-container/03-BeanDefinition-BeanFactory与ApplicationContext.md) | 定义、实例、刷新与按需获取分别是什么 |
+| 4 | [Bean 生命周期、Scope 与线程安全](./01-container/04-Bean生命周期Scope与线程安全.md) | 注入、初始化、共享和销毁的责任边界在哪里 |
+| 5 | [定义后置处理、实例后置处理与 FactoryBean](./01-container/05-定义后置处理实例后置处理与FactoryBean.md) | 何时修改定义，何时包装实例，工厂与产品怎样区分 |
+| 6 | [Environment、PropertySource、Profile 与条件配置](./01-container/06-Environment-PropertySource-Profile与条件配置.md) | 值的来源、覆盖和定义条件怎样协作 |
+| 7 | [事件、SmartLifecycle 与资源关闭](./01-container/07-事件SmartLifecycle与资源关闭.md) | 通知、启动、排空、停止和最终释放怎样分工 |
 
 关键实验是替换一个执行器而不修改业务类，并证明 Singleton 不自动提供线程安全；Prototype 对象也不能简单假设由容器统一完成全部销毁。
 
@@ -95,7 +97,9 @@ MVC 与 WebFlux分别沿自己的执行路径分析。响应式 API 返回类型
 
 学完容器基础后就可以创建 Boot 服务。第一次请求能够运行后，再分析 MVC；接入数据库时回到事务；出现配置和启动问题时再深入源码。
 
-Spring 独立示例采用 7.x 中固定的正式版本；Boot 工程以其 BOM 管理兼容依赖，不能为了让版本号看起来更新而单独替换核心 JAR。
+容器独立示例固定 Spring Framework 7.0.9、JDK 25、Maven 3.9.14，使用正式功能，工程见 `examples/spring/container-lab/`。每篇提供完整源文件、运行结果和练习答案，边界测试验证装配失败、生命周期及配置行为。
+
+Boot 工程以其 BOM 管理兼容依赖，不能为了让版本号看起来更新而单独替换核心 JAR。纯 Spring 的 PropertySource、Profile 与事件也不等于 Boot 的全部配置和启动机制。
 
 ## 5. 验收任务
 
