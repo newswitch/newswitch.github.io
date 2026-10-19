@@ -48,6 +48,8 @@ ncu --version
 4. [`nvidia-bug-report.sh`](./04-nvidia-bug-report命令详解.md)：在驱动异常仍存在时采集完整证据包。
 5. [`nvidia-modprobe`](./05-nvidia-modprobe命令详解.md)：加载模块并创建设备节点，理解权限边界。
 
+受支持 NVIDIA 服务器平台的整机健康补充见 [`NVSM`](./23-NVSM命令详解.md)。它与 GPU 字段观测互补，不应假设对任意 OEM 节点都提供相同检查。
+
 ### 3.2 容器设备注入 {/* #第二阶段容器设备注入 */}
 
 6. [`nvidia-ctk`](./06-nvidia-ctk命令详解.md)：配置 Docker/containerd/CRI-O 和 CDI。

@@ -82,4 +82,40 @@ sinfo -R
 记账缺失 → slurmdbd/数据库/Association
 ```
 
-参考：[Slurm Quick Start Administrator Guide](https://slurm.schedmd.com/quickstart_admin.html)、[High Availability](https://slurm.schedmd.com/quickstart_admin.html#HA)。
+## 8. 从提交到退出的状态链
+
+先区分四个对象。Job 是提交的工作请求；Allocation 是调度器授予的资源集合；Step 是这份 Allocation 内的一次并行执行；Task 才是具体应用进程。`sbatch` 返回 Job ID，只证明提交成功，不证明分配成功，更不证明所有训练 Rank 已就绪。
+
+```text
+提交脚本 → 验证身份与账户 → 进入待调度集合
+→ 按策略与资源形状获得 Allocation
+→ batch Step 执行脚本 → srun 创建应用 Step
+→ slurmstepd 启动并跟踪 Task → 收集退出状态
+→ 清理设备与 cgroup → 释放资源 → 完成记账
+```
+
+一个脚本可以依次运行预处理、训练、结果校验三个 Step，不能把三个 Step 的时间、内存峰值和 ExitCode 简单看成一份进程结果。交互式 `salloc` 可以先获取 Allocation，再执行多个 `srun`；`srun` 在无 Allocation 的上下文中也可以申请资源。因此检查启动问题时，必须先确认当前命令处于哪种上下文。
+
+## 9. 配置生效与实际状态
+
+假设配置写了节点有 8 张 GPU，但 `slurmd` 只发现 7 张。配置表示期望，守护进程报告实际能力，两者不一致时不能通过“修改看板为 8”恢复容量。先定位丢卡、发现插件、设备权限或型号匹配，再决定修复设备还是调整计划容量。
+
+同样，配置文件已同步不代表所有进程已经重新加载。排障需要同时比较磁盘文件、控制器有效配置、节点注册信息和进程启动参数。变更记录至少保留配置修订、加载时间、进程版本和验证作业，而不是只留一份文件 Hash。
+
+认证还依赖 UID/GID、密钥和时钟。Munge 在采用 `auth/munge` 的部署中证明凭据来源与有效性；它不替代 Account/QOS 的资源授权。认证成功但账户关联不存在，是另一层故障。其他认证插件必须按目标版本另行核对，不能把 Munge 当作 Slurm 唯一可能的认证实现。
+
+## 10. 控制面故障不等于作业立刻终止
+
+控制器暂时不可用时，已启动的 Task 不一定立刻停止，但新分配、状态协调和后续 Step 操作会受到影响；超时、节点故障及应用自身失败仍可能结束作业。记账数据库故障也不能一概解释为“训练肯定不受影响”，还要检查关联缓存、准入策略和排队积压。
+
+恢复顺序应是确认唯一有效控制器、状态目录与配置版本，再恢复节点通信和记账，最后验证新旧作业。不要在恢复时删除状态目录重新初始化：这会丢失控制器对已有 Allocation 的认识，使资源是否可重用变得不确定。
+
+可用一个纸面故障演练检查理解：主控制器断网、计算进程仍运行、备控制器接管。你需要说明谁有权发新 Allocation，旧节点向谁报告，主控制器恢复时如何避免继续以过期状态服务。具体共享存储、选主和网络隔离方案必须符合目标 Slurm 部署模式，而不是从“有两台控制器”推断自动安全。
+
+## 11. 掌握检查
+
+1. `sbatch` 成功但找不到训练进程，依次检查什么？先看 Job 是否获分配，再看 batch Step、应用 Step 和 Task；不能直接跳到 NCCL。
+2. 数据库不可用但 `squeue` 有结果，矛盾吗？不矛盾，两者主要查询的服务不同，还要核对结果时效与策略缓存。
+3. 为什么 Slurm 与 Kubernetes 不能同时独占相同 GPU？两者各自的账本都可能允许分配，内核不会自动把两份调度账本协调成一个事实来源。
+
+参考：[Slurm Quick Start Administrator Guide](https://slurm.schedmd.com/quickstart_admin.html)、[High Availability](https://slurm.schedmd.com/quickstart_admin.html#HA)、[Slurm Overview](https://slurm.schedmd.com/overview.html)。

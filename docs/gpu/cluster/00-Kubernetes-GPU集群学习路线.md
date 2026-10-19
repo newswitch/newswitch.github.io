@@ -10,6 +10,8 @@ categories: 云原生
 
 # Kubernetes GPU 集群学习路线
 
+组织资源与产品调度可继续阅读[Run:ai 资源管理与调度](./scheduling/run-ai/00-Runai资源管理与调度学习路线.md)。学习时区分配额资格、节点放置、设备分配、内核隔离和应用就绪，不把它们合并为一个“调度成功”。
+
 **系列名称**：Kubernetes GPU 集群从入门到生产实践
 **副标题**：从 GPU 基础、Kubernetes 资源管理，到大模型部署、GPU 调度、监控告警和生产排障
 **核心目标**：从「会部署 GPU 服务」升级为「能规划、建设、调度、监控、优化和排障生产级 Kubernetes GPU 集群」

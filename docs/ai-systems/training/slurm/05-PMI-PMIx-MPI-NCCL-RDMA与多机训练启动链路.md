@@ -52,6 +52,8 @@ srun --nodes=2 --ntasks-per-node=1 hostname
 
 若 `srun` 能启动 hostname，但 MPI 程序失败，继续检查 MPI Runtime、PMIx 和动态库；若连 Step 都不能跨节点启动，先处理 Slurm、Munge、DNS 和端口。
 
+采用 HPC-X 时继续读[组件分层与版本契约](../../../networking/rdma-roce/ai-cluster/15-HPC-X组件分层动态装载与版本契约.md)：包内 MPI 主版本、构建包装器、launcher 和容器实际装载库必须分别核对。不能从提交节点加载了环境模块，就推断每个远端 Rank 使用相同运行时；直接 NCCL 程序也不一定经过 MPI 数据面。
+
 ## 5. NCCL 与 RDMA
 
 NCCL Bootstrap 通常需要 IP 网络，数据面可选择共享内存、NVLink、Socket 或 IB/RoCE。检查：
@@ -82,4 +84,29 @@ NCCL Bootstrap 通常需要 IP 网络，数据面可选择共享内存、NVLink�
 
 一个 Rank 因数据加载或设备错误退出，其他 Rank 可能最终都报告 Collective Timeout。按带时间戳的日志找到最早异常进程，并关联 Slurm Step、Node、GPU UUID 和交换端口；超时 Rank 通常不是根因。
 
-参考：[Slurm MPI Users Guide](https://slurm.schedmd.com/mpi_guide.html)、[NCCL User Guide](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/)。
+## 8. 两种启动拓扑不能叠乘
+
+以两节点、每节点 4 GPU 为教学条件，有两种常见组织方式：
+
+| 方式 | Slurm 每节点启动 | 下一级启动 | 最终训练进程 |
+| --- | --- | --- | --- |
+| 每卡一个 Task | 4 个训练 Task | 每 Task 直接运行一个 Rank | 8 |
+| 每节点一个 Launcher | 1 个 torchrun Launcher | 每 Launcher 创建 4 个本地 Rank | 8 |
+
+若 Slurm 每节点启动 4 个 Launcher，每个又创建 4 个 Rank，最终变成 32 个训练进程。这不是“提高并行度”，而是启动层级重复，通常还伴随重复本地编号和 GPU 争用。
+
+选择第二种方式时，每节点 Launcher 的 Allocation 必须包含它的所有 Worker 所需 GPU、CPU、内存和端口；不要给 Launcher 只分配一张卡，再期望子进程合法使用其余三张。环境变量如何由 `srun` 转换为训练框架参数，应由一个明确的包装层负责。
+
+## 9. 三种成功证据
+
+首先是进程启动成功：预期主机和 Rank 均存在。其次是进程组建立成功：成员一致、rendezvous 与地址交换完成。最后才是数据面成功：目标 Tensor 的 Collective 正确结束并达到合理性能。
+
+能通过 TCP 交换地址不意味着 RDMA 连接成功；RDMA 小消息测试成功也不证明真实 NCCL 多 Rail 和大规模拓扑正确。比较时应固定 GPU/NIC 映射、消息大小、进程数和软件版本，不能拿完全不同规模的结果作退化依据。
+
+## 10. 按首个失败定位
+
+教学事件序列：12:00:01 节点 B 的 Rank 5 因挂载权限无法读取数据退出；12:00:31 其他 Rank 报 Collective Timeout；12:00:32 Slurm 清理 Step。此时超时日志数量最多，但根因发生在第一条数据读取错误。
+
+建立按 Job ID、Step、主机、Global/Local Rank、GPU UUID 关联的时间线，先找最早破坏共同前提的事件。时钟误差大时，时间排序也可能误导，应结合启动序号、同机日志和请求因果关系，不能只按最后显示的时间戳处理。
+
+参考：[Slurm MPI Users Guide](https://slurm.schedmd.com/mpi_guide.html)、[NCCL User Guide](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/)、[PyTorch torchrun](https://docs.pytorch.org/docs/stable/elastic/run.html)。

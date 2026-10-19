@@ -40,6 +40,8 @@ tags: [模型安全, 镜像, Dataset, Checkpoint, Sigstore, SLSA]
 
 Admission 可以校验镜像签名；模型下载器也应校验允许的 Registry/Repository、Revision、Size 和 Checksum。校验失败时 Fail Closed，不能降级为忽略。
 
+镜像签名必须绑定明确的内容对象与允许的签名者。多架构索引、平台清单和关联证明的具体关系见 [OCI 索引、Digest 与离线信任链](../../cloud-native/containers/images/04-OCI索引Digest与离线镜像信任链.md)，避免转存时保留了层却丢失验证材料。
+
 ## 4. 反序列化风险
 
 Python Pickle 和允许 Remote Code 的模型仓库可能执行代码。安全边界包括：

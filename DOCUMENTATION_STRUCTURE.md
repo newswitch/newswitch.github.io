@@ -187,6 +187,8 @@ projects/
 
 ## 跨模块归档规则
 
+AI 集群运维继续按知识点归档，不建立以认证名称命名的正文目录。`learning/05-AI集群运维知识体系与掌握检查.md` 只串联各领域主文章。BCM 归 `gpu/bare-metal-fleet/base-command-manager/`，Run:ai 归 `gpu/cluster/scheduling/run-ai/`，两者保留产品对象和实现差异，不复制通用调度、网络启动或权限原理。DOCA 归现有 `networking/dpu/`，NGC 镜像与权限归现有 `cloud-native/containers/images/`，VMI 的 GPU 运行栈归 `gpu/driver-runtime/`，Fleet Command 的边缘生命周期归现有边缘计算目录。NVSM 原理归节点管理、命令归 GPU 命令库；NVSwitch FM 与 InfiniBand UFM 分别归互联和网络运维。
+
 | 内容 | 唯一主归属 |
 | --- | --- |
 | GPU 架构、显存、PCIe、NUMA、NVLink、CUDA | `gpu/` |

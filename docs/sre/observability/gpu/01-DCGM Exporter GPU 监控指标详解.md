@@ -191,7 +191,29 @@ curl -s http://<node>:9400/metrics | grep DCGM_FI_DEV_GPU_UTIL
 
 下一篇：[Prometheus GPU 告警策略设计](./02-Prometheus%20GPU%20告警策略设计.md)。
 
-## 7. 参考与致谢 {/* #参考与致谢 */}
+## 7. 从设备字段到租户视角
+
+DCGM 的 Entity、Field 和采样值，Exporter 导出的时序，以及 Kubernetes 的 Pod/容器映射属于不同层。为设备指标附上 Pod 标签，不会自动把整卡利用率精确分摊到各租户。Time-Slicing、MPS 或其他共享方式下，一个设备值可能关联多个消费者，直接求和会重复计算。
+
+MIG 场景也要区分物理 GPU、GI/CI 和具体字段支持。计数器不可用、不支持或采集失败，不能统一替换成零。否则看板会把监控缺口显示为“设备很闲”，进而错误缩容或计费。
+
+## 8. 时间窗口与采样误差
+
+教学例子：GPU 在 10 秒中工作 1 秒后空闲 9 秒，长期平均活动比例约 10%；若低频快照总在某个阶段采集，观察结果可能偏离这一比例。不同字段本身还有不同统计窗口，不能只把 scrape interval 改短就宣称获得了真实瞬时计算行为。
+
+累计计数需要处理重启与设备重配，Gauge 与 Counter 不能机械使用同一查询。原始值的单位、有效范围和字段支持应来自目标版本定义；异常占位值与采集错误应单独过滤并告警，而不是进入普通平均数。
+
+## 9. 缺失与低值的区别
+
+目标抓取失败、目标消失、字段缺失、字段不支持和字段有效值为零，是五种不同状态。先看 Prometheus 抓取目标、Exporter/Host Engine、设备发现与字段输出，再看业务利用率。
+
+NVSM 可提供整机和平台关联信息，见[整机健康模型](../../../gpu/bare-metal-fleet/08-NVSM整机健康告警与证据关联.md)。时序数据、驱动事件与主动诊断各有证据范围，不宜用单一字段覆盖全部健康判定。
+
+## 10. 掌握检查
+
+同一 GPU 的利用率被两个共享 Pod 各标为 80%，是否说明总利用率 160%？不是，先确定是否复制了设备级指标。设备指标消失，是否等于卡空闲？不是，先验证采集与设备状态。
+
+## 11. 参考与致谢 {/* #参考与致谢 */}
 
 - [使用 DCGM 监控 Kubernetes 中的 GPU](https://developer.nvidia.cn/blog/monitoring-gpus-in-kubernetes-with-dcgm/)
 - [About GPU Telemetry](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/index.html)

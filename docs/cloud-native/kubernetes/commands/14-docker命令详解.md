@@ -10,6 +10,8 @@ tags: [Docker, 容器, 镜像, BuildKit, OCI]
 
 `docker` CLI 通过 Docker API 访问 Dockerd；Dockerd 再协调 containerd、OCI Runtime、Network、Volume 和 BuildKit。Kubernetes 早已移除 Dockershim，大多数节点的 `docker ps` 看不到 Kubernetes Pod，这不是故障。
 
+理论分析见[运行链路、退出语义与分层定位](../../containers/01-Docker运行链路退出语义与分层故障定位.md)，先分清创建、启动、健康与退出的失败边界，再选择命令。
+
 ## 1. 版本、Context 与权限
 
 ```bash

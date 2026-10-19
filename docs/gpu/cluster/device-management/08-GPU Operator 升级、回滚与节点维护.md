@@ -110,6 +110,10 @@ kubectl get node -l nvidia.com/gpu.present=true \
 
 常见：`upgrade-required`、`cordon-required`、`pod-deletion-required`、`pod-restart-required`、`validation-required`、`uncordon-required`、`upgrade-done`、`upgrade-failed`。
 
+这不是所有版本的完整状态集合。例如 26.3 的控制器还包含等待任务与按需 drain 阶段；等待条件、删除范围和退出条件应分别核对。完整原理见[驱动升级状态机、客户端引用与可用性预算](./09-驱动升级状态机客户端引用与可用性预算.md)。
+
+`maxParallelUpgrades` 与 `maxUnavailable` 同时限制升级。已有不可用节点会占用预算，不能只用“当前只升级一台”判断安全；按节点计算的预算也不代表模型服务有足够剩余吞吐。
+
 改驱动版本（确认兼容后）：
 
 ```bash
@@ -129,11 +133,13 @@ kubectl get pods -A --field-selector spec.nodeName="$NODE" -o wide
 kubectl get pdb -A
 
 kubectl drain "$NODE" \
-  --ignore-daemonsets --delete-emptydir-data \
+  --ignore-daemonsets \
   --grace-period=300 --timeout=30m
 ```
 
-驱逐前确认：服务有其他副本、训练可中断/Checkpoint、emptyDir 无可丢关键数据、PDB 允许、本地 PV 可迁移。
+驱逐前确认：剩余副本具有实际承载能力、训练已有可恢复 Checkpoint、emptyDir 中没有必须保留的数据，且所用驱逐方式满足中断约束。上面的命令没有默认允许丢弃 emptyDir；若因此被阻止，应先确认数据和授权，不直接添加强制删除选项。
+
+本地 PV 有节点亲和性，驱逐不会自动把数据迁到另一台节点。任务要么等待原节点恢复，要么已有明确的数据迁移与重新绑定方案。PDB 也不能保护直接删除 Pod 或节点故障，不能把“配置了 PDB”理解成训练不会中断。
 
 验证：`nvidia-smi`、节点 Capacity/Allocatable、绑节点的 CUDA 测试 Pod，再 `kubectl uncordon "$NODE"`。Pending 排查见：[GPU Pod Pending](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
 

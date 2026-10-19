@@ -171,6 +171,8 @@ cuFileRead(handle, gpu_buffer, size, offset, 0);
 
 具体能力随 CUDA/GDS 版本演进。
 
+句柄注册与显存注册不能混为一谈。显式 `cuFileBufRegister` 是按复用、映射资源与请求形状选择的优化，不是所有请求的必选前提；注册的基址与 Buffer offset 还必须按 API 契约传递。深入推导见 [cuFile 请求、对齐、注册与回退](./09-cuFile请求对齐注册与回退机制.md)。
+
 ## 6. `O_DIRECT`
 
 GDS 直接路径通常需要符合 Direct IO 条件，使数据不通过普通 Page Cache。
@@ -191,6 +193,8 @@ GDS 直接路径通常需要符合 Direct IO 条件，使数据不通过普通 P
 - 返回错误
 
 具体行为取决于 GDS 版本、配置和文件系统。
+
+从 CUDA 12.2 起，受支持组合下，即使文件最初并非以 `O_DIRECT` 打开，cuFile 也可能为满足条件的请求选择直接路径。反过来，带有 `O_DIRECT` 也不保证每个请求直接到达应用 GPU Buffer。应观察实际路径，而不是只检查 open flags，见 [GDS Overview](https://docs.nvidia.com/gpudirect-storage/overview-guide/)。
 
 ## 7. `libcufile`
 
@@ -307,6 +311,8 @@ Storage
 > cuFile API 调用成功，不等于数据一定走了直接路径。
 
 必须结合统计、日志和性能验证。
+
+还要区分 GPU bounce buffer 与 CPU 兼容回退：未对齐请求使用 GPU 内部中转时，并不等于已经走 CPU；部分未对齐写入则可能使用 POSIX/RMW。请求成功、CPU 使用量与实际搬运量要分别观察。
 
 ## 12. 哪些应用适合 GDS
 
@@ -633,6 +639,8 @@ GPU 正常
 - 保留回退到普通 IO 的方案
 
 性能优化不能以数据正确性为代价。
+
+IO 完成、GPU 可以消费、数据在故障后仍持久存在，是三个条件。cuFile 同步写返回不应被当成整个 Checkpoint 已持久提交；文件系统元数据与崩溃持久性仍需相应同步和发布协议。具体语义见 [cuFile Write API](https://docs.nvidia.com/gpudirect-storage/api-reference-guide/index.html)，训练发布协议回到 [Checkpoint 与断点恢复](../../ai-systems/training/distributed/04-训练任务%20Checkpoint%20与断点恢复.md)。
 
 ## 24. 它与其他模块的关系
 

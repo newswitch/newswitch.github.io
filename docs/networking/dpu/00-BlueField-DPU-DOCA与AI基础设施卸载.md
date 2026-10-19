@@ -66,4 +66,17 @@ DPU 自身有 CPU、内存、Firmware 和 OS，也会出现资源耗尽、升级
 
 DPU 管理面与业务隔离，Arm OS 最小化服务和权限；控制 API 需要强身份；Firmware 与镜像签名；Host 不应无条件获得 DPU Root。
 
+## 9. 继续学习
+
+1. [Host 与 Arm 管理边界](./01-BlueField工作模式Host与Arm管理边界.md)：从谁控制设备理解模式、Representor 和管理网络。
+2. [DOCA 服务生命周期](./02-DOCA服务镜像静态Pod与生命周期.md)：对照独立 kubelet、DMS 与 DPF，区分版本、服务依赖和部署权威，推演控制权迁移。
+3. [遥测与故障定位](./03-DOCA遥测BlueMan与数据面故障分析.md)：从仪表盘追溯 DTS、采集源与真实硬件路径。
+4. [DPF 控制对象与生命周期](./04-DPF控制对象与DPU生命周期.md)：沿 BFB、Flavor、服务配置和子对象解释异步协调。
+5. [服务链与转发边界](./05-DPUServiceChain转发关系与故障边界.md)：区分外部接线、应用内部处理和实际数据面。
+6. [版本契约与兼容矩阵](./06-DOCA软件栈版本契约与兼容矩阵.md)：区分 Host、Arm、BSP、固件、SDK 与服务之间的契约。
+7. [升级激活与回退](./07-BlueField升级激活重置与回退边界.md)：解释暂存、激活、不同重置范围和业务可用性预算。
+8. [Flow 异步规则与卸载证明](./08-DOCA-Flow匹配转发异步规则与卸载证明.md)：从 Pipe、Entry、Miss 与完成状态追到真实硬件路径。
+
+先学模式和控制权，再学部署；否则同一个接口名可能被误当成 Host、Arm 或 Representor 中的不同对象。
+
 参考：[NVIDIA BlueField Documentation](https://docs.nvidia.com/networking/display/bluefielddpuosv470)、[NVIDIA DOCA](https://docs.nvidia.com/doca/)。

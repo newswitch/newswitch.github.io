@@ -78,4 +78,26 @@ Worker CPU、内存分配、NIC/NVMe 和 GPU 应尽量位于相同 NUMA 域。�
 | H2D 很慢 | Pinned、NUMA、PCIe、Batch碎片 |
 | 每个 Epoch 停顿 | Worker 重建、Shuffle、缓存失效 |
 
+## 8. 预取的内存预算
+
+设 Rank 数为 R，每 Rank 有 W 个 Worker，每 Worker 预取 F 个 Batch，每 Batch 展开后约 B 字节。可用 `R × W × F × B` 估算这部分在途 Batch 的容量级别，而不是整个进程组 RSS 的精确公式；解码临时对象、主进程当前 Batch、锁页副本和缓存还会增加占用。
+
+教学条件 R=8、W=4、F=2、B=256 MiB，预取部分约为 16 GiB。把 W 从 4 提高到 16 后，该项就约为 64 GiB，尚未计算其他内存。这解释了为什么增大 Worker 后可能在主机内存或 `/dev/shm` 失败，而不是更快喂满 GPU。
+
+## 9. 串行时间与流水线周期
+
+假设准备一个 Batch 需 60 ms、H2D 需 10 ms、计算需 80 ms。完全串行约为 150 ms；若三阶段能在不同 Batch 间充分重叠，稳态周期的理想下界由最慢阶段决定，约为 80 ms。首个 Batch 和流水线排空仍有额外时间。
+
+若准备时间偶尔达到 200 ms，预取队列可以吸收部分抖动，但不能弥补长期平均生产速度不足。判断方向应观察队列是否持续被耗尽与 GPU 时间线，而不是只比较一次平均文件读速。
+
+## 10. 异步操作的正确性
+
+异步 H2D 返回时数据可能仍在传输。源内存不得提前修改或复用，目标 Tensor 被计算使用前需要正确流依赖。使用独立 Copy Stream 后，还应处理跨流同步和内存生命周期，不能只把 `non_blocking=True` 当作完成证明。
+
+CPU 解码是瓶颈时，GDS 不会自动替应用完成图片解码或 Tokenization；页缓存命中也不代表数据已经在 HBM。优化必须找到关键路径中的实际慢阶段，见[数据完整路径](./01-训练数据从对象存储到GPU的一次完整路径.md)。
+
+## 11. 掌握检查
+
+为什么 Worker 翻倍不一定吞吐翻倍？共享 CPU、存储、内存带宽与锁会限制扩展。为什么 Copy 更快而 Step 不变？Copy 可能早已被计算隐藏，或者瓶颈在准备和尾部 Rank。
+
 参考：[PyTorch DataLoader](https://docs.pytorch.org/docs/stable/data.html)、[PyTorch Performance Tuning Guide](https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html)。

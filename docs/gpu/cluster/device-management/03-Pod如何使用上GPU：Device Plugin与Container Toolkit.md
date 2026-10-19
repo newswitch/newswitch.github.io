@@ -20,6 +20,8 @@ categories: 云原生
 
 本文把整条链路串起来：**宿主机上的 GPU，是怎么被 Kubernetes 里的 Pod 真正用上的？**
 
+阅读基线：源码示例以 `k8s-device-plugin v0.17.1` 为准，hook 调用链描述 Toolkit 的 legacy 模式。CDI 模式具有不同路径，不能把后面的 prestart hook 当作所有运行时的必经步骤。
+
 拆成两个问题：
 
 1. Kubernetes **如何感知** GPU
@@ -47,7 +49,7 @@ NVIDIA Device Plugin 策略较多，可用 `DEVICE_LIST_STRATEGY` 指定 env / v
 
 ### 1.2 GPU 如何分配给 Pod
 
-靠 **nvidia-container-toolkit**，核心三件套：
+设备注入可以经过 Toolkit legacy hook，也可以由支持 CDI 的运行时消费设备规范。先看 legacy 模式的三件套：
 
 | 组件 | 作用 |
 |------|------|
@@ -55,7 +57,7 @@ NVIDIA Device Plugin 策略较多，可用 `DEVICE_LIST_STRATEGY` 指定 env / v
 | `nvidia-container-runtime-hook` | 解析 GPU 信息，调用 CLI 做配置 |
 | `nvidia-container-cli` | 真正把驱动库 / 设备挂进容器 |
 
-需把 Docker / containerd 的 runtime 配成 `nvidia`（即走 `nvidia-container-runtime`），调用链变为：
+采用这条 legacy 路径时，需要配置对应 NVIDIA runtime，调用链变为：
 
 ![nvidia-container-runtime 调用链](/images/k8s-gpu/06-GPU分配链路/nv-container-runtime-call-flow.png)
 
@@ -113,7 +115,7 @@ runC 按 Spec 启动容器时会执行该 hook，真正干活的是 hook。
 `Allocate` 对每个容器请求校验设备 ID，再组装 `ContainerAllocateResponse`：
 
 ```go
-func (plugin *NvidiaDevicePlugin) Allocate(ctx context.Context, reqs *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+func (plugin *nvidiaDevicePlugin) Allocate(ctx context.Context, reqs *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
 	responses := pluginapi.AllocateResponse{}
 	for _, req := range reqs.ContainerRequests {
 		if err := plugin.rm.ValidateRequest(req.DevicesIDs); err != nil {
@@ -132,13 +134,13 @@ func (plugin *NvidiaDevicePlugin) Allocate(ctx context.Context, reqs *pluginapi.
 `getAllocateResponse` 会按策略分支（CDI、MPS、envvar、volume-mounts、PassDeviceSpecs、GDS、MOFED 等）。默认最常见的是 **envvar**：
 
 ```go
-if plugin.deviceListStrategies.Includes(spec.DeviceListStrategyEnvvar) {
-	plugin.updateResponseForDeviceListEnvvar(response, deviceIDs...)
+if plugin.deviceListStrategies.Includes(spec.DeviceListStrategyEnvVar) {
+	plugin.updateResponseForDeviceListEnvVar(response, deviceIDs...)
 }
 ```
 
 ```go
-func (plugin *NvidiaDevicePlugin) updateResponseForDeviceListEnvvar(
+func (plugin *nvidiaDevicePlugin) updateResponseForDeviceListEnvVar(
 	response *pluginapi.ContainerAllocateResponse, deviceIDs ...string,
 ) {
 	response.Envs[plugin.deviceListEnvvar] = strings.Join(deviceIDs, ",")
@@ -298,10 +300,34 @@ runC prestart
 
 生产配置与 Pending 排查可继续阅读：[Kubernetes GPU Pod 配置详解](./04-Kubernetes%20GPU%20Pod%20配置详解.md)、[GPU Pod 一直 Pending 的排查流程](../troubleshooting/01-GPU%20Pod%20一直%20Pending%20的排查流程.md)。
 
-## 6. 参考与致谢 {/* #参考与致谢 */}
+## 6. CDI 与 legacy 的分支
+
+CDI 即 Container Device Interface，用设备名和设备规范描述容器所需编辑，包括设备节点、挂载与必要 hook。Device Plugin 可以返回 CDI 相关信息，再由兼容的 kubelet、CRI 和运行时处理；是否可用取决于整条组件链，而不只是插件支持某个参数。
+
+`v0.17.1` 的 `getAllocateResponse` 先构建空响应，处理已启用的 CDI 策略；若所有策略均为 CDI，则直接返回，不再构造后面的 envvar/volume-mounts 路径。这个提前返回说明“Allocate 一定写 NVIDIA_VISIBLE_DEVICES”是过度概括。混合策略时还会继续处理其他分支。
+
+```text
+ListAndWatch 告知可用设备 → 调度器选择节点 → kubelet 请求 Allocate
+                                  ├─ envvar → legacy runtime/hook/CLI
+                                  └─ CDI 信息 → 兼容的 CRI/运行时 → 设备规范编辑
+```
+
+图只表示分工，不保证同一环境两种策略同时启用。CDI 规范中的 hook 也不能与 legacy 的 NVIDIA prestart hook 简单混为一谈。MIG 重配置后，应刷新规范与设备发现，避免新分配引用过期身份。
+
+## 7. 资源账本与设备权限
+
+Scheduler 处理 GPU 资源数量与节点约束，通常不选择具体 GPU UUID；kubelet/插件在节点内完成设备分配。Device Plugin 报告不健康可以影响后续分配，但不会自动迁移已运行的应用、修复物理卡或保证现有作业继续成功。
+
+容器中 `nvidia-smi` 正常只证明部分管理能力可用。CUDA Kernel、目标动态库版本、设备隔离和 RDMA 数据面需要分别验证。反过来，容器没有 `nvidia-smi` 可执行文件也不能单独证明 CUDA 不可用。
+
+源码阅读可追踪 `Allocate → getAllocateResponse → updateResponseForCDI/updateResponseForDeviceListEnvVar`，比较不同策略返回字段，而不是将函数名背成线性调用链。
+
+## 8. 参考与致谢 {/* #参考与致谢 */}
 
 - [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin)
 - [NVIDIA/nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit)
 - [NVIDIA/libnvidia-container](https://github.com/NVIDIA/libnvidia-container)
+- [Device Plugin v0.17.1 Allocate 与响应分支](https://github.com/NVIDIA/k8s-device-plugin/blob/v0.17.1/internal/plugin/server.go#L303-L357)
+- [NVIDIA CDI Support](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html)
 
 本文参考 [意琦行 / KubeExplorer - 在 K8S 中创建 Pod 是如何使用到 GPU 的](https://www.cnblogs.com/KubeExplorer/p/18624112)，并结合当前 Kubernetes 与 NVIDIA 组件的数据路径进行校订。

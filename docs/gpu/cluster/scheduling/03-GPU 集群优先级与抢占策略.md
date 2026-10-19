@@ -70,7 +70,7 @@ spec:
 
 - **节点池污点**：推理池只收高优先级 + 对应 toleration（[第 51 篇](../governance/01-生产%20GPU%20集群节点池规划.md)）
 - **ResourceQuota**：限制低优先级租户的 GPU 上限（[第 52 篇](../governance/02-GPU%20多租户与资源配额设计.md)）
-- **PDB**：关键推理设 `minAvailable`，降低被随意驱逐的风险
+- **PDB**：约束支持 Eviction API 的自愿中断；调度器抢占对 PDB 的遵守是尽力而为，不能把它当作绝对防抢占锁
 
 ## 3. 抢占时会发生什么
 
@@ -82,7 +82,7 @@ spec:
 生产注意：
 
 - 训练被抢应能从 **Checkpoint** 恢复（[第 32 篇](../../../ai-systems/training/distributed/04-训练任务%20Checkpoint%20与断点恢复.md)）
-- 推理若 `preemptionPolicy: Never`，则宁可 Pending 也不挤别人——适合「绝对不能抖」的业务，但可能长期等不到卡
+- `preemptionPolicy: Never` 表示该 Pod 不主动抢占低优先级 Pod；它仍可能被更高优先级 Pod 抢占，也可能遭遇驱逐或节点故障。不能用它保证自身不抖动
 - 抢占 **不等于** 队列里的 reclaim；Volcano/Kueue 还有跨队列回收
 
 ## 4. 和 Volcano / Kueue 的分工
@@ -115,10 +115,26 @@ kubectl get events -A --field-selector reason=Preempted
 | 问题 | 要点 |
 |------|------|
 | 怎么分层？ | 推理 > 训练 > 开发 |
-| 抢占代价？ | 训练要 CKPT；推理要 PDB/Never 权衡 |
+| 抢占代价？ | 训练要 CKPT；推理需容量余量和恢复策略，PDB/Never 不提供绝对保护 |
 | 和队列？ | PriorityClass 管 Pod；Queue 管配额与批作业 |
 
-## 7. 参考与致谢 {/* #参考与致谢 */}
+## 7. 准入与放置不是同一个决策
+
+ResourceQuota 判断 Namespace 是否还能申请资源；Kueue 等队列层判断工作负载是否得到预算；kube-scheduler 决定 Pod 能放到哪台节点。即使前两项通过，节点型号、污点、亲和、存储和拓扑仍可能使 Pod Pending。
+
+教学例子：两节点各 4 GPU，各有两个低优先级单卡 Pod，集群剩 4 GPU。高优先级 Pod 请求单节点 4 GPU，可能需要在同一节点腾出两张卡；“总空闲 4”不足以满足放置。若它还有节点亲和，只能选择目标节点上的候选者，不能无条件驱逐别处 Pod 来解决。
+
+## 8. 抢占不保证立即运行
+
+候选者终止存在宽限期；其他资源可能在等待期间变化；提名节点也不等于最终绑定节点。排障应分别看 Pending Reason、候选驱逐事件、终止宽限期与绑定事件。优先级主要影响排队和抢占，不提高 GPU 计算速度，也不绕过不满足的亲和条件。
+
+把在线服务、可恢复训练和开发任务分层只是策略起点。在线服务还应具备多副本、容量余量、流量摘除与模型重载预算；可恢复训练要能区分完整和未完成 Checkpoint；队列回收应明确哪些任务可被停止，防止多个调度层相互竞争同一份资源所有权。
+
+## 9. 掌握检查
+
+高优先级 Pod 设置 Never，为什么仍然 Pending？它不会主动腾走其他 Pod，且优先级不创造资源。为什么设置 PDB 仍可能中断？PDB 不是所有终止路径的强制屏障。回答时还应区分调度抢占、节点压力驱逐、管理员删除与节点故障。
+
+## 10. 参考与致谢 {/* #参考与致谢 */}
 
 - [Kubernetes 调度 · Pod 优先级与抢占](https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 - [多租户](https://kubernetes.io/zh-cn/docs/concepts/security/multi-tenancy/)

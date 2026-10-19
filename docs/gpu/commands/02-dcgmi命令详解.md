@@ -19,7 +19,7 @@ systemctl status nvidia-dcgm
 dcgmi discovery -l
 ```
 
-常见部署有两种：命令自行启动嵌入式 Host Engine，或连接已运行的 `nv-hostengine`/`nvidia-dcgm` 服务。远程连接选项和监听策略随版本变化，生产环境不要把 Host Engine 无认证暴露到非可信网络。
+DCGM 库支持独立服务和嵌入式模式；常规 dcgmi 查询通常连接已经运行的 `nv-hostengine`/`nvidia-dcgm` 服务，不能假设每个子命令都会自动启动它。DCGM v4.4.1 的 diag 执行器存在嵌入式回退路径，所以 diag 可以运行也不足以证明常驻监控正常。远程连接选项和监听策略随版本变化，生产环境不要把 Host Engine 无认证暴露到非可信网络。
 
 ## 2. 对象与选择器
 
@@ -58,7 +58,7 @@ modules     管理 Host Engine 模块
 
 不同 DCGM 版本的子命令和参数会变化，先用 `dcgmi <subcommand> --help` 获取准确列表。
 
-## 4. 只读巡检 `[R]`
+## 4. 巡检与健康监视设置 `[R/W]`
 
 ```bash
 dcgmi discovery -l
@@ -69,6 +69,8 @@ dcgmi health -c
 ```
 
 健康检查不是一次即时传感器读取。通常应先启用观察项，等待一个覆盖业务周期的窗口，再检查结果：
+
+下面的 `health -s a` 会设置监视项，属于写配置，不是纯查询；先确认当前策略和管理权限。`health -c` 则读取检查结果。
 
 ```bash
 dcgmi health --help
@@ -103,6 +105,8 @@ dcgmi diag -r 1 -i 0
 
 一次通过只说明本次插件未发现异常。一次失败也要区分硬件故障、环境权限、驱动版本、GPU 正忙、阈值不适配和插件不支持。
 
+逐实体结果、跳过项和插件汇总的关系见[DCGM 诊断原理与源码](../bare-metal-fleet/09-DCGM诊断插件结果与故障归因.md)。尤其不能只搜索一个 Pass 字符串作为自动验收条件。
+
 ## 7. 配置类操作 `[W/D]`
 
 `config`、`policy`、组增删和某些模块操作会改变状态。先查看帮助和当前配置，记录回滚值：
@@ -134,3 +138,5 @@ dcgmi policy --help
 - [DCGM command-line reference](https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/index.html)
 - [dcgmi diag reference](https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/dcgmi/dcgmi-diag.html)
 - [DCGM field identifiers](https://docs.nvidia.com/datacenter/dcgm/latest/dcgm-api/dcgm-api-field-ids.html)
+- [DCGM 运行模式](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/getting-started.html)
+- [v4.4.1 诊断执行器](https://github.com/NVIDIA/DCGM/blob/v4.4.1/dcgmi/Diag.cpp)

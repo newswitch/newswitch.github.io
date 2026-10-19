@@ -28,7 +28,10 @@ sbatch/srun请求
 4. [cgroup、CPU、GPU、NUMA 与进程亲和性](./04-cgroup-CPU-GPU-NUMA与进程亲和性.md)；
 5. [PMI、PMIx、MPI、NCCL、RDMA 与多机训练启动链路](./05-PMI-PMIx-MPI-NCCL-RDMA与多机训练启动链路.md)；
 6. [Enroot、Pyxis、Apptainer、数据挂载与 Checkpoint](./06-Enroot-Pyxis-Apptainer数据挂载与Checkpoint.md)；
-7. [Slurm 监控、容量规划、慢任务与生产故障排查](./07-Slurm监控容量规划慢任务与生产故障排查.md)。
+7. [Slurm 监控、容量规划、慢任务与生产故障排查](./07-Slurm监控容量规划慢任务与生产故障排查.md)；
+8. [Job 状态、退出码、信号与 Requeue](./08-Job状态退出码信号与Requeue恢复.md)：区分调度重启、应用恢复和结果正确性；
+9. [Fair Tree、历史用量与层级公平性](./09-FairTree历史用量与层级公平性.md)：手算账户树，并结合固定版本源码理解递归排名；
+10. [Prolog、Epilog 与作业清理](./10-Prolog-Epilog与作业清理边界.md)：理解执行上下文、失败传播和幂等性。
 
 ## 2. 与 Kubernetes 的差异
 
@@ -41,6 +44,10 @@ sbatch/srun请求
 | 服务治理 | 不是主要目标 | Service、Gateway、Controller 丰富 |
 
 两者可以管理不同资源池，也可以通过严格边界共享底层设施；不要让两个调度器同时认为自己独占同一 GPU。
+
+使用 BCM 维护节点时，继续阅读[调度器集成与资源所有权](../../../gpu/bare-metal-fleet/base-command-manager/05-Slurm-Kubernetes集成与资源所有权.md)。配置生成来源、节点供应和每次作业分配属于不同层。
+
+理论学习依次完成四个推演：画出 Job—Allocation—Step—Task；按字段求有效资源限制；用时间线计算 Backfill；从 Global Rank 追踪到 GPU UUID 和进程 cgroup。Slurm 时间片 Gang 与 Kubernetes 的 PodGroup 准入不可混为一谈。
 
 ## 3. 完成标准
 

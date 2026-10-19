@@ -1,0 +1,6 @@
+{
+  "label": "Base Command Manager",
+  "position": 9,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "gpu/bare-metal-fleet/base-command-manager/BCM集群供应与管理学习路线" }
+}

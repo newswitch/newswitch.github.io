@@ -90,7 +90,7 @@ ClusterPolicy → MIG Manager DaemonSet
 helm upgrade --install gpu-operator nvidia/gpu-operator \
   --namespace gpu-operator --create-namespace \
   --version <GPU_OPERATOR_VERSION> \
-  --set mig.strategy=single \   # 或 mixed
+  --set mig.strategy=single \
   --wait --timeout 30m
 # 预装驱动再加：--set driver.enabled=false
 
@@ -110,7 +110,7 @@ kubectl get pods -n gpu-operator -o wide | grep mig-manager
 NODE=<GPU节点名称>
 kubectl cordon "$NODE"
 kubectl get pods -A --field-selector spec.nodeName="$NODE" -o wide
-kubectl drain "$NODE" --ignore-daemonsets --delete-emptydir-data --timeout=30m
+kubectl drain "$NODE" --ignore-daemonsets --timeout=30m
 
 # 示例（以本集群 ConfigMap 实际键为准）
 kubectl label node "$NODE" nvidia.com/mig.config=all-1g.10gb --overwrite
@@ -119,6 +119,8 @@ kubectl label node "$NODE" nvidia.com/mig.config=all-1g.10gb --overwrite
 ```
 
 是否存在 `all-1g.10gb` / `all-balanced` 取决于型号、驱动与 MIG ConfigMap。
+
+上述 drain 不能默认允许删除 `emptyDir`；若因本地数据或 PDB 等条件被阻止，应先核对保存与业务退出策略，不能直接加删除或强制参数绕过。Local PV 也不会因为 Drain 自动迁移。示例中的 `mig.strategy=single` 可按已审核布局改为 `mixed`，不要在 Shell 续行反斜杠后追加注释。
 
 观察：
 
@@ -178,7 +180,39 @@ kubectl uncordon "$NODE"
 
 下一篇共享方案可看 [HAMi](./10-HAMi%20vGPU%20原理与实践.md)；推理侧见 [部署 vLLM](../../../ai-systems/inference/serving/01-Kubernetes%20部署%20vLLM%20推理服务.md)。
 
-## 14. 参考与致谢 {/* #参考与致谢 */}
+## 14. 从资源几何理解布局
+
+GI 划定显存与相关硬件资源边界，CI 在 GI 内进一步组织计算资源。同一 GI 内的多个 CI 不应被当成拥有彼此独立显存隔离边界的多个 GI。Profile 的计算切片比例也不等于任意工作负载都按比例获得端到端吞吐。
+
+合法布局受目标 GPU 的切片位置、Profile 组合和放置规则约束，不只是显存总量求和。几个 Profile 的显存加起来不超过整卡容量，仍不保证能同时创建。判断顺序应为型号支持、可用 Profile、当前 GI/CI 布局、合法放置、设备导出及应用兼容。
+
+教学例子：节点分别剩两个小实例，某 Pod 请求一个更大的实例。它们不能由调度器自动拼接成大实例；需要先改变物理卡布局，而重配置可能中断同卡其他客户端。MIG 碎片既包括节点放置碎片，也包括同卡 Profile 形状碎片。
+
+## 15. 配置变更是跨层状态转换
+
+```text
+停止新分配 → 清理同卡客户端 → 修改 MIG 模式和布局
+→ 重新发现 GI/CI → 更新 CDI 或设备导出信息
+→ Device Plugin 重新注册资源 → 校验监控归属 → 恢复调度
+```
+
+上述顺序表达必须维护的不变量，不是所有版本完全相同的服务编排。布局变化后旧 UUID、设备路径、CDI 描述和缓存中的资源数量可能失效。修改标签成功只证明写入期望状态，不能替代 `mig.config.state`、节点 Allocatable、容器枚举和实际计算验证。
+
+Kubernetes、Slurm 或手工管理工具应明确由谁负责布局；不要让两套控制器同时修正同一张卡。Slurm 的 GRES 发现与 Kubernetes 扩展资源注册是两个独立账本，同一物理 GPU 不应在两边被重复独占分配。
+
+## 16. 隔离与性能边界
+
+MIG 提供硬件资源隔离，但节点 CPU、NIC、存储和电源仍可能共享。某实例 GPU 计算稳定，不代表其请求 P99 不受共享数据加载或网络拥塞影响。跨实例通信、P2P、监控计数器和某些 API 的支持范围要按 GPU 代际与驱动核对，不能从整卡模式推断。
+
+对比实验应固定模型、Batch、输入长度、并发、CPU 和数据路径，分别观察实例内吞吐、延迟与邻居干扰。只记录 GPU 利用率无法判断切分后是否满足服务目标。
+
+## 17. 掌握检查
+
+1. 两个 CI 是否必然有独立显存边界？不必然，先看是否属于同一 GI。
+2. 两个小实例能直接满足一个大实例请求吗？不能，调度资源名不具有自动合并语义。
+3. 重配后 Pod 能启动但监控仍显示旧实例，是否完成？没有，需要修复设备身份与指标归属，防止容量和告警误判。
+
+## 18. 参考与致谢 {/* #参考与致谢 */}
 
 - [MIG User Guide](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/latest/index.html)
 - [Supported GPUs / Profiles](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/supported-gpus.html)

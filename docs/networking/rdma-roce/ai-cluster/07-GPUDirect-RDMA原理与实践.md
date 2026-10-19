@@ -2,7 +2,7 @@
 title: "GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存"
 sidebar_label: "07. GPUDirect RDMA 原理与实践：网卡如何直接访问 GPU 显存"
 sidebar_position: 7
-description: "理解普通 GPU 网络路径与 GPUDirect RDMA 的差异，掌握 BAR1、Pinned GPU Memory、nvidia-peermem、PCIe 亲和、NCCL GDR 验证和排障方法。"
+description: "理解普通 GPU 网络路径与 GPUDirect RDMA 的差异，掌握 BAR1、内存注册、DMA-BUF/legacy peermem、PCIe 亲和及分层路径验证。"
 tags: [GPU, GPUDirect RDMA, RDMA, InfiniBand, RoCE, NCCL]
 date: 2026-08-06 18:30:00
 categories: 云原生
@@ -161,7 +161,7 @@ Pin/Unpin 代价不低。高性能通信库通常会缓存注册信息，而不�
 
 ## 6. `nvidia-peermem`
 
-`nvidia-peermem` 是 NVIDIA 驱动提供的 Peer Memory 内核模块之一，用于让 RDMA 子系统访问 GPU Memory。
+`nvidia-peermem` 是 legacy Peer Memory 路径中的 NVIDIA 内核模块，用于支持 RDMA 子系统访问 GPU Memory。以下只解释这一分支；采用 DMA-BUF 的受支持系统不应仅为满足本节检查而额外加载它。
 
 检查：
 
@@ -170,7 +170,7 @@ lsmod | grep nvidia_peermem
 modinfo nvidia-peermem
 ```
 
-加载：
+只有已确认目标版本采用 legacy 路径、兼容条件满足，并获授权进行节点变更时，才考虑加载。若生命周期由 GPU Operator 等管理，应通过其支持的配置协调，不在运行中的生产节点手工叠加另一套管理方式：
 
 ```bash
 sudo modprobe nvidia-peermem
@@ -189,7 +189,7 @@ sudo modprobe nvidia-peermem
 
 ### 6.1 DMA-BUF 路径 {/* #dma-buf-路径 */}
 
-较新的 CUDA、内核、驱动和 NCCL 组合也可能使用 DMA-BUF 路径。是否支持和默认选择会持续演进。
+较新的 CUDA、内核、驱动和 NCCL 组合也可能使用 DMA-BUF 路径。GPU Operator 26.3 文档推荐在支持条件满足时使用 DMA-BUF；它与 legacy `nvidia-peermem` 的内核、驱动和 GPU 条件不同。是否支持和默认选择会持续演进，不应把“没有加载 nvidia-peermem”直接判断为 GDR 不可用。
 
 学习时应掌握不变的判断方法：
 
@@ -199,6 +199,8 @@ sudo modprobe nvidia-peermem
 4. 性能基线是否符合预期
 
 不要把某一版本的环境变量写成永久真理。
+
+理论深化见 [GPUDirect 内存注册、DMA-BUF 与生命周期](./13-GPUDirect内存注册DMA-BUF与生命周期.md)：从分配身份解释注册缓存为什么必须失效，以及 NIC 完成为什么不能替代 CUDA 的消费者同步。
 
 ## 7. GPU 与 NIC 的 PCIe 亲和
 
@@ -332,7 +334,7 @@ export NCCL_DEBUG_SUBSYS=INIT,NET,GRAPH
 观察：
 
 - 选中了哪张 HCA
-- 使用 `NET/IB` 还是 `NET/Socket`
+- 所选 NCCL 插件和数据路径；本篇 IB/RoCE 对照常见 `NET/IB` 与 `NET/Socket`，云优化插件还需查自身日志
 - GPU Direct RDMA 是否启用
 - GPU 与 NIC 的距离
 - Channel/Ring/Tree
@@ -412,7 +414,7 @@ GPU 4～7 → HCA 1
 
 - GPU 设备暴露
 - RDMA 设备暴露
-- Peer Memory 内核模块
+- 目标平台支持的 DMA-BUF 或 legacy Peer Memory 路径
 - 容器权限
 - Host Network 或 RDMA CNI
 - GPU/NIC 拓扑调度
@@ -452,7 +454,7 @@ Pod 同时申请 GPU 和 RDMA 资源并不自动保证它们拓扑就近。还�
 检查：
 
 - Peer Memory/DMA-BUF 支持
-- `nvidia-peermem`
+- 仅在 legacy 路径检查 `nvidia-peermem`，DMA-BUF 路径核对相应支持条件
 - GPU 型号
 - HCA 和驱动
 - PCIe 拓扑
@@ -567,7 +569,7 @@ RDMA 可能只访问 CPU Memory。
 ```text
 普通 RDMA：GPU ↔ CPU Pinned Memory ↔ NIC
 GPUDirect RDMA：GPU HBM ↔ NIC
-关键条件：Peer Memory + PCIe P2P + 健康 RDMA Fabric
+关键条件：受支持的内存注册/映射路径 + PCIe P2P + 健康 RDMA Fabric
 验证顺序：硬件 → RDMA → GPU RDMA → NCCL → 业务
 ```
 
@@ -591,8 +593,8 @@ GPUDirect RDMA：GPU HBM ↔ NIC
 2. GPU总显存是权重、激活等数据的存储容量；BAR1是CPU/PCIe设备映射GPU显存窗口的地址资源，容量和映射方式不等于整块显存容量。
 3. `nvidia-peermem` 为NVIDIA GPU显存与第三方RDMA设备建立Peer Memory注册/映射支持，使HCA能够对GPU内存执行RDMA DMA；新内核/驱动栈也可能使用DMA-BUF路径，需按实际版本确认。
 4. GDR数据仍经过GPU、PCIe Switch/Root Complex与HCA。跨Root或跨NUMA会多走互连、降低带宽并增加抖动，因此直连不代表拓扑无关。
-5. CPU Memory基线可用`ib_write_bw/ib_read_bw`；GPU Memory基线按工具版本使用支持CUDA Buffer的perftest或`gdrcopy`/通信基准。两组必须固定链路、MTU、队列深度和消息大小，并记录是否真正启用GPU Buffer。
-6. 设置`NCCL_DEBUG=INFO`和`NCCL_DEBUG_SUBSYS=INIT,NET,GRAPH`，确认日志选择`NET/IB`而非`NET/Socket`，并检查HCA、GDR/DMA-BUF、GPU Direct RDMA级别及每个Channel的GPU-HCA路径。
+5. CPU Memory 基线可用 `ib_write_bw/ib_read_bw`；GPU Memory 网络基线使用构建和版本支持 CUDA Buffer 的 perftest，并核对两端 Buffer、注册路径和设备。[GDRCopy](https://github.com/NVIDIA/gdrcopy) 研究 CPU 与 GPU 映射内存间的低开销拷贝，不是 GPU Buffer RDMA 网络基准的替代品。网络对照必须固定链路、MTU、队列深度和消息大小，并记录是否真正启用 GPU Buffer。
+6. 设置 `NCCL_DEBUG=INFO` 和 `NCCL_DEBUG_SUBSYS=INIT,NET,GRAPH`，在本篇 IB/RoCE 条件下确认所选 Verbs 路径，并继续检查 HCA、GDR/DMA-BUF 注册及各 Channel 的 GPU-HCA 关系；云优化插件不以 `NET/IB` 作为统一通过条件。模块、插件和端到端路径证据不能互相替代。
 7. 每节点4卡示例应优先把GPU0/1映射到同一PCIe根下的HCA0、GPU2/3映射到HCA1；两节点保持对称。表中至少包含Rank、GPU BDF、NUMA、HCA端口、网卡名、GID和交换网络，最后用Pair测试验证。
 
 ## 20. 参考与致谢 {/* #参考与致谢 */}

@@ -66,7 +66,17 @@ nvidia-ctk cdi list
 grep -E 'name:|containerEdits:' /etc/cdi/nvidia.yaml
 ```
 
-CDI 将 GPU、MIG 设备及其容器编辑描述为标准 YAML。GPU/MIG 配置变化后需要重新生成，或启用 Toolkit 提供的刷新机制。不要手工长期维护自动生成文件。
+CDI 将 GPU、MIG 设备及其容器编辑描述为标准 YAML。上面是手工生成模式；Toolkit 1.18 起的自动刷新通常写入 `/var/run/cdi/nvidia.yaml`。应先确定由谁维护规范，避免 `/etc/cdi` 手工文件与自动文件重复定义同名设备。
+
+当前自动刷新不能覆盖驱动移除与 MIG 重配置，不能以“服务已启用”替代变更后的显式生成与核验。使用自动刷新方案时，可在获授权的维护流程中重新执行其 oneshot 服务：
+
+```bash
+# [W] 更新规范；先确认节点任务、设备变更和目标 Toolkit 版本
+sudo systemctl restart nvidia-cdi-refresh.service
+nvidia-ctk --debug cdi list
+```
+
+没有该服务的版本使用已确认的手工生成流程。更新规范不会修复既有容器的 CUDA 上下文。完整机制见 [CDI 规范、刷新与权限边界](../driver-runtime/04-CDI设备规范刷新与容器权限边界.md)，不要手工长期维护自动生成文件。
 
 ## 6. 配置变更的正确步骤
 

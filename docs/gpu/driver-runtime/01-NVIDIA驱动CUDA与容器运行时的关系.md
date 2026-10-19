@@ -417,6 +417,33 @@ Done
 
 集群规模一大，手动装驱动、Toolkit、Plugin 会很繁琐。下一篇用 **GPU Operator** 把这些自动化：[NVIDIA GPU Operator 架构与组件说明](../cluster/device-management/05-NVIDIA%20GPU%20Operator%20架构与组件说明.md)。
 
-## 6. 参考与致谢 {/* #参考与致谢 */}
+## 6. 兼容性是一组接口契约
+
+CUDA 应用通常经过 CUDA Runtime、用户态驱动库和宿主内核驱动访问 GPU。Toolkit 提供编译与开发工具；容器中的 Runtime 库并不替代宿主内核模块。`nvcc --version`、`nvidia-smi` 的 CUDA Version 和 Python 框架自带 CUDA 版本因此可能不同，不能通过统一字符串判断兼容。
+
+```text
+应用与框架 → Runtime 和数学库 → 用户态驱动接口
+→ 宿主内核驱动 → GPU 固件和硬件
+```
+
+兼容性还包括 GPU 架构、已编译的 SASS/PTX、JIT 与新特性要求。CUDA 的向后兼容、同主版本内的 minor compatibility，以及特定 forward compatibility 包具有不同条件；不能把“容器隔离了依赖”解释为任意新 CUDA 都能运行在任意旧驱动上。选择版本应以目标 CUDA Compatibility 文档与框架支持矩阵为准。
+
+## 7. 一次库加载失败的分析
+
+教学场景：宿主 `nvidia-smi` 正常，容器导入框架却报动态库缺失。先确认镜像架构和目标文件，再看动态链接器搜索路径、Toolkit 注入的设备与库、实际加载版本和能力配置。管理工具成功只覆盖了部分用户态接口，不证明计算依赖完整。
+
+若错误是 Driver/Library mismatch，比较正在加载的内核模块与实际用户态驱动库来源；升级磁盘包但未加载新模块、容器挂载旧库、不同安装方式混用均可能造成不一致。不要先复制一份未知 `libcuda.so` 到镜像里掩盖问题。
+
+## 8. 从单机到 Kubernetes 的责任边界
+
+裸机最小计算通过后，再验证容器设备注入，最后验证 Kubernetes 资源发现、Allocate 与 CRI 路径。Docker 成功不能替代 containerd/CRI 配置检查。legacy hook 与 CDI 的区别见[Pod 使用 GPU 的完整链路](../cluster/device-management/03-Pod如何使用上GPU：Device%20Plugin与Container%20Toolkit.md)。
+
+生产版本基线至少绑定 OS/Kernel、GPU 型号、驱动、Toolkit、容器运行时、框架镜像 Digest 和功能验证。旧版本示例用于解释步骤，不作为所有平台的安装推荐。
+
+进一步阅读 [CUDA 兼容性、动态链接与 PTX 装载](./03-CUDA兼容性动态链接与PTX装载机制.md)，解释为什么基础初始化成功而特定算子失败；阅读 [CDI 规范与刷新](./04-CDI设备规范刷新与容器权限边界.md)，追踪设备身份变化如何影响新容器的注入。
+
+## 9. 参考与致谢 {/* #参考与致谢 */}
+
+- [CUDA Compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/)
 
 本文参考 [意琦行 - GPU 环境搭建指南：如何在物理机、Docker、K8s 等环境中使用 GPU](https://www.lixueduan.com/posts/ai/01-how-to-use-gpu/)，并结合当前 NVIDIA 驱动、CUDA 与容器运行时的组件关系校订。原文采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可。

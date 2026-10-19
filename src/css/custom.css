@@ -248,6 +248,12 @@ body {
   line-height: 1.85;
 }
 
+/* Mermaid measures HTML labels with their own inherited line height. */
+.theme-doc-markdown .docusaurus-mermaid-container p,
+.theme-doc-markdown .docusaurus-mermaid-container li {
+  line-height: inherit;
+}
+
 .theme-doc-markdown blockquote {
   border-left: 0.42rem solid var(--xyf-yellow);
   color: var(--xyf-muted);

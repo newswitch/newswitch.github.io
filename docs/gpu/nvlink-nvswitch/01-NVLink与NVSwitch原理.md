@@ -200,6 +200,8 @@ nvidia-smi -q
 
 不同代际系统的初始化机制可能变化，不能假设所有 NVSwitch 服务器都使用完全相同的 Fabric Manager 行为。
 
+管理组件代际差异、初始化链路与恢复证据详见[Fabric Manager 与 NVLSM](./02-Fabric-Manager-NVLSM初始化与故障分析.md)。跨节点 InfiniBand 的 SM/UFM 是另一套管理平面，不能混用服务与配置。
+
 Fabric 未正确初始化时可能出现：
 
 - CUDA 应用无法启动

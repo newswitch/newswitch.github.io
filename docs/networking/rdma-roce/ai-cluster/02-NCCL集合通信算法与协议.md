@@ -194,7 +194,23 @@ AllGather 和 ReduceScatter 的系数不同。比较结果时必须使用同一 
 看到一份 NCCL 日志时，能说明 Rank、Channel、算法、协议、Transport、HCA 与 GPU/NIC 拓扑；
 看到 `busbw` 时能说出它的计算口径和局限，而不是直接等同于物理线速。
 
-## 15. 参考资料 {/* #参考资料 */}
+## 15. 用成本模型理解消息规模
+
+对简化 Ring AllReduce，可以把时间近似为 `2 × (N - 1) × α + 2 × (N - 1) / N × S / B`，其中 N 为 Rank 数、α 是每通信步的延迟项、S 是每 Rank 输入大小、B 是模型中的有效传输带宽。它用于理解固定开销与字节项，不是现代 NCCL 所有协议和拓扑的精确性能公式。
+
+教学条件 N=8、S=1 GiB、B=50 GiB/s，仅带宽项约为 35 ms；小消息时这项迅速下降，固定延迟、启动、进度和同步开销可能主导。Tree、分层算法和硬件卸载因此可能在不同规模表现不同，不能把“Ring 大消息快”写成永远最优。
+
+## 16. Bootstrap 与数据面
+
+成员先交换必要连接信息，之后按选定拓扑和 Transport 传输目标 Tensor。地址交换成功不等于目标 RDMA/GDR 路径建立；日志包含 IB 也不单独证明每条传输都绕过了主机中转。
+
+集合通信还要求参与成员按协议一致调用。一个 Rank 在数据加载失败后未进入下一次 AllReduce，其他成员报超时是后果。先匹配首个异常、Collective 顺序和输入，再检查通信路径，避免将所有超时归咎于 Fabric。
+
+## 17. 掌握检查
+
+用 N=8 推导 `busbw/algbw=1.75`，解释它为何不是某一物理端口利用率；再用成本模型解释为什么大消息带宽提升不一定改善小消息训练。比较实验应固定 Rank、拓扑、消息和单位，不能只保留一条最好结果。
+
+## 18. 参考资料 {/* #参考资料 */}
 
 - [NCCL User Guide](https://docs.nvidia.com/deeplearning/nccl/user-guide/)
 - [NCCL Troubleshooting](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting.html)

@@ -587,6 +587,8 @@ Reusable Pinned Buffer
 
 下一篇继续研究：当数据已经进入不同 GPU 的 HBM 后，GPU 之间如何通过 NVLink 和 NVSwitch交换数据。
 
+CPU 小消息传递的另一条路径见 [GDRCopy 映射拷贝与源码](./06-GDRCopy映射拷贝生命周期与源码.md)：它由 CPU 访问合法 GPU 映射，需另外分析准备成本、对齐和 GPU 消费同步，不是把所有 H2D 都替换成更快的 DMA。
+
 → [NVLink 与 NVSwitch 原理](../nvlink-nvswitch/01-NVLink与NVSwitch原理.md)
 
 ## 21. 课后练习

@@ -104,6 +104,8 @@ ibnetdiscover
 
 大型 Fabric 的路由算法、Adaptive Routing 和 Congestion Control 能力取决于 SM 实现与交换平台。
 
+深入阅读 [SM 选举、重扫与路由收敛](../../ai-fabric/production/12-SubnetManager选举重扫与路由收敛.md)。已有转发表可能继续服务一部分流量，但这不能证明管理失效期间的新节点、拓扑变化和上层恢复仍然正常。
+
 ## 5. PKey Partition
 
 PKey 提供 IB Fabric 内的逻辑分区。成员关系可限制不同主机/租户通信。
