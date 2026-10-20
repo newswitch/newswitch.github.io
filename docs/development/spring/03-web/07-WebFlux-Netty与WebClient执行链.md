@@ -180,7 +180,8 @@ JSON 确实经过 HTTP 编解码，404 分支显式释放正文；SSE 客户端�
 
 ## 8. 关联文章与资料
 
-- [Spring Framework 学习路线](../00-Spring学习路线.md)：下一专题进入容器、代理、事务与 Web 的源码路径。
+- 下一专题：[ApplicationContext 刷新、状态与失败清理](../04-internals/01-ApplicationContext刷新状态与失败清理.md)。
+- [Spring Framework 学习路线](../00-Spring学习路线.md)
 - [Spring WebFlux](https://docs.spring.io/spring-framework/reference/web/webflux.html)
 - [WebClient 配置与资源](https://docs.spring.io/spring-framework/reference/web/webflux-webclient/client-builder.html)
 - [Reactor Netty HTTP Client](https://projectreactor.io/docs/netty/release/reference/http-client.html)

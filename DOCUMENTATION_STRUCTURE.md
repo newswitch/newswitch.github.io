@@ -165,6 +165,8 @@ projects/
 
 `examples/spring/web-lab/` 保存 Servlet、MVC、异步通信与 Reactor/WebFlux 专题。`scripts/verify-spring-web.mjs` 对照 11 个文章源文件，验证 40 项 JUnit 边界测试与 7 个主类各 3 次运行结果。真实 HTTP、SSE、WebSocket 与模拟 Servlet 测试明确分开；真实服务器仅绑定 `127.0.0.1` 临时端口，使用有界线程、连接池与超时，并关闭自有资源。Web 专题由本地 `development/spring/03-web/` 自动生成，分类默认折叠。运行验证脚本需要 JDK 25、Maven 3.9.14；`--check-sources` 只检查文章和示例一致性，不启动服务。
 
+`examples/spring/internals-lab/` 保存 Spring 7.0.9 源码专题的 7 个演示与测试。`scripts/verify-spring-internals.mjs` 对照 8 个文章源文件，验证 42 项 JUnit 测试、运行依赖版本以及每个主类 3 次独立 JVM 输出。实验覆盖刷新失败、循环依赖、配置导入、自动代理、真实 H2 事务、MockMvc 与 TestContext 缓存，不启动网络服务；关闭自有上下文和数据库池，缓存仅定向失效本实验配置。对应目录为 `development/spring/04-internals/`，默认折叠；验证工具使用 JDK 25、Maven 3.9.14。
+
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
 | 产品或专题 | 二级专题 |
