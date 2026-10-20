@@ -14,6 +14,10 @@ tags: [Java, Maven, 依赖冲突, BOM, Classpath]
 
 ## 1. 坐标与依赖图
 
+![Maven 依赖、版本管理、插件与产物的边界](/img/development/maven-boundaries.svg)
+
+版本管理不等于引入依赖，生命周期不等于依赖图；诊断时先确定问题属于哪个维度，再使用对应命令。
+
 groupId、artifactId、version 标识常用制品坐标，type/classifier 进一步区分 POM、测试归档或平台变体等。相同 Java 包名不意味着同一个 Maven 制品，不同制品也可能带入重复类。
 
 ```text

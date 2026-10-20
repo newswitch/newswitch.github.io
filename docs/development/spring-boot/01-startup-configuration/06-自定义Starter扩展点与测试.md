@@ -182,6 +182,8 @@ Consumer 没有组件扫描，也没有显式导入 GreetingAutoConfiguration。
 
 ## 8. 关联文章
 
+- [下一专题：REST 接口、分层与任务服务](../02-web/01-REST接口分层DTO与任务服务.md)
+
 - [Spring Boot 学习路线](../00-SpringBoot学习路线.md)
 - [自动配置条件与评估报告](./04-自动配置条件与评估报告.md)
 - [Spring 配置类解析源码](../../spring/04-internals/03-配置类解析ImportSelector与定义注册.md)

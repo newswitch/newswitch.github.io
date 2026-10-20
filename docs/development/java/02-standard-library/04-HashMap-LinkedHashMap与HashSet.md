@@ -14,6 +14,10 @@ tags: [Java, HashMap, LinkedHashMap, HashSet]
 
 ## 1. get 如何找到键
 
+![HashMap 的桶定位、碰撞与扩容](/img/development/hashmap.svg)
+
+桶数组与桶内结构分开：前者决定定位范围，后者处理同桶比较。扩容和可变键的影响也发生在这条查找路径上。
+
 ```text
 key.hashCode → 扰动与桶定位
              → 桶内比较哈希、身份或 equals

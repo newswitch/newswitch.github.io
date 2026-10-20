@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS task (
+  id VARCHAR(36) PRIMARY KEY,
+  tenant VARCHAR(40) NOT NULL,
+  request_key VARCHAR(80) NOT NULL,
+  name VARCHAR(80) NOT NULL,
+  status VARCHAR(16) NOT NULL,
+  version BIGINT NOT NULL,
+  CONSTRAINT uq_task_request UNIQUE (tenant, request_key)
+);
+CREATE TABLE IF NOT EXISTS outbox (
+  event_id VARCHAR(36) PRIMARY KEY,
+  task_id VARCHAR(36) NOT NULL,
+  tenant VARCHAR(40) NOT NULL,
+  event_type VARCHAR(40) NOT NULL,
+  published BOOLEAN DEFAULT FALSE NOT NULL
+);

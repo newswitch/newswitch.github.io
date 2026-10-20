@@ -14,6 +14,10 @@ tags: [Java, NIO, ByteBuffer, Channel, Selector, mmap]
 
 ## 1. Buffer 的三个指针
 
+![NIO 的 Selector、事件循环与缓冲区关系](/img/development/nio-selector.svg)
+
+先把“通知就绪”“实际读写”和“业务处理”分开。下文的 Buffer 指针描述数据边界，不表示一次就能收到完整应用请求。
+
 始终满足 `0 <= position <= limit <= capacity`：capacity 是容纳上限，limit 是当前可操作边界，position 是下一个相对读写位置。
 
 ```text

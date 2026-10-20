@@ -12,6 +12,10 @@ tags: [Spring, Bean生命周期, Scope, PostConstruct, 线程安全]
 
 ## 1. 普通 Bean 的关键阶段
 
+![普通 Bean 的实例化、注入、初始化、代理与销毁](/img/development/bean-lifecycle.svg)
+
+顺着图看容器返回对象前后的分界：构造成功不等于初始化完成，目标对象也不一定就是最终暴露的代理。
+
 ```text
 实例化 / 工厂方法返回对象
 → 属性与注入处理

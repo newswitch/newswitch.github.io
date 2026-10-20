@@ -18,6 +18,10 @@ G1 的核心不是“把堆平均分块后就不暂停”，而是利用 Region 
 
 ## 2. 从 Young 到 Mixed 的主路径
 
+![G1 的分配、标记、回收集合与复制暂停](/img/development/g1-cycle.svg)
+
+图显示阶段职责，不表示所有 GC 日志都会按这六步出现一次；并发阶段和暂停阶段必须分开读。
+
 ```text
 普通 Young GC
 → Young GC 同时启动并发标记

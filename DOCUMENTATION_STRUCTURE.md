@@ -171,6 +171,10 @@ projects/
 
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
+Spring Boot 六个专题现有 42 篇正文，连同 Java 56 篇、Spring 28 篇和三篇路线共 129 篇。`examples/spring-boot/service-lab/` 使用 Boot 4.1.1 与 JDK 25，`scripts/verify-boot-service.mjs` 在独立目录构建并验证 31 项测试：真实 HTTP 健康、带安全链的 MockMvc、H2 事务、并发幂等、版本竞争与 Outbox 回滚。外部中间件、目标数据库、IdP、Testcontainers、systemd、Kubernetes、Native 不在本机验证范围。
+
+`static/img/development/` 保存 20 张无外部字体或远程依赖的 SVG 机制图，源布局由 `scripts/generate-development-diagrams.mjs` 生成。编辑布局后重新生成，并栅格预览检查文字边界、连线和图注；文章通过固定静态路径引用，Mermaid 用于请求时序、状态与跨系统消息流程。不要为单个术语强制加图。
+
 | 产品或专题 | 二级专题 |
 | --- | --- |
 | Nginx | 架构与源码、代理与内容服务、协议与服务发现、安全与生产运维 |

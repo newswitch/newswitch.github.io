@@ -26,6 +26,10 @@ tags: [Java, JMM, volatile, happens-before]
 
 ## 2. happens-before 怎样建立关系
 
+![volatile 发布与 happens-before 的传递关系](/img/development/jmm-publication.svg)
+
+沿箭头可组合生产者顺序、volatile 同步和消费者顺序；它表达语言保证，不是根据两个线程的墙上时间猜执行次序。
+
 它表达可见性与顺序约束，不等于墙上时钟先发生。常用关系包括同线程程序顺序、同一监视器的解锁到后续加锁、同一 volatile 变量的写到后续读，以及 start、终止观察等关系；它们还可传递。
 
 ```text

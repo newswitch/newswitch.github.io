@@ -14,6 +14,10 @@ tags: [Java, ArrayList, LinkedList, 数据结构]
 
 ## 1. 两种布局
 
+![数组引用槽位与双向链表节点的关系](/img/development/collection-layout.svg)
+
+图把“元素引用连续”与“元素对象连续”分开；链表局部插入前的定位成本，也不能从接链动作中省略。
+
 ```text
 ArrayList：Object[] → [引用A][引用B][引用C][空槽]
 LinkedList：头 → 节点A ⇄ 节点B ⇄ 节点C ← 尾

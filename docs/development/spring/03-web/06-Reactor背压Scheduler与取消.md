@@ -12,6 +12,10 @@ Reactor 不是“把方法返回值改成 Mono 就会变快”。它提供一种
 
 ## 1. 组装不是执行，Mono 也不是线程
 
+![Reactor 数据、需求与取消信号的方向](/img/development/reactor-demand.svg)
+
+上方箭头是数据方向，下方箭头是需求和取消方向；线程切换与内部缓冲仍需另外分析。
+
 `Mono` 表达零个或一个元素，`Flux` 表达零个到多个元素。订阅时，订阅者收到 Subscription，再通过 `request(n)` 表达需求；发布者用 `onNext` 发送值，以 `onComplete` 或 `onError` 终止。
 
 没有元素的成功完成和失败是两种信号，不能用 null 随意混合。多数操作符返回一个新的 Publisher，忘记使用返回值可能使预期转换完全没有接入链路。

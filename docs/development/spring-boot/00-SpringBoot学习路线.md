@@ -48,7 +48,7 @@ Client
 
 ## 3. 六个专题与 42 篇技术文章
 
-启动与配置的 6 篇正文已提供，包含可运行的多模块工程、练习答案和边界测试。其余专题继续沿 Web、数据、外部调用、安全与生产运行展开。
+六个专题的 42 篇正文均已提供，包含原理、配置边界、故障分析和练习答案。启动与配置使用多模块工程，Web、数据和安全使用独立任务服务；需要外部中间件、身份提供方或部署平台的部分分别标明实验条件，不能把本机测试结果泛化为所有环境已验证。
 
 ### 3.1 启动与配置（6 篇）
 
@@ -67,64 +67,68 @@ Client
 
 ### 3.2 Web 服务（6 篇）
 
-1. REST API、Controller、Service 与 DTO。
-2. 参数校验、错误响应与 Problem Details。
-3. JSON 字段、日期、精度、空值与循环引用。
-4. 分页、并发更新、状态机与业务幂等。
-5. 上传下载、流式响应、SSE 与客户端断连。
-6. HTTP 客户端连接池、超时、重试与取消。
+1. [REST 接口、分层、DTO 与任务服务](./02-web/01-REST接口分层DTO与任务服务.md)。
+2. [参数校验、错误响应与 Problem Details](./02-web/02-参数校验错误响应与ProblemDetails.md)。
+3. [JSON、日期、精度、空值与对象边界](./02-web/03-JSON日期精度空值与对象边界.md)。
+4. [分页、并发更新、状态机与幂等](./02-web/04-分页并发更新状态机与幂等.md)。
+5. [上传下载、SSE 与客户端断连](./02-web/05-上传下载SSE与客户端断连.md)。
+6. [HTTP 客户端、连接池、超时、重试与取消](./02-web/06-HTTP客户端连接池超时重试与取消.md)。
 
 每个接口同时覆盖正常、非法输入、重复请求和依赖失败。响应状态码、业务状态和日志证据应能互相解释。
 
 ### 3.3 数据访问（6 篇）
 
-1. JDBC、JdbcTemplate 与 SQL 执行路径。
-2. HikariCP 生命周期、排队与容量。
-3. MyBatis 的 Mapper、SqlSession、执行与缓存。
-4. JPA/Hibernate 的实体、脏检查、懒加载与 N+1。
-5. Flyway/Liquibase 与兼容数据库变更。
-6. 业务事务、Outbox 与外部副作用。
+1. [JDBC、JdbcTemplate 与 SQL 执行路径](./03-data/01-JDBC与JdbcTemplate执行路径.md)。
+2. [HikariCP 生命周期、排队与容量](./03-data/02-HikariCP生命周期排队与容量.md)。
+3. [MyBatis 的 Mapper、SqlSession、执行与缓存](./03-data/03-MyBatis映射SqlSession执行与缓存.md)。
+4. [JPA 实体状态、脏检查、懒加载与 N+1](./03-data/04-JPA实体状态脏检查懒加载与N加一.md)。
+5. [Flyway、Liquibase 与兼容数据库变更](./03-data/05-Flyway-Liquibase与兼容数据库变更.md)。
+6. [业务事务、Outbox 与外部副作用](./03-data/06-业务事务Outbox与外部副作用.md)。
 
-MyBatis 与 JPA 使用同一组业务需求分别观察 SQL、事务和连接行为。ORM 的缓存不是数据库本身的一致性保证。
+MyBatis 与 JPA 对照相同业务需求分析 SQL、事务和连接行为；配套任务服务实际运行 JdbcTemplate，不将替代实现的分析当作已经联调。ORM 的缓存不是数据库本身的一致性保证。
 
 ### 3.4 中间件与外部服务（6 篇）
 
-1. Redis 序列化、缓存策略与一致性。
-2. Kafka 发送、消费、提交、重试与幂等。
-3. RabbitMQ Confirm、ACK、死信与重复投递。
-4. Async、Scheduled 与后台任务资源管理。
-5. Nacos 配置、服务发现与客户端生命周期。
-6. Resilience4j 的重试、熔断、隔离、限流与时间预算。
+1. [Redis 序列化、缓存策略与一致性](./04-integrations/01-Redis序列化缓存策略与一致性.md)。
+2. [Kafka 发送、消费、提交、重试与幂等](./04-integrations/02-Kafka发送消费提交重试与幂等.md)。
+3. [RabbitMQ Confirm、ACK、死信与重复投递](./04-integrations/03-RabbitMQ确认ACK死信与重复投递.md)。
+4. [Async、Scheduled 与后台任务资源管理](./04-integrations/04-Async-Scheduled与后台任务资源.md)。
+5. [Nacos 配置、服务发现与客户端生命周期](./04-integrations/05-Nacos配置发现与客户端生命周期.md)。
+6. [Resilience4j 的熔断、隔离、限流与时间预算](./04-integrations/06-Resilience4j熔断隔离限流与时间预算.md)。
 
 服务端原理分别链接已有数据库、缓存和消息模块；这里观察应用客户端如何占用资源、处理结果和恢复失败。
 
 ### 3.5 安全（6 篇）
 
-1. Spring Security 过滤器链与认证授权。
-2. Session、密码存储与安全上下文。
-3. JWT Resource Server、声明、签名与密钥。
-4. OAuth2/OIDC、授权码、PKCE 和身份提供方。
-5. CSRF、CORS、Cookie 与会话。
-6. 方法权限、多租户隔离与安全测试。
+1. [Spring Security 过滤器链与认证授权](./05-security/01-SpringSecurity过滤器链与认证授权.md)。
+2. [Session、密码存储与安全上下文](./05-security/02-Session密码存储与安全上下文.md)。
+3. [JWT Resource Server、声明、签名与密钥](./05-security/03-JWT资源服务器声明签名与密钥.md)。
+4. [OAuth2、OIDC、授权码、PKCE 与身份提供方](./05-security/04-OAuth2-OIDC授权码PKCE与身份提供方.md)。
+5. [CSRF、CORS、Cookie 与会话边界](./05-security/05-CSRF-CORS-Cookie与会话边界.md)。
+6. [方法权限、多租户隔离与安全测试](./05-security/06-方法权限多租户与安全测试.md)。
 
 每种身份模式要明确谁签发身份、谁验证、权限由谁判断；使用 JWT 也不能省去授权和密钥生命周期。
 
 ### 3.6 生产运行（12 篇）
 
-1. 单元、切片、集成测试与 Testcontainers。
-2. Actuator、Micrometer、健康检查与指标。
-3. 结构化日志、MDC、OpenTelemetry 与证据链。
-4. JAR、systemd、配置、信号与优雅退出。
-5. Docker、Buildpacks、分层镜像与 JVM。
-6. Kubernetes 探针、资源、摘流与滚动更新。
-7. 压测与请求、线程、连接、CPU、内存容量。
-8. 慢请求、线程池、数据库连接池与下游等待。
-9. 内存增长、GC 抖动与容器 OOM。
-10. 依赖、Bean、配置、端口和环境引起的启动失败。
-11. Spring AOT 与 Native Image。
-12. 依赖兼容、行为变化与升级回归。
+1. [单元测试、切片、集成测试与 Testcontainers](./06-production/01-测试分层切片集成与Testcontainers.md)。
+2. [Actuator、Micrometer、健康检查与指标](./06-production/02-Actuator-Micrometer健康检查与指标.md)。
+3. [结构化日志、MDC、OpenTelemetry 与证据链](./06-production/03-结构化日志MDC与OpenTelemetry.md)。
+4. [JAR、systemd、配置、信号与优雅退出](./06-production/04-JAR-systemd信号与优雅退出.md)。
+5. [Docker、Buildpacks、分层镜像与 JVM](./06-production/05-Docker-Buildpacks分层镜像与JVM.md)。
+6. [Kubernetes 探针、资源、摘流与滚动更新](./06-production/06-Kubernetes探针资源摘流与滚动更新.md)。
+7. [压测与请求、线程、连接、CPU、内存容量](./06-production/07-压测请求线程连接与内存容量.md)。
+8. [慢请求、线程池、数据库连接池与下游等待](./06-production/08-慢请求线程池连接池与下游等待.md)。
+9. [内存增长、GC 抖动与容器 OOM](./06-production/09-内存增长GC抖动与容器OOM.md)。
+10. [依赖、Bean、配置、端口和环境引起的启动失败](./06-production/10-依赖Bean配置端口与启动失败.md)。
+11. [Spring AOT 与 Native Image](./06-production/11-SpringAOT与NativeImage.md)。
+12. [依赖兼容、行为变化与升级回归](./06-production/12-依赖兼容行为变化与升级回归.md)。
 
 ## 4. 贯穿项目与验收
+
+![请求与资源之间的关系](/img/development/request-resources.svg)
+
+完整任务工程与说明见 [service-lab 源码](https://github.com/newswitch/newswitch.github.io/tree/main/examples/spring-boot/service-lab)。本机测试范围是 MVC、安全、H2 事务与有限并发，不包含外部中间件、身份提供方、Linux 托管、容器编排和 Native 编译。
 
 任务服务保留创建、查询、执行和取消的明确状态。先用纯 Java 表达规则，再由容器装配；持久化后为状态迁移增加事务；异步化后增加重投递和幂等验证。
 

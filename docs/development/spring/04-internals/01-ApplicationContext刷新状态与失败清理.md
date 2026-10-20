@@ -14,6 +14,10 @@ tags: [Spring, 源码, ApplicationContext, 生命周期]
 
 ## 1. 从 refresh 看四类状态变化
 
+![ApplicationContext 刷新中定义、实例与完成状态](/img/development/context-refresh.svg)
+
+图中的定义处理早于普通单例创建；失败路径还要清理已经拥有的资源，不能只把刷新理解为“批量 new”。
+
 ```mermaid
 flowchart TD
     A["准备环境与 BeanFactory"] --> B["处理 BeanDefinition"]

@@ -12,6 +12,10 @@ tags: [Java, JVM, 内存, RSS, NMT]
 
 ## 1. 先分规范概念与 HotSpot 实现
 
+![JVM 内存区域和 OS 统计口径](/img/development/jvm-memory.svg)
+
+区域框表示归属而非容量比例，右下角是观测口径，不是另一块可与前面简单相加的 JVM 内存。
+
 JVM 规范描述堆、方法区、运行时常量池、线程栈等逻辑区域；HotSpot 通过具体的数据结构和地址空间实现。Metaspace 是其存放类元数据的重要实现，不能把规范“方法区”与某一个内存数字完全画等号。
 
 ```text

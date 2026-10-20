@@ -8,6 +8,8 @@ tags: [Spring, 源码, AOP, Advisor, 代理]
 
 # 自动代理创建、Advisor 匹配与调用链
 
+![AOP 代理与调用边界总览](/img/development/aop-boundary.svg)
+
 前面的 AOP 实验可以手动创建代理。自动代理则要回答另一个问题：容器何时发现某个 Bean 需要增强，怎样把代理交给其他对象，方法调用时又怎样选择这一方法的拦截链？
 
 ## 1. 创建代理和执行通知是两个阶段
