@@ -118,7 +118,7 @@ fresh=0
 
 `@DirtiesContext` 应用于确实改变了容器级状态的情况，而不是所有失败后的通用补丁。每次重建都可能重新建立线程、连接池和订阅，也会掩盖共享状态设计的问题。
 
-这结束了 Spring Framework 四个专题。接下来进入 [Spring Boot 学习路线](../../spring-boot/00-SpringBoot学习路线.md)，把容器、代理、事务和 Web 机制放到启动、自动配置与生产运行中理解。
+这结束了 Spring Framework 四个专题。接下来从[第一个 Spring Boot 应用](../../spring-boot/01-startup-configuration/01-第一个SpringBoot应用与工程结构.md)开始，把容器、代理、事务和 Web 机制放到启动、自动配置与生产运行中理解，完整顺序见 [Spring Boot 学习路线](../../spring-boot/00-SpringBoot学习路线.md)。
 
 ## 8. 练习与答案
 

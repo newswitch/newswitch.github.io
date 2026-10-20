@@ -167,6 +167,8 @@ projects/
 
 `examples/spring/internals-lab/` 保存 Spring 7.0.9 源码专题的 7 个演示与测试。`scripts/verify-spring-internals.mjs` 对照 8 个文章源文件，验证 42 项 JUnit 测试、运行依赖版本以及每个主类 3 次独立 JVM 输出。实验覆盖刷新失败、循环依赖、配置导入、自动代理、真实 H2 事务、MockMvc 与 TestContext 缓存，不启动网络服务；关闭自有上下文和数据库池，缓存仅定向失效本实验配置。对应目录为 `development/spring/04-internals/`，默认折叠；验证工具使用 JDK 25、Maven 3.9.14。
 
+`examples/spring-boot/startup-lab/` 保存 Boot 4.1.1 启动与配置专题，包含普通自动配置库、依赖型 Starter 和可执行应用三个 Maven 模块。`scripts/verify-boot-startup.mjs` 对照 18 个文章代码/资源文件，验证 36 项测试、六个主类各三次输出，以及可执行 JAR 的真实 HTTP 请求、普通库布局、候选资源和生成的属性元数据。服务器仅绑定环回临时端口，Runner 等待有期限，结束后关闭自有上下文；构建目录不提交。文档目录为 `development/spring-boot/01-startup-configuration/`，默认折叠，工具使用 JDK 25 与 Maven 3.9.14。
+
 文章较多的产品目录保留 `00-学习路线` 作为唯一入口，正文按可以直接识别的技术专题继续分组。网站侧边栏由这些目录自动生成，不单独维护文章列表。
 
 | 产品或专题 | 二级专题 |

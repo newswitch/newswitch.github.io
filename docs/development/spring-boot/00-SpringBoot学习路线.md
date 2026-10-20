@@ -10,7 +10,7 @@ tags: [SpringBoot, Java, Web, 数据访问, 可观测性, 学习路线]
 
 Spring Boot 把 Spring 应用的启动、依赖、配置和常见基础设施集成组织起来。一个能提供 HTTP 响应的服务，还需要正确处理配置、数据、权限、资源上限和退出过程。学习主线因此从第一个可运行应用一直延伸到压测、故障定位和升级验证。
 
-本系列选择 JDK 25 与 Spring Boot 4.1.x，固定具体补丁版本和依赖树。官方当前系统要求包含 Java 25；第三方 Starter、数据库驱动和构建插件仍需分别确认兼容性。[版本要求](https://docs.spring.io/spring-boot/system-requirements.html)
+本系列以 JDK 25 与 Spring Boot 4.1.1 建立固定基线，依赖版本由 Boot 管理。官方系统要求包含 Java 25；第三方 Starter、数据库驱动和构建插件仍需分别确认兼容性。升级补丁版本时重新验证依赖树、产物和行为，不把固定实验版本理解为永远不变的生产建议。[版本要求](https://docs.spring.io/spring-boot/system-requirements.html)
 
 ## 1. 一次请求会经过什么
 
@@ -48,18 +48,22 @@ Client
 
 ## 3. 六个专题与 42 篇技术文章
 
-当前发布本学习路线；下列正文按阶段逐步提供。
+启动与配置的 6 篇正文已提供，包含可运行的多模块工程、练习答案和边界测试。其余专题继续沿 Web、数据、外部调用、安全与生产运行展开。
 
 ### 3.1 启动与配置（6 篇）
 
-1. 第一个 Spring Boot 应用与工程结构。
-2. 从 main 到端口监听的启动生命周期。
-3. Starter、BOM 与依赖管理。
-4. 自动配置、条件装配与评估报告。
-5. 配置优先级、ConfigurationProperties、校验与多环境。
-6. 自定义 Starter、扩展点与测试。
+| 顺序 | 文章 | 核心问题 |
+| --- | --- | --- |
+| 1 | [第一个 Spring Boot 应用与工程结构](./01-startup-configuration/01-第一个SpringBoot应用与工程结构.md) | 工程怎样构建，入口和扫描范围怎样影响 HTTP 服务 |
+| 2 | [从 main 到端口监听的启动生命周期](./01-startup-configuration/02-从main到端口监听的启动生命周期.md) | 环境、刷新、服务器、Runner 与 Ready 怎样衔接 |
+| 3 | [Starter、BOM、依赖树与可执行 JAR](./01-startup-configuration/03-Starter-BOM依赖树与可执行JAR.md) | 依赖管理、构建插件与运行布局分别负责什么 |
+| 4 | [自动配置、条件与评估报告](./01-startup-configuration/04-自动配置条件与评估报告.md) | 候选是否发现，默认实现为什么创建、退让或关闭 |
+| 5 | [配置优先级、属性绑定、校验与多环境](./01-startup-configuration/05-配置优先级属性绑定校验与多环境.md) | 最终值来自哪里，怎样转换和在启动时校验 |
+| 6 | [自定义 Starter、扩展点与测试](./01-startup-configuration/06-自定义Starter扩展点与测试.md) | 如何提供可替换默认行为并验证真实消费端 |
 
 完成后应能说明某个 Bean 为什么存在、某个配置由哪里覆盖，以及进程存活、端口监听和应用就绪有什么区别。
+
+完整工程位于 `examples/spring-boot/startup-lab/`。HTTP 与生命周期实验使用本机临时端口；自动配置、绑定与 Starter 消费端主要使用非 Web 上下文；普通库 JAR 和可执行应用分别构建验证。所有独立校验程序结束后关闭自有资源。
 
 ### 3.2 Web 服务（6 篇）
 

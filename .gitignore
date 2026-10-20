@@ -16,6 +16,8 @@
 /.java-article-checks/
 /examples/spring/**/target/
 /examples/spring/**/out/
+/examples/spring-boot/**/target/
+/examples/spring-boot/**/out/
 
 # Misc
 .DS_Store
