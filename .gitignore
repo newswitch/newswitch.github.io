@@ -25,6 +25,14 @@
 /examples/python/**/.venv/
 /examples/python/**/__pycache__/
 /examples/python/**/.pytest_cache/
+/examples/python/**/dist/
+/examples/python/**/build/
+/examples/python/**/*.egg-info/
+/examples/fastapi/**/.venv/
+/examples/fastapi/**/__pycache__/
+/examples/fastapi/**/.pytest_cache/
+/examples/fastapi/framework-lab/*.db
+/examples/fastapi/framework-lab/*.db-*
 
 .DS_Store
 .env.local

@@ -153,9 +153,13 @@ projects/
 
 软件开发按具体语言与框架建立独立入口。`development/java/` 保存 Java、标准库、并发、JVM、构建和排障；`development/spring/` 保存容器、AOP、事务、Web 和源码调用链；`development/spring-boot/` 保存启动配置、服务、数据接入、安全及生产运行。每个系列保留学习路线，专题文件夹随正文发布逐步建立，网站不维护另一套虚拟目录。
 
-`development/python/` 保存 Python 语言与运行时系列，当前 `01-language/` 提供 10 篇基础文章，后续对象模型、标准库、并发、运行时与工程专题随正文建立；`development/fastapi/` 保存独立框架路线，尚未发布的专题不创建空目录。已有 `automation/python/` 保留自动化应用内容，通过学习路线交叉引用，不复制或混放正文。
+`development/python/` 保存 36 篇 Python 正文，按语言、对象模型、标准库 I/O、并发、运行时与工程六个目录组织；`development/fastapi/` 保存 24 篇正文，按 HTTP、依赖异步、数据安全、I/O 任务、生产运行和源码诊断六个目录组织。连同两篇路线共 62 页、180 个练习答案。已有 `automation/python/` 保留自动化应用内容，通过学习路线交叉引用，不复制或混放正文。
 
 `examples/python/language-lab/` 保存首批 12 个文章源文件与 47 项标准库 unittest 测试。`scripts/verify-python-language.mjs` 校对源码与 30 个练习答案，并可通过 `--python` 指定 CPython 3.14 验证九个脚本各三次独立进程输出、venv/pip 隔离、包入口、错误退出与静默导入。临时环境仅在忽略的 `.python-article-checks/` 下创建并定向清理，不修改系统解释器或全局依赖。
+
+`examples/python/advanced-lab/` 与 `examples/fastapi/framework-lab/` 保存后续 50 个文章源文件。`scripts/verify-python-framework-series.mjs` 校验所有 62 页 MDX、源码与答案，执行 48 个演示各三次输出、6 项 Python pytest 用例和 44 项 FastAPI 用例。FastAPI 验证包括 SQLite 迁移、持久化、租户与权限、幂等、条件取消、上传、WebSocket、退出栈，以及环回临时端口的真实 Uvicorn；只关闭自有进程。PostgreSQL/MySQL、systemd、容器与 Kubernetes 不属于该 Windows 本机集成验证。
+
+`examples/python/package-lab/` 提供可安装项目，`scripts/verify-python-package.mjs` 在临时副本构建 sdist/wheel，再离线安装到干净 venv 验证导入与 console entry。`scripts/verify-python-browser.mjs` 验证 62 个页面、8 张 Mermaid 图与手机布局。构建缓存、测试数据库、虚拟环境和临时运行包不提交。
 
 代码示例保存在 `examples/java/first-batch/` 与 `examples/java/second-batch/`，不进入文档侧边栏。`scripts/verify-java-examples.mjs` 验证工具链与 Maven 示例，`scripts/verify-java-standard-library.mjs` 验证语言进阶和标准库示例；两者都检查文章与源码一致，并可使用 JDK 25 编译、运行和测试。`target/` 与 `out/` 构建产物不提交。
 

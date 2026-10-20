@@ -18,7 +18,9 @@ Python 代码短，不代表运行机制简单。变量保存的是什么，函�
 
 安装时选择对应平台仍受支持的修订版本；不要为了复现一段基础代码降级到有已知安全问题的版本。第三方框架的支持范围和版本组合，会在涉及该框架的文章中分别说明。
 
-完整示例位于源码仓库的 `examples/python/language-lab/`。文章中的文件名与示例名对应，输出中只有明确标注为“示意”的路径、版本和进程信息需要按实际环境替换。
+语言示例位于源码仓库的 `examples/python/language-lab/`，对象、标准库、并发和运行时示例位于 `examples/python/advanced-lab/`。文章中的文件名与示例名对应，输出中只有明确标注为“示意”的路径、版本和进程信息需要按实际环境替换。
+
+[示例源码](https://github.com/newswitch/newswitch.github.io/tree/main/examples/python)包含完整脚本和可安装的包项目；每个示例旁的输出可在独立进程复现，临时文件只在实验目录创建。
 
 ## 2. 语言与工具链
 
@@ -37,56 +39,56 @@ Python 代码短，不代表运行机制简单。变量保存的是什么，函�
 | 9 | [作用域与闭包](./01-language/09-作用域名称查找闭包与变量捕获.md) | 名称从哪里查找，捕获的值何时读取 |
 | 10 | [模块与导入](./01-language/10-模块包导入路径与导入副作用.md) | 导入如何查找、执行和缓存模块 |
 
-## 3. 对象模型：下一组八篇
+## 3. 对象模型：八篇
 
-对象模型专题将在语言基础上展开，而不是把所有“高级语法”压进一篇文章：
+对象模型专题在语言基础上逐项展开：
 
-1. 类、实例、构造、属性与方法。
-2. 继承、组合、MRO 与 `super`。
-3. 特殊方法、相等性、哈希与数据模型。
-4. `property`、描述符与属性访问。
-5. 装饰器、包装函数与执行时机。
-6. 迭代器、生成器、`yield` 与惰性计算。
-7. 异常、异常链、`with` 与资源生命周期。
-8. `dataclass`、`Enum`、类型注解、泛型与 `Protocol`。
+1. [类、实例、构造、属性与方法](./02-object-model/01-类实例构造属性与方法.md)
+2. [继承、组合、MRO 与 super](./02-object-model/02-继承组合MRO与super.md)
+3. [特殊方法、相等性、哈希与数据模型](./02-object-model/03-特殊方法相等哈希与数据模型.md)
+4. [property、描述符与属性访问](./02-object-model/04-property描述符与属性访问.md)
+5. [装饰器、包装函数与执行时机](./02-object-model/05-装饰器包装函数与执行时机.md)
+6. [迭代器、生成器、yield 与惰性计算](./02-object-model/06-迭代器生成器yield与惰性计算.md)
+7. [异常、异常链、with 与资源生命周期](./02-object-model/07-异常异常链with与资源生命周期.md)
+8. [dataclass、Enum、类型注解、泛型与 Protocol](./02-object-model/08-dataclass-Enum类型注解泛型与Protocol.md)
 
 判断是否真正理解对象，不是背出特殊方法的名字，而是能解释：某个操作调用了哪个协议，状态由谁拥有，异常发生后资源由谁释放。
 
 ## 4. 标准库与 I/O：六篇
 
-1. `pathlib`、文件、临时目录与原子替换。
-2. JSON、TOML、环境变量、配置优先级与 Secret。
-3. `collections`、`itertools` 与 `functools`。
-4. 时间点、时区、时间戳与耗时测量。
-5. `logging`、上下文与诊断证据。
-6. HTTP 连接复用、TLS、超时与重试。
+1. [pathlib、文件、临时目录与原子替换](./03-library-io/01-pathlib文件临时目录与原子替换.md)
+2. [JSON、TOML、环境变量、配置与 Secret](./03-library-io/02-JSON-TOML环境变量配置与Secret.md)
+3. [collections、itertools 与 functools](./03-library-io/03-collections-itertools与functools.md)
+4. [时间点、时区、时间戳与耗时测量](./03-library-io/04-时间点时区时间戳与耗时测量.md)
+5. [logging、上下文与诊断证据](./03-library-io/05-logging上下文与诊断证据.md)
+6. [HTTP 连接复用、TLS、超时与重试](./03-library-io/06-HTTP连接复用TLS超时与重试.md)
 
 这一组解决“程序如何接触外部世界”。编码正确不等于文件已经持久化；收到 HTTP 超时不等于对方没有执行；环境变量存在不等于配置已经通过校验。
 
 ## 5. 并发与异步：六篇
 
-1. 线程、锁与共享状态。
-2. 进程、进程池、序列化与 IPC。
-3. Executor、Future、有界队列与背压。
-4. `async/await`、事件循环、Task 与 Future。
-5. TaskGroup、超时、取消传播与清理。
-6. `contextvars`、线程切换与同步异步互操作。
+1. [线程、锁与共享状态](./04-concurrency/01-线程锁与共享状态.md)
+2. [进程、进程池、序列化与 IPC](./04-concurrency/02-进程进程池序列化与IPC.md)
+3. [Executor、Future、有界队列与背压](./04-concurrency/03-Executor-Future有界队列与背压.md)
+4. [async、await、事件循环、Task 与 Future](./04-concurrency/04-async-await事件循环Task与Future.md)
+5. [TaskGroup、超时、取消传播与清理](./04-concurrency/05-TaskGroup超时取消传播与清理.md)
+6. [contextvars、线程切换与同步异步互操作](./04-concurrency/06-contextvars线程切换与同步异步互操作.md)
 
 学习顺序是“工作由谁执行 → 状态由谁拥有 → 等待发生在哪里 → 过载怎样限制 → 取消怎样完成”。不要把 `async def` 当成自动提速的标记。
 
 ## 6. CPython 运行时：三篇
 
-1. 源码、字节码、代码对象与执行帧。
-2. 引用计数、循环 GC、弱引用与进程内存。
-3. GIL、不同解释器构建与 CPU/I/O 并发。
+1. [源码、字节码、代码对象与执行帧](./05-runtime/01-源码字节码代码对象与执行帧.md)
+2. [引用计数、循环 GC、弱引用与进程内存](./05-runtime/02-引用计数循环GC弱引用与进程内存.md)
+3. [GIL、解释器构建与 CPU、I/O 并发](./05-runtime/03-GIL解释器构建与CPU-IO并发.md)
 
 语言规范定义允许的行为，CPython 实现决定具体的数据结构和执行路径。实现细节必须带版本与构建前提，不能拿某个版本的字节码推导所有 Python 程序。
 
 ## 7. 工程实践：三篇
 
-1. `pyproject.toml`、依赖约束、锁定、构建与发布。
-2. pytest、Fixture、Mock、契约与异步测试。
-3. 调试、CPU、内存与性能诊断。
+1. [pyproject、依赖锁定、构建与发布](./06-engineering/01-pyproject依赖锁定构建与发布.md)
+2. [pytest、Fixture、Mock、契约与异步测试](./06-engineering/02-pytest-Fixture-Mock契约与异步测试.md)
+3. [调试、CPU、内存与性能诊断](./06-engineering/03-调试CPU内存与性能诊断.md)
 
 最终项目可以是一个带类型化输入、文件持久化和 HTTP 客户端的任务处理工具，再接入 FastAPI。先让规则可测试，再接网络入口，不把业务逻辑写进启动脚本。
 
@@ -98,7 +100,7 @@ FastAPI 需要的前置知识是：对象与引用、函数参数、模块、异
 
 ## 9. 阅读进度
 
-规划包含 36 篇 Python 技术文章。目前已经提供语言与工具链的 10 篇；其余 26 篇按上面的专题继续展开。FastAPI 的 24 篇安排见独立路线，路线列出的主题不代表正文已经发布。
+本系列已提供 36 篇 Python 技术文章，覆盖六个专题；[FastAPI 系列](../fastapi/00-FastAPI学习路线.md)提供 24 篇框架文章。先理解可运行示例，再改变输入、注入失败并验证边界，避免将读懂文字等同于已经掌握运行中的系统。
 
 ## 10. 参考资料
 

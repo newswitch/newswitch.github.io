@@ -62,14 +62,14 @@ if (options.includes('--check-build')) {
   const data = JSON.parse(fs.readFileSync('.docusaurus/globalData.json', 'utf8'));
   const built = data['docusaurus-plugin-content-docs'].default.versions.flatMap(v => v.docs)
     .filter(doc => /^development\/(?:python|fastapi)\//u.test(doc.id));
-  assert.equal(built.length, 12);
+  assert.equal(built.length, 62);
   for (const doc of built) {
     const target = path.join(root, 'build', decodeURIComponent(doc.path), 'index.html');
     const html = fs.readFileSync(target, 'utf8');
     assert(html.includes('<h1'), 'Built heading missing: ' + doc.path);
     if (doc.id.includes('/language/')) assert(html.includes('练习与答案'));
   }
-  console.log('PASS: 12 built document routes and technical article answers');
+  console.log('PASS: 62 built document routes and language article answers');
 }
 if (!python) process.exit(0);
 assert(fs.existsSync(python), 'Python executable does not exist');

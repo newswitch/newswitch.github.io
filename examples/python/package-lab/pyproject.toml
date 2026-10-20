@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lesson-jobs"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+lesson-jobs = "lesson_jobs.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
