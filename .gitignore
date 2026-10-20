@@ -20,6 +20,12 @@
 /examples/spring-boot/**/out/
 
 # Misc
+# Python article verification and local runtime files
+/.python-article-checks/
+/examples/python/**/.venv/
+/examples/python/**/__pycache__/
+/examples/python/**/.pytest_cache/
+
 .DS_Store
 .env.local
 .env.development.local

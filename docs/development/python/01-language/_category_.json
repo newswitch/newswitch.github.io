@@ -1,0 +1,9 @@
+{
+  "label": "01. 语言与工具链",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "从解释器和虚拟环境开始，理解名称绑定、基本类型、控制流、函数、作用域和模块导入。"
+  }
+}

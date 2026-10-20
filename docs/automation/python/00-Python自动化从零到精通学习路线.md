@@ -10,6 +10,8 @@ tags: [Python, 自动化, CLI, API, 并发, SRE, 学习路线]
 
 Python 自动化不是把 Shell 命令换成 `subprocess.run()`。它的价值在于用稳定的数据模型、API 契约、异常分类、并发控制和测试能力，把一次性脚本升级为可维护工具。
 
+解释器、对象引用、基本类型、函数和模块的逐项讲解见 [Python 语言与运行时系列](../../development/python/00-Python学习路线.md)。本系列侧重自动化工具的应用与工程边界；Web 服务开发另见 [FastAPI 学习路线](../../development/fastapi/00-FastAPI学习路线.md)。
+
 ```text
 CLI / 配置 / 环境
 → 类型化领域模型

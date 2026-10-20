@@ -80,7 +80,7 @@ const DOMAINS = [
     id: '09',
     label: 'DEVELOP',
     title: '软件开发',
-    note: 'Java · JVM · Spring · Spring Boot',
+    note: 'Java · Python · Spring Boot · FastAPI',
     to: '/docs/development/软件开发学习路线',
     tone: 'violet',
   },

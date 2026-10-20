@@ -153,6 +153,10 @@ projects/
 
 软件开发按具体语言与框架建立独立入口。`development/java/` 保存 Java、标准库、并发、JVM、构建和排障；`development/spring/` 保存容器、AOP、事务、Web 和源码调用链；`development/spring-boot/` 保存启动配置、服务、数据接入、安全及生产运行。每个系列保留学习路线，专题文件夹随正文发布逐步建立，网站不维护另一套虚拟目录。
 
+`development/python/` 保存 Python 语言与运行时系列，当前 `01-language/` 提供 10 篇基础文章，后续对象模型、标准库、并发、运行时与工程专题随正文建立；`development/fastapi/` 保存独立框架路线，尚未发布的专题不创建空目录。已有 `automation/python/` 保留自动化应用内容，通过学习路线交叉引用，不复制或混放正文。
+
+`examples/python/language-lab/` 保存首批 12 个文章源文件与 47 项标准库 unittest 测试。`scripts/verify-python-language.mjs` 校对源码与 30 个练习答案，并可通过 `--python` 指定 CPython 3.14 验证九个脚本各三次独立进程输出、venv/pip 隔离、包入口、错误退出与静默导入。临时环境仅在忽略的 `.python-article-checks/` 下创建并定向清理，不修改系统解释器或全局依赖。
+
 代码示例保存在 `examples/java/first-batch/` 与 `examples/java/second-batch/`，不进入文档侧边栏。`scripts/verify-java-examples.mjs` 验证工具链与 Maven 示例，`scripts/verify-java-standard-library.mjs` 验证语言进阶和标准库示例；两者都检查文章与源码一致，并可使用 JDK 25 编译、运行和测试。`target/` 与 `out/` 构建产物不提交。
 
 `examples/java/third-batch/` 保存构建、测试和并发示例。`scripts/verify-java-concurrency.mjs` 验证并发程序和协调边界，`scripts/verify-java-builds.mjs` 在临时工作区验证 Maven/Gradle、测试失败门禁、多模块分发与可复现归档。
