@@ -19,7 +19,7 @@ OTel middleware 提取 W3C Trace Context，建立 server Span，把新 Context �
 ## 2. 导出链路
 
 ```mermaid
-flowchart LR
+flowchart TB
     R["HTTP traceparent"] --> M["Gin server Span"]
     M --> B["task.create 子 Span"]
     B --> Q["有界 BatchSpanProcessor"]

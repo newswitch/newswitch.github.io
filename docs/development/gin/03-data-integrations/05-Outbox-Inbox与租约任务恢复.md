@@ -13,11 +13,17 @@ tags: [Go, Gin, 技术原理, 实验]
 ## 1. 两条相关但独立的链路
 
 ```mermaid
-flowchart LR
+flowchart TB
     A["HTTP 创建"] --> T["事务：Task + Outbox"]
     T --> W["Worker 条件领取"]
     W --> F["有效 token 提交结果"]
-    T --> R["Relay 租约领取"]
+```
+
+任务执行与事件传递从同一份已提交状态出发，下面是独立的事件链路：
+
+```mermaid
+flowchart TB
+    S["Outbox 已持久化"] --> R["Relay 租约领取"]
     R --> K["Broker 确认"]
     K --> C["消费者：Inbox + 通知事务"]
     C --> O["提交 Offset"]

@@ -35,7 +35,7 @@ try {
     const page=await browser.newPage({viewport:{width,height:1000}});let errors=[];page.on('pageerror',error=>errors.push(String(error)));
     for(const doc of selected){
       errors=[];await page.goto(base+doc.path,{waitUntil:'networkidle',timeout:45000});await page.waitForSelector('main article h1');
-      if(/GMP调度|Outbox-Inbox|Engine-ServeHTTP|日志Metrics/u.test(doc.id))await page.waitForFunction(()=>document.querySelectorAll('main article svg[id^="mermaid"]').length===1,null,{timeout:15000});
+      if(/GMP调度|Outbox-Inbox|Engine-ServeHTTP|日志Metrics/u.test(doc.id))await page.waitForFunction(expected=>document.querySelectorAll('main article svg[id^="mermaid"]').length===expected,/Outbox-Inbox/u.test(doc.id)?2:1,{timeout:15000});
       const text=await page.locator('main article').innerText();
       if(/Syntax error in text|mermaid version/u.test(text)||(!/学习路线/u.test(doc.id)&&!text.includes('练习与答案')))throw new Error('Content failed '+doc.id);
       const bad=await page.evaluate(()=>({images:[...document.querySelectorAll('main article img')].filter(i=>!i.complete||!i.naturalWidth).length,overflow:document.documentElement.scrollWidth>window.innerWidth+2}));
