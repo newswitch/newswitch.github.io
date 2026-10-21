@@ -43,21 +43,46 @@ OOMKill、某些 Runtime fatal error、SIGKILL 和机器断电不属于普通 re
 
 Recovery 日志也要脱敏，不能默认打印所有 Header、Cookie 或正文。错误采样、堆栈保存与告警应按风险设置，避免一次外部非法输入产生大量敏感日志。
 
-## 5. 练习与答案
+## 5. 沿 recovery.go 找出恢复与提交的先后
 
-### 5.1 Recovery 能捕获任意后台 Goroutine panic 吗
+CustomRecoveryWithWriter 先安装 defer，再调用 c.Next。panic 展开到这里时检查 recover 返回值，记录相关信息，再调用恢复处理器；默认处理器使用 AbortWithStatus(500)。
+
+若此前没有写出，这通常能提交 500；若已写出 202 和部分正文，包装层不能改写已发状态。TestRecoveryOrderAndCommittedResponse 明确对照未写路径为 500、已写路径仍为 202，且普通 after 未执行而 defer 执行。
+
+这与 JSON Render 返回普通 error 不同：普通编码失败进入 c.Errors 与 Abort 路径，并非一定触发 panic。两套机制应分别测试，不能希望一层 Recovery 自动覆盖全部错误。
+
+## 6. 连接已坏时，继续输出错误也可能没有意义
+
+固定版本对某些断连类错误有特殊处理，识别后记录并 Abort，而不是假装还能把新的 500 完整发送到客户端。应用日志与客户端实际接收结果可以不同，这不必然是日志系统错误。
+
+Recovery 的默认请求转储并非完整脱敏器：该版本只对 Authorization 做特定处理，其他 Header 等数据不应被假定已经安全。需要自定义受控日志策略，尤其注意 Cookie、查询参数与内部标识。
+
+记录堆栈有助于定位代码，但不需要把整个请求对象和私密正文一并输出。错误样本、计数与告警可以分开管理，避免故障时放大 I/O。
+
+## 7. 恢复后要保持失败语义和资源收敛
+
+HTTP panic 不一定让进程退出，但当前操作可能只做了一半。事务应由其作用域回滚，锁与句柄由 defer 释放，任务状态由持久协议恢复；不能 recover 后无条件返回成功。
+
+后台 Goroutine 需要自身的失败边界，跨 Goroutine 的 recover 不存在。即使本地恢复成功，也要通知所有者、结束相关子任务并 Join；否则服务还会留下无主等待或持续执行的工作。
+
+OOMKill、SIGKILL、Runtime fatal 与机器故障不受这条普通恢复路径控制。可靠性最终还依赖持久状态、租约、幂等和部署恢复，而不仅是一段 defer。
+
+## 8. 练习与答案
+
+### 8.1 Recovery 能捕获任意后台 Goroutine panic 吗
 
 不能，需要在对应执行栈内处理。
 
-### 5.2 OOMKill 能靠 recover 继续运行吗
+### 8.2 OOMKill 能靠 recover 继续运行吗
 
-不能。
+不能。OOMKill 由操作系统终止进程，不经过普通 panic 展开；资源恢复要依赖持久状态、租约和部署重启，而不是 recover。
 
-### 5.3 每请求一个 Context 能让全局 Map 安全吗
+### 8.3 每请求一个 Context 能让全局 Map 安全吗
 
 不能，共享状态仍需同步。
 
-## 6. 参考资料
+## 9. 参考资料
 
 - [Recovery 固定源码](https://github.com/gin-gonic/gin/blob/v1.12.0/recovery.go)
 - [net/http](https://pkg.go.dev/net/http)
+- [请求链回归](https://github.com/newswitch/newswitch.github.io/tree/main/examples/gin/service-lab/internal/requestflow)

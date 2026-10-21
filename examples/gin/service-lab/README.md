@@ -166,3 +166,16 @@ go test ./internal/protocol -v -count=1 -timeout=20s
 原 taskd 仍采用 4096 字节及输入错误统一 400 的现有契约；protocol 没有改变其公开 API，也没有声称额外拒绝重复键。
 
 响应实验用真实回环 HTTP/1.1 对照待发送状态、Flush 提交、提交后修改、编码错误无策略/有策略和 204。状态记录用 Mutex 同步，自建服务与连接在结束时关闭。它不替代反向代理、HTTP/2 或生产网络断连测试；c.Errors 中有错也不意味着框架自动生成 500。
+
+## 10. 路由、Recovery 与 multipart
+
+```bash
+go test ./internal/requestflow -run 'TestMiddlewareRegistration|TestMethodTrees|TestRecoveryOrder|TestMultipartMemory' -v -count=1 -timeout=20s
+go test ./internal/transport -run TestCache -v -count=1 -timeout=20s
+```
+
+验证全局 Use 不追溯改写已注册业务链、405/Allow、HEAD 不自动继承 GET、GET/POST 尾斜杠 301/307，以及 Recovery 内层普通 after 与 defer 的不同。已提交 202 后 panic 不能改成干净 500。
+
+multipart 用正常 128 字节文件、1 字节内存阈值和独立 1024 字节正文上限，证明内存阈值不是总上传上限；显式关闭句柄并清理本实验解析产生的临时文件。
+
+go-redis v9.23.0 的 PoolSize 是基础规模，当前普通 GET/SET 池同时设置 MaxActiveConns=4，并启用 ContextTimeoutEnabled；配置测试直接断言。新增 Pipeline 等用法时应另查其池与预算，不能把普通池参数扩大为全客户端所有连接的总保证。真实 Redis、Kafka 与 PostgreSQL 联调仍独立执行。

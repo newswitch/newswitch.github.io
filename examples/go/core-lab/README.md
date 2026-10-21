@@ -113,6 +113,24 @@ I/O 验证数据与 EOF 同时返回、短写、WriterTo/ReaderFrom 优先级、
 
 这些实验不访问外部服务，不依赖磁盘满或永久阻塞，不通过 unsafe 绑定运行时内存布局。
 
+## 语言基础、类型与资源边界
+
+```bash
+go run ./cmd/foundation-lab -mode language
+go run ./cmd/foundation-lab -mode types
+go run ./cmd/foundation-lab -mode resources
+go test ./internal/foundation -v -count=1 -timeout=20s
+go test ./internal/foundation -run '^$' -fuzz FuzzPrefixRunes -fuzztime=2s -parallel=2
+```
+
+language 对照循环内声明与外部赋值变量、可变参数共享、指针重定向、Join 错误和 defer 求值顺序。types 实际编译 Go 1.27 方法自身的类型参数，验证命名切片保留、UTF-8 宽度、反射可设置性和排序次键。
+
+resources 只在自己创建并核验的随机临时目录操作文件，检查 Write/Sync/Close/Rename 后读取，再清理该目录；目标起初不存在，不证明跨平台覆盖、目录同步或断电恢复。Timer 测试先接收第一次通知再 Reset，不把调度时间当精度保证；日志使用虚构凭证并检查脱敏；ReadFrame 先验证两字节长度，再读取最多 256 字节的正文。
+
+PrefixRunes 明确按码点而非字素簇截断，限制最多 4096 字节；Fuzz 只检查有限合法文本的前缀、UTF-8 与长度性质，不操作外部资源。
+
+根目录联合脚本另构建 Linux/amd64、Linux/arm64 的 hello 并检查构建信息；这是目标编译，不是目标系统运行验收。
+
 ## Race 验证
 
 ```bash

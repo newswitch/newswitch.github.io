@@ -27,20 +27,23 @@ try {
   const base='http://127.0.0.1:'+server.address().port;
   for(const doc of docs){const response=await fetch(base+doc.path);const html=await response.text();if(response.status!==200||!html.includes('<h1'))throw new Error('Invalid built page '+doc.path);}
   browser=await chromium.launch({headless:true,executablePath:path.resolve(option('--browser'))});
-  const selected=docs.filter(d=>/Go学习路线|Gin学习路线|数组Slice底层数组|Map语义哈希|接口方法集|Reader-Writer|JSON缺失Null|参数绑定校验|响应状态JSON|Binding-Render/u.test(d.id));
-  if(selected.length!==10)throw new Error('Expected 10 deepening/route pages, found '+selected.length);
+  const selected=docs;
+  function sourceFiles(folder){return fs.readdirSync(folder,{withFileTypes:true}).flatMap(e=>e.isDirectory()?sourceFiles(path.join(folder,e.name)):e.name.endsWith('.md')?[path.join(folder,e.name)]:[]);}
+  const sourceById=new Map(sourceFiles('docs/development').map(file=>[path.relative('docs',file).replaceAll('\\','/').replace(/\.md$/,'').split('/').map(part=>part.replace(/^\d+-/,'')).join('/'),fs.readFileSync(file,'utf8')]));
   const output=path.resolve('.go-article-checks/deepening-browser');fs.mkdirSync(output,{recursive:true});
   let checked=0;
   for(const width of [1440,390]){
     const page=await browser.newPage({viewport:{width,height:1000}});let errors=[];page.on('pageerror',error=>errors.push(String(error)));
     for(const doc of selected){
       errors=[];await page.goto(base+doc.path,{waitUntil:'networkidle',timeout:45000});await page.waitForSelector('main article h1');
-      if(/数组Slice底层数组|接口方法集|Reader-Writer|参数绑定校验/u.test(doc.id))await page.waitForFunction(()=>document.querySelectorAll('main article svg[id^="mermaid"]').length===1,null,{timeout:15000});
+      const source=sourceById.get(doc.id);if(!source)throw new Error('Missing source '+doc.id);
+      const expectedDiagrams=(source.match(/```mermaid/g)||[]).length;
+      if(expectedDiagrams)await page.waitForFunction(expected=>document.querySelectorAll('main article svg[id^="mermaid"]').length===expected,expectedDiagrams,{timeout:15000});
       const text=await page.locator('main article').innerText();
       if(/Syntax error in text|mermaid version/u.test(text)||(!/学习路线/u.test(doc.id)&&!text.includes('练习与答案')))throw new Error('Content failed '+doc.id);
       const bad=await page.evaluate(()=>({images:[...document.querySelectorAll('main article img')].filter(i=>!i.complete||!i.naturalWidth).length,overflow:document.documentElement.scrollWidth>window.innerWidth+2}));
       if(bad.images||bad.overflow||errors.length)throw new Error(doc.id+' '+JSON.stringify({bad,errors}));
-      if(/数组Slice底层数组|接口方法集|Reader-Writer|参数绑定校验|学习路线/u.test(doc.id)){
+      if(expectedDiagrams||/泛型约束|反射StructTag|Module-MVS|上传下载|SSE流式|容器Kubernetes|学习路线/u.test(doc.id)){
         await page.screenshot({path:path.join(output,doc.id.split('/').at(-1)+'-'+width+'.png'),fullPage:true});
         // Element screenshots may auto-scroll a tall SVG behind the sticky navbar.
         // Hide only that overlay while capturing the figure, not in the website.

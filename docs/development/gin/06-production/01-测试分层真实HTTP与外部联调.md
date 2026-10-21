@@ -44,21 +44,46 @@ go test -tags=integration ./integration -count=1 -timeout=90s
 
 本机 Docker 引擎未运行，外部测试只完成编译，不列为通过。Race 也需支持平台和 C 工具链，未完成时单独列出；Windows 的进程终止不证明 Linux SIGTERM 排空正确。
 
-## 5. 练习与答案
+## 5. 为每一类结论选择足够的测试边界
 
-### 5.1 外部测试编译成功等于联调通过吗
+路由与字段验证适合 Recorder，提交、Flush、取消和断连适合真实 HTTP，配置与文件持久性适合独立进程，数据库锁与 Broker 交接需要真实服务。层次更高不代表总能替代更低层的确定故障测试。
 
-不等于。
+protocol 模块实际发现：JSON 编码失败无错误策略可能返回空 201，真实 HTTP 才能同时核对客户端收到的结果；requestflow 模块又用 Recorder 精确固定注册与链顺序。两者不应合并成一句“接口测试通过”。
 
-### 5.2 本地 HTTP 测试与 Recorder 完全等价吗
+容器网络、TLS 终止与 Service 摘流还在更外层，需要目标环境证据。测试报告应按这些层次记录，而不是用一个总 PASS 隐去未执行项。
+
+## 6. 先控制前置状态，再验证资源回收
+
+连接池测试先借走唯一连接，SSE 测试等待真实流事件后关闭客户端，租约测试注入明确 now。这样失败条件可解释，不靠随意 Sleep 猜测某个阶段已经发生。
+
+对返回 504 的请求，还需看后台 active、许可、连接与任务是否归零；对事务错误，还需看业务与事件行是否一致；对重复投递，还需看 Inbox 和通知数量。只检查状态码无法确认这些事实。
+
+临时端口、目录与自建子进程都由测试拥有者清理，异常路径也要 Join。不能让每次验证都在电脑上留下永久服务，或要求人工找进程收尾。
+
+## 7. 扩大回归范围而不混淆证据等级
+
+本系列验证脚本串联两个模块的普通测试、vet、模块校验、有限 CLI 实验、profile、Fuzz、编译证据与真实 API/Worker。新增 foundation 与 routing 测试覆盖语言与请求链的剩余边界。
+
+显式 integration 集合要求隔离地址，编译检查只证明代码可构建；只有真实连接并通过断言才算数据库、缓存或 Broker 验证。Race、Linux 信号排空与 Kubernetes 发布也分别记录。
+
+回归失败时保留原始失败信息和执行命令，先修复原因，再复跑受影响层；不要过滤出成功行或把未配置环境改成自动跳过来制造全绿。
+
+## 8. 练习与答案
+
+### 8.1 外部测试编译成功等于联调通过吗
+
+不等于。编译只确认测试代码与依赖可构建；真实数据库、Redis 或 Kafka 已连接且通过状态断言，才算完成对应联调。
+
+### 8.2 本地 HTTP 测试与 Recorder 完全等价吗
 
 不等价，后者不经过真实连接。
 
-### 5.3 缺中间件时自动 Skip 可以计为通过吗
+### 8.3 缺中间件时自动 Skip 可以计为通过吗
 
 不能，应明确未验证。
 
-## 6. 参考资料
+## 9. 参考资料
 
 - [httptest](https://pkg.go.dev/net/http/httptest)
 - [本系列验证脚本](https://github.com/newswitch/newswitch.github.io/blob/main/scripts/verify-go-gin-labs.mjs)
+- [完整服务实验源码](https://github.com/newswitch/newswitch.github.io/tree/main/examples/gin/service-lab)

@@ -101,6 +101,8 @@ go test ./... -count=1 -timeout=60s
 
 协议实验进一步对照 Should/Must 绑定控制、Body 缓存、零值验证与独立 400/413/415 输入策略；真实回环 HTTP 验证待发送状态、Flush 提交和 JSON 编码错误。原 taskd 契约保持不变，固定版本 Render 的错误记录不等于自动返回 500。
 
+路由、Recovery 与 multipart 实验补齐注册快照、方法树、重定向、提交后失败和临时文件边界。Redis 示例按固定客户端版本区分基础池规模与 MaxActiveConns 硬上限；SQL、消息与部署章节分别说明事务、确认、租约和运行环境的保证范围。
+
 ## 5. 延伸阅读
 
 数据库、Redis、Kafka、Kubernetes 与可观测性各有独立技术系列，Gin 文章关注调用、错误、事务和资源边界，不替代这些产品的部署与内部原理。

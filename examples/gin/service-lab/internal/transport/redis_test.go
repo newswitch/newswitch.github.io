@@ -30,3 +30,12 @@ func TestCacheRejectsEmptyTenant(t *testing.T) {
 		t.Fatal("missing validation")
 	}
 }
+
+func TestCachePoolAndContextConfiguration(t *testing.T) {
+	cache := NewCache("127.0.0.1:1")
+	defer cache.Close()
+	options := cache.client.Options()
+	if options.PoolSize != 4 || options.MaxActiveConns != 4 || !options.ContextTimeoutEnabled || cap(cache.origin) != 4 {
+		t.Fatalf("pool=%d active=%d context=%t origin=%d", options.PoolSize, options.MaxActiveConns, options.ContextTimeoutEnabled, cap(cache.origin))
+	}
+}

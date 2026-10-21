@@ -50,21 +50,47 @@ recover 需要在相应 Goroutine 的延迟调用路径中使用。HTTP 中间�
 
 Gin Recovery 可以处理相应请求栈的 panic，但若响应已经写出，不能可靠改写成全新的 JSON 错误；也不能把 panic 当作所有输入校验的正常实现方式。资源、事务和任务状态都需要显式设计。
 
-## 4. 练习与答案
+## 4. 返回值赋值与 defer 的具体顺序
 
-### 4.1 for 循环里每次 defer Close 会每轮释放吗
+普通 return 表达式先求值并赋给返回值，再执行 defer，最后返回。命名返回值是函数内变量，因此 defer 可以修改它；未命名返回值不能靠修改同名局部变量追溯改变已经求出的返回结果。
+
+defer f(n) 保存登记时的 n，defer 闭包则可能在退出时再读取 n。foundation-lab 的 language 实验得到 defer_order=[2,1]，同时体现延迟读取与后进先出顺序。
+
+把重要的返回值改写隐藏在很长的 defer 中，会增加理解成本。适用于关闭错误合并等明确场景时，保持逻辑短，并用测试断言主要错误不会被覆盖。
+
+## 5. 资源关闭必须发生在正确的生命周期内
+
+文件创建成功后马上登记 Close，事务创建成功后登记 Rollback，锁获取后登记 Unlock；若每次迭代都持有大量资源，缩小包围函数范围，而不是等整个批次返回才释放。
+
+bufio.Writer 还要检查 Flush，压缩 Writer 的 Close 可能写出尾部；数据库 Commit 可能失败。单纯“写了 defer”不等于检查了最终结果，更不等于持久化已经完成。
+
+关闭错误与原始错误都重要时可用 errors.Join 保留识别能力；对外仍由业务边界决定主错误类别。进程强制终止、机器断电和 OOMKill 不能依赖 defer 清理，应由持久状态和恢复协议兜底。
+
+## 6. recover 恢复的是哪个调用边界
+
+panic 展开时会执行同一 Goroutine 的延迟调用。有效 recover 停止这条展开，但不会让原 panic 位置继续执行；安装恢复的函数结束后，外层调用才有机会继续。
+
+把恢复放在每个小函数里并返回零值，可能把不完整操作伪装成成功。合理的边界通常是请求、任务执行或插件调用：记录失败、标记状态、回收资源，并决定该执行单元能否继续。
+
+Gin 的 Recovery 是这个规则的一种应用，不会自动处理其他 Goroutine 或进程级 fatal。普通预期失败仍用 error 返回，并发任务还要 Join；恢复 panic 不能代替取消和事务协议。
+
+## 7. 练习与答案
+
+### 7.1 for 循环里每次 defer Close 会每轮释放吗
 
 不会，通常等包围函数返回。大批文件或连接会一直被持有，需要缩小函数级资源范围。
 
-### 4.2 main 中 recover 能捕获其他 Goroutine 的 panic 吗
+### 7.2 main 中 recover 能捕获其他 Goroutine 的 panic 吗
 
 不能跨 Goroutine 恢复。每个执行单元要有自己的失败和收敛边界。
 
-### 4.3 有 defer Rollback 就不用检查 Commit 吗
+### 7.3 有 defer Rollback 就不用检查 Commit 吗
 
 不行。提交也可能失败，且结果可能需要进一步确认；defer 只是未成功完成时的清理兜底。
 
-## 5. 参考资料
+## 8. 参考资料
 
 - [defer 与 panic 规范](https://go.dev/ref/spec#Defer_statements)
 - [panic 与 recover](https://go.dev/blog/defer-panic-and-recover)
+- [Go 语言规范与执行规则](https://go.dev/ref/spec)
+- [配套基础实验](https://github.com/newswitch/newswitch.github.io/tree/main/examples/go/core-lab/internal/foundation)

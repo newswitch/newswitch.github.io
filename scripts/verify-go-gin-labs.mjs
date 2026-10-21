@@ -113,6 +113,25 @@ for(const mode of ['binding','response']){
 }
 report.protocol=protocol;
 
+const foundations=[];
+for(const mode of ['language','types','resources']){
+  const result=JSON.parse(command(core,go,['run','./cmd/foundation-lab','-mode',mode]));
+  foundations.push({mode,...result});report.experiments++;
+  if(mode==='language'&&(JSON.stringify(result.declared_loop)!=='[0,1,2]'||JSON.stringify(result.assigned_loop)!=='[2,2,2]'||!result.variadic_shared||!result.pointer_reassign_local||!result.joined_has_both||JSON.stringify(result.defer_order)!=='[2,1]'))throw new Error('Language foundation regression');
+  if(mode==='types'&&(JSON.stringify(result.byte_offsets)!=='[0,3]'||result.invalid_width!==1||result.replacement_width!==3||result.prefix!=='中A'||!result.named_slice_kept||result.generic_method!==6||result.can_set_copy||!result.can_set_pointer||result.private_can_set||!result.tag_present_empty||JSON.stringify(result.sorted_ids)!=='["c","a","b"]'))throw new Error('Type foundation regression');
+  if(mode==='resources'&&(result.renamed_body!=='complete'||!result.same_instant||result.same_representation||result.reset_has_old_tick||!result.redacted||JSON.stringify(result.frames)!=='["abc","de"]'))throw new Error('Resource foundation regression');
+}
+report.foundations=foundations;
+command(core,go,['test','./internal/foundation','-run','^$','-fuzz','FuzzPrefixRunes','-fuzztime=2s','-parallel=2']);
+report.crossCompile=[];
+for(const arch of ['amd64','arm64']){
+  const output='out/hello-linux-'+arch;
+  command(core,go,['build','-trimpath','-o',output,'./cmd/hello'],{env:{...env,GOOS:'linux',GOARCH:arch,CGO_ENABLED:'0'}});
+  const metadata=command(core,go,['version','-m',output]);
+  if(!metadata.includes('GOOS=linux')||!metadata.includes('GOARCH='+arch))throw new Error('Cross-compile metadata mismatch');
+  report.crossCompile.push({goos:'linux',goarch:arch,built:true,executed:false});
+}
+
 const database=path.join(checks,'cli-'+Date.now()+'.db').replaceAll('\\','/');
 const token=command(gin,taskd,['-mode=token','-demo']);
 let child,base,stderr='';

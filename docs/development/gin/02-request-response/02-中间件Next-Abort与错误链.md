@@ -55,21 +55,47 @@ Abort 阻止剩余 Handler，但不会立即 return 当前函数。认证失败�
 
 对已写部分内容后的 panic，不能承诺客户端收到干净完整的 500。测试未写、已写和流式三类路径。
 
-## 5. 练习与答案
+## 5. Next 推进索引，普通 return 只结束当前调用
 
-### 5.1 Abort 相当于当前函数的 return 吗
+Gin 的链调度不要求每个 Handler 都显式调用 Next 才继续。外层调度器仍可能推进后续索引；在一个中间件里仅 return，不等于中止业务 Handler。
+
+调用 c.Next 则在当前位置进入后续链，返回后可以执行后置逻辑。Abort 把后续调度推到中止状态，但当前 Go 函数继续执行，所以鉴权失败要 Abort 并 return。
+
+已有 requestflow 测试把“嵌套 Next”“Abort 不 return”“仅 return”分开验证。源码细节见 Context 池化专题，避免把三种控制语句画成相同流程。
+
+## 6. Recovery 的位置决定哪些 after 能运行
+
+若 Recovery 在外层，内部中间件调用 Next 后发生 panic，内部普通 after 不会执行，但其 defer 会在展开时执行；外层 Recovery 捕获后，自己的调用边界才能继续。
+
+配套 TestRecoveryOrderAndCommittedResponse 记录 before、defer，而不记录 after。若需要外层观测看到恢复后的最终状态，可把观测包装在合适外层，并同时考虑 defer 的执行顺序。
+
+不要为了强行让 after 运行就把 panic 吞掉并当成功。请求日志、锁释放与事务回滚有不同责任，适合放在对应作用域的 defer；错误分类仍由明确边界完成。
+
+## 7. 错误中间件不应拥有无限的重写权
+
+c.Error 记录错误并不自动提交响应，Abort 也不自动决定 JSON 结构；Render 编码失败与业务显式写错还有不同路径。统一策略应先区分错误类别，再检查 Writer.Written。
+
+未提交时可以输出稳定错误；已有部分响应时不能追加另一份完整错误 JSON。流式协议需要自己的错误事件或结束策略，不能把一套普通 REST 错误中间件无条件套到所有响应。
+
+运行 requestflow 与 protocol 的对应测试，分别验证链顺序和提交状态。只在日志里看到一条 error，不足以知道客户端实际收到了哪个状态和正文。
+
+## 8. 练习与答案
+
+### 8.1 Abort 相当于当前函数的 return 吗
 
 不是，仍要按控制流显式返回。
 
-### 5.2 每次 Next 都从头重跑吗
+### 8.2 每次 Next 都从头重跑吗
 
 不会，它沿共享 index 推进。
 
-### 5.3 响应已写后还能随意改成另一种 JSON 错误吗
+### 8.3 响应已写后还能随意改成另一种 JSON 错误吗
 
 不能，协议已提交，需按实际状态处理。
 
-## 6. 参考资料
+## 9. 参考资料
 
 - [Gin 官方文档](https://gin-gonic.com/en/docs/)
 - [Gin 1.12.0 源码](https://github.com/gin-gonic/gin/tree/v1.12.0)
+- [Gin 1.12.0 路由与链组合](https://github.com/gin-gonic/gin/blob/v1.12.0/routergroup.go)
+- [请求链机制测试](https://github.com/newswitch/newswitch.github.io/tree/main/examples/gin/service-lab/internal/requestflow)

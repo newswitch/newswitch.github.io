@@ -14,7 +14,7 @@ type Cache struct {
 }
 
 func NewCache(address string) *Cache {
-	options := &redis.Options{Addr: address, DialTimeout: 500 * time.Millisecond, ReadTimeout: 300 * time.Millisecond, WriteTimeout: 300 * time.Millisecond, MaxRetries: -1, PoolSize: 4, PoolTimeout: 300 * time.Millisecond}
+	options := &redis.Options{Addr: address, DialTimeout: 500 * time.Millisecond, ReadTimeout: 300 * time.Millisecond, WriteTimeout: 300 * time.Millisecond, ContextTimeoutEnabled: true, MaxRetries: -1, PoolSize: 4, MaxActiveConns: 4, PoolTimeout: 300 * time.Millisecond}
 	return &Cache{client: redis.NewClient(options), origin: make(chan struct{}, 4)}
 }
 func (c *Cache) Close() error { return c.client.Close() }
