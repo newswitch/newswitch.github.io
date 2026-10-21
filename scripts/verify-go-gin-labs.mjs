@@ -79,6 +79,19 @@ command(core,go,['build','./internal/mechanism'],{env:{...env,GOSSAFUNC:'PrefixB
 command(core,go,['build','-pgo=off','-o','out/profile-baseline'+suffix,'./cmd/profile']);
 command(core,go,['build','-pgo=out/cpu.pprof','-o','out/profile-pgo'+suffix,'./cmd/profile']);
 report.compiler.ssaExportAndPGOBuilds=true;
+const lifecycle=[];
+for(const mode of ['context','group','pipeline','leak']){
+  const result=JSON.parse(command(core,go,['run','./cmd/lifecycle-lab','-mode',mode,'-dir','out/lifecycle']));
+  lifecycle.push({mode,...result});report.experiments++;
+  if(mode==='context'&&(!result.child_leaves_parent_active||!result.sibling_receives_cause||!result.first_child_cause_preserved||!result.deadline_not_extended||!result.detached_done_nil||result.detached_value!=='request-42'))throw new Error('Context lifecycle regression');
+  if(mode==='group'&&(!result.first_error||!result.cause_preserved||result.joined!==2||!result.success_wait_error_nil||!result.success_context_canceled||!result.canceled_parent_wait_error_nil))throw new Error('errgroup lifecycle regression');
+  if(mode==='pipeline'&&(result.produced!==1000||result.processed!==1000||result.consumed!==1000||result.peak_active!==2||result.active_at_return!==0||!result.joined||result.sum!==332833500))throw new Error('Streaming pipeline regression');
+  if(mode==='leak'){
+    if(result.blocked_after_cancel!==8||result.blocked_after_drain!==0||result.cancellation_aware_joined!==8)throw new Error('Owned sender cleanup regression');
+    if(!fs.readFileSync(path.resolve(core,result.profile),'utf8').includes('lifecycle.abandonedSender('))throw new Error('Missing goroutine evidence');
+  }
+}
+report.lifecycle=lifecycle;
 
 const database=path.join(checks,'cli-'+Date.now()+'.db').replaceAll('\\','/');
 const token=command(gin,taskd,['-mode=token','-demo']);

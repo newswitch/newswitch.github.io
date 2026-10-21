@@ -38,7 +38,7 @@ go mod graph
 go test ./...
 ```
 
-主模块名应为 newswitch.dev/go-core-lab，列出的包包括 cmd/lab、cmd/profile 和 internal/demos。这个模块没有第三方依赖；Gin 的独立工程有自己的 go.mod 和 go.sum，不通过修改 Go 标准库共享依赖。
+主模块名应为 newswitch.dev/go-core-lab，列出的包包括 cmd/lab、cmd/profile、cmd/lifecycle-lab 和 internal/demos。并发实验固定依赖 golang.org/x/sync v0.23.0 来验证真实 errgroup 行为；Gin 的独立工程有自己的 go.mod 和 go.sum，不通过修改 Go 标准库共享依赖。
 
 ## 3. 初始化和可复现性
 

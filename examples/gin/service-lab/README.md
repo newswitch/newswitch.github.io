@@ -141,3 +141,14 @@ session.New 不自动建表，需在明确的迁移步骤调用 migrate.Up 后�
 PurgeExpired 是显式批量操作，调度由所有者管理；认证请求不会自动启动永久清理进程。Cookie Jar 测试不替代真实浏览器的跨源、安全属性与代理链验证。
 
 外部 integration 集合新增 PostgreSQL Session/迁移用例，只有实际连接隔离 gin_lab 运行后才算该数据库验证通过。普通测试只覆盖 SQLite 与本机 HTTPS，不能替代此项。
+
+## 8. 请求取消与 Context 生命周期
+
+```bash
+go test ./internal/requestflow -v -count=1 -timeout=30s
+go test ./internal/app -run 'TestHealth|TestDependencyFailureChangesReadinessNotLiveness' -v -count=1
+```
+
+requestflow 使用 Gin 1.12.0 与 x/sync v0.23.0，验证 fallback 开关、Copy 容器隔离与嵌套引用、Request Context 共享、Next/Abort/return 的调度差异。真实回环 HTTP 对照同样返回 504 时后台任务仍活动或已经 Join 的两种情况；负面实验由测试拥有者主动解除并 Join，不留下后台进程。
+
+健康检查测试关闭本机实验 DB，确认 live=200、ready=503。当前 taskd 的 readiness 不维护独立 draining 状态，信号 Context 也没有直接作为全部请求的 BaseContext；不能把这些测试等同于 Linux 信号或 Kubernetes 摘流已验证。

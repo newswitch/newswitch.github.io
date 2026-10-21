@@ -1,6 +1,6 @@
 # Go core-lab
 
-配套 [Go 学习路线](https://newswitch.github.io/docs/development/go/Go学习路线/)。固定基线 Go 1.27.3；不替换系统工具链，不依赖外部中间件。
+配套 [Go 学习路线](https://newswitch.github.io/docs/development/go/Go学习路线/)。固定基线 Go 1.27.3，errgroup 使用 x/sync v0.23.0；不替换系统工具链，不依赖外部中间件。
 
 ## 运行
 
@@ -79,6 +79,22 @@ Channel 对照关闭排空、Slice 别名与复制、nil 分支和取消 Join；
 HTTP 客户端固定为回环 HTTP/1.1、512 KiB 正文、单连接，结合 GotConn 与服务端计数定位池等待。Go 1.27.3 对较小的提前关闭正文有有限排空优化，不能把“不读完必然不复用”当通用结论。服务端实验分别验证正常排空、Shutdown 超时不自动取消 Handler，以及 Close 之后的连接取消；所有自建监听和后台任务都在返回前回收，不处理系统信号。
 
 分配实验使用 64 字节 Record，对照内联立即读取、非内联返回、全局保留和只读借用。0/1 allocs/op 是固定工具链回归基线，不是所有 Go 版本的语言承诺。Prefix 函数只在合法输入范围内比较结果，配合 BCE 报告和反汇编观察循环内检查，不关闭安全检查。
+
+## 生命周期与流式背压
+
+```bash
+go run ./cmd/lifecycle-lab -mode context
+go run ./cmd/lifecycle-lab -mode group
+go run ./cmd/lifecycle-lab -mode pipeline
+go run ./cmd/lifecycle-lab -mode leak -dir out/lifecycle
+go test ./internal/lifecycle -v -count=1 -timeout=30s
+```
+
+固定 x/sync v0.23.0，实际验证 errgroup：首个错误关联取消、Wait 统一 Join、成功 Wait 后组 Context 也取消、SetLimit 的许可等待不会被 Context 自动打断。AfterFunc 的 stop 也不代表回调已经结束。
+
+Run 生成有限整数并逐条消费，jobs/results 容量均受控，返回前 Join 全部生产者、Worker 和关闭协调者。它与仍保留全部输入输出的 SquareAll 不同。默认 1000 项、2 个 Worker、队列容量 2，消费者只保存平方累加值；回调自己的缓存和外部资源不在通道内存边界内。测试覆盖处理与消费失败、中途取消、零缓冲和重复 20 次取消。
+
+leak 模式暂时保留 8 个无取消分支的阻塞发送者，采集文本堆栈后全部接收并 Join，再验证可取消版本。包括 profile 写失败的路径，所有发送者也会在返回前释放；不会留下永久演示进程。profile 归类只统计本实验函数，不要求全进程 Goroutine 数绝对不变。
 
 ## Race 验证
 

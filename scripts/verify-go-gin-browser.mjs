@@ -27,7 +27,7 @@ try {
   const base='http://127.0.0.1:'+server.address().port;
   for(const doc of docs){const response=await fetch(base+doc.path);const html=await response.text();if(response.status!==200||!html.includes('<h1'))throw new Error('Invalid built page '+doc.path);}
   browser=await chromium.launch({headless:true,executablePath:path.resolve(option('--browser'))});
-  const selected=docs.filter(d=>/Go学习路线|Gin学习路线|内存模型HappensBefore|Channel缓冲|Mutex-RWMutex|WaitGroup-Once|HTTP客户端连接池|HTTP服务端路由|栈增长逃逸|编译SSA/u.test(d.id));
+  const selected=docs.filter(d=>/Go学习路线|Gin学习路线|Goroutine启动调度|Context取消预算|WorkerPool背压|Goroutine泄漏|HTTP连接池系统资源|Context取消Copy|Context池化Next|配置健康检查信号/u.test(d.id));
   if(selected.length!==10)throw new Error('Expected 10 deepening/route pages, found '+selected.length);
   const output=path.resolve('.go-article-checks/deepening-browser');fs.mkdirSync(output,{recursive:true});
   let checked=0;
@@ -35,12 +35,12 @@ try {
     const page=await browser.newPage({viewport:{width,height:1000}});let errors=[];page.on('pageerror',error=>errors.push(String(error)));
     for(const doc of selected){
       errors=[];await page.goto(base+doc.path,{waitUntil:'networkidle',timeout:45000});await page.waitForSelector('main article h1');
-      if(/Channel缓冲|HTTP客户端连接池|HTTP服务端路由|编译SSA/u.test(doc.id))await page.waitForFunction(()=>document.querySelectorAll('main article svg[id^="mermaid"]').length===1,null,{timeout:15000});
+      if(/Context取消预算|WorkerPool背压|Context池化Next|配置健康检查信号/u.test(doc.id))await page.waitForFunction(()=>document.querySelectorAll('main article svg[id^="mermaid"]').length===1,null,{timeout:15000});
       const text=await page.locator('main article').innerText();
       if(/Syntax error in text|mermaid version/u.test(text)||(!/学习路线/u.test(doc.id)&&!text.includes('练习与答案')))throw new Error('Content failed '+doc.id);
       const bad=await page.evaluate(()=>({images:[...document.querySelectorAll('main article img')].filter(i=>!i.complete||!i.naturalWidth).length,overflow:document.documentElement.scrollWidth>window.innerWidth+2}));
       if(bad.images||bad.overflow||errors.length)throw new Error(doc.id+' '+JSON.stringify({bad,errors}));
-      if(/Channel缓冲|HTTP客户端连接池|HTTP服务端路由|编译SSA|学习路线/u.test(doc.id)){
+      if(/Context取消预算|WorkerPool背压|Context池化Next|配置健康检查信号|学习路线/u.test(doc.id)){
         await page.screenshot({path:path.join(output,doc.id.split('/').at(-1)+'-'+width+'.png'),fullPage:true});
         // Element screenshots may auto-scroll a tall SVG behind the sticky navbar.
         // Hide only that overlay while capturing the figure, not in the website.

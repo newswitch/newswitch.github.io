@@ -16,6 +16,7 @@ tags: [Go, Gin, 学习路线, 技术原理]
 | --- | --- |
 | Go | 1.27.3，go.mod 语言版本 1.27.0 |
 | Gin | 1.12.0，仅框架工程依赖 |
+| x/sync | 0.23.0，验证 errgroup 的真实取消与准入语义 |
 | 语言实验 | examples/go/core-lab，无第三方中间件 |
 | 框架工程 | examples/gin/service-lab，默认 SQLite，独立 Worker |
 | 外部联调 | PostgreSQL、Redis、Kafka 与 Collector 分别验证，不能由替身测试代替 |
@@ -95,6 +96,8 @@ go test ./... -count=1 -timeout=60s
 真实 PostgreSQL/Redis/Kafka 联调、Docker/Collector/Kubernetes 运行、Race 与 Linux SIGTERM 排空需在具备条件的环境单独完成。外部联调测试编译成功不是服务已验证；Windows 终止进程也不等于 Unix 优雅退出。
 
 会话模块验证 HTTPS 登录、轮换、退出、空闲与绝对过期及有界清理；密钥模块验证新旧公钥重叠和退役；迁移模块验证 checksum、并发协调与事务回滚。这些能力有独立边界：身份验证由注入的提供方负责，迁移实验仅覆盖可事务化 DDL，任务 SSE 仍是快照而非持久历史重放。
+
+请求生命周期对照进一步验证 Context fallback、Copy 的浅复制与取消边界，以及 Next/Abort/return 的不同控制层。真实回环 HTTP 测试比较同样返回 504 时后台工作是否已 Join；健康检查测试将数据库不可用与进程存活分开，不能由此替代 Linux/Kubernetes 摘流与信号退出验证。
 
 ## 5. 延伸阅读
 
