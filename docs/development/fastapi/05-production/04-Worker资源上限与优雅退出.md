@@ -56,6 +56,14 @@ SSE、WebSocket 与长任务需要单独的退出协议；不能无限等待。�
 
 Uvicorn keep-alive timeout 不是业务请求总超时；graceful timeout 也不能代替数据库语句和 HTTP 客户端预算。
 
+### 4.1 API Worker 与任务 Worker
+
+同一个 Worker 词在两处职责不同：Uvicorn Worker 负责 HTTP 应用进程，任务 Worker 负责从持久化状态领取工作。关闭 API 要处理连接、响应与 lifespan；关闭任务 Worker 要停止领取、结束有限执行或让租约过期恢复，不能照搬同一段退出代码。
+
+综合工程的 Linux 任务入口注册 SIGTERM/SIGINT，先设置停止信号，当前工作有三十秒异步预算，再关闭 Engine；容器宽限示例为四十五秒，仍需包含数据库和清理时间。Windows 控制台中断路径不同，不能用 process.terminate 的测试证明 Linux graceful shutdown。
+
+验证退出时，在持续有限请求或运行中的任务之间发正常停止信号，记录接收新工作、已有工作结束、池关闭和进程退出的顺序。再测试超出预算的行为，确认关键状态依靠持久化恢复，而非寄托在不会被调用的 finally 上。
+
 ## 5. 练习与答案
 
 ### 5.1 增加 Worker 能共享一个内存任务列表吗？

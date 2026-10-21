@@ -69,6 +69,19 @@ memory recorded: True
 
 缓存、并发与批处理都可能牺牲新鲜度或延迟。记录适用工作负载，而不是写“某参数越大越快”的通用结论。
 
+### 4.1 从实际报告读出热点
+
+```bash
+python -m cProfile -s cumulative engineering_profile.py
+python -m pdb study_tasks.py --store ./new-lab/tasks.json list
+```
+
+第二条只用于自己选择的新实验路径，pdb 的 n 单步越过、s 进入函数、p 表达式检查值、c 继续、q 退出。先在 load 和状态转换处断点，观察输入、返回值及异常，不把调试器当成在生产进程中无限暂停的工具。
+
+Profile 表中 ncalls 表示调用次数，tottime 关注函数自身成本，cumtime 包括子调用；包装函数 cumtime 大而自身小，可能只是承载了慢下游。递归、线程与异步调度还会影响归因，原生热点需要配合采样工具。
+
+内存使用前后快照对比，而不是只判断“已记录到内存”。让同一有限输入重复多轮，观察任务结束后存活状态；分别验证有上限缓存和无界列表。详细快照读法见[对象与内存](../05-runtime/02-引用计数循环GC弱引用与进程内存.md)，真实 HTTP 对照见[并发压测](../../fastapi/06-internals-diagnostics/05-并发压测与瓶颈对照实验.md)。
+
 ## 5. 练习与答案
 
 ### 5.1 CPU 只有百分之二十，为什么请求仍慢？

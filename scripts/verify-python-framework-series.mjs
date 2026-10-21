@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {compile} from '@mdx-js/mdx';
+import {compile, createProcessor} from '@mdx-js/mdx';
 
 const root = process.cwd();
 const args = process.argv.slice(2);
@@ -50,13 +50,23 @@ if (args.includes('--source-patch')) {
   process.exit(0);
 }
 if (!args.includes('--partial')) {
-  assert.equal(allDocs.length, 62, '36 Python, 24 FastAPI and two routes');
-  assert.equal(freshDocs.length, 50, 'Expected all remaining technical articles');
+  assert.equal(allDocs.length, 74, '38 Python, 34 FastAPI and two routes');
+  assert.equal(freshDocs.length, 62, 'Expected all non-language technical articles');
 }
 for (const file of allDocs) {
   const source = fs.readFileSync(file, 'utf8').replaceAll('\r\n', '\n');
-  assert.equal((source.match(/^# /gm) ?? []).length, 1, file);
-  await compile(source.replace(/^---\n[\s\S]*?\n---\n/u, ''));
+  const prose = source.replace(/^```[^\n]*\n[\s\S]*?^```/gm, '');
+  assert.equal((prose.match(/^# /gm) ?? []).length, 1, file);
+  const body = source.replace(/^---\n[\s\S]*?\n---\n/u, '');
+  const tree = createProcessor().parse(body);
+  const inspect = node => {
+    if (['mdxTextExpression', 'mdxFlowExpression'].includes(node.type)) {
+      assert(node.value.trim().startsWith('/*'), 'Unexpected MDX expression in ' + file);
+    }
+    for (const child of node.children ?? []) inspect(child);
+  };
+  inspect(tree);
+  await compile(body);
   if (!path.basename(file).startsWith('00-')) {
     assert.equal([...source.matchAll(/^### \d+\.\d+ .+\n\n答案：/gm)].length, 3, file);
   }
@@ -109,10 +119,12 @@ for (let round = 0; round < 3; round++) {
 }
 const pythonLab = path.join(root, 'examples/python/advanced-lab');
 if (fs.existsSync(pythonLab)) {
-  console.log(run(['-m', 'pytest', '-q', 'test_contract.py'], pythonLab));
+  console.log(run(['-m', 'pytest', '-q', 'test_contract.py', 'test_deepening.py',
+    'test_study_tasks.py'], pythonLab));
 }
 const fastLab = path.join(root, 'examples/fastapi/framework-lab');
 if (fs.existsSync(path.join(fastLab, 'tests'))) {
   console.log(run(['-m', 'pytest', '-q', 'test_api_contract.py', 'tests'], fastLab));
 }
+console.log(run(['-m', 'pytest', '-q', 'tests'], path.join(root, 'examples/fastapi/task-service')));
 console.log('PASS: ' + outputs + ' independently executed expected outputs and test suites');

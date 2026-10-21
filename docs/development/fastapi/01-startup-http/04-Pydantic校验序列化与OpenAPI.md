@@ -62,6 +62,36 @@ PATCH 场景需要区分字段未提供、显式 None 与具体值。`exclude_un
 
 OpenAPI 描述声明的接口，不能证明权限、事务或实际依赖健康。自定义 Response、手写错误和额外状态码仍需确保与文档一致，并通过契约测试验证。
 
+### 4.1 嵌套模型与错误位置
+
+```python
+from typing import Annotated, Literal
+from pydantic import BaseModel, Field
+
+class FileSource(BaseModel):
+    kind: Literal["file"]
+    path: str
+
+class UrlSource(BaseModel):
+    kind: Literal["url"]
+    url: str
+
+class RequestBody(BaseModel):
+    source: Annotated[FileSource | UrlSource, Field(discriminator="kind")]
+```
+
+kind 作为判别字段选择分支，避免靠“哪个模型碰巧先匹配”猜输入含义。声明 url 为 str 只约束字符串形态，不验证地址可信；即使使用 URL 类型，也还要单独处理允许目的地和访问权限。
+
+嵌套校验错误的 loc 描述来源、字段、分支或列表下标。先按位置找到实际输入，再读 type 与 msg；不能只把全部错误压成“参数错误”而丢掉可定位信息。对客户端返回哪些细节还要考虑敏感输入，服务器日志也不应原样存完整 body。
+
+### 4.2 PATCH 的三个状态
+
+定义 `name: str | None = None` 时，实例属性为 None 可能是省略，也可能是显式 null。通过 model_fields_set 或 model_dump(exclude_unset=True) 区分；exclude_none 会把显式清空也删掉，不能互换。
+
+更新过程应先校验允许修改哪些字段，再按显式输入构造变化，最后用版本条件提交。模型验证器适合检查起止时间等跨字段关系；需要查库验证名称唯一时，在事务与数据库约束层处理，避免在模型创建过程中偷偷进行异步 I/O。
+
+输出可以使用独立 response_model 筛选公开字段，但安全不能只寄托在筛选：日志、异常和其他接口仍可能接触内部对象。直接返回 Response 时还可能绕开通常的模型处理，需自行保证编码和契约。
+
 ## 5. 练习与答案
 
 ### 5.1 类型写 int，就必定拒绝字符串数字吗？

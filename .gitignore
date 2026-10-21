@@ -33,6 +33,10 @@
 /examples/fastapi/**/.pytest_cache/
 /examples/fastapi/framework-lab/*.db
 /examples/fastapi/framework-lab/*.db-*
+/examples/fastapi/task-service/*.db
+/examples/fastapi/task-service/*.db-*
+/examples/fastapi/task-service/.env
+/examples/python/**/.mypy_cache/
 
 .DS_Store
 .env.local

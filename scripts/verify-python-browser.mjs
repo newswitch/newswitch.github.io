@@ -14,7 +14,7 @@ const {chromium} = createRequire(path.join(path.resolve(modules), 'package.json'
 const data = JSON.parse(fs.readFileSync('.docusaurus/globalData.json', 'utf8'));
 const docs = data['docusaurus-plugin-content-docs'].default.versions.flatMap(v => v.docs)
   .filter(doc => /^development\/(?:python|fastapi)\//u.test(doc.id));
-assert.equal(docs.length, 62);
+assert.equal(docs.length, 74);
 const base = option('--base-url') ?? 'http://127.0.0.1:4173';
 const output = path.resolve('.python-article-checks/browser');
 fs.mkdirSync(output, {recursive: true});
@@ -73,9 +73,9 @@ try {
       await diagram.screenshot({path: path.join(output, doc.id.split('/').at(-1) + '.png')});
     }
   }
-  assert.equal(diagramCount, 8);
+  assert.equal(diagramCount, 11);
   await page.setViewportSize({width: 390, height: 1000});
-  for (const keyword of ['变量对象引用', 'Uvicorn-ASGI', '请求依赖响应与清理源码']) {
+  for (const keyword of ['变量对象引用', 'Uvicorn-ASGI', '请求依赖响应与清理源码', '任务服务运行配置迁移与部署']) {
     const preview = docs.find(doc => doc.id.includes(keyword));
     assert(preview, 'Mobile preview missing: ' + keyword);
     await page.goto(base + preview.path, {waitUntil: 'networkidle'});
@@ -86,7 +86,7 @@ try {
     await page.screenshot({path: path.join(output, keyword + '-mobile.png')});
   }
   assert.equal(pageErrors.length, 0, pageErrors.join('\n'));
-  console.log('PASS: 62 rendered pages, 8 Mermaid diagrams and mobile layout');
+  console.log('PASS: 74 rendered pages, 11 Mermaid diagrams and mobile layout');
 } finally {
   await browser.close();
 }

@@ -1,6 +1,7 @@
 # FastAPI framework lab
 
-对应 FastAPI 六个专题的 24 个文章源文件，以及可组合运行的 `task_app.py`。
+包含 FastAPI 单项机制示例，以及同步任务记录服务 `task_app.py`。
+完整异步执行服务另见相邻 `../task-service/`，两个实验按阶段分别运行。
 基线为 CPython 3.14.8、FastAPI 0.150.0、Starlette 1.9.0、Pydantic 2.14.1、
 Uvicorn 0.54.0、SQLAlchemy 2.1.5。HTTPX 0.28.1 用于出站/ASGI 示例，
 httpx2 2.15.1 用于当前 Starlette TestClient。
@@ -69,3 +70,17 @@ python load_probe.py --url http://127.0.0.1:8000/health/live --requests 20 --con
 SQLite 验证不覆盖 PostgreSQL/MySQL 的锁、隔离与驱动行为；Windows 环境
 不验证 systemd、容器和 Kubernetes 的真实部署。生产部署章节解释对应配置
 与原理，目标平台仍需自己的集成与发布验证。
+
+## 深化实验
+
+从仓库根目录为同一独立环境安装 `examples/fastapi/deepening.lock`，再进入本目录：
+
+```bash
+python api_telemetry_export.py
+python -m uvicorn api_otel_live:create_app --factory --host 127.0.0.1 --port 8000
+python compare_load.py
+```
+
+遥测默认导出到 Console，设置 OTEL_EXPORTER_OTLP_ENDPOINT 才使用指定 OTLP HTTP
+接收端；不要将真实业务数据发送到不可信地址。compare_load 只请求自己启动的环回
+教学服务，每组有限二十次，结束关闭自有子进程，不产生通用容量承诺。

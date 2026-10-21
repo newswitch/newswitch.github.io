@@ -1,0 +1,21 @@
+-r framework-lab/requirements.lock
+aiosqlite==0.22.1
+asyncpg==0.32.0
+greenlet==3.4.0
+mypy==2.4.0
+ast-serialize==0.13.1
+librt==0.16.0
+mypy_extensions==1.1.0
+pathspec==1.1.1
+opentelemetry-sdk==1.45.1
+opentelemetry-exporter-otlp-proto-http==1.45.1
+opentelemetry-semantic-conventions==0.66b1
+opentelemetry-exporter-http-transport==0.66b1
+opentelemetry-exporter-otlp-common==0.66b1
+opentelemetry-exporter-otlp-proto-common==1.45.1
+opentelemetry-proto==1.45.1
+googleapis-common-protos==1.75.5
+protobuf==7.36.2
+requests==2.34.2
+charset-normalizer==3.5.2
+urllib3==2.8.0

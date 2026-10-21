@@ -67,6 +67,29 @@ cleanup
 
 异步生成器使用 `async for` 与异步关闭机制；它并不意味着每一项自动并行执行。消费者取消后仍需要保证资源清理。
 
+### 4.1 手写一个可重复遍历的集合
+
+```python
+class Batch:
+    def __init__(self, values):
+        self.values = tuple(values)
+
+    def __iter__(self):
+        return iter(self.values)
+
+batch = Batch([10, 20])
+first, second = iter(batch), iter(batch)
+print(next(first), next(first), next(second))
+```
+
+输出是 `10 20 10`。Batch 是可迭代容器，每次 __iter__ 返回独立迭代器。迭代器自身的 __iter__ 通常返回自己，__next__ 修改当前位置并在结束时抛 StopIteration；若让 Batch 自己保存唯一游标并返回 self，两个循环就会相互干扰。
+
+`for value in batch` 大致先执行 iter(batch)，再反复 next，捕获耗尽信号后结束；它不要求输入支持长度或下标。先执行 list(first) 再把 first 交给下游，后者只能看到剩余内容，而不是重新从头。
+
+send 的参数成为暂停处 yield 表达式的值，yield from 则把推进、发送、关闭等协议委托给子生成器。对子生成器 return 的值，可用 `answer = yield from child()` 取得；普通 for 只关注产出项，不会以相同方式取回返回值。
+
+异步资源可用 `contextlib.aclosing` 包围异步生成器，使提前退出时显式执行 aclose。清理发生在消费者仍拥有相关上下文的阶段，比等引用何时消失更可控。
+
 ## 5. 练习与答案
 
 ### 5.1 创建生成器时，为什么没有打印 start？

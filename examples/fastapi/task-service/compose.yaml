@@ -1,0 +1,48 @@
+name: task-service-lab
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: task_lab
+      POSTGRES_DB: task_lab
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?set a local lab password}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U task_lab -d task_lab"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  migrate:
+    image: task-service-lab:local
+    build:
+      context: ..
+      dockerfile: task-service/Dockerfile
+    environment: &app-env
+      APP_DATABASE_URL: postgresql+asyncpg://task_lab:${PG_PASSWORD:?set a local lab password}@db:5432/task_lab
+      APP_JWT_SECRET: ${APP_JWT_SECRET:?set a local secret}
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+  api:
+    image: task-service-lab:local
+    environment: *app-env
+    ports:
+      - "127.0.0.1:8000:8000"
+    stop_grace_period: 45s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  worker:
+    image: task-service-lab:local
+    environment: *app-env
+    command: ["python", "-m", "task_service.cli", "worker"]
+    stop_grace_period: 45s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+volumes:
+  pgdata:

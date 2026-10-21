@@ -58,6 +58,16 @@ Mock 应在代码实际查找符号的位置替换。只断言“调用过一次
 
 后台任务、连接池和线程应在测试结束前关闭；“测试函数已经返回”不表示它创建的工作已经结束。时间断言优先用事件与可控时钟，避免依赖毫秒级 sleep 推测顺序。
 
+### 4.1 运行真正的异步与替身测试
+
+安装深化依赖后，从 advanced-lab 执行 `python -m pytest -q test_deepening.py test_study_tasks.py`。AnyIO 插件选择 asyncio 后端，测试中的 async def 才会被正确等待；不安装相应插件而只写异步测试，不能获得相同执行语义。
+
+AsyncMock 分别模拟成功与 TimeoutError，断言 await_count 和最后调用参数。mock.called 只说明创建过一次调用，不能证明异步结果被 await。替换业务实际查找符号的位置，也不要把模拟驱动的成功当成真实 SQL 已提交。
+
+资源测试使用 yield Fixture，在退出路径关闭 Engine、文件或任务。取消测试先等待 opened Event，再 cancel 并 await，最后断言 cleaned；这样检查生命周期，而不是在一个 sleep 之后猜测清理已经发生。
+
+把 monkeypatch 用于环境与时钟，tmp_path 用于文件，参数化用于边界组合。测试若只有返回值断言，容易漏掉失败后文件被截断、重试次数无界或租约仍持有；结果、状态、副作用和资源都应按契约检查。
+
 ## 5. 练习与答案
 
 ### 5.1 Mock 数据库返回正确结果，是否验证了 SQL 与事务？
