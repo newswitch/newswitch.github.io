@@ -72,7 +72,9 @@ PKCE 的启用和客户端类型相关，显式要求时使用该版本支持的
 
 验证错 state/nonce、回调重复、code 过期、redirect 不匹配、密钥轮换、用户取消授权、IdP 不可用、退出与多会话。日志记录阶段和关联 ID，不记录 code、access/refresh token。
 
-本文未部署 IdP；在隔离身份环境完成真实浏览器/回调测试，单元 Mock 不能证明整套协议联通。
+可直接使用[Keycloak 登录、刷新与密钥轮换实验](./07-Keycloak登录资源授权刷新与密钥轮换.md)：提供固定镜像、完整 realm 导入、PKCE 客户端、Bearer API 和服务端调用实现，而不只是占位 issuer。
+
+其中 API 与浏览器安全链分离，AuthorizedClientManager 配置授权码与刷新 provider，Token 留在服务端；PkceTest 断言 S256、state、nonce 和 verifier 不泄露到授权 URL。BrowserFlowTest 进一步用受控协议对端走通真实 HTTP 回调、换码和刷新；真实 Keycloak 的登录/刷新仍按该文的浏览器、IdP 事件与错误分支执行，不把受控对端等同完整身份系统。
 
 ## 6. 练习与答案
 

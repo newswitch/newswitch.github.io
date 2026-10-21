@@ -45,7 +45,7 @@ spring.jpa.open-in-view=false
 spring.jpa.hibernate.ddl-auto=validate
 ```
 
-JdbcTemplate 实验无需此配置。关闭 OSIV 后出现懒加载异常，说明原边界不明确，不应简单全部改 EAGER。生产 schema 用迁移管理，ddl-auto=update 不提供可靠变更审阅和多版本兼容。
+JdbcTemplate 实验无需此配置。关闭 OSIV 后出现懒加载异常，说明原边界不明确，不应简单全部改 EAGER。生产 schema 用迁移管理，ddl-auto=update 不提供可靠变更审阅和多版本兼容。独立 persistence 实验使用可丢弃 H2 的 create-drop，不应将其复制到生产配置。
 
 ## 5. 乐观锁与批量更新
 
@@ -72,7 +72,7 @@ public class TaskEntity {
 }
 ```
 
-注解来自 `jakarta.persistence`。创建方法、访问器和列约束需按模型补齐。Service 在事务中查出当前租户的受管实体，再调用 cancel，flush 时产生带版本约束的更新；数据库竞争失败和对象 if 拒绝是两条路径。
+注解来自 `jakarta.persistence`。上面只用于说明原任务模型的字段形状；带完整构造方式、访问器、LAZY owner 与版本字段的可运行实体见 [JobEntity 与 OwnerEntity](https://github.com/newswitch/newswitch.github.io/tree/main/examples/spring-boot/deepening-lab/persistence/src/main/java/lab/persistence)。Service 在事务中查出当前租户的受管实体，再调用领域方法，flush 时产生带版本约束的更新；数据库竞争失败和对象 if 拒绝是两条路径。
 
 Repository 可用 `findByTenantAndId` 表达可见范围，不只 findById 就假定已授权。列表优先返回投影；表实体不直接充当 HTTP 协议。
 
@@ -84,7 +84,9 @@ Repository 可用 `findByTenantAndId` 表达可见范围，不只 findById 就�
 
 记录事务和 flush 前后的 SQL、其他事务可见性、上下文关闭后的关联访问。分别用 1、20、100 条数据测试查询数，别只测一条掩盖 N+1。
 
-现有 service-lab 不含 Hibernate。目标数据库集成测试才能验证其锁与分页，不能把机制示意当作已测试行为。
+独立 [MyBatis/JPA 对照实验](./07-MyBatis与JPA的SQL事务缓存对照实验.md) 已加入 Hibernate：3 个任务分别关联不同 owner，普通 LAZY 遍历产生 4 次 prepare，fetch join 为 1；显式 flush 后回滚，数据库仍保留旧值；两个 EntityManager 竞争同一版本时，后提交者 flush 失败；JPQL 批量更新后，受管对象保持旧字段，clear 后重读才改变。
+
+这些测试用真实 H2 与完整 Boot 上下文执行。它们证明对象/SQL/事务边界，不能替代目标 MySQL/PostgreSQL 的锁、分页和执行计划验证。不要将两个 EntityManager 的并发实验改成跨线程共享同一个上下文。
 
 ## 7. 练习与答案
 

@@ -8,7 +8,7 @@ function files(directory){
 }
 let total=0, diagrams=0;
 const newDocs=[];
-for(const [name,expected] of [['java',57],['spring',29],['spring-boot',43]]){
+for(const [name,expected] of [['java',57],['spring',29],['spring-boot',49]]){
   const docs=files(path.join(base,name)).filter(f=>f.endsWith('.md'));
   if(docs.length!==expected) throw new Error(name+': expected '+expected+', got '+docs.length);
   for(const file of docs){
@@ -29,7 +29,7 @@ for(const [name,expected] of [['java',57],['spring',29],['spring-boot',43]]){
     total++;
   }
 }
-if(newDocs.length!==36) throw new Error('Expected 36 new articles');
+if(newDocs.length!==42) throw new Error('Expected 42 post-startup articles');
 for(const folder of ['02-web','03-data','04-integrations','05-security','06-production']){
   const category=JSON.parse(fs.readFileSync(path.join(base,'spring-boot',folder,'_category_.json'),'utf8'));
   if(category.collapsed!==true || category.link!==null) throw new Error('Invalid category '+folder);
@@ -41,12 +41,12 @@ for(const name of svgs){
   if(!source.includes('<title')||!source.includes('<desc')) throw new Error('Accessible labels absent '+name);
   if(/<script|<foreignObject|href=/u.test(source)) throw new Error('Unexpected external or active SVG content '+name);
 }
-console.log('PASS '+total+' MDX articles, 36 new articles / 108 answered exercises, '+svgs.length+' SVGs / '+diagrams+' placements.');
+console.log('PASS '+total+' MDX articles, 42 post-startup articles / 126 answered exercises, '+svgs.length+' SVGs / '+diagrams+' placements.');
 if(process.argv.includes('--check-build')){
   const data=JSON.parse(fs.readFileSync('.docusaurus/globalData.json','utf8'));
   const docs=data['docusaurus-plugin-content-docs'].default.versions.flatMap(v=>v.docs)
     .filter(d=>/^development\/(?:java|spring|spring-boot)\//u.test(d.id));
-  if(docs.length!==129) throw new Error('Expected 129 built documents');
+  if(docs.length!==135) throw new Error('Expected 135 built documents');
   for(const doc of docs){
     const file=path.join(root,'build',decodeURIComponent(doc.path),'index.html');
     if(!fs.existsSync(file)) throw new Error('Missing built page '+doc.path);
@@ -67,5 +67,5 @@ if(process.argv.includes('--check-build')){
     const html=fs.readFileSync(path.join(root,'build/docs/development/spring-boot/production',slug,'index.html'),'utf8');
     if(!html.includes(sentence)) throw new Error('Stale built text '+slug);
   }
-  console.log('PASS 129 built pages, 20 exact SVG assets and final article wording.');
+  console.log('PASS 135 built pages, 20 exact SVG assets and final article wording.');
 }

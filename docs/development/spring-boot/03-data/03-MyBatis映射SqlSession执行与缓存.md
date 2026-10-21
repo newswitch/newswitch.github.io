@@ -14,11 +14,11 @@ MyBatis 把接口方法和 SQL 映射起来，不像 JPA 那样依赖脏检查�
 
 [官方兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)区分 Starter 4.0、3.0 等系列。Boot 4 选择明确支持它的系列，不把 Boot 3 Starter 原样带入。坐标 `org.mybatis.spring.boot:mybatis-spring-boot-starter` 的版本要单独锁定并验证，不能假定全部由 Boot BOM 管理。
 
-本文分析 Boot 4 集成；任务服务实际采用 JdbcTemplate，下面 Mapper 是等价实现节选，不宣称所有第三方版本均已联调。
+本文沿执行链分析 Boot 4 集成。[persistence 完整工程](https://github.com/newswitch/newswitch.github.io/tree/main/examples/spring-boot/deepening-lab/persistence) 已接入 MyBatis Starter 4.0.0，并通过真实 H2 测试验证参数绑定、事务回滚、缓存和更新行数。原 service-lab 保持 JdbcTemplate 实现，二者是不同实验，不能把一种实现的测试结果套给另一种。
 
 ## 2. 一次查询的内部路径
 
-官方兼容表给出的 4.0.0 可作为固定候选，先在独立工程验证，不覆盖 Boot 管理的 Spring 模块：
+配套工程固定使用 4.0.0，不覆盖 Boot 管理的 Spring 模块：
 
 ```xml
 <dependency>
@@ -58,7 +58,7 @@ public interface TaskMapper {
 }
 ```
 
-需要 MyBatis 注解导入与 TaskRow。井号形式绑定值，美元符号形式进行文本替换，不应用于直接接受的用户值。表名和排序字段应来自白名单。XML foreach、if、choose 解决 SQL 组合，不自动保证逻辑正确。
+以上是原任务表的映射形状，TaskRow 需要与查询列匹配；可直接构建运行的 TaskMapper、嵌套 Row record 和导入见完整工程。井号形式绑定值，美元符号形式进行文本替换，不应用于直接接受的用户值。表名和排序字段应来自白名单。XML foreach、if、choose 解决 SQL 组合，不自动保证逻辑正确。
 
 别名、驼峰配置、构造器和 null 都影响映射。先用简单返回模型验证；嵌套 select 也可能产生 N+1。
 
@@ -72,7 +72,17 @@ public interface TaskMapper {
 
 ## 5. 同模型对照验证
 
-用任务表验证零行映射、重复键、更新 0/1 行、事务回滚、两次查询是否真的发 SQL、外部更新后的缓存。受控打开 SQL 日志，统计条数，不泄露参数。
+完整步骤见[MyBatis 与 JPA 对照实验](./07-MyBatis与JPA的SQL事务缓存对照实验.md)。在仓库根目录执行：
+
+```bash
+mvn -B -ntp -f examples/spring-boot/deepening-lab/pom.xml -pl persistence verify
+```
+
+SqlCounter 在 StatementHandler.prepare 计数：同一事务内相同查询两次为 1；事务外分别调用为 2；查询、Mapper 更新、再查询为 3。显式开启 CachedMapper namespace 二级缓存后，JdbcTemplate 的外部更新不会自动使它失效，测试能稳定观察到缓存旧值。
+
+更新 0 行不一定抛异常。实验先以 version=0 成功更新，再用旧版本更新得到 0；业务要按行数处理竞争，而不是把“不报错”当成功。不存在的租户/ID 返回 null，重复主键报错，事务回滚后值不改变，均有断言。
+
+计数证明本版本、配置和输入下执行了几次 prepare，不等于数据库查询成本相同；真实计划、索引、网络和锁需另行测量。SQL 日志包含参数时应限制范围并脱敏。
 
 找不到 Mapper 时先查扫描范围和 Bean 定义，再查依赖和数据源；不要随意叠注解掩盖扫描错误。
 

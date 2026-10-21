@@ -67,7 +67,9 @@ Boot 可通过相应桥接/导出依赖建立追踪；另一方案是 OTel Java 
 
 发起两个不同请求并跨线程，确认无 ID 串线；访问下游观察父子关系；模拟错误、超时与取消检查结束事件。关闭 Collector 时应用不应无限阻塞，导出队列和丢弃策略需要验证。
 
-service-lab 提供 Boot 默认日志与请求测试，没有启动 OTel Collector，本文不宣称遥测后端已联通。
+独立 [telemetry 工程](https://github.com/newswitch/newswitch.github.io/tree/main/examples/spring-boot/deepening-lab/telemetry) 已实际通过 HTTP 导出 OTLP protobuf：测试接收器解析 span，验证 db.acquire 与 db.hold 的 trace/parent 关系，并检查 Prometheus 指标。还模拟导出端拒绝，检查业务请求仍可成功，不把遥测失败变成同步业务依赖。
+
+详细运行、Collector 配置和等待边界见[遥测导出实战](./13-OTLP链路导出指标日志与等待分解实战.md)。该接收器证明协议内容，不是长期后端存储；跨线程、跨服务传播需要继续按自己的运行路径验证。
 
 ## 7. 练习与答案
 

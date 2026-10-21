@@ -1,0 +1,65 @@
+name: boot-deepening-lab
+services:
+  redis:
+    image: redis:8.2.1
+    profiles: [brokers]
+    ports: ["127.0.0.1:16379:6379"]
+    mem_limit: 256m
+    command: [redis-server, --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 3s
+      timeout: 2s
+      retries: 30
+  kafka:
+    image: apache/kafka:4.1.0
+    profiles: [brokers]
+    ports: ["127.0.0.1:19092:9092"]
+    mem_limit: 1g
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:19092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+    healthcheck:
+      test: [CMD-SHELL, /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  rabbit:
+    image: rabbitmq:4.2.0
+    profiles: [brokers]
+    ports: ["127.0.0.1:15672:5672"]
+    mem_limit: 512m
+    environment:
+      RABBITMQ_DEFAULT_USER: lab
+      RABBITMQ_DEFAULT_PASS: lab-only-not-production
+    healthcheck:
+      test: [CMD, rabbitmq-diagnostics, -q, ping]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1
+    profiles: [identity]
+    ports: ["127.0.0.1:18080:8080"]
+    mem_limit: 1g
+    command: [start-dev, --import-realm]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: lab-admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: lab-admin-only-not-production
+    volumes: ["./identity/realm.json:/opt/keycloak/data/import/realm.json:ro"]
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.139.0
+    profiles: [telemetry]
+    ports: ["127.0.0.1:14318:4318"]
+    mem_limit: 256m
+    command: [--config=/etc/otelcol/config.yaml]
+    volumes: ["./telemetry/collector.yaml:/etc/otelcol/config.yaml:ro"]

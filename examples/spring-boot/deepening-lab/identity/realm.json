@@ -1,0 +1,34 @@
+{
+  "realm": "boot-lab",
+  "enabled": true,
+  "sslRequired": "none",
+  "accessTokenLifespan": 60,
+  "revokeRefreshToken": true,
+  "refreshTokenMaxReuse": 0,
+  "users": [{
+    "username": "alice", "enabled": true, "emailVerified": true,
+    "email": "alice@example.invalid", "firstName": "Alice", "lastName": "Lab",
+    "attributes": {"tenant": ["alpha"]},
+    "credentials": [{"type": "password", "value": "lab-alice-only-not-production", "temporary": false}]
+  }],
+  "clientScopes": [{
+    "name": "task:read", "protocol": "openid-connect",
+    "attributes": {"include.in.token.scope": "true", "display.on.consent.screen": "true"}
+  }],
+  "clients": [{
+    "clientId": "task-web", "enabled": true, "publicClient": false,
+    "secret": "lab-browser-only-not-production", "standardFlowEnabled": true,
+    "directAccessGrantsEnabled": false, "serviceAccountsEnabled": false,
+    "redirectUris": ["http://localhost:8082/login/oauth2/code/keycloak"],
+    "webOrigins": ["http://localhost:8082"],
+    "defaultClientScopes": ["profile", "email", "task:read"],
+    "attributes": {"pkce.code.challenge.method": "S256"},
+    "protocolMappers": [{
+      "name": "task-api-audience", "protocol": "openid-connect", "protocolMapper": "oidc-audience-mapper",
+      "config": {"included.custom.audience": "task-api", "access.token.claim": "true", "id.token.claim": "false"}
+    }, {
+      "name": "tenant", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-attribute-mapper",
+      "config": {"user.attribute": "tenant", "claim.name": "tenant", "jsonType.label": "String", "access.token.claim": "true", "id.token.claim": "true"}
+    }]
+  }]
+}

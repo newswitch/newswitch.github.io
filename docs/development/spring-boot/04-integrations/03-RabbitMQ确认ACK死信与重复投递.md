@@ -63,7 +63,11 @@ prefetch 限制未确认交付，可避免单消费者囤太多，但总占用�
 
 测试无绑定路由、Broker 断开、发布确认超时、消费提交后断连、毒消息和死信重放。记录 ready、unacked、消费速率、重投递、Return、确认时间和最老年龄。
 
-ready 低、unacked 高常意味着消费者已拿走但未完成；可先检查慢 SQL、锁与下游，不先扩队列。本文未在本机运行 RabbitMQ，不把配置片段等同端到端实测。
+ready 低、unacked 高常意味着消费者已拿走但未完成；可先检查慢 SQL、锁与下游，不先扩队列。
+
+完整 RabbitPublisher、manual ACK 消费者、DLX/队列声明与测试见[隔离联调](./07-RedisKafkaRabbitMQ隔离联调与故障恢复.md)。发送端等待 correlated confirm 并检查 return；消费者在 Inbox 本地事务提交后 ACK。实验选择失败即停放死信而不立即 requeue，避免热循环，但不代表生产最优重试策略。
+
+默认测试已验证本地去重和回滚；真正路由、确认和 ACK 要运行显式 Broker 联调，不能将 Mock 或源码编译视为已运行 RabbitMQ。普通队列的 DLX 也不自动提供绝不丢失保证，需要按队列类型和故障模型核对可靠性。
 
 ## 6. 练习与答案
 

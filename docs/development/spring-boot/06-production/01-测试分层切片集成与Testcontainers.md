@@ -49,7 +49,9 @@ Testcontainers 是测试依赖，不是生产容器编排器。镜像应锁版�
 
 将任务服务指向一次性 PostgreSQL 容器，运行迁移后测试重复键、并发取消、Outbox 回滚、迁移中断和连接归还。测试失败保留脱敏日志和版本，不上传数据库文件里的敏感数据。
 
-配套自动化实验不包含 Testcontainers 或 Kafka/Redis/RabbitMQ 联调；这些测试需要独立的容器环境。H2 通过不能替代目标服务验证，关键 CI 测试也不应因缺少 Docker 而默默跳过。
+配套自动化实验不包含 Testcontainers；另有 [delivery 的独立 Compose 联调](../04-integrations/07-RedisKafkaRabbitMQ隔离联调与故障恢复.md)，显式执行 `-Pbrokers` 才连接 Redis/Kafka/RabbitMQ，服务缺失会失败。两种生命周期方式不要混淆：Compose 由操作者启动和关闭，Testcontainers 则由测试管理相应容器。
+
+H2 通过不能替代目标服务验证，关键 CI 测试也不应因缺少 Docker 而默默跳过。新增 [deepening-lab](https://github.com/newswitch/newswitch.github.io/tree/main/examples/spring-boot/deepening-lab) 的默认 48 项测试另外覆盖 ORM、Outbox、真实 JWT/JWK HTTP、受控 OIDC 回调/刷新和 OTLP；真实外部 Broker 的 3 项测试单独列出，不计入本机通过数量。
 
 ## 6. 上下文复用与隔离
 

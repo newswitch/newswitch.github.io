@@ -51,17 +51,14 @@ sequenceDiagram
 
 ## 3. listener 的执行边界
 
-发送不能调用后丢弃结果。持有 `KafkaTemplate<String,String>` 的组件可观察 Future：
+发送不能调用后丢弃结果。配套 Brokers.KafkaPublisher 在 Relay 的有界工作迭代中等待 Future：
 
 ```java
-template.send("task-events", aggregateId, jsonEvent)
-    .whenComplete((result, error) -> {
-        if (error != null) recordSendFailure(eventId, error);
-        else recordBrokerAccepted(eventId);
-    });
+template.send("boot-lab-events", event.taskId(), event.json())
+    .get(5, java.util.concurrent.TimeUnit.SECONDS);
 ```
 
-回调不能复用未知线程中的调用方事务。两个 record 方法是待实现的业务操作，不代表已可靠更新 Outbox，其失败也要能恢复。同步等待 Future 同样需有限时。
+完整适配器和 Relay 见 [delivery 源码](https://github.com/newswitch/newswitch.github.io/tree/main/examples/spring-boot/deepening-lab/delivery)。发布时不持有数据库事务；确认后以领取令牌标记 Outbox，异常则保留待发并延迟重试。等待超时代表结果未知，不能断言 Broker 一定没收到。如果采用异步回调，也不能复用未知线程中的调用方事务。
 
 监听方法解析 schema 后调用同步、幂等、带事务的 Service，不要 fire-and-forget 立即返回。event_id 随业务传递，用于重复处理，不只依靠当前 offset。
 
@@ -79,7 +76,9 @@ ACK/offset 模式和错误处理器要一起验证；抛异常、捕获后吞掉
 
 独立 broker 测：发送结果异常、业务提交前崩溃、提交后 offset 前崩溃、重平衡、毒消息、重放和乱序。观察 lag、最老消息年龄、处理时长、重试和重复，lag=0 也可能意味着消息被错误跳过。
 
-当前 service-lab 只验证本地 Outbox，不启动 Kafka。容器配置说明见 [Spring Kafka 提交模式](https://docs.spring.io/spring-kafka/reference/kafka/receiving-messages/message-listener-container.html)。
+原 service-lab 只验证本地 Outbox；独立 delivery 工程已提供实际 KafkaTemplate、listener、Inbox 和死信恢复器。执行与验证步骤见[隔离联调](./07-RedisKafkaRabbitMQ隔离联调与故障恢复.md)。真实 Broker 测试显式启用，不在缺少服务时悄悄跳过。
+
+实验消费者不异步甩出工作：Inbox 事务完成后 listener 才返回。错误处理器做有限重试并将耗尽记录转 DLT，恢复器要求死信发送成功；因此进度推进和“业务已完成”仍是不同事实。[Spring Kafka 提交模式](https://docs.spring.io/spring-kafka/reference/kafka/receiving-messages/message-listener-container.html)
 
 ## 6. 练习与答案
 

@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-21",
+  "environment": {"os": "Windows", "jdk": "25.0.4", "boot": "4.1.1", "database": "H2 in-memory", "maxHeapMiB": 384},
+  "scope": "Single illustrative closed-loop run; loopback and artificial 80ms connection occupancy, not production capacity.",
+  "samples": [
+    {"name": "pool2-serial", "requests": 80, "concurrency": 1, "seconds": 7.483, "successes": 80, "http503": 0, "completedPerSecond": 10.69, "successfulPerSecond": 10.69, "allP95ms": 95.59, "successP95ms": 95.59},
+    {"name": "pool2-queue", "requests": 80, "concurrency": 8, "seconds": 2.905, "successes": 62, "http503": 18, "completedPerSecond": 27.54, "successfulPerSecond": 21.34, "allP95ms": 299.37, "successP95ms": 297.75},
+    {"name": "pool4-queue", "requests": 80, "concurrency": 8, "seconds": 1.891, "successes": 80, "http503": 0, "completedPerSecond": 42.30, "successfulPerSecond": 42.30, "allP95ms": 191.08, "successP95ms": 191.08},
+    {"name": "pool2-admission", "requests": 80, "concurrency": 8, "seconds": 0.304, "successes": 6, "http503": 74, "completedPerSecond": 263.40, "successfulPerSecond": 19.76, "allP95ms": 106.11, "successP95ms": 127.16}
+  ]
+}

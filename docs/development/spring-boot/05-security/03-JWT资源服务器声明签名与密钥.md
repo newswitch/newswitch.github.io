@@ -68,7 +68,11 @@ kid 帮助选择验证密钥，但它不是信任证明。新旧密钥重叠窗�
 
 MockMvc 的 jwt 请求支持可以验证授权映射，不证明签名验证。解码器测试应使用隔离生成的密钥和固定时钟，覆盖错签名、错 issuer/audience、过期、未生效、未知 key 和轮换，再与真实 IdP 做联调。
 
-service-lab 使用 Basic，不包含 JWT 密钥或身份服务；本文配置不是本机已验证 IdP 部署。
+service-lab 保持 Basic 实验；独立 [identity 工程](https://github.com/newswitch/newswitch.github.io/tree/main/examples/spring-boot/deepening-lab/identity) 已用本机临时 JWK HTTP 服务、隔离 RSA 私钥和真实 Boot HTTP 请求验证 JWT。测试覆盖有效请求、401/403、tenant 缺失、错误签名、未知 kid、非允许算法、错 issuer/audience、exp/nbf 和新旧密钥重叠。
+
+错误签名测试故意保留合法 kid、换用另一把私钥，确保验证的确是签名，而不只是“找不到 kid”。密钥轮换测试先加载旧密钥，再公布新旧 JWK 并验证新 kid，观察真实刷新，不用重建解码器冒充运行期轮换。
+
+Keycloak 的部署、浏览器授权、刷新和错误检查见[身份联调](./07-Keycloak登录资源授权刷新与密钥轮换.md)。本机 JWK 测试只扮演验签公钥端点，不是一个完整授权服务器。
 
 ## 6. 练习与答案
 
