@@ -96,6 +96,23 @@ Run 生成有限整数并逐条消费，jobs/results 容量均受控，返回前
 
 leak 模式暂时保留 8 个无取消分支的阻塞发送者，采集文本堆栈后全部接收并 Join，再验证可取消版本。包括 profile 写失败的路径，所有发送者也会在返回前释放；不会留下永久演示进程。profile 归类只统计本实验函数，不要求全进程 Goroutine 数绝对不变。
 
+## 值共享、I/O 与 JSON 协议
+
+```bash
+go run ./cmd/value-lab -mode slice
+go run ./cmd/value-lab -mode map
+go run ./cmd/value-lab -mode interface
+go run ./cmd/value-lab -mode io
+go run ./cmd/value-lab -mode json
+go test ./internal/valueflow -v -count=1 -timeout=20s
+```
+
+Slice 对照容量限制、超容量追加、嵌套浅复制、Delete 清尾与重叠 copy；Map 对照值副本写回、Clone 的嵌套共享与显式键排序。接口验证方法集、typed nil、errors.As 匹配 nil 指针与方法值保存的接收者。
+
+I/O 验证数据与 EOF 同时返回、短写、WriterTo/ReaderFrom 优先级、LimitReader 截断与 MaxBytesError。JSON 使用 encoding/json 兼容 API，验证三态 Optional、全新 DTO 与复用差异、未知字段、尾部、数字精度、重复键和大小写行为。DecodeOne 不是完整 HTTP 入口；上限、媒体类型、业务与授权仍由调用方负责。Optional 只演示入站，不是通用 PATCH 或输出序列化框架。
+
+这些实验不访问外部服务，不依赖磁盘满或永久阻塞，不通过 unsafe 绑定运行时内存布局。
+
 ## Race 验证
 
 ```bash

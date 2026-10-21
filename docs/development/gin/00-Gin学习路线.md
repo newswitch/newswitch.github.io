@@ -99,6 +99,8 @@ go test ./... -count=1 -timeout=60s
 
 请求生命周期对照进一步验证 Context fallback、Copy 的浅复制与取消边界，以及 Next/Abort/return 的不同控制层。真实回环 HTTP 测试比较同样返回 504 时后台工作是否已 Join；健康检查测试将数据库不可用与进程存活分开，不能由此替代 Linux/Kubernetes 摘流与信号退出验证。
 
+协议实验进一步对照 Should/Must 绑定控制、Body 缓存、零值验证与独立 400/413/415 输入策略；真实回环 HTTP 验证待发送状态、Flush 提交和 JSON 编码错误。原 taskd 契约保持不变，固定版本 Render 的错误记录不等于自动返回 500。
+
 ## 5. 延伸阅读
 
 数据库、Redis、Kafka、Kubernetes 与可观测性各有独立技术系列，Gin 文章关注调用、错误、事务和资源边界，不替代这些产品的部署与内部原理。

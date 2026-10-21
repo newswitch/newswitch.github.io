@@ -152,3 +152,17 @@ go test ./internal/app -run 'TestHealth|TestDependencyFailureChangesReadinessNot
 requestflow 使用 Gin 1.12.0 与 x/sync v0.23.0，验证 fallback 开关、Copy 容器隔离与嵌套引用、Request Context 共享、Next/Abort/return 的调度差异。真实回环 HTTP 对照同样返回 504 时后台任务仍活动或已经 Join 的两种情况；负面实验由测试拥有者主动解除并 Join，不留下后台进程。
 
 健康检查测试关闭本机实验 DB，确认 live=200、ready=503。当前 taskd 的 readiness 不维护独立 draining 状态，信号 Context 也没有直接作为全部请求的 BaseContext；不能把这些测试等同于 Linux 信号或 Kubernetes 摘流已验证。
+
+## 9. 绑定、协议与响应提交
+
+```bash
+go run ./cmd/protocol-lab -mode binding
+go run ./cmd/protocol-lab -mode response
+go test ./internal/protocol -v -count=1 -timeout=20s
+```
+
+默认 Gin 1.12.0 codec 使用 encoding/json，不在请求中切换全局 Decoder 选项。绑定实验验证 Should/Must 的响应控制、默认 binder 的未知字段与尾部行为、消费型 Body、缓存重绑与零值验证。独立 ReadInput 示例限制 64 字节，仅接受 JSON，检查 EOF、null 和字段规则，按 400/413/415 分类；测试包括恰好上限、超长尾部与缓存前上限。
+
+原 taskd 仍采用 4096 字节及输入错误统一 400 的现有契约；protocol 没有改变其公开 API，也没有声称额外拒绝重复键。
+
+响应实验用真实回环 HTTP/1.1 对照待发送状态、Flush 提交、提交后修改、编码错误无策略/有策略和 204。状态记录用 Mutex 同步，自建服务与连接在结束时关闭。它不替代反向代理、HTTP/2 或生产网络断连测试；c.Errors 中有错也不意味着框架自动生成 500。

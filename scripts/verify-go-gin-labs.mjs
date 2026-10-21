@@ -93,6 +93,26 @@ for(const mode of ['context','group','pipeline','leak']){
 }
 report.lifecycle=lifecycle;
 
+const valueflow=[];
+for(const mode of ['slice','map','interface','io','json']){
+  const result=JSON.parse(command(core,go,['run','./cmd/value-lab','-mode',mode]));
+  valueflow.push({mode,...result});report.experiments++;
+  if(mode==='slice'&&(JSON.stringify(result.shared)!=='[1,8,3,9]'||JSON.stringify(result.detached)!=='[6,3,7]'||!result.clip_still_aliases||!result.nested_clone_is_shallow||!result.delete_clears_tail))throw new Error('Slice ownership regression');
+  if(mode==='map'&&(result.nil_present||!result.zero_present||result.copied_field!==1||result.written_back_field!==2||!result.clone_nested_shared))throw new Error('Map value regression');
+  if(mode==='interface'&&(!result.pointer_nil||result.interface_nil||!result.as_matched||!result.as_target_nil||result.value_implements||!result.pointer_implements||result.captured_value!==0||result.current_value!==1))throw new Error('Interface boundary regression');
+  if(mode==='io'&&(result.data_with_eof!=='abc'||!result.copy_error_nil||!result.short_write_detected||!result.source_writer_to_first||!result.wrapped_uses_reader_from||!result.limit_error_nil||!result.max_bytes_detected))throw new Error('IO contract regression');
+  if(mode==='json'&&(result.missing_set||!result.null_set||!result.null_flag||!result.zero_set||!result.second_rejected||!result.unknown_rejected||result.duplicate_value!==2||result.case_insensitive!==3||!result.float_rounded||result.number_literal!=='9007199254740993'))throw new Error('JSON contract regression');
+}
+report.valueflow=valueflow;
+const protocol=[];
+for(const mode of ['binding','response']){
+  const result=JSON.parse(command(gin,go,['run','./cmd/protocol-lab','-mode',mode]));
+  protocol.push({mode,...result});report.experiments++;
+  if(mode==='binding'&&(result.should_written||result.should_status!==422||!result.must_written||result.must_status!==400||!result.default_unknown_ok||!result.default_tail_ok||!result.second_bind_eof||!result.cached_rebind_ok||result.cached_bytes!==23||!result.zero_accepted||result.strict_oversize_code!==413))throw new Error('Gin binding regression');
+  if(mode==='response'&&(result.status_only_written||result.status_only_size!==-1||result.revised_status!==201||!result.flushed_written||result.flushed_size!==0||result.late_status!==202||result.late_header!=='before'||result.encoding_errors!==1||!result.encoding_aborted||result.encoding_written||result.no_policy_status!==201||result.no_policy_body!==''||result.policy_status!==500||result.no_content_body!==''))throw new Error('Gin response commit regression');
+}
+report.protocol=protocol;
+
 const database=path.join(checks,'cli-'+Date.now()+'.db').replaceAll('\\','/');
 const token=command(gin,taskd,['-mode=token','-demo']);
 let child,base,stderr='';
