@@ -22,6 +22,13 @@
 # Misc
 # Python article verification and local runtime files
 /.python-article-checks/
+/.go-article-checks/
+/examples/go/**/out/
+/examples/go/**/*.test
+/examples/gin/**/out/
+/examples/gin/**/*.db
+/examples/gin/**/*.db-*
+/examples/gin/**/.env
 /examples/python/**/.venv/
 /examples/python/**/__pycache__/
 /examples/python/**/.pytest_cache/

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gin-task-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: gin-task-api}
+  template:
+    metadata:
+      labels: {app: gin-task-api}
+    spec:
+      terminationGracePeriodSeconds: 15
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: api
+          image: gin-task-lab:local
+          imagePullPolicy: IfNotPresent
+          args: ["-listen=0.0.0.0:8084", "-admin=127.0.0.1:9091"]
+          env:
+            - name: LAB_DB_DRIVER
+              value: pgx
+            - name: LAB_DB_DSN
+              valueFrom:
+                secretKeyRef: {name: gin-task-lab, key: db-dsn}
+            - name: LAB_JWT_KEY
+              valueFrom:
+                secretKeyRef: {name: gin-task-lab, key: jwt-key}
+            - name: GOMEMLIMIT
+              value: 160MiB
+          ports: [{name: http, containerPort: 8084}]
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 256Mi}
+          readinessProbe:
+            httpGet: {path: /health/ready, port: http}
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /health/live, port: http}
+            periodSeconds: 10
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gin-task-api
+spec:
+  selector: {app: gin-task-api}
+  ports: [{port: 80, targetPort: http}]
