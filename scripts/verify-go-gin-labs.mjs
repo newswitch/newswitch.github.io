@@ -52,6 +52,33 @@ const view=runtimeResult.find(x=>x.mode==='view'),clone=runtimeResult.find(x=>x.
 if(view.visible_bytes!==64||clone.visible_bytes!==64||view.heap_added_bytes-clone.heap_added_bytes<6*1024*1024)throw new Error('Retention regression');
 if(!runtimeResult.at(-1).channel_and_network_joined)throw new Error('Scheduler waiters not joined');
 report.runtimeDeepening=runtimeResult;
+const mechanisms=[];
+for(const mode of ['channel','locks','http-client','http-server']){
+  const result=JSON.parse(command(core,go,['run','./cmd/mechanism-lab','-mode',mode]));
+  mechanisms.push({mode,...result});report.experiments++;
+  if(mode==='channel'&&(!result.sender_joined||result.aliased_value!==2||result.cloned_value!==2||result.drained_ok))throw new Error('Channel protocol regression');
+  if(mode==='locks'&&(result.mixed_atomic_total!==99||!result.mutex_invariant||!result.snapshot_consistent||!result.input_isolated))throw new Error('Lock invariant regression');
+  if(mode==='http-client'&&(!result.pool_deadline||!result.queued_get_conn||result.queued_got_conn||result.requests_while_held!==2||result.after_unread_close_reused||!result.after_drain_reused))throw new Error('HTTP pool evidence regression');
+  if(mode==='http-server'&&(!result.graceful_completed||!result.deadline_returned||result.deadline_canceled_handler||!result.close_canceled_handler))throw new Error('HTTP shutdown evidence regression');
+}
+report.mechanisms=mechanisms;
+report.allocationBenchmark=command(core,go,['test','./internal/mechanism','-run','^$','-bench','Benchmark(Inline|Opaque|Published|Borrowed)','-benchmem','-count=3','-benchtime=100ms']);
+const compiler=spawnSync(go,['test','./internal/mechanism','-run','^$','-gcflags=newswitch.dev/go-core-lab/internal/mechanism=-m=2 -d=ssa/check_bce/debug=1'],{cwd:core,env,encoding:'utf8',timeout:120000,maxBuffer:32*1024*1024});
+if(compiler.error||compiler.status!==0)throw new Error('Compiler evidence failed '+compiler.stderr);
+fs.writeFileSync(path.join(checks,'mechanism-compiler.txt'),compiler.stdout+'\n'+compiler.stderr);
+if(!compiler.stderr.includes('inlining call to InlineRecord')||!compiler.stderr.includes('Found IsInBounds'))throw new Error('Compiler baseline changed; review rather than silently passing');
+const mechanismBinary='out/mechanism.test'+suffix;
+command(core,go,['test','-c','./internal/mechanism','-o',mechanismBinary]);
+const unchecked=command(core,go,['tool','objdump','-s','mechanism.PrefixUnchecked',mechanismBinary]);
+const bounded=command(core,go,['tool','objdump','-s','mechanism.PrefixBounded',mechanismBinary]);
+fs.writeFileSync(path.join(checks,'mechanism-objdump.txt'),unchecked+'\n'+bounded+'\n');
+if(!unchecked.includes('runtime.panicBounds')||bounded.includes('runtime.panicBounds'))throw new Error('Index bounds implementation changed; inspect object code');
+report.compiler={escapeAndBCE:true,uncheckedHasPanicBounds:true,boundedHasPanicBounds:false};
+const ssaDirectory=path.join(core,'out/ssa');fs.mkdirSync(ssaDirectory,{recursive:true});
+command(core,go,['build','./internal/mechanism'],{env:{...env,GOSSAFUNC:'PrefixBounded',GOSSADIR:ssaDirectory}});
+command(core,go,['build','-pgo=off','-o','out/profile-baseline'+suffix,'./cmd/profile']);
+command(core,go,['build','-pgo=out/cpu.pprof','-o','out/profile-pgo'+suffix,'./cmd/profile']);
+report.compiler.ssaExportAndPGOBuilds=true;
 
 const database=path.join(checks,'cli-'+Date.now()+'.db').replaceAll('\\','/');
 const token=command(gin,taskd,['-mode=token','-demo']);

@@ -62,6 +62,24 @@ go run ./cmd/profile -mode cpu -encoder typed -dir out/typed -duration 500ms
 
 两者都保留 []byte 的 Base64 协议；固定时长 profile 的完成次数不同，不能仅比较热点百分比。runtimeprobe 通过进程级全局参数和引用简化观察，应作为独立命令串行使用，不直接当作并发 Web Handler 库。
 
+## 并发、HTTP 与编译对照
+
+```bash
+go run ./cmd/mechanism-lab -mode channel
+go run ./cmd/mechanism-lab -mode locks
+go run ./cmd/mechanism-lab -mode http-client
+go run ./cmd/mechanism-lab -mode http-server
+go test ./internal/mechanism -v -count=1 -timeout=30s
+go test ./internal/mechanism -run '^$' -bench 'Benchmark(Inline|Opaque|Published|Borrowed)' -benchmem -count=3
+go test ./internal/mechanism -run '^$' -gcflags='newswitch.dev/go-core-lab/internal/mechanism=-m=2 -d=ssa/check_bce/debug=1'
+```
+
+Channel 对照关闭排空、Slice 别名与复制、nil 分支和取消 Join；locks 固定两次 atomic 更新之间的读取，说明无 Race 也可能观察到不一致总额，同时验证 Mutex 不变量和不可变配置快照。实验不用 Sleep 猜测同步。
+
+HTTP 客户端固定为回环 HTTP/1.1、512 KiB 正文、单连接，结合 GotConn 与服务端计数定位池等待。Go 1.27.3 对较小的提前关闭正文有有限排空优化，不能把“不读完必然不复用”当通用结论。服务端实验分别验证正常排空、Shutdown 超时不自动取消 Handler，以及 Close 之后的连接取消；所有自建监听和后台任务都在返回前回收，不处理系统信号。
+
+分配实验使用 64 字节 Record，对照内联立即读取、非内联返回、全局保留和只读借用。0/1 allocs/op 是固定工具链回归基线，不是所有 Go 版本的语言承诺。Prefix 函数只在合法输入范围内比较结果，配合 BCE 报告和反汇编观察循环内检查，不关闭安全检查。
+
 ## Race 验证
 
 ```bash
