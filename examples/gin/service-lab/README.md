@@ -118,4 +118,26 @@ node scripts/verify-go-gin-labs.mjs --go D:/Go/bin/go.exe
 - Relay 至少一次发送，消费去重，不保证通用外部副作用恰好一次。
 - 随机事件 ID 排序未保证同任务按 version 发布；当前通知消费不是有序状态投影。
 - 毒消息停止并报错，没有自动 DLT；需隔离与受控重放，不能静默提交跳过。
-- 没有完整 OIDC/Session 登录、任意脚本执行、持久 SSE 历史与自动任务调度平台。
+- 不承担完整 OIDC 身份提供方、任意脚本执行、持久 SSE 历史与自动任务调度平台；SQL Session、密钥轮换与迁移由下面的独立模块演示。
+
+## 7. 深化实验
+
+```bash
+go test ./internal/session ./internal/keyauth ./internal/migrate -count=1 -v -timeout=30s
+go test ./internal/app -run TestPoolWaitDiagnosisAndRecovery -count=1 -v -timeout=10s
+```
+
+| 模块 | 实际验证 |
+| --- | --- |
+| session | 本机 TLS + Cookie Jar 登录、CSRF、ID 轮换、旧凭证失效、退出、idle/absolute 过期、有界清理、独立连接池共享状态、存储故障失败关闭 |
+| keyauth | RS256 旧新公钥重叠、过期、仍未过期旧凭证的密钥退役、错误更新保留旧集合、Gin 请求 |
+| migrate | 固定连接、连续版本与 checksum、并发协调、DDL/ledger 一起回滚、兼容可空列扩展 |
+| app pool case | 借出唯一连接，记录请求 504 和池等待；仅归还连接后恢复 200，检查 InUse 与许可归零 |
+
+Session 的身份验证回调由调用方提供，测试身份不是生产账号系统。Handler 要求同源 HTTPS；Session/RS256 与原 taskd HMAC 入口保持独立，不能无条件混合算法和凭证模型。
+
+session.New 不自动建表，需在明确的迁移步骤调用 migrate.Up 后装配。迁移器只支持本实验的事务 DDL，不处理通用在线索引、百万行回填或自动破坏性 down。原 Task Store 的便捷自动建表仍仅用于基础实验。
+
+PurgeExpired 是显式批量操作，调度由所有者管理；认证请求不会自动启动永久清理进程。Cookie Jar 测试不替代真实浏览器的跨源、安全属性与代理链验证。
+
+外部 integration 集合新增 PostgreSQL Session/迁移用例，只有实际连接隔离 gin_lab 运行后才算该数据库验证通过。普通测试只覆盖 SQLite 与本机 HTTPS，不能替代此项。

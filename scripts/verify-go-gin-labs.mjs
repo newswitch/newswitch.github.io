@@ -43,12 +43,21 @@ for(const mode of ['cpu','heap','mutex','block','goroutine','trace']) {
 }
 command(core,go,['test','./internal/demos','-run','^$','-fuzz','FuzzSum','-fuzztime=2s','-parallel=2']);
 report.benchmark=command(core,go,['test','./internal/demos','-run','^$','-bench','BenchmarkSum','-benchmem','-count=2','-benchtime=100ms']);
+report.encodingBenchmark=command(core,go,['test','./internal/demos','-run','^$','-bench','BenchmarkEncode','-benchmem','-count=3','-benchtime=100ms']);
+const runtimeResult=[];
+for(const [mode,extra] of [['gc',['-gogc','20']],['gc',['-gogc','100']],['view',[]],['clone',[]],['scheduler',[]]]) {
+  runtimeResult.push(JSON.parse(command(core,go,['run','./cmd/runtime-lab','-mode',mode,'-dir','out/deep-'+mode,...extra])));
+}
+const view=runtimeResult.find(x=>x.mode==='view'),clone=runtimeResult.find(x=>x.mode==='clone');
+if(view.visible_bytes!==64||clone.visible_bytes!==64||view.heap_added_bytes-clone.heap_added_bytes<6*1024*1024)throw new Error('Retention regression');
+if(!runtimeResult.at(-1).channel_and_network_joined)throw new Error('Scheduler waiters not joined');
+report.runtimeDeepening=runtimeResult;
 
 const database=path.join(checks,'cli-'+Date.now()+'.db').replaceAll('\\','/');
 const token=command(gin,taskd,['-mode=token','-demo']);
 let child,base,stderr='';
 async function start() {
-  child=spawn(taskd,['-demo','-listen=127.0.0.1:0','-admin=127.0.0.1:0','-dsn',database],{cwd:gin,env,stdio:['pipe','pipe','pipe']});
+  child=spawn(taskd,['-demo','-listen=127.0.0.1:0','-admin=127.0.0.1:0','-dsn',database],{cwd:gin,env,stdio:['pipe','pipe','pipe'],windowsHide:true});
   let output='';const ready=new Promise((resolve,reject)=>{
     const timeout=setTimeout(()=>reject(new Error('API startup timeout '+stderr)),10000);
     child.once('error',error=>{clearTimeout(timeout);reject(error);});

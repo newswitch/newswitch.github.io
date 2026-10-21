@@ -2,9 +2,9 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"flag"
 	"fmt"
+	"newswitch.dev/go-core-lab/internal/demos"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -16,9 +16,12 @@ import (
 
 var retained [][]byte
 
+var encode = demos.EncodeDynamic
+var payload = bytes.Repeat([]byte("x"), 4096)
+
 func workload() {
 	for range 200 {
-		body, _ := json.Marshal(map[string]any{"payload": bytes.Repeat([]byte("x"), 4096), "kind": "demo"})
+		body, _ := encode(payload)
 		if len(body) == 0 {
 			panic("empty payload")
 		}
@@ -28,7 +31,13 @@ func main() {
 	mode := flag.String("mode", "cpu", "cpu, heap, mutex, block, goroutine or trace")
 	dir := flag.String("dir", "out", "artifact directory")
 	duration := flag.Duration("duration", time.Second, "bounded workload duration")
+	encoder := flag.String("encoder", "dynamic", "dynamic or typed; same JSON contract")
 	flag.Parse()
+	if *encoder == "typed" {
+		encode = demos.EncodeTyped
+	} else if *encoder != "dynamic" {
+		panic("unknown encoder")
+	}
 	if *duration < 100*time.Millisecond || *duration > 30*time.Second {
 		panic("duration must be 100ms..30s")
 	}

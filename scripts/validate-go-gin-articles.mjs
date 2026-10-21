@@ -21,6 +21,6 @@ for(const type of ['go','gin']){
     if(/面试|岗位职责|kubectl-command-is-not-needed/.test(body))errors.push(file+': editorial wording or placeholder');
   }
 }
-if(totals.go!==48||totals.gin!==30||totals.routes!==2)errors.push('Unexpected catalog '+JSON.stringify(totals));
+if(totals.go!==49||totals.gin!==31||totals.routes!==2)errors.push('Unexpected catalog '+JSON.stringify(totals));
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
 console.log('PASS '+JSON.stringify(totals)+'; MDX syntax, titles, answered exercises and collapsed categories.');
