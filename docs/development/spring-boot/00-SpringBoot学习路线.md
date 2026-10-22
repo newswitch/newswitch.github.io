@@ -35,6 +35,8 @@ Client
 
 先学习 [Java 基础](../java/00-Java与JVM学习路线.md)和 [Spring 容器](../spring/00-Spring学习路线.md)。然后创建第一个 Boot 应用，在引入数据库时学习 JDBC 与事务，在引入安全时学习 HTTP 会话和身份协议。
 
+[Java 生态组件](../java-components/00-Java生态组件学习地图.md)按具体工具组织 Lombok、MapStruct、DevTools、配置处理器与 springdoc-openapi。这里继续沿应用请求与运行生命周期学习；组件专题解释每种依赖如何参与编译、开发或实际调用。
+
 ```text
 工程与启动
 → 配置与自动装配

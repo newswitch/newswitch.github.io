@@ -132,4 +132,5 @@ BOM 管理版本，不等于声明所有依赖。应用仍需要引入相应模�
 ## 8. 继续阅读
 
 - [自动配置、条件与评估报告](./04-自动配置条件与评估报告.md)
+- [Java 生态组件：编译期、开发期与运行期依赖](../../java-components/00-Java生态组件学习地图.md)
 - [Spring Boot 4.1.1 依赖声明](https://github.com/spring-projects/spring-boot/blob/v4.1.1/platform/spring-boot-dependencies/build.gradle)

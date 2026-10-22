@@ -18,6 +18,8 @@
 /examples/spring/**/out/
 /examples/spring-boot/**/target/
 /examples/spring-boot/**/out/
+/examples/java-components/**/target/
+/examples/java-components/**/out/
 
 # Misc
 # Python article verification and local runtime files
