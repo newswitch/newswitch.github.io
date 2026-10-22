@@ -16,6 +16,20 @@ tags: [Go, Gin, 技术原理, 实验]
 
 链中的 index 被多个 Next 调用共同推进，不是每次 Next 都重新从第一个 Handler 开始。注册顺序影响认证、日志、Recovery 与指标是否能够看到最终状态。
 
+假设注册顺序为 A、B、业务 Handler，A/B 都在 before 与 after 之间调用 Next，且没有 Abort 或 panic，实际执行顺序如下：
+
+```mermaid
+flowchart TB
+    A["A：before"] --> AN["A 调用 Next<br/>暂时进入后续链"]
+    AN --> B["B：before"]
+    B --> BN["B 调用 Next<br/>进入业务 Handler"]
+    BN --> H["业务 Handler 执行并返回"]
+    H --> BA["B 的 Next 返回<br/>B：after"]
+    BA --> AA["A 的 Next 返回<br/>A：after"]
+```
+
+after 的反向顺序来自普通 Go 调用栈返回，不是 Gin 把 Handler 列表倒序重跑。Abort 会阻止尚未执行的后续 Handler，但不会跳出当前函数，也不会抹掉外层已经存在的调用栈。
+
 ## 2. 顺序与中止实验
 
 ```bash

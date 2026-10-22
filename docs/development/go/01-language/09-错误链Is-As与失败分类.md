@@ -57,6 +57,17 @@ errors.Join 可以表达多个清理/执行错误，但需要保持主要失败�
 
 包装可以形成单链，errors.Join 或多个 %w 也可以形成多分支错误树。Is 检查身份或自定义匹配，As 按可赋值类型寻找匹配项；errors.Unwrap 不是把 Join 的所有分支扁平返回的通用函数。
 
+例如 `errors.Join(fmt.Errorf("load: %w", ErrMissing), closeErr)` 形成的关系不是一段拼接后的错误文字，而是一棵保留子错误的树：
+
+```mermaid
+flowchart TB
+    J["Join 错误"] --> W["load 包装错误"]
+    J --> C["closeErr<br/>关闭失败"]
+    W --> M["ErrMissing<br/>主要操作失败"]
+```
+
+Is/As 从根开始，按子错误顺序深度优先查找；找到首个匹配即返回。匹配到一个错误不代表其他分支不存在，也不自动决定哪个错误应该映射成 HTTP 状态。
+
 分类顺序会影响对外结果：一个 Join 同时包含业务失败和清理失败时，应先保留主要操作的语义，再记录次要清理问题。foundation-lab 的 language 模式验证 joined_has_both=true，说明加入清理错误后主要哨兵仍可识别。
 
 As 的目标通常是保存所需类型的变量地址，例如 var target *MyError，再传 &target；不要把接口断言、nil 判断和 As 类型匹配混在一起。typed nil 的独立边界见接口章节。

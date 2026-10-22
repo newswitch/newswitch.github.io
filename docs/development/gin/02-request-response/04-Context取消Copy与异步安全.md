@@ -53,6 +53,18 @@ Request 指针仍共享，Request.Context 的取消也仍共享；Keys 中的 Ma
 
 这是串行别名对照，没有故意并发修改来制造 Race。后台需要的数据最好是提取出的不可变值或独立 DTO，不是整个 gin.Context。
 
+Copy 对请求生命周期的影响可以单独画成一张引用图：
+
+```mermaid
+flowchart TB
+    C["原 gin.Context"] -->|Request 指针| R["同一个 http.Request"]
+    P["Copy 副本<br/>独立外壳"] -->|仍是同一指针| R
+    R --> Q["同一个 Request.Context<br/>同一取消与截止时间"]
+    Q --> D["原请求结束后<br/>副本也会观察到取消"]
+```
+
+上半部分箭头表示引用，下半部分表示生命周期结果。图只展开 Request 分支；Keys 中的嵌套引用仍可能共享，不能因为外壳独立，就认为所有数据已深复制或后台任务已有独立寿命。
+
 ## 4. 真实请求返回后，副本仍观察到取消
 
 ```bash

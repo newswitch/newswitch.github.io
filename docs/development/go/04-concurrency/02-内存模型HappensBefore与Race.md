@@ -33,6 +33,15 @@ fmt.Println(value)
 
 这里有一条完整的证明链：写入 value 在 close 之前；关闭 Channel 在观察到“已关闭且无剩余值”的接收之前；接收又在打印之前。把这些边连接起来，写入 happens-before 读取。
 
+```mermaid
+flowchart TB
+    W["写者：value = 42"] -->|程序顺序| C["写者：close(done)"]
+    C ==>|同步关系| R["读者：接收返回<br/>观察到 done 已关闭"]
+    R -->|程序顺序| V["读者：读取 value"]
+```
+
+粗箭头是跨 Goroutine 的同步边，普通箭头是各自内部顺序。靠这三段关系的传递性，才得到写入先于读取；图中箭头不是数据搬运或 CPU 缓存刷新步骤。
+
 这不是“close 把所有内存刷新一次”的用法规则。关键是这次写入与这次读取之间存在可组合的同步关系。若发送方在 close 后继续修改 value，后续写入就不受这条关系保护。
 
 Go 1.27.3 中可以在 runtime/chan.go 的 closechan 和 chanrecv 找到关闭、唤醒与接收路径，但应用正确性应依据内存模型，不依赖内部字段布局。

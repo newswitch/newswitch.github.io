@@ -31,7 +31,7 @@ try {
   function sourceFiles(folder){return fs.readdirSync(folder,{withFileTypes:true}).flatMap(e=>e.isDirectory()?sourceFiles(path.join(folder,e.name)):e.name.endsWith('.md')?[path.join(folder,e.name)]:[]);}
   const sourceById=new Map(sourceFiles('docs/development').map(file=>[path.relative('docs',file).replaceAll('\\','/').replace(/\.md$/,'').split('/').map(part=>part.replace(/^\d+-/,'')).join('/'),fs.readFileSync(file,'utf8')]));
   const output=path.resolve('.go-article-checks/deepening-browser');fs.mkdirSync(output,{recursive:true});
-  let checked=0;
+  let checked=0;const figureMetrics=[];
   for(const width of [1440,390]){
     const page=await browser.newPage({viewport:{width,height:1000}});let errors=[];page.on('pageerror',error=>errors.push(String(error)));
     for(const doc of selected){
@@ -43,6 +43,13 @@ try {
       if(/Syntax error in text|mermaid version/u.test(text)||(!/学习路线/u.test(doc.id)&&!text.includes('练习与答案')))throw new Error('Content failed '+doc.id);
       const bad=await page.evaluate(()=>({images:[...document.querySelectorAll('main article img')].filter(i=>!i.complete||!i.naturalWidth).length,overflow:document.documentElement.scrollWidth>window.innerWidth+2}));
       if(bad.images||bad.overflow||errors.length)throw new Error(doc.id+' '+JSON.stringify({bad,errors}));
+      const sizes=await page.locator('main article svg[id^="mermaid"]').evaluateAll(figures=>figures.map((svg,index)=>{
+        const box=svg.getBoundingClientRect(),scale=Math.abs(svg.getScreenCTM()?.a??1);
+        const fonts=[...svg.querySelectorAll('.nodeLabel,.edgeLabel')].map(label=>parseFloat(getComputedStyle(label).fontSize)*scale).filter(Number.isFinite);
+        return {index,width:Math.round(box.width),height:Math.round(box.height),minFontPx:fonts.length?Math.round(Math.min(...fonts)*10)/10:null};
+      }));
+      if(width===390&&sizes.some(figure=>figure.minFontPx!==null&&figure.minFontPx<12.5))throw new Error('Mobile figure text too small: '+doc.id+' '+JSON.stringify(sizes));
+      if(sizes.length)figureMetrics.push({id:doc.id,viewport:width,figures:sizes});
       if(expectedDiagrams||/泛型约束|反射StructTag|Module-MVS|上传下载|SSE流式|容器Kubernetes|学习路线/u.test(doc.id)){
         await page.screenshot({path:path.join(output,doc.id.split('/').at(-1)+'-'+width+'.png'),fullPage:true});
         // Element screenshots may auto-scroll a tall SVG behind the sticky navbar.
@@ -56,7 +63,7 @@ try {
     }
     await page.close();
   }
-  fs.writeFileSync(path.join(output,'verification.json'),JSON.stringify({builtPages:docs.length,viewportChecks:checked,widths:[1440,390]},null,2)+'\n');
+  fs.writeFileSync(path.join(output,'verification.json'),JSON.stringify({builtPages:docs.length,viewportChecks:checked,widths:[1440,390],figureMetrics},null,2)+'\n');
   console.log('PASS all 82 built routes; '+checked+' desktop/mobile page checks.');
 }finally{
   if(browser)await browser.close();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));

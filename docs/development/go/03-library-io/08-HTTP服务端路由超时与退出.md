@@ -67,15 +67,14 @@ HTTP/1.x 的请求 Context 通常在客户端连接断开或 ServeHTTP 返回等
 
 ```mermaid
 flowchart TD
-    A["停止业务准入与探针接流"] --> B["Server.Shutdown 使用新预算"]
-    B --> C["关闭监听和空闲连接"]
-    C --> D{"活跃 Handler 是否完成"}
-    D -->|完成| E["排空成功后 Join 后台任务"]
-    D -->|预算耗尽| F["返回超时 需要决定 Close 兜底"]
-    F --> G["关闭活跃连接并继续等待任务收敛"]
-    E --> H["最后关闭数据库与其他依赖"]
-    G --> H
+    A["应用停止准入<br/>探针与流量入口开始摘流"] --> B["调用 Server.Shutdown<br/>使用新的有限预算"]
+    B --> C["关闭监听与空闲连接<br/>等待活跃请求排空"]
+    C --> D["检查 Shutdown 结果<br/>超时则按策略 Close 兜底"]
+    D --> E["确认请求收敛<br/>停止并 Join 自管后台任务"]
+    E --> H["最后关闭数据库等依赖"]
 ```
+
+前面的摘流由应用与部署层组织，不是 Shutdown 自动修改探针。图把成功和预算耗尽汇合到“检查结果”节点：成功不需要额外 Close；预算耗尽则进入兜底策略，但两者都要确认任务已结束，不能只因监听关闭就退出主函数。
 
 Shutdown 关闭监听、关闭空闲连接并等待活跃连接变为空闲。Go 1.27.3 的实现通过 inShutdown、closeListenersLocked 和 closeIdleConns 等组织这个过程。它不是先给所有 Handler 发取消。
 
