@@ -156,3 +156,4 @@ assertTimeout 不会在超出时间的瞬间强杀任意工作；assertTimeoutPr
 
 - [JUnit 6.0.3 总览](https://docs.junit.org/6.0.3/overview.html)
 - [多模块、JAR 与运行分发](./05-Maven多模块JAR与运行分发.md)
+- [Mockito 调用拦截、存根与验证](../../java-components/09-testing/mockito/01-测试替身调用拦截存根匹配与验证边界.md)

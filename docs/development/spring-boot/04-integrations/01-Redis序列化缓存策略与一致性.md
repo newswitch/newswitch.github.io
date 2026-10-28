@@ -100,3 +100,5 @@ sequenceDiagram
 
 - [事务与外部副作用](../03-data/06-业务事务Outbox与外部副作用.md)
 - [Boot Redis 支持](https://docs.spring.io/spring-boot/reference/data/nosql.html#data.nosql.redis)
+- [Lettuce 的命令、连接与线程](../../java-components/07-redis/lettuce/01-命令执行线程模型连接复用与故障语义.md)
+- [Redisson 的租约与协调边界](../../java-components/07-redis/redisson/01-分布式对象锁租约续约与一致性边界.md)

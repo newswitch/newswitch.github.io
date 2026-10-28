@@ -85,3 +85,4 @@ JWT 不自动解决退出撤销；Session 也不是落后方案。取舍取决�
 
 - [ThreadLocal 与上下文](../../java/03-concurrency/08-ThreadLocal-ScopedValue与上下文.md)
 - [Spring Session](https://docs.spring.io/spring-session/reference/)
+- [Spring Session 会话接管、保存与多实例一致性](../../java-components/08-session/spring-session/01-会话接管保存过期与多实例一致性.md)

@@ -39,7 +39,7 @@ try {
   const data = JSON.parse(fs.readFileSync('.docusaurus/globalData.json', 'utf8'));
   const docs = data['docusaurus-plugin-content-docs'].default.versions.flatMap(version => version.docs)
     .filter(doc => doc.id.startsWith('development/java-components/'));
-  assert.equal(docs.length, 6);
+  assert.equal(docs.length, 18);
   function sources(folder) {
     return fs.readdirSync(folder, {withFileTypes: true}).flatMap(entry => {
       const file = path.join(folder, entry.name);
@@ -104,7 +104,7 @@ try {
     await page.close();
   }
   fs.writeFileSync(path.join(output, 'verification.json'), JSON.stringify({builtPages: docs.length, viewportChecks: docs.length * 2, figures}, null, 2) + '\n');
-  console.log('PASS 6 routes, 12 desktop/mobile page checks; browser and local server closing.');
+  console.log('PASS ' + docs.length + ' routes, ' + docs.length * 2 + ' desktop/mobile page checks; browser and local server closing.');
 } finally {
   if (browser) await browser.close();
   server.closeAllConnections();

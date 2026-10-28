@@ -83,3 +83,4 @@ RestClient inventoryClient(RestClient.Builder builder) {
 
 - [Spring REST 客户端机制](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html)
 - [熔断与隔离](../04-integrations/06-Resilience4j熔断隔离限流与时间预算.md)
+- [WireMock 的 HTTP 模拟与验证边界](../../java-components/09-testing/wiremock/01-HTTP模拟匹配响应状态与验证边界.md)

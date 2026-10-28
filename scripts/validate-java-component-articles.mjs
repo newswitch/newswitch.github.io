@@ -34,7 +34,7 @@ for (const file of walk('docs/development/java-components')) {
   totals.answers += questions.length;
   totals.diagrams += (body.match(/```mermaid/g) ?? []).length;
 }
-assert.equal(totals.articles, 5);
+assert.equal(totals.articles, 17);
 assert.equal(totals.guides, 1);
-assert.equal(totals.diagrams, 6);
+assert.equal(totals.diagrams, 18);
 console.log('PASS ' + JSON.stringify(totals) + '; MDX, titles, answers and collapsed categories.');

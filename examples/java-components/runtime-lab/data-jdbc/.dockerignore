@@ -1,0 +1,4 @@
+**
+!target/
+target/**
+!target/data-jdbc-lab-1.0.0.jar

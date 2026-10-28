@@ -81,3 +81,5 @@ fixedDelay 通常在前次完成后等待，fixedRate 按时间基准触发；cr
 
 - [Java 线程池与拒绝](../../java/03-concurrency/06-线程池队列拒绝与关闭.md)
 - [Spring 调度机制](https://docs.spring.io/spring-framework/reference/integration/scheduling.html)
+- [Quartz 触发、恢复与集群语义](../../java-components/06-jobs/quartz/01-调度模型触发领取持久化与集群语义.md)
+- [Spring Batch 分块、检查点与恢复](../../java-components/06-jobs/spring-batch/01-作业身份分块事务检查点与恢复原理.md)

@@ -1,0 +1,11 @@
+name: java-components-image-lab
+services:
+  app:
+    image: java-components/data-jdbc:local
+    ports:
+      - "127.0.0.1:8087:8087"
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=60
+    mem_limit: 512m
+    stop_grace_period: 30s
