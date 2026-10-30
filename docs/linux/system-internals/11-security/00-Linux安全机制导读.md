@@ -30,7 +30,7 @@ Linux 安全不是一个开关，而是多层检查的组合。一次 `open`、`
 3. [LSM Hook 与安全决策链](./03-LSM-Hook与安全决策链.md)
 4. [SELinux 标签、类型强制与排障](./04-SELinux标签类型强制与排障.md)
 5. [AppArmor 路径策略与排障](./05-AppArmor路径策略与排障.md)
-6. [seccomp-BPF、no_new_privs 与系统调用边界](./06-seccomp-BPF与系统调用边界.md)
+6. [seccomp 原理与容器配置：系统调用过滤、unconfined 与权限边界](./06-seccomp-BPF与系统调用边界.md)
 7. [可信启动、模块签名与文件完整性](./07-可信启动模块签名与文件完整性.md)
 8. [Linux Audit 与安全事件证据链](./08-Linux-Audit与安全事件证据链.md)
 9. [最小权限、容器加固与安全排查](./09-最小权限容器加固与安全排查.md)

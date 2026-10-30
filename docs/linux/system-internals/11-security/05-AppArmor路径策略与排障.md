@@ -58,4 +58,4 @@ apparmor_parser -Q /etc/apparmor.d/<profile>
 
 答案：取决于目录内容和业务需求。宽泛递归规则可能允许读取凭据或修改可执行文件，应尽量缩小对象和权限。
 
-下一篇：[seccomp-BPF、no_new_privs 与系统调用边界](./06-seccomp-BPF与系统调用边界.md)
+下一篇：[seccomp 原理与容器配置](./06-seccomp-BPF与系统调用边界.md)

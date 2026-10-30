@@ -41,9 +41,11 @@ GPU Runtime 需要设备和部分宿主库，不代表需要 Privileged。
 
 ## 4. seccomp 与 AppArmor
 
-seccomp 过滤系统调用及参数范围，AppArmor/SELinux 约束文件、Capability、网络等行为。训练框架可能使用 `clone3`、`perf_event_open`、共享内存或调试接口，策略应在测试环境通过 Audit 生成，再收敛允许集。
+seccomp 过滤系统调用及原始参数值，AppArmor/SELinux 约束文件、Capability、网络等行为。训练框架可能使用 `clone3`、`perf_event_open`、共享内存或调试接口，应在测试环境结合 Audit、调用跟踪与功能需求维护最小策略，不能把一次采样自动生成的允许集直接视为完整生产策略。
 
 遇到 Permission Denied 时不能直接改成 Unconfined；先关联 Audit Log、Syscall、进程和实际功能。
+
+`--security-opt seccomp=unconfined` 不等于 `--privileged`，`Seccomp: 2` 也只能证明过滤器存在，不能直接证明本次错误由它造成。系统调用过滤原理、Docker 与 Kubernetes 配置对应关系，以及带输出解释的诊断方法，见 [seccomp 原理与容器配置](../../linux/system-internals/11-security/06-seccomp-BPF与系统调用边界.md)。
 
 ## 5. GPU 与 RDMA Device
 

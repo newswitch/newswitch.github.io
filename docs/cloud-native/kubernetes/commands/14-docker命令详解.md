@@ -54,6 +54,8 @@ docker run --rm --name demo \
 
 参数族：Identity/Entrypoint、TTY/Detach、Env/Secret、Mount/Volume、Network/Publish/DNS、CPU/Memory/PID、Restart/Health、User/Group、Capability/Seccomp/AppArmor/SELinux、Device/GPU、Platform/Pull。`--privileged`、Host PID/Network、Docker Socket Mount、宿主机根目录写挂载都会突破隔离，生产默认禁止。
 
+其中 `--security-opt seccomp=unconfined` 表示不为该容器加载 Docker 的 seccomp profile，不等于授予全部权限或清除既有过滤器。默认策略、自定义 Profile、与 Capability/Privileged 的区别，以及 Kubernetes 对应配置和检查输出，见 [seccomp 原理与容器配置](../../../linux/system-internals/11-security/06-seccomp-BPF与系统调用边界.md)。
+
 ## 4. 容器观察与调试
 
 ```bash
