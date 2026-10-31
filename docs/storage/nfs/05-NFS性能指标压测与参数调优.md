@@ -8,6 +8,8 @@ tags: [NFS, nfsstat, nfsiostat, fio, rsize, wsize, nconnect, 性能调优]
 
 # NFS 性能指标、压测与参数调优
 
+具体指标名、采集口径、PromQL 与告警边界见[核心监控指标采集与告警](./07-NFS核心监控指标采集与告警.md)；本篇保留原有运维与机制主线。
+
 NFS 性能是端到端结果：
 
 ```text

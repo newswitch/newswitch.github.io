@@ -8,6 +8,8 @@ tags: [Pulsar, Deployment, Tiered Storage, Geo Replication]
 
 # Pulsar 部署、分层存储、Geo-Replication、选型与故障 Runbook
 
+指标名称、预计算速率、Entry/Message 与订阅告警边界见[核心监控指标采集与告警](./03-Pulsar核心监控指标采集与告警.md)。
+
 ## 1. 生产拓扑
 
 Broker 无状态但依赖 Metadata Store 与 BookKeeper；Bookie 使用独立 Journal 与 Ledger 磁盘并开启机架/可用区感知；Metadata Store 使用奇数节点保持多数派。Kubernetes 部署还要给 Bookie 稳定 PV、反亲和和可控滚动策略。

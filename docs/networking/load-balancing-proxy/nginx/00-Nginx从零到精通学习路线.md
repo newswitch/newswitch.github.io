@@ -51,6 +51,7 @@ Client TCP/TLS
 | G19 | [日志、指标、Tracing、调试与故障排查](./04-production/19-Nginx日志指标Tracing调试与故障排查.md) | P0 |
 | G20 | [Kubernetes Ingress、Gateway API 与生产运维](./04-production/20-Nginx-Kubernetes-Ingress-Gateway与生产运维.md) | P1 |
 | G21 | [模块、动态模块、njs、Lua/OpenResty 与扩展边界](./01-core/21-Nginx模块动态模块njs-Lua-OpenResty与扩展边界.md) | P2 |
+| G22 | [核心监控指标采集与告警](./04-production/22-Nginx核心监控指标采集与告警.md) | P1 |
 
 ## 3. 学习阶段
 

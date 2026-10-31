@@ -51,6 +51,7 @@ Embedding Model
 | M14 | [备份、Snapshot、升级、迁移、安全与多租户](./04-performance-operations/14-Milvus备份升级迁移安全与多租户.md) | P1 | 数据恢复和变更边界 |
 | M15 | [写入积压、加载失败、OOM、慢查询与生产故障 Runbook](./04-performance-operations/15-Milvus生产故障Runbook.md) | P1 | 从 API 到依赖逐层排查 |
 | M16 | [Snapshot、Milvus Backup 与一致性恢复专项](./04-performance-operations/16-Milvus-Snapshot-Backup与一致性恢复专项.md) | P1 | 元数据、对象和日志状态怎样形成可恢复闭包 |
+| M17 | [核心监控指标采集与告警](./04-performance-operations/17-Milvus核心监控指标采集与告警.md) | P1 | 请求、向量吞吐、查询等待、数据新鲜度与后台任务如何观测 |
 
 ## 3. 学习阶段
 
@@ -78,7 +79,7 @@ Storage：metadata + WAL + object storage
 
 ### 3.4 阶段四：生产 SRE {/* #阶段四生产-sre */}
 
-完成 M12～M16。建立向量条数×维度×类型、索引系数、副本数、加载比例、查询并发、写入速率、Compaction 和对象存储带宽模型，并验证快照与独立备份的恢复边界。
+完成 M12～M17。建立向量条数×维度×类型、索引系数、副本数、加载比例、查询并发、写入速率、Compaction 和对象存储带宽模型，接入分层指标，并验证快照与独立备份的恢复边界。
 
 ## 4. P0 验收题
 

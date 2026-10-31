@@ -8,6 +8,8 @@ tags: [Elasticsearch, Monitoring, Upgrade, Runbook]
 
 # 监控、滚动升级、红黄集群与生产故障 Runbook
 
+具体 Exporter 指标、单位、标签冲突、去重和规则示例见[Elasticsearch 核心监控指标采集与告警](./18-Elasticsearch核心监控指标采集与告警.md)。
+
 ## 1. 监控层次 {/* #监控层次 */}
 
 ```text

@@ -43,6 +43,7 @@ Producer Record
 | K10 | [Network Thread、Request Handler、Replica Fetch 与源码路径](./10-Kafka网络线程请求处理副本拉取与源码路径.md) | P2 |
 | K11 | [MirrorMaker 2、跨集群复制、灾备切换与一致性](./11-MirrorMaker2跨集群复制灾备切换与一致性.md) | P1 |
 | K12 | [生产验收、监控告警、基准测试与故障演练](./12-Kafka生产验收监控基准与故障演练.md) | P1 |
+| K14 | [核心监控指标采集与告警](./14-Kafka核心监控指标采集与告警.md) | P1 |
 
 命令实验使用 [Kafka Topic、Producer、Consumer 与 Group 命令手册](./13-Kafka-Topic-Producer-Consumer与Group命令手册.md)，与 K01～K12 的原理和生产实践配合学习。
 

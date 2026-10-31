@@ -15,6 +15,7 @@ Apache Pulsar 是分布式消息与流平台。Broker 处理协议、路由和�
 1. 本文理解定位、术语与选型；
 2. [Broker、BookKeeper、Metadata、Topic、Subscription 与消息路径](./01-Pulsar-Broker-BookKeeper-Metadata-Topic-Subscription与消息路径.md)掌握原理；
 3. [部署、分层存储、Geo-Replication、选型与故障 Runbook](./02-Pulsar部署-分层存储-Geo-Replication-选型与故障Runbook.md)掌握生产边界。
+4. [核心监控指标采集与告警](./03-Pulsar核心监控指标采集与告警.md)区分 Broker、BookKeeper、订阅积压与业务完成。
 
 ## 2. 核心模型
 

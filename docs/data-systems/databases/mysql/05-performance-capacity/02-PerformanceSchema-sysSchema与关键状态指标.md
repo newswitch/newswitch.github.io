@@ -10,6 +10,8 @@ tags: [MySQL, Performance Schema, sys Schema, 可观测性]
 
 `SHOW STATUS` 告诉你“发生了多少”，Performance Schema 更接近“谁在何时因什么消耗或等待”，sys Schema 则提供便于阅读的汇总视图。
 
+要把这些状态接入 Prometheus，继续阅读[核心监控指标采集与告警](./07-MySQL核心监控指标采集与告警.md)，区分原始状态、Exporter 映射、单位和累计值查询。
+
 ## 1. 四层观测模型
 
 ```text

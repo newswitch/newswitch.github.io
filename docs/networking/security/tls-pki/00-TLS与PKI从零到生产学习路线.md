@@ -52,6 +52,7 @@ HTTP/3 使用 QUIC 承载 HTTP，TLS 1.3 握手被集成进 QUIC，而不是先�
 | 性能 | [TLS 握手性能、会话复用、容量规划与加速](./04-operations/17-TLS握手性能会话复用容量规划与加速.md) | CPU、RTT、证书链和连接复用怎样影响延迟 |
 | 排障 | [TLS 证书与握手故障排查 Runbook](./04-operations/18-TLS证书与握手故障排查Runbook.md) | 如何按 TCP、协商、证书、mTLS、HTTP 分层定位 |
 | 源码 | [OpenSSL 组件、状态机、BIO、EVP 与一次握手调用链](./04-operations/19-OpenSSL组件状态机BIO-EVP与一次握手调用链.md) | 配置最终怎样进入密码算法和 Socket I/O |
+| 监控 | [TLS 证书监控指标与轮换告警](./04-operations/20-TLS证书监控指标与轮换告警.md) | 控制器、Secret、进程加载与真实握手怎样共同验收 |
 
 ## 3. 文件关系总图
 

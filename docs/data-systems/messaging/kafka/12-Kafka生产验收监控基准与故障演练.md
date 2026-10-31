@@ -8,6 +8,8 @@ tags: [Kafka, Monitoring, Benchmark, Runbook]
 
 # 生产验收、监控告警、基准测试与故障演练
 
+JMX 映射、消费组 Offset、ISR 和积压的精确查询见[Kafka 核心监控指标采集与告警](./14-Kafka核心监控指标采集与告警.md)，避免把不同 Exporter 的指标名称与业务完成语义混用。
+
 ## 1. SLO {/* #slo */}
 
 分别定义 Produce 成功/端到端延迟、Consumer lag 时间、可用性、数据缺口和重复容忍。Broker request latency 不等于消息业务完成时间。

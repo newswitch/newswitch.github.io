@@ -17,6 +17,7 @@ Apache Doris 是面向实时分析的 MPP 数据库。FE 负责 SQL 解析、优
 3. [部署、数据模型、容量、选型与故障 Runbook](./02-Doris部署-数据模型-容量-选型与故障Runbook.md)完成生产入门；
 4. 深入阅读 [Doris MPP、Tablet、物化视图与查询加速](../olap/03-Doris-MPP-Tablet物化视图与查询加速.md)；
 5. 实践 [Doris SQL、Load、Tablet 与诊断命令手册](../olap/91-Doris-SQL-Load-Tablet与诊断命令手册.md)。
+6. 阅读[核心监控指标采集与告警](./03-Doris核心监控指标采集与告警.md)，理解 FE/BE、指标层次、数据可见性与后台债务。
 
 ## 2. 适用与边界
 

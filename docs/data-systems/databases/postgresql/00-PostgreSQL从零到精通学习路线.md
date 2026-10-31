@@ -49,6 +49,7 @@ Dead Tuple → Vacuum → Visibility Map / FSM → Freeze → Bloat Control
 | P17 | [性能、容量、监控、安全、升级与故障 Runbook](./05-operations-internals/17-PostgreSQL性能容量监控安全升级与故障Runbook.md) | P1 | 生产 SRE 完整闭环 |
 | P18 | [PostgreSQL 源码、Extension、Hook 与内核调试](./05-operations-internals/18-PostgreSQL源码Extension-Hook与内核调试.md) | P2 | 从 Backend 追到存储和扩展点 |
 | P19 | [pgBackRest、WAL-G、Patroni 与跨集群 PITR](./04-ha-dr/19-pgBackRest-WAL-G-Patroni与跨集群PITR.md) | P1 | 生产备份工具链、恢复编排和时间线验证 |
+| P20 | [核心监控指标采集与告警](./05-operations-internals/20-PostgreSQL核心监控指标采集与告警.md) | P1 | 会话等待、事务、Vacuum/XID、WAL 与复制的指标口径 |
 
 是否掌握应以能设计约束和索引、解释 MVCC/WAL、完成 PITR 与主备切换，并用等待事件和执行计划定位故障为准。
 

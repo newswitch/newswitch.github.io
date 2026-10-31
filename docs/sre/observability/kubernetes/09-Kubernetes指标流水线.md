@@ -165,11 +165,16 @@ kube_deployment_status_replicas_available
 
 判断持续处于 `Pending` 的 Pod：
 
-```promql
-max_over_time(
-  kube_pod_status_phase{phase="Pending"}[10m]
-) == 1
+```yaml
+groups:
+  - name: pod-state-example
+    rules:
+      - alert: PodPendingContinuously
+        expr: kube_pod_status_phase{phase="Pending"} == 1
+        for: 10m
 ```
+
+`max_over_time(...[10m]) == 1` 仅表示窗口中曾经 Pending；持续条件应由告警规则的 `for` 表达，同时独立验证抓取覆盖与新鲜度。完整对象、资源与告警清单见[节点、工作负载与存储指标](./12-Kubernetes节点工作负载与存储指标.md)。
 
 ### 4.1 为什么 KSM 与 kubectl 显示可能不同
 

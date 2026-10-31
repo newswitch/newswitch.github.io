@@ -8,6 +8,8 @@ tags: [Flink, Kubernetes Operator, 升级, 恢复]
 
 # Flink Kubernetes Operator、升级、恢复与生产运维
 
+Reporter 类型映射、反压、Watermark 与 Checkpoint 告警见[核心监控指标采集与告警](./08-Flink核心监控指标采集与告警.md)。
+
 Flink Kubernetes Operator 通过 CR 描述期望状态并持续 reconcile Flink 集群/作业。Operator 管生命周期，Flink checkpoint/savepoint 管业务状态，Kubernetes API/CR status 管调谐状态；三者不能混为一个备份。
 
 ## 1. 控制路径

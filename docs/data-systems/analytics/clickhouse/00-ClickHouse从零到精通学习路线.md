@@ -51,6 +51,7 @@ SELECT
 | C14 | [备份恢复、权限、配额、升级与生产故障 Runbook](./04-production/14-备份权限配额升级与生产故障Runbook.md) | P1 |
 | C15 | [ClickHouse Client、System 表与运维命令手册](./04-production/15-ClickHouse-Client-System表与运维命令手册.md) | P0 |
 | C16 | [增量备份、对象存储与分片集群恢复](./04-production/16-ClickHouse增量备份对象存储与分片集群恢复.md) | P1 |
+| C17 | [ClickHouse 核心监控指标采集与告警](./04-production/17-ClickHouse核心监控指标采集与告警.md) | P1 |
 
 ## 3. 学习顺序
 
@@ -64,7 +65,7 @@ SELECT
 
 ### 3.3 分布式生产 {/* #分布式生产 */}
 
-完成 C09～C16，分清：
+完成 C09～C17，分清：
 
 ```text
 Shard：水平拆分数据与计算

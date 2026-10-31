@@ -8,6 +8,8 @@ tags: [RabbitMQ, Prometheus, Management API, SLO, 可观测性]
 
 # Prometheus、Management API、日志、告警与 SLO
 
+具体指标名、采集口径、PromQL 与告警边界见[核心监控指标采集与告警](./15-RabbitMQ核心监控指标采集与告警.md)；本篇保留原有运维与机制主线。
+
 RabbitMQ 监控不能只看节点 Up。真正要回答的是：发布是否被确认、消息是否及时被消费、关键队列是否有多数派，以及资源是否足以撑过恢复窗口。
 
 ## 1. 分层信号

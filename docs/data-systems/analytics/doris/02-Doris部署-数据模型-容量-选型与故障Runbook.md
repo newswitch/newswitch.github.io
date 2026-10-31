@@ -8,6 +8,8 @@ tags: [Doris, Deployment, Capacity, Troubleshooting]
 
 # Doris 部署、数据模型、容量、选型与故障 Runbook
 
+FE/BE 指标、用户级重复统计、Compaction 与磁盘告警见[核心监控指标采集与告警](./03-Doris核心监控指标采集与告警.md)。
+
 ## 1. 生产拓扑
 
 部署奇数个可选举 FE 跨故障域，按官方规则配置 Follower/Observer；BE 至少满足表副本数和一个故障域失效后的容量。BE 使用稳定高吞吐磁盘，配置多数据目录时理解磁盘均衡和故障隔离。生产域名、时钟、端口和文件描述符统一治理。

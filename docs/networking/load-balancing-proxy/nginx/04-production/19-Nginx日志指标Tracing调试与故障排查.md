@@ -8,6 +8,8 @@ tags: [Nginx, 可观测性, 日志, 指标, Tracing, 故障排查]
 
 # Nginx 日志、指标、Tracing、调试与故障排查
 
+监控接入清单、原生指标名和日志聚合指标契约见[Nginx 核心监控指标采集与告警](./22-Nginx核心监控指标采集与告警.md)，其中明确区分开源 stub_status、Plus 和 Ingress 的能力。
+
 只记录 `$status $request_time` 无法区分客户端慢、Nginx 排队、Upstream 建连慢还是后端处理慢。可观测性要围绕一次请求的阶段和连接生命周期设计。
 
 ## 1. 请求标识

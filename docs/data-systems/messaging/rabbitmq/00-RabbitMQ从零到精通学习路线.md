@@ -47,6 +47,7 @@ Producer
 
 13. [rabbitmqctl、rabbitmq-diagnostics、rabbitmq-queues 与 HTTP API](./04-production/13-rabbitmqctl-rabbitmq-diagnostics-rabbitmq-queues与HTTP-API.md)
 14. [RabbitMQ 生产故障 Runbook 与故障演练](./04-production/14-RabbitMQ生产故障Runbook与故障演练.md)
+15. [RabbitMQ 核心监控指标采集与告警](./04-production/15-RabbitMQ核心监控指标采集与告警.md)
 
 ## 4. RabbitMQ 与相邻系统怎样选
 

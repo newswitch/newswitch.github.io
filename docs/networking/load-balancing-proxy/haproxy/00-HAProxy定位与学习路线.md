@@ -15,6 +15,7 @@ HAProxy 是高性能 TCP/HTTP 代理和负载均衡器，擅长连接转发、�
 1. 本文建立定位与选型；
 2. [Frontend、Backend、Server、ACL、Health Check 与请求路径](./01-HAProxy-Frontend-Backend-Server-ACL-Health-Check与请求路径.md)理解核心配置；
 3. [部署、Reload、Runtime API、监控、选型与故障 Runbook](./02-HAProxy部署-Reload-Runtime-API-监控-选型与故障Runbook.md)完成生产运维。
+4. [核心监控指标采集与告警](./03-HAProxy核心监控指标采集与告警.md)区分对象层次、状态、队列和耗时口径。
 
 ## 2. 什么时候使用
 

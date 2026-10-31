@@ -48,6 +48,7 @@ Application
 | R13 | [Streams、Pub/Sub、可靠队列与 Kafka/RocketMQ 对比](./04-patterns-operations/13-Redis-Streams-PubSub与可靠队列.md) | P1 | 消费确认、重放、积压和可靠性边界 |
 | R14 | [性能、容量、监控、安全、备份、升级与故障 Runbook](./04-patterns-operations/14-Redis性能容量监控安全备份升级与故障Runbook.md) | P1 | 从压测到生产治理的闭环 |
 | R15 | [RDB、AOF、Sentinel 与 Cluster 完整恢复专项](./04-patterns-operations/15-Redis持久化备份与Cluster恢复专项.md) | P1 | 备份一致性、分片恢复和恢复演练 |
+| R16 | [核心监控指标采集与告警](./04-patterns-operations/16-Redis核心监控指标采集与告警.md) | P1 | INFO/Exporter 映射、命中率、内存、持久化和复制的查询边界 |
 
 是否掌握应以能解释命令执行、持久化和复制时间线，并完成缓存雪崩、主从切换和恢复验证为准。
 

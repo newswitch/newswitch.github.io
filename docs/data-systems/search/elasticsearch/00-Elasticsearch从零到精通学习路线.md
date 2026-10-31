@@ -56,6 +56,7 @@ Search request
 | E15 | [Snapshot、Restore、CCR、跨集群搜索与灾备](./04-security-operations/15-Snapshot-Restore-CCR与跨集群灾备.md) | P1 | 副本为何不是备份、怎样恢复 |
 | E16 | [监控、滚动升级、红黄集群与生产故障 Runbook](./04-security-operations/16-Elasticsearch监控滚动升级与故障Runbook.md) | P1 | 从 SLO 到 shard/node/JVM/磁盘定位 |
 | E17 | [SLM、Repository、CCR 与完整灾难恢复专项](./04-security-operations/17-Elasticsearch-SLM-CCR与完整灾难恢复专项.md) | P1 | 自动快照、跨集群容灾和恢复验证 |
+| E18 | [核心监控指标采集与告警](./04-security-operations/18-Elasticsearch核心监控指标采集与告警.md) | P1 | 颜色、分片、线程池、Heap/GC 和节点查询统计的边界 |
 
 ## 3. 学习顺序
 

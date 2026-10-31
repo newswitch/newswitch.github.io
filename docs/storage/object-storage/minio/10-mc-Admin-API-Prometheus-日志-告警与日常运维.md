@@ -8,6 +8,8 @@ tags: [MinIO, mc, Admin API, Prometheus, 运维]
 
 # mc、Admin API、Prometheus、日志、告警与日常运维
 
+具体指标名、采集口径、PromQL 与告警边界见[核心监控指标采集与告警](./14-MinIO核心监控指标采集与告警.md)；本篇保留原有运维与机制主线。
+
 `mc` 既能执行只读盘点，也能删除、镜像和修改策略。生产使用必须区分只读、变更和破坏性命令，明确 Alias 指向，避免把测试命令打到生产。
 
 ## 1. Alias 与凭据

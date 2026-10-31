@@ -8,6 +8,8 @@ tags: [Java, JVM, Kubernetes, cgroups, 容量]
 
 # JVM 容器资源、CPU 与内存预算
 
+具体指标名、采集口径、PromQL 与告警边界见[核心监控指标采集与告警](./10-JVM核心监控指标采集与告警.md)；本篇保留原有运维与机制主线。
+
 宿主机有 64 核、256 GiB，不代表 Pod 内的 JVM 能持续获得这些资源。Linux 容器通过 cgroups 等机制约束进程，JVM 还会根据自己观察到的资源选择线程数、堆和 GC 行为。
 
 本篇 Linux/cgroups 命令需在目标 Linux 容器或节点执行；Windows 原生实验只验证 Java 参数，不冒充实际 Kubernetes 限流结果。

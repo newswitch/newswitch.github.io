@@ -45,6 +45,7 @@ Producer
 | Q12 | [Topic/Queue、吞吐、存储、网络与容量规划](./04-production/12-Topic-Queue吞吐存储网络与容量规划.md) | P1 | 如何估算 Broker 和保留空间 |
 | Q13 | [ACL、TLS、监控、Dashboard、升级与跨集群迁移](./04-production/13-ACL-TLS监控Dashboard升级与跨集群迁移.md) | P1 | 安全运维闭环 |
 | Q14 | [源码请求路径、积压、发送失败、主从异常与故障 Runbook](./04-production/14-源码请求路径与生产故障Runbook.md) | P2 | 从客户端到 CommitLog 定位 |
+| Q15 | [RocketMQ 核心监控指标采集与告警](./04-production/15-RocketMQ核心监控指标采集与告警.md) | P1 | 原生 OTel、单位、积压年龄与死信 |
 
 > 版本基线：本路线以 Apache RocketMQ 5.5.x 为主线，并区分 4.x/5.x 的资源模型、请求路径和部署差异。实验应固定实际运行的 Broker、Proxy、SDK 与管理工具版本。
 

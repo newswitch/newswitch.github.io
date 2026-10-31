@@ -8,6 +8,8 @@ tags: [Envoy, Observability, Access Log, Tracing, Admin, Tap]
 
 # Envoy Stats、Access Log、Tracing、Admin、Tap 与请求调试
 
+具体导出名、默认标签、查询与告警见[核心监控指标采集与告警](./15-Envoy核心监控指标采集与告警.md)。
+
 Envoy 的可观测性要回答两类问题：运行时装载了什么配置，请求在哪个阶段发生了什么。一个 Dashboard 不能替代配置事实和单请求时间线。
 
 ## 1. 四类证据

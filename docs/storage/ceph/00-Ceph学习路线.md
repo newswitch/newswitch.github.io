@@ -55,6 +55,7 @@ tags: [Ceph, 学习路线, 存储]
 | --- | --- |
 | 第 16 篇 | [Ceph 日常运维](./05-operations/16-Ceph日常运维.md) |
 | 第 17 篇 | [Ceph 监控告警](./05-operations/17-Ceph监控告警.md) |
+| 第 31 篇 | [Ceph 核心监控指标采集与告警](./05-operations/31-Ceph核心监控指标采集与告警.md) |
 
 ### 1.6 Part VI · 故障排查 {/* #part-vi--故障排查 */}
 

@@ -42,6 +42,7 @@ S3 Client
 ## 3. P2：故障处理
 
 13. [MinIO 生产故障 Runbook：磁盘、节点、Quorum、Healing、证书和容量](./13-MinIO生产故障Runbook-磁盘-节点-Quorum-Healing-证书与容量.md)
+14. [MinIO 核心监控指标采集与告警](./14-MinIO核心监控指标采集与告警.md)
 
 ## 4. 与相邻存储的边界
 

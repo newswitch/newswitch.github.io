@@ -152,6 +152,8 @@ SHOW VARIABLES LIKE 'version%';
 28. [QPS、数据增长、IOPS、复制与备份容量规划](./05-performance-capacity/05-QPS数据增长IOPS复制与备份容量规划.md)
 29. [数据库 SLI/SLO、Dashboard、告警与变更关联](./05-performance-capacity/06-数据库SLI-SLO-Dashboard告警与变更关联.md)
 
+指标专项：[MySQL 核心监控指标采集与告警](./05-performance-capacity/07-MySQL核心监控指标采集与告警.md)，补充 mysqld_exporter 源码映射、PromQL、复制字段与告警边界。
+
 ### 4.7 模块七：复制与高可用（5 篇） {/* #模块七复制与高可用5-篇 */}
 
 30. [Binlog Format、Position、GTID 与复制数据路径](./06-replication-ha/01-BinlogFormat-Position-GTID与复制数据路径.md)

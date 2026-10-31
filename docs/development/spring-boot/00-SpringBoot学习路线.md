@@ -78,7 +78,7 @@ Client
 
 每个接口同时覆盖正常、非法输入、重复请求和依赖失败。响应状态码、业务状态和日志证据应能互相解释。
 
-### 3.3 数据访问（8 篇）
+### 3.3 数据访问（9 篇）
 
 1. [JDBC、JdbcTemplate 与 SQL 执行路径](./03-data/01-JDBC与JdbcTemplate执行路径.md)。
 2. [HikariCP 生命周期、排队与容量](./03-data/02-HikariCP生命周期排队与容量.md)。
@@ -88,6 +88,7 @@ Client
 6. [业务事务、Outbox 与外部副作用](./03-data/06-业务事务Outbox与外部副作用.md)。
 7. [MyBatis 与 JPA 的 SQL、事务和缓存对照实验](./03-data/07-MyBatis与JPA的SQL事务缓存对照实验.md)。
 8. [Outbox Relay 领取、重发与消费者去重实战](./03-data/08-OutboxRelay领取重发与消费者去重实战.md)。
+9. [HikariCP 连接池核心监控指标采集与告警](./03-data/09-HikariCP连接池核心监控指标采集与告警.md)。
 
 基础任务服务运行 JdbcTemplate，独立 persistence 工程用完整 Mapper 与实体测量 SQL 次数、事务、缓存、N+1 和版本冲突；delivery 工程继续实现发送领取和消费去重。ORM 的缓存不是数据库本身的一致性保证。
 

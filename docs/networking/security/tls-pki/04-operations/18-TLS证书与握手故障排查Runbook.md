@@ -8,6 +8,8 @@ tags: [TLS 排障, 证书错误, Runbook, OpenSSL]
 
 # TLS 证书与握手故障排查 Runbook
 
+到期时间、控制器就绪与真实握手的持续监控见[证书监控指标与轮换告警](./20-TLS证书监控指标与轮换告警.md)。
+
 不要从“重启 Nginx”开始。先确定失败发生在 DNS、TCP、TLS 哪个握手阶段、证书验证还是 TLS 之后的 HTTP。
 
 ![TLS 故障排查决策树](/img/networking/tls-pki/tls-troubleshooting.svg)

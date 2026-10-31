@@ -8,6 +8,8 @@ tags: [HAProxy, Runtime API, Reload, Troubleshooting]
 
 # HAProxy 部署、Reload、Runtime API、监控、选型与故障 Runbook
 
+状态枚举、对象层次、近期平均耗时与 Prometheus 查询见[核心监控指标采集与告警](./03-HAProxy核心监控指标采集与告警.md)。
+
 ## 1. 生产部署
 
 至少两个 HAProxy 实例跨故障域，前置 VIP/Keepalived、云 LB、Anycast 或 DNS。进程本身无状态，但证书、Map、配置和 Runtime 状态要统一发布。调整文件描述符、端口范围、连接跟踪、CPU 绑定前先压测真实连接模型。

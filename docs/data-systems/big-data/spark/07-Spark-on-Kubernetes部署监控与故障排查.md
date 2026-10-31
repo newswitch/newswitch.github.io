@@ -8,6 +8,8 @@ tags: [Spark, Kubernetes, 监控, 故障排查]
 
 # Spark on Kubernetes 部署、监控与故障排查
 
+ExecutorSummary、运行指标、事件日志与流式进度的区别见[核心监控指标采集与告警](./08-Spark核心监控指标采集与告警.md)。
+
 Spark on Kubernetes 由 Driver 向 API Server 创建/管理 Executor Pod。Kubernetes 负责 Pod 资源与生命周期，Spark 负责 task 与 stage；Pod Running 不代表 Spark Job 健康。
 
 ## 1. 控制路径

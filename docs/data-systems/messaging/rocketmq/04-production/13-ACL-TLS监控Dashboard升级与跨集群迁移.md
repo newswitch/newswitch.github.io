@@ -8,6 +8,8 @@ tags: [RocketMQ, ACL, TLS, Monitoring, Migration]
 
 # ACL、TLS、监控、Dashboard、升级与跨集群迁移
 
+具体指标名、采集口径、PromQL 与告警边界见[核心监控指标采集与告警](./15-RocketMQ核心监控指标采集与告警.md)；本篇保留原有运维与机制主线。
+
 RocketMQ 的生产治理需要把接入安全、运行观测、变更升级和跨集群恢复连成一条链。Dashboard 能打开不代表已安全，Broker 有副本也不代表可以从误删、错误配置或跨集群事故恢复。
 
 ## 1. 先画出所有暴露面

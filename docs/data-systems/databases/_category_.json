@@ -1,9 +1,10 @@
 {
-  "label": "关系数据库",
+  "label": "数据库",
   "position": 1,
   "collapsed": true,
   "link": {
     "type": "generated-index",
-    "description": "MySQL 与 PostgreSQL：从 SQL、事务和存储引擎到复制、高可用、容量与生产排障。"
+    "slug": "/category/关系数据库",
+    "description": "MySQL、PostgreSQL 与 MongoDB：关系和文档模型、存储、复制、可靠性、容量及监控。"
   }
 }

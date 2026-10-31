@@ -8,6 +8,8 @@ tags: [Trino, MPP, Stage, Split, Pushdown]
 
 # Trino Coordinator、Worker、Stage、Split 与谓词下推
 
+当前状态、查询/Driver 区别、归一化采集与排队告警见[Trino 核心监控指标采集与告警](./05-Trino核心监控指标采集与告警.md)。
+
 Trino 是分布式 SQL 查询引擎，不是通用 OLTP 数据库，也不默认保存业务表数据。Connector 连接 Iceberg、Hive、关系库等数据源；Coordinator 规划，Worker 并行读取和计算。
 
 ## 1. 架构

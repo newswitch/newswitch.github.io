@@ -4,6 +4,6 @@
   "collapsed": true,
   "link": {
     "type": "generated-index",
-    "description": "Milvus、向量索引、召回、混合检索、容量和生产运维。"
+    "description": "Milvus、Qdrant 与 Weaviate 的向量索引、召回、混合检索、容量和监控运维。"
   }
 }
