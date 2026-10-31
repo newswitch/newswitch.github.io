@@ -200,5 +200,3 @@ try {
   for (const generated of [rulesFile, testsFile]) if (fs.existsSync(generated)) fs.unlinkSync(generated);
   fs.rmdirSync(temporary);
 }
-
-
