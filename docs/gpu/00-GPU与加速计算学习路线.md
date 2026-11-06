@@ -27,6 +27,8 @@ tags: [GPU, NPU, HBM, NUMA, PCIe, NVLink, CUDA, CANN]
 15. [Kubernetes GPU 集群学习路线](./cluster/00-Kubernetes-GPU集群学习路线.md)
 16. [GPU 与加速器命令参考库](./commands/00-GPU与加速器命令参考库学习路线.md)
 
+整机与运行时基础建立后，可继续阅读 [GPU 与 NPU 资源池化学习路线](./cluster/pooling/00-GPU-NPU资源池化学习路线.md)，将设备身份、共享切分、分配回收和拓扑调度串联。机架级系统的具体组织见 [GB200/GB300 NVL72](./servers/nvidia-dgx/03-GB200-GB300-NVL72机架级架构.md)。
+
 前十步建立硬件执行、整机与互联基础：先用 P100/GP100 串起 SM、精度、HBM2 与 NVLink，再沿 Pascal 到 Blackwell 建立代际地图，通过 Rubin 理解双 Die、HBM4、增强 TMA、NVLink 6 和机架级 Scale-Up；整机模块结合 DGX H100/H200、B200/B300 与 Atlas A2/A3，解释芯片、模组、整机和超节点的边界。裸金属、驱动和编译器章节继续覆盖服务器生命周期与算子执行；最后进入异构加速器、Kubernetes 集群和命令证据链。现有命令参考库以 NVIDIA GPU 为主，昇腾 NPU 命令结合 vLLM-Ascend 与设备故障专题学习。建议在读完对应原理后立即完成实验，而不是把命令参数与硬件原理分开背诵。
 
 ## 2. 学完后的能力 {/* #学完后的能力 */}

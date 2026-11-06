@@ -51,7 +51,7 @@ hardware/
 gpu/
 ├── fundamentals/        # GPU 架构与计算基础
 ├── servers/             # AI 整机产品体系、Host、互联、网络与存储
-│   ├── nvidia-dgx/       # DGX H100/H200、B200/B300
+│   ├── nvidia-dgx/       # DGX H100/H200、B200/B300 与 GB200/GB300 NVL72
 │   └── huawei-atlas/     # Atlas 800I A2/A3
 ├── memory/              # 显存与 HBM
 ├── pcie-numa/           # PCIe、NUMA 与 CPU-GPU 数据搬运
@@ -62,7 +62,8 @@ gpu/
 ├── compiler-kernels/    # AI 编译器与 GPU Kernel
 ├── performance/         # GPU 性能分析与优化
 ├── ascend-npu/           # 昇腾 NPU、CANN 与设备执行模型
-├── cluster/             # 设备管理、调度、共享、DRA、治理与排障
+├── cluster/             # 设备管理、调度、共享、池化、DRA、治理与排障
+│   └── pooling/         # 设备身份与生命周期、昇腾 HDK/vCANN-RT
 ├── commands/            # GPU 与加速器命令库
 └── labs/                # 动手实验
 
@@ -165,6 +166,8 @@ projects/
 计算软件与运行环境分为三处：`gpu/cuda/` 解释 CUDA 执行及软件栈；`gpu/ascend-npu/` 解释 CANN 组件与安装环境；`gpu/driver-runtime/` 解释驱动、兼容、容器设备注入及隔离。`ai-systems/runtime/01-PyTorch后端选择CUDA与torch-npu适配.md` 归属 AI 框架运行环境，引用双方软件栈而不复制正文。对应八篇主文合计 32 个练习答案；`examples/accelerator-runtime/backend_probe.py` 是显式选择 CPU/CUDA/NPU 的有限功能验证，不作为性能基准。`node scripts/verify-accelerator-runtime-articles.mjs --python python` 校验元数据、答案、YAML、示例算术、Python 语法和七项控制流单元测试，`--bash` 可指定 Bash 进行命令语法检查。基础检查与模拟单元测试不能宣称已完成目标加速器硬件验收。
 
 `storage/oceanstor/` 直接承载 OceanStor AI 存储入口、A800、A600 和协议/客户端四篇主文；通用 I/O 模型与 NVIDIA GDS 保留在 `storage/ai-workloads/`。六篇通过相对链接串联，合计 30 个练习答案，厂商参考规格与教学预算分别标注。`node scripts/verify-ai-storage-articles.mjs` 校验元数据、答案、目录、容量/带宽/时延算术与 GDS 配置范围，`--bash` 可额外检查命令语法；验证不会挂载存储、运行 fio/gdsio 或修改驱动。
+
+`gpu/cluster/pooling/` 保存资源池入口、设备模型与昇腾切分原理；NVIDIA 共享对比继续归 `sharing/`，拓扑放置继续归 `scheduling/`，GB200/GB300 NVL72 归整机目录。六篇通过相对链接关联，含 24 个练习答案、8 张 Mermaid 图。`node scripts/verify-accelerator-pooling-articles.mjs` 校验结构、配置片段、教学容量与集合可行性；可选 `--bash` 仅做语法检查，不执行设备切分、驱动修改或集群命令。
 
 软件开发按具体语言与框架建立独立入口。`development/java/` 保存 Java、标准库、并发、JVM、构建和排障；`development/spring/` 保存容器、AOP、事务、Web 和源码调用链；`development/spring-boot/` 保存启动配置、服务、数据接入、安全及生产运行。每个系列保留学习路线，专题文件夹随正文发布逐步建立，网站不维护另一套虚拟目录。
 

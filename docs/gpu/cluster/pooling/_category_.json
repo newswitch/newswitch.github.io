@@ -1,0 +1,9 @@
+{
+  "label": "GPU 与 NPU 资源池化",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "gpu/cluster/pooling/GPU-NPU资源池化学习路线"
+  }
+}
