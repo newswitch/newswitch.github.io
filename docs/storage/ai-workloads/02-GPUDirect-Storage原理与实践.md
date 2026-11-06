@@ -27,6 +27,8 @@ GPUDirect Storage（GDS）的目标是建立更直接的数据路径：
 
 它可以减少 CPU bounce buffer、降低 CPU 负担，并在合适工作负载和拓扑上改善带宽或延迟。
 
+组件与版本差异按 2026 年 11 月核对的官方概览、安装指南和发布说明校订，其中对象接口配置部分明确对应 GDS v1.20 发布说明。CUDA Toolkit、cuFile、内核组件与第三方客户端分别记录，不通过相同版本字符串推断整套兼容关系。
+
 ← [AI 工作负载的存储 IO 模型](./01-AI工作负载的存储IO模型.md)
 
 ## 1. 学习目标
@@ -55,9 +57,9 @@ cudaMemcpy(gpu_buffer, host_buffer, size, cudaMemcpyHostToDevice);
 简化数据路径：
 
 ```mermaid
-flowchart LR
+flowchart TD
     S["NVMe / 远端存储"] --> K["文件系统/内核"]
-    K --> R["CPU System Memory"]
+    K --> R["Host 系统内存"]
     R --> P["PCIe"]
     P --> H["GPU HBM"]
 ```
@@ -82,7 +84,7 @@ GDS 使用 `cuFile` API，让应用把 GPU Buffer 地址直接交给存储 IO �
 本地 NVMe：
 
 ```mermaid
-flowchart LR
+flowchart TD
     N["Local NVMe DMA Engine"] --> P["PCIe"]
     P --> H["GPU HBM"]
 ```
@@ -90,7 +92,7 @@ flowchart LR
 远端存储：
 
 ```mermaid
-flowchart LR
+flowchart TD
     S["远端存储"] --> F["RDMA Fabric"]
     F --> N["本机 Storage NIC"]
     N --> P["PCIe"]
@@ -98,6 +100,8 @@ flowchart LR
 ```
 
 数据不必在 CPU System Memory 中进行 bounce。
+
+图描述的是满足条件的直接数据路径，不是所有 cuFile 请求的保证路径。通过 CPU PCIe Root Complex 不等于 CPU Core 在复制字节；经过哪一棵 PCIe 树、是否使用 Host 内存中转和最终是否提速，应分别留证。
 
 ## 4. Control Path 与 Data Path
 
@@ -233,6 +237,21 @@ modinfo nvidia-fs
 
 不要把某一版本的部署步骤套用到所有平台。
 
+### 8.1 nvfs、P2PDMA 与 DMA-BUF 分别说明什么
+
+| 名称 | 所在层次 | 不能由它单独推出 |
+| --- | --- | --- |
+| `nvidia-fs` / nvfs 路径 | 相应 GPU 内存与文件系统数据路径集成 | 全部文件请求都已走直接路径 |
+| PCI P2PDMA | 受支持 PCI 设备间的 DMA 基础能力与路径 | 任意跨 Root、Kernel 和文件系统都能使用 |
+| DMA-BUF | 内存共享、导出与映射协作机制 | 一种新的网络协议或存储接口 |
+| compat | 使用兼容数据路径的能力或选择 | 已获得直接路径的性能收益 |
+
+官方概览说明，自 CUDA 12.8 起，受支持的 x86_64 NVMe 组合可以利用上游 PCI P2PDMA，而不依赖 nvidia-fs；这不能推广到所有远端文件系统、虚拟化环境或全部 NVMe 配置。DMA-BUF 与所选驱动、文件系统和通信实现也有配套条件。
+
+另一个安装边界是：官方指南说明，CUDA Toolkit 13.4 起非 DGX 平台的 nvidia-fs 需按独立说明安装；cuFile 用户态库与工具仍属于相应 Toolkit 交付。不要因为装了新版 Toolkit 就假定所需模块一定存在，也不要在不需要该模块的路径上反复加载它。
+
+IOMMU、ACS 或驱动模式变更可能影响整机隔离、虚拟化和其他任务，不应为跑通一个存储测试直接修改在线节点。应先核对目标平台的支持条件，再按维护范围处理。
+
 ## 9. 本地 NVMe 的 GDS
 
 本地路径中，NVMe Controller 的 DMA Engine 可以向 GPU Memory 搬运数据。
@@ -284,6 +303,12 @@ NIC → Kernel Socket Buffer → CPU Memory
 就不满足真正直接路径。
 
 GDS 不能单方面把一个不支持 RDMA/GDS 的存储系统变成直接 GPU 存储。
+
+### 10.1 文件接口与对象接口不是同一条检查链
+
+本篇的 `cuFileRead` 示例基于文件句柄，不表示任意 S3 SDK 或 HTTP 下载都自动进入同一路径。较新 GDS 还包含 cuObject 等对象访问组件，必须核对对应服务端、传输、客户端和应用 API，而不是仅看“支持 S3”。
+
+OceanStor 的 DataTurbo/NDS、一个普通 NFS 挂载，以及 NVIDIA cuFile/cuObject 分别属于不同配套范围。某产品支持 RoCE 或 NDS，不自动证明它具备当前 GDS 的全部认证和接口能力。具体识别方法见 [协议与客户端数据路径](../oceanstor/03-OceanStor-AI存储协议客户端与数据路径.md)。
 
 ## 11. Compatibility Mode
 
@@ -383,12 +408,14 @@ nvcc --version
 - 存储厂商文档
 - 容器平台文档
 
+`nvcc` 只用于确认当前编译器是否存在及其版本，没有 nvcc 不应直接等同于运行路径不可用。还要记录应用实际加载的 libcufile、所需模块与客户端；镜像 Digest 不固定后来挂入的 Host 文件。
+
 ## 15. `gdscheck`
 
-安装 GDS 工具后，常见检查入口：
+安装 GDS 工具且其目录已经加入 PATH 后，检查入口为：
 
 ```bash
-gdscheck -p
+gdscheck.py -p
 ```
 
 输出可能包含：
@@ -404,10 +431,26 @@ gdscheck -p
 命令和字段随版本变化，先查看：
 
 ```bash
-gdscheck --help
+gdscheck.py -h
 ```
 
 不要只看最后一行“Supported”。还要确认目标 Mount 的实际路径。
+
+### 15.1 区分环境能力与请求实际选择
+
+工具若未加入 PATH，官方安装指南的入口形如 `/usr/local/cuda-13.5/gds/tools/gdscheck.py`；该路径里的版本只是本例，使用时按实际安装定位。检查会访问驱动与系统状态，不将其等同于单纯读取文本，也不在这里执行压测。
+
+假设整理出下面一份**归一化教学记录**，它不是固定的原始输出版式：
+
+```text
+本地 NVMe 可用模式：p2pdma / nvfs / compat
+目标 NFS 可用模式：compat
+应用实际路径：尚需按目标请求取证
+```
+
+它不能证明某次 NVMe 请求已经使用 P2PDMA，也不能因为本地能力良好就认为目标 NFS 已支持直接路径。应继续关联挂载身份、请求、配置、统计与应用时间线。
+
+CPU 使用量下降也不是唯一证明：缓存命中、较少解码或其他阶段缩短同样可能降低 CPU。直接路径与端到端收益需要分别确认。
 
 ## 16. `cufile.json`
 
@@ -432,6 +475,23 @@ gdscheck --help
 
 不要复制旧版本的 `cufile.json` 覆盖新版本默认值。
 
+### 16.1 GDS v1.20 的 cuObject 配置边界
+
+GDS v1.20 发布说明为 cuObject 明确了独立配置选择：默认 `/etc/cuobj.json`，非空 `CUOBJ_ENV_PATH_JSON` 选择另一份完整文件，而不是在默认文件上叠加。它不通过 `CUFILE_ENV_PATH_JSON` 或 `/etc/cufile.json` 选择自己的 JSON 配置。
+
+因此，检查文件接口的配置不等于检查对象接口。也不能把新发布说明中的 cuObject 规则套给旧客户端：先固定组件版本和实际 API，再读取有效配置。这里只说明边界，不提供在线覆盖配置的命令。
+
+文件、环境变量与库内生效状态还要分开。配置文件在磁盘上已经修改，不代表现有进程已经重新读取，应按相应版本的初始化与配置机制验证。上述变化见 [GDS 发布说明](https://docs.nvidia.com/gpudirect-storage/release-notes/index.html)。
+
+在支持该选项的版本中，可以分别查询本次诊断环境的文件接口与对象接口配置：
+
+```bash
+gdscheck.py -p
+gdscheck.py -p --object
+```
+
+`--object` 需要与 `-p` 一起使用。工具诊断的是本次调用所选环境，不会自动检查或修改另一个已运行应用进程的有效配置。
+
 ## 17. `gdsio` 基线
 
 `gdsio` 可测试不同 IO 路径。
@@ -439,7 +499,7 @@ gdscheck --help
 先查看：
 
 ```bash
-gdsio --help
+gdsio -h
 ```
 
 测试维度：
@@ -627,6 +687,19 @@ GPU 正常
 
 每层都要有失败停止条件，不要在不明确数据路径时直接改生产 Mount 或内核模块。
 
+### 22.1 一组完整的路径证据
+
+| 证据 | 重点内容 |
+| --- | --- |
+| 配置与身份 | GPU、Kernel、Driver、cuFile、模块、客户端和模型版本 |
+| 数据入口 | 文件/对象、挂载、接口与授权 |
+| 请求形状 | 字节范围、对齐、Buffer、并发、同步与异步 |
+| 实际路径 | 支持模式、有效配置、统计及回退原因 |
+| 数据正确性 | 返回结果、完成边界、校验与生命周期 |
+| 应用表现 | 冷/热状态、读取/解析/搬运与 TTFT 或 Step 时间 |
+
+例如，同一文件的 POSIX 热读与 GDS 冷读不是公平对照；较高的测试 GB/s 也可能包含不同缓存或统计范围。不要为了获得漂亮结果先清掉所有节点缓存；应在隔离测试环境中明确控制条件，并保存业务级结果。
+
 ## 23. 安全与数据正确性
 
 - 使用专用测试文件
@@ -715,10 +788,10 @@ Storage DMA/NIC RDMA → GPU HBM
 1. Control Path由CPU、文件系统、驱动和cuFile完成打开文件、注册Buffer、地址映射及提交IO；Data Path是数据在存储DMA Agent与GPU显存之间的实际搬运。
 2. Compatibility Mode保持cuFile API可用，但数据可能经过内核Page Cache或CPU Bounce Buffer再H2D；它证明功能兼容，不证明绕过CPU的直接数据路径生效。
 3. 本地NVMe通常由NVMe控制器作为DMA Agent；远端存储可能由支持RDMA的NIC/HCA承担数据搬运，但是否可直达取决于文件系统、驱动、拓扑与认证的软件栈。
-4. `O_DIRECT`绕过Page Cache，对Buffer地址、文件偏移和长度通常有块对齐要求。未对齐可能失败、降级或触发额外读改写，导致结果不是预期直接路径。
+4. `O_DIRECT` 影响 Page Cache 路径，地址、偏移与长度的对齐还会影响实际搬运。但新版 cuFile 在受支持条件下也可为非 O_DIRECT 打开的文件选择直接路径；反过来，标志存在也不保证每个请求直达应用 GPU Buffer。未对齐可能产生设备内部中转、CPU 回退或错误，需要看实际选择。
 5. 四组实验应固定文件、GPU、NUMA、块大小、队列深度和缓存条件：POSIX buffered、POSIX `O_DIRECT`、cuFile Compatibility、cuFile Direct。记录吞吐、P95、CPU、GPU Copy/DRAM指标与`gdscheck`结果。
-6. 用`lspci -tv`、`nvidia-smi topo -m`及NVMe/NIC BDF画出每个设备所属PCIe Switch、Root Complex和NUMA；优选GPU与NVMe/NIC同Root或最短路径，并标注ACS/IOMMU状态。
-7. 在应用中分别记录文件打开/读取完成、Tensor反序列化、数据到达GPU和引擎初始化完成时间；比较总时间与各阶段和，识别流水线重叠。GDS模式下仍需单独记录格式解析和Kernel初始化。
+6. 用 lspci、GPU 拓扑及 NVMe/NIC 的 BDF 关联 Switch、Root 与 NUMA，再记录当前支持的模式与应用实际路径。同一 NUMA 不代表同一 Switch，经过 Root 也不直接证明 Host Memory bounce；不要未经维护评估就修改 ACS/IOMMU。
+7. 在应用中记录打开/读取完成、解析、数据到达 GPU 与初始化完成等区间，保留重叠和关键依赖。还要确认应用实际使用文件还是对象 API、有效配置与直接/回退路径。不能把阶段耗时简单相加，也不能用一次 cuFile 成功替代实际路径证明。
 
 ## 28. 参考与致谢 {/* #参考与致谢 */}
 
@@ -727,3 +800,5 @@ Storage DMA/NIC RDMA → GPU HBM
 - [GDS O_DIRECT Requirements Guide](https://docs.nvidia.com/gpudirect-storage/o-direct-guide/)
 - [GDS Benchmarking and Configuration Guide](https://docs.nvidia.com/gpudirect-storage/configuration-guide/)
 - [GDS Installation and Troubleshooting Guide](https://docs.nvidia.com/gpudirect-storage/troubleshooting-guide/)
+- [GDS Release Notes 与组件版本变化](https://docs.nvidia.com/gpudirect-storage/release-notes/index.html)
+- [OceanStor 协议、客户端与路径边界](../oceanstor/03-OceanStor-AI存储协议客户端与数据路径.md)
