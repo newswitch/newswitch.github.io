@@ -56,7 +56,7 @@ gpu/
 ├── memory/              # 显存与 HBM
 ├── pcie-numa/           # PCIe、NUMA 与 CPU-GPU 数据搬运
 ├── nvlink-nvswitch/     # NVLink 与 NVSwitch
-├── cuda/                # CUDA 执行模型
+├── cuda/                # CUDA 执行模型、软件栈与计算调用链
 ├── driver-runtime/      # 驱动、CUDA 与容器运行时
 ├── bare-metal-fleet/     # 裸金属、BMC、固件与节点生命周期
 ├── compiler-kernels/    # AI 编译器与 GPU Kernel
@@ -98,7 +98,7 @@ cloud-native/
 └── serverless-edge/     # Serverless 与边缘计算
 
 ai-systems/
-├── runtime/             # Python、环境和动态链接库
+├── runtime/             # PyTorch 设备后端、Python 环境、动态链接与 Ray
 ├── models/              # 模型与数据制品
 ├── training/            # 分布式训练、通信与训练命令
 ├── inference/           # 推理原理、框架、服务、性能与压测命令
@@ -158,6 +158,8 @@ projects/
 ## 产品级专题目录
 
 `gpu/servers/` 保存 AI 整机产品体系，按 `nvidia-dgx/` 与 `huawei-atlas/` 分类；Atlas A2 主文从推理框架模块迁入此处，vLLM-Ascend、昇腾学习路线和硬件分类通过相对链接引用。通用 PCIe/NUMA 主文仍归属 `gpu/pcie-numa/`，保留原有拓扑图与命令示例。`node scripts/verify-ai-server-articles.mjs` 校验六篇主文的元数据、24 个练习答案、目录顺序、迁移引用和规格范围，不以行数作为文章质量标准。
+
+计算软件与运行环境分为三处：`gpu/cuda/` 解释 CUDA 执行及软件栈；`gpu/ascend-npu/` 解释 CANN 组件与安装环境；`gpu/driver-runtime/` 解释驱动、兼容、容器设备注入及隔离。`ai-systems/runtime/01-PyTorch后端选择CUDA与torch-npu适配.md` 归属 AI 框架运行环境，引用双方软件栈而不复制正文。对应八篇主文合计 32 个练习答案；`examples/accelerator-runtime/backend_probe.py` 是显式选择 CPU/CUDA/NPU 的有限功能验证，不作为性能基准。`node scripts/verify-accelerator-runtime-articles.mjs --python python` 校验元数据、答案、YAML、示例算术、Python 语法和七项控制流单元测试，`--bash` 可指定 Bash 进行命令语法检查。基础检查与模拟单元测试不能宣称已完成目标加速器硬件验收。
 
 软件开发按具体语言与框架建立独立入口。`development/java/` 保存 Java、标准库、并发、JVM、构建和排障；`development/spring/` 保存容器、AOP、事务、Web 和源码调用链；`development/spring-boot/` 保存启动配置、服务、数据接入、安全及生产运行。每个系列保留学习路线，专题文件夹随正文发布逐步建立，网站不维护另一套虚拟目录。
 

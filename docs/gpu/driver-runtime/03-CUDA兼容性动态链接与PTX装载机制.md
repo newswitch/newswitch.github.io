@@ -31,6 +31,24 @@ Forward Compatibility 则通过兼容包提供一组较新的用户态驱动库�
 
 判断顺序应是：先确认目标 GPU 和驱动仍受支持，再查应用所需功能，最后选受支持的兼容路径。不要遇到报错就全局追加一个 `compat` 目录；驱动升级后遗留的旧兼容库反而可能覆盖正确库。
 
+### 2.1 以 CUDA 13.x 的兼容范围理解最低要求
+
+截至 2026 年 11 月核对的官方小版本兼容表，CUDA 13.x 的驱动主分支下限为 580，12.x 为 525，11.x 为 450。这是大版本家族的兼容筛选，不是适用于所有功能、硬件和操作系统的完整安装清单；精确补丁版本及特性要求仍要查对应 Release Notes。
+
+| 教学组合 | 可以先判断什么 | 仍不能断言什么 |
+| --- | --- | --- |
+| CUDA 13.x 应用与未达到相应最低要求的旧驱动 | 不能按普通小版本兼容直接认为受支持 | 安装任意 compat 包就一定解决 |
+| CUDA 13.x 应用与满足家族下限的驱动 | 有资格继续检查相应小版本兼容条件 | 新 PTX、新功能和全部 GPU 都可用 |
+| 较新受支持驱动与较旧 CUDA 应用 | 可以按向后兼容方向评估 | 已被移除的硬件支持也自动恢复 |
+
+同一个大版本内可能有“初始化成功、特定 API 或 PTX 路径失败”的情况。因此驱动达到下限与程序完整可用之间，还有特性和设备代码验证。
+
+### 2.2 Toolkit 打包关系也会改变
+
+CUDA 13.5 安装指南说明，13.4 及之后版本中 Toolkit 元包与 Driver 包的所有权、依赖关系已分别列出。不能把旧教程中“安装 CUDA 元包一定连驱动一起安装”的经验当成永久规则；也不能仅看包名就断言完全不影响其他依赖。应检查实际包管理事务和目标版本的组件表。
+
+这类打包变化不改变物理边界：运行程序仍需要可用的驱动，用户态计算库也不自动变成内核模块。具体说明见 [CUDA 13.5 包与安装方式](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)。
+
 ## 3. 为什么同一个二进制在两个容器里结果不同
 
 Linux 动态链接器处理无斜杠的库名时，会综合 RPATH、环境变量、RUNPATH、缓存与默认目录。RPATH 与 RUNPATH 的优先级和对子依赖的作用不同，安全执行模式还会忽略部分环境变量。因此不能简单断言“LD_LIBRARY_PATH 永远优先”。完整规则见 [ld.so 手册](https://man7.org/linux/man-pages/man8/ld.so.8.html)。
@@ -42,11 +60,23 @@ Linux 动态链接器处理无斜杠的库名时，会综合 RPATH、环境变�
 ```bash
 readelf -d ./my_cuda_app
 printf '%s\n' "$LD_LIBRARY_PATH"
-# 在应用仍存活时查看真正映射的库；PID 换成实际进程号
-rg 'libcuda|libcudart|libcublas|libcudnn' /proc/PID/maps
+# 在应用仍存活时查看真正映射的库；24680 换成实际进程号
+rg 'libcuda|libcudart|libcublas|libcudnn' /proc/24680/maps
 ```
 
 `readelf` 展示声明的依赖，`maps` 展示已经映射的文件。对使用 `dlopen` 延迟加载的程序，应在触发相关算子后再检查。不要对未知来源的可执行文件随意运行诊断命令来“看看它加载什么”。
+
+下面是某个虚构程序的 `readelf -d` 教学节选：
+
+```text
+(NEEDED)  Shared library: [libcuda.so.1]
+(NEEDED)  Shared library: [libstdc++.so.6]
+(RUNPATH) Library runpath: [/opt/model/lib]
+```
+
+它说明二进制声明了这些依赖与搜索信息，不说明 `/opt/model/lib` 最终提供了全部依赖。没有单独列出 libcudart，也不能直接断言“没有 CUDA”：程序可能直接使用 Driver API、静态链接相关内容，或通过其他库间接加载。
+
+进程在容器中时，还应区分镜像文件与 Host 注入文件。镜像 Digest 固定的是镜像内容，不固定挂载到相同路径上的所有 Driver 库。
 
 ## 4. SASS 与 PTX：可装载比“编译成功”多一层
 
@@ -73,8 +103,28 @@ rg 'libcuda|libcudart|libcublas|libcudnn' /proc/PID/maps
 
 复现环境至少应关联 GPU 型号、内核驱动、镜像 digest、框架与扩展构建信息、实际加载的库路径。同名镜像标签和同名虚拟环境都不足以固定环境身份。
 
-## 6. 掌握检查
+## 6. 练习与答案 {/* #掌握检查 */}
 
-能解释以下三个反例，才算理解装载边界：为什么没有 `nvcc` 的运行镜像仍能训练；为什么 `nvidia-smi` 正常而某个 CUDA 算子失败；为什么升级宿主机驱动后还要检查遗留的兼容库搜索路径。
+**问题一：没有 nvcc 的运行镜像，为什么仍可能训练？**
 
-进一步学习时，尝试画出一个真实应用从 Python 扩展到 `libcuda` 再到内核驱动的依赖链，并标明每个文件来自镜像、虚拟环境还是宿主机。这里的重点是验证依赖关系，不是把所有组件升级成同一个版本号。
+答案：运行预构建程序与现场编译依赖不同。只要相容的运行库、设备代码和驱动满足需要，就可以执行；要编译扩展时才进一步检查开发链。
+
+**问题二：满足 CUDA 13.x 的驱动家族下限，是否证明全部新 PTX 和新功能可用？**
+
+答案：不能。小版本兼容带有功能限制，PTX JIT 和某些 API 仍可能需要较新驱动，还要检查目标 GPU 和实际使用功能。
+
+**问题三：升级了宿主机驱动，为什么仍要检查 compat 目录？**
+
+答案：动态链接器可能继续选中遗留用户态兼容库，遮住预期库。需要确认进程的实际映射，不能仅看磁盘包版本。
+
+**问题四：readelf 没列出 libcudart，是否足以判断程序不使用 CUDA？**
+
+答案：不足。可能直接使用 Driver API、静态链接或间接加载。声明依赖与运行中映射提供不同证据，需要结合程序实现和实际路径判断。
+
+## 7. 官方参考与延伸阅读
+
+- [CUDA Minor Version Compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/latest/minor-version-compatibility.html)
+- [CUDA Forward Compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/latest/forward-compatibility.html)
+- [CUDA Toolkit 包与版本说明](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
+- [Linux 动态链接器](https://man7.org/linux/man-pages/man8/ld.so.8.html)
+- [CUDA 软件栈与计算调用链](../cuda/02-CUDA软件栈运行库与计算调用链.md)

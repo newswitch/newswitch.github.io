@@ -26,8 +26,12 @@ Atlas服务器
 1. [GPU、CUDA 与 NPU、CANN 是什么](../fundamentals/02-GPU-CUDA与NPU-CANN是什么.md)
 2. [Atlas 800I A2 与 Ascend 910B 软硬件架构](../servers/huawei-atlas/01-Atlas-800I-A2与Ascend-910B软硬件架构.md)
 3. [Ascend 910B AI Core、Cube、Vector、UB 与 HBM 执行路径](./03-Ascend-910B-AI-Core与片上存储执行路径.md)
-4. [torch-npu 与 CANN 异步执行链路](../../ai-systems/inference/vllm-ascend/07-torch-npu与CANN异步执行链路.md)
-5. [CUDA、CANN、PyTorch 与推理框架版本兼容](../../ai-systems/inference/startup-troubleshooting/06-CUDA-CANN-PyTorch与推理框架版本兼容.md)
+4. [CANN 软件栈组件与计算调用链](./04-CANN软件栈组件与计算调用链.md)
+5. [CANN 安装形态与环境隔离](./05-CANN安装形态版本证据与环境隔离.md)
+6. [PyTorch 后端选择与 torch-npu 适配](../../ai-systems/runtime/01-PyTorch后端选择CUDA与torch-npu适配.md)
+7. [昇腾容器运行时设备注入与权限边界](../driver-runtime/08-昇腾容器运行时设备注入与权限边界.md)
+8. [torch-npu 与 CANN 异步执行链路](../../ai-systems/inference/vllm-ascend/07-torch-npu与CANN异步执行链路.md)
+9. [CUDA、CANN、PyTorch 与推理框架版本兼容](../../ai-systems/inference/startup-troubleshooting/06-CUDA-CANN-PyTorch与推理框架版本兼容.md)
 
 完成这一阶段后，应能区分：
 

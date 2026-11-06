@@ -33,6 +33,7 @@
 /examples/gin/**/.env
 /examples/python/**/.venv/
 /examples/python/**/__pycache__/
+/examples/accelerator-runtime/__pycache__/
 /examples/python/**/.pytest_cache/
 /examples/python/**/dist/
 /examples/python/**/build/

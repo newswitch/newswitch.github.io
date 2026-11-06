@@ -41,3 +41,18 @@ tags: [GPU, NPU, HBM, NUMA, PCIe, NVLink, CUDA, CANN]
 - 能解释 NPU、Ascend 910B、CANN、torch-npu、HCCL 和 vLLM-Ascend 的层次关系。
 - 能将 NVIDIA GPU/CUDA 与昇腾 NPU/CANN 映射到同一套硬件、驱动、运行时、框架和服务层次。
 - 能使用只读观察、主动诊断、程序调试和通信基准工具，把 GPU 故障定位到设备、驱动、容器、CUDA 程序、互联或网络层。
+
+## 3. 计算软件与容器的关联阅读
+
+| 顺序 | 主题 | 主要问题 |
+| --- | --- | --- |
+| 1 | [CUDA 软件栈与计算调用链](./cuda/02-CUDA软件栈运行库与计算调用链.md) | Driver、Runtime、计算库和 Toolkit 分别负责什么 |
+| 2 | [CANN 软件栈与计算调用链](./ascend-npu/04-CANN软件栈组件与计算调用链.md) | AscendCL、ACLNN、GE、算子与通信如何配合 |
+| 3 | [CANN 安装形态与环境隔离](./ascend-npu/05-CANN安装形态版本证据与环境隔离.md) | 软件安装在哪里，实际进程又加载了什么 |
+| 4 | [NVIDIA 驱动与容器运行时](./driver-runtime/01-NVIDIA驱动CUDA与容器运行时的关系.md) | Host 依赖怎样进入容器与 Kubernetes |
+| 5 | [昇腾容器注入与权限](./driver-runtime/08-昇腾容器运行时设备注入与权限边界.md) | 分配、设备挂载、可见性与计算各是哪一步 |
+| 6 | [裸金属容器与虚拟机边界](./driver-runtime/09-GPU-NPU裸金属容器与虚拟机边界.md) | 内核、驱动、设备、RAM 与共享内存如何隔离 |
+| 7 | [PyTorch 后端选择与适配](../ai-systems/runtime/01-PyTorch后端选择CUDA与torch-npu适配.md) | 相同 Tensor 语义为什么需要不同硬件实现 |
+| 8 | [CUDA 兼容与装载](./driver-runtime/03-CUDA兼容性动态链接与PTX装载机制.md) | 版本、库文件、设备代码与实际执行怎样关联 |
+
+这些主题分别归属计算软件栈、容器运行时和 AI 运行环境。阅读时先辨认对象与职责，再用文件、进程、设备和有限计算验证建立证据，不把“能看到设备”当作所有模型都可运行。
