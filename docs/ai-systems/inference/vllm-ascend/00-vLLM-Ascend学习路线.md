@@ -19,7 +19,7 @@ vLLM-Ascend 不是一套与 vLLM 毫无关系的新引擎，也不是把 `cuda` 
 | 1 | [vLLM-Ascend 整体架构与请求生命周期](./01-vLLM-Ascend整体架构与请求生命周期.md) | 一个请求在哪一层与 CUDA 路径分叉，NPUPlatform、NPUWorker 和 NPUModelRunner 分别做什么 |
 | 2 | [vLLM-Ascend 生产参数参考](./02-vLLM-Ascend生产参数参考.md) | upstream 参数与 Ascend 专属参数如何组合，哪些参数影响 HBM、TTFT、TPOT、Graph 和 HCCL |
 | 3 | [版本兼容矩阵与镜像标签选择](./04-vLLM-Ascend版本兼容矩阵与镜像标签选择.md) | `v0.22.1rc1-a3`每一段表示什么，A2/A3怎样选镜像并固定完整兼容行 |
-| 4 | [Atlas 800I A2 与 Ascend 910B 架构](./05-Atlas-800I-A2与Ascend-910B软硬件架构.md) | 服务器、NPU、HBM、HCCS、PCIe、NUMA和网卡怎样组成推理节点 |
+| 4 | [Atlas 800I A2 与 Ascend 910B 架构](../../../gpu/servers/huawei-atlas/01-Atlas-800I-A2与Ascend-910B软硬件架构.md) | 服务器、NPU、HBM、HCCS、PCIe、NUMA和网卡怎样组成推理节点 |
 | 5 | [Ascend Device Plugin 与 Pod 设备注入](./06-Ascend-Device-Plugin资源发现与Pod设备注入.md) | NPU怎样成为Kubernetes资源，逻辑设备、物理设备与TP Rank怎样映射 |
 | 6 | [torch-npu 与 CANN 异步执行](./07-torch-npu与CANN异步执行链路.md) | 为什么异步错误堆栈会滞后，怎样使用同步实验寻找首个错误 |
 | 7 | [ACLGraph 与 npugraph_ex 源码执行路径](./08-ACLGraph与npugraph_ex源码执行路径.md) | FX Pass、npugraph_ex和ACLGraph分别处在哪一阶段，怎样验证Replay与回退 |

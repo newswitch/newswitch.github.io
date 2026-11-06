@@ -24,7 +24,7 @@ Atlas服务器
 ## 1. 基础认知
 
 1. [GPU、CUDA 与 NPU、CANN 是什么](../fundamentals/02-GPU-CUDA与NPU-CANN是什么.md)
-2. [Atlas 800I A2 与 Ascend 910B 软硬件架构](../../ai-systems/inference/vllm-ascend/05-Atlas-800I-A2与Ascend-910B软硬件架构.md)
+2. [Atlas 800I A2 与 Ascend 910B 软硬件架构](../servers/huawei-atlas/01-Atlas-800I-A2与Ascend-910B软硬件架构.md)
 3. [Ascend 910B AI Core、Cube、Vector、UB 与 HBM 执行路径](./03-Ascend-910B-AI-Core与片上存储执行路径.md)
 4. [torch-npu 与 CANN 异步执行链路](../../ai-systems/inference/vllm-ascend/07-torch-npu与CANN异步执行链路.md)
 5. [CUDA、CANN、PyTorch 与推理框架版本兼容](../../ai-systems/inference/startup-troubleshooting/06-CUDA-CANN-PyTorch与推理框架版本兼容.md)

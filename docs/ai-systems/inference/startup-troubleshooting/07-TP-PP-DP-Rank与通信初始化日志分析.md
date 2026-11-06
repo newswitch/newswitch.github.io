@@ -231,7 +231,7 @@ nvidia-smi topo -p2p r
 放置可能导致启动正常但吞吐下降、尾延迟升高。
 
 昇腾环境需要结合服务器硬件拓扑、NPU 逻辑 ID、HCCS 和 RoCE 组网验证。可继续阅读
-[Atlas 800I A2 与 Ascend 910B 软硬件架构](../vllm-ascend/05-Atlas-800I-A2与Ascend-910B软硬件架构.md)。
+[Atlas 800I A2 与 Ascend 910B 软硬件架构](../../../gpu/servers/huawei-atlas/01-Atlas-800I-A2与Ascend-910B软硬件架构.md)。
 
 ## 13. 分层最小实验
 

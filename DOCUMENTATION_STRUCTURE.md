@@ -50,12 +50,18 @@ hardware/
 
 gpu/
 ├── fundamentals/        # GPU 架构与计算基础
+├── servers/             # AI 整机产品体系、Host、互联、网络与存储
+│   ├── nvidia-dgx/       # DGX H100/H200、B200/B300
+│   └── huawei-atlas/     # Atlas 800I A2/A3
 ├── memory/              # 显存与 HBM
 ├── pcie-numa/           # PCIe、NUMA 与 CPU-GPU 数据搬运
 ├── nvlink-nvswitch/     # NVLink 与 NVSwitch
 ├── cuda/                # CUDA 执行模型
 ├── driver-runtime/      # 驱动、CUDA 与容器运行时
+├── bare-metal-fleet/     # 裸金属、BMC、固件与节点生命周期
+├── compiler-kernels/    # AI 编译器与 GPU Kernel
 ├── performance/         # GPU 性能分析与优化
+├── ascend-npu/           # 昇腾 NPU、CANN 与设备执行模型
 ├── cluster/             # 设备管理、调度、共享、DRA、治理与排障
 ├── commands/            # GPU 与加速器命令库
 └── labs/                # 动手实验
@@ -150,6 +156,8 @@ projects/
 ```
 
 ## 产品级专题目录
+
+`gpu/servers/` 保存 AI 整机产品体系，按 `nvidia-dgx/` 与 `huawei-atlas/` 分类；Atlas A2 主文从推理框架模块迁入此处，vLLM-Ascend、昇腾学习路线和硬件分类通过相对链接引用。通用 PCIe/NUMA 主文仍归属 `gpu/pcie-numa/`，保留原有拓扑图与命令示例。`node scripts/verify-ai-server-articles.mjs` 校验六篇主文的元数据、24 个练习答案、目录顺序、迁移引用和规格范围，不以行数作为文章质量标准。
 
 软件开发按具体语言与框架建立独立入口。`development/java/` 保存 Java、标准库、并发、JVM、构建和排障；`development/spring/` 保存容器、AOP、事务、Web 和源码调用链；`development/spring-boot/` 保存启动配置、服务、数据接入、安全及生产运行。每个系列保留学习路线，专题文件夹随正文发布逐步建立，网站不维护另一套虚拟目录。
 

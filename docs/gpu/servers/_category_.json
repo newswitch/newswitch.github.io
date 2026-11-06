@@ -1,0 +1,9 @@
+{
+  "label": "AI 服务器整机",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "gpu/servers/AI服务器产品体系与整机学习路线"
+  }
+}

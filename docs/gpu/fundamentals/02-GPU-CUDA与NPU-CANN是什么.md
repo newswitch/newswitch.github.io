@@ -512,4 +512,4 @@ Kubernetes Node
 - [CUDA Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html)
 - [CANN 社区版文档入口](https://www.hiascend.com/document/detail/en/CANNCommunityEdition/850/index/index.html)
 - [Ascend Extension for PyTorch 安装架构](https://www.hiascend.com/document/detail/en/Pytorch/2600/configandinstg/instg/docs/en/installation_guide/installation_description.md)
-- [Atlas 800I A2 与 Ascend 910B 软硬件架构](../../ai-systems/inference/vllm-ascend/05-Atlas-800I-A2与Ascend-910B软硬件架构.md)
+- [Atlas 800I A2 与 Ascend 910B 软硬件架构](../servers/huawei-atlas/01-Atlas-800I-A2与Ascend-910B软硬件架构.md)

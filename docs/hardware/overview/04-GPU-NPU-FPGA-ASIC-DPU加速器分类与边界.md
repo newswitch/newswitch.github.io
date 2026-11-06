@@ -222,4 +222,4 @@ GPU 常见 CUDA/ROCm 等栈，NPU 可能使用 CANN 或其他厂商 Runtime，FP
 
 - [GPU 与加速计算学习路线](../../gpu/00-GPU与加速计算学习路线.md)
 - [NIC、HCA、SmartNIC、DPU 与 IPU](../network-devices/04-NIC-HCA-CNA-SmartNIC-DPU-IPU与OCP网卡.md)
-- [昇腾 910B 软硬件架构](../../ai-systems/inference/vllm-ascend/05-Atlas-800I-A2与Ascend-910B软硬件架构.md)
+- [昇腾 910B 软硬件架构](../../gpu/servers/huawei-atlas/01-Atlas-800I-A2与Ascend-910B软硬件架构.md)
