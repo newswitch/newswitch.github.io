@@ -127,6 +127,7 @@ data-systems/
 │   └── rocketmq/        # RocketMQ
 ├── search/              # 搜索引擎
 │   └── elasticsearch/   # Elasticsearch
+│       └── 05-api-reference/ # 请求、读写、查询、分页聚合、索引与诊断 API
 ├── vector-databases/    # 向量数据库
 │   └── milvus/          # Milvus
 ├── analytics/           # OLAP 与分析数据库
@@ -166,6 +167,8 @@ projects/
 计算软件与运行环境分为三处：`gpu/cuda/` 解释 CUDA 执行及软件栈；`gpu/ascend-npu/` 解释 CANN 组件与安装环境；`gpu/driver-runtime/` 解释驱动、兼容、容器设备注入及隔离。`ai-systems/runtime/01-PyTorch后端选择CUDA与torch-npu适配.md` 归属 AI 框架运行环境，引用双方软件栈而不复制正文。对应八篇主文合计 32 个练习答案；`examples/accelerator-runtime/backend_probe.py` 是显式选择 CPU/CUDA/NPU 的有限功能验证，不作为性能基准。`node scripts/verify-accelerator-runtime-articles.mjs --python python` 校验元数据、答案、YAML、示例算术、Python 语法和七项控制流单元测试，`--bash` 可指定 Bash 进行命令语法检查。基础检查与模拟单元测试不能宣称已完成目标加速器硬件验收。
 
 `storage/oceanstor/` 直接承载 OceanStor AI 存储入口、A800、A600 和协议/客户端四篇主文；通用 I/O 模型与 NVIDIA GDS 保留在 `storage/ai-workloads/`。六篇通过相对链接串联，合计 30 个练习答案，厂商参考规格与教学预算分别标注。`node scripts/verify-ai-storage-articles.mjs` 校验元数据、答案、目录、容量/带宽/时延算术与 GDS 配置范围，`--bash` 可额外检查命令语法；验证不会挂载存储、运行 fio/gdsio 或修改驱动。
+
+`data-systems/search/elasticsearch/05-api-reference/` 保存九篇常用 API 操作参考，使用六条基准文档，变更实验使用独立索引。原 Query DSL 文章保留原路径，与操作参考相互链接。`node scripts/verify-elasticsearch-api-articles.mjs` 检查请求 JSON/NDJSON、36 个新练习答案和原文六个答案，并校验样例筛选/排序/统计；`--bash` 仅增加 curl 模板的语法检查，不连接 Elasticsearch，也不把本地算术验证当作分布式集成测试。
 
 `gpu/cluster/pooling/` 保存资源池入口、设备模型与昇腾切分原理；NVIDIA 共享对比继续归 `sharing/`，拓扑放置继续归 `scheduling/`，GB200/GB300 NVL72 归整机目录。六篇通过相对链接关联，含 24 个练习答案、8 张 Mermaid 图。`node scripts/verify-accelerator-pooling-articles.mjs` 校验结构、配置片段、教学容量与集合可行性；可选 `--bash` 仅做语法检查，不执行设备切分、驱动修改或集群命令。
 

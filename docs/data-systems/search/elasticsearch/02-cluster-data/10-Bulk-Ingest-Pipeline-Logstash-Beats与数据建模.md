@@ -8,6 +8,8 @@ tags: [Elasticsearch, Bulk, Ingest Pipeline, Logstash]
 
 # Bulk、Ingest Pipeline、Logstash、Beats 与数据建模
 
+Bulk 的 action 格式、逐项响应、重试与并发控制见 [文档与 Bulk 操作参考](../05-api-reference/02-文档增删改查Bulk与并发控制.md)。摄取架构与文档 API 分开学习，避免把 HTTP 200 当成整个批次全部成功。
+
 ```text
 Agent/Beats → optional Logstash/Kafka
 → Bulk API → coordinating/ingest node

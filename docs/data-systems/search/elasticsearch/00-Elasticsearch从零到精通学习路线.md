@@ -12,6 +12,8 @@ Elasticsearch 不是“会写 Query DSL”就算掌握。真正的难点在 Luce
 
 本路线以 **Elasticsearch 9.x** 为主线，实验固定当前受支持的稳定补丁版本；Elastic Stack 各组件保持官方兼容。自建、ECK、Elastic Cloud 的责任边界分开描述。
 
+常用操作可从 [命令与 API 操作参考](./05-api-reference/00-Elasticsearch命令与API操作导读.md)进入：使用六条固定文档练习请求认证、增删改查、条件查询、分页、聚合、索引迁移与诊断，再结合本路线解释底层行为。涉及批量变更的实验使用独立副本，不改变查询基准。
+
 ## 1. 一次写入和搜索
 
 ```text

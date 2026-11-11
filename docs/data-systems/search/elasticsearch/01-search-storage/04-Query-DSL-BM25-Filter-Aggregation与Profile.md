@@ -8,6 +8,8 @@ tags: [Elasticsearch, Query DSL, BM25, Aggregation, Profile]
 
 # Query DSL、BM25、Filter、Aggregation 与 Profile
 
+完整请求与返回结果可配合 [精确、全文与组合查询](../05-api-reference/03-精确全文Bool与Nested查询.md)、[排序分页与 PIT](../05-api-reference/04-排序字段高亮分页与PIT.md)、[常用聚合](../05-api-reference/05-分组指标时间桶与Composite聚合.md)阅读；三篇共用固定 Mapping 和六条基准文档。
+
 ## 1. Bool 语义 {/* #bool-语义 */}
 
 ```text
@@ -65,15 +67,17 @@ Bucket 分组，Metric 计算，Pipeline 处理聚合结果。Terms 分布式合
 
 ## 5. Profile {/* #profile */}
 
-`profile: true` 展示 shard 内 Query/Aggregation 组件耗时，不包含网络、协调队列、Fetch 等全部端到端时间，且有开销。配合 slow log、task、客户端 trace 和节点指标。
+`profile: true` 展示 shard 内 Query、Collector、Aggregation 等组件耗时，当前版本也可包含 Fetch 的分析部分。它仍不是完整端到端 Trace，不能覆盖全部网络、队列与协调开销；父子组件和并行分片的时间也不能直接相加。配合 slow log、task、客户端 trace 和节点指标，具体请求见 [诊断 API](../05-api-reference/08-集群分片节点与慢查询诊断API.md)。
 
 ## 6. 可执行实验：把“结果不对”和“查询太慢”分开 {/* #可执行实验把结果不对和查询太慢分开 */}
 
+先按 [实验数据篇](../05-api-reference/01-HTTP请求认证响应与实验数据.md)建立索引。以下组合请求在六条基准数据中命中 p1/p5；耗时和评分以实际执行为准。
+
 ```http
-GET products/_search
+GET es_api_lab_products_v1/_search
 {
   "profile": true,
-  "query": {"bool": {"must": [{"match": {"title": "gpu server"}}],"filter": [{"term": {"status": "online"}}]}},
+  "query": {"bool": {"must": [{"match": {"name": "gpu server"}}],"filter": [{"term": {"status": "active"}}]}},
   "aggs": {"by_vendor": {"terms": {"field": "vendor", "size": 10}}},
   "size": 20,
   "track_total_hits": false
@@ -82,7 +86,7 @@ GET products/_search
 
 先在固定索引快照和固定查询集上记录命中、排序、P50/P95/P99，再只改变一个变量。`filter` 不参与评分并可能复用缓存；`must` 参与评分。高基数字段的大 `terms` 聚合、深分页和脚本最容易扩大 CPU/heap 消耗。
 
-`profile` 会增加开销，只用于采样诊断。排障时同时保存 `_search` 请求、响应 `took`、客户端端到端耗时、慢日志和 `GET _nodes/hot_threads`；`took` 很小但用户很慢，问题通常在排队、网络、代理或客户端解析，而不是 Query DSL 本身。
+`profile` 会增加开销，只用于采样诊断。排障时同时保存 `_search` 请求、响应 `took`、客户端端到端耗时、慢日志和 `GET _nodes/hot_threads`；`took` 很小但用户很慢时，继续检查客户端排队、连接、网络、代理和解析，不能凭一个计时值直接确定根因。
 
 ## 7. 验收题 {/* #验收题 */}
 
@@ -92,6 +96,15 @@ GET products/_search
 - Profile 很快但请求慢还要查什么？
 - tf 从 1 增到 3 为什么不使 BM25 得分变成三倍？
 - 为什么分片 Top-K 文档可以精确合并，Top-K terms 却可能漏掉全局第一名？
+
+### 7.1 参考答案
+
+1. term 直接查询已索引 term，不执行全文分析；match 会按字段分析器处理输入。需要结合 text/keyword Mapping 判断语义。
+2. 状态等精确条件只需判断是否匹配，不需要相关性计分；Filter 省去计分工作，但不保证每次缓存或必然比所有 Query 快。
+3. terms 可能先截断各分片候选桶，再在协调端合并；全局高频桶可能在每片都未进入候选，返回桶的计数也可能不完整。
+4. 继续查客户端排队、协调、线程池、网络、Fetch/返回体积与客户端处理，并关联 took、日志和节点指标，不能只看某个执行器。
+5. BM25 的 tf 因子会饱和，不是线性计分；本篇默认参数下，tf 从 1 到 3 的因子约从 0.455 到 0.714，而非三倍。
+6. 固定一致排序下，文档若未进本片 Top-K，已有同片 K 条排在它前面；terms 的全局值却要跨片累加，一个桶可能每片都非第一但合计最高。
 
 ## 8. 参考资料 {/* #参考资料 */}
 
