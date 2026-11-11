@@ -1,1 +1,9 @@
-{"label":"Quartz","position":1,"collapsed":true,"link":null}
+{
+  "label": "Quartz",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/jobs/quartz/调度模型触发领取持久化与集群语义"
+  }
+}

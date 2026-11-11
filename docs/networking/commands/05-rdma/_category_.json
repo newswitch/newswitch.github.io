@@ -1,0 +1,9 @@
+{
+  "label": "05. RDMA 与 InfiniBand",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "/networking/commands/rdma"
+  }
+}

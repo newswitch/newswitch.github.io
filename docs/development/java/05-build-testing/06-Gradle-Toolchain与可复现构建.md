@@ -14,7 +14,7 @@ Maven 主要围绕生命周期绑定插件，Gradle 主要组织带依赖关系�
 
 ## 1. 同一份源码，两套构建模型
 
-配套 [build-lab](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/third-batch/build-lab)同时包含 pom.xml 和 Gradle 配置，使用同一 src/main 与 src/test。这样能比较构建机制，不用再维护一份业务实现。
+配套 [build-lab](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/build-testing-lab/build-lab)同时包含 pom.xml 和 Gradle 配置，使用同一 src/main 与 src/test。这样能比较构建机制，不用再维护一份业务实现。
 
 ```text
 Gradle 配置阶段 → 注册与配置任务

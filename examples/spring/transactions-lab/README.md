@@ -30,8 +30,8 @@ Linux/macOS 使用 `target/classes:target/dependency/*`。其他主类：
 ## 仓库校验
 
 ```powershell
-node scripts/verify-spring-transactions.mjs --check-sources
-node scripts/verify-spring-transactions.mjs --java-home 'C:/Java/jdk-25' --maven-home 'C:/Tools/apache-maven-3.9.14'
+node scripts/checks/verify-spring-transactions.mjs --check-sources
+node scripts/checks/verify-spring-transactions.mjs --java-home 'C:/Java/jdk-25' --maven-home 'C:/Tools/apache-maven-3.9.14'
 ```
 
 可选 `--maven-repo` 使用可信已有缓存。脚本检查十个文章源码文件与本工程一致，在忽略目录中运行测试，并为每个主类运行三次独立 JVM，比对文章结果及依赖版本。成功后删除本次临时工程，失败时打印并保留路径供诊断，依赖缓存不在清理范围。

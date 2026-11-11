@@ -1,1 +1,9 @@
-{"label":"Buildpacks 与镜像分层","position":2,"collapsed":true,"link":null}
+{
+  "label": "Buildpacks 与镜像分层",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/containers/buildpacks/JAR到OCI镜像构建分层与运行验证"
+  }
+}

@@ -1,1 +1,9 @@
-{"label":"Docker Compose Support","position":1,"collapsed":true,"link":null}
+{
+  "label": "Docker Compose Support",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/containers/docker-compose/开发服务连接生命周期与环境边界"
+  }
+}

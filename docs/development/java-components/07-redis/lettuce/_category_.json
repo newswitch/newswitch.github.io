@@ -1,1 +1,9 @@
-{"label":"Lettuce","position":1,"collapsed":true,"link":null}
+{
+  "label": "Lettuce",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/redis/lettuce/命令执行线程模型连接复用与故障语义"
+  }
+}

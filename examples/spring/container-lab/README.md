@@ -32,8 +32,8 @@ Linux/macOS 使用 `target/classes:target/dependency/*`。其他主类为：
 在仓库根目录执行：
 
 ```powershell
-node scripts/verify-spring-container.mjs --check-sources
-node scripts/verify-spring-container.mjs --java-home 'C:/Java/jdk-25' --maven-home 'C:/Tools/apache-maven-3.9.14'
+node scripts/checks/verify-spring-container.mjs --check-sources
+node scripts/checks/verify-spring-container.mjs --java-home 'C:/Java/jdk-25' --maven-home 'C:/Tools/apache-maven-3.9.14'
 ```
 
 可选 `--maven-repo` 指定已有可信 Maven 缓存。脚本复制源码到忽略目录 `.java-article-checks/spring-container-check-*`，运行 JUnit 边界测试，再为每个示例启动三次独立 JVM，比对确定性业务输出。没有修改系统 Java 或下载未固定版本的 Spring 模块。

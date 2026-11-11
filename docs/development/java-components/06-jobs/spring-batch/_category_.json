@@ -1,1 +1,9 @@
-{"label":"Spring Batch","position":2,"collapsed":true,"link":null}
+{
+  "label": "Spring Batch",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/jobs/spring-batch/作业身份分块事务检查点与恢复原理"
+  }
+}

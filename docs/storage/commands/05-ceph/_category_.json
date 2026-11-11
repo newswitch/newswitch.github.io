@@ -1,0 +1,9 @@
+{
+  "label": "05. Ceph、RADOS 与 RBD",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "/storage/commands/ceph"
+  }
+}

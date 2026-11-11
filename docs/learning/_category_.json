@@ -1,0 +1,9 @@
+{
+  "label": "学习导航",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "learning/AI-Infra技术模块学习地图"
+  }
+}

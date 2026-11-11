@@ -1,5 +1,6 @@
 {
   "label": "Kubernetes 扩展开发",
   "position": 8,
-  "collapsed": true
+  "collapsed": true,
+  "link": {"type":"doc","id":"cloud-native/kubernetes/extensions/本章导读"}
 }

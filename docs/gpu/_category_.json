@@ -1,6 +1,6 @@
 {
-  "label": "计算与加速器",
-  "position": 2,
+  "label": "GPU、NPU 与加速计算",
+  "position": 4,
   "collapsed": true,
   "link": {
     "type": "doc",

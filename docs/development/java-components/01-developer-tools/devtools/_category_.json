@@ -1,1 +1,9 @@
-{"label": "Spring Boot DevTools", "position": 3, "collapsed": true, "link": null}
+{
+  "label": "Spring Boot DevTools",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/developer-tools/devtools/DevTools重启类加载器与开发运行边界"
+  }
+}

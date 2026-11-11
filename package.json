@@ -12,15 +12,20 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "format:docs": "node scripts/normalize-doc-format.mjs --write",
-    "check:format": "node scripts/normalize-doc-format.mjs --check",
-    "validate:docs": "node scripts/validate-doc-links.mjs"
+    "format:docs": "node scripts/checks/normalize-doc-format.mjs --write",
+    "check:format": "node scripts/checks/normalize-doc-format.mjs --check",
+    "validate:docs": "node scripts/checks/validate-doc-links.mjs",
+    "check:structure": "node scripts/checks/validate-structure.mjs",
+    "check:site": "node scripts/checks/verify-site-structure.mjs",
+    "check": "npm run check:format && npm run validate:docs && npm run check:structure",
+    "sync:navigation": "node scripts/generators/sync-domain-metadata.mjs --write"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.0",
     "@docusaurus/faster": "3.10.0",
     "@docusaurus/preset-classic": "3.10.0",
     "@docusaurus/theme-mermaid": "^3.10.0",
+    "@easyops-cn/docusaurus-search-local": "0.55.3",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.3.0",

@@ -10,7 +10,7 @@ tags: [Java, Maven, 多模块, JAR, Classpath]
 
 拆成多个 Maven 模块，是为了建立可独立编译和依赖的制品边界，不是把包名改成更多目录。应用 JAR 依赖另一个模块时，构建成功还不够，运行分发必须包含那个模块的产物。
 
-本篇使用 JDK 25、Maven 3.9.14，完整工程位于 [multi-module](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/third-batch/multi-module)。
+本篇使用 JDK 25、Maven 3.9.14，完整工程位于 [multi-module](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/build-testing-lab/multi-module)。
 
 ## 1. 四种关系不要混淆
 

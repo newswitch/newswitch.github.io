@@ -20,7 +20,7 @@ deepening-lab/
 java -version
 mvn -version
 mvn -B -ntp -f examples/spring-boot/deepening-lab/pom.xml clean verify
-node scripts/verify-boot-deepening.mjs
+node scripts/checks/verify-boot-deepening.mjs
 ```
 
 不依赖系统数据库、Redis、Broker 或 Keycloak，默认不运行 `BrokersIT`。测试 HTTP 只监听本机临时端口，结束关闭接收器和应用；内存数据库可丢弃。各 Maven 测试 JVM 最大堆 512MiB，模块顺序运行。
@@ -101,7 +101,7 @@ OTLP HTTP protobuf 导向 14318/v1/traces，Collector 是 traces-only 的 debug 
 从仓库根目录自动运行四档对照：
 
 ```bash
-node scripts/verify-boot-deepening.mjs --run-http --java-home /你的/JDK25目录
+node scripts/checks/verify-boot-deepening.mjs --run-http --java-home /你的/JDK25目录
 ```
 
 脚本只访问 loopback，依次启动并关闭自有 JVM，每组 80 请求，预热后比较 2 连接串行、2/4 连接并发和准入 2。测量文件保存到忽略目录 `.java-article-checks/deepening-load`；示例原始统计见 `telemetry/sample-results.json`。

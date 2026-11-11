@@ -101,7 +101,7 @@ docker compose -f compose.yaml down
 仓库根目录运行：
 
 ```powershell
-node scripts/verify-go-gin-labs.mjs --go D:/Go/bin/go.exe
+node scripts/checks/verify-go-gin-labs.mjs --go D:/Go/bin/go.exe
 ```
 
 示例路径需指向 Go 1.27.3；如果系统路径仍是较旧 Go，传入独立工具链路径，不需要替换系统安装。

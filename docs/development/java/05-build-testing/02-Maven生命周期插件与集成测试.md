@@ -10,7 +10,7 @@ tags: [Java, Maven, 生命周期, Failsafe, 集成测试]
 
 mvn package 不是一个“编译、测试、发布”的万能动作。Maven 根据生命周期阶段和插件绑定生成执行计划；只有实际绑定且未跳过的检查，才会参与构建结果。
 
-本篇使用 JDK 25、Maven 3.9.14、JUnit 6.0.3。配套 [build-lab 工程](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/third-batch/build-lab)包含完整源码；后续依赖、JUnit 与 Gradle 专题继续使用同一组业务和测试。
+本篇使用 JDK 25、Maven 3.9.14、JUnit 6.0.3。配套 [build-lab 工程](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/build-testing-lab/build-lab)包含完整源码；后续依赖、JUnit 与 Gradle 专题继续使用同一组业务和测试。
 
 ## 1. phase 与 goal
 

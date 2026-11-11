@@ -37,4 +37,4 @@ alice 属于 alpha，bob 属于 beta。实验密码分别为 lab-only-alice 和 
 
 未包含 Redis、Kafka、RabbitMQ、Nacos、JWT IdP、Relay、OTel Collector、Testcontainers、systemd、Kubernetes 或 Native Image。Outbox 实验只验证发送意图和业务同事务，不声称端到端 exactly once。
 
-仓库根目录可用 `scripts/verify-boot-service.mjs --java-home ... --maven-home ... --maven-repo ...` 将工程复制到独立临时目录验证，成功后只清理该临时目录。
+仓库根目录可用 `scripts/checks/verify-boot-service.mjs --java-home ... --maven-home ... --maven-repo ...` 将工程复制到独立临时目录验证，成功后只清理该临时目录。

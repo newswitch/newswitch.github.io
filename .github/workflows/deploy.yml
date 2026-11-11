@@ -32,8 +32,12 @@ jobs:
         uses: actions/configure-pages@v6
       - name: Install dependencies
         run: npm ci
+      - name: Validate documentation and navigation
+        run: npm run check
       - name: Build
         run: npm run build
+      - name: Verify generated routes and navigation
+        run: npm run check:site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:

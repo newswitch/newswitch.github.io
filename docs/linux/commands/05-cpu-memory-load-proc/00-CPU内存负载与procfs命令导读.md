@@ -99,7 +99,7 @@ socket → core → hardware thread/logical CPU
 | 内存归因 | `pmap`、`slabtop` | 进程地址映射与内核 slab 缓存 |
 | 限制与参数 | `prlimit`、`ulimit`、`sysctl` | 查询/设置 RLIMIT 与运行时内核参数 |
 
-`iostat` 已在[存储命令参考库](../../../storage/commands/09-iostat命令详解.md)；`numastat/taskset/chrt` 已在[内核、硬件拓扑与中断命令模块](../08-kernel-hardware-topology/00-内核硬件拓扑与中断命令导读.md)完整讲解，`perf/strace/eBPF` 留给深度性能分析模块。
+`iostat` 已在[存储命令参考库](../../../storage/commands/02-performance-health/09-iostat命令详解.md)；`numastat/taskset/chrt` 已在[内核、硬件拓扑与中断命令模块](../08-kernel-hardware-topology/00-内核硬件拓扑与中断命令导读.md)完整讲解，`perf/strace/eBPF` 留给深度性能分析模块。
 
 ## 7. 容器里的观察边界
 

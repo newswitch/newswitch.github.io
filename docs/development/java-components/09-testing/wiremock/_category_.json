@@ -1,1 +1,9 @@
-{"label":"WireMock","position":2,"collapsed":true,"link":null}
+{
+  "label": "WireMock",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/testing/wiremock/HTTP模拟匹配响应状态与验证边界"
+  }
+}

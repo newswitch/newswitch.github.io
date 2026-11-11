@@ -1,0 +1,9 @@
+{
+  "label": "06. S3 与对象存储",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "/storage/commands/object-storage"
+  }
+}

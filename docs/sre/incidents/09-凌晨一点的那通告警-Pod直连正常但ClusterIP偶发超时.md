@@ -923,8 +923,8 @@ node_nf_conntrack_entries_limit
 
 - [Kubernetes Service原理](../../networking/kubernetes/service-routing/02-Service.md)
 - [Kubernetes网络架构概述](../../networking/kubernetes/service-routing/01-概述.md)
-- [conntrack命令详解](../../networking/commands/19-conntrack命令详解.md)
-- [iptables命令详解](../../networking/commands/18-iptables命令详解.md)
+- [conntrack命令详解](../../networking/commands/04-firewall-conntrack/19-conntrack命令详解.md)
+- [iptables命令详解](../../networking/commands/04-firewall-conntrack/18-iptables命令详解.md)
 - [Calico网络：从Pod veth到BGP、VXLAN与eBPF数据路径](../../networking/kubernetes/cni/03-Calico.md)
 - [网络故障排查方法与工具](../../networking/troubleshooting/10-网络故障排查方法与工具.md)
 

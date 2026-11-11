@@ -1,0 +1,9 @@
+{
+  "label": "03. LVM 与 RAID",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "/storage/commands/lvm-raid"
+  }
+}

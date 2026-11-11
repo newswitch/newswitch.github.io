@@ -1,1 +1,9 @@
-{"label": "Lombok", "position": 1, "collapsed": true, "link": null}
+{
+  "label": "Lombok",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/developer-tools/lombok/Lombok成员生成构建配置与使用边界"
+  }
+}

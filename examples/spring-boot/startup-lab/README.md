@@ -38,8 +38,8 @@ FirstApplication 不带 `lab.once` 时保持服务运行，供手工访问；检
 在仓库根目录替换实际工具路径：
 
 ```bash
-node scripts/verify-boot-startup.mjs --check-sources
-node scripts/verify-boot-startup.mjs --java-home /path/to/jdk-25 --maven-home /path/to/apache-maven-3.9.14
+node scripts/checks/verify-boot-startup.mjs --check-sources
+node scripts/checks/verify-boot-startup.mjs --java-home /path/to/jdk-25 --maven-home /path/to/apache-maven-3.9.14
 ```
 
 可用 `--maven-repo /path/to/cache` 指定本地仓库缓存。脚本在独立忽略目录构建，检查文章与 18 个源码/资源文件、36 项测试、18 次主类运行，并额外启动一次可执行 JAR 发起真实 HTTP 请求。验证失败保留临时工程，成功清理本次工作目录。

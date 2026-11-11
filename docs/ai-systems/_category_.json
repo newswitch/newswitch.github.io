@@ -1,0 +1,9 @@
+{
+  "label": "AI 训练、推理与 MLOps",
+  "position": 8,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "ai-systems/大模型系统学习地图"
+  }
+}

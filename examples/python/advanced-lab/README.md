@@ -27,8 +27,8 @@ IO 示例只在自己的临时目录中操作，不接触真实业务数据。
 仓库级验证：
 
 ```bash
-node scripts/verify-python-framework-series.mjs
-node scripts/verify-python-framework-series.mjs --python /absolute/path/to/python
+node scripts/checks/verify-python-framework-series.mjs
+node scripts/checks/verify-python-framework-series.mjs --python /absolute/path/to/python
 ```
 
 第二条要求已经安装固定依赖的 CPython 3.14 环境。

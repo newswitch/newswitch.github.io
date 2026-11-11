@@ -175,21 +175,21 @@ categories: 云原生
 
 | 篇 | 说明 |
 | --- | --- |
-| [本章导读](./extensions/platform/00-本章导读.md) | 章节引言与目录 |
-| [概述](./extensions/platform/01-api-operators/01-概述.md) | 扩展总览 |
-| [API 扩展机制](./extensions/platform/01-api-operators/02-API扩展机制.md) | API Extension |
-| [APIService](./extensions/platform/01-api-operators/03-APIService.md) | API 聚合层 |
-| [CRD](./extensions/platform/01-api-operators/04-CRD.md) | 自定义资源定义 |
-| [控制器与 Operator](./extensions/platform/01-api-operators/05-控制器与Operator模式.md) | Controller / Operator |
-| [Kubebuilder](./extensions/platform/01-api-operators/06-Kubebuilder.md) | 开发脚手架 |
-| [Operator SDK](./extensions/platform/01-api-operators/07-Operator-SDK.md) | Operator 工具链 |
-| [Admission Webhook](./extensions/platform/01-api-operators/08-Admission-Webhook扩展.md) | 准入扩展总览 |
-| [Validating Webhook](./extensions/platform/02-admission/09-Validating-Webhook扩展.md) | 验证 |
-| [Mutating Webhook](./extensions/platform/02-admission/10-Mutating-Webhook扩展.md) | 变更 |
-| [调度架构扩展](./extensions/platform/03-scheduling/11-调度架构扩展.md) | 调度扩展 |
-| [Scheduler Framework](./extensions/platform/03-scheduling/12-Scheduler-Framework插件.md) | 调度插件 |
-| [DRA](./extensions/platform/03-scheduling/13-动态资源分配-DRA.md) | 动态资源分配 |
-| [GPU 与 AI 调度](./extensions/platform/03-scheduling/14-GPU与AI调度.md) | GPU / AI |
+| [本章导读](./extensions/00-本章导读.md) | 章节引言与目录 |
+| [概述](./extensions/01-api-operators/01-概述.md) | 扩展总览 |
+| [API 扩展机制](./extensions/01-api-operators/02-API扩展机制.md) | API Extension |
+| [APIService](./extensions/01-api-operators/03-APIService.md) | API 聚合层 |
+| [CRD](./extensions/01-api-operators/04-CRD.md) | 自定义资源定义 |
+| [控制器与 Operator](./extensions/01-api-operators/05-控制器与Operator模式.md) | Controller / Operator |
+| [Kubebuilder](./extensions/01-api-operators/06-Kubebuilder.md) | 开发脚手架 |
+| [Operator SDK](./extensions/01-api-operators/07-Operator-SDK.md) | Operator 工具链 |
+| [Admission Webhook](./extensions/01-api-operators/08-Admission-Webhook扩展.md) | 准入扩展总览 |
+| [Validating Webhook](./extensions/02-admission/09-Validating-Webhook扩展.md) | 验证 |
+| [Mutating Webhook](./extensions/02-admission/10-Mutating-Webhook扩展.md) | 变更 |
+| [调度架构扩展](./extensions/03-scheduling/11-调度架构扩展.md) | 调度扩展 |
+| [Scheduler Framework](./extensions/03-scheduling/12-Scheduler-Framework插件.md) | 调度插件 |
+| [DRA](./extensions/03-scheduling/13-动态资源分配-DRA.md) | 动态资源分配 |
+| [GPU 与 AI 调度](./extensions/03-scheduling/14-GPU与AI调度.md) | GPU / AI |
 
 ### 2.4 多集群管理 {/* #多集群管理已完成 */}
 

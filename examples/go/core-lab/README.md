@@ -139,4 +139,4 @@ go test -race ./... -count=1 -timeout=60s
 
 需要支持的平台和相应 C 工具链。没有执行时不能把普通测试视为 Race 通过。
 
-仓库根目录的 `scripts/verify-go-gin-labs.mjs --go <实际可执行文件路径>` 联合验证 Go/Gin，生成结果在忽略目录 `.go-article-checks/`。该参数是说明形式，运行时换成真实路径。
+仓库根目录的 `scripts/checks/verify-go-gin-labs.mjs --go <实际可执行文件路径>` 联合验证 Go/Gin，生成结果在忽略目录 `.go-article-checks/`。该参数是说明形式，运行时换成真实路径。

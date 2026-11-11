@@ -158,7 +158,7 @@ JVM 按执行、状态、回收和启动优化阅读：
 | 构建对照 | Gradle 9.1.0；与 Maven 共用业务和测试源码，理解任务图及 Toolchain |
 | 主实验系统 | Windows PowerShell 或 Linux；分别给出必要的路径和命令差异 |
 | 输出 | 确定性结果给出完整输出；路径、耗时、补丁号等明确为示例 |
-| 工程 | `examples/java/first-batch/` 为工具链与入门工程；`second-batch/` 为语言进阶和标准库；`third-batch/` 为构建、测试和并发；`fourth-batch/` 为 JVM 与诊断 |
+| 工程 | `examples/java/language-lab/` 为工具链与入门；`standard-library-lab/` 为标准库；`concurrency-lab/` 为并发；`build-testing-lab/` 为构建与测试；`jvm-diagnostics-lab/` 为 JVM 与诊断 |
 
 JDK 发行版、完整版本、CPU 架构和构建工具要一同记录。`--release 25` 是编译目标与 API 约束，不会帮助旧 JDK 获得 Java 25 编译能力。
 

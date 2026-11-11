@@ -1,6 +1,7 @@
 {
   "label": "08. 综合项目",
   "position": 8,
+  "collapsed": true,
   "link": {
     "type": "generated-index",
     "description": "通过四个端到端项目完成 Ray Core、Ray Train、KubeRay、Ray Serve LLM 和异构资源池的综合实践。"

@@ -44,8 +44,8 @@ No exercise requires altering system Python or installing packages globally.
 From the repository root:
 
 ```bash
-node scripts/verify-python-language.mjs
-node scripts/verify-python-language.mjs --python /absolute/path/to/python
+node scripts/checks/verify-python-language.mjs
+node scripts/checks/verify-python-language.mjs --python /absolute/path/to/python
 ```
 
 The first command compares the 12 article source blocks with their companion

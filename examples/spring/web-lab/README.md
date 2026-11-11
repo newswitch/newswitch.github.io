@@ -39,8 +39,8 @@ Tomcat 和 Reactor Netty 的诊断日志不属于文章的预期业务标准输�
 在仓库根目录执行；路径替换为本机工具安装位置：
 
 ```bash
-node scripts/verify-spring-web.mjs --check-sources
-node scripts/verify-spring-web.mjs --java-home /path/to/jdk-25 --maven-home /path/to/apache-maven-3.9.14
+node scripts/checks/verify-spring-web.mjs --check-sources
+node scripts/checks/verify-spring-web.mjs --java-home /path/to/jdk-25 --maven-home /path/to/apache-maven-3.9.14
 ```
 
 可选 `--maven-repo /path/to/cache` 复用依赖缓存。脚本在独立、忽略提交的工作目录编译，验证 40 项 JUnit 测试和七个主类各三次新 JVM 输出。失败保留诊断目录，成功删除本次临时工程。

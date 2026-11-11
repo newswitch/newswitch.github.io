@@ -1,1 +1,9 @@
-{"label":"Spring Session","position":1,"collapsed":true,"link":null}
+{
+  "label": "Spring Session",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/session/spring-session/会话接管保存过期与多实例一致性"
+  }
+}

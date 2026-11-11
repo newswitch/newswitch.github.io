@@ -1,0 +1,9 @@
+{
+  "label": "01. 接口、路由与链路管理",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "/networking/commands/interface-routing"
+  }
+}

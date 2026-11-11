@@ -1,1 +1,9 @@
-{"label": "springdoc-openapi", "position": 1, "collapsed": true, "link": null}
+{
+  "label": "springdoc-openapi",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/web-api/springdoc-openapi/OpenAPI文档生成SwaggerUI与接口契约"
+  }
+}

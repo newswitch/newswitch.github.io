@@ -1,1 +1,9 @@
-{"label": "MapStruct", "position": 2, "collapsed": true, "link": null}
+{
+  "label": "MapStruct",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/developer-tools/mapstruct/MapStruct生成映射DTO边界与空值策略"
+  }
+}

@@ -85,7 +85,7 @@ mvn -pl data-jdbc spring-boot:build-image "-Dspring-boot.build-image.imageName=j
 从仓库根目录执行：
 
 ```bash
-node scripts/verify-java-component-runtime.mjs --java-home /path/to/jdk25 --maven-home /path/to/apache-maven-3.9.14
+node scripts/checks/verify-java-component-runtime.mjs --java-home /path/to/jdk25 --maven-home /path/to/apache-maven-3.9.14
 ```
 
 脚本复制工程到被忽略的 .java-article-checks 临时目录，使用隔离 Maven 仓库，执行 22 项测试、归档检查、tools 分层提取、原 JAR 与合并分层布局的真实 HTTP，以及两个命令行应用启动。所有自有 Java 服务在 finally 中关闭。

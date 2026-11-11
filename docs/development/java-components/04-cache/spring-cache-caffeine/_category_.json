@@ -1,1 +1,9 @@
-{"label":"Spring Cache 与 Caffeine","position":1,"collapsed":true,"link":null}
+{
+  "label": "Spring Cache 与 Caffeine",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/cache/spring-cache-caffeine/缓存代理键设计过期淘汰与一致性"
+  }
+}

@@ -36,8 +36,8 @@ Windows classpath 使用 `target/classes;target/dependency/*`。其他主类如�
 在仓库根目录执行，工具路径替换为本机安装位置：
 
 ```bash
-node scripts/verify-spring-internals.mjs --check-sources
-node scripts/verify-spring-internals.mjs --java-home /path/to/jdk-25 --maven-home /path/to/apache-maven-3.9.14
+node scripts/checks/verify-spring-internals.mjs --check-sources
+node scripts/checks/verify-spring-internals.mjs --java-home /path/to/jdk-25 --maven-home /path/to/apache-maven-3.9.14
 ```
 
 可选 `--maven-repo /path/to/cache`。校验脚本在忽略提交的独立工作目录编译，检查 8 个文章代码文件、42 项 JUnit 测试与七个主类各三次新 JVM 输出；失败保留诊断目录，成功清理本次临时工程。

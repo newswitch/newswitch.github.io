@@ -1,0 +1,9 @@
+{
+  "label": "可观测性、性能与 SRE",
+  "position": 11,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "sre/SRE与生产工程学习路线"
+  }
+}

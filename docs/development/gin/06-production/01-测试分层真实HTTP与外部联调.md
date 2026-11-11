@@ -23,7 +23,7 @@ cd examples/gin/service-lab
 go test ./... -count=1 -timeout=60s
 go vet ./...
 # 回到仓库根目录
-node scripts/verify-go-gin-labs.mjs --go /path/to/go
+node scripts/checks/verify-go-gin-labs.mjs --go /path/to/go
 ```
 
 Windows 的 --go 可传 go.exe 完整路径。验证脚本会运行两个模块测试、独立实验、有限 profile/Fuzz/Benchmark，再启动自己拥有的 API 进程，创建任务、用另一个 Worker 进程处理，重启 API 后检查状态仍存在。
@@ -85,5 +85,5 @@ protocol 模块实际发现：JSON 编码失败无错误策略可能返回空 20
 ## 9. 参考资料
 
 - [httptest](https://pkg.go.dev/net/http/httptest)
-- [本系列验证脚本](https://github.com/newswitch/newswitch.github.io/blob/main/scripts/verify-go-gin-labs.mjs)
+- [本系列验证脚本](https://github.com/newswitch/newswitch.github.io/blob/main/scripts/checks/verify-go-gin-labs.mjs)
 - [完整服务实验源码](https://github.com/newswitch/newswitch.github.io/tree/main/examples/gin/service-lab)

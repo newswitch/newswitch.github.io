@@ -59,7 +59,7 @@ java -cp "target/classes;target/dependency/*" lab.components.ComponentsApplicati
 从仓库根目录运行，传入实际安装路径；不需要修改系统 Java：
 
 ```bash
-node scripts/verify-java-components.mjs --java-home /path/to/jdk25 --maven-home /path/to/apache-maven-3.9.14
+node scripts/checks/verify-java-components.mjs --java-home /path/to/jdk25 --maven-home /path/to/apache-maven-3.9.14
 ```
 
 脚本复制工程到 `.java-article-checks/` 的临时目录，使用隔离 Maven 仓库，执行：

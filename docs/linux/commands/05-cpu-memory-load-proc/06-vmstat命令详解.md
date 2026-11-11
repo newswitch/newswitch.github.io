@@ -43,7 +43,7 @@ vmstat [option ...] [delay [count]]
 | `-h, --help` | 帮助 |
 | `-V, --version` | 版本 |
 
-磁盘深度分析优先使用[专门的 `iostat`](../../../storage/commands/09-iostat命令详解.md)，`vmstat -d` 用于快速旁证。
+磁盘深度分析优先使用[专门的 `iostat`](../../../storage/commands/02-performance-health/09-iostat命令详解.md)，`vmstat -d` 用于快速旁证。
 
 ## 3. 默认字段全集
 

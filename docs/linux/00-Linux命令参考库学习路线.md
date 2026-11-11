@@ -251,7 +251,7 @@ CPU、内存与负载内容已经进入下一节；`taskset/chrt` 已在第 13 �
 14. [`ulimit`：Bash 资源限制、soft/hard 与继承](./commands/05-cpu-memory-load-proc/14-ulimit命令详解.md)
 15. [`sysctl`：运行时内核参数、加载顺序与安全变更](./commands/05-cpu-memory-load-proc/15-sysctl命令详解.md)
 
-磁盘性能分析使用存储专题中的 [`iostat`](../storage/commands/09-iostat命令详解.md)；`numastat/taskset/chrt` 见第 13 节，`perf/strace/eBPF` 见第 16 节。
+磁盘性能分析使用存储专题中的 [`iostat`](../storage/commands/02-performance-health/09-iostat命令详解.md)；`numastat/taskset/chrt` 见第 13 节，`perf/strace/eBPF` 见第 16 节。
 
 ## 11. systemd 服务、启动过程与日志
 

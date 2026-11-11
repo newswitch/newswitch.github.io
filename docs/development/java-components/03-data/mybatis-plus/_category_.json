@@ -1,1 +1,9 @@
-{"label":"MyBatis-Plus","position":2,"collapsed":true,"link":null}
+{
+  "label": "MyBatis-Plus",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/data/mybatis-plus/BaseMapper条件构造分页乐观锁与逻辑删除"
+  }
+}

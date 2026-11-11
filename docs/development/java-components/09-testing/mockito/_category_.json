@@ -1,1 +1,9 @@
-{"label":"Mockito","position":1,"collapsed":true,"link":null}
+{
+  "label": "Mockito",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/testing/mockito/测试替身调用拦截存根匹配与验证边界"
+  }
+}

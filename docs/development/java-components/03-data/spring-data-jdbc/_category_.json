@@ -1,1 +1,9 @@
-{"label":"Spring Data JDBC","position":1,"collapsed":true,"link":null}
+{
+  "label": "Spring Data JDBC",
+  "position": 1,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/data/spring-data-jdbc/聚合建模Repository保存与并发控制"
+  }
+}

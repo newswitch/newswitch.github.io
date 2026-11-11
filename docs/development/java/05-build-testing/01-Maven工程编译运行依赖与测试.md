@@ -36,7 +36,7 @@ mvn -version
 
 ## 2. 工程结构
 
-配套工程可从[仓库源码](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/first-batch/maven-task-cli)取得。也可以按以下路径逐个保存完整文件：
+配套工程可从[仓库源码](https://github.com/newswitch/newswitch.github.io/tree/main/examples/java/language-lab/maven-task-cli)取得。也可以按以下路径逐个保存完整文件：
 
 ```text
 maven-task-cli/

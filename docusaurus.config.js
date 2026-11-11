@@ -1,6 +1,7 @@
 // @ts-check
 
 import {themes as prismThemes} from 'prism-react-renderer';
+import {domains} from './src/data/domains.mjs';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -33,7 +34,25 @@ const config = {
     locales: ['zh-Hans'],
   },
 
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    ['@easyops-cn/docusaurus-search-local', {
+      hashed: 'filename',
+      language: ['en', 'zh'],
+      indexDocs: true,
+      indexBlog: true,
+      indexPages: false,
+      explicitSearchResultPath: true,
+      searchResultLimits: 12,
+      highlightSearchTermsOnTargetPage: true,
+      // Search articles/sections/summaries, not thousands of full code blocks.
+      // Full-text indexing this library creates a >100 MiB first download.
+      ignoreCssSelectors: [
+        'svg', '.mermaid',
+        '.markdown > :not(header):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6)',
+      ],
+    }],
+  ],
 
   presets: [
     [
@@ -43,6 +62,21 @@ const config = {
         docs: {
           sidebarPath: './sidebars.js',
           editUrl: 'https://github.com/newswitch/newswitch.github.io/tree/main/',
+          async sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}) {
+            const items = await defaultSidebarItemsGenerator(args);
+            const domain = domains.find(item => item.directory === args.item.dirName);
+            const children = domain ? items.filter(item => !(item.type === 'doc' && item.id === domain.docId)) : items;
+            // Docusaurus flattens empty linked categories into article links.
+            // Retain the sole file under its physical folder, while the folder
+            // itself still opens the article directly (no empty index page).
+            const preserveFolders = entries => entries.map(item => {
+              if (item.type !== 'category') return item;
+              const nested = preserveFolders(item.items);
+              return {...item, items:!nested.length && item.link?.type === 'doc'
+                ? [{type:'doc', id:item.link.id}] : nested};
+            });
+            return preserveFolders(children);
+          },
         },
         blog: {
           showReadingTime: true,

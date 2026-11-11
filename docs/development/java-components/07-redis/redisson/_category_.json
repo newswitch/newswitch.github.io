@@ -1,1 +1,9 @@
-{"label":"Redisson","position":2,"collapsed":true,"link":null}
+{
+  "label": "Redisson",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "development/java-components/redis/redisson/分布式对象锁租约续约与一致性边界"
+  }
+}
