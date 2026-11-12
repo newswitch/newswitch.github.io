@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/alibaba/DataX",
+  "commit": "80ec23d5c5328eb90ca364d2749e92dfaf44541e",
+  "commitDate": "2026-07-07T08:41:05Z",
+  "reviewDate": "2026-11-12",
+  "scope": "Standalone execution and selected upstream Reader/Writer implementations; not a prebuilt distribution or database compatibility certification."
+}

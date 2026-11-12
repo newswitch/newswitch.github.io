@@ -1,0 +1,38 @@
+{
+  "common": {"column": {"timeZone": "UTC"}},
+  "job": {
+    "setting": {
+      "speed": {"channel": 1},
+      "errorLimit": {"record": 0}
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "username": "${source_username}",
+            "password": "${source_password}",
+            "column": ["order_id", "customer_id", "amount", "status", "updated_at"],
+            "where": "updated_at >= '${window_start}' AND updated_at < '${window_end}'",
+            "splitPk": "order_id",
+            "connection": [{"jdbcUrl": ["${source_jdbc_url}"], "table": ["orders"]}]
+          }
+        },
+        "writer": {
+          "name": "txtfilewriter",
+          "parameter": {
+            "path": "${output_dir}",
+            "fileName": "orders",
+            "writeMode": "nonConflict",
+            "fileFormat": "csv",
+            "fieldDelimiter": ",",
+            "encoding": "UTF-8",
+            "nullFormat": "\\N",
+            "dateFormat": "yyyy-MM-dd HH:mm:ss",
+            "header": ["order_id", "customer_id", "amount", "status", "updated_at"]
+          }
+        }
+      }
+    ]
+  }
+}

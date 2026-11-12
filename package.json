@@ -18,7 +18,8 @@
     "check:structure": "node scripts/checks/validate-structure.mjs",
     "check:site": "node scripts/checks/verify-site-structure.mjs",
     "check": "npm run check:format && npm run validate:docs && npm run check:structure",
-    "sync:navigation": "node scripts/generators/sync-domain-metadata.mjs --write"
+    "sync:navigation": "node scripts/generators/sync-domain-metadata.mjs --write",
+    "check:datax": "node scripts/checks/verify-datax-articles.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.0",

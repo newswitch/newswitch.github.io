@@ -56,9 +56,12 @@ node scripts/checks/verify-ai-storage-articles.mjs
 node scripts/checks/verify-accelerator-pooling-articles.mjs
 node scripts/checks/verify-elasticsearch-api-articles.mjs
 node scripts/checks/validate-java-component-articles.mjs
+npm run check:datax
 ```
 
 更多工具链、测试范围和限制见各 `examples/` README 与 [历史验证记录](./validation-history.md)，以当前脚本与实际结果为准。不要凭历史篇数推断当前全站统计。
+
+`check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
 
 ## 页面与搜索
 

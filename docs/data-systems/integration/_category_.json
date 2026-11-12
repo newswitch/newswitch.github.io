@@ -4,6 +4,6 @@
   "collapsed": true,
   "link": {
     "type": "generated-index",
-    "description": "Debezium、CDC、Snapshot、Offset、Schema 演进、数据复制和生产故障治理。"
+    "description": "DataX 批量同步，Debezium、Canal 与 Maxwell 日志 CDC，以及数据契约、水位、Schema 演进和恢复。"
   }
 }

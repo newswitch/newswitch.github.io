@@ -4,6 +4,8 @@
 
 ## 产品级专题目录
 
+`data-systems/integration/datax/` 保存 DataX 学习路线和 13 篇正文，覆盖 standalone 源码链路、部署/驱动、任务选项、抽取/写入、文件与外部存储边界、类型/Transformer、水位、容量、调度、安全、日志、校验与发布恢复。上游基线固定为 `80ec23d5c5328eb90ca364d2749e92dfaf44541e`。`examples/datax/sync-lab/` 保存四行订单、四份任务配置及 Python 标准库渲染/校验程序。`npm run check:datax` 验证结构、56 个答案、3 张图、配置与离线测试；不把本机 Python 验证称为已完成 DataX/JDBC/目标环境集成验收。
+
 
 `gpu/servers/` 保存 AI 整机产品体系，按 `nvidia-dgx/` 与 `huawei-atlas/` 分类；Atlas A2 主文从推理框架模块迁入此处，vLLM-Ascend、昇腾学习路线和硬件分类通过相对链接引用。通用 PCIe/NUMA 主文仍归属 `gpu/pcie-numa/`，保留原有拓扑图与命令示例。`node scripts/checks/verify-ai-server-articles.mjs` 校验六篇主文的元数据、24 个练习答案、目录顺序、迁移引用和规格范围，不以行数作为文章质量标准。
 

@@ -1,0 +1,35 @@
+{
+  "common": {"column": {"timeZone": "UTC"}},
+  "job": {
+    "setting": {
+      "speed": {"channel": 1},
+      "errorLimit": {"record": 0}
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "username": "${source_username}",
+            "password": "${source_password}",
+            "column": ["order_id", "customer_id", "amount", "status", "updated_at"],
+            "where": "updated_at >= '${window_start}' AND updated_at < '${window_end}'",
+            "splitPk": "order_id",
+            "connection": [{"jdbcUrl": ["${source_jdbc_url}"], "table": ["orders"]}]
+          }
+        },
+        "writer": {
+          "name": "mysqlwriter",
+          "parameter": {
+            "username": "${target_username}",
+            "password": "${target_password}",
+            "column": ["order_id", "customer_id", "amount", "status", "updated_at"],
+            "writeMode": "insert",
+            "batchSize": 500,
+            "connection": [{"jdbcUrl": "${target_jdbc_url}", "table": ["orders_stage"]}]
+          }
+        }
+      }
+    ]
+  }
+}
