@@ -2,6 +2,20 @@
 
 以下记录保留各批文章的验证范围、工具链和限制，不代表当前全站篇数或已经完成的硬件验收。当前命令见 [验证与发布](./validation.md)，内容归属见 [目录规则](./structure.md)。
 
+## 2026-11-14：SeaTunnel、NiFi 与 Airbyte
+
+在 `docs/data-systems/integration/` 下增加三个独立产品目录，各含一篇路线与六篇正文，共 21 页、84 个有答案的练习、6 张 Mermaid 图；分类使用物理目录自动生成，默认折叠。更新数据系统地图与 DataX 交叉入口，不移动原有文章。
+
+基线为 SeaTunnel 3.0.0/Zeta、NiFi 2.12.0/Java 21/Traditional Engine；Airbyte 按当日官方文档和 abctl v0.30.4 核对，明确 Chart、平台、协议与连接器独立版本化。修正 V2 Chart 仓库地址，区分 Socket 与传统数据通路；SeaTunnel JSON-HOCON 示例展开路径键，NiFi 示例显式处理 original/failure 并先保留结果队列。
+
+`npm run check:integration` 通过 21 页 MDX、84 个答案、配置/代码一致性和 8 项离线测试；`npm run check:datax` 回归通过 14 页与原有 30 项 Python 测试（Windows 权限位用例按设计跳过一项）。格式、相对链接和结构检查通过：当次全站 2566 个源文档、467 个物理分类、14 个领域。六张图另以本地 Mermaid 在正文宽度 738/326 px 预览，并人工检查文字、连线和裁边。
+
+本机曾有两次 Rspack 构建在打包阶段停止推进，仅结束各自已核实的自有 PID。随后保持标准生产配置，以 `DOCUSAURUS_NO_PERSISTENT_CACHE=true`、`RAYON_NUM_THREADS=2`、SSR/SSG 并发均为 1、Node 堆上限 6144 MiB 重试，最终构建成功（476.63 秒）；不能仅凭该现象认定已经定位原始停滞根因。`check:site` 通过 2566 个正文、53 个分类索引与 467 个目录；搜索索引 16.4 MiB。仅有原有 Browserslist 数据过旧提示，未升级依赖。
+
+使用自有无头 Edge 与环回静态服务器，验证全部 21 个路由在 1440/390 px 下共 42 次访问：H1、84 个唯一答案、全部非 Mermaid 代码块与源码一致；6 张图在两种尺寸下可读，无全局横向溢出。三个入口正文链接与侧栏归属、三种关键词的搜索结果/跳转，以及深色模式均通过。另人工查看图表与手机搜索截图。浏览器与服务器在验证结束时关闭，截图与中间结果只保留在忽略的 `.cache-loader/integration-review/`。
+
+所有验证均未启动三个产品、数据库、Docker 或 Kubernetes；不声明完成真实 JDBC/TLS、CDC、XA、State 恢复与节点故障集成测试。配套 NiFi recipe 是人读配置，Airbyte JSONL 是合成协议材料，不得冒充可导入流程或生产 State。
+
 ## 产品级专题目录
 
 `data-systems/integration/datax/` 保存 DataX 学习路线和 13 篇正文，覆盖 standalone 源码链路、部署/驱动、任务选项、抽取/写入、文件与外部存储边界、类型/Transformer、水位、容量、调度、安全、日志、校验与发布恢复。上游基线固定为 `80ec23d5c5328eb90ca364d2749e92dfaf44541e`。`examples/datax/sync-lab/` 保存四行订单、四份任务配置及 Python 标准库渲染/校验程序。`npm run check:datax` 验证结构、56 个答案、3 张图、配置与离线测试；不把本机 Python 验证称为已完成 DataX/JDBC/目标环境集成验收。

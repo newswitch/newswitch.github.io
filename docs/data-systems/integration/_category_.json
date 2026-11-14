@@ -4,6 +4,6 @@
   "collapsed": true,
   "link": {
     "type": "generated-index",
-    "description": "DataX 批量同步，Debezium、Canal 与 Maxwell 日志 CDC，以及数据契约、水位、Schema 演进和恢复。"
+    "description": "DataX 批量同步、SeaTunnel 执行引擎、NiFi 数据流、Airbyte 同步平台与 Debezium、Canal、Maxwell 日志 CDC，涵盖数据契约、状态、Schema 演进与恢复。"
   }
 }

@@ -57,11 +57,14 @@ node scripts/checks/verify-accelerator-pooling-articles.mjs
 node scripts/checks/verify-elasticsearch-api-articles.mjs
 node scripts/checks/validate-java-component-articles.mjs
 npm run check:datax
+npm run check:integration
 ```
 
 更多工具链、测试范围和限制见各 `examples/` README 与 [历史验证记录](./validation-history.md)，以当前脚本与实际结果为准。不要凭历史篇数推断当前全站统计。
 
 `check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
+
+`check:integration` 检查 SeaTunnel、NiFi、Airbyte 三个产品共 21 页、84 个答案、6 张图及配置与示例一致性，运行 8 项 Node 标准库离线测试。`examples/data-integration/` 的 NiFi 配方不是 flow export，Airbyte State 是合成协议示例；检查不启动三个产品或外部服务，不能替代 JDBC/TLS、CDC、集群与恢复实测。
 
 ## 页面与搜索
 

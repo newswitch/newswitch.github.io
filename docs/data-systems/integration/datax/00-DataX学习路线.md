@@ -24,6 +24,8 @@ DataX 把一次异构数据同步拆成读取、传输和写入三个部分。�
 
 先读[定位与边界](./01-DataX定位与批量同步边界.md)，再与 [Debezium](../debezium/00-Debezium从零到精通学习路线.md)、[Canal 与 Maxwell](../canal-maxwell/00-Canal与Maxwell定位和学习路线.md)对照。它们不是只换一下名称就能互相替代的工具。
 
+进一步比较集成方式，可阅读 [SeaTunnel](../seatunnel/00-SeaTunnel学习路线.md) 的执行图与检查点、[NiFi](../nifi/00-NiFi学习路线.md) 的队列和流路由，以及 [Airbyte](../airbyte/00-Airbyte学习路线.md) 的 Catalog、同步模式与 State。
+
 ## 2. 基础与执行原理
 
 1. [DataX 定位与批量同步边界](./01-DataX定位与批量同步边界.md)：区分复制、ETL、轮询增量、CDC 和备份。

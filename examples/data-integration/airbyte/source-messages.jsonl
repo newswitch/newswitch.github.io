@@ -1,0 +1,2 @@
+{"type":"RECORD","record":{"stream":"orders","namespace":"demo","emitted_at":1794614400000,"data":{"order_id":101,"updated_at":"2026-11-14T00:00:00Z"}}}
+{"type":"STATE","state":{"type":"STREAM","stream":{"stream_descriptor":{"name":"orders","namespace":"demo"},"stream_state":{"cursor":"2026-11-14T00:00:00Z"}}}}

@@ -1,0 +1,24 @@
+{
+  "format": "human-readable-recipe-not-nifi-flow-export",
+  "nifi_version": "2.12.0",
+  "engine": "Traditional",
+  "scope": "single-node-isolated-test",
+  "input": "orders.json",
+  "generate": {"type": "GenerateFlowFile", "Batch Size": 1, "Data Format": "Text", "Unique FlowFiles": false, "Character Set": "UTF-8", "trigger": "Run Once"},
+  "reader": {"type": "JsonTreeReader", "schema_strategy": "Infer Schema"},
+  "writer": {"type": "JsonRecordSetWriter", "schema_strategy": "Inherit Record Schema", "output_grouping": "Array"},
+  "query": {"type": "QueryRecord", "dynamic_properties": {"paid": "SELECT * FROM FLOWFILE WHERE status = 'paid'"}},
+  "log": {"type": "LogAttribute", "Log Payload": false, "initial_state": "stopped-until-output-inspected"},
+  "inspection_sinks": [
+    {"name": "stopped-inspection-original", "type": "LogAttribute", "Log Payload": false, "state": "stopped", "auto_terminate": "success"},
+    {"name": "stopped-inspection-failure", "type": "LogAttribute", "Log Payload": false, "state": "stopped", "auto_terminate": "success"}
+  ],
+  "connections": [
+    {"from": "generate", "relationship": "success", "to": "query"},
+    {"from": "query", "relationship": "paid", "to": "log"},
+    {"from": "query", "relationship": "original", "to": "stopped-inspection-original"},
+    {"from": "query", "relationship": "failure", "to": "stopped-inspection-failure"}
+  ],
+  "auto_terminate": [{"processor": "log", "relationship": "success", "scope": "this-isolated-example-only"}],
+  "expected": {"input_flowfiles": 1, "input_records": 3, "paid_flowfiles": 1, "paid_records": 2, "paid_order_ids": [101, 103], "paid_amount": "15.30", "failure_records": 0}
+}

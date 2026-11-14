@@ -1,0 +1,7 @@
+{
+  "reviewed_on": "2026-11-14",
+  "seatunnel": {"version": "3.0.0", "tag": "v3.0.0", "engine": "Zeta", "source": "https://github.com/apache/seatunnel/tree/v3.0.0"},
+  "nifi": {"version": "2.12.0", "tag": "rel/nifi-2.12.0", "java": 21, "engine": "Traditional", "source": "https://github.com/apache/nifi/tree/rel/nifi-2.12.0"},
+  "airbyte": {"basis": "official-current-docs-reviewed-on-date-above", "abctl": "v0.30.4", "source": "https://docs.airbyte.com/platform/understanding-airbyte/airbyte-protocol", "requires_separate_pins": ["Helm Chart", "Platform images", "Source Connector", "Destination Connector", "Protocol compatibility"]},
+  "validation_scope": "offline fixtures, arithmetic, MDX and configuration consistency; no product runtime or external service is started"
+}
