@@ -56,11 +56,15 @@ node scripts/checks/verify-ai-storage-articles.mjs
 node scripts/checks/verify-accelerator-pooling-articles.mjs
 node scripts/checks/verify-elasticsearch-api-articles.mjs
 node scripts/checks/validate-java-component-articles.mjs
+node scripts/checks/verify-durability-articles.mjs
+node scripts/checks/verify-redis-ha-streams-articles.mjs
 npm run check:datax
 npm run check:integration
 ```
 
 更多工具链、测试范围和限制见各 `examples/` README 与 [历史验证记录](./validation-history.md)，以当前脚本与实际结果为准。不要凭历史篇数推断当前全站统计。
+
+`verify-durability-articles` 与 `verify-redis-ha-streams-articles` 检查指定文章的 MDX、明确解答、原有锚点和教学算例；后者逐条比对 Streams 示例的有限状态模型回复。两者不启动 Redis/MySQL，不验证真实切主、迁移、并发消费或掉电恢复，不能替代隔离环境实验。
 
 `check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
 
