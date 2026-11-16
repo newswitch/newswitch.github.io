@@ -123,14 +123,33 @@
 - `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 57 个脚本语法检查通过；`git diff --check` 通过。
 - 本机不运行 nginx -t、网关服务、curl、reload 或 APISIX 完整 Schema 校验，不修改真实路由、etcd 或执行故障注入。完整构建/发布以对应提交的 CI 为准，配置的实际装载与运行行为仍需隔离实例验证。
 
+## 第七批 P1 依赖恢复与模型部署
+
+日期：2026-11-16。
+
+| 文章 | 完成内容 | 核验依据 |
+| --- | --- | --- |
+| [Milvus 依赖原理](<../../../docs/data-systems/vector-databases/milvus/02-storage-index/09-etcd-Woodpecker与S3-MinIO依赖原理.md>) | 固定 v3.0.6/Woodpecker v0.1.46；区分嵌入式/独立服务、Append 同步结果与 Aq、Storage V3 默认关闭；补单通道 WAL→历史状态→索引→加载表、依赖查询、写超时与加载失败分支、备份集合校验及 10 个答案 | 固定 tag 的 milvus.yaml、go.mod、InsertTask.Execute、Woodpecker AppendOp/对象写入实现；官方 Woodpecker、Streaming Service、Storage V3、架构文档 |
+| [vLLM Kubernetes 部署](<../../../docs/ai-systems/inference/serving/01-Kubernetes 部署 vLLM 推理服务.md>) | 固定 v0.31.0 与模型 revision，提供公开模型无 Secret 引用的 Namespace/PVC/Deployment/Service；分离门禁变体，补资源/TP/KV/shm、Recreate/RWO、三种探针、Service 验收与故障证据；固定 Chart 0.1.14 并关闭非必要组件，解释探针零值回落，补 10 个答案 | vLLM v0.31.0 的 Kubernetes/安装文档、Dockerfile、health 实现；Production Stack 0.1.14 的 Chart、values、Schema、引擎/PVC/辅助模板；Kubernetes Secret、探针、卷文档与 HF 模型固定提交 |
+
+不更改目录、文件名、标题、侧边栏顺序或原有显式锚点；保留原章节主题，参考资料顺延。按写作规范补足版本、因果与可观测证据，不以行数衡量深度，公开文章不加入审计批次或岗位导向描述。
+
+### 本批验证
+
+- `node scripts/checks/verify-milvus-vllm-deployment-articles.mjs`：2 页 MDX、20 个答案、8 个 YAML 代码块、JSON/请求及旧主题/锚点/导航元数据通过；核对公开模型 Secret/PVC/端口/资源/探针引用、固定版本 values、WAL/checkpoint/Aq 和集合算例。
+- Woodpecker 确认路径、Storage V3 默认值、Chart 的缓存路径、Secret 条件、V0 分支、资源/探针与 `default 15` 行为，按固定 tag 源码复核。脚本的有限状态模型与 values 对照不是完整协议模拟或 Go 模板渲染。
+- 前五个专项脚本（持久性、Redis HA/Streams、Redis 类型/Buffer Pool、Kafka、Nginx/APISIX）回归通过。
+- `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 58 个脚本语法检查通过；`git diff --check` 通过。
+- 本机没有运行 Helm 渲染、完整 Kubernetes/Chart Schema 校验、kubectl/curl 集群请求、etcd/S3 操作、模型加载、恢复或性能实验；没有启动预览/数据库/推理后台进程。实际安装兼容性与恢复仍需隔离环境验证，站点完整构建/部署按对应提交 CI 另行确认。
+
 ## 原始已确认清单的剩余工作
 
-已处理 2 篇 P0 与 13 篇 P1；原始 23 篇具体待改事项还剩 8 篇：
+已处理 2 篇 P0 与 15 篇 P1；原始 23 篇具体待改事项还剩 6 篇：
 
-- P1 2 篇：Milvus 依赖 1 篇、vLLM Kubernetes 部署 1 篇。
+- P0、P1 已确认事项均已完成本轮修复。
 - P2 5 篇：Temporal 测试、Backstage 插件、Linux perf、Linux 路由、LLM 压测容量曲线。
 - 单独补答案 1 篇：Kafka 请求处理源码。
 
-下一批优先处理 Milvus 依赖与 vLLM Kubernetes 部署，补依赖故障证据、部署清单/参数与恢复验收；之后继续 P2 专项和 Kafka 源码篇的答案。
+下一批优先处理 Linux perf 与路由原理：补 PMU 计数缩放/报告阅读、RPDB→FIB→邻居查表推演及 rp_filter 分支；随后继续 Temporal、Backstage、LLM 容量曲线和 Kafka 源码篇答案。
 
-193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至六批的十三篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 5 篇仅做过指定段落复核（含本批 APISIX 架构篇）。
+193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至七批的十五篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 5 篇仅做过指定段落复核（含第六批 APISIX 架构篇）。
