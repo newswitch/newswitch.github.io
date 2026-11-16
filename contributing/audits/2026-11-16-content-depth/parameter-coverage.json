@@ -1,0 +1,1331 @@
+{
+  "warning": "Literal-term presence/absence is navigation evidence only, not proof of explanation quality, correctness or required coverage. Aliases, underscores, translated concepts and cross-module coverage require manual review.",
+  "modules": [
+    {
+      "name": "Redis",
+      "prefix": "docs/data-systems/cache/redis/",
+      "articles": 17,
+      "topics": [
+        {
+          "term": "maxclients",
+          "hits": []
+        },
+        {
+          "term": "client-output-buffer-limit",
+          "hits": []
+        },
+        {
+          "term": "tcp-keepalive",
+          "hits": []
+        },
+        {
+          "term": "lazyfree-lazy-eviction",
+          "hits": []
+        },
+        {
+          "term": "activedefrag",
+          "hits": []
+        },
+        {
+          "term": "replica-ignore-maxmemory",
+          "hits": []
+        },
+        {
+          "term": "appendfsync",
+          "hits": [
+            {
+              "file": "docs/data-systems/cache/redis/01-client-data/01-Redis解决什么问题与一次命令的完整路径.md",
+              "line": 98,
+              "context": "\n普通 `SET` 的 `OK` 通常不能证明已经到达 T5、T6、T7 或 T8。`appendfsync everysec` 是性能与数据丢失窗口的折中，也不能理解成任何故障下绝对最多丢一秒。`WAIT` 可以等待指定数量副本确认已处理复制流，但它不是跨节点强一致提交协议，也不替代磁盘持久化与故障域设计。\n\n这也是主节点刚写成功便宕机、随后提升落后副本时仍可能丢写的根本原因。\n\n## 5. 读路径与缓存一致性\n\nCache-Aside 的典型读路径是："
+            },
+            {
+              "file": "docs/data-systems/cache/redis/02-engine-persistence/05-Redis事件循环IO-Threads命令执行与源码主路径.md",
+              "line": 103,
+              "context": "\n`appendfsync always` 还有顺序约束：不能在对应 AOF 刷盘前就让 I/O 线程发出成功回复，因此交回发送要等待 `beforeSleep` 的相应阶段。异步网络发送不应越过持久化承诺。这一实现不能与 Redis 6/7 的按批分派 I/O 模型混写，也不应外推为所有 Redis 8.x 的固定实现。[AOF 与交回时机](https://github.com/redis/redis/blob/8.0.0/src/iothread.c#L390)\n\n```bash\nredis-cli INFO commandstats\nredis-cli INFO threads\nredis-cli LATENCY DOCTOR\nredis-cli SLOWLOG GET 20"
+            },
+            {
+              "file": "docs/data-systems/cache/redis/02-engine-persistence/07-Redis-RDB-AOF-fork与Copy-on-Write.md",
+              "line": 24,
+              "context": "\nAOF 记录可重放写命令。`appendfsync always/everysec/no` 分别交换持久性和吞吐；内核、磁盘和故障类型使 everysec 不能解释为绝对只丢一秒。\n\n多段 AOF 由 base 和 incremental 文件及 manifest 组成，rewrite 生成更紧凑 base。不要手工删除单个 segment；恢复工具必须理解 manifest。\n\n## 3. 同时启用 {/* #同时启用 */}\n\n恢复优先级和文件有效性以目标版本文档为准。备份必须包含一致的文件集合、配置/ACL/模块和版本信息，并在隔离实例执行恢复。"
+            },
+            {
+              "file": "docs/data-systems/cache/redis/03-ha-cluster/11-Redis-APT-RPM源码Docker-Sentinel-Cluster与Kubernetes部署.md",
+              "line": 93,
+              "context": "docker exec redis-lab redis-cli PING\ndocker exec redis-lab redis-cli CONFIG GET dir appendonly appendfsync\ndocker inspect redis-lab --format '{{.Image}}'\n```\n\n把 6379 映射到所有网卡且无认证是危险实验习惯。数据 Volume、配置、ACL 文件和证书要分别管理；删除容器不应等于删除数据，删除 Volume 则属于独立的破坏性操作。\n\n## 6. Sentinel：一主两从加三个仲裁进程"
+            },
+            {
+              "file": "docs/data-systems/cache/redis/04-patterns-operations/15-Redis持久化备份与Cluster恢复专项.md",
+              "line": 35,
+              "context": "\n这些时间点并不相等。appendfsync everysec 常见情况下把 AOF 刷盘损失窗口控制在秒级，但进程、内核、存储和配置异常仍决定真实 RPO；RDB 的 RPO 通常等于两次成功快照之间的间隔。\n\n## 3. RDB：一个时间点的完整数据集\n\nRDB 适合离线归档、快速加载和跨地域复制。Redis 通过子进程生成临时文件，完成后原子替换最终 RDB，因此应复制已经完成的最终文件，而不是正在写入的临时文件。\n\n### 3.1 生成和确认"
+            }
+          ]
+        },
+        {
+          "term": "maxmemory-policy",
+          "hits": [
+            {
+              "file": "docs/data-systems/cache/redis/01-client-data/01-Redis解决什么问题与一次命令的完整路径.md",
+              "line": 141,
+              "context": "redis-cli INFO server\nredis-cli CONFIG GET appendonly appendfsync maxmemory maxmemory-policy\nredis-cli SET lab:counter 0 EX 300\nredis-cli INCR lab:counter\nredis-cli TTL lab:counter\nredis-cli INFO memory\nredis-cli INFO persistence\nredis-cli INFO replication"
+            },
+            {
+              "file": "docs/data-systems/cache/redis/02-engine-persistence/06-Redis内存过期与淘汰.md",
+              "line": 11,
+              "context": "\nRedis 的内存策略要回答三个不同的问题：**什么时候需要回收、哪些键可以被回收、优先回收谁**。`maxmemory` 决定内存压力边界，`maxmemory-policy` 决定候选范围与选择方式，TTL 则决定键的有效期限。它们不能相互替代。\n\n本文以 Redis Open Source 8.x 为主线：先解释 8.0 已有的八种策略，再单独说明 **8.6 起新增的 `allkeys-lrm`、`volatile-lrm`**。托管服务可能限制可配置项，实际生效值应从目标实例读取。命令示例使用隔离实验实例 `127.0.0.1:16379`，输出中的数值和键名用于说明，不代表生产默认配置。\n\n## 1. 内存指标与分配路径 {/* #指标 */}\n\n```text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MySQL",
+      "prefix": "docs/data-systems/databases/mysql/",
+      "articles": 64,
+      "topics": [
+        {
+          "term": "innodb_buffer_pool_size",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/mysql/03-innodb-transactions/01-InnoDB内存与磁盘整体架构.md",
+              "line": 189,
+              "context": "```text\n总内存 ≠ innodb_buffer_pool_size\n```\n\n容器 Limit 下尤其要为峰值连接和临时内存留余量，避免被 OOM Kill。\n\n## 14. 实验与验收\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/05-performance-capacity/01-MySQL配置分层内存预算连接与线程模型.md",
+              "line": 26,
+              "context": "```sql\nSHOW VARIABLES LIKE 'innodb_buffer_pool_size';\nSELECT VARIABLE_NAME, VARIABLE_SOURCE, VARIABLE_PATH\nFROM performance_schema.variables_info\nWHERE VARIABLE_NAME IN\n ('innodb_buffer_pool_size','max_connections','tmp_table_size');\n```\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/05-performance-capacity/07-MySQL核心监控指标采集与告警.md",
+              "line": 123,
+              "context": "\n脏页看 `mysql_global_status_buffer_pool_dirty_pages`，字节预算看 `mysql_global_variables_innodb_buffer_pool_size`。页数转字节需使用实际 page size，不能固定所有实例为 16 KiB。高脏页不是必然故障，应关联刷脏速度、checkpoint/redo 压力和提交延迟。\n\n### 5.2 临时表与排序是诊断信号\n\n`mysql_global_status_created_tmp_disk_tables` 是累计落盘临时表数量；同时看 `created_tmp_tables`、digest、rows examined 和执行计划。MySQL 8.4 的 TempTable 内存映射文件路径等行为使“disk_tables / tmp_tables”不能覆盖所有临时数据落盘，也不能换算落盘字节或查询占比。\n\n不要看到临时表就直接增加全局缓冲区。先确认排序、GROUP BY、JOIN、字段类型和执行计划，再按并发估算内存放大。原理见[Join、排序与临时表](../04-index-optimizer/04-Join子查询CTE排序与临时表执行原理.md)。"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/01-MySQL部署原理-进程目录配置初始化与启动.md",
+              "line": 109,
+              "context": "SHOW VARIABLES LIKE 'gtid_mode';\nSHOW VARIABLES LIKE 'innodb_buffer_pool_size';\n```\n\n最终以运行实例为准，并把期望配置与实际值自动比对。修改文件却没有重启、变量名称已废弃、被后续配置覆盖，都会造成“文件对、实例错”。\n\n## 4. 初始化到底做了什么\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/02-RHEL-Rocky使用RPM仓库部署MySQL8.4.md",
+              "line": 135,
+              "context": "# 实际值必须由容量测试和恢复目标决定\ninnodb_buffer_pool_size = 8G\nmax_connections = 500\n\nlog_error_verbosity = 2\nslow_query_log = ON\nlong_query_time = 1\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/03-Ubuntu-Debian使用APT部署MySQL8.4.md",
+              "line": 127,
+              "context": "\ninnodb_buffer_pool_size = 8G\nmax_connections = 500\n\nserver_id = 201\nlog_bin = binlog\nbinlog_format = ROW\ngtid_mode = ON"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/04-通用二进制包离线部署与systemd托管.md",
+              "line": 131,
+              "context": "# 必须根据容量测试修改\ninnodb_buffer_pool_size = 8G\nmax_connections = 500\n```\n\n强制所有命令都带 `--defaults-file`，降低读到系统遗留配置的风险：\n\n```bash"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/10-Ansible自动化批量部署MySQL.md",
+              "line": 223,
+              "context": "\ninnodb_buffer_pool_size={{ mysql_buffer_pool_size }}\nmax_connections={{ mysql_max_connections }}\n\nlog_bin=binlog\nbinlog_format=ROW\ngtid_mode=ON\nenforce_gtid_consistency=ON"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/11-部署验收安全监控备份与故障排查.md",
+              "line": 136,
+              "context": "  'character_set_server', 'collation_server',\n  'innodb_buffer_pool_size', 'max_connections',\n  'log_bin', 'binlog_format', 'gtid_mode',\n  'enforce_gtid_consistency', 'sync_binlog',\n  'innodb_flush_log_at_trx_commit',\n  'slow_query_log', 'long_query_time'\n);\n```"
+            }
+          ]
+        },
+        {
+          "term": "innodb_flush_log_at_trx_commit",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/mysql/03-innodb-transactions/04-Redo-Undo-Binlog与一次提交的完整路径.md",
+              "line": 108,
+              "context": "```sql\nSHOW VARIABLES LIKE 'innodb_flush_log_at_trx_commit';\nSHOW VARIABLES LIKE 'sync_binlog';\nSHOW VARIABLES LIKE 'binlog_format';\nSHOW VARIABLES LIKE 'innodb_redo_log_capacity';\n```\n\n不要把示例值当推荐值。"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/06-replication-ha/01-BinlogFormat-Position-GTID与复制数据路径.md",
+              "line": 79,
+              "context": "SHOW VARIABLES WHERE Variable_name IN (\n 'sync_binlog','innodb_flush_log_at_trx_commit',\n 'log_bin','log_replica_updates','gtid_mode',\n 'enforce_gtid_consistency'\n);\n```\n\n不要只看一个参数。文件系统、设备写缓存和云盘持久性也属于链路。必须用故障注入验证，而不是从配置推断绝对零丢失。"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/07-主从半同步复制生产部署.md",
+              "line": 100,
+              "context": "sync_binlog = 1\ninnodb_flush_log_at_trx_commit = 1\n```\n\n配置验证和受控重启后确认：\n\n```sql\nSHOW VARIABLES WHERE Variable_name IN ("
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/11-部署验收安全监控备份与故障排查.md",
+              "line": 139,
+              "context": "  'enforce_gtid_consistency', 'sync_binlog',\n  'innodb_flush_log_at_trx_commit',\n  'slow_query_log', 'long_query_time'\n);\n```\n\n同时保存：\n"
+            }
+          ]
+        },
+        {
+          "term": "sync_binlog",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/mysql/03-innodb-transactions/04-Redo-Undo-Binlog与一次提交的完整路径.md",
+              "line": 109,
+              "context": "SHOW VARIABLES LIKE 'innodb_flush_log_at_trx_commit';\nSHOW VARIABLES LIKE 'sync_binlog';\nSHOW VARIABLES LIKE 'binlog_format';\nSHOW VARIABLES LIKE 'innodb_redo_log_capacity';\n```\n\n不要把示例值当推荐值。\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/06-replication-ha/01-BinlogFormat-Position-GTID与复制数据路径.md",
+              "line": 79,
+              "context": "SHOW VARIABLES WHERE Variable_name IN (\n 'sync_binlog','innodb_flush_log_at_trx_commit',\n 'log_bin','log_replica_updates','gtid_mode',\n 'enforce_gtid_consistency'\n);\n```\n\n不要只看一个参数。文件系统、设备写缓存和云盘持久性也属于链路。必须用故障注入验证，而不是从配置推断绝对零丢失。"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/07-主从半同步复制生产部署.md",
+              "line": 99,
+              "context": "# 生产持久性基线，最终仍需以 RPO/性能测试决定\nsync_binlog = 1\ninnodb_flush_log_at_trx_commit = 1\n```\n\n配置验证和受控重启后确认：\n\n```sql"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/11-部署验收安全监控备份与故障排查.md",
+              "line": 138,
+              "context": "  'log_bin', 'binlog_format', 'gtid_mode',\n  'enforce_gtid_consistency', 'sync_binlog',\n  'innodb_flush_log_at_trx_commit',\n  'slow_query_log', 'long_query_time'\n);\n```\n\n同时保存："
+            }
+          ]
+        },
+        {
+          "term": "max_connections",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/mysql/01-foundations/01-MySQL解决什么问题及一条SQL的完整路径.md",
+              "line": 151,
+              "context": "\n`max_connections=5000` 只表示允许建立很多会话，不代表实例能并行高效执行 5000 个活跃查询。大量连接会消耗内存、线程/调度资源，并放大锁和 I/O 竞争。容量要看活跃并发与工作量，不只看连接总数。\n\n## 6. Parser 与语义解析\n\nParser 把 SQL 文本转换为内部语法结构，并检查：\n\n- 语法是否合法；"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/01-foundations/02-安装MySQL8.4LTS与建立安全实验环境.md",
+              "line": 183,
+              "context": "observability: error log、slow log、Performance Schema\nlimits: max_connections、文件句柄、包大小\n```\n\n不要在没有基准和风险分析时直接加入：\n\n- 关闭持久性保证的参数；\n- 超大的连接数；"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/02-schema-application/05-连接池Prepared-Statement事务超时与重试.md",
+              "line": 41,
+              "context": "\n例如 100 个 Pod，每池 50，理论上是 5000 个应用连接。实例 `max_connections`、内存和执行能力可能远低于此。\n\n池大小应基于数据库能承受的**活跃并发**与请求时间，而不是应用线程数。\n\n## 3. 连接池必须观测什么\n\n- active/idle/total；"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/05-performance-capacity/01-MySQL配置分层内存预算连接与线程模型.md",
+              "line": 30,
+              "context": "WHERE VARIABLE_NAME IN\n ('innodb_buffer_pool_size','max_connections','tmp_table_size');\n```\n\n修改分为动态/静态、全局/会话、持久/仅本次运行。`SET GLOBAL` 通常只影响新会话；`SET PERSIST` 会写持久配置。变更前确认版本、权限、重启行为和回滚命令。\n\n## 2. 内存不是一个 Buffer Pool\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/05-performance-capacity/07-MySQL核心监控指标采集与告警.md",
+              "line": 36,
+              "context": "| `SHOW GLOBAL STATUS` | `collect.global_status`，默认启用 | 当前连接、活跃线程与累计操作 |\n| `SHOW GLOBAL VARIABLES` | `collect.global_variables`，默认启用 | max_connections、Buffer Pool 等配置分母 |\n| `SHOW REPLICA STATUS` 等 | `collect.slave_status`，默认启用 | 复制通道运行与位置/延迟字段，名称仍有历史前缀 |\n| Performance Schema | `collect.perf_schema.*`，按需启用 | SQL digest、等待、文件 I/O、内存与复制 worker |\n| InnoDB 详细状态 | `collect.engine_innodb_status` / `collect.info_schema.innodb_metrics`，按需 | 事务/历史链、引擎内部细节，注意版本和开关 |\n| 应用/代理 | 应用 SDK、连接池和网关 | 请求错误、池等待、端到端 P99；默认 Exporter 不能补出这些 |\n\ncollector 与支持范围见[固定版本 README](https://github.com/prometheus/mysqld_exporter/blob/v0.20.0/README.md)。不要一次打开所有 collector：表、索引、文件路径和 SQL digest 都可能造成高基数、查询开销与敏感信息暴露。"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/08-production-operations/05-MySQL生产故障排查Runbook与事故复盘.md",
+              "line": 68,
+              "context": "\n确认连接泄漏、慢 SQL、应用扩容和重试；保留管理连接；先限流和修复池，不把 `max_connections` 无限调高。\n\n### 6.2 锁队列 {/* #锁队列 */}\n\n沿 `data_lock_waits` 找最上游阻塞事务，评估回滚成本和业务；缩短事务、修复热点/DDL，而非只杀等待者。\n\n### 6.3 磁盘满 {/* #磁盘满 */}"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/09-command-labs/05-管理SQL-PerformanceSchema与故障实验手册.md",
+              "line": 34,
+              "context": "FROM performance_schema.variables_info\nWHERE VARIABLE_NAME = 'max_connections';\n```\n\n动态改动示意仅供受控变更：\n\n```sql\nSET GLOBAL max_connections = ...;"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/02-RHEL-Rocky使用RPM仓库部署MySQL8.4.md",
+              "line": 136,
+              "context": "innodb_buffer_pool_size = 8G\nmax_connections = 500\n\nlog_error_verbosity = 2\nslow_query_log = ON\nlong_query_time = 1\n\n# 为复制和 PITR 保留 Binlog；server_id 每个节点唯一"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/03-Ubuntu-Debian使用APT部署MySQL8.4.md",
+              "line": 128,
+              "context": "innodb_buffer_pool_size = 8G\nmax_connections = 500\n\nserver_id = 201\nlog_bin = binlog\nbinlog_format = ROW\ngtid_mode = ON\nenforce_gtid_consistency = ON"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/04-通用二进制包离线部署与systemd托管.md",
+              "line": 132,
+              "context": "innodb_buffer_pool_size = 8G\nmax_connections = 500\n```\n\n强制所有命令都带 `--defaults-file`，降低读到系统遗留配置的风险：\n\n```bash\n/opt/mysql/current/bin/mysqld --defaults-file=/etc/mysql-offline/my.cnf --validate-config"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/09-MySQL-Operator在Kubernetes生产部署.md",
+              "line": 218,
+              "context": "    collation_server=utf8mb4_0900_ai_ci\n    max_connections=500\n```\n\n配置中的版本、存储类、大小和参数都是占位示例。Buffer Pool、连接数和存储空间要根据 Pod limit、连接模型、数据增长、备份与故障恢复计算。\n\n提交前做四层校验：\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/10-Ansible自动化批量部署MySQL.md",
+              "line": 103,
+              "context": "mysql_buffer_pool_size: 8G\nmysql_max_connections: 500\nmysql_change_ticket: CHG-2026-0000\n```\n\nSecret 通过 Ansible Vault 或外部 Secret 系统在运行时获取：\n\n```yaml"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/deployment/11-部署验收安全监控备份与故障排查.md",
+              "line": 136,
+              "context": "  'character_set_server', 'collation_server',\n  'innodb_buffer_pool_size', 'max_connections',\n  'log_bin', 'binlog_format', 'gtid_mode',\n  'enforce_gtid_consistency', 'sync_binlog',\n  'innodb_flush_log_at_trx_commit',\n  'slow_query_log', 'long_query_time'\n);\n```"
+            }
+          ]
+        },
+        {
+          "term": "innodb_io_capacity",
+          "hits": []
+        },
+        {
+          "term": "transaction_isolation",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/mysql/01-foundations/01-MySQL解决什么问题及一条SQL的完整路径.md",
+              "line": 297,
+              "context": "SHOW VARIABLES LIKE 'default_storage_engine';\nSHOW VARIABLES LIKE 'transaction_isolation';\n```\n\n这些是只读观察，但生产执行仍要使用受限诊断账户并控制频率。\n\n## 13. MySQL 与其他系统的边界\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/01-foundations/02-安装MySQL8.4LTS与建立安全实验环境.md",
+              "line": 211,
+              "context": "SELECT @@character_set_server, @@collation_server;\nSELECT @@transaction_isolation, @@autocommit;\n```\n\n保存输出，作为后续实验的实例身份基线。\n\n## 9. 创建学习账户\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/01-foundations/03-mysql客户端连接会话与元数据导航.md",
+              "line": 131,
+              "context": "  @@super_read_only       AS super_read_only,\n  @@transaction_isolation AS isolation_level,\n  @@autocommit            AS autocommit;\n```\n\n任何写操作前先回答：\n\n```text"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/03-innodb-transactions/05-ACID隔离级别MVCC版本链与ReadView.md",
+              "line": 32,
+              "context": "```sql\nSELECT @@transaction_isolation;\nSET TRANSACTION ISOLATION LEVEL READ COMMITTED;\nSTART TRANSACTION;\n```\n\n`SET TRANSACTION` 的作用范围和执行时机要核对，不在事务中途随意改变。\n"
+            },
+            {
+              "file": "docs/data-systems/databases/mysql/09-command-labs/05-管理SQL-PerformanceSchema与故障实验手册.md",
+              "line": 21,
+              "context": "SELECT NOW(6), @@system_time_zone, @@session.time_zone,\n       @@transaction_isolation, @@autocommit;\n```\n\n先确认“在哪台、什么角色、什么版本”，再操作。\n\n## 2. 配置和值来源\n"
+            }
+          ]
+        },
+        {
+          "term": "binlog_expire_logs_seconds",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/mysql/08-production-operations/06-MySQL迁移到TBase生产方案.md",
+              "line": 230,
+              "context": "  'enforce_gtid_consistency',\n  'binlog_expire_logs_seconds',\n  'lower_case_table_names',\n  'character_set_server',\n  'collation_server',\n  'time_zone'\n);\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PostgreSQL",
+      "prefix": "docs/data-systems/databases/postgresql/",
+      "articles": 21,
+      "topics": [
+        {
+          "term": "shared_buffers",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/01-foundations-sql/01-PostgreSQL解决什么问题与一条SQL的完整路径.md",
+              "line": 34,
+              "context": "shared memory\n  ├─ shared_buffers\n  ├─ WAL buffers\n  └─ locks and process state\n```\n\n默认是一连接一后端进程，而不是每条 SQL 新建进程。高连接数会带来进程内存、调度和争用成本，因此生产环境常使用连接池，并区分 session、transaction pooling 对会话状态和 prepared statement 的影响。\n"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/03-performance/12-PostgreSQL连接PgBouncer内存HugePages与IO.md",
+              "line": 26,
+              "context": "```text\nshared_buffers\n+ backend/process base\n+ concurrent operations × work_mem (sort/hash nodes)\n+ maintenance/autovacuum memory\n+ WAL and extensions\n+ OS Page Cache\n```"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/05-operations-internals/17-PostgreSQL性能容量监控安全升级与故障Runbook.md",
+              "line": 42,
+              "context": "\n内存不是 `shared_buffers + max_connections × work_mem` 的简单固定分配。`work_mem` 可被一个查询的多个 Sort/Hash 节点、并行 Worker 和多个活跃 Session 分别使用；还要加 `maintenance_work_mem`、Autovacuum、WAL、连接 Backend、扩展、OS Page Cache 和容器余量。\n\n```text\n并发内存峰值\n≈ shared_buffers\n + 活跃查询数 × 每查询并发内存节点 × work_mem\n + 并行 Worker/维护/Autovacuum"
+            }
+          ]
+        },
+        {
+          "term": "work_mem",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/01-foundations-sql/05-PostgreSQL-SQL-CTE-Window-JSONB-Array与全文检索.md",
+              "line": 166,
+              "context": "\n排序键要稳定，时间相同则补唯一键，否则 `row_number` 和累计结果可能在多次执行间变化。Window Sort/WindowAgg 可能消耗 `work_mem` 并落临时磁盘；一个查询的多个 Sort/Hash 节点可以分别使用内存，不能为了消除一次 Spill 全局盲目放大 `work_mem`。\n\n## 4. JSONB 与 Array {/* #jsonb-与-array */}\n\n### 4.1 JSON 还是 JSONB {/* #json-还是-jsonb */}\n\n`json` 保留输入文本格式，每次操作重新解析；`jsonb` 以分解后的二进制形式保存，支持索引和丰富操作，通常适合查询。JSONB 不保留空白、Key 顺序和重复 Key 的全部原貌。"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/03-performance/12-PostgreSQL连接PgBouncer内存HugePages与IO.md",
+              "line": 28,
+              "context": "+ backend/process base\n+ concurrent operations × work_mem (sort/hash nodes)\n+ maintenance/autovacuum memory\n+ WAL and extensions\n+ OS Page Cache\n```\n\n`work_mem` 是每个执行节点、每个并行 worker 的潜在预算，不是每连接固定只用一次。根据并发计划和 spill 证据设置。"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/05-operations-internals/17-PostgreSQL性能容量监控安全升级与故障Runbook.md",
+              "line": 42,
+              "context": "\n内存不是 `shared_buffers + max_connections × work_mem` 的简单固定分配。`work_mem` 可被一个查询的多个 Sort/Hash 节点、并行 Worker 和多个活跃 Session 分别使用；还要加 `maintenance_work_mem`、Autovacuum、WAL、连接 Backend、扩展、OS Page Cache 和容器余量。\n\n```text\n并发内存峰值\n≈ shared_buffers\n + 活跃查询数 × 每查询并发内存节点 × work_mem\n + 并行 Worker/维护/Autovacuum"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/05-operations-internals/20-PostgreSQL核心监控指标采集与告警.md",
+              "line": 128,
+              "context": "\n`rate(pg_stat_database_temp_bytes[5m])` 输出字节/秒；临时落盘突增应关联 Top SQL、Sort/Hash、并行节点与 work_mem。不能为了消灭临时文件全局放大 work_mem，因为它可被一个查询的多个节点和多个 Worker 分别使用。\n\n## 6. Vacuum、XID 与维护进度\n\n`n_dead_tup` 是估计值；需要连同表大小、更新速率、Autovacuum 的执行/完成时间、长事务和 Slot 一起看。死元组多不直接等于可回收磁盘字节，普通 Vacuum 通常复用空间而不是立即缩小文件；不要自动执行 VACUUM FULL。\n\n[pg_database_wraparound.go](https://github.com/prometheus-community/postgres_exporter/blob/v0.18.1/collector/pg_database_wraparound.go)查询的是 `age(datfrozenxid)` 和 `mxid_age(datminmxid)`，却在该版本名称中使用 `_seconds`。源码中的值是 ID 年龄，不能换算成“多少天没 Vacuum”。实际接入可在指标字典中显式改名/标注，再按事务消耗率、Freeze 预算和修复时间设预警。"
+            }
+          ]
+        },
+        {
+          "term": "maintenance_work_mem",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/03-performance/12-PostgreSQL连接PgBouncer内存HugePages与IO.md",
+              "line": 46,
+              "context": "总内存 ≠ shared_buffers + max_connections × work_mem\n还要考虑每会话/后台进程、并发算子倍数、maintenance_work_mem、OS page cache 与连接池\n```\n\n使用真实事务并发逐步提高连接数，记录 TPS、P95/P99、active/idle/waiting、上下文切换、RSS、page fault 和磁盘延迟。`work_mem` 可被一个查询的多个 sort/hash 节点和并行 worker 分别使用，不能直接设成“剩余内存/连接数”。\n\n```sql\nSELECT state, wait_event_type, wait_event, count(*) FROM pg_stat_activity GROUP BY 1,2,3;"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/05-operations-internals/17-PostgreSQL性能容量监控安全升级与故障Runbook.md",
+              "line": 42,
+              "context": "\n内存不是 `shared_buffers + max_connections × work_mem` 的简单固定分配。`work_mem` 可被一个查询的多个 Sort/Hash 节点、并行 Worker 和多个活跃 Session 分别使用；还要加 `maintenance_work_mem`、Autovacuum、WAL、连接 Backend、扩展、OS Page Cache 和容器余量。\n\n```text\n并发内存峰值\n≈ shared_buffers\n + 活跃查询数 × 每查询并发内存节点 × work_mem\n + 并行 Worker/维护/Autovacuum"
+            }
+          ]
+        },
+        {
+          "term": "max_connections",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/03-performance/12-PostgreSQL连接PgBouncer内存HugePages与IO.md",
+              "line": 11,
+              "context": "\nPostgreSQL 通常每客户端连接一个 Backend。连接数提高会增加进程内存、调度、锁数组和并发查询资源，不应直接把 `max_connections` 调到几千。\n\n## 1. PgBouncer {/* #pgbouncer */}\n\n| 模式 | 复用范围 | 限制 |\n| --- | --- | --- |\n| session | 整个客户端会话 | 复用率低，语义完整 |"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/05-operations-internals/17-PostgreSQL性能容量监控安全升级与故障Runbook.md",
+              "line": 42,
+              "context": "\n内存不是 `shared_buffers + max_connections × work_mem` 的简单固定分配。`work_mem` 可被一个查询的多个 Sort/Hash 节点、并行 Worker 和多个活跃 Session 分别使用；还要加 `maintenance_work_mem`、Autovacuum、WAL、连接 Backend、扩展、OS Page Cache 和容器余量。\n\n```text\n并发内存峰值\n≈ shared_buffers\n + 活跃查询数 × 每查询并发内存节点 × work_mem\n + 并行 Worker/维护/Autovacuum"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/05-operations-internals/20-PostgreSQL核心监控指标采集与告警.md",
+              "line": 80,
+              "context": "\n最老事务年龄升高时，继续用 `pg_stat_activity`、`pg_blocking_pids()` 定位 Owner 与阻塞链；监控查询不把 PID 或完整 query 放进长期时序标签。连接预算应考虑 max_connections、保留连接、池和后台进程，不能把 numbackends 与某个全局分母不加说明地称为“可用业务连接比例”。\n\n```yaml\ngroups:\n  - name: postgresql-transaction-example\n    rules:\n      - alert: PostgreSQLIdleTransactionTooOld"
+            }
+          ]
+        },
+        {
+          "term": "synchronous_commit",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/01-foundations-sql/01-PostgreSQL解决什么问题与一条SQL的完整路径.md",
+              "line": 94,
+              "context": "→ COMMIT record enters WAL\n→ synchronous_commit policy waits for required WAL durability/replica state\n→ COMMIT response\n→ dirty data page may be written later\n→ checkpoint controls recovery starting point\n```\n\nWAL 的基本约束是相关 WAL 必须先于数据页写入稳定存储，这样宕机后可从最近 checkpoint 开始重放日志恢复。提交并不要求每个脏数据页立即落盘；它主要要求提交日志达到配置承诺的持久化阶段。"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/02-storage-concurrency/08-PostgreSQL-WAL-Commit-Checkpoint恢复与Timeline.md",
+              "line": 15,
+              "context": "\n因此 COMMIT 成功通常不要求表和索引的所有脏页已经落盘，只要求 Commit Record 达到 `synchronous_commit` 所承诺的持久化阶段。崩溃后，PostgreSQL 用 WAL 重做尚未写入数据文件的变化。\n\n## 1. Buffer、WAL 与数据文件\n\n一次修改的简化路径：\n\n```text"
+            },
+            {
+              "file": "docs/data-systems/databases/postgresql/04-ha-dr/13-PostgreSQL流复制同步复制Slot与Hot-Standby.md",
+              "line": 20,
+              "context": "\n异步复制主库提交不等待副本，主故障可能丢未到达 WAL。同步复制按 `synchronous_standby_names` 和 `synchronous_commit` 等待指定阶段，可降低 RPO，但副本/网络慢会进入主事务 P99。\n\n## 2. Replication Slot {/* #replication-slot */}\n\n物理 Slot 防止主库删除副本尚需 WAL；副本长期离线会让 `pg_wal` 无限增长直到磁盘满。设置容量上限/告警，废弃 Slot 需先确认消费者身份和恢复策略再删除。\n\n## 3. Hot Standby 冲突 {/* #hot-standby-冲突 */}"
+            }
+          ]
+        },
+        {
+          "term": "checkpoint_timeout",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/02-storage-concurrency/08-PostgreSQL-WAL-Commit-Checkpoint恢复与Timeline.md",
+              "line": 106,
+              "context": "\n- 到达 `checkpoint_timeout`；\n- WAL 量接近 `max_wal_size` 的检查点压力；\n- 管理动作或关机；\n- 显式 `CHECKPOINT`。\n\n`max_wal_size` 不是严格磁盘上限。高峰、归档、复制 Slot 和恢复过程都可能让 `pg_wal` 超过它，磁盘必须保留额外安全空间。\n"
+            }
+          ]
+        },
+        {
+          "term": "max_wal_size",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/02-storage-concurrency/08-PostgreSQL-WAL-Commit-Checkpoint恢复与Timeline.md",
+              "line": 107,
+              "context": "- 到达 `checkpoint_timeout`；\n- WAL 量接近 `max_wal_size` 的检查点压力；\n- 管理动作或关机；\n- 显式 `CHECKPOINT`。\n\n`max_wal_size` 不是严格磁盘上限。高峰、归档、复制 Slot 和恢复过程都可能让 `pg_wal` 超过它，磁盘必须保留额外安全空间。\n\n关键参数关系："
+            }
+          ]
+        },
+        {
+          "term": "autovacuum_vacuum_scale_factor",
+          "hits": [
+            {
+              "file": "docs/data-systems/databases/postgresql/02-storage-concurrency/09-PostgreSQL-Vacuum-Autovacuum-Freeze与Bloat.md",
+              "line": 44,
+              "context": "≈ autovacuum_vacuum_threshold\n + autovacuum_vacuum_scale_factor × 估算表行数\n```\n\nAnalyze 使用对应的 `autovacuum_analyze_threshold/scale_factor`。目标版本还可能根据 INSERT 数量触发 Vacuum。最终行为受表级参数、全局参数、Worker、Cost Delay/Limit 和 Anti-wraparound 任务影响。\n\n对于 10 亿行大表，默认比例即使很小也可能允许数千万 Dead Tuple；热点大表应使用更小 scale factor 和合适 threshold：\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kafka",
+      "prefix": "docs/data-systems/messaging/kafka/",
+      "articles": 15,
+      "topics": [
+        {
+          "term": "min.insync.replicas",
+          "hits": [
+            {
+              "file": "docs/data-systems/messaging/kafka/13-Kafka-Topic-Producer-Consumer与Group命令手册.md",
+              "line": 112,
+              "context": "\n修改前后都要 `--describe` 留证。`retention.ms`、`cleanup.policy` 和 `min.insync.replicas` 会直接影响数据保留与写入可用性，不能脱离副本数和生产者 `acks` 单独调整。\n\n## 5. 用控制台验证消息链路\n\n```bash\n# [W] 启动生产者；输入一行发送一条消息\n$KAFKA_HOME/bin/kafka-console-producer.sh \\"
+            },
+            {
+              "file": "docs/data-systems/messaging/kafka/14-Kafka核心监控指标采集与告警.md",
+              "line": 108,
+              "context": "\nURP 表示 ISR 小于副本集合，未必已低于 min.insync.replicas；UnderMinIsr 则意味着已经越过该副本预算，可能影响满足 acks=all 的写入。AtMinIsr 说明进一步失去一个副本的余量不足，不等于当前必然写入失败。\n\n```yaml\ngroups:\n  - name: kafka-replication-example\n    rules:\n      - alert: KafkaPartitionBelowMinISR"
+            }
+          ]
+        },
+        {
+          "term": "enable.idempotence",
+          "hits": []
+        },
+        {
+          "term": "max.in.flight.requests.per.connection",
+          "hits": []
+        },
+        {
+          "term": "cleanup.policy",
+          "hits": [
+            {
+              "file": "docs/data-systems/messaging/kafka/13-Kafka-Topic-Producer-Consumer与Group命令手册.md",
+              "line": 112,
+              "context": "\n修改前后都要 `--describe` 留证。`retention.ms`、`cleanup.policy` 和 `min.insync.replicas` 会直接影响数据保留与写入可用性，不能脱离副本数和生产者 `acks` 单独调整。\n\n## 5. 用控制台验证消息链路\n\n```bash\n# [W] 启动生产者；输入一行发送一条消息\n$KAFKA_HOME/bin/kafka-console-producer.sh \\"
+            }
+          ]
+        },
+        {
+          "term": "max.poll.interval.ms",
+          "hits": []
+        },
+        {
+          "term": "isolation.level",
+          "hits": []
+        }
+      ]
+    },
+    {
+      "name": "Nginx",
+      "prefix": "docs/networking/load-balancing-proxy/nginx/",
+      "articles": 23,
+      "topics": [
+        {
+          "term": "worker_connections",
+          "hits": [
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/01-core/07-Nginx-Master-Worker事件循环连接与定时器.md",
+              "line": 59,
+              "context": "\n`listen ... backlog=`、内核 `somaxconn`、SYN Cookie、网卡/软中断和 Worker 调度共同决定突发承载。只增大 `worker_connections` 不能修复 Accept Queue 溢出。\n\n## 4. Accept Mutex 与 Reuseport\n\n多个 Worker 共享监听 Socket 时需要避免惊群和负载不均。Nginx/内核版本会影响 Accept Mutex 的必要性和默认行为。\n\n`reuseport` 可为各 Worker 创建独立监听 Socket，由内核分配新连接："
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/01-core/13-nginx源码分析-基础数据结构.md",
+              "line": 306,
+              "context": "events {\n    worker_connections 128;\n}\n\nhttp {\n    server {\n        listen 8080;\n        location / {"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/04-production/11-Nginx-Worker连接CPU内存带宽与容量压测.md",
+              "line": 11,
+              "context": "\n容量规划不能从 `worker_connections × worker_processes` 得出一个“最大并发”。Nginx 是请求链中的一层，连接、FD、内存、CPU、带宽、临时盘和上游容量任何一项都可能先达到边界。\n\n## 1. 先定义流量模型\n\n至少记录：\n\n- 新连接/s、并发连接和连接寿命；"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/04-production/22-Nginx核心监控指标采集与告警.md",
+              "line": 78,
+              "context": "\n语义见[stub_status 模块](https://nginx.org/en/docs/http/ngx_http_stub_status_module.html)。HTTP/2 一连接可复用多个流，Upstream 连接和其他 FD 又有独立消耗，不能用 Active / worker_connections 直接得到精确“请求并发占用率”。\n\n## 4. 原生查询与连接诊断\n\n```promql\nsum by (cluster, instance) (\n  rate(nginx_http_requests_total{job=\"nginx\"}[5m])"
+            }
+          ]
+        },
+        {
+          "term": "proxy_read_timeout",
+          "hits": [
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/02-proxy-content/04-Nginx反向代理Upstream负载均衡健康与重试.md",
+              "line": 94,
+              "context": "proxy_send_timeout 30s;\nproxy_read_timeout 60s;\n```\n\n- Connect Timeout：建立上游连接；\n- Send Timeout：两次向上游写操作之间允许的间隔；\n- Read Timeout：两次从上游读操作之间允许的间隔。\n"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/03-protocols/16-Nginx-WebSocket-SSE-gRPC-FastCGI与流式代理.md",
+              "line": 40,
+              "context": "    proxy_set_header Host $host;\n    proxy_read_timeout 300s;\n    proxy_pass http://ws_backend;\n}\n```\n\nUpgrade 与 Connection 是 Hop-by-Hop Header，Nginx 不会自动原样转发。连接建立后普通 HTTP 响应缓存不适用。\n"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/04-production/10-Nginx大模型网关日志配置实践.md",
+              "line": 134,
+              "context": "    proxy_connect_timeout 10s;\n    proxy_read_timeout 600s;\n}\n```\n\n## 5. 日志示例\n\n```json"
+            }
+          ]
+        },
+        {
+          "term": "proxy_buffering",
+          "hits": [
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/02-proxy-content/04-Nginx反向代理Upstream负载均衡健康与重试.md",
+              "line": 160,
+              "context": "\n开启 `proxy_buffering` 时，Nginx 尽快读上游并通过内存/临时文件隔离慢客户端；关闭后，上游更直接承受下游消费速度。对普通 API，Buffering 有助释放上游连接；对 SSE/Token Streaming，可能推迟首块输出。\n\n请求体由 `proxy_request_buffering` 控制，两者不能混为一谈。\n\n## 11. 常见故障证据\n\n| 现象 | 证据与判断 |"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/02-proxy-content/06-Nginx静态文件Sendfile-Buffer压缩与Cache.md",
+              "line": 90,
+              "context": "```nginx\nproxy_buffering on;\nproxy_buffer_size 16k;\nproxy_buffers 16 16k;\nproxy_busy_buffers_size 64k;\nproxy_max_temp_file_size 1g;\n```\n"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/03-protocols/16-Nginx-WebSocket-SSE-gRPC-FastCGI与流式代理.md",
+              "line": 56,
+              "context": "    proxy_http_version 1.1;\n    proxy_buffering off;\n    proxy_cache off;\n    proxy_read_timeout 5m;\n    proxy_set_header Connection \"\";\n    proxy_pass http://event_backend;\n}\n```"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/04-production/10-Nginx大模型网关日志配置实践.md",
+              "line": 130,
+              "context": "    # 流式响应优化\n    proxy_buffering off;\n    proxy_request_buffering off;\n\n    proxy_connect_timeout 10s;\n    proxy_read_timeout 600s;\n}\n```"
+            }
+          ]
+        },
+        {
+          "term": "proxy_cache_valid",
+          "hits": [
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/02-proxy-content/06-Nginx静态文件Sendfile-Buffer压缩与Cache.md",
+              "line": 167,
+              "context": "        proxy_cache_key \"$scheme$host$request_uri\";\n        proxy_cache_valid 200 10m;\n        proxy_cache_valid 404 30s;\n        add_header X-Cache-Status $upstream_cache_status always;\n    }\n}\n```\n"
+            }
+          ]
+        },
+        {
+          "term": "keepalive_timeout",
+          "hits": [
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/02-proxy-content/04-Nginx反向代理Upstream负载均衡健康与重试.md",
+              "line": 51,
+              "context": "    keepalive_requests 1000;\n    keepalive_timeout 60s;\n}\n```\n\n`zone` 让 Worker 共享部分 Upstream 运行时状态；支持的动态能力与健康检查仍取决于 Nginx 版本和发行版。\n\n## 3. 负载均衡算法"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/03-protocols/15-Nginx-HTTP1-HTTP2-HTTP3请求解析连接与流控.md",
+              "line": 61,
+              "context": "```nginx\nkeepalive_timeout 65s;\nkeepalive_requests 1000;\nkeepalive_time 1h;\n```\n\n长 Keepalive 降低握手成本但占用连接、FD 和内存。`keepalive_requests`/`keepalive_time` 也可限制单连接长期积累的资源。\n"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/04-production/09-Nginx限流限连鉴权WAF与安全加固.md",
+              "line": 161,
+              "context": "client_body_timeout 30s;\nkeepalive_timeout 60s;\nlarge_client_header_buffers 4 16k;\n```\n\n数值应基于真实业务。设置过小会拒绝合法上传和大 Cookie；过大则扩大内存、磁盘和慢请求攻击面。还需限制临时盘容量、文件数量和并发上传。\n\n## 11. 隐藏版本与最小权限"
+            }
+          ]
+        },
+        {
+          "term": "worker_rlimit_nofile",
+          "hits": [
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/01-core/07-Nginx-Master-Worker事件循环连接与定时器.md",
+              "line": 140,
+              "context": "\n- `worker_rlimit_nofile` 与进程 `RLIMIT_NOFILE`；\n- 系统文件描述符上限；\n- 内存与 Cgroup；\n- Conntrack、端口和 NAT；\n- Upstream 最大连接与业务容量。\n\n## 7. 读写与背压"
+            },
+            {
+              "file": "docs/networking/load-balancing-proxy/nginx/04-production/11-Nginx-Worker连接CPU内存带宽与容量压测.md",
+              "line": 48,
+              "context": "\n`worker_connections` 包含上游连接。还需检查 `worker_rlimit_nofile`、systemd `LimitNOFILE`、Cgroup 和内核全局限制。\n\n## 3. Upstream 端口与 NAT\n\nNginx 连接同一后端四元组时，需要本地临时端口。大量短连接可能耗尽端口并积累 TIME_WAIT：\n\n```bash"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ceph",
+      "prefix": "docs/storage/ceph/",
+      "articles": 31,
+      "topics": [
+        {
+          "term": "osd_memory_target",
+          "hits": [
+            {
+              "file": "docs/storage/ceph/03-deployment/07-部署前的集群规划.md",
+              "line": 251,
+              "context": "\nBlueStore 的 `osd_memory_target` 是目标值，不是绝对硬上限。官方当前文档给出的默认值是 4 GiB，并强调恢复、内核回收延迟以及其他守护进程会带来额外占用。\n\n一个保守的初步估算方法是：\n\n```text\n主机内存预算\n= OSD 数量 × 每 OSD 内存目标"
+            },
+            {
+              "file": "docs/storage/ceph/03-deployment/10-Cephadm管理机制.md",
+              "line": 413,
+              "context": "ceph config show osd.3\nceph config get osd osd_memory_target\n```\n\n### 6.2 配置作用域 {/* #2-配置作用域 */}\n\n常见作用域：\n"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/28-大规模Ceph集群优化.md",
+              "line": 588,
+              "context": "\nBlueStore 使用缓存来平衡 metadata 和 data。`osd_memory_target` 是目标而非绝对硬上限，实际 RSS 可能受碎片、线程、PG、RocksDB 和工作负载影响。\n\n检查：\n\n```bash\nceph config get osd osd_memory_target\nceph config get osd bluestore_cache_autotune"
+            }
+          ]
+        },
+        {
+          "term": "min_size",
+          "hits": [
+            {
+              "file": "docs/storage/ceph/02-architecture/04-Ceph数据组织原理.md",
+              "line": 112,
+              "context": "| size | 副本池的目标副本数量 |\n| min_size | 允许 IO 所需的最低副本条件 |\n| PG 数量与 Autoscaler | 决定对象被分成多少组 |\n| CRUSH Rule | 决定使用哪些设备和故障域 |\n| Quota | 限制 Pool 容量或对象数 |\n| Application Tag | 标记 Pool 供 RBD、CephFS、RGW 等应用使用 |\n\n### 3.2 Pool 是不是一组固定磁盘 {/* #pool-是不是一组固定磁盘 */}"
+            },
+            {
+              "file": "docs/storage/ceph/02-architecture/05-CRUSH数据分布原理.md",
+              "line": 502,
+              "context": "\n**三副本为什么只剩三分之一容量，size 和 min_size 有什么区别，纠删码又为什么可以提高空间利用率？**\n\n## 15. 自测题 {/* #自测题 */}\n\n1. CRUSH 为什么不需要维护每个对象的中心位置表？\n2. CRUSH Map 和 CRUSH Rule 有什么区别？\n3. Failure Domain 设置为 Host 代表什么？"
+            },
+            {
+              "file": "docs/storage/ceph/02-architecture/06-副本纠删码与一致性.md",
+              "line": 5,
+              "context": "sidebar_position: 6\ndescription: \"讲清副本池与纠删码、size/min_size、k+m、Scrub/Deep Scrub，以及副本与备份的区别。\"\ntags: [Ceph, 学习路线, 存储, 副本, 纠删码]\n---\n\n# Ceph 数据保护原理：副本、纠删码、minsize 与 Scrub\n\n《Ceph 从零基础到生产运维实战》第 6 篇"
+            },
+            {
+              "file": "docs/storage/ceph/04-client-usage/11-Pool与CephX权限管理.md",
+              "line": 32,
+              "context": "- 创建副本 Pool，并正确设置应用类型\n- 理解 `size`、`min_size`、CRUSH Rule 和 failure domain 的关系\n- 使用 PG autoscaler 管理 PG 数量\n- 配置 Pool 容量或对象数配额\n- 解释 CephX 的认证与授权过程\n- 为 RBD 和 CephFS 创建最小权限客户端\n- 安全分发、验证、轮换和回收 keyring\n- 避免误删 Pool、覆盖 caps 和泄露 `client.admin` 密钥"
+            },
+            {
+              "file": "docs/storage/ceph/04-client-usage/12-CephFS文件存储实战.md",
+              "line": 270,
+              "context": "- 副本数\n- min_size\n- CRUSH 规则\n- 设备类\n- PG Autoscaler 状态\n- 容量配额\n- Application 标签\n"
+            },
+            {
+              "file": "docs/storage/ceph/04-client-usage/13-RBD块存储实战.md",
+              "line": 198,
+              "context": "ceph osd pool get rbd-prod size\nceph osd pool get rbd-prod min_size\n```\n\n确认：\n\n- Application 标签为 `rbd`\n- 副本或 EC 策略符合设计"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/18-建立Ceph故障排查方法.md",
+              "line": 32,
+              "context": ":::danger 风险提示\nPG 修复涉及数据副本选择。`pg repair`、降低 `min_size`、强制恢复、标记 unfound 对象丢失等操作不能按模板盲目执行。生产中必须先保存现场、判断权威副本并确认应用影响。\n:::\n\n## 2. PG 到底解决了什么问题 {/* #pg-到底解决了什么问题 */}\n\n假设集群有数十亿个对象。如果 MON 为每个对象保存「它在哪几块盘上」，映射规模会非常大，数据变化时管理成本也难以接受。\n"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/19-常见故障实战.md",
+              "line": 775,
+              "context": "- 强制移除 OSD\n- 降低副本数或 min_size\n- 绕过上层接口删除 RADOS 对象\n\n### 22.4 恢复完成标准 {/* #恢复完成标准 */}\n\n- 写入恢复\n- OSD_FULL/POOL_FULL 解除"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/20-磁盘故障与数据恢复.md",
+              "line": 718,
+              "context": "- 网络或磁盘性能太差\n- Pool 的 size/min_size、EC 约束无法满足\n\n不要因为「等得久」就加 `--force`。先定位阻塞原因。\n\n### 16.2 新盘没有自动创建 OSD {/* #新盘没有自动创建-osd */}\n\n检查："
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/26-Ceph自动化巡检与报告.md",
+              "line": 335,
+              "context": "- Pool 是否有 application tag\n- size/min_size 是否符合标准\n- EC profile 是否经过审批\n- quota 是否缺失或超限\n- pg_autoscale_mode\n- autoscaler 是否建议 NEW PG_NUM\n- target_size_ratio/bytes 是否矛盾\n- 空闲或遗留 Pool"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/27-生产事故应急.md",
+              "line": 253,
+              "context": "- 清空防火墙或重启全部交换机\n- 将 Pool `min_size` 降到 1 以恢复写入\n- 提高 full ratio 掩盖容量问题\n- 对未知 PG 直接 `mark_unfound_lost`\n- 删除损坏对象「让告警消失」\n- 在生产盘执行 FIO 或擦盘\n- 同时修改恢复、网络、CRUSH 和内核参数\n"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/28-大规模Ceph集群优化.md",
+              "line": 926,
+              "context": "- CRUSH 大改\n- 副本/min_size\n- `mark_unfound_lost`\n- full ratio\n- 批量 restart\n- `cleanupPolicy`\n- 跨站点 promote\n"
+            }
+          ]
+        },
+        {
+          "term": "nearfull",
+          "hits": [
+            {
+              "file": "docs/storage/ceph/01-overview/01-为什么需要Ceph.md",
+              "line": 205,
+              "context": "- OSD 之间的数据分布不可能始终绝对均匀\n- Ceph 的 Nearfull、Backfillfull 和 Full 阈值\n- 某个节点故障后，剩余节点是否还有足够空间完成恢复\n\n因此，**5.33 TB 是用于理解容量关系的估算值，不是精确的生产容量承诺**。\n\n### 4.2 为什么三副本只剩三分之一 {/* #为什么三副本只剩三分之一 */}\n"
+            },
+            {
+              "file": "docs/storage/ceph/03-deployment/07-部署前的集群规划.md",
+              "line": 474,
+              "context": "\n**原始容量、可用容量、副本与纠删码开销、恢复预留，以及 nearfull、backfillfull 和 full 红线。**\n\n## 12. 自测题 {/* #自测题 */}\n\n1. 为什么三个 MON 通常要部署在三台不同 Host 上？\n2. 三副本、故障域为 Host 时，为什么只有三台 OSD 主机不利于故障恢复？\n3. 一块 NVMe 为多个 HDD OSD 提供 DB 时，会引入什么故障影响？"
+            },
+            {
+              "file": "docs/storage/ceph/03-deployment/08-Ceph容量计算.md",
+              "line": 5,
+              "context": "sidebar_position: 8\ndescription: \"讲清 Raw、理论可用与规划可用容量，以及副本/纠删码开销、恢复预留与 nearfull/backfillfull/full 红线。\"\ntags: [Ceph, 学习路线, 存储, 容量规划]\n---\n\n# Ceph 容量规划：原始容量、可用容量、恢复预留与 Full 红线\n\n《Ceph 从零基础到生产运维实战》第 8 篇"
+            },
+            {
+              "file": "docs/storage/ceph/04-client-usage/13-RBD块存储实战.md",
+              "line": 283,
+              "context": "\n可以创建很多逻辑容量大于集群物理容量的 Image，但如果所有业务同时写满，Ceph 仍会达到 Nearfull 或 Full。\n\n生产环境必须监控：\n\n- Pool 逻辑分配总量\n- Image 实际占用\n- 集群 Raw 使用率"
+            },
+            {
+              "file": "docs/storage/ceph/04-client-usage/14-RGW对象存储实战.md",
+              "line": 458,
+              "context": "- 副本或纠删码开销计算\n- nearfull、backfillfull、full 阈值监控\n- 容量增长趋势预测\n- 故障恢复所需的安全余量\n\n所有用户配额之和也可以大于集群容量，这类似资源超分配。是否允许超分，需要结合实际使用率和扩容周期制定规则。\n\n### 11.2 统计可能不是实时精确值 {/* #统计可能不是实时精确值 */}"
+            },
+            {
+              "file": "docs/storage/ceph/05-operations/16-Ceph日常运维.md",
+              "line": 57,
+              "context": "- `PG_AVAILABILITY` 可能意味着部分数据已经不可访问\n- `OSD_NEARFULL` 可能正在逼近写入停止\n\n严重程度不能只由颜色决定。\n\n### 2.4 维护结束不等于服务恢复 {/* #维护结束不等于服务恢复 */}\n\n必须同时验证："
+            },
+            {
+              "file": "docs/storage/ceph/05-operations/17-Ceph监控告警.md",
+              "line": 51,
+              "context": "| --- | --- | --- |\n| 健康检查 | Ceph 已经识别出什么异常 | OSD down、PG inactive、Pool nearfull |\n| 指标 | 异常何时出现、趋势如何 | 容量、延迟、吞吐、错误率 |\n| 日志 | 某个组件为什么失败 | 认证失败、磁盘 I/O 错误、进程崩溃 |\n| 业务探测 | 用户是否真的能使用服务 | RBD I/O、CephFS 文件操作、S3 PUT/GET |\n\n四类信号不能互相替代。例如：\n"
+            },
+            {
+              "file": "docs/storage/ceph/05-operations/31-Ceph核心监控指标采集与告警.md",
+              "line": 99,
+              "context": "\nRaw 比例只是全局概览；最满的 OSD、某个 CRUSH 故障域或设备类可能先触发 nearfull/backfillfull/full。需要按副本/EC、失去一个故障域后的余量与恢复写入计算预算，不能承诺“平均还有 20% 就一定能恢复”。\n\n每个 OSD 的窗口平均读操作毫秒数：\n\n```promql\n(\n  rate(ceph_osd_op_r_latency_sum{job=\"ceph-daemon\"}[5m])"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/18-建立Ceph故障排查方法.md",
+              "line": 187,
+              "context": "4. 是否有 OSD down/out？\n5. 是否存在 nearfull/backfillfull/full？\n6. 是否刚发生换盘、扩容、CRUSH 或副本数变更？\n7. 状态是否持续推进？\n8. 对应业务是否读写失败？\n\n## 7. 从 PG ID 反查业务范围 {/* #从-pg-id-反查业务范围 */}\n"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/19-常见故障实战.md",
+              "line": 2,
+              "context": "---\ntitle: \"Ceph 容量危机实战：Nearfull、Backfillfull、Full 的判断与应急处理\"\nsidebar_label: \"19. Ceph 容量危机实战：Nearfull、Backfillfull、Full 的判断与应急处理\"\nsidebar_position: 19\ndescription: \"区分 nearfull/backfillfull/full 与 OSD_FULL/POOL_FULL，定位最满 OSD，按止写、清理、扩容顺序应急并验证恢复。\"\ntags: [Ceph, 学习路线, 存储, 容量]\n---\n"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/20-磁盘故障与数据恢复.md",
+              "line": 152,
+              "context": "4. 是否还有其他 OSD、主机或机架异常？\n5. 集群是否接近 nearfull/backfillfull/full？\n6. 当前是否正在升级、回填、扩容或进行计划维护？\n7. 受影响的是副本 Pool 还是纠删码 Pool？\n8. 客户端是否已经出现读写失败或延迟升高？\n\n### 5.1 同一主机多个 OSD 同时 down {/* #同一主机多个-osd-同时-down */}\n"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/21-Ceph性能分析与优化.md",
+              "line": 207,
+              "context": "- OSD down\n- nearfull/backfillfull/full\n- 持续 slow ops\n- 未知网络或设备错误\n\n不要直接开始大规模压测。\n\n### 6.3 记录环境 {/* #记录环境 */}"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/22-Cephadm滚动升级实战.md",
+              "line": 176,
+              "context": "\n不要在接近 `nearfull`、`backfillfull` 或 `full` 的状态升级。一个 OSD 或主机意外离线时必须仍有恢复空间。\n\n### 6.6 崩溃记录 {/* #崩溃记录 */}\n\n```bash\nceph crash ls-new\n```"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/26-Ceph自动化巡检与报告.md",
+              "line": 311,
+              "context": "- 最大/最小 OSD 使用差异\n- nearfull/backfillfull/full ratio\n- 近 7/30/90 天增长率\n- 达到阈值的预计日期\n- 容量是否足以承受一个 failure domain 故障\n\n容量告警建议同时包含：\n"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/27-生产事故应急.md",
+              "line": 400,
+              "context": "ceph osd df tree\nceph osd dump | grep -E 'full_ratio|backfillfull_ratio|nearfull_ratio'\n```\n\n先判断：\n\n- 是全局容量不足还是单 OSD 倾斜\n- 哪个 Pool 增长"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/28-大规模Ceph集群优化.md",
+              "line": 780,
+              "context": "\n## 34. 容量扩容线不能等于 nearfull {/* #容量扩容线不能等于-nearfull */}\n\n扩容线应早于 Ceph nearfull，并包含：\n\n- 采购和上架周期\n- 数据回填时间\n- 一个主机/机架故障空间"
+            }
+          ]
+        },
+        {
+          "term": "backfillfull",
+          "hits": [
+            {
+              "file": "docs/storage/ceph/01-overview/01-为什么需要Ceph.md",
+              "line": 205,
+              "context": "- OSD 之间的数据分布不可能始终绝对均匀\n- Ceph 的 Nearfull、Backfillfull 和 Full 阈值\n- 某个节点故障后，剩余节点是否还有足够空间完成恢复\n\n因此，**5.33 TB 是用于理解容量关系的估算值，不是精确的生产容量承诺**。\n\n### 4.2 为什么三副本只剩三分之一 {/* #为什么三副本只剩三分之一 */}\n"
+            },
+            {
+              "file": "docs/storage/ceph/03-deployment/07-部署前的集群规划.md",
+              "line": 474,
+              "context": "\n**原始容量、可用容量、副本与纠删码开销、恢复预留，以及 nearfull、backfillfull 和 full 红线。**\n\n## 12. 自测题 {/* #自测题 */}\n\n1. 为什么三个 MON 通常要部署在三台不同 Host 上？\n2. 三副本、故障域为 Host 时，为什么只有三台 OSD 主机不利于故障恢复？\n3. 一块 NVMe 为多个 HDD OSD 提供 DB 时，会引入什么故障影响？"
+            },
+            {
+              "file": "docs/storage/ceph/03-deployment/08-Ceph容量计算.md",
+              "line": 5,
+              "context": "sidebar_position: 8\ndescription: \"讲清 Raw、理论可用与规划可用容量，以及副本/纠删码开销、恢复预留与 nearfull/backfillfull/full 红线。\"\ntags: [Ceph, 学习路线, 存储, 容量规划]\n---\n\n# Ceph 容量规划：原始容量、可用容量、恢复预留与 Full 红线\n\n《Ceph 从零基础到生产运维实战》第 8 篇"
+            },
+            {
+              "file": "docs/storage/ceph/04-client-usage/14-RGW对象存储实战.md",
+              "line": 458,
+              "context": "- 副本或纠删码开销计算\n- nearfull、backfillfull、full 阈值监控\n- 容量增长趋势预测\n- 故障恢复所需的安全余量\n\n所有用户配额之和也可以大于集群容量，这类似资源超分配。是否允许超分，需要结合实际使用率和扩容周期制定规则。\n\n### 11.2 统计可能不是实时精确值 {/* #统计可能不是实时精确值 */}"
+            },
+            {
+              "file": "docs/storage/ceph/05-operations/16-Ceph日常运维.md",
+              "line": 322,
+              "context": "- 客户端延迟是否可接受\n- 是否被 nearfull/backfillfull 阻塞\n\n深入检查单个 PG：\n\n```bash\nceph pg map <pg-id>\nceph pg <pg-id> query"
+            },
+            {
+              "file": "docs/storage/ceph/05-operations/17-Ceph监控告警.md",
+              "line": 256,
+              "context": "| OSD_NEARFULL | OSD 接近容量阈值 | 增长趋势和扩容时间 |\n| OSD_BACKFILLFULL | 回填受容量限制 | 恢复能否继续 |\n| OSD_FULL | 达到 full 阈值 | 写入可能被阻止，优先级极高 |\n| PG_AVAILABILITY | PG 当前不可提供完整 I/O | 业务是否中断 |\n| PG_DEGRADED | PG 副本或分片不完整 | 故障域与恢复进度 |\n| SLOW_OPS | 操作长时间未完成 | OSD、磁盘、网络和恢复负载 |\n| MDS_ALL_DOWN | CephFS 没有可用 MDS | CephFS 客户端访问 |\n| MDS_INSUFFICIENT_STANDBY | MDS Standby 不足 | 故障切换能力 |"
+            },
+            {
+              "file": "docs/storage/ceph/05-operations/31-Ceph核心监控指标采集与告警.md",
+              "line": 99,
+              "context": "\nRaw 比例只是全局概览；最满的 OSD、某个 CRUSH 故障域或设备类可能先触发 nearfull/backfillfull/full。需要按副本/EC、失去一个故障域后的余量与恢复写入计算预算，不能承诺“平均还有 20% 就一定能恢复”。\n\n每个 OSD 的窗口平均读操作毫秒数：\n\n```promql\n(\n  rate(ceph_osd_op_r_latency_sum{job=\"ceph-daemon\"}[5m])"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/18-建立Ceph故障排查方法.md",
+              "line": 25,
+              "context": "- 使用 `ceph pg <pgid> query` 分析 peering 阻塞位置\n- 排查 inactive、stale、undersized、degraded 和 backfillfull\n- 理解 scrub、deep-scrub、inconsistent 和 `pg repair` 的边界\n- 判断 unfound 对象可能位于哪些 OSD\n- 认识 `mark_unfound_lost` 的不可逆数据风险\n- 建立一套从告警到恢复验证的 PG Runbook\n\n:::danger 风险提示"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/19-常见故障实战.md",
+              "line": 2,
+              "context": "---\ntitle: \"Ceph 容量危机实战：Nearfull、Backfillfull、Full 的判断与应急处理\"\nsidebar_label: \"19. Ceph 容量危机实战：Nearfull、Backfillfull、Full 的判断与应急处理\"\nsidebar_position: 19\ndescription: \"区分 nearfull/backfillfull/full 与 OSD_FULL/POOL_FULL，定位最满 OSD，按止写、清理、扩容顺序应急并验证恢复。\"\ntags: [Ceph, 学习路线, 存储, 容量]\n---\n"
+            },
+            {
+              "file": "docs/storage/ceph/06-troubleshooting/20-磁盘故障与数据恢复.md",
+              "line": 152,
+              "context": "4. 是否还有其他 OSD、主机或机架异常？\n5. 集群是否接近 nearfull/backfillfull/full？\n6. 当前是否正在升级、回填、扩容或进行计划维护？\n7. 受影响的是副本 Pool 还是纠删码 Pool？\n8. 客户端是否已经出现读写失败或延迟升高？\n\n### 5.1 同一主机多个 OSD 同时 down {/* #同一主机多个-osd-同时-down */}\n"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/21-Ceph性能分析与优化.md",
+              "line": 207,
+              "context": "- OSD down\n- nearfull/backfillfull/full\n- 持续 slow ops\n- 未知网络或设备错误\n\n不要直接开始大规模压测。\n\n### 6.3 记录环境 {/* #记录环境 */}"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/22-Cephadm滚动升级实战.md",
+              "line": 176,
+              "context": "\n不要在接近 `nearfull`、`backfillfull` 或 `full` 的状态升级。一个 OSD 或主机意外离线时必须仍有恢复空间。\n\n### 6.6 崩溃记录 {/* #崩溃记录 */}\n\n```bash\nceph crash ls-new\n```"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/26-Ceph自动化巡检与报告.md",
+              "line": 311,
+              "context": "- 最大/最小 OSD 使用差异\n- nearfull/backfillfull/full ratio\n- 近 7/30/90 天增长率\n- 达到阈值的预计日期\n- 容量是否足以承受一个 failure domain 故障\n\n容量告警建议同时包含：\n"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/27-生产事故应急.md",
+              "line": 238,
+              "context": "4. OSD down 与副本数\n5. full/backfillfull\n6. 大量 degraded/undersized\n7. recovery/backfill\n8. slow ops 与性能\n9. 单个守护进程和非关键模块\n\n实际严重度仍结合业务。例如只有一个 RGW 入口全部不可用时，集群数据健康但对象业务仍可能是 SEV-1。"
+            }
+          ]
+        },
+        {
+          "term": "mclock",
+          "hits": [
+            {
+              "file": "docs/storage/ceph/05-operations/16-Ceph日常运维.md",
+              "line": 670,
+              "context": "- OSD CPU 和内存\n- mClock QoS\n- backfillfull\n- CRUSH 约束\n- 故障盘仍在反复上线\n- 业务高峰主动限制后台任务\n\n在增大恢复并发前，先定位瓶颈。如果瓶颈是目标盘或网络，盲目增加并发只会进一步推高业务延迟。"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/21-Ceph性能分析与优化.md",
+              "line": 230,
+              "context": "- Pool size/EC profile/CRUSH rule\n- mClock profile\n- 当前容量水位\n\n没有环境信息，结果无法复现。\n\n## 7. 建立测试账号和 Pool {/* #建立测试账号和-pool */}\n"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/27-生产事故应急.md",
+              "line": 506,
+              "context": "- 单个热 PG/Pool/客户端\n- mClock profile\n\n缓解必须对应瓶颈：\n\n- 业务受恢复影响，可临时切换经过验证的 QoS 策略\n- 单盘故障，隔离并换盘\n- 网络丢包，修复链路"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/28-大规模Ceph集群优化.md",
+              "line": 5,
+              "context": "sidebar_position: 28\ndescription: \"用性能/容量/恢复/控制面/运维五预算管理规模：CRUSH、PG autoscaler、MON/MGR、mClock、分批扩容与换盘流水线。\"\ntags: [Ceph, 学习路线, 存储, 大规模, PG, 运维]\n---\n\n# 大规模 Ceph 集群设计与运维：OSD、PG、对象、恢复窗口和爆炸半径\n\n《Ceph 从零基础到生产运维实战》第 28 篇"
+            }
+          ]
+        },
+        {
+          "term": "pg_autoscale_mode",
+          "hits": [
+            {
+              "file": "docs/storage/ceph/04-client-usage/11-Pool与CephX权限管理.md",
+              "line": 303,
+              "context": "```bash\nceph osd pool set rbd-vm pg_autoscale_mode on\n```\n\n查看：\n\n```bash\nceph osd pool get rbd-vm pg_autoscale_mode"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/26-Ceph自动化巡检与报告.md",
+              "line": 338,
+              "context": "- quota 是否缺失或超限\n- pg_autoscale_mode\n- autoscaler 是否建议 NEW PG_NUM\n- target_size_ratio/bytes 是否矛盾\n- 空闲或遗留 Pool\n- 是否出现跨多个 CRUSH root 的异常 Pool\n\nPool 名称和数量也应与配置基线比较。一个新 Pool 可能来自合法业务，也可能是错误脚本。"
+            },
+            {
+              "file": "docs/storage/ceph/07-performance/28-大规模Ceph集群优化.md",
+              "line": 310,
+              "context": "```bash\nceph osd pool set <pool> pg_autoscale_mode on\n```\n\n大规模生产常见方法：\n\n- 新平台先用 `warn` 观察建议和业务窗口\n- 经过验证后对合适 Pool 使用 `on`"
+            }
+          ]
+        },
+        {
+          "term": "osd_max_backfills",
+          "hits": []
+        }
+      ]
+    },
+    {
+      "name": "etcd",
+      "prefix": "docs/cloud-native/etcd/",
+      "articles": 11,
+      "topics": [
+        {
+          "term": "quota-backend-bytes",
+          "hits": [
+            {
+              "file": "docs/cloud-native/etcd/05-etcd-WAL-Snapshot-bbolt-Compaction-Defrag与Quota.md",
+              "line": 80,
+              "context": "\n`--quota-backend-bytes` 限制 Backend 大小。任一成员越过配额后，会触发集群级 `NOSPACE` Alarm，集群进入维护模式，主要允许读和删除。客户端收到 `mvcc: database space exceeded` 时，不应盲目重试写入；官方文档还指出，配额在 API 层和 Apply 层都会检查，因此报错的那次请求仍可能已经落入 Backend，业务必须按幂等方式核对结果。\n\n### 4.1 NOSPACE 恢复 Runbook {/* #nospace-恢复-runbook */}\n\n1. **止血**：暂停异常写入方或降低写速率，确认主机磁盘仍有维护空间。\n2. **留证**：记录 `endpoint status`、Alarm、DB total/in-use、磁盘占用和异常写入来源；若条件允许，生成并校验快照。\n3. **删除无用当前数据**：由业务方确认可删除的 Key。Compaction 只能清历史，不能替代业务数据治理。"
+            }
+          ]
+        },
+        {
+          "term": "auto-compaction-retention",
+          "hits": []
+        },
+        {
+          "term": "snapshot-count",
+          "hits": []
+        },
+        {
+          "term": "heartbeat-interval",
+          "hits": []
+        },
+        {
+          "term": "election-timeout",
+          "hits": []
+        }
+      ]
+    },
+    {
+      "name": "Kubernetes",
+      "prefix": "docs/cloud-native/kubernetes/",
+      "articles": 163,
+      "topics": [
+        {
+          "term": "startupProbe",
+          "hits": [
+            {
+              "file": "docs/cloud-native/kubernetes/operations/application-delivery/05-部署有状态应用.md",
+              "line": 35,
+              "context": "- 存储：使用 VolumeClaimTemplates 为每个 Pod 提供独立 PVC；首选支持拓扑感知与动态绑定的 StorageClass（volumeBindingMode: WaitForFirstConsumer）。\n- 启动与探针：使用 startupProbe 处理长启动时间，readinessProbe 控制流量导入，livenessProbe 检测僵死进程；结合 readiness gates 避免流量短路。\n- 更新策略：updateStrategy 使用 RollingUpdate，并配合 partition 实现分阶段升级；podManagementPolicy 根据一致性需求选 OrderedReady（会序列化创建/删除）或 Parallel。\n- 优雅终止：设置 terminationGracePeriodSeconds 与 lifecycle.preStop 做应用级优雅下线（flush、leader 转移等）。\n- PodDisruptionBudget（PDB）：与 rolling updates、节点维护策略配合，保证最小可用实例。\n- 拓扑感知：使用 PodAntiAffinity / topologySpreadConstraints 与 StorageClass 的拓扑绑定，保证副本分布在不同可用区/节点池。\n- 备份与快照：使用 CSI 快照（VolumeSnapshot）与定期备份（对象存储），并演练恢复流程。\n- 安全与多租户：使用 PSP/PodSecurity（或 OPA Gatekeeper 策略）、NetworkPolicy、最小权限 SecurityContext、只读根文件系统等。"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/06-Pod生命周期.md",
+              "line": 117,
+              "context": "    - containerPort: 80\n    startupProbe:\n      httpGet:\n        path: /\n        port: 80\n      initialDelaySeconds: 10\n      periodSeconds: 5\n      failureThreshold: 12  # 60 秒启动窗口"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/09-存活与就绪探针.md",
+              "line": 222,
+              "context": "> **更新（2024）**\n> Kubernetes 1.16+ 支持 `startupProbe`，用于检测容器启动阶段健康，适合启动慢的应用。\n> 配置 `startupProbe` 后，liveness/readiness 探针会在启动探针通过后才生效，避免误杀。\n\n```yaml\nstartupProbe:\n  httpGet:\n    path: /healthz"
+            }
+          ]
+        },
+        {
+          "term": "failureThreshold",
+          "hits": [
+            {
+              "file": "docs/cloud-native/kubernetes/operations/application-delivery/05-部署有状态应用.md",
+              "line": 188,
+              "context": "              command: [\"/bin/sh\", \"-c\", \"check-startup.sh\"]\n            failureThreshold: 60\n            periodSeconds: 10\n          readinessProbe:\n            exec:\n              command: [\"/bin/sh\", \"-c\", \"check-ready.sh\"]\n            initialDelaySeconds: 5\n            periodSeconds: 10"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/06-Pod生命周期.md",
+              "line": 123,
+              "context": "      periodSeconds: 5\n      failureThreshold: 12  # 60 秒启动窗口\n    livenessProbe:\n      httpGet:\n        path: /health\n        port: 80\n      initialDelaySeconds: 15\n      periodSeconds: 10"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/09-存活与就绪探针.md",
+              "line": 198,
+              "context": "    C --> D[successThreshold]\n    D --> E[failureThreshold]\n```\n\n![探针参数关系](/images/k8s/pod/liveness-readiness-probes/2823dc43fbec206e134991780b4452e0.svg)\n\n### 5.1 通用参数 {/* #通用参数 */}\n"
+            }
+          ]
+        },
+        {
+          "term": "maxUnavailable",
+          "hits": [
+            {
+              "file": "docs/cloud-native/kubernetes/ai-native/05-大模型部署与调优.md",
+              "line": 224,
+              "context": "  rollingUpdate:\n    maxUnavailable: 25%\n    maxSurge: 1\n```\n\n### 6.2 金丝雀发布 {/* #金丝雀发布 */}\n\n逐步替换模型版本，降低更新风险。"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/controllers/02-Deployment.md",
+              "line": 179,
+              "context": "\n- `maxUnavailable`：最多有 25% 的 Pod 不可用\n- `maxSurge`：最多有 25% 的 Pod 超出期望数量\n\n查看更新过程中的 ReplicaSet 变化：\n\n```bash\nkubectl get rs"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/controllers/04-DaemonSet.md",
+              "line": 102,
+              "context": "    rollingUpdate:\n      maxUnavailable: 1\n```\n\n### 6.2 更新触发条件 {/* #更新触发条件 */}\n\n以下情况会触发 DaemonSet 更新：\n"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/extensions/development/04-client-go示例.md",
+              "line": 257,
+              "context": "| 健康检查     | 配置 readiness 和 liveness 探针                    |\n| 滚动更新策略 | 合理设置 `maxUnavailable` 和 `maxSurge`            |\n| 回滚准备     | 保留历史版本，便于快速回滚                         |\n| 监控告警     | 配置监控与告警机制，及时发现异常                   |\n\n## 7. 总结 {/* #总结 */}\n\nclient-go 为 Go 语言开发者提供了强大的 Kubernetes API 编程能力。通过本示例，你可以掌握 Deployment 资源的自动化管理方法，并为构建更复杂的集群运维工具和平台集成打下基础。"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/operations/application-delivery/05-部署有状态应用.md",
+              "line": 254,
+              "context": "- 更新策略：使用 partitioned rolling update；在变更 partition 前测试变更流程。\n- PDB：与业务可用性要求对应设置 minAvailable 或 maxUnavailable。\n- 备份：CSI snapshot + 对象存储定期备份；确保恢复演练已验证。\n- 性能与资源：为磁盘、IOPS、网络设置合理 request/limit，并用 QoS class 保障关键 Pod。\n- 安全：运行非 root、只读根文件系统、最小权限的 ServiceAccount。\n- 拓扑：使用 PodAntiAffinity + topologySpreadConstraints + 拓扑感知 StorageClass 以防单点故障。\n- 日志与监控：部署 Exporter、Prometheus、AlertManager、日志聚合与可观测性面板。\n- 测试：定期演练滚动升级、节点故障、PVC 恢复与跨 AZ 灾难恢复（DR）。"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/operations/cluster/02-调度与资源管理.md",
+              "line": 381,
+              "context": "\nPDB 可指定 `minAvailable` 或 `maxUnavailable`，仅保护自愿中断，不防止节点故障或资源驱逐。\n\n## 8. 自动扩缩容（Autoscaling） {/* #自动扩缩容autoscaling */}\n\nKubernetes 支持基于指标的自动扩缩容，提升资源利用率。\n\n### 8.1 水平 Pod 自动扩缩容（HPA） {/* #水平-pod-自动扩缩容hpa */}"
+            }
+          ]
+        },
+        {
+          "term": "evictionHard",
+          "hits": []
+        },
+        {
+          "term": "topologySpreadConstraints",
+          "hits": [
+            {
+              "file": "docs/cloud-native/kubernetes/ai-native/07-AI工作负载调度.md",
+              "line": 63,
+              "context": "spec:\n  topologySpreadConstraints:\n  - maxSkew: 1\n    topologyKey: topology.kubernetes.io/zone\n    whenUnsatisfiable: DoNotSchedule\n    labelSelector:\n      matchLabels:\n        app: ai-workload"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/operations/application-delivery/05-部署有状态应用.md",
+              "line": 39,
+              "context": "- PodDisruptionBudget（PDB）：与 rolling updates、节点维护策略配合，保证最小可用实例。\n- 拓扑感知：使用 PodAntiAffinity / topologySpreadConstraints 与 StorageClass 的拓扑绑定，保证副本分布在不同可用区/节点池。\n- 备份与快照：使用 CSI 快照（VolumeSnapshot）与定期备份（对象存储），并演练恢复流程。\n- 安全与多租户：使用 PSP/PodSecurity（或 OPA Gatekeeper 策略）、NetworkPolicy、最小权限 SecurityContext、只读根文件系统等。\n\n```mermaid\n%% mermaid 架构图：StatefulSet 与相关组件（示例）\ngraph LR"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/scheduling/08-资源调度.md",
+              "line": 237,
+              "context": "```yaml\ntopologySpreadConstraints:\n- maxSkew: 1\n  topologyKey: topology.kubernetes.io/zone\n  whenUnsatisfiable: DoNotSchedule\n  labelSelector:\n    matchLabels:\n      app: inference"
+            }
+          ]
+        },
+        {
+          "term": "terminationGracePeriodSeconds",
+          "hits": [
+            {
+              "file": "docs/cloud-native/kubernetes/controllers/01-概述.md",
+              "line": 360,
+              "context": "- 配置合适的启动、存活、就绪探针\n- 设置 terminationGracePeriodSeconds 实现优雅关闭\n- 应用需正确处理终止信号\n- 使用 Init 容器处理依赖与启动需求\n- 利用 preStop 钩子做清理操作\n\n## 10. 工作负载控制器选择指南 {/* #工作负载控制器选择指南 */}\n"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/controllers/03-StatefulSet.md",
+              "line": 66,
+              "context": "- StatefulSet 需要 Headless Service 来管理 Pod 的网络身份\n- 不建议将 `pod.Spec.TerminationGracePeriodSeconds` 设置为 0，这样做不安全\n\n## 6. 基础示例 {/* #基础示例 */}\n\n以下 YAML 示例展示了一个典型的 nginx StatefulSet 配置方式：\n\n```yaml"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/operations/application-delivery/05-部署有状态应用.md",
+              "line": 37,
+              "context": "- 更新策略：updateStrategy 使用 RollingUpdate，并配合 partition 实现分阶段升级；podManagementPolicy 根据一致性需求选 OrderedReady（会序列化创建/删除）或 Parallel。\n- 优雅终止：设置 terminationGracePeriodSeconds 与 lifecycle.preStop 做应用级优雅下线（flush、leader 转移等）。\n- PodDisruptionBudget（PDB）：与 rolling updates、节点维护策略配合，保证最小可用实例。\n- 拓扑感知：使用 PodAntiAffinity / topologySpreadConstraints 与 StorageClass 的拓扑绑定，保证副本分布在不同可用区/节点池。\n- 备份与快照：使用 CSI 快照（VolumeSnapshot）与定期备份（对象存储），并演练恢复流程。\n- 安全与多租户：使用 PSP/PodSecurity（或 OPA Gatekeeper 策略）、NetworkPolicy、最小权限 SecurityContext、只读根文件系统等。\n\n```mermaid"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/02-Pod解析.md",
+              "line": 167,
+              "context": "\n可以通过自定义 Pod 的终止行为来实现更优雅的下线流程。例如，设置 `terminationGracePeriodSeconds` 参数延长优雅终止时间，并通过 `preStop` 生命周期钩子在容器被终止前执行清理脚本。以下是典型的自定义终止行为 YAML 示例：\n\n```yaml\napiVersion: v1\nkind: Pod\nspec:\n  terminationGracePeriodSeconds: 60  # 自定义优雅期"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/06-Pod生命周期.md",
+              "line": 332,
+              "context": "- **资源管理**：设置合理的资源请求和限制，监控资源使用\n- **优雅终止**：处理 SIGTERM 信号，设置合适的 `terminationGracePeriodSeconds`\n\n## 10. 总结 {/* #总结 */}\n\nPod 生命周期管理是 Kubernetes 自动化运维和高可用的基础。通过合理配置探针、重启策略和生命周期事件，能够有效提升应用的健壮性和弹性。建议结合实际业务场景，灵活运用生命周期管理机制，保障集群稳定运行。\n\n## 11. 参考资料 {/* #参考文献 */}"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/07-Pod-Hook.md",
+              "line": 61,
+              "context": "- **执行方式**：同步阻塞调用\n- **超时时间**：默认 30 秒（可通过 `terminationGracePeriodSeconds` 配置）\n- **使用场景**：优雅关闭、清理资源、保存状态等\n\n## 4. 配置示例 {/* #配置示例 */}\n\n以下 YAML 示例展示了如何为 Pod 配置 postStart 和 preStop 两种 Hook。\npostStart Hook 会在容器启动后执行指定命令，preStop Hook 会在容器终止前向指定端点发送 HTTP 请求，实现优雅关闭。"
+            },
+            {
+              "file": "docs/cloud-native/kubernetes/pods-workloads/08-Pod中断预算.md",
+              "line": 85,
+              "context": "- 仅限自愿中断：PDB 无法阻止非自愿中断\n- 优雅终止：通过 Eviction API 驱逐的 Pod 会按照 `terminationGracePeriodSeconds` 优雅关闭\n- 滚动更新兼容：控制器（如 Deployment）在滚动更新时不受 PDB 限制\n\n## 5. 实践示例：节点维护场景 {/* #实践示例节点维护场景 */}\n\n以下示例展示了 PDB 在节点维护场景下的实际应用。\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Prometheus",
+      "prefix": "docs/sre/observability/prometheus/",
+      "articles": 16,
+      "topics": [
+        {
+          "term": "scrape_interval",
+          "hits": [
+            {
+              "file": "docs/sre/observability/prometheus/01-model-query/01-Prometheus解决什么问题与一条指标的完整路径.md",
+              "line": 53,
+              "context": "5. Relabel决定最终Target和Labels\n6. Prometheus按scrape_interval请求/metrics\n7. 解析样本并追加到Head/WAL\n8. Head数据形成持久Block并Compaction\n9. PromQL选择并计算时序\n10. Rule按evaluation_interval执行\n11. Alerting Rule进入Pending/Firing\n12. Prometheus发送Alert给Alertmanager"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/01-model-query/03-Instrumentation-Exporter-文本格式-Scrape与服务发现.md",
+              "line": 94,
+              "context": "\n`scrape_interval` 是调度间隔，`scrape_timeout` 必须小于间隔。每次抓取都接近 Timeout，会造成数据间断和持续压力，不能只把 Timeout 调得更长。\n\n```yaml\nglobal:\n  scrape_interval: 30s\n  scrape_timeout: 10s\n"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/03-deployment-scaling/09-二进制-systemd-Docker-Helm-Prometheus-Operator与kube-prometheus-stack.md",
+              "line": 57,
+              "context": "global:\n  scrape_interval: 30s\n  evaluation_interval: 30s\n  external_labels:\n    cluster: prod-a\n    replica: prometheus-01\n\nrule_files:"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/04-production/12-Series-Samples-WAL-查询并发-容量规划与性能优化.md",
+              "line": 31,
+              "context": "```text\nsamples_per_second ≈ active_series / scrape_interval_seconds\ndaily_samples = samples_per_second × 86400\n```\n\n示例：\n\n```text"
+            }
+          ]
+        },
+        {
+          "term": "scrape_timeout",
+          "hits": [
+            {
+              "file": "docs/sre/observability/prometheus/01-model-query/01-Prometheus解决什么问题与一条指标的完整路径.md",
+              "line": 118,
+              "context": "\nPrometheus 根据 `scrape_interval` 和 `scrape_timeout` 请求 Target。成功抓取需要：\n\n- DNS/网络可达；\n- 协议、TLS、认证正确；\n- `/metrics` 在 timeout 内返回；\n- 内容格式可解析；\n- 样本和标签合法；"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/01-model-query/03-Instrumentation-Exporter-文本格式-Scrape与服务发现.md",
+              "line": 94,
+              "context": "\n`scrape_interval` 是调度间隔，`scrape_timeout` 必须小于间隔。每次抓取都接近 Timeout，会造成数据间断和持续压力，不能只把 Timeout 调得更长。\n\n```yaml\nglobal:\n  scrape_interval: 30s\n  scrape_timeout: 10s\n"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/04-production/12-Series-Samples-WAL-查询并发-容量规划与性能优化.md",
+              "line": 123,
+              "context": "```promql\nscrape_duration_seconds / scrape_timeout_seconds\nscrape_samples_scraped\nscrape_samples_post_metric_relabeling\nscrape_series_added\n```\n\n大量 Target 在同一时刻启动、证书频繁握手、Exporter 查询慢和 Body 巨大都可能让 Scrape 接近 Timeout。增加 Scrape Interval 会降低 Samples/s，但也降低时序分辨率和故障发现速度。"
+            }
+          ]
+        },
+        {
+          "term": "evaluation_interval",
+          "hits": [
+            {
+              "file": "docs/sre/observability/prometheus/01-model-query/01-Prometheus解决什么问题与一条指标的完整路径.md",
+              "line": 57,
+              "context": "9. PromQL选择并计算时序\n10. Rule按evaluation_interval执行\n11. Alerting Rule进入Pending/Firing\n12. Prometheus发送Alert给Alertmanager\n13. Alertmanager分组、抑制、路由和通知\n14. Grafana查询并展示相同数据\n```\n"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/02-alerting-visualization/06-Recording-Rule-Alerting-Rule-for-keep_firing_for与规则测试.md",
+              "line": 152,
+              "context": "\nevaluation_interval: 1m\n\ntests:\n  - interval: 1m\n    input_series:\n      - series: 'http_requests_total{cluster=\"prod\",service=\"order\",code=\"200\"}'\n        values: '0+60x20'"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/03-deployment-scaling/09-二进制-systemd-Docker-Helm-Prometheus-Operator与kube-prometheus-stack.md",
+              "line": 58,
+              "context": "  scrape_interval: 30s\n  evaluation_interval: 30s\n  external_labels:\n    cluster: prod-a\n    replica: prometheus-01\n\nrule_files:\n  - /etc/prometheus/rules/*.yml"
+            }
+          ]
+        },
+        {
+          "term": "storage.tsdb.retention.time",
+          "hits": [
+            {
+              "file": "docs/sre/observability/prometheus/01-model-query/04-Prometheus-TSDB-Head-WAL-Block-Compaction与Retention.md",
+              "line": 104,
+              "context": "```bash\n--storage.tsdb.retention.time=30d\n--storage.tsdb.retention.size=400GB\n```\n\n同时设置时间和空间时，先触发的条件生效。时间保留按整个 Block 判断，只有 Block 完全过期才能删除；后台清理不是即时发生。\n\n```text"
+            },
+            {
+              "file": "docs/sre/observability/prometheus/03-deployment-scaling/09-二进制-systemd-Docker-Helm-Prometheus-Operator与kube-prometheus-stack.md",
+              "line": 93,
+              "context": "  --storage.tsdb.path=/var/lib/prometheus \\\n  --storage.tsdb.retention.time=30d \\\n  --storage.tsdb.retention.size=400GB \\\n  --web.enable-lifecycle\nRestart=on-failure\nRestartSec=5s\nLimitNOFILE=1048576\nTimeoutStopSec=120"
+            }
+          ]
+        },
+        {
+          "term": "sample_limit",
+          "hits": []
+        },
+        {
+          "term": "query.max-concurrency",
+          "hits": []
+        }
+      ]
+    },
+    {
+      "name": "vLLM",
+      "prefix": "docs/ai-systems/inference/vllm/",
+      "articles": 45,
+      "topics": [
+        {
+          "term": "max-num-batched-tokens",
+          "hits": [
+            {
+              "file": "docs/ai-systems/inference/vllm/02-execution/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md",
+              "line": 693,
+              "context": "- `--max-num-seqs`；\n- `--max-num-batched-tokens`；\n- 大量 vLLM 指标和请求语义。\n\n### 14.2 必须分别验证 {/* #必须分别验证 */}\n\n- 支持的模型与多模态输入；\n- Structured Output 与 Tool Calling 的具体组合；"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/25-vLLM-Serve生产参数参考.md",
+              "line": 53,
+              "context": "\nmax-num-seqs + max-num-batched-tokens\n                  ↓\n        每轮 Batch / 并发 / 抢占\n\nchunked-prefill + prefix-cache + compilation/graph\n                  ↓\n       TTFT / TPOT / 吞吐 / 启动时间"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/31-KV-Cache内存调度与连续批处理参数.md",
+              "line": 111,
+              "context": "| `--max-num-seqs` | 本轮最多让多少条序列参与 |\n| `--max-num-batched-tokens` | 本轮最多计划多少个 Token |\n\nScheduler 必须同时满足：\n\n~~~text\nscheduled_sequences ≤ max_num_seqs\nscheduled_tokens ≤ max_num_batched_tokens"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/90-source-notes/96-vLLM学习笔记（六）参数使用.md",
+              "line": 116,
+              "context": "\n### 4.1 max-num-seqs、max-num-batched-tokens {/* #31-max-num-seqsmax-num-batched-tokens */}\n\n二者共同构成调度器每轮迭代的**预算**（对应本系列（三）调度器、（四）SchedulingBudget）：每次前向步内，同时参与的序列数不超过 `max_num_seqs`，总 token 数不超过 `max_num_batched_tokens`。显存一定时，二者越大则单步并发越高、吞吐潜力越大，但 KV 占用与抢占风险也上升；调小可减轻抢占、改善尾延迟，代价是并发与吞吐下降。\n\n- **--max-num-seqs**（每轮最大序列数）\n  单次调度迭代中**最多允许同时参与计算**的序列（请求）数。越大则同一时刻能跑的请求越多，有利于高 QPS；但每条序列都会占用 KV 块，过大易导致显存不足、触发抢占（recompute/swap），反而拉高延迟。**调优**：若日志中抢占频繁，可适当减小以稳定延迟；显存充裕且追求吞吐时可增大。**取值**：正整数（如 64、128、256）。默认: 未指定时由引擎根据配置填入（SchedulerConfig 默认 128）。\n"
+            }
+          ]
+        },
+        {
+          "term": "max-num-seqs",
+          "hits": [
+            {
+              "file": "docs/ai-systems/inference/vllm/02-execution/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md",
+              "line": 692,
+              "context": "- `--max-model-len`；\n- `--max-num-seqs`；\n- `--max-num-batched-tokens`；\n- 大量 vLLM 指标和请求语义。\n\n### 14.2 必须分别验证 {/* #必须分别验证 */}\n\n- 支持的模型与多模态输入；"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/25-vLLM-Serve生产参数参考.md",
+              "line": 21,
+              "context": "vllm serve --help=ModelConfig\nvllm serve --help=max-num-seqs\nvllm collect-env\n```\n\n固定镜像 Digest 后，将 `--help=all` 输出与启动命令一起归档。不要使用主分支文档解释旧生产镜像。\n\n## 1. 参数分成四种"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/28-vLLM-v0.31参数体系与版本审计.md",
+              "line": 97,
+              "context": "~~~bash\nvllm serve --help=max-num-seqs\nvllm serve --help=kv-transfer\nvllm serve --help=cudagraph\n~~~\n\n帮助输出属于目标二进制本身，比 `latest` 网页更接近事实。\n"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/31-KV-Cache内存调度与连续批处理参数.md",
+              "line": 110,
+              "context": "|---|---|\n| `--max-num-seqs` | 本轮最多让多少条序列参与 |\n| `--max-num-batched-tokens` | 本轮最多计划多少个 Token |\n\nScheduler 必须同时满足：\n\n~~~text\nscheduled_sequences ≤ max_num_seqs"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/90-source-notes/96-vLLM学习笔记（六）参数使用.md",
+              "line": 116,
+              "context": "\n### 4.1 max-num-seqs、max-num-batched-tokens {/* #31-max-num-seqsmax-num-batched-tokens */}\n\n二者共同构成调度器每轮迭代的**预算**（对应本系列（三）调度器、（四）SchedulingBudget）：每次前向步内，同时参与的序列数不超过 `max_num_seqs`，总 token 数不超过 `max_num_batched_tokens`。显存一定时，二者越大则单步并发越高、吞吐潜力越大，但 KV 占用与抢占风险也上升；调小可减轻抢占、改善尾延迟，代价是并发与吞吐下降。\n\n- **--max-num-seqs**（每轮最大序列数）\n  单次调度迭代中**最多允许同时参与计算**的序列（请求）数。越大则同一时刻能跑的请求越多，有利于高 QPS；但每条序列都会占用 KV 块，过大易导致显存不足、触发抢占（recompute/swap），反而拉高延迟。**调优**：若日志中抢占频繁，可适当减小以稳定延迟；显存充裕且追求吞吐时可增大。**取值**：正整数（如 64、128、256）。默认: 未指定时由引擎根据配置填入（SchedulerConfig 默认 128）。\n"
+            }
+          ]
+        },
+        {
+          "term": "block-size",
+          "hits": [
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/25-vLLM-Serve生产参数参考.md",
+              "line": 45,
+              "context": "\nmax-model-len / kv-cache-dtype / block-size\n                  ↓\n          每请求 KV Cache 成本\n\ngpu-memory-utilization 或 kv-cache-memory-bytes\n                  ↓\n              KV 总预算"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/30-模型Tokenizer权重加载与Attention参数.md",
+              "line": 126,
+              "context": "- `--safetensors-prefetch-num-threads`：预取线程数；\n- `--safetensors-prefetch-block-size`：每次预取读取大小。\n\n线程和 Block 越大不一定越快。网络存储可能先撞带宽或元数据服务，CPU 内存也可能因 eager 加载发生峰值 OOM。\n\n## 7. TP 下的加载峰值\n\n权重最终会按 TP 切分，但加载过程中可能出现："
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/31-KV-Cache内存调度与连续批处理参数.md",
+              "line": 45,
+              "context": "| `--kv-cache-memory-bytes` | 显式 KV 字节预算 | 支持版本中比比例更直接 |\n| `--block-size` | 每个 KV Block 的 Token 数 | 粒度、碎片、元数据和 Backend 约束 |\n| `--kv-cache-dtype` | KV 存储精度 | 容量、带宽、Scale 和精度 |\n| `--calculate-kv-scales` | 运行时计算 KV Scale | 量化 KV 的精度与初始化成本 |\n| `--num-gpu-blocks-override` | 强制 Block 数 | 只用于实验或故障注入 |\n| `--enable-prefix-caching` | 允许复用相同前缀的 KV | 命中、占用、淘汰和隔离 |\n| `--prefix-caching-hash-algo` | Block Hash 算法 | 哈希成本与稳定性 |\n| `--disable-hybrid-kv-cache-manager` | 关闭混合层专用 KV 分组 | 混合 Attention/SSM 模型容量会变化 |"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/90-source-notes/96-vLLM学习笔记（六）参数使用.md",
+              "line": 82,
+              "context": "\n### 3.1 block-size、gpu-memory-utilization {/* #21-block-sizegpu-memory-utilization */}\n\n- **--block-size**：每个 KV 块容纳的连续 token 数。**取值**：`8`、`16`、`32`、`64`、`128`（越小块越细、调度越灵活；CUDA 仅支持 ≤32）。**未指定时**：无 `auto` 字面值，不传则由 `Platform.check_and_update_config()` 在运行时设定；CUDA 上通常为 **16**，HPU 上通常为 **128**。\n- **--gpu-memory-utilization**：用于模型执行的 GPU 内存比例。**取值**：0～1 的浮点数（如 `0.9` 表示 90%）。默认: `0.9`。\n- **--num-gpu-blocks-override**：强制使用的 GPU 块数量，覆盖自动分析。**取值**：正整数或 `None`。默认: `None`。\n\n### 3.2 swap-space、CPU 卸载 {/* #22-swap-spacecpu-卸载 */}"
+            }
+          ]
+        },
+        {
+          "term": "gpu-memory-utilization",
+          "hits": [
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/25-vLLM-Serve生产参数参考.md",
+              "line": 49,
+              "context": "\ngpu-memory-utilization 或 kv-cache-memory-bytes\n                  ↓\n              KV 总预算\n\nmax-num-seqs + max-num-batched-tokens\n                  ↓\n        每轮 Batch / 并发 / 抢占"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/28-vLLM-v0.31参数体系与版本审计.md",
+              "line": 64,
+              "context": "tensor-parallel-size: 2\ngpu-memory-utilization: 0.88\n~~~\n\n~~~bash\nvllm serve --config /etc/vllm/config.yaml\n~~~\n"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/31-KV-Cache内存调度与连续批处理参数.md",
+              "line": 37,
+              "context": "\n`--gpu-memory-utilization` 不是“KV 占显存的比例”，而是实例规划设备内存时使用的整体比例。权重、运行时和非 KV 开销扣除后，剩余空间才可能交给 KV Cache。\n\n## 2. KV Cache 参数\n\n| 参数 | 含义 | 调整影响 |\n|---|---|---|\n| `--gpu-memory-utilization` | 实例使用设备内存的目标比例 | 调高可能增加 KV，但压缩峰值余量 |"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/90-source-notes/96-vLLM学习笔记（六）参数使用.md",
+              "line": 82,
+              "context": "\n### 3.1 block-size、gpu-memory-utilization {/* #21-block-sizegpu-memory-utilization */}\n\n- **--block-size**：每个 KV 块容纳的连续 token 数。**取值**：`8`、`16`、`32`、`64`、`128`（越小块越细、调度越灵活；CUDA 仅支持 ≤32）。**未指定时**：无 `auto` 字面值，不传则由 `Platform.check_and_update_config()` 在运行时设定；CUDA 上通常为 **16**，HPU 上通常为 **128**。\n- **--gpu-memory-utilization**：用于模型执行的 GPU 内存比例。**取值**：0～1 的浮点数（如 `0.9` 表示 90%）。默认: `0.9`。\n- **--num-gpu-blocks-override**：强制使用的 GPU 块数量，覆盖自动分析。**取值**：正整数或 `None`。默认: `None`。\n\n### 3.2 swap-space、CPU 卸载 {/* #22-swap-spacecpu-卸载 */}"
+            }
+          ]
+        },
+        {
+          "term": "enforce-eager",
+          "hits": [
+            {
+              "file": "docs/ai-systems/inference/vllm/01-architecture/02-vllm-serve启动与初始化全流程.md",
+              "line": 347,
+              "context": "\n排查启动 OOM 时，`--enforce-eager` 可以作为诊断变量，但它会改变运行性能，不能把诊断配置直接\n当成最终优化结论。\n\n## 11. 第十段：构建 API 应用并对外服务\n\n引擎初始化完成后，API Server 才会继续：\n"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/02-execution/24-昇腾910B-vLLM-Ascend与原生vLLM源码差异.md",
+              "line": 480,
+              "context": "\n### 8.3 `--enforce-eager` 是定位工具，不是最终调优答案\n\n若 Eager 能稳定运行而 Graph 模式报错或抖动，说明问题范围缩小到编译/捕获/Replay；但生产是否长期 Eager，要用 TTFT、TPOT、吞吐和 CPU 空洞压测决定。\n\n## 9. 算子生态差异\n\n### 9.1 NVIDIA 路径"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/03-performance/27-vLLM服务日志定位吞吐断崖与并发拐点.md",
+              "line": 390,
+              "context": "\n是否支持该参数及具体模式必须以当前版本为准。旧版本可能使用 `--enforce-eager`；vLLM-Ascend 使用 NPU/ACLGraph 执行栈，不能把 CUDA Graph 结论原样套用。\n\n### 7.2 判定逻辑\n\n```text\n异常只在 Graph 模式出现\n→ 证明“依赖 Graph 路径”"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/25-vLLM-Serve生产参数参考.md",
+              "line": 277,
+              "context": "|---|---|---|\n| `--enforce-eager` | 禁用编译/Graph 的相关快速路径，强制 Eager | 定位 Graph/编译问题；不是默认生产优化 |\n| `--compilation-config` / `-cc` | 编译与图执行的嵌套配置 | 字段随版本变化，必须归档完整 JSON |\n| `--max-seq-len-to-capture` | Graph 捕获最大序列范围（支持版本） | 超出通常回退 Eager；过大增加捕获/内存成本 |\n| `cudagraph_mode` | Graph 模式 | NONE/PIECEWISE/FULL 等值依版本与平台支持 |\n| `cudagraph_capture_sizes` | 捕获的 Batch Size 集合 | 覆盖真实流量即可，不要盲目捕获全部尺寸 |\n| `compile_sizes` | 编译 Shape 集合 | 冷启动和缓存体积与覆盖率权衡 |\n"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/04-parameters/33-torch-compile-CUDA-Graph与运行时参数.md",
+              "line": 24,
+              "context": "\n## 1. `--enforce-eager`\n\n开启后强制使用 Eager 路径，常用于：\n\n- 定位 CUDA Graph 捕获或 Replay 问题；\n- 定位动态 Shape；\n- 对比编译前后的正确性；"
+            },
+            {
+              "file": "docs/ai-systems/inference/vllm/90-source-notes/96-vLLM学习笔记（六）参数使用.md",
+              "line": 100,
+              "context": "\n- **--enforce-eager**（强制 Eager 模式）\n  为 `True` 时**完全禁用 CUDA Graph**，所有前向均以 PyTorch 的 eager 模式执行。CUDA Graph 会把一段 GPU 算子序列录成图并复放，减少 kernel 启动开销、提升吞吐，但不利于调试且对动态 shape 等支持有限。**适用**：调试、遇到 CUDA Graph 相关报错或兼容性问题时。**取值**：`True` / `False`。默认: `False`。\n\n- **--max-seq-len-to-capture**（CUDA 图捕获的最大序列长度）\n  使用 CUDA Graph 时，仅对**序列长度 ≤ 该值**的 batch 进行图捕获与复放；超过该长度的请求会**回退到 eager**，避免为过长序列捕获图导致显存或兼容性问题。未指定时由编译/图配置内部决定。**取值**：正整数或 `None`。默认: `None`。\n\n- **--disable-custom-all-reduce**（禁用自定义 All-Reduce）"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

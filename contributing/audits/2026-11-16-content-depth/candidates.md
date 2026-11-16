@@ -1,0 +1,429 @@
+# 全量筛查候选索引
+
+规则命中不是内容不合格结论；未命中也不是通过。人工处置与范围见人工复核表。
+
+## ai-systems（20 篇候选）
+
+- [vLLM serve 命令详解](<../../../docs/ai-systems/inference/commands/01-vLLM-Serve命令详解.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`command_without_example_output`（candidate-not-confirmed）——命令参考未发现独立输出/配置块或输出解读标记，需核对混排代码与链接。
+- [MindIE 调度器、KV Block 与连续批处理](<../../../docs/ai-systems/inference/mindie/04-MindIE调度器-KV-Block与连续批处理.md>)；人工状态：`not-yet-recorded`。
+  - 第 153 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Kubernetes 部署 vLLM 推理服务](<../../../docs/ai-systems/inference/serving/01-Kubernetes 部署 vLLM 推理服务.md>)；人工状态：`confirmed-issue`。
+  - 第 113 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [SGLang Scheduler 与 Overlap Scheduler](<../../../docs/ai-systems/inference/sglang/04-SGLang-Scheduler与Overlap-Scheduler.md>)；人工状态：`not-yet-recorded`。
+  - 第 151 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [vLLM-Ascend 版本兼容矩阵与镜像标签选择](<../../../docs/ai-systems/inference/vllm-ascend/04-vLLM-Ascend版本兼容矩阵与镜像标签选择.md>)；人工状态：`not-yet-recorded`。
+  - 第 204 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [torch-npu 与 CANN 异步执行链路](<../../../docs/ai-systems/inference/vllm-ascend/07-torch-npu与CANN异步执行链路.md>)；人工状态：`not-yet-recorded`。
+  - 第 212 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [OutputProcessor、Detokenizer 与流式返回](<../../../docs/ai-systems/inference/vllm/01-architecture/13-OutputProcessor-Detokenizer与流式返回.md>)；人工状态：`not-yet-recorded`。
+  - 第 280 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [KVCacheManager、BlockPool 与 Prefix Cache](<../../../docs/ai-systems/inference/vllm/02-execution/05-KVCacheManager-BlockPool与PrefixCache.md>)；人工状态：`not-yet-recorded`。
+  - 第 323 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Executor、Worker 与 GPUModelRunner](<../../../docs/ai-systems/inference/vllm/02-execution/06-Executor-Worker与GPUModelRunner.md>)；人工状态：`not-yet-recorded`。
+  - 第 314 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Model、Attention Backend 与 Sampling](<../../../docs/ai-systems/inference/vllm/02-execution/12-Model-AttentionBackend与Sampling.md>)；人工状态：`not-yet-recorded`。
+  - 第 265 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [vLLM 性能分析总论：TTFT、TPOT、吞吐与 GPU 利用率](<../../../docs/ai-systems/inference/vllm/03-performance/14-vLLM性能分析总论-TTFT-TPOT-吞吐与GPU利用率.md>)；人工状态：`not-yet-recorded`。
+  - 第 248 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [TTFT 超标但 GPU 利用率低：完整排查案例](<../../../docs/ai-systems/inference/vllm/03-performance/15-TTFT超标但GPU利用率低完整排查案例.md>)；人工状态：`not-yet-recorded`。
+  - 第 304 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [vLLM 指标到 V1 组件与源码映射](<../../../docs/ai-systems/inference/vllm/03-performance/16-vLLM指标到V1组件与源码映射.md>)；人工状态：`not-yet-recorded`。
+  - 第 287 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [CPU、Tokenizer 与 EngineCore 饥饿分析](<../../../docs/ai-systems/inference/vllm/03-performance/17-CPU-Tokenizer与EngineCore饥饿分析.md>)；人工状态：`not-yet-recorded`。
+  - 第 218 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Scheduler、Batch、KV Cache 与抢占性能实验](<../../../docs/ai-systems/inference/vllm/03-performance/18-Scheduler-Batch-KVCache与抢占性能实验.md>)；人工状态：`not-yet-recorded`。
+  - 第 235 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [按真实 Token 分布完成单副本容量规划](<../../../docs/ai-systems/inference/vllm/03-performance/21-按真实Token分布完成单副本容量规划.md>)；人工状态：`not-yet-recorded`。
+  - 第 247 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [多副本、N-1、冷启动与扩缩容容量规划](<../../../docs/ai-systems/inference/vllm/03-performance/22-多副本-N-1-冷启动与扩缩容容量规划.md>)；人工状态：`not-yet-recorded`。
+  - 第 266 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [vLLM 生产故障排查 Runbook](<../../../docs/ai-systems/inference/vllm/05-operations/23-vLLM生产故障排查Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 274 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Ray Serve 架构与请求生命周期](<../../../docs/ai-systems/runtime/ray/05-serve/20-Ray-Serve架构与请求生命周期.md>)；人工状态：`not-yet-recorded`。
+  - 第 59 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [PyTorch DDP 在 Kubernetes 中的部署](<../../../docs/ai-systems/training/distributed/02-PyTorch DDP 在 Kubernetes 中的部署.md>)；人工状态：`not-yet-recorded`。
+  - 第 116 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+
+## automation（11 篇候选）
+
+- [Backstage 定位、架构与请求路径](<../../../docs/automation/backstage/01-定位架构与请求路径.md>)；人工状态：`not-yet-recorded`。
+  - 第 11 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Backstage 插件架构与集成开发](<../../../docs/automation/backstage/07-插件架构与集成开发.md>)；人工状态：`confirmed-issue`。
+  - 第 11 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [GitLab CI 架构、Pipeline、Job 与 Runner](<../../../docs/automation/gitlab-ci/01-架构Pipeline-Job与Runner.md>)；人工状态：`not-yet-recorded`。
+  - 第 31 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Go Context、并发与可靠 HTTP 客户端](<../../../docs/automation/go/04-Context并发与可靠HTTP客户端.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`maintenance_scaffolding`（human-dismissed）——正文出现待写/面试/写作安排等词，需判断语境。
+- [Go 任务队列、限流、幂等与恢复](<../../../docs/automation/go/06-任务队列限流幂等与恢复.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`recovery_without_acceptance`（human-dismissed）——恢复专项未发现对账/校验/恢复后验证等信号。
+- [Terraform/OpenTofu Plan 策略](<../../../docs/automation/opa-conftest/07-Terraform-OpenTofu-Plan策略.md>)；人工状态：`not-yet-recorded`。
+  - 第 41 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Kubernetes 清单与准入策略](<../../../docs/automation/opa-conftest/08-Kubernetes清单与准入策略.md>)；人工状态：`signal-dismissed`。
+  - 第 35 行：`compressed_multitopic_sections`（human-dismissed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [策略 CI 门禁、等级、例外与渐进上线](<../../../docs/automation/opa-conftest/09-CI门禁等级例外与渐进上线.md>)；人工状态：`not-yet-recorded`。
+  - 第 53 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Kubernetes 工作负载 Secret 轮换与一致性](<../../../docs/automation/sops-external-secrets/09-Kubernetes工作负载轮换与一致性.md>)；人工状态：`not-yet-recorded`。
+  - 第 30 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Temporal 测试、时间跳跃与故障注入](<../../../docs/automation/temporal/08-测试时间跳跃与故障注入.md>)；人工状态：`confirmed-issue`。
+  - 第 8 行：`runbook_without_diagnostic_artifact`（candidate-not-confirmed）——排障/Runbook 正文未发现命令、配置、日志等代码块或配套示例入口。
+- [Temporal AI Infra 持久化运维工作流综合项目](<../../../docs/automation/temporal/12-AI-Infra持久化运维工作流综合项目.md>)；人工状态：`not-yet-recorded`。
+  - 第 11 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+
+## cloud-native（33 篇候选）
+
+- [NGC 拉取故障离线分发与运行验证](<../../../docs/cloud-native/containers/images/03-NGC拉取故障离线分发与运行验证.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`runbook_without_diagnostic_artifact`（human-dismissed）——排障/Runbook 正文未发现命令、配置、日志等代码块或配套示例入口。
+- [etcd 从零到精通学习路线](<../../../docs/cloud-native/etcd/00-etcd从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 68 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Key、Revision、MVCC、Range、Txn 与 Compare-And-Swap](<../../../docs/cloud-native/etcd/02-etcd-Key-Revision-MVCC-Range-Txn与CAS.md>)；人工状态：`not-yet-recorded`。
+  - 第 216 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Watch、Lease、TTL、Lock 与 Leader Election](<../../../docs/cloud-native/etcd/03-etcd-Watch-Lease-TTL-Lock与Leader-Election.md>)；人工状态：`not-yet-recorded`。
+  - 第 52 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [WAL、Snapshot、bbolt、Compaction、Defrag 与 Quota](<../../../docs/cloud-native/etcd/05-etcd-WAL-Snapshot-bbolt-Compaction-Defrag与Quota.md>)；人工状态：`not-yet-recorded`。
+  - 第 118 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Member Add/Remove/Replace、Learner、扩缩和滚动升级](<../../../docs/cloud-native/etcd/07-etcd成员变更Learner扩缩与滚动升级.md>)；人工状态：`not-yet-recorded`。
+  - 第 121 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Snapshot Backup/Restore、Revision Bump 与灾难恢复](<../../../docs/cloud-native/etcd/08-etcd-Snapshot-Restore-Revision-Bump与灾难恢复.md>)；人工状态：`not-yet-recorded`。
+  - 第 134 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [线性/串行读、延迟、吞吐、磁盘 fsync 与容量规划](<../../../docs/cloud-native/etcd/09-etcd读一致性延迟吞吐fsync与容量规划.md>)；人工状态：`not-yet-recorded`。
+  - 第 132 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [TLS、Authentication、Role、Network Isolation 与审计](<../../../docs/cloud-native/etcd/10-etcd-TLS认证Role网络隔离与审计.md>)；人工状态：`not-yet-recorded`。
+  - 第 137 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Kubernetes etcd 备份、控制面故障和恢复边界](<../../../docs/cloud-native/etcd/11-Kubernetes-etcd备份控制面故障与恢复边界.md>)；人工状态：`not-yet-recorded`。
+  - 第 43 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [AI 工作负载调度](<../../../docs/cloud-native/kubernetes/ai-native/07-AI工作负载调度.md>)；人工状态：`not-yet-recorded`。
+  - 第 93 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [Kubernetes 设备插件（Device Plugin）深度剖析：异构资源调度的关键技术](<../../../docs/cloud-native/kubernetes/ai-native/12-设备插件.md>)；人工状态：`not-yet-recorded`。
+  - 第 95 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [kubectl rollout、scale、autoscale、cordon 与 drain：发布和节点维护](<../../../docs/cloud-native/kubernetes/commands/05-kubectl工作负载发布与节点维护.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`command_without_example_output`（candidate-not-confirmed）——命令参考未发现独立输出/配置块或输出解读标记，需核对混排代码与链接。
+- [kubeadm 命令详解：初始化、加入、升级、证书与重置](<../../../docs/cloud-native/kubernetes/commands/09-kubeadm命令详解.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`command_without_example_output`（candidate-not-confirmed）——命令参考未发现独立输出/配置块或输出解读标记，需核对混排代码与链接。
+- [etcdctl 命令详解：Endpoint 健康、快照与恢复](<../../../docs/cloud-native/kubernetes/commands/10-etcdctl命令详解.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`command_without_example_output`（candidate-not-confirmed）——命令参考未发现独立输出/配置块或输出解读标记，需核对混排代码与链接。
+- [nerdctl 命令详解：面向 containerd 的容器、镜像与 Build 工具](<../../../docs/cloud-native/kubernetes/commands/13-nerdctl命令详解.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`command_without_example_output`（candidate-not-confirmed）——命令参考未发现独立输出/配置块或输出解读标记，需核对混排代码与链接。
+- [client-go 示例](<../../../docs/cloud-native/kubernetes/extensions/development/04-client-go示例.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`maintenance_scaffolding`（human-dismissed）——正文出现待写/面试/写作安排等词，需判断语境。
+- [迁移传统应用到 Kubernetes 步骤详解——以 Hadoop YARN 为例](<../../../docs/cloud-native/kubernetes/operations/application-delivery/04-迁移传统应用.md>)；人工状态：`not-yet-recorded`。
+  - 第 178 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [Nacos 从零到精通学习路线](<../../../docs/cloud-native/nacos/00-Nacos从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 67 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Namespace、Group、Service、Cluster、Instance 与 DataId](<../../../docs/cloud-native/nacos/02-Nacos资源模型与隔离.md>)；人工状态：`not-yet-recorded`。
+  - 第 59 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [配置发布、监听、灰度、加密、回滚与动态刷新](<../../../docs/cloud-native/nacos/04-配置发布监听灰度加密回滚与动态刷新.md>)；人工状态：`not-yet-recorded`。
+  - 第 134 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Distro、Raft/JRaft、AP/CP 与数据一致性](<../../../docs/cloud-native/nacos/05-Distro-Raft-JRaft与数据一致性.md>)；人工状态：`not-yet-recorded`。
+  - 第 222 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Server、Console、gRPC、端口与 3.x 架构](<../../../docs/cloud-native/nacos/06-Nacos-Server-Console-gRPC端口与3x架构.md>)；人工状态：`not-yet-recorded`。
+  - 第 50 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+  - 第 21 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Java/Spring Cloud/Dubbo 客户端、版本兼容与推送故障](<../../../docs/cloud-native/nacos/08-Nacos-Java-Spring-Cloud-Dubbo客户端与推送故障.md>)；人工状态：`not-yet-recorded`。
+  - 第 129 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Authentication、Token、TLS、RBAC、Namespace 与内网隔离](<../../../docs/cloud-native/nacos/09-Nacos认证Token-TLS-RBAC与内网隔离.md>)；人工状态：`not-yet-recorded`。
+  - 第 118 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [服务数、实例数、配置数、推送连接与容量压测](<../../../docs/cloud-native/nacos/10-服务实例配置推送与容量压测.md>)；人工状态：`not-yet-recorded`。
+  - 第 123 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [监控、日志、备份、升级、迁移与多集群](<../../../docs/cloud-native/nacos/11-Nacos监控日志备份升级迁移与多集群.md>)；人工状态：`not-yet-recorded`。
+  - 第 151 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [源码、注册丢失、配置不生效、选主/数据库异常 Runbook](<../../../docs/cloud-native/nacos/12-Nacos源码与生产故障Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 176 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Kubernetes Serverless 架构概述](<../../../docs/cloud-native/serverless-edge/serverless/01-概述.md>)；人工状态：`not-yet-recorded`。
+  - 第 172 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [Knative Eventing](<../../../docs/cloud-native/serverless-edge/serverless/04-Knative-Eventing.md>)；人工状态：`not-yet-recorded`。
+  - 第 500 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [Kubernetes 原生 Serverless 模式](<../../../docs/cloud-native/serverless-edge/serverless/05-Kubernetes原生Serverless模式.md>)；人工状态：`not-yet-recorded`。
+  - 第 279 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [你是否需要 Istio？](<../../../docs/cloud-native/service-mesh/03-你是否需要Istio.md>)；人工状态：`confirmed-issue`。
+  - 第 133 行：`empty_section`（candidate-not-confirmed）——存在无正文的叶子标题；需核对图片/组件或外链是否承担内容。
+- [服务网格的部署模式](<../../../docs/cloud-native/service-mesh/05-服务网格部署模式.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`deployment_without_validation`（candidate-not-confirmed）——部署/安装正文未发现明确验收或健康检查信号。
+
+## data-systems（104 篇候选）
+
+- [ClickHouse 从零到精通学习路线](<../../../docs/data-systems/analytics/clickhouse/00-ClickHouse从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 78 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [数据类型、Nullable、LowCardinality、Array/Map 与 Schema](<../../../docs/data-systems/analytics/clickhouse/01-foundations-storage/02-ClickHouse数据类型LowCardinality-Array-Map与Schema.md>)；人工状态：`not-yet-recorded`。
+  - 第 54 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Part、Column File、Granule、Mark 与稀疏主键索引](<../../../docs/data-systems/analytics/clickhouse/01-foundations-storage/03-Part列文件Granule-Mark与稀疏主键索引.md>)；人工状态：`not-yet-recorded`。
+  - 第 66 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Replacing/Summing/Aggregating/Collapsing MergeTree 语义](<../../../docs/data-systems/analytics/clickhouse/01-foundations-storage/05-Replacing-Summing-Aggregating-Collapsing-MergeTree.md>)；人工状态：`not-yet-recorded`。
+  - 第 70 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [SELECT Pipeline、向量化、PREWHERE、Join 与聚合](<../../../docs/data-systems/analytics/clickhouse/02-query-ingest/06-SELECT-Pipeline向量化PREWHERE-Join与聚合.md>)；人工状态：`not-yet-recorded`。
+  - 第 90 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Projection、Materialized View、Skip Index 与 Query Cache](<../../../docs/data-systems/analytics/clickhouse/02-query-ingest/07-Projection物化视图Skip-Index与Query-Cache.md>)；人工状态：`not-yet-recorded`。
+  - 第 46 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [异步 INSERT、Batch、Kafka Engine、去重与一致性](<../../../docs/data-systems/analytics/clickhouse/02-query-ingest/08-异步INSERT-Batch-Kafka-Engine去重与一致性.md>)；人工状态：`not-yet-recorded`。
+  - 第 43 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [ReplicatedMergeTree、Shard、Replica、Distributed Table 与路由](<../../../docs/data-systems/analytics/clickhouse/03-cluster-replication/10-ReplicatedMergeTree-Shard-Replica与Distributed-Table.md>)；人工状态：`not-yet-recorded`。
+  - 第 44 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Keeper/Raft、复制队列、选主、故障恢复和扩缩容](<../../../docs/data-systems/analytics/clickhouse/03-cluster-replication/11-Keeper-Raft复制队列故障恢复与扩缩容.md>)；人工状态：`not-yet-recorded`。
+  - 第 40 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Merge、Mutation、TTL、小 Part、磁盘与对象存储治理](<../../../docs/data-systems/analytics/clickhouse/04-production/12-Merge-Mutation-TTL小Part磁盘与对象存储治理.md>)；人工状态：`not-yet-recorded`。
+  - 第 59 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [内存、线程、网络、并发、容量规划与 Benchmark](<../../../docs/data-systems/analytics/clickhouse/04-production/13-内存线程网络并发容量规划与Benchmark.md>)；人工状态：`not-yet-recorded`。
+  - 第 51 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [备份恢复、权限、配额、升级与生产故障 Runbook](<../../../docs/data-systems/analytics/clickhouse/04-production/14-备份权限配额升级与生产故障Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 50 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [湖仓查询与 OLAP 选型、基准测试和故障排查](<../../../docs/data-systems/analytics/olap/04-湖仓查询与OLAP选型基准测试和故障排查.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`runbook_without_diagnostic_artifact`（human-dismissed）——排障/Runbook 正文未发现命令、配置、日志等代码块或配套示例入口。
+- [Airflow DAG、依赖、补数、重试与幂等调度](<../../../docs/data-systems/big-data/engineering-governance/02-Airflow-DAG依赖补数重试与幂等调度.md>)；人工状态：`not-yet-recorded`。
+  - 第 13 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Spark DAG、Job、Stage、Task 与调度过程](<../../../docs/data-systems/big-data/spark/02-DAG-Job-Stage-Task与调度过程.md>)；人工状态：`not-yet-recorded`。
+  - 第 28 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Redis 从零到精通学习路线](<../../../docs/data-systems/cache/redis/00-Redis从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 87 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [RESP、客户端连接、Pipeline、事务与 Lua](<../../../docs/data-systems/cache/redis/01-client-data/02-RESP客户端连接Pipeline事务与Lua.md>)；人工状态：`not-yet-recorded`。
+  - 第 78 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [String、Hash、List、Set、ZSet 与底层编码](<../../../docs/data-systems/cache/redis/01-client-data/03-Redis核心数据结构与底层编码.md>)；人工状态：`not-yet-recorded`。
+  - 第 306 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Bitmap、HyperLogLog、Geo、JSON、Search 与 Vector](<../../../docs/data-systems/cache/redis/01-client-data/04-Bitmap-HyperLogLog-Geo-JSON-Search与Vector.md>)；人工状态：`confirmed-issue`。
+  - 第 58 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [事件循环、I/O Threads、命令执行与源码主路径](<../../../docs/data-systems/cache/redis/02-engine-persistence/05-Redis事件循环IO-Threads命令执行与源码主路径.md>)；人工状态：`not-yet-recorded`。
+  - 第 115 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [RDB、AOF、多段 AOF、fork 与 Copy-on-Write](<../../../docs/data-systems/cache/redis/02-engine-persistence/07-Redis-RDB-AOF-fork与Copy-on-Write.md>)；人工状态：`confirmed-issue`。
+  - 第 60 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [主从复制、PSYNC、Replication Backlog 与一致性](<../../../docs/data-systems/cache/redis/03-ha-cluster/08-Redis主从复制PSYNC与一致性.md>)；人工状态：`confirmed-issue`。
+  - 第 59 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+  - 第 25 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Sentinel 监控、主观/客观下线与故障转移](<../../../docs/data-systems/cache/redis/03-ha-cluster/09-Redis-Sentinel监控与故障转移.md>)；人工状态：`confirmed-issue`。
+  - 第 55 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Redis Cluster、slot、Gossip、迁移与故障转移](<../../../docs/data-systems/cache/redis/03-ha-cluster/10-Redis-Cluster-slot-Gossip迁移与故障转移.md>)；人工状态：`confirmed-issue`。
+  - 第 46 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [缓存模式、穿透、击穿、雪崩、热 Key 与大 Key](<../../../docs/data-systems/cache/redis/04-patterns-operations/12-Redis缓存模式穿透击穿雪崩热Key与大Key.md>)；人工状态：`not-yet-recorded`。
+  - 第 311 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Streams、Pub/Sub、可靠队列与 Kafka/RocketMQ 对比](<../../../docs/data-systems/cache/redis/04-patterns-operations/13-Redis-Streams-PubSub与可靠队列.md>)；人工状态：`confirmed-issue`。
+  - 第 56 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [性能、容量、监控、安全、备份、升级与故障 Runbook](<../../../docs/data-systems/cache/redis/04-patterns-operations/14-Redis性能容量监控安全备份升级与故障Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 229 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [MySQL 解决什么问题及一条 SQL 的完整路径](<../../../docs/data-systems/databases/mysql/01-foundations/01-MySQL解决什么问题及一条SQL的完整路径.md>)；人工状态：`not-yet-recorded`。
+  - 第 369 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [安装 MySQL 8.4 LTS 与建立安全实验环境](<../../../docs/data-systems/databases/mysql/01-foundations/02-安装MySQL8.4LTS与建立安全实验环境.md>)；人工状态：`not-yet-recorded`。
+  - 第 361 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [mysql 客户端、连接、会话与元数据导航](<../../../docs/data-systems/databases/mysql/01-foundations/03-mysql客户端连接会话与元数据导航.md>)；人工状态：`not-yet-recorded`。
+  - 第 400 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [数据库、表、数据类型、字符集与排序规则](<../../../docs/data-systems/databases/mysql/01-foundations/04-数据库表数据类型字符集与排序规则.md>)；人工状态：`not-yet-recorded`。
+  - 第 330 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [主键、唯一约束、外键、NULL 与数据完整性](<../../../docs/data-systems/databases/mysql/02-schema-application/01-主键唯一外键NULL与数据完整性.md>)；人工状态：`not-yet-recorded`。
+  - 第 265 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [范式、反范式、宽表与关系建模](<../../../docs/data-systems/databases/mysql/02-schema-application/02-范式反范式宽表与关系建模.md>)；人工状态：`not-yet-recorded`。
+  - 第 273 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [时间、金额、字符集、JSON 与数据类型陷阱](<../../../docs/data-systems/databases/mysql/02-schema-application/03-时间金额字符集JSON与类型陷阱.md>)；人工状态：`not-yet-recorded`。
+  - 第 235 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Online DDL、Metadata Lock 与 Schema 变更](<../../../docs/data-systems/databases/mysql/02-schema-application/04-Online-DDL-MDL与Schema变更.md>)；人工状态：`not-yet-recorded`。
+  - 第 243 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [连接池、Prepared Statement、事务、超时与重试](<../../../docs/data-systems/databases/mysql/02-schema-application/05-连接池Prepared-Statement事务超时与重试.md>)；人工状态：`not-yet-recorded`。
+  - 第 306 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Page、Row Format、聚簇索引与二级索引](<../../../docs/data-systems/databases/mysql/03-innodb-transactions/02-Page-RowFormat聚簇索引与二级索引.md>)；人工状态：`not-yet-recorded`。
+  - 第 189 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Buffer Pool、脏页、刷盘、Change Buffer 与 Doublewrite](<../../../docs/data-systems/databases/mysql/03-innodb-transactions/03-BufferPool脏页刷盘ChangeBuffer与Doublewrite.md>)；人工状态：`confirmed-issue`。
+  - 第 161 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Redo、Undo、Binlog 与一次提交的完整路径](<../../../docs/data-systems/databases/mysql/03-innodb-transactions/04-Redo-Undo-Binlog与一次提交的完整路径.md>)；人工状态：`confirmed-issue`。
+  - 第 172 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Checkpoint、Crash Recovery 与持久性边界](<../../../docs/data-systems/databases/mysql/03-innodb-transactions/07-Checkpoint-CrashRecovery与持久性边界.md>)；人工状态：`not-yet-recorded`。
+  - 第 156 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [ProxySQL、Orchestrator 与读写路由架构](<../../../docs/data-systems/databases/mysql/08-production-operations/04-ProxySQL-Orchestrator与读写路由架构.md>)；人工状态：`not-yet-recorded`。
+  - 第 54 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [PostgreSQL 从零到精通学习路线](<../../../docs/data-systems/databases/postgresql/00-PostgreSQL从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 88 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [psql、Database、Schema、Role 与元数据导航](<../../../docs/data-systems/databases/postgresql/01-foundations-sql/03-psql-Database-Schema-Role与元数据导航.md>)；人工状态：`not-yet-recorded`。
+  - 第 75 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [类型、约束、Sequence、Partition 与 Schema 设计](<../../../docs/data-systems/databases/postgresql/01-foundations-sql/04-PostgreSQL类型约束Sequence分区与Schema设计.md>)；人工状态：`not-yet-recorded`。
+  - 第 62 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [SQL、CTE、Window、JSONB、Array 与全文检索](<../../../docs/data-systems/databases/postgresql/01-foundations-sql/05-PostgreSQL-SQL-CTE-Window-JSONB-Array与全文检索.md>)；人工状态：`not-yet-recorded`。
+  - 第 252 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Page、Heap Tuple、TOAST、FSM 与 Visibility Map](<../../../docs/data-systems/databases/postgresql/02-storage-concurrency/06-PostgreSQL-Page-Heap-Tuple-TOAST-FSM与Visibility-Map.md>)；人工状态：`not-yet-recorded`。
+  - 第 56 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [MVCC、Snapshot、隔离级别、锁与 SSI](<../../../docs/data-systems/databases/postgresql/02-storage-concurrency/07-PostgreSQL-MVCC-Snapshot隔离级别锁与SSI.md>)；人工状态：`not-yet-recorded`。
+  - 第 292 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [WAL、Commit、Checkpoint、Crash Recovery 与 Timeline](<../../../docs/data-systems/databases/postgresql/02-storage-concurrency/08-PostgreSQL-WAL-Commit-Checkpoint恢复与Timeline.md>)；人工状态：`not-yet-recorded`。
+  - 第 341 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Vacuum、Autovacuum、Freeze、XID Wraparound 与 Bloat](<../../../docs/data-systems/databases/postgresql/02-storage-concurrency/09-PostgreSQL-Vacuum-Autovacuum-Freeze与Bloat.md>)；人工状态：`not-yet-recorded`。
+  - 第 184 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [B-Tree、GIN、GiST、BRIN、Hash 与索引设计](<../../../docs/data-systems/databases/postgresql/02-storage-concurrency/10-PostgreSQL-BTree-GIN-GiST-BRIN-Hash索引设计.md>)；人工状态：`not-yet-recorded`。
+  - 第 70 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Planner、统计信息、EXPLAIN ANALYZE 与 Join](<../../../docs/data-systems/databases/postgresql/03-performance/11-PostgreSQL-Planner统计信息EXPLAIN与Join.md>)；人工状态：`not-yet-recorded`。
+  - 第 85 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [连接进程、PgBouncer、内存、Huge Pages 与 I/O](<../../../docs/data-systems/databases/postgresql/03-performance/12-PostgreSQL连接PgBouncer内存HugePages与IO.md>)；人工状态：`not-yet-recorded`。
+  - 第 58 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [流复制、同步复制、Replication Slot 与 Hot Standby](<../../../docs/data-systems/databases/postgresql/04-ha-dr/13-PostgreSQL流复制同步复制Slot与Hot-Standby.md>)；人工状态：`not-yet-recorded`。
+  - 第 49 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Patroni、etcd、HAProxy 与自动故障转移](<../../../docs/data-systems/databases/postgresql/04-ha-dr/14-Patroni-etcd-HAProxy与自动故障转移.md>)；人工状态：`not-yet-recorded`。
+  - 第 52 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [逻辑复制、Publication/Subscription、CDC 与迁移](<../../../docs/data-systems/databases/postgresql/04-ha-dr/15-PostgreSQL逻辑复制Publication-Subscription与CDC.md>)；人工状态：`not-yet-recorded`。
+  - 第 57 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [pgdump、pgbasebackup、WAL Archive 与 PITR](<../../../docs/data-systems/databases/postgresql/04-ha-dr/16-pg_dump-pg_basebackup-WAL归档与PITR.md>)；人工状态：`not-yet-recorded`。
+  - 第 59 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [性能、容量、监控、安全、升级与故障 Runbook](<../../../docs/data-systems/databases/postgresql/05-operations-internals/17-PostgreSQL性能容量监控安全升级与故障Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 212 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [PostgreSQL 源码、Extension、Hook 与内核调试](<../../../docs/data-systems/databases/postgresql/05-operations-internals/18-PostgreSQL源码Extension-Hook与内核调试.md>)；人工状态：`not-yet-recorded`。
+  - 第 178 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Kafka 从零到精通学习路线](<../../../docs/data-systems/messaging/kafka/00-Kafka从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 58 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [TLS、SASL、ACL、配额与多租户安全](<../../../docs/data-systems/messaging/kafka/09-Kafka-TLS-SASL-ACL配额与多租户安全.md>)；人工状态：`not-yet-recorded`。
+  - 第 46 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Network Thread、Request Handler、Replica Fetch 与源码路径](<../../../docs/data-systems/messaging/kafka/10-Kafka网络线程请求处理副本拉取与源码路径.md>)；人工状态：`mixed-findings`。
+  - 第 79 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+  - 第 26 行：`compressed_multitopic_sections`（human-dismissed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [MirrorMaker 2、跨集群复制、灾备切换与一致性](<../../../docs/data-systems/messaging/kafka/11-MirrorMaker2跨集群复制灾备切换与一致性.md>)；人工状态：`confirmed-issue`。
+  - 第 55 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+  - 第 19 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [生产验收、监控告警、基准测试与故障演练](<../../../docs/data-systems/messaging/kafka/12-Kafka生产验收监控基准与故障演练.md>)；人工状态：`not-yet-recorded`。
+  - 第 68 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [RocketMQ 从零到精通学习路线](<../../../docs/data-systems/messaging/rocketmq/00-RocketMQ从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 70 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Topic、MessageQueue、Tag、Key、Group 与消息类型](<../../../docs/data-systems/messaging/rocketmq/01-architecture-storage/02-RocketMQ资源模型与消息类型.md>)；人工状态：`not-yet-recorded`。
+  - 第 169 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [NameServer、Broker、Proxy、Controller 架构](<../../../docs/data-systems/messaging/rocketmq/01-architecture-storage/03-NameServer-Broker-Proxy-Controller架构.md>)；人工状态：`not-yet-recorded`。
+  - 第 171 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [CommitLog、ConsumeQueue、IndexFile 与刷盘](<../../../docs/data-systems/messaging/rocketmq/01-architecture-storage/04-CommitLog-ConsumeQueue-IndexFile与刷盘.md>)；人工状态：`not-yet-recorded`。
+  - 第 185 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Producer 同步/异步、重试、批量与可靠发送](<../../../docs/data-systems/messaging/rocketmq/02-messaging-semantics/05-Producer同步异步重试批量与可靠发送.md>)；人工状态：`not-yet-recorded`。
+  - 第 209 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Push/Simple Consumer、Offset、负载均衡与重试 DLQ](<../../../docs/data-systems/messaging/rocketmq/02-messaging-semantics/06-Push-Simple-Consumer-Offset重试与DLQ.md>)；人工状态：`not-yet-recorded`。
+  - 第 219 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [FIFO 顺序消息、锁、Queue 与扩缩容](<../../../docs/data-systems/messaging/rocketmq/02-messaging-semantics/07-FIFO顺序消息锁Queue与扩缩容.md>)；人工状态：`not-yet-recorded`。
+  - 第 197 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [事务消息、Half Message、回查与业务幂等](<../../../docs/data-systems/messaging/rocketmq/02-messaging-semantics/08-事务消息Half-Message回查与业务幂等.md>)；人工状态：`not-yet-recorded`。
+  - 第 200 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [延迟/定时消息、批量、Filter 与 LiteTopic](<../../../docs/data-systems/messaging/rocketmq/02-messaging-semantics/09-延迟定时批量Filter与LiteTopic.md>)；人工状态：`not-yet-recorded`。
+  - 第 193 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [同步复制、刷盘、SyncStateSet、选主与数据丢失边界](<../../../docs/data-systems/messaging/rocketmq/03-deployment-reliability/11-同步复制刷盘SyncStateSet选主与RPO.md>)；人工状态：`not-yet-recorded`。
+  - 第 175 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Topic/Queue、吞吐、存储、网络与容量规划](<../../../docs/data-systems/messaging/rocketmq/04-production/12-Topic-Queue吞吐存储网络与容量规划.md>)；人工状态：`not-yet-recorded`。
+  - 第 254 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [ACL、TLS、监控、Dashboard、升级与跨集群迁移](<../../../docs/data-systems/messaging/rocketmq/04-production/13-ACL-TLS监控Dashboard升级与跨集群迁移.md>)；人工状态：`not-yet-recorded`。
+  - 第 236 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [源码请求路径、积压、发送失败、主从异常与故障 Runbook](<../../../docs/data-systems/messaging/rocketmq/04-production/14-源码请求路径与生产故障Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 296 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Elasticsearch 从零到精通学习路线](<../../../docs/data-systems/search/elasticsearch/00-Elasticsearch从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 95 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [倒排索引、Term Dictionary、Postings 与 Doc Values](<../../../docs/data-systems/search/elasticsearch/01-search-storage/02-倒排索引Term-Dictionary-Postings与Doc-Values.md>)；人工状态：`not-yet-recorded`。
+  - 第 60 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Mapping、字段类型、Analyzer、Tokenizer 与相关性](<../../../docs/data-systems/search/elasticsearch/01-search-storage/03-Mapping字段类型Analyzer与相关性.md>)；人工状态：`not-yet-recorded`。
+  - 第 58 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Index、Refresh、Translog、Flush、Segment 与 Merge](<../../../docs/data-systems/search/elasticsearch/01-search-storage/05-Index-Refresh-Translog-Flush-Segment与Merge.md>)；人工状态：`not-yet-recorded`。
+  - 第 59 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Node、Cluster State、Master 选举与发布机制](<../../../docs/data-systems/search/elasticsearch/02-cluster-data/06-Node-Cluster-State-Master选举与发布机制.md>)；人工状态：`not-yet-recorded`。
+  - 第 48 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+  - 第 23 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Primary/Replica Shard、路由、分配、恢复与 Rebalance](<../../../docs/data-systems/search/elasticsearch/02-cluster-data/07-Primary-Replica-Shard路由分配恢复与Rebalance.md>)；人工状态：`not-yet-recorded`。
+  - 第 51 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Index Template、Data Stream、ILM 与 Hot-Warm-Cold-Frozen](<../../../docs/data-systems/search/elasticsearch/02-cluster-data/09-Index-Template-Data-Stream-ILM与冷热分层.md>)；人工状态：`not-yet-recorded`。
+  - 第 64 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Bulk、Ingest Pipeline、Logstash、Beats 与数据建模](<../../../docs/data-systems/search/elasticsearch/02-cluster-data/10-Bulk-Ingest-Pipeline-Logstash-Beats与数据建模.md>)；人工状态：`not-yet-recorded`。
+  - 第 51 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Dense Vector、ANN、HNSW、Hybrid Search 与 RAG](<../../../docs/data-systems/search/elasticsearch/03-vector-performance/11-Dense-Vector-ANN-HNSW-Hybrid-Search与RAG.md>)；人工状态：`not-yet-recorded`。
+  - 第 43 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [JVM Heap、GC、Page Cache、Circuit Breaker 与 Cache](<../../../docs/data-systems/search/elasticsearch/03-vector-performance/12-JVM-Heap-GC-Page-Cache-Circuit-Breaker与Cache.md>)；人工状态：`not-yet-recorded`。
+  - 第 53 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Shard Sizing、吞吐、延迟、容量规划与基准测试](<../../../docs/data-systems/search/elasticsearch/03-vector-performance/13-Shard-Sizing容量规划与基准测试.md>)；人工状态：`not-yet-recorded`。
+  - 第 58 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [TLS、RBAC、API Key、审计与多租户安全](<../../../docs/data-systems/search/elasticsearch/04-security-operations/14-TLS-RBAC-API-Key审计与多租户安全.md>)；人工状态：`not-yet-recorded`。
+  - 第 47 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Snapshot、Restore、CCR、跨集群搜索与灾备](<../../../docs/data-systems/search/elasticsearch/04-security-operations/15-Snapshot-Restore-CCR与跨集群灾备.md>)；人工状态：`not-yet-recorded`。
+  - 第 53 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [监控、滚动升级、红黄集群与生产故障 Runbook](<../../../docs/data-systems/search/elasticsearch/04-security-operations/16-Elasticsearch监控滚动升级与故障Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 62 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Milvus 从零到精通学习路线](<../../../docs/data-systems/vector-databases/milvus/00-Milvus从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 84 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Collection、Schema、Primary Key、Partition 与 Dynamic Field](<../../../docs/data-systems/vector-databases/milvus/01-foundations-data/03-Milvus-Collection-Schema主键分区与Dynamic-Field.md>)；人工状态：`not-yet-recorded`。
+  - 第 59 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Insert、Upsert、Delete、Timestamp 与一致性级别](<../../../docs/data-systems/vector-databases/milvus/01-foundations-data/04-Milvus写入删除Timestamp与一致性级别.md>)；人工状态：`not-yet-recorded`。
+  - 第 49 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Growing/Sealed Segment、Flush、Compaction 与 Garbage Collection](<../../../docs/data-systems/vector-databases/milvus/02-storage-index/05-Growing-Sealed-Segment-Flush-Compaction与GC.md>)；人工状态：`not-yet-recorded`。
+  - 第 48 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [FLAT、IVF、HNSW、DISKANN、SCANN 与索引参数](<../../../docs/data-systems/vector-databases/milvus/02-storage-index/06-FLAT-IVF-HNSW-DISKANN-SCANN与索引参数.md>)；人工状态：`not-yet-recorded`。
+  - 第 105 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Scalar Filter、Hybrid Search、Sparse/Dense、Rerank 与 Grouping](<../../../docs/data-systems/vector-databases/milvus/02-storage-index/07-Scalar-Filter混合检索Sparse-Dense与Rerank.md>)；人工状态：`not-yet-recorded`。
+  - 第 49 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Proxy、Coordinator、Streaming、Query、Data Node 源码职责](<../../../docs/data-systems/vector-databases/milvus/02-storage-index/08-Milvus组件源码职责与请求主路径.md>)；人工状态：`not-yet-recorded`。
+  - 第 54 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [etcd、WAL/Woodpecker 与 S3/MinIO 依赖原理](<../../../docs/data-systems/vector-databases/milvus/02-storage-index/09-etcd-Woodpecker与S3-MinIO依赖原理.md>)；人工状态：`confirmed-issue`。
+  - 第 43 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+  - 第 19 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [Lite、Compose Standalone、Helm/K8s Distributed 多种部署](<../../../docs/data-systems/vector-databases/milvus/03-deployment-scaling/10-Milvus-Lite-Compose-Helm与Kubernetes生产部署.md>)；人工状态：`not-yet-recorded`。
+  - 第 64 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Shard、Replica、Resource Group、Load/Release 与弹性扩缩](<../../../docs/data-systems/vector-databases/milvus/03-deployment-scaling/11-Shard-Replica-Resource-Group与弹性扩缩.md>)；人工状态：`not-yet-recorded`。
+  - 第 44 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [向量维度、Segment、索引、QPS、内存与容量规划](<../../../docs/data-systems/vector-databases/milvus/04-performance-operations/12-向量维度Segment索引QPS与容量规划.md>)；人工状态：`not-yet-recorded`。
+  - 第 56 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Benchmark、Recall、P95/P99、监控与性能调优](<../../../docs/data-systems/vector-databases/milvus/04-performance-operations/13-Milvus-Benchmark-Recall监控与性能调优.md>)；人工状态：`not-yet-recorded`。
+  - 第 54 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [备份、Snapshot、升级、迁移、安全与多租户](<../../../docs/data-systems/vector-databases/milvus/04-performance-operations/14-Milvus备份升级迁移安全与多租户.md>)；人工状态：`not-yet-recorded`。
+  - 第 39 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [写入积压、加载失败、OOM、慢查询与生产故障 Runbook](<../../../docs/data-systems/vector-databases/milvus/04-performance-operations/15-Milvus生产故障Runbook.md>)；人工状态：`not-yet-recorded`。
+  - 第 53 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+
+## development（2 篇候选）
+
+- [事件重放、断线恢复与慢消费者](<../../../docs/development/fastapi/07-task-service/03-事件重放断线恢复与慢消费者.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`recovery_without_acceptance`（human-dismissed）——恢复专项未发现对账/校验/恢复后验证等信号。
+- [Gin 源码：Recovery、并发请求与无法恢复的边界](<../../../docs/development/gin/05-internals/04-Recovery并发与执行边界源码.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`recovery_without_acceptance`（human-dismissed）——恢复专项未发现对账/校验/恢复后验证等信号。
+
+## gpu（3 篇候选）
+
+- [Pod 如何使用上 GPU：Device Plugin 与 Container Toolkit](<../../../docs/gpu/cluster/device-management/03-Pod如何使用上GPU：Device Plugin与Container Toolkit.md>)；人工状态：`not-yet-recorded`。
+  - 第 171 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [DRA 集群安装与设备分配实践（v1.34+）](<../../../docs/gpu/cluster/dra/02-DRA 集群安装与设备分配实践（v1.34+）.md>)；人工状态：`not-yet-recorded`。
+  - 第 130 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+- [nvidia-modprobe 命令详解：内核模块与设备节点创建](<../../../docs/gpu/commands/05-nvidia-modprobe命令详解.md>)；人工状态：`signal-dismissed`。
+  - 第 8 行：`command_without_example_output`（human-dismissed）——命令参考未发现独立输出/配置块或输出解读标记，需核对混排代码与链接。
+
+## learning（1 篇候选）
+
+- [AI 集群运维知识体系与掌握检查](<../../../docs/learning/05-AI集群运维知识体系与掌握检查.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`maintenance_scaffolding`（candidate-not-confirmed）——正文出现待写/面试/写作安排等词，需判断语境。
+
+## linux（3 篇候选）
+
+- [unshare 命令详解：创建 Namespace、UID 映射与最小容器实验](<../../../docs/linux/commands/09-namespaces-cgroups-container/03-unshare命令详解.md>)；人工状态：`not-yet-recorded`。
+  - 第 8 行：`command_without_example_output`（candidate-not-confirmed）——命令参考未发现独立输出/配置块或输出解读标记，需核对混排代码与链接。
+- [路由、策略路由与邻居子系统：一个目的地址如何找到出口和下一跳](<../../../docs/linux/system-internals/07-network-stack/02-routing-transport/05-路由策略路由与邻居子系统.md>)；人工状态：`confirmed-issue`。
+  - 第 34 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [perf：PMU、采样与火焰图原理](<../../../docs/linux/system-internals/12-observability/04-perf-PMU采样与火焰图原理.md>)；人工状态：`confirmed-issue`。
+  - 第 29 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+
+## networking（12 篇候选）
+
+- [从应用到网卡：一个数据包的完整生命周期](<../../../docs/networking/fundamentals/02-从应用到网卡的数据包生命周期.md>)；人工状态：`not-yet-recorded`。
+  - 第 253 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [APISIX 性能容量、升级、选型与故障 Runbook](<../../../docs/networking/load-balancing-proxy/apisix/03-APISIX性能容量-升级-选型与故障Runbook.md>)；人工状态：`confirmed-issue`。
+  - 第 8 行：`runbook_without_diagnostic_artifact`（candidate-not-confirmed）——排障/Runbook 正文未发现命令、配置、日志等代码块或配套示例入口。
+- [Envoy 从零到精通学习路线](<../../../docs/networking/load-balancing-proxy/envoy/00-Envoy从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 74 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Higress 从零到精通学习路线](<../../../docs/networking/load-balancing-proxy/higress/00-Higress从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 65 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Controller、Pilot/Config、Gateway/Envoy 与一次请求](<../../../docs/networking/load-balancing-proxy/higress/02-Higress控制面数据面与一次请求路径.md>)；人工状态：`not-yet-recorded`。
+  - 第 55 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Ingress、Gateway API、Domain、Route 与 Backend](<../../../docs/networking/load-balancing-proxy/higress/04-Ingress-Gateway-API-Domain-Route与Backend.md>)；人工状态：`not-yet-recorded`。
+  - 第 49 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Kubernetes、Nacos、DNS、Dubbo 服务发现](<../../../docs/networking/load-balancing-proxy/higress/05-Kubernetes-Nacos-DNS-Dubbo服务发现.md>)；人工状态：`not-yet-recorded`。
+  - 第 50 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [负载均衡、重试、超时、熔断、健康与流量灰度](<../../../docs/networking/load-balancing-proxy/higress/06-负载均衡重试超时熔断健康与灰度.md>)；人工状态：`not-yet-recorded`。
+  - 第 50 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [TLS、mTLS、JWT/OIDC、Key Auth、WAF 与安全](<../../../docs/networking/load-balancing-proxy/higress/07-TLS-mTLS-JWT-OIDC-Key-Auth与WAF.md>)；人工状态：`not-yet-recorded`。
+  - 第 51 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [Nginx 从零到精通学习路线](<../../../docs/networking/load-balancing-proxy/nginx/00-Nginx从零到精通学习路线.md>)；人工状态：`not-yet-recorded`。
+  - 第 70 行：`exercise_without_answer`（candidate-not-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+- [HTTP Phase、Module、Subrequest、Filter 与变量源码](<../../../docs/networking/load-balancing-proxy/nginx/01-core/08-Nginx-HTTP-Phase-Module-Subrequest与Filter源码.md>)；人工状态：`confirmed-issue`。
+  - 第 51 行：`exercise_without_answer`（human-confirmed）——存在练习/验收题段，但段落之后未发现明确答案标记；可能跨文引用，需复核。
+  - 第 21 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+- [nginx源码分析-基础数据结构](<../../../docs/networking/load-balancing-proxy/nginx/01-core/14-nginx源码解析-基础数据结构（一）.md>)；人工状态：`confirmed-issue`。
+  - 第 15 行：`compressed_multitopic_sections`（human-dismissed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。
+
+## sre（3 篇候选）
+
+- [etcd NOSPACE 导致外呼服务失效：一次故障复盘与错误归因校正](<../../../docs/sre/incidents/07-etcd-NOSPACE导致外呼服务失效故障复盘.md>)；人工状态：`not-yet-recorded`。
+  - 第 10 行：`maintenance_scaffolding`（candidate-not-confirmed）——正文出现待写/面试/写作安排等词，需判断语境。
+- [CNI DaemonSet 滚动更新导致节点 NotReady：故障复盘与错误归因校正](<../../../docs/sre/incidents/08-CNI-DaemonSet滚动更新导致节点NotReady故障复盘.md>)；人工状态：`not-yet-recorded`。
+  - 第 10 行：`maintenance_scaffolding`（candidate-not-confirmed）——正文出现待写/面试/写作安排等词，需判断语境。
+- [Kiali 服务网格观测面板](<../../../docs/sre/observability/kubernetes/03-Kiali.md>)；人工状态：`not-yet-recorded`。
+  - 第 199 行：`production_floating_image`（candidate-not-confirmed）——生产相关内容出现 latest 镜像，需要核对是否仅示意或明确禁止。
+
+## storage（1 篇候选）
+
+- [Lustre、BeeGFS 并行文件系统架构与选型](<../../../docs/storage/training-data-plane/04-Lustre-BeeGFS并行文件系统架构与选型.md>)；人工状态：`not-yet-recorded`。
+  - 第 23 行：`compressed_multitopic_sections`（candidate-not-confirmed）——机制/架构正文多个主题只有单段概要，未见展开、示例或因果桥接；仅为需人工精读的结构信号。

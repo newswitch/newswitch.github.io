@@ -1,16 +1,20 @@
 ---
-title: "nginx源码分析-基础数据结构"
+title: "Nginx 内存池与基础数据结构实现"
 sidebar_label: "14. Nginx 内存池与基础数据结构实现"
 sidebar_position: 14
-description: "从 Nginx 源码理解内存池、数组、链表、队列和红黑树等核心基础数据结构的设计与使用边界。"
+description: "以 Nginx 1.28.0 源码解释内存池、数组扩容、Buffer 与 Chain、链表、Hash 和字符串，区分分配、复用及资源释放的边界。"
 tags: [Nginx, 源码解析, 技术学习]
 date: 2025-11-10 15:00:00
 categories: NGINX
 ---
 
-# nginx源码分析-基础数据结构
+# Nginx 内存池与基础数据结构实现
 
-> 本文是历史源码阅读笔记，参考了 [Nginx 源码分析——基础数据结构](https://blog.csdn.net/yangyin007/article/details/82777086)。Nginx 的结构体字段和内部接口可能随版本变化，实践时应以所阅读源码的 tag 为准。
+实现基线为 **Nginx `release-1.28.0`**，主要入口是 `src/core/ngx_palloc.c`、`ngx_array.c` 与 `ngx_buf.h`。这些内部接口不承诺跨版本保持不变；其他版本应沿自己的源码核对，不能仅根据字段名称猜语义。
+
+先区分三件事：Pool 决定对象的分配与生命周期，Array/List 等决定数据怎样组织，Buffer/Chain 决定一段内存或文件怎样参与 I/O。同一个请求会同时使用这些结构，但它们并不拥有相同职责。
+
+原有示意图用于理解引用关系，不代表结构体和数据在所有路径下都连续排列。源码导读见 [Core 模块与基础数据结构](./13-nginx源码分析-基础数据结构.md)；历史笔记参考保留在文末。
 
 ## 1. Nginx架构图 {/* #nginx架构图 */}
 
@@ -21,28 +25,20 @@ categories: NGINX
 
 ## 3. 内存池 ngx_palloc.c {/* #内存池-ngxpallocc */}
 
-Nginx的内存管理是通过内存池来实现的。Nginx的内存池的设计非常的精巧，很多场景下，我们可以将Nginx的内存池实现抽象出来改造成我们开发中的内存池。
+Nginx 的大量对象绑定到请求、连接或配置 Cycle 的生命周期。Pool 的优势是把这些对象一起管理：小块分配通常只对齐并推进指针，生命周期结束后统一释放，不必给每个对象设计独立的 `free` 路径。
 
-一般我们使用malloc/alloc/free等函数来分配和释放内存。但是直接使用这些函数会有一些弊端：
-
-- 虽然系统自带的ptmalloc内存分配管理器，也有自己的内存优化管理方案（申请内存块以及将内存交还给系统都有自己的优化方案，具体可以研究一下ptmalloc的源码），但是直接使用malloc/alloc/free，仍然会导致内存分配的性能比较低。
-- 频繁使用这些函数分配和释放内存，会导致内存碎片，不容易让系统直接回收内存。典型的例子就是大并发频繁分配和回收内存，会导致进程的内存产生碎片，并且不会立马被系统回收。
-- 容易产生内存泄露。
-
-使用内存池分配内存有几点好处：
-- 提升内存分配效率。不需要每次分配内存都执行malloc/alloc等函数。
-- 让内存的管理变得更加简单。内存的分配都会在一块大的内存上，回收的时候只需要回收大块内存就能将所有的内存回收，防止了内存管理混乱和内存泄露问题。
+Pool 并没有取代系统分配器。创建内存块、扩展内存块以及大块分配，仍需向底层申请内存。它也不是通用的“防泄漏工具”：长生命周期 Pool 中不断分配而不回收，仍会让内存持续增长；把短生命周期对象指针交给长期任务，还可能产生悬空引用。
 
 ### 3.1 数据结构定义 {/* #数据结构定义 */}
 #### 3.1.1 ngx_pool_t 内存池主结构 {/* #ngxpoolt-内存池主结构 */}
 ```c
 struct ngx_pool_s {
-    ngx_pool_data_t       d;        /* 内存池的数据区域*/
-    size_t                max;      /* 最大每次可分配内存 */
-    ngx_pool_t           *current;  /* 指向当前的内存池指针地址。ngx_pool_t链表上最后一个缓存池结构*/
-    ngx_chain_t          *chain;    /* 缓冲区链表 */
-    ngx_pool_large_t     *large;    /* 存储大数据的链表 */
-    ngx_pool_cleanup_t   *cleanup;  /* 可自定义回调函数，清除内存块分配的内存 */
+    ngx_pool_data_t       d;        /* 当前块的分配游标、边界与下一块 */
+    size_t                max;      /* 使用小块分配路径的大小上限 */
+    ngx_pool_t           *current;  /* 后续小块分配开始搜索的位置 */
+    ngx_chain_t          *chain;    /* 可复用的 ngx_chain_t 链接节点 */
+    ngx_pool_large_t     *large;    /* 独立大块分配的登记链表 */
+    ngx_pool_cleanup_t   *cleanup;  /* 销毁时需要执行的资源清理回调 */
     ngx_log_t            *log;      /* 日志 */
 };
 ```
@@ -52,14 +48,14 @@ typedef struct {
     u_char               *last;  /* 内存池中未使用内存的开始节点地址 */
     u_char               *end;   /* 内存池的结束地址 */
     ngx_pool_t           *next;  /* 指向下一个内存池 */
-    ngx_uint_t            failed;/* 失败次数 */
+    ngx_uint_t            failed;/* 扩展块路径中的启发式计数，并非业务请求失败数 */
 } ngx_pool_data_t;
 ```
 #### 3.1.3 ngx_pool_large_t 大数据块结构 {/* #ngxpoollarget-大数据块结构 */}
 ```c
 struct ngx_pool_large_s {
-    ngx_pool_large_t     *next;   /* 指向下一个存储地址 通过这个地址可以知道当前块长度 */
-    void                 *alloc;  /* 数据块指针地址 */
+    ngx_pool_large_t     *next;   /* 下一个登记节点，不提供本次分配长度 */
+    void                 *alloc;  /* 底层分配器返回的地址；释放后可设为 NULL */
 };
 ```
 #### 3.1.4 ngx_pool_cleanup_t 自定义清理回调的数据结构 {/* #ngxpoolcleanupt-自定义清理回调的数据结构 */}
@@ -75,6 +71,8 @@ struct ngx_pool_cleanup_s {
 - 当申请的内存大于pool->max的值的时候，Nginx就会单独分配一块large的内存块，会放置在pool->large的链表结构上。
 - pool->cleanup的链表结构主要存放需要通过回调函数清理的内存数据。（例如文件描述符）
 ![内存池数据结构图](/images/nginx源码解析/内存池数据结构图.png)
+
+读图时把 `current` 理解为搜索起点，不是尾指针。首块包含完整 `ngx_pool_t` 管理信息；扩展块只使用块头中的 `ngx_pool_data_t`，不能根据图中的简写推断每个扩展块都有可用的 `log`、`cleanup` 等管理字段。[固定版本定义](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_palloc.h)
 
 ### 3.3 具体函数实现 {/* #具体函数实现 */}
 #### 3.3.1 内存分配 ngx_alloc和ngx_calloc {/* #内存分配-ngxalloc和ngxcalloc */}
@@ -123,6 +121,8 @@ ngx_calloc(size_t size, ngx_log_t *log)
 #### 3.3.2 创建内存池 {/* #创建内存池 */}
 调用ngx_create_pool这个方法就可以创建一个内存池。
 
+其中 `pool->max = min(首块剩余空间, ngx_pagesize - 1)` 是小块路径阈值，不是 Pool 的总容量上限。假设系统页为 4 KiB、首块空间足够，阈值为 4095 字节；申请 5000 字节时会走大块路径，而不是直接失败。创建大小还需满足 `NGX_MIN_POOL_SIZE` 与对齐要求。
+
 ```c
 /**
  * 创建一个内存池
@@ -165,276 +165,244 @@ ngx_create_pool(size_t size, ngx_log_t *log) {
 ```
 
 #### 3.3.3 销毁内存池ngx_destroy_pool {/* #销毁内存池ngxdestroypool */}
+
+销毁顺序是执行 Cleanup、输出需要的调试信息、释放独立大块，最后释放各个 Pool 内存块。Cleanup 需要的上下文必须在回调期间仍然有效。
+
 ```c
-/**
- * 销毁内存池。
- */
-void ngx_destroy_pool(ngx_pool_t *pool) {
-	ngx_pool_t *p, *n;
-	ngx_pool_large_t *l;
-	ngx_pool_cleanup_t *c;
+void
+ngx_destroy_pool(ngx_pool_t *pool)
+{
+    ngx_pool_t          *p, *n;
+    ngx_pool_large_t    *l;
+    ngx_pool_cleanup_t  *c;
 
-	/* 首先清理pool->cleanup链表 */
-	for (c = pool->cleanup; c; c = c->next) {
-		/* handler 为一个清理的回调函数 */
-		if (c->handler) {
-			ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
-					"run cleanup: %p", c);
-			c->handler(c->data);
-		}
-	}
-
-	/* 清理pool->large链表（pool->large为单独的大数据内存块）  */
-	for (l = pool->large; l; l = l->next) {
-
-		ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0, "free: %p", l->alloc);
-
-		if (l->alloc) {
-			ngx_free(l->alloc);
-		}
-	}
+    for (c = pool->cleanup; c; c = c->next) {
+        if (c->handler) {
+            ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
+                           "run cleanup: %p", c);
+            c->handler(c->data);
+        }
+    }
 
 #if (NGX_DEBUG)
 
-	/*
-	 * we could allocate the pool->log from this pool
-	 * so we cannot use this log while free()ing the pool
-	 */
+    /*
+     * we could allocate the pool->log from this pool
+     * so we cannot use this log while free()ing the pool
+     */
 
-	for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
-		ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
-				"free: %p, unused: %uz", p, p->d.end - p->d.last);
+    for (l = pool->large; l; l = l->next) {
+        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0, "free: %p", l->alloc);
+    }
 
-		if (n == NULL) {
-			break;
-		}
-	}
+    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+        ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
+                       "free: %p, unused: %uz", p, p->d.end - p->d.last);
+
+        if (n == NULL) {
+            break;
+        }
+    }
 
 #endif
 
-	/* 对内存池的data数据区域进行释放 */
-	for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
-		ngx_free(p);
+    for (l = pool->large; l; l = l->next) {
+        if (l->alloc) {
+            ngx_free(l->alloc);
+        }
+    }
 
-		if (n == NULL) {
-			break;
-		}
-	}
+    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+        ngx_free(p);
+
+        if (n == NULL) {
+            break;
+        }
+    }
 }
 ```
+
 #### 3.3.4 重设内存池ngx_reset_pool {/* #重设内存池ngxresetpool */}
+
 ```c
+void
+ngx_reset_pool(ngx_pool_t *pool)
+{
+    ngx_pool_t        *p;
+    ngx_pool_large_t  *l;
 
-/**
- * 重设内存池
- */
-void ngx_reset_pool(ngx_pool_t *pool) {
-	ngx_pool_t *p;
-	ngx_pool_large_t *l;
+    for (l = pool->large; l; l = l->next) {
+        if (l->alloc) {
+            ngx_free(l->alloc);
+        }
+    }
 
-	/* 清理pool->large链表（pool->large为单独的大数据内存块）  */
-	for (l = pool->large; l; l = l->next) {
-		if (l->alloc) {
-			ngx_free(l->alloc);
-		}
-	}
+    for (p = pool; p; p = p->d.next) {
+        p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+        p->d.failed = 0;
+    }
 
-	pool->large = NULL;
-
-	/* 循环重新设置内存池data区域的 p->d.last；data区域数据并不擦除*/
-	for (p = pool; p; p = p->d.next) {
-		p->d.last = (u_char *) p + sizeof(ngx_pool_t);
-	}
+    pool->current = pool;
+    pool->chain = NULL;
+    pool->large = NULL;
 }
 ```
+
+`reset` 保留小块所属的 Pool 内存块，释放已登记的大块，重置分配游标、启发式计数和搜索起点；它不是“销毁后重新创建”，也不会把原字节全部清零。
+
+与 `destroy` 不同，`reset` 不遍历执行 Cleanup Handler。不能带着仍需执行的 Cleanup 随意 reset：登记对象本身可能位于即将复用的区域。旧对象也不能继续使用，因为后续分配可能覆盖它们。需要资源回调的 Pool，应按对象生命周期销毁，或由调用方先完成明确的资源收尾。[固定版本实现](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_palloc.c)
+
 #### 3.3.5 使用内存池分配一块内存ngx_palloc和ngx_pnalloc {/* #使用内存池分配一块内存ngxpalloc和ngxpnalloc */}
+
+二者把小块搜索交给同一个 `ngx_palloc_small`：`align=1` 主动对齐，`align=0` 不主动对齐。下面保留本版本的分支；开启 `NGX_DEBUG_PALLOC` 会改变分配路径，不能把这种调试构建的表现当作普通构建行为。
+
 ```c
-/**
- * 内存池分配一块内存，返回void类型指针
- */
 void *
-ngx_palloc(ngx_pool_t *pool, size_t size) {
-	u_char *m;
-	ngx_pool_t *p;
+ngx_palloc(ngx_pool_t *pool, size_t size)
+{
+#if !(NGX_DEBUG_PALLOC)
+    if (size <= pool->max) {
+        return ngx_palloc_small(pool, size, 1);
+    }
+#endif
 
-	/* 判断每次分配的内存大小，如果超出pool->max的限制，则需要走大数据内存分配策略 */
-	if (size <= pool->max) {
-
-		p = pool->current;
-
-		/*
-		 * 循环读取缓存池链p->d.next的各个的ngx_pool_t节点，
-		 * 如果剩余的空间可以容纳size，则返回指针地址
-		 *
-		 * 这边的循环，实际上最多只有4次，具体可以看ngx_palloc_block函数
-		 * */
-		do {
-			/* 对齐操作,会损失内存，但是提高内存使用速度 */
-			m = ngx_align_ptr(p->d.last, NGX_ALIGNMENT);
-
-			if ((size_t)(p->d.end - m) >= size) {
-				p->d.last = m + size;
-
-				return m;
-			}
-
-			p = p->d.next;
-
-		} while (p);
-
-		/* 如果没有缓存池空间没有可以容纳大小为size的内存块，则需要重新申请一个缓存池pool节点 */
-		return ngx_palloc_block(pool, size);
-	}
-
-	/* 走大数据分配策略 ，在pool->large链表上分配 */
-	return ngx_palloc_large(pool, size);
+    return ngx_palloc_large(pool, size);
 }
 
-/**
- * 内存池分配一块内存，返回void类型指针
- * 不考虑对齐情况
- */
 void *
-ngx_pnalloc(ngx_pool_t *pool, size_t size) {
-	u_char *m;
-	ngx_pool_t *p;
+ngx_pnalloc(ngx_pool_t *pool, size_t size)
+{
+#if !(NGX_DEBUG_PALLOC)
+    if (size <= pool->max) {
+        return ngx_palloc_small(pool, size, 0);
+    }
+#endif
 
-	/* 判断每次分配的内存大小，如果超出pool->max的限制，则需要走大数据内存分配策略 */
-	if (size <= pool->max) {
+    return ngx_palloc_large(pool, size);
+}
 
-		p = pool->current;
+static ngx_inline void *
+ngx_palloc_small(ngx_pool_t *pool, size_t size, ngx_uint_t align)
+{
+    u_char      *m;
+    ngx_pool_t  *p;
 
-		/* 循环读取数据区域的各个ngx_pool_t缓存池链，如果剩余的空间可以容纳size，则返回指针地址*/
-		do {
-			m = p->d.last; //分配的内存块的地址
+    p = pool->current;
 
-			if ((size_t)(p->d.end - m) >= size) {
-				p->d.last = m + size;
+    do {
+        m = p->d.last;
 
-				return m;
-			}
+        if (align) {
+            m = ngx_align_ptr(m, NGX_ALIGNMENT);
+        }
 
-			p = p->d.next;
+        if ((size_t) (p->d.end - m) >= size) {
+            p->d.last = m + size;
 
-		} while (p);
+            return m;
+        }
 
-		/* 如果没有缓存池空间没有可以容纳大小为size的内存块，则需要重新申请一个缓存池*/
-		return ngx_palloc_block(pool, size);
-	}
+        p = p->d.next;
 
-	/* 走大数据分配策略 */
-	return ngx_palloc_large(pool, size);
+    } while (p);
+
+    return ngx_palloc_block(pool, size);
 }
 ```
-内存分配逻辑：
-- 分配一块内存，如果分配的内存size小于内存池的pool->max的限制，则属于小内存块分配，走小内存块分配逻辑；否则走大内存分配逻辑。
-- 小内存分配逻辑：循环读取pool->d上的内存块，是否有足够的空间容纳需要分配的size，如果可以容纳，则直接分配内存；否则内存池需要申请新的内存块，调用ngx_palloc_block。
-- 大内存分配逻辑：当分配的内存size大于内存池的pool->max的限制，则会直接调用ngx_palloc_large方法申请一块独立的内存块，并且将内存块挂载到pool->large的链表上进行统一管理。
+
+普通构建中，`size <= pool->max` 走小块路径。从 `pool->current` 开始，逐块检查 `end - 对齐后的 last` 是否容纳申请；足够就推进 `last`，否则继续搜索或申请新块。较早的块中可能仍有空隙，但搜索起点向后移动后不再逐个回访，这是一种速度与空间利用率的取舍。
+
+小块分配通常没有保存可独立释放的分配头，所以不能用普通 `free` 释放返回的任意小块指针。超过阈值时改用独立大块，并在 `pool->large` 登记，生命周期仍由 Pool 管理。
 
 #### 3.3.6 ngx_palloc_block，内存池扩容 {/* #ngxpallocblock内存池扩容 */}
+
+`ngx_palloc_block` 按原块大小申请扩展块，块头只使用 `ngx_pool_data_t`，载荷起点还需对齐。下面的 `failed++ > 4` 比较的是递增前计数，并在扩展路径中推动后续搜索起点；它是减少无效扫描的启发式，**不是每次分配最多搜索四块的上限**。
+
 ```c
-/**
- * 申请一个新的缓存池 ngx_pool_t
- * 新的缓存池会挂载在主缓存池的 数据区域 （pool->d->next）
- */
 static void *
-ngx_palloc_block(ngx_pool_t *pool, size_t size) {
-	u_char *m;
-	size_t psize;
-	ngx_pool_t *p, *new, *current;
+ngx_palloc_block(ngx_pool_t *pool, size_t size)
+{
+    u_char      *m;
+    size_t       psize;
+    ngx_pool_t  *p, *new;
 
-	psize = (size_t)(pool->d.end - (u_char *) pool);
+    psize = (size_t) (pool->d.end - (u_char *) pool);
 
-	/* 申请新的块 */
-	m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool->log);
-	if (m == NULL) {
-		return NULL;
-	}
+    m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool->log);
+    if (m == NULL) {
+        return NULL;
+    }
 
-	new = (ngx_pool_t *) m;
+    new = (ngx_pool_t *) m;
 
-	new->d.end = m + psize;
-	new->d.next = NULL;
-	new->d.failed = 0;
+    new->d.end = m + psize;
+    new->d.next = NULL;
+    new->d.failed = 0;
 
-	/* 分配size大小的内存块，返回m指针地址 */
-	m += sizeof(ngx_pool_data_t);
-	m = ngx_align_ptr(m, NGX_ALIGNMENT);
-	new->d.last = m + size;
+    m += sizeof(ngx_pool_data_t);
+    m = ngx_align_ptr(m, NGX_ALIGNMENT);
+    new->d.last = m + size;
 
-	current = pool->current;
+    for (p = pool->current; p->d.next; p = p->d.next) {
+        if (p->d.failed++ > 4) {
+            pool->current = p->d.next;
+        }
+    }
 
-	/**
-	 * 缓存池的pool数据结构会挂载子节点的ngx_pool_t数据结构
-	 * 子节点的ngx_pool_t数据结构中只用到pool->d的结构，只保存数据
-	 * 每添加一个子节点，p->d.failed就会+1，当添加超过4个子节点的时候，
-	 * pool->current会指向到最新的子节点地址
-	 *
-	 * 这个逻辑主要是为了防止pool上的子节点过多，导致每次ngx_palloc循环pool->d.next链表
-	 * 将pool->current设置成最新的子节点之后，每次最大循环4次，不会去遍历整个缓存池链表
-	 */
-	for (p = current; p->d.next; p = p->d.next) {
-		if (p->d.failed++ > 4) {
-			current = p->d.next;
-		}
-	}
+    p->d.next = new;
 
-	p->d.next = new;
-
-	/* 最终这个还是没变 */
-	pool->current = current ? current : new;
-
-	return m;
+    return m;
 }
 ```
-分配一块大内存，挂载到pool->large链表上ngx_palloc_large：
+
+大块分配则先向系统分配器申请载荷，再寻找可以复用的登记节点：
+
 ```c
-/**
- * 当分配的内存块大小超出pool->max限制的时候,需要分配在pool->large上
- */
 static void *
-ngx_palloc_large(ngx_pool_t *pool, size_t size) {
-	void *p;
-	ngx_uint_t n;
-	ngx_pool_large_t *large;
+ngx_palloc_large(ngx_pool_t *pool, size_t size)
+{
+    void              *p;
+    ngx_uint_t         n;
+    ngx_pool_large_t  *large;
 
-	/* 分配一块新的大内存块 */
-	p = ngx_alloc(size, pool->log);
-	if (p == NULL) {
-		return NULL;
-	}
+    p = ngx_alloc(size, pool->log);
+    if (p == NULL) {
+        return NULL;
+    }
 
-	n = 0;
+    n = 0;
 
-	/* 去pool->large链表上查询是否有NULL的，只在链表上往下查询3次，主要判断大数据块是否有被释放的，如果没有则只能跳出*/
-	for (large = pool->large; large; large = large->next) {
-		if (large->alloc == NULL) {
-			large->alloc = p;
-			return p;
-		}
+    for (large = pool->large; large; large = large->next) {
+        if (large->alloc == NULL) {
+            large->alloc = p;
+            return p;
+        }
 
-		if (n++ > 3) {
-			break;
-		}
-	}
+        if (n++ > 3) {
+            break;
+        }
+    }
 
-	/* 分配一个ngx_pool_large_t 数据结构 */
-	large = ngx_palloc(pool, sizeof(ngx_pool_large_t));
-	if (large == NULL) {
-		ngx_free(p); //如果分配失败，删除内存块
-		return NULL;
-	}
+    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
+    if (large == NULL) {
+        ngx_free(p);
+        return NULL;
+    }
 
-	large->alloc = p;
-	large->next = pool->large;
-	pool->large = large;
+    large->alloc = p;
+    large->next = pool->large;
+    pool->large = large;
 
-	return p;
+    return p;
 }
 ```
+
+这里复用的是 `alloc == NULL` 的登记节点，不是之前那块已释放的载荷。实际大块内存仍先由 `ngx_alloc` 申请；`next` 只串联登记节点，不能通过相邻节点地址相减推导载荷长度。前部有限搜索也不表示最多只能登记几个大块。
+
 #### 3.3.7 大内存块的释放ngx_pfree {/* #大内存块的释放ngxpfree */}
+Pool 整体释放使用 `ngx_destroy_pool`；单独释放已登记的大块使用 `ngx_pfree`。小块不支持这种逐项释放，调用返回 `NGX_DECLINED` 不能解释成“该对象已回收”。
+
 ```c
-内存池释放需要走ngx_destroy_pool，独立大内存块的单独释放，可以走ngx_pfree方法。
 /**
  * 大内存块释放  pool->large
  */
@@ -587,8 +555,7 @@ void ngx_pool_delete_file(void *data) {
 }
 ```
 ## 4. 数组结构 ngx_array.c {/* #数组结构-ngxarrayc */}
-前面一章我们介绍了Nginx的内存池的数据结构。Nginx的内存管理都是围绕内存池来实现的，包括array数组类型也是基于Nginx的pool来实现数据结构。
-Nginx的Array结构设计得非常小巧，主要用于存储小块内存。Nginx的数组每个元素的大小是固定的。
+`ngx_array_t` 把固定大小的元素放在连续区域内，便于按下标访问。它支持自动扩容，并非只能存放小数据；元素区域较大时，底层 `ngx_palloc` 也可能走 Pool 的大块登记路径。
 
 ### 4.1 数据结构定义 {/* #数据结构定义-1 */}
 ngx_array_t 数组的基础数据结构
@@ -596,25 +563,25 @@ ngx_array_t 数组的基础数据结构
 ```c
 /* 数组Array数据结构 */
 typedef struct {
-    void        *elts; 		/* 指向数组第一个元素指针*/
-    ngx_uint_t   nelts; 	/* 未使用元素的索引*/
-    size_t       size; 		/* 每个元素的大小，元素大小固定*/
-    ngx_uint_t   nalloc;	/* 分配多少个元素 */
-    ngx_pool_t  *pool;  	/* 内存池*/
+    void        *elts;   /* 元素存储区起点 */
+    ngx_uint_t   nelts;  /* 当前有效元素数量 */
+    size_t       size;   /* 单个元素的字节数 */
+    ngx_uint_t   nalloc; /* 已分配的元素槽位容量 */
+    ngx_pool_t  *pool;   /* 元素存储区使用的 Pool */
 } ngx_array_t;
 ```
-*elts：指向数组的第一个元素的指针地址
-nelts：未使用的元素的计数器
-size：每个元素的大小，元素大小是固定的。
-nalloc：一共分配了多少个元素。如果元素不够用，Nginx会数组会进行自动扩容
-pool：数组的数据结构ngx_array_t和元素所需要的内存都会分配在pool内存池上。
+`nelts` 是当前元素数，`nalloc` 是容量，不能混用。例如 `nelts=2, nalloc=4` 表示已有两个元素、还有两个预留槽位。
+
+创建后预留了槽位，不代表这些位置已经存入有效元素。`ngx_array_init` 把 `nelts` 设为 0；每次成功 push 才增加计数。`size` 是单个元素字节数，不是容量字节数。[初始化定义](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_array.h)
 
 ### 4.2 数据结构图 {/* #数据结构图-1 */}
-- Nginx的数组只存储比较小的数据
-- 数组的元素长度在创建数组的时候就固定死了。但是数组个数，会自动扩容。
-- 数组的数据结构和元素内存都会分配在Nginx的pool内存池上。
-- 数组回收会去检查pool内存池，看是否可以将数组内存交还给内存池。
+- 元素大小初始化后固定，元素数量与容量可以增长。
+- `ngx_array_create` 从 Pool 分配结构体；`ngx_array_init` 还可初始化调用方提供的结构体，不能假设结构体一律来自 Pool。
+- 扩容可能移动元素区，保存的旧元素地址不一定仍是当前数组的位置。
+- destroy 只在满足尾部条件时回退 Pool 游标，其他占用随 Pool 生命周期释放。
 ![Array数据结构图](/images/nginx源码解析/Array数据结构图.png)
+
+图示把管理信息和元素画在相邻位置以展示关系，但它们分别分配，并不承诺物理相邻。
 
 ### 4.3 具体函数实现 {/* #具体函数实现-1 */}
 #### 4.3.1 创建数组 ngx_array_create {/* #创建数组-ngxarraycreate */}
@@ -638,11 +605,7 @@ ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
         return NULL;
     }
 
-    /**
-     *  数组初始化，并且分配内存空间给数组元素
-     *  PS:这边数组的数据结构和数组元素的存储分成了两次在pool上分配，笔者认为可以一次进行分配
-     *  但是Nginx是多进程的，程序执行流程是线性的，所以分两次分配也无伤大雅。
-     */
+    /* 初始化当前元素数、容量、元素大小，并申请元素存储区 */
     if (ngx_array_init(a, p, n, size) != NGX_OK) {
         return NULL;
     }
@@ -666,13 +629,6 @@ ngx_array_destroy(ngx_array_t *a)
     p = a->pool;
 
     /**
-     * PS：你估计比较奇怪，为何数组的内存空间一定会分配在内存池（pool->d存储小内存）上面
-     * 如果比较大的内存块不是会存储在内存池的pool->large上面吗？
-     * 当我们全局搜索Nginx代码中ngx_array_create方法的时候发现，Nginx的数组都是比较小的，存储的数据量也
-     * 并不是很大。所以ngx_array_t适合存储小块的内存。
-     */
-
-    /**
      * 如果数组元素的末尾地址和内存池pool的可用开始的地址相同
      * 则将内存池pool->d.last移动到数组元素的开始地址，相当于清除当前数组的内容
      */
@@ -689,6 +645,9 @@ ngx_array_destroy(ngx_array_t *a)
     }
 }
 ```
+
+这里不是对任意数组执行 `free`。如果元素区不在首块分配尾部，或者走过独立大块路径，这个函数没有逐项释放相应载荷的逻辑；它依赖最终销毁 Pool 回收。即使字节暂时仍在，destroy 后也不能继续使用这个数组。
+
 #### 4.3.3 获取一个元素 ngx_array_push {/* #获取一个元素-ngxarraypush */}
 ```c
 /**
@@ -742,10 +701,9 @@ ngx_array_push(ngx_array_t *a)
             a->elts = new; /* 内存块指针地址改变 */
             a->nalloc *= 2; /* 分配的个数*2 */
 
-            // size 不变（最大容量，即单个元素大小 x 最大元素数）
-            // pool 不变（因为分配新的内存块的时候，会去循环读取pool->d.next链表上的缓存池，
-            // 并且比较剩余空间大小,是否可以容乃新的内存块存储）
-            // nelts 已用元素数量不变
+            // a->size 是单元素大小，扩容不会改变它
+            // 这里的局部 size 是扩容前元素区容量字节数
+            // nelts 此时尚未增加，下面实际取出新槽位时才加一
         }
     }
 
@@ -756,6 +714,19 @@ ngx_array_push(ngx_array_t *a)
     return elt;
 }
 ```
+
+可以用一个固定例子区分两条扩容路径。假设单元素 8 字节，初始容量 2，下面的数字是源码推演，不是线上采样：
+
+| 步骤 | `nelts` | `nalloc` | 分配区域字节数 | 本次返回位置 |
+| --- | ---: | ---: | ---: | --- |
+| 初始化 | 0 | 2 | 16 | 尚无有效元素 |
+| 第一次 push | 1 | 2 | 16 | `elts + 0` |
+| 第二次 push | 2 | 2 | 16 | `elts + 8` |
+| 第三次 push，可原地增长 | 3 | 3 | 24 | `elts + 16` |
+| 第三次 push，需要搬迁 | 3 | 4 | 32 | `新 elts + 16` |
+
+最后两行是互斥分支：元素区恰好位于首块尾部且后面有空间时，只增加一个槽位；否则重新申请两倍区域并拷贝。**不是每次扩容都翻倍**。搬迁后，旧指针即使没有立即悬空，也指向旧副本，继续修改不能代表修改新数组。[扩容实现](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_array.c)
+
 #### 4.3.4 获取多个元素 ngx_array_push_n {/* #获取多个元素-ngxarraypushn */}
 ```c
 /**
@@ -812,14 +783,9 @@ ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
 ```
 
 ## 5. 缓冲区结构 ngx_buf.c {/* #缓冲区结构-ngxbufc */}
-Nginx的buf缓冲区数据结构，主要用来存储非常大块的内存。ngx_buf_t数据结构也贯穿了整个Nginx。
+`ngx_buf_t` 是 I/O 描述对象，不是“大块内存本身”。它可以引用内存区间、文件区间，或者只携带控制标志；结构体与载荷分别分配，也可能引用已有数据。
 
-Nginx的缓冲区设计是比较灵活的。
-
-- 可以自定义管理业务层面的缓冲区链表；
-- 也可以将空闲的缓冲区链表交还给内存池pool->chain结构。
-
-缓冲区ngx_buf_t是nginx处理大数据的关键数据结构，它既应用于内存数据也应用于磁盘数据。
+内存载荷用半开区间 `[pos, last)` 表示待处理部分，`[start, end)` 描述对应内存区域边界；文件载荷则使用偏移 `[file_pos, file_last)`。因此看到一个 Buffer 并不能推断它一定持有一整块新申请的内存。
 
 ```c
 typedef struct ngx_buf_s  ngx_buf_t;
@@ -854,9 +820,9 @@ struct ngx_buf_s {
     unsigned         recycled:1;	/* 标志位，为1时，可回收 */
     unsigned         in_file:1;		/* 标志位，为1时，表示处理的是文件 */
     unsigned         flush:1;		/* 标志位，为1时，表示需要进行flush操作 */
-    unsigned         sync:1;		/* 标志位，为1时，表示可以进行同步操作，容易引起堵塞 */
-    unsigned         last_buf:1;	/* 标志位，为1时，表示为缓冲区链表ngx_chain_t上的最后一块待处理缓冲区 */
-    unsigned         last_in_chain:1;/* 标志位，为1时，表示为缓冲区链表ngx_chain_t上的最后一块缓冲区 */
+    unsigned         sync:1;       /* 可作为无载荷的特殊控制 Buffer，不是阻塞 I/O 开关 */
+    unsigned         last_buf:1;   /* HTTP 场景中，主请求完整输出的最后一个 Buffer */
+    unsigned         last_in_chain:1; /* 当前请求或子请求没有后续数据 Buffer */
 
     unsigned         last_shadow:1;	/* 标志位，为1时，表示是否是最后一个影子缓冲区 */
     unsigned         temp_file:1;	/* 标志位，为1时，表示当前缓冲区是否属于临时文件 */
@@ -864,12 +830,35 @@ struct ngx_buf_s {
     /* STUB */ int   num;
 };
 ```
-- 从上面这个数据结构中，可以看到ngx_buf_t结构，即可以处理内存，也可以处理文件。
-- Nginx使用了位域的方法，节省存储空间。
-- 每个buf都记录了开始和结束点以及未处理的开始和结束点，因为缓冲区的内存申请了之后，是可以被复用的。
-- 所有缓冲区需要的数据结构以及缓冲区的buf内存块都会被分配到内存池上面。
+几个标志回答的是不同问题：
 
-### 5.1 缓冲区链表结构 ngx_chain_t {/* #缓冲区链表结构-ngxchaint */}
+| 标志 | 含义与边界 |
+| --- | --- |
+| `temporary` / `memory` / `mmap` | 标识内存载荷的性质，不是任意可互换的内存类型开关 |
+| `in_file` | 描述文件载荷，需结合文件对象和偏移 |
+| `flush` | 要求输出此前积累的数据；不是对磁盘文件执行 `fsync` |
+| `sync` | 让特定空数据 Buffer 作为合法特殊标记处理；不使事件循环切换为同步阻塞 |
+| `last_buf` | 标记整个主请求输出结束 |
+| `last_in_chain` | 标记当前请求或子请求的数据结束，不等于整个主响应结束 |
+
+`ngx_buf_special` 的判定同时检查 `flush/last_buf/sync` 和是否存在内存或文件载荷；仅设置 `sync` 不代表所有组合都自动成为特殊空 Buffer。[缓冲区定义与宏](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_buf.h)
+
+例如主请求等待一个子请求产生片段时，子请求的最后一块可以设置 `last_in_chain=1`，但不能据此提前终止整个主响应。另一方面，`cl->next == NULL` 仅说明本次传入的链到此结束，不证明未来不会再传入新链。输出结束需要明确的语义标志，而不是猜链表尾指针。
+
+### 5.1 一次部分发送怎样推进游标
+
+假设分配了 1024 字节缓冲区，其中装入 100 字节数据：
+
+```text
+初始：start=基址，pos=基址，last=基址+100，end=基址+1024
+写出 40 字节：pos=基址+40，last 不变，待写 60 字节
+暂时不可写：保留剩余区间，等待后续可写事件
+再写出 60 字节：pos=last，当前载荷消费完毕
+```
+
+这解释了为什么“调用一次输出函数”不等于“一次发完”。只要下游还持有引用或载荷尚未消费完，就不能提前覆盖或释放相应存储。
+
+### 5.2 缓冲区链表结构 ngx_chain_t {/* #缓冲区链表结构-ngxchaint */}
 ```c
 typedef struct ngx_chain_s       ngx_chain_t;
 /**
@@ -880,45 +869,116 @@ struct ngx_chain_s {
     ngx_chain_t  *next;
 };
 ```
-- 内存池结构中，有一个数据结构pool->chain就是保存空闲的缓冲区链表的。
-- Nginx的缓冲区ngx_buf_t，通过ngx_chain_t链表结构进行关联和管理。
-- 通过链表的方式实现buf有一个非常大的好处：如果一次需要缓冲区的内存很大，那么并不需要分配一块完整的内存，只需要将缓冲区串起来就可以了。
+- `ngx_chain_t` 是两个指针组成的链接节点，`buf` 指向描述对象，`next` 串联节点。
+- 一条输出链可以组合多段内存和文件片段，不要求把整个响应拼进连续大块。
+- `pool->chain` 复用的是链接节点，不等于释放了它曾引用的 Buffer 结构或载荷。
 
-### 5.2 数据结构图 {/* #数据结构图-2 */}
+### 5.3 数据结构图 {/* #数据结构图-2 */}
 ![缓冲区数据结构](/images/nginx源码解析/缓冲区数据结构.png)
 
-- Nginx的缓冲区数据结构主要包含链表数据结构ngx_chain_t和buf数据结构ngx_buf_t
-- Nginx可以在自定义的业务层面管理繁忙busy和空闲free的缓冲区链表结构。通过后边的函数，可以对缓冲区的链表结构和buf结构进行管理。
-- 如果缓冲区链表需要被回收，则会放到Nginx内存池的pool->chain链表上。
-- 缓冲区是Nginx用的非常多的一种数据结构，主要用于接收和输出HTTP的数据信息。所以对Nginx的缓冲区的数据结构深入理解非常有必要。
+图中 Buffer 字段与载荷并列是关系示意，不是“结构体后必然紧跟载荷”。模块通常单独管理 `out`、`busy`、`free`：待交给下游、尚未消费完、可复用的 Buffer 链，与 Pool 的空闲链接节点池不能混为一谈。
+
+`ngx_chain_update_chains` 会结合 Buffer 的 `tag` 与剩余大小决定如何移动节点。错误地复用其他模块拥有的 Buffer，或者在 `busy` 尚未清空时释放 Pool，都可能破坏输出；回收到 `pool->chain` 的链接节点也没有替调用方完成所有载荷的生命周期管理。[链复用实现](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_buf.c)
 
 ## 6. 双向链表结构 ngx_queue.c {/* #双向链表结构-ngxqueuec */}
-通过链表的简单和精巧的设计，让Nginx的链表的数据结构和具体业务依赖进行了解耦。一般我们在设计c语言程序的时候，完全可以学习Nginx的这种数据结构的设计方式。
+队列节点的基本定义和插入、移除等操作主要在 `ngx_queue.h`，`ngx_queue.c` 提供中点查找、排序等函数。它是侵入式双向链表：业务对象内部嵌入 `ngx_queue_t` 链接成员，而不是链表再复制一份业务对象。
 
-整个链表实现的是双向链表。
-遍历链表后，获取链表的主体业务数据结构（上图为ngx_connection_s）使用ngx_queue_data方法
-链表和业务数据结构之间进行了解耦，使用更加灵活和方便。
+```c
+typedef struct {
+    ngx_uint_t  id;
+    ngx_queue_t link;
+} example_item_t;
+```
+
+这是说明布局的自定义类型，不是 Nginx 内置业务结构。遍历时取得的是 `link` 地址，`ngx_queue_data(q, example_item_t, link)` 通过成员偏移还原外部对象地址；类型或成员写错，会还原到错误位置。
+
+哨兵节点表示链表头，不是一个有效业务对象。空链表时前后链接都指向自己；不能把哨兵当元素读取，也不能在仍挂链时释放外部业务对象。准备把同一个链接成员加入另一条链前，应先从原链移除。
+
 ![双向链表数据结构](/images/nginx源码解析/双向链表数据结构.png)
 
 ## 7. 单向链表结构 ngx_list.c {/* #单向链表结构-ngxlistc */}
 
+`ngx_list_t` 更准确地说是“数组块串成的链表”：每个 `ngx_list_part_t` 包含元素区 `elts`、本块有效数 `nelts` 与下一块 `next`。当前块放满后，`ngx_list_push` 申请新块，不需要把旧块的元素整体搬走。[List 结构](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_list.h)
+
+例如每块容量为 2，连续加入 5 个元素后，块内有效数为 `2 → 2 → 1`。遍历既要移动块指针，也要在每块内读取 `0..nelts-1`，不能把所有元素当成一个连续的 5 元素数组。
+
+这与 `ngx_array_t` 扩容可能搬迁形成对照：List 更方便保留已加入元素的地址，但按全局下标随机访问不如连续 Array 直接。常见 HTTP Header 列表使用这类结构；通用接口并不提供任意删除，业务可根据自己的约定把元素标记为不再使用。
+
 ![单链表](/images/nginx源码解析/单链表.png)
 
 ## 8. hash表结构 ngx_hash.c {/* #hash表结构-ngxhashc */}
-Nginx的hash表结构主要几个特点：
+这里讨论初始化后固定键集合的 `ngx_hash_t`，常用于配置阶段建立的快速查询结构，不是提供任意运行期增删键接口的通用 Hash Map。想加入新的键，通常需要构建新的表；`value` 指向的业务对象是否可变，则是另一件事。
 
-- 静态只读。当初始化生成hash表结构后，是不能动态修改这个hash表结构的内容。
-- 将内存利用最大化。Nginx的hash表，将内存利用率发挥到了极致，并且很多设计上面都是可以供我们学习和参考的。
-- 查询速度快。Nginx的hash表做了内存对齐等优化。
-- 主要解析配置数据。
+初始化时选择桶数量与布局，运行时按 Hash 定位桶，再比较桶内候选的键长和键内容。键字节内联存储、长度可变，遍历不能按固定 `sizeof(ngx_hash_elt_t)` 简单跳到下一项。
+
 ![hash数据结构](/images/nginx源码解析/hash数据结构.png)
-- Nginx的hash表主要存放在ngx_hash_t数据结构上。ngx_hash_t主要存放桶的指针值和桶的个数。
-- Nginx的hash表中桶的个数会在初始化的时候进行“探测”，会探测出合适的痛的个数。
-- Nginx的hash表在初始化的时候就决定了hash表的桶的个数以及元素个数和大小，所以所有元素都会被分配到一个大的连续的内存块上。
-- 每个bucket的长度会根据元素个数的实际长度决定，并且每个bucket之间通过NULL指针进行分割。
-- 每个桶都保存了桶的第一个元素ngx_hash_elt_t的指针值。
-- NULL指针会在查找元素的时候用到。
-- ngx_hash_elt_t存储每个元素的数据结构，并且key的长度是非定长的。
+
+`ngx_hash_t` 保存桶指针数组及其数量。桶内以 `value == NULL` 的项标记结束；不是用一个统一固定步长扫描整块内存。`max_size`、`bucket_size` 等初始化约束影响能否构建合适布局，也不能把“桶更大”直接等同于查询更快。
 
 ## 9. 字符串结构 ngx_string.c {/* #字符串结构-ngxstringc */}
 ![字符串结构](/images/nginx源码解析/字符串结构.png)
+
+`ngx_str_t` 主要由长度与数据指针组成：
+
+```c
+typedef struct {
+    size_t   len;
+    u_char  *data;
+} ngx_str_t;
+```
+
+它引用 `len` 个字节，不保证后面一定有 `\0`，也不意味着拥有这段内存。把它直接交给要求 NUL 结尾的 `%s` 或 C 字符串接口，可能越过有效边界；Nginx 格式化接口支持按结构读取的 `%V`。
+
+同样，复制 `ngx_str_t` 结构只复制长度和指针，不会深拷贝载荷。如果源数据属于请求 Pool，复制到长期对象后仍会随请求结束失效。需要跨生命周期保存时，应在合适的目标存储中复制字节，并按被调用接口决定是否追加终止符。
+
+## 10. 用生命周期判断内存问题
+
+Pool 的释放边界不清楚时，“一直增长”可能有不同原因：
+
+- 把每请求对象误放进长期 Cycle/模块 Pool，导致短期工作留下长期占用；
+- 慢客户端让输出仍在 `busy`，Buffer 尚不能复用；
+- Array 多次搬迁留下旧的小块区域，直到 Pool 结束才整体释放；
+- 对象已经失效，但其他回调仍保存指针，形成越界访问或重复清理。
+
+排查时先画出“谁创建 Pool、谁分配对象、谁持有指针、谁结束生命周期”。仅看到 RSS 未立刻下降，不足以证明某个小块没有执行 `free`；Pool 生命周期、系统分配器和操作系统回收粒度是不同层次。
+
+## 11. 练习与答案
+
+### 11.1 `nelts=3, nalloc=8, size=16` 各表示什么
+
+已有 3 个有效元素，元素区容量为 8 个槽位，每个元素 16 字节，容量字节数为 128。下一次不需要扩容的 push 返回 `elts + 48`，成功后 `nelts=4`，`nalloc` 仍为 8。
+
+### 11.2 Pool 的 `max=4095` 是否表示申请 8 KiB 必须失败
+
+不是。普通构建中超过阈值会转向独立大块分配，再由 `pool->large` 登记。是否成功取决于实际分配结果，不取决于能否塞进小块路径。
+
+### 11.3 `failed++ > 4` 为什么不能证明最多遍历四块
+
+这个判断在扩展路径中按历史计数移动未来搜索起点，不是小块搜索循环的次数条件。搜索仍会沿 `d.next` 前进到足够空间或链尾。
+
+### 11.4 Array 扩容后还能继续使用以前的元素指针吗
+
+不能一概而论。原地扩展时地址未变，搬迁时旧指针不再指向当前元素区。需要在可能搬迁的操作后重新取得元素地址，不依赖旧副本暂时未被释放这一偶然条件。
+
+### 11.5 为什么 `cl->next == NULL` 不等于 HTTP 响应结束
+
+它只是本次传入的链尾，后面还可能传入新链。主请求最终输出与当前请求/子请求数据结束，分别由 `last_buf`、`last_in_chain` 等语义参与表达。
+
+### 11.6 把节点放回 `pool->chain`，是否已释放文件与 Buffer 载荷
+
+不是。复用链接节点、复用 Buffer 描述对象、回收内存载荷及关闭文件，是不同的资源操作，必须分别满足其所有权和生命周期条件。
+
+### 11.7 能否用 reset 代替 destroy 来执行资源回调
+
+不能。reset 不遍历执行 Cleanup，并会让原来的分配区域进入复用状态；需要按所有权先收尾资源，或在正确的生命周期结束点 destroy。
+
+## 12. 参考资料
+
+- [Nginx 开发指南](https://nginx.org/en/docs/dev/development_guide.html)
+- [1.28.0 Pool 定义](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_palloc.h)
+- [1.28.0 Pool 实现](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_palloc.c)
+- [1.28.0 Array 定义](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_array.h)
+- [1.28.0 Array 实现](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_array.c)
+- [1.28.0 Buffer 与 Chain 定义](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_buf.h)
+- [1.28.0 Buffer 与 Chain 实现](https://github.com/nginx/nginx/blob/release-1.28.0/src/core/ngx_buf.c)
+- [历史笔记参考：Nginx 源码分析——基础数据结构](https://blog.csdn.net/yangyin007/article/details/82777086)
