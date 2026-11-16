@@ -21,18 +21,18 @@ Redis 既可能是可随时重建的缓存，也可能保存会话、限流状�
 
 若最后一类数据存在，就不能把“Redis 本来就是缓存”当恢复方案。
 
-## 2. Redis 的四个数据时间点
+## 2. Redis 的确认与恢复位置 {/* #2-redis-的四个数据时间点 */}
 
 ~~~text
-客户端收到 OK
-  → 命令已修改主节点内存
-  → 副本收到并应用
-  → AOF 写入操作系统 Page Cache
-  → AOF fsync 到稳定介质
-  → 下一次 RDB 快照包含该变化
+主节点执行写命令并修改内存
+  ├─ AOF 缓冲 → 写入文件缓存 → AOF 同步持久化
+  ├─ 复制流 → 副本应用 → 副本自己的持久化路径
+  └─ 某个后续 RDB 快照的数据视图包含该变化
 ~~~
 
-这些时间点并不相等。appendfsync everysec 常见情况下把 AOF 刷盘损失窗口控制在秒级，但进程、内核、存储和配置异常仍决定真实 RPO；RDB 的 RPO 通常等于两次成功快照之间的间隔。
+这些是相关但不固定串行完成的路径。客户端回复与本地同步的关系由 AOF 策略等条件决定；`WAIT`、`WAITAOF` 还会等待各自定义的复制/持久化条件。不能把客户端收到 OK 放在命令执行之前，也不能把副本应用和主节点 fsync 画成必然先后。
+
+`appendfsync everysec` 的正常目标是秒级同步，真实 RPO 仍取决于进程、OS、存储故障与配置。RDB 恢复点由所选快照的数据视图决定，不是文件生成结束时刻；连续快照失败还会使它落后多个周期。具体策略与同连接等待语义见 [RDB/AOF 原理](../02-engine-persistence/07-Redis-RDB-AOF-fork与Copy-on-Write.md) 和 [复制与确认边界](../03-ha-cluster/08-Redis主从复制PSYNC与一致性.md)。
 
 ## 3. RDB：一个时间点的完整数据集
 
@@ -90,7 +90,7 @@ Base 保存重写后的基础数据，Incr 保存之后的变化，Manifest 定�
 
 1. 暂停自动 AOF Rewrite；
 2. 等待 aof_rewrite_in_progress 变为 0；
-3. 原子地复制整个 appenddirname；
+3. 在重写已静止、文件集合稳定的窗口内复制完整 appenddirname，并记录清单及备份起止；
 4. 对目录清单和每个文件计算校验和；
 5. 恢复原有 rewrite 策略。
 
@@ -102,6 +102,8 @@ redis-cli CONFIG GET appendfsync
 ~~~
 
 不要在 Rewrite 正在切换 Base、Incr 和 Manifest 时逐文件复制，否则得到的组合可能从未同时存在过。
+
+普通逐文件复制不等于原子目录快照。关闭重写是为了稳定依赖集合，活跃增量文件仍可能追加；需要更明确恢复点时，应选择支持的快照/备份流程或业务停写边界，并在隔离加载后验证，不能仅凭复制命令成功就宣称得到全局一致快照。
 
 Redis 8.10 及以后若目标版本支持 BACKUP 命令族，可用 BACKUP START、BACKUP SEAL 和 BACKUP CLEANUP 创建封存的多段 AOF 恢复集；上线前必须以实际 COMMAND DOCS 和目标补丁版本验证，不能把新版本命令直接写进旧集群自动化。
 
