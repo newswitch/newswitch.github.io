@@ -63,14 +63,33 @@
 - `npm run check`：格式、相对链接、2,566 篇文档、467 个物理分类、14 个领域与 54 个脚本语法检查通过；`git diff --check` 通过。
 - 本机未启动数据库、预览服务或执行故障注入。真实 Sentinel 切主、Cluster 迁移、网络分区与持久性仍需在隔离集群验证；完整站点构建和部署由对应提交的 CI 另行确认。
 
+## 第四批 P1 数据类型、索引与缓存页
+
+日期：2026-11-16。
+
+| 文章 | 完成内容 | 核验依据 |
+| --- | --- | --- |
+| [Redis Bitmap/HLL/GEO/JSON/Search/Vector](<../../../docs/data-systems/cache/redis/01-client-data/04-Bitmap-HyperLogLog-Geo-JSON-Search与Vector.md>) | 补 Bitmap 空洞与 BITFIELD 溢出、HLL 误差及并集、GEO 坐标/排序、JSONPath 返回、Schema 与二进制向量、FLAT/HNSW 参数、过滤真值/召回、总内存及能力检查；补 10 个解答 | Redis 官方命令/数据类型/Query Engine 文档，8.6.0 HLL 源码，固定提交的 VecSim FP32 L2 实现 |
+| [MySQL Buffer Pool](<../../../docs/data-systems/databases/mysql/03-innodb-transactions/03-BufferPool脏页刷盘ChangeBuffer与Doublewrite.md>) | 补页状态与管理链、young/old、采样命中率、WAL/刷脏/Checkpoint、Doublewrite 三类模式、Change Buffer 六分支与 8.4 默认值、页/LSN 算例、内存预算、扩缩与预热；补 11 个解答 | MySQL 8.4 官方 Buffer Pool、抗扫描、刷新、I/O Capacity、系统/状态变量、Change Buffer、Doublewrite、Redo 与热点页加载文档 |
+
+保留两篇原标题、文件归属、侧边栏顺序、H1/H2 章节及已有显式锚点。用短状态图解释读页、LRU 和刷页关系，未引入新分类或构图进程；写作规范用于保留有效内容并补足机制、算例和必要条件，不向公共文章加入作者维护流程。
+
+### 本批验证
+
+- `node scripts/checks/verify-redis-types-buffer-pool-articles.mjs`：2 页 MDX、21 个明确解答、原有章节/锚点/导航元数据通过；逐条比对 19 条 Redis 教学回复，核对 HLL 精确并集参考、索引配置 token 与维度、向量距离/过滤排序/召回及容量算术。
+- Python 3 标准库仅解析文中 Python 的 AST 并核对 FLOAT32 blob 为 16 字节，不导入 redis-py 或执行网络示例；MySQL 检查页数关系、60 秒计数差值、命中率、刷页载荷、wait_free 与 LSN 算例，不执行 SQL。
+- `node scripts/checks/verify-durability-articles.mjs`、`node scripts/checks/verify-redis-ha-streams-articles.mjs` 回归通过。
+- `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 55 个脚本语法检查通过；`git diff --check` 通过。
+- 本机未启动 Redis/MySQL、构建向量索引、执行 ANN 性能评测或数据库恢复实验。完整站点构建和发布结果仍以对应提交的 CI 为准。
+
 ## 原始已确认清单的剩余工作
 
-已处理 2 篇 P0 与 6 篇 P1；原始 23 篇具体待改事项还剩 15 篇：
+已处理 2 篇 P0 与 8 篇 P1；原始 23 篇具体待改事项还剩 13 篇：
 
-- P1 9 篇：Redis Bitmap/HLL/Geo/JSON/Search/Vector 1 篇、MySQL Buffer Pool 1 篇、Kafka Producer/Consumer/MM2 3 篇、Nginx HTTP Phase 1 篇、APISIX 1 篇、Milvus 依赖 1 篇、vLLM Kubernetes 部署 1 篇。
+- P1 7 篇：Kafka Producer/Consumer/MM2 3 篇、Nginx HTTP Phase 1 篇、APISIX 1 篇、Milvus 依赖 1 篇、vLLM Kubernetes 部署 1 篇。
 - P2 5 篇：Temporal 测试、Backstage 插件、Linux perf、Linux 路由、LLM 压测容量曲线。
 - 单独补答案 1 篇：Kafka 请求处理源码。
 
-下一批优先处理 Redis 扩展数据类型与 MySQL Buffer Pool，补齐统计精度、索引查询、缓存页与刷脏边界；之后继续 Kafka Producer/Consumer/MM2 及其余专项。
+下一批优先处理 Kafka Producer、Consumer 与 MirrorMaker 2，补齐发送确认与幂等约束、消费位点与重平衡，以及跨集群复制的配置和恢复边界；之后继续其余专项。
 
-193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二、三批的六篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 4 篇仅做过指定段落复核。
+193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至四批的八篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 4 篇仅做过指定段落复核。
