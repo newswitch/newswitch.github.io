@@ -8,7 +8,7 @@ tags: [Linux, perf record, perf report, 火焰图, 性能分析]
 
 # perf record 与 report 命令详解：采样、调用栈、符号与热点归因
 
-`perf record` 把事件样本写入 `perf.data`，`perf report` 解析样本并按 DSO、symbol、thread、CPU 等维度聚合。百分比是“已采到样本的占比”，不是函数精确耗时，也不包含没有采样到或无法展开的栈。
+`perf record` 把事件样本写入 `perf.data`，`perf report` 解析样本并按 DSO、symbol、thread、CPU 等维度聚合。报告开销通常按样本的 event period 累积，等权时才等于样本个数占比；还需核对过滤条件与分母。它不是函数精确耗时，也不能自动补齐未采到的执行或未能展开的调用链。具体算例见 [perf、PMU 与火焰图原理](../../system-internals/12-observability/04-perf-PMU采样与火焰图原理.md)。
 
 ## 1. record 核心参数
 

@@ -142,14 +142,35 @@
 - `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 58 个脚本语法检查通过；`git diff --check` 通过。
 - 本机没有运行 Helm 渲染、完整 Kubernetes/Chart Schema 校验、kubectl/curl 集群请求、etcd/S3 操作、模型加载、恢复或性能实验；没有启动预览/数据库/推理后台进程。实际安装兼容性与恢复仍需隔离环境验证，站点完整构建/部署按对应提交 CI 另行确认。
 
+## 第八批 P2 Linux 计数与路由推演
+
+日期：2026-11-16。
+
+| 文章 | 完成内容 | 核验依据 |
+| --- | --- | --- |
+| [perf 原理](<../../../docs/linux/system-internals/12-observability/04-perf-PMU采样与火焰图原理.md>) | 补作用域/事件组、IPC 与 CPU 时间、enabled/running 缩放、重复缩放与无法计数边界；用 4 条等权折叠栈推导 6 行 Self/Children，区分 period/样本数、火焰图与时间线；补符号/丢样/on/off CPU/权限边界，保留原 2 个答案并扩为 10 个 | Linux v6.12 的 perf stat/list/record/report/script、安全文档；perf_event_open 手册；FlameGraph 官方 README |
+| [路由与邻居原理](<../../../docs/linux/system-internals/07-network-stack/02-routing-transport/05-路由策略路由与邻居子系统.md>) | 补双网卡、5 条 RPDB 规则、3 张路由表、源/mark/掩码与 3 份查询摘录；区分跨表优先级/表内前缀/metric、throw/blackhole、源选择/SNAT；补 NUD、二层下一跳、rp_filter 三模式/all 最大值/src_valid_mark 分支与 Namespace 验收；保留原 2 个答案并扩为 10 个 | iproute2 v6.12.0 的 rule/route/neighbour 手册；Linux v6.12 ip-sysctl、fib_rules.c、fib_frontend.c |
+
+对 [perf record/report 命令篇](<../../../docs/linux/commands/10-deep-diagnostics/06-perf-record-report命令详解.md>) 仅修正开头的百分比口径并回链：报告通常按 event period 累积，不笼统等于样本数占比。此局部修订不计为额外全文深化。
+
+保留原目录、文件名、标题、侧边栏位置和既有 H2 章节顺序，新增参考资料。按写作规范用可核算状态、必要条件与观察边界解释原理，不以行数判断质量，也不将审计说明写入公共正文。
+
+### 本批验证
+
+- `node scripts/checks/verify-linux-perf-routing-articles.mjs`：3 页 MDX、两篇共 20 个明确答案、旧章节/锚点/导航元数据通过；核算原始计数缩放、非法时间、IPC/CPU 算术、4 条折叠栈与 6 行 Self/Children。
+- 从文章实际文本解析 5 条规则、3 张路由表和 3 份查询摘录，使用仅覆盖这些教学条件的有限查表模型核对前缀/metric/源/mark/掩码、空表/throw/blackhole 及反向验证分支；不把模型视为真实 Linux FIB 或 rp_filter 实现。
+- 前六个专项检查脚本（持久性、Redis HA/Streams、Redis 类型/Buffer Pool、Kafka、Nginx/APISIX、Milvus/vLLM）回归通过。
+- `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 59 个脚本语法检查通过；`git diff --check` 通过。
+- 本机未执行 perf、nsenter、tcpdump、sysctl 或任何 Linux 路由/邻居修改，没有采集真实 CPU 数据、创建 Namespace、生成抓包或启动预览进程。实际 PMU/栈展开、网络与反向过滤行为仍需在对应硬件/内核验证，完整构建/发布按提交 CI 另行确认。
+
 ## 原始已确认清单的剩余工作
 
-已处理 2 篇 P0 与 15 篇 P1；原始 23 篇具体待改事项还剩 6 篇：
+已处理 2 篇 P0、15 篇 P1 与 2 篇 P2；原始 23 篇具体待改事项还剩 4 篇：
 
 - P0、P1 已确认事项均已完成本轮修复。
-- P2 5 篇：Temporal 测试、Backstage 插件、Linux perf、Linux 路由、LLM 压测容量曲线。
+- P2 3 篇：Temporal 测试、Backstage 插件、LLM 压测容量曲线。
 - 单独补答案 1 篇：Kafka 请求处理源码。
 
-下一批优先处理 Linux perf 与路由原理：补 PMU 计数缩放/报告阅读、RPDB→FIB→邻居查表推演及 rp_filter 分支；随后继续 Temporal、Backstage、LLM 容量曲线和 Kafka 源码篇答案。
+下一批优先处理 Temporal 测试与 Backstage 插件：补固定 SDK/测试环境 API、明确断言，以及插件模型、注册/API/权限的最小实现；之后处理 LLM 容量曲线和 Kafka 源码篇答案。
 
-193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至七批的十五篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 5 篇仅做过指定段落复核（含第六批 APISIX 架构篇）。
+193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至八批的十七篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 6 篇仅做过指定段落复核（含第六批 APISIX 架构篇和第八批 perf 命令篇）。
