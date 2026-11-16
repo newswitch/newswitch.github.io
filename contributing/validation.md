@@ -59,6 +59,7 @@ node scripts/checks/validate-java-component-articles.mjs
 node scripts/checks/verify-durability-articles.mjs
 node scripts/checks/verify-redis-ha-streams-articles.mjs
 node scripts/checks/verify-redis-types-buffer-pool-articles.mjs
+node scripts/checks/verify-kafka-delivery-recovery-articles.mjs
 npm run check:datax
 npm run check:integration
 ```
@@ -68,6 +69,8 @@ npm run check:integration
 `verify-durability-articles` 与 `verify-redis-ha-streams-articles` 检查指定文章的 MDX、明确解答、原有锚点和教学算例；后者逐条比对 Streams 示例的有限状态模型回复。两者不启动 Redis/MySQL，不验证真实切主、迁移、并发消费或掉电恢复，不能替代隔离环境实验。
 
 `verify-redis-types-buffer-pool-articles` 检查 Redis 扩展类型与 MySQL Buffer Pool 两页的 MDX、21 个解答、旧章节与导航元数据；比对 19 条教学回复、索引配置 token、向量数学真值、采样/页容量与 LSN 算术。需要 Python 3，仅使用标准库做 Python 代码 AST 和 blob 长度检查，可用 `--python /path/to/python` 指定解释器；不导入 redis-py、不执行查询、不建索引，也不运行数据库。
+
+`verify-kafka-delivery-recovery-articles` 检查 Producer、Consumer、MM2 三页的 MDX、25 个解答、旧章节/锚点和导航元数据；核对三份 properties、幂等与超时约束、5 步完成水位、4 个稀疏映射分支，以及 lag、命名和事件缺口算例。它是离线教学契约检查，不启动 Kafka/Connect、不编译 Java、不提交或重置位点、不执行跨集群灾备实验。
 
 `check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
 

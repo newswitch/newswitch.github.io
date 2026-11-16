@@ -82,14 +82,34 @@
 - `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 55 个脚本语法检查通过；`git diff --check` 通过。
 - 本机未启动 Redis/MySQL、构建向量索引、执行 ANN 性能评测或数据库恢复实验。完整站点构建和发布结果仍以对应提交的 CI 为准。
 
+## 第五批 P1 发送、消费与跨集群恢复
+
+日期：2026-11-16。
+
+| 文章 | 完成内容 | 核验依据 |
+| --- | --- | --- |
+| [Kafka Producer](<../../../docs/data-systems/messaging/kafka/02-Producer-Batching-Acks重试与幂等.md>) | 补批次/内存/压缩参数、acks 0/1/all 与 min ISR、4.1 ELR 边界、幂等四项约束、超时体系、基础配置和诊断；补 8 个解答 | Kafka 4.1 Producer/Topic 配置、Producer API、ELR 文档与 4.1.0 ProducerConfig |
+| [Kafka Consumer](<../../../docs/data-systems/messaging/kafka/03-Consumer-Group-Offset-Rebalance与顺序.md>) | 补下一位置语义、并发完成水位、自动/同步/异步提交、reset 分支、classic/consumer 协议、撤销/丢失与旧 worker、背压、查询输出；补 9 个解答 | Kafka 4.1 Consumer 配置/API 与 4.1.0 ConsumerConfig |
+| [MirrorMaker 2](<../../../docs/data-systems/messaging/kafka/11-MirrorMaker2跨集群复制灾备切换与一致性.md>) | 区分三类 Connector、命名/环路、offset-sync/checkpoint/目标提交；补保守转换、组同步条件、EOS 边界、单向配置、旧历史/新写衔接和集合对账；补 8 个解答 | Kafka 4.1 MM2/跨机房文档与 4.1.0 OffsetSyncStore、MirrorCheckpointTask、MirrorSourceConfig、MirrorCheckpointConfig、DefaultReplicationPolicy |
+
+保留原目录、文件名、标题、导航顺序、H1/H2 和已有显式锚点；Producer 原 Mermaid 图保留，新增的短状态图和表格仅用于解释路径、参数关系与数值状态。按写作规范收紧过宽结论，公共文章不加入修复批次或作者维护流程。
+
+### 本批验证
+
+- `node scripts/checks/verify-kafka-delivery-recovery-articles.mjs`：3 页 MDX、25 个明确解答、旧章节/锚点/导航元数据通过；核对 3 份 properties、幂等和超时约束、5 步连续完成水位、4 个 MM2 稀疏映射分支、lag、内部 topic 命名及事件集合缺口。
+- 参数组合与位点检查为离线有限教学模型，不等于执行 Java 客户端或完整模拟 Kafka 协议。MM2 的 100→500、105→501 分支与固定 tag 源码核对，不使用固定差值线性外推。
+- `verify-durability-articles`、`verify-redis-ha-streams-articles`、`verify-redis-types-buffer-pool-articles` 回归通过。
+- `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 56 个脚本语法检查通过；`git diff --check` 通过。
+- 本机未启动 broker/Connect/预览服务，未提交或重置真实消费位点，未执行 WAN、切换或回切实验。全站构建与发布仍由对应提交的 CI 另行确认。
+
 ## 原始已确认清单的剩余工作
 
-已处理 2 篇 P0 与 8 篇 P1；原始 23 篇具体待改事项还剩 13 篇：
+已处理 2 篇 P0 与 11 篇 P1；原始 23 篇具体待改事项还剩 10 篇：
 
-- P1 7 篇：Kafka Producer/Consumer/MM2 3 篇、Nginx HTTP Phase 1 篇、APISIX 1 篇、Milvus 依赖 1 篇、vLLM Kubernetes 部署 1 篇。
+- P1 4 篇：Nginx HTTP Phase 1 篇、APISIX 1 篇、Milvus 依赖 1 篇、vLLM Kubernetes 部署 1 篇。
 - P2 5 篇：Temporal 测试、Backstage 插件、Linux perf、Linux 路由、LLM 压测容量曲线。
 - 单独补答案 1 篇：Kafka 请求处理源码。
 
-下一批优先处理 Kafka Producer、Consumer 与 MirrorMaker 2，补齐发送确认与幂等约束、消费位点与重平衡，以及跨集群复制的配置和恢复边界；之后继续其余专项。
+下一批优先处理 Nginx HTTP Phase 与 APISIX，把请求阶段、插件执行、配置生效和诊断证据展开；之后继续 Milvus 依赖、vLLM Kubernetes 部署和 P2 专项。
 
-193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至四批的八篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 4 篇仅做过指定段落复核。
+193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至五批的十一篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 4 篇仅做过指定段落复核。
