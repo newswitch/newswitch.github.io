@@ -38,7 +38,7 @@ Application
 | R03 | [String、Hash、List、Set、ZSet 与底层编码](./01-client-data/03-Redis核心数据结构与底层编码.md) | P0 | 数据结构选型、复杂度和内存代价 |
 | R04 | [Bitmap、HyperLogLog、Geo、JSON、Search 与 Vector](./01-client-data/04-Bitmap-HyperLogLog-Geo-JSON-Search与Vector.md) | P1 | 特殊结构和模块能力的适用边界 |
 | R05 | [事件循环、I/O Threads、命令执行与源码主路径](./02-engine-persistence/05-Redis事件循环IO-Threads命令执行与源码主路径.md) | P0 | 用固定版本源码解释 Redis 为什么快及串行瓶颈 |
-| R06 | [jemalloc、对象共享、过期删除与内存淘汰](./02-engine-persistence/06-Redis内存过期与淘汰.md) | P0 | used_memory、RSS、碎片和 OOM 如何解释 |
+| R06 | [内存管理、maxmemory 与淘汰策略](./02-engine-persistence/06-Redis内存过期与淘汰.md) | P0 | 内存与 RSS、过期/淘汰、候选范围、LRU/LFU/LRM、拒写与 OOM |
 | R07 | [RDB、AOF、多段 AOF、fork 与 Copy-on-Write](./02-engine-persistence/07-Redis-RDB-AOF-fork与Copy-on-Write.md) | P0 | 持久化时间点、恢复和磁盘风险 |
 | R08 | [主从复制、PSYNC、Replication Backlog 与一致性](./03-ha-cluster/08-Redis主从复制PSYNC与一致性.md) | P0 | 全量/部分同步和数据丢失边界 |
 | R09 | [Sentinel 监控、主观/客观下线与故障转移](./03-ha-cluster/09-Redis-Sentinel监控与故障转移.md) | P1 | 仲裁、选主、客户端切换和脑裂 |
