@@ -27,14 +27,16 @@ tags: [APISIX, Request Path, Route, Upstream]
 Client建立TCP/TLS
 → Nginx接收HTTP请求
 → radixtree匹配Route
-→ 合并Route/Service/Consumer插件配置
-→ rewrite/access阶段执行认证、限流、改写
+→ 准备Route/Service等插件配置，执行相应rewrite逻辑并识别Consumer
+→ 合并Consumer相关配置，继续后续插件阶段
 → Upstream选择节点并建立连接
-→ header/body filter与log阶段
-→ 返回响应并写指标/日志
+→ header/body filter处理并返回响应，可流式分批
+→ 请求收尾，执行log阶段等统计/日志处理
 ```
 
 插件按 Nginx 阶段和优先级执行。认证要在流量进入上游前，响应改写在过滤阶段，异步日志在 log 阶段。插件“已经启用”不代表执行顺序符合预期。
+
+这里是逻辑职责，不是插件阶段与原生 Nginx 枚举的一一映射。以 3.20.0 为例，OpenResty 的 HTTP access 回调中还会调用 APISIX 插件的 rewrite/access 路径；Consumer 也需先被认证逻辑识别，再合并其相关配置，不能假定一开始已经完成全部 Consumer 合并。阶段、优先级与排障证据见[性能与故障排查](./03-APISIX性能容量-升级-选型与故障Runbook.md)。
 
 ## 3. 控制面路径
 

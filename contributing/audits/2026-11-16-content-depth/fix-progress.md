@@ -102,14 +102,35 @@
 - `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 56 个脚本语法检查通过；`git diff --check` 通过。
 - 本机未启动 broker/Connect/预览服务，未提交或重置真实消费位点，未执行 WAN、切换或回切实验。全站构建与发布仍由对应提交的 CI 另行确认。
 
+## 第六批 P1 请求阶段与网关故障证据
+
+日期：2026-11-16。
+
+| 文章 | 完成内容 | 核验依据 |
+| --- | --- | --- |
+| [Nginx HTTP Phase](<../../../docs/networking/load-balancing-proxy/nginx/01-core/08-Nginx-HTTP-Phase-Module-Subrequest与Filter源码.md>) | 补配置/阶段构建、checker 返回值、LOG 收尾、内部跳转、Filter 连接/分块、Subrequest 放大与变量时机；用 rewrite→auth 子请求→静态文件的轨迹映射实际函数；补 9 个解答 | Nginx release-1.28.0 的 ngx_http.c、ngx_http_core_module.c/h、ngx_http_request.c；官方开发、rewrite、auth_request、日志与 debug 文档 |
+| [APISIX Runbook](<../../../docs/networking/load-balancing-proxy/apisix/03-APISIX性能容量-升级-选型与故障Runbook.md>) | 补路由不匹配、Admin 新/本地旧、响应头等待超时三条证据链，含 GET/日志查询、教学输出、判断分支和恢复验证；补插件阶段/优先级、指标单位、容量与升级边界；补 10 个解答 | APISIX 3.20.0 的 Admin/Control API、部署模式、插件开发、Prometheus 文档与 init.lua、plugin.lua、config_etcd.lua、ngx_tpl.lua、ctx/log-util 实现 |
+
+对 [APISIX 架构篇](<../../../docs/networking/load-balancing-proxy/apisix/01-APISIX-Nginx-Lua-etcd-Route-Service-Upstream与请求路径.md>) 仅修正数据面流程段落：先识别 Consumer 再合并相关配置，区分返回响应与收尾日志，补非一一阶段映射说明。该局部修改不计为新增一篇完整深化或全文事实认证。
+
+原目录、文件名、标题与侧边栏顺序不变。Nginx 新增配置/阶段原理章节，后续小节顺延，原显式锚点全部保留；APISIX 补独立验收与参考资料章节。按写作规范保留有效主题，以短轨迹、表格和必要限定解释机制，不在公共文章加入维护流程。
+
+### 本批验证
+
+- `node scripts/checks/verify-nginx-apisix-request-articles.mjs`：3 页 MDX、19 个明确解答、原章节主题顺序/锚点与导航元数据通过；核对 6 份 JSON、YAML/原生日志格式、有限 rewrite/auth/filter 模型、路由与配置版本对照、超时/单位与容量算术。
+- Nginx generic checker 短分支、阶段构建不含 LOG、LOG 独立调用和普通阶段逆序装入，与固定 tag 源码核对。APISIX 插件调用、Control API 包装、指标毫秒单位与差值口径按固定 tag 核对。
+- 前四个专项检查脚本（持久性、Redis HA/Streams、Redis 类型/Buffer Pool、Kafka）回归通过。
+- `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 57 个脚本语法检查通过；`git diff --check` 通过。
+- 本机不运行 nginx -t、网关服务、curl、reload 或 APISIX 完整 Schema 校验，不修改真实路由、etcd 或执行故障注入。完整构建/发布以对应提交的 CI 为准，配置的实际装载与运行行为仍需隔离实例验证。
+
 ## 原始已确认清单的剩余工作
 
-已处理 2 篇 P0 与 11 篇 P1；原始 23 篇具体待改事项还剩 10 篇：
+已处理 2 篇 P0 与 13 篇 P1；原始 23 篇具体待改事项还剩 8 篇：
 
-- P1 4 篇：Nginx HTTP Phase 1 篇、APISIX 1 篇、Milvus 依赖 1 篇、vLLM Kubernetes 部署 1 篇。
+- P1 2 篇：Milvus 依赖 1 篇、vLLM Kubernetes 部署 1 篇。
 - P2 5 篇：Temporal 测试、Backstage 插件、Linux perf、Linux 路由、LLM 压测容量曲线。
 - 单独补答案 1 篇：Kafka 请求处理源码。
 
-下一批优先处理 Nginx HTTP Phase 与 APISIX，把请求阶段、插件执行、配置生效和诊断证据展开；之后继续 Milvus 依赖、vLLM Kubernetes 部署和 P2 专项。
+下一批优先处理 Milvus 依赖与 vLLM Kubernetes 部署，补依赖故障证据、部署清单/参数与恢复验收；之后继续 P2 专项和 Kafka 源码篇的答案。
 
-193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至五批的十一篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 4 篇仅做过指定段落复核。
+193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至六批的十三篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 5 篇仅做过指定段落复核（含本批 APISIX 架构篇）。
