@@ -34,6 +34,9 @@
 /examples/python/**/.venv/
 /examples/python/**/__pycache__/
 /examples/accelerator-runtime/__pycache__/
+/examples/automation/**/__pycache__/
+/examples/automation/**/.venv/
+/examples/automation/**/.pytest_cache/
 /examples/datax/**/__pycache__/
 /examples/python/**/.pytest_cache/
 /examples/python/**/dist/

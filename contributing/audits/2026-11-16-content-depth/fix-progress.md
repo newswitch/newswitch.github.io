@@ -163,14 +163,34 @@
 - `npm run check`：格式、相对文档链接、2,566 篇文档、467 个物理分类、14 个领域与 59 个脚本语法检查通过；`git diff --check` 通过。
 - 本机未执行 perf、nsenter、tcpdump、sysctl 或任何 Linux 路由/邻居修改，没有采集真实 CPU 数据、创建 Namespace、生成抓包或启动预览进程。实际 PMU/栈展开、网络与反向过滤行为仍需在对应硬件/内核验证，完整构建/发布按提交 CI 另行确认。
 
+## 第九批 P2 Temporal 测试与 Backstage 插件
+
+日期：2026-11-17。
+
+| 文章 | 完成内容 | 核验依据 |
+| --- | --- | --- |
+| [Temporal 测试](<../../../docs/automation/temporal/08-测试时间跳跃与故障注入.md>) | 固定 Python SDK 1.36.1，区分 V1 全局/V2 实验逐 Workflow 跳时与真实时间；补审批 Workflow、Activity 替身、自动/手动跳时与 Query 同步、Retry/不可重试原因链、Replay/History 和故障窗口断言；附 4 个 Activity 与 4 个 Workflow 测试定义，新增 10 个解答 | SDK 固定 tag 的 WorkflowEnvironment、ActivityEnvironment、Replayer、Client/Worker 与 README；本地 SDK 元数据与 4 个实际 ActivityEnvironment 测试 |
+| [Backstage 插件](<../../../docs/automation/backstage/07-插件架构与集成开发.md>) | 固定 v1.56.5 新前后端系统，区分独立包版本；补 Blueprint、后端注册/路由、Discovery/Fetch、fixture/DTO 校验、Entity 标识映射、基础权限登记/授权/宿主策略、拒绝路径和资源隔离边界；附核心文件与 6 个 Router Jest 测试定义，新增 10 个解答 | 固定 tag 的 Backend/Frontend Plugin、安装、权限入门/基础权限文档，包 manifest、PermissionsRegistry、PolicyQueryUser、MiddlewareFactory、服务 mock 与 API 定义 |
+
+不更改公共目录、文件名、标题、侧边栏或原有 H2 主题顺序。代码放入 `examples/automation/`，在正文链接配套说明；不将 Backstage 核心文件描述为博客中可独立启动的完整应用。写作规范用于保留主题、说明必要前提与验证边界，不把作者维护流程放进公共正文。
+
+### 本批验证
+
+- `node scripts/checks/verify-temporal-backstage-articles.mjs`：2 页 MDX、20 个答案、旧主题/锚点/导航元数据、10 个正文/源码片段通过；源码一致性忽略格式器合并的重复空行，保留语句内容。
+- 标准 Python AST 解析 4 个文件/8 个测试定义；Babel 解析/转换 9 个 TS/TSX 模块，执行真实的无外部依赖 fixture/DTO 模块，核对标识、克隆、枚举/结构、时间与 JSON/YAML 合约。TS 转换不是完整类型检查或依赖解析。
+- 在项目忽略的独立虚拟环境安装 `temporalio==1.36.1`，实际执行 `python -m unittest -v test_activity`：4 个 SDK ActivityEnvironment 测试通过；核对 Workflow/Activity 注册名及 Replay/V2 API 存在。Windows 限制内异步测试未完成，已终止该次测试；限制外重跑通过，没有遗留本次测试进程。
+- 没有启动 Temporal 测试服务器/Worker，没有实际执行 4 个 Workflow/Replay 测试、Backstage Jest、完整 typecheck/build、真实身份/策略或故障注入；这些仍须在配套 README 指定的环境验收。SDK 与本地依赖缓存不提交。
+- 前七个专项脚本（持久性、Redis HA/Streams、Redis 类型/Buffer Pool、Kafka、Nginx/APISIX、Milvus/vLLM、Linux perf/路由）回归通过。
+- `npm run check`：格式、相对链接、2,566 篇文档、467 个物理分类、14 个领域和 60 个脚本语法检查通过；`git diff --check` 通过。专项 Babel 转换提示既有 Browserslist 数据过期，不影响本次通过；没有为此更新依赖或 lockfile。全站构建与部署按提交 CI 另行确认。
+
 ## 原始已确认清单的剩余工作
 
-已处理 2 篇 P0、15 篇 P1 与 2 篇 P2；原始 23 篇具体待改事项还剩 4 篇：
+已处理 2 篇 P0、15 篇 P1 与 4 篇 P2；原始 23 篇具体待改事项还剩 2 篇：
 
 - P0、P1 已确认事项均已完成本轮修复。
-- P2 3 篇：Temporal 测试、Backstage 插件、LLM 压测容量曲线。
+- P2 1 篇：LLM 压测容量曲线。
 - 单独补答案 1 篇：Kafka 请求处理源码。
 
-下一批优先处理 Temporal 测试与 Backstage 插件：补固定 SDK/测试环境 API、明确断言，以及插件模型、注册/API/权限的最小实现；之后处理 LLM 容量曲线和 Kafka 源码篇答案。
+下一批处理 LLM 压测容量曲线和 Kafka 请求处理源码答案，完成原始已确认清单；随后仍需按候选队列继续复核，不能据此宣称全站已完整人工审完。
 
-193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至八批的十七篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 6 篇仅做过指定段落复核（含第六批 APISIX 架构篇和第八批 perf 命令篇）。
+193 篇规则候选、145 篇练习答案候选以及其他未精读文章，仍是初始筛查队列，并不因完成本批而全部转为通过。原始人工全文复核为 38 篇技术文档；第一批将 Nginx 从指定段落扩大到全文复核，累计为 39 篇。第二至九批的十九篇此前已在人工全文复核清单内，不重复增加篇数。其余尚未全文复核的技术文档为 2,527 篇，其中 6 篇仅做过指定段落复核（含第六批 APISIX 架构篇和第八批 perf 命令篇）。

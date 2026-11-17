@@ -63,6 +63,7 @@ node scripts/checks/verify-kafka-delivery-recovery-articles.mjs
 node scripts/checks/verify-nginx-apisix-request-articles.mjs
 node scripts/checks/verify-milvus-vllm-deployment-articles.mjs
 node scripts/checks/verify-linux-perf-routing-articles.mjs
+node scripts/checks/verify-temporal-backstage-articles.mjs
 npm run check:datax
 npm run check:integration
 ```
@@ -80,6 +81,8 @@ npm run check:integration
 `verify-milvus-vllm-deployment-articles` 检查 Milvus 依赖与 vLLM Kubernetes 部署 2 页 MDX、20 个解答、原章节主题/锚点和导航元数据；解析 YAML/JSON，核对公开模型无必选 Secret、PVC/Service/端口引用、资源/探针、固定模型与 Helm values，以及有限 WAL/checkpoint/Aq/集合算例。它不渲染 Helm、不执行完整 Kubernetes/Chart Schema 验证、不联系 etcd/S3/集群、不加载模型或运行恢复/性能实验，不能替代指定版本的隔离部署验收。
 
 `verify-linux-perf-routing-articles` 检查 perf 原理、路由原理及 perf 命令篇局部修订共 3 页 MDX、20 个明确解答、旧章节/锚点与导航元数据；核对计数缩放/非法时间、IPC/CPU 算术、4 条折叠栈与 6 行 Self/Children，以及 5 条规则、3 张路由表、3 份查询摘录、掩码/源地址/控制路由和有限反向验证算例。它不是 PMU、栈展开或 Linux FIB/rp_filter 的完整模拟，不执行 perf/nsenter/tcpdump/sysctl 或修改路由；不能替代目标 Linux 内核、硬件和网络环境的实测。
+
+`verify-temporal-backstage-articles` 检查 Temporal 测试与 Backstage 插件 2 页 MDX、20 个解答、旧主题/锚点和导航元数据；核对正文与配套源码一致，解析 4 个 Python 文件和 8 个测试定义、转换 9 个 TS/TSX 模块，并执行无外部依赖的 fixture/DTO 校验与 YAML/JSON 合约检查。需要 Python 3.11+，可用 `--python /path/to/python` 指定。脚本不加载 Temporal SDK、不启动服务、不执行 Workflow/Replay、Backstage Jest、真实令牌验证或完整 TypeScript 类型检查。真实 ActivityEnvironment 测试须在独立环境按 `examples/automation/temporal-testing/README.md` 另行运行；Backstage 核心文件需先接入指定版本 workspace，不能在博客目录当独立应用运行。
 
 `check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
 
