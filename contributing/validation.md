@@ -65,6 +65,7 @@ node scripts/checks/verify-milvus-vllm-deployment-articles.mjs
 node scripts/checks/verify-linux-perf-routing-articles.mjs
 node scripts/checks/verify-temporal-backstage-articles.mjs
 node scripts/checks/verify-object-storage-foundation-articles.mjs --bash /path/to/bash
+node scripts/checks/verify-object-storage-foundation-articles.mjs --series s3fs --bash /path/to/bash --python /path/to/python
 npm run check:datax
 npm run check:integration
 ```
@@ -86,6 +87,8 @@ npm run check:integration
 `verify-temporal-backstage-articles` 检查 Temporal 测试与 Backstage 插件 2 页 MDX、20 个解答、旧主题/锚点和导航元数据；核对正文与配套源码一致，解析 4 个 Python 文件和 8 个测试定义、转换 9 个 TS/TSX 模块，并执行无外部依赖的 fixture/DTO 校验与 YAML/JSON 合约检查。需要 Python 3.11+，可用 `--python /path/to/python` 指定。脚本不加载 Temporal SDK、不启动服务、不执行 Workflow/Replay、Backstage Jest、真实令牌验证或完整 TypeScript 类型检查。真实 ActivityEnvironment 测试须在独立环境按 `examples/automation/temporal-testing/README.md` 另行运行；Backstage 核心文件需先接入指定版本 workspace，不能在博客目录当独立应用运行。
 
 `verify-object-storage-foundation-articles` 检查对象存储路线与通用原理 4 页 MDX、17 个解答、3 份 JSON、33 字节正文算例、条件写命令及只读身份策略。`--bash /path/to/bash` 只执行 `bash -n` 检查正文 Bash 块，不执行正文命令。可选 `--node-modules /path/to/node_modules --browser /path/to/chromium` 使用 Playwright 和一个仅绑定环回临时端口的服务渲染 3 张 Mermaid 图；`--screenshots /path/to/output` 保存图形检查截图，结束关闭自有浏览器与服务。不访问对象存储、不读取真实凭证、不验证实际 PUT/GET、条件冲突、TLS、IAM 或 FUSE 行为，也不替代生产构建和网站导航检查。
+
+该脚本的 `--series s3fs` 检查 4 篇 S3FS 文章、21 个答案、3 张图、正文代码及配套 systemd/Dockerfile/Pod/启动脚本。`--python` 仅解析写入探针 AST 与 17 字节正文，不执行探针；`--check-upstream` 可只读核对 v1.97 上游手册中的参数名及构建依赖。Bash 检查不执行挂载、卸载、Docker 或 kubectl；静态配置契约不等于 `systemd-analyze verify`、镜像构建、Kubernetes Schema/准入或真实对象服务验收。
 
 `check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
 

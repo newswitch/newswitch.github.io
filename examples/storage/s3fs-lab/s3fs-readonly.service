@@ -1,0 +1,17 @@
+[Unit]
+Description=Read-only S3FS laboratory mount
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=s3reader
+Group=s3reader
+ExecStart=/opt/s3fs/1.97/bin/s3fs your-owned-test-bucket /srv/s3fs-models -f -o ro -o passwd_file=/etc/s3fs-models.passwd -o url=https://s3.lab.example.com -o endpoint=us-east-1 -o use_path_request_style -o sigv4 -o complement_stat -o default_permissions -o umask=027 -o use_cache=/var/cache/s3fs-models/data -o tmpdir=/var/cache/s3fs-models/tmp -o stat_cache_expire=30 -o disable_negative_cache -o ensure_diskfree=1024 -o max_thread_count=4
+ExecStop=/usr/bin/fusermount3 -u /srv/s3fs-models
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

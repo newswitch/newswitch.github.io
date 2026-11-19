@@ -1,0 +1,9 @@
+{
+  "label": "S3FS 文件式接入",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "从 FUSE 与 S3 请求路径学习 s3fs-fuse，理解安装、缓存、写入语义和 Kubernetes 接入边界。"
+  }
+}

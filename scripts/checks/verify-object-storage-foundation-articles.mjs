@@ -1,5 +1,6 @@
 // Offline documentation checks. Never executes the article's AWS/curl commands.
 // Optional isolated browser rendering loads local Mermaid only, not the website.
+// --check-upstream reads pinned public sources; no storage or cluster is contacted.
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -15,7 +16,7 @@ import {docIdFromSource} from '../../src/data/domains.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const base = 'docs/storage/object-storage/';
-const specs = [
+const foundationSpecs = [
   {file: '00-对象存储学习路线.md', questions: 3, diagrams: 1},
   {file: 'fundamentals/01-对象存储原理与完整读写路径.md', questions: 4, diagrams: 1},
   {file: 'fundamentals/02-对象存储一致性与并发更新.md', questions: 5, diagrams: 1},
@@ -27,6 +28,14 @@ const option = name => {
   assert(process.argv[index + 1], `Missing value: ${name}`);
   return process.argv[index + 1];
 };
+const series = option('--series') ?? 'foundations';
+assert(['foundations', 's3fs'].includes(series), 'Unknown article series.');
+const specs = series === 'foundations' ? foundationSpecs : [
+  {file: 's3fs-fuse/01-s3fs-fuse原理与文件访问路径.md', questions: 4, diagrams: 1},
+  {file: 's3fs-fuse/02-s3fs-fuse安装挂载与配置.md', questions: 5, diagrams: 0},
+  {file: 's3fs-fuse/03-s3fs-fuse缓存写入与文件语义.md', questions: 6, diagrams: 1},
+  {file: 's3fs-fuse/04-s3fs-fuse的Kubernetes接入与故障排查.md', questions: 6, diagrams: 1},
+];
 const read = file => fs.readFileSync(path.join(root, file), 'utf8').replaceAll('\r\n', '\n');
 const parser = unified().use(remarkParse);
 const plain = node => node.value ?? node.children?.map(plain).join('') ?? '';
@@ -34,6 +43,7 @@ const docs = [];
 let questions = 0;
 let bashBlocks = 0;
 let jsonBlocks = 0;
+let yamlBlocks = 0;
 
 for (const spec of specs) {
   const file = base + spec.file;
@@ -62,46 +72,142 @@ for (const spec of specs) {
   const code = nodes.filter(node => node.type === 'code');
   assert.equal(code.filter(node => node.lang === 'mermaid').length, spec.diagrams);
   const json = code.filter(node => node.lang === 'json').map(node => JSON.parse(node.value));
+  const yml = code.filter(node => node.lang === 'yaml').flatMap(node => yaml.loadAll(node.value));
   const bash = code.filter(node => node.lang === 'bash').map(node => node.value);
   jsonBlocks += json.length;
+  yamlBlocks += yml.length;
   bashBlocks += bash.length;
   // -n parses input only. It does not contact AWS, read credentials or write lab files.
   if (option('--bash') && bash.length) execFileSync(path.resolve(option('--bash')), ['-n'], {
     input: bash.join('\n\n'), encoding: 'utf8', cwd: root, timeout: 10000,
   });
   assert(!/面试|岗位职责|本批文章|网站与本地|一眼找到对应目录/.test(match[2]), `Editorial scaffolding: ${file}`);
-  docs.push({file, source, meta, code, json, bash});
+  docs.push({file, source, meta, code, json, yml, bash});
 }
 
-const payload = docs[1].bash.join('\n').match(/printf '([^']+)' > "\$LAB_DIR\/config\.json"/)?.[1];
-assert(payload);
-const payloadText = payload.replaceAll('\\n', '\n');
-assert.equal(Buffer.byteLength(payloadText), 33);
-assert.deepEqual(JSON.parse(payloadText), {revision: 'r1', batch_size: 8});
-assert.deepEqual(docs[1].json[0], {Bytes: 33, Type: 'application/json', Meta: {revision: 'r1'}});
-assert.deepEqual(docs[2].json[0], {revision: 'r2-a', batch_size: 16, timeout: 30});
-const conditional = docs[2].bash.join('\n');
-assert(conditional.includes("--if-none-match '*'"));
-assert.equal(conditional.match(/--if-match "\$ETAG_BEFORE"/g)?.length, 2);
-assert.equal(conditional.match(/--query ETag --output text/g)?.length, 1);
-const policy = docs[3].json[0];
-assert.equal(policy.Version, '2012-10-17');
-assert.equal(policy.Statement.length, 2);
-assert.deepEqual(policy.Statement[0], {
-  Sid: 'ListDemoPrefix', Effect: 'Allow', Action: 's3:ListBucket',
-  Resource: 'arn:aws:s3:::example-ai-models',
-  Condition: {StringLike: {'s3:prefix': ['models/demo/*']}},
-});
-assert.deepEqual(policy.Statement[1], {
-  Sid: 'ReadDemoObjects', Effect: 'Allow', Action: 's3:GetObject',
-  Resource: 'arn:aws:s3:::example-ai-models/models/demo/*',
-});
-const category = JSON.parse(read(`${base}_category_.json`));
-assert.equal(category.collapsed, true);
-assert.equal(category.link.type, 'doc');
-assert.equal(category.link.id, docIdFromSource(`${base}${specs[0].file}`.slice('docs/'.length)));
-assert.equal(JSON.parse(read(`${base}fundamentals/_category_.json`)).collapsed, true);
-console.log(`PASS ${docs.length} MDX articles, ${questions} explicit answers, ${jsonBlocks} JSON blocks, payload/policy/conditional-command contracts.`);
+if (series === 'foundations') {
+  const payload = docs[1].bash.join('\n').match(/printf '([^']+)' > "\$LAB_DIR\/config\.json"/)?.[1];
+  assert(payload);
+  const payloadText = payload.replaceAll('\\n', '\n');
+  assert.equal(Buffer.byteLength(payloadText), 33);
+  assert.deepEqual(JSON.parse(payloadText), {revision: 'r1', batch_size: 8});
+  assert.deepEqual(docs[1].json[0], {Bytes: 33, Type: 'application/json', Meta: {revision: 'r1'}});
+  assert.deepEqual(docs[2].json[0], {revision: 'r2-a', batch_size: 16, timeout: 30});
+  const conditional = docs[2].bash.join('\n');
+  assert(conditional.includes("--if-none-match '*'"));
+  assert.equal(conditional.match(/--if-match "\$ETAG_BEFORE"/g)?.length, 2);
+  assert.equal(conditional.match(/--query ETag --output text/g)?.length, 1);
+  const policy = docs[3].json[0];
+  assert.equal(policy.Version, '2012-10-17');
+  assert.equal(policy.Statement.length, 2);
+  assert.deepEqual(policy.Statement[0], {
+    Sid: 'ListDemoPrefix', Effect: 'Allow', Action: 's3:ListBucket',
+    Resource: 'arn:aws:s3:::example-ai-models',
+    Condition: {StringLike: {'s3:prefix': ['models/demo/*']}},
+  });
+  assert.deepEqual(policy.Statement[1], {
+    Sid: 'ReadDemoObjects', Effect: 'Allow', Action: 's3:GetObject',
+    Resource: 'arn:aws:s3:::example-ai-models/models/demo/*',
+  });
+  const category = JSON.parse(read(`${base}_category_.json`));
+  assert.equal(category.collapsed, true);
+  assert.equal(category.link.type, 'doc');
+  assert.equal(category.link.id, docIdFromSource(`${base}${specs[0].file}`.slice('docs/'.length)));
+  assert.equal(JSON.parse(read(`${base}fundamentals/_category_.json`)).collapsed, true);
+} else {
+  const exampleRoot = 'examples/storage/s3fs-lab/';
+  const launcher = read(`${exampleRoot}run-readonly.sh`);
+  assert(!fs.readFileSync(path.join(root, exampleRoot, 'run-readonly.sh'), 'utf8').includes('\r'), 'Linux launcher requires LF line endings.');
+  assert(read(`${exampleRoot}.gitattributes`).includes('*.sh text eol=lf'));
+  const docker = read(`${exampleRoot}Dockerfile`);
+  const unit = read(`${exampleRoot}s3fs-readonly.service`);
+  const python = read(`${exampleRoot}write-probe.py`);
+  const pod = yaml.load(read(`${exampleRoot}pod-readonly.yaml`));
+  const container = pod.spec.containers[0];
+  const category = JSON.parse(read(`${base}s3fs-fuse/_category_.json`));
+  assert.equal(category.collapsed, true);
+  assert.equal(category.link.type, 'generated-index');
+  assert.equal(pod.metadata.namespace, 'storage-lab');
+  assert.equal(pod.metadata.name, 's3fs-readonly-lab');
+  assert.equal(pod.spec.automountServiceAccountToken, false);
+  assert.equal(pod.spec.containers.length, 1);
+  assert(!pod.spec.initContainers && !pod.spec.hostPID && !pod.spec.hostNetwork);
+  assert.equal(pod.spec.nodeSelector['kubernetes.io/os'], 'linux');
+  assert.equal(pod.spec.nodeSelector['storage.example.com/fuse-lab'], 'true');
+  assert.deepEqual(container.securityContext, docs[3].yml[0].securityContext);
+  assert.deepEqual(container.securityContext, {privileged: true, runAsUser: 0});
+  assert.equal(container.image, 'registry.example.com/storage/s3fs-lab:1.97');
+  assert.equal(container.resources.limits['ephemeral-storage'], '5Gi');
+  assert(!container.livenessProbe && !container.envFrom);
+  assert.equal(container.startupProbe.exec.command.at(-1), '/mnt/s3');
+  assert.equal(container.readinessProbe.exec.command.at(-1), '/mnt/s3/health/ready.txt');
+  assert.equal(container.readinessProbe.exec.command[1], '5');
+  const volumes = new Map(pod.spec.volumes.map(volume => [volume.name, volume]));
+  assert.deepEqual(volumes.get('fuse-device').hostPath, {path: '/dev/fuse', type: 'CharDevice'});
+  assert.equal([...volumes.values()].filter(volume => volume.hostPath).length, 1);
+  assert.equal(volumes.get('credentials').secret.secretName, 's3fs-credentials');
+  assert.equal(volumes.get('credentials').secret.defaultMode, 0o400);
+  assert.deepEqual(volumes.get('cache').emptyDir, {sizeLimit: '4Gi'});
+  for (const mount of container.volumeMounts) {
+    assert(volumes.has(mount.name));
+    assert(!mount.mountPropagation);
+  }
+  assert(container.volumeMounts.some(mount => mount.name === 'credentials' && mount.readOnly));
+  assert(container.volumeMounts.some(mount => mount.name === 'cache' && mount.mountPath === '/var/cache/s3fs'));
+  assert(container.env.every(entry => !entry.valueFrom && !/KEY|TOKEN|SECRET/.test(entry.name)));
+  assert(docker.includes('ARG S3FS_VERSION=1.97'));
+  assert(docker.includes('libfuse3-dev') && docker.includes('make -j2'));
+  assert(docker.includes('COPY run-readonly.sh /usr/local/bin/run-readonly.sh'));
+  assert(docker.includes('ENTRYPOINT ["/usr/local/bin/run-readonly.sh"]'));
+  assert(!/passwd|ACCESS_KEY|SESSION_TOKEN/.test(docker));
+  assert(launcher.includes('-o ro -o "passwd_file=$S3FS_CRED_FILE"'));
+  assert(launcher.includes('-o use_cache=/var/cache/s3fs/data -o tmpdir=/var/cache/s3fs/tmp'));
+  assert(launcher.includes('FUSE_PID=$!') && launcher.includes('wait "$FUSE_PID"'));
+  assert(launcher.includes('trap cleanup EXIT') && launcher.includes('timeout 10 fusermount3 -u /mnt/s3'));
+  assert(launcher.includes('if [[ -n "$FUSE_PID" ]] && mountpoint -q /mnt/s3; then'));
+  assert(!/killall|pkill|allow_other|curldbg|no_check_certificate/.test(launcher));
+  assert(/Type=simple/.test(unit) && /User=s3reader/.test(unit));
+  assert(/ExecStart=\/opt\/s3fs\/1\.97\/bin\/s3fs .* -f -o ro /.test(unit));
+  assert(unit.includes('ExecStop=/usr/bin/fusermount3 -u /srv/s3fs-models'));
+  assert(!/allow_other|PrivateMounts|NoNewPrivileges/.test(unit));
+  assert.equal(Buffer.byteLength('s3fs-write-check\n'), 17);
+  assert.equal(docs[2].json[0].bytes, 17);
+  assert.equal(4 * 6 + 8 + 8, 40);
+  assert.equal(300 * 4, 1200);
+  const pythonSnippet = docs[2].code.find(node => node.lang === 'python').value;
+  const normalizeIndent = source => source.split('\n').map(line => line.trim()).join('\n').trim();
+  assert(normalizeIndent(python).includes(normalizeIndent(pythonSnippet)));
+  if (option('--python')) {
+    execFileSync(path.resolve(option('--python')), ['-c',
+      'import ast,json,sys\nsrc=json.load(sys.stdin)\ntree=ast.parse(src)\nvalues=[n.value for n in ast.walk(tree) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=="payload" for t in n.targets)]\nassert len(values)==1 and len(ast.literal_eval(values[0]))==17\n'],
+    {input: JSON.stringify(python), encoding: 'utf8', timeout: 10000});
+    console.log('PASS write-probe Python AST and 17-byte payload; probe not executed.');
+  } else {
+    console.log('SKIP Python AST: supply --python /path/to/python.');
+  }
+  if (option('--bash')) {
+    execFileSync(path.resolve(option('--bash')), ['-n'], {input: launcher, encoding: 'utf8', timeout: 10000});
+    bashBlocks++;
+  }
+  if (process.argv.includes('--check-upstream')) {
+    const origin = 'https://raw.githubusercontent.com/s3fs-fuse/s3fs-fuse/v1.97/';
+    const fetchSource = async file => {
+      const response = await fetch(origin + file, {signal: AbortSignal.timeout(20000)});
+      assert(response.ok, `Cannot read pinned upstream: ${file}`);
+      return response.text();
+    };
+    const [manual, configure] = await Promise.all([
+      fetchSource('doc/man/s3fs.1.in'), fetchSource('configure.ac'),
+    ]);
+    const options = ['passwd_file', 'url', 'endpoint', 'use_path_request_style', 'sigv4',
+      'complement_stat', 'use_cache', 'tmpdir', 'stat_cache_expire', 'disable_negative_cache',
+      'ensure_diskfree', 'max_thread_count', 'connect_timeout', 'readwrite_timeout', 'retries'];
+    for (const name of options) assert(manual.includes(name), `Unknown pinned option: ${name}`);
+    assert(configure.includes('fuse3 >= ${min_fuse_version}'));
+    console.log(`PASS ${options.length} example S3FS option names and FUSE 3 build dependency against v1.97 source; not a runtime test.`);
+  }
+}
+console.log(`PASS ${docs.length} ${series} MDX articles, ${questions} explicit answers, ${jsonBlocks} JSON and ${yamlBlocks} YAML blocks; scoped example contracts.`);
 console.log(option('--bash') ? `PASS ${bashBlocks} Bash blocks parsed with bash -n; none executed.` : 'SKIP Bash syntax: supply --bash /path/to/bash.');
 
 const modules = option('--node-modules');
@@ -144,7 +250,7 @@ if (!modules) {
     let count = 0;
     for (const doc of docs) {
       for (const diagram of doc.code.filter(node => node.lang === 'mermaid')) {
-        const id = `object-storage-${++count}`;
+        const id = `${series}-${++count}`;
         const rendered = await page.evaluate(async ({source, id}) => {
           await window.mermaid.parse(source);
           const {svg} = await window.mermaid.render(id, source);
@@ -169,7 +275,13 @@ if (!modules) {
       }
     }
     assert.deepEqual(errors, []);
-    assert.equal(count, 3);
+    assert.equal(count, specs.reduce((sum, spec) => sum + spec.diagrams, 0));
+    await page.setViewportSize({width: 390, height: 900});
+    const fits = await page.evaluate(() => [...document.querySelectorAll('main svg')].every(svg => {
+      const box = svg.getBoundingClientRect();
+      return box.width > 0 && box.left >= 0 && box.right <= innerWidth;
+    }));
+    assert(fits, 'Diagram exceeds the isolated mobile viewport.');
     console.log(`PASS ${count} Mermaid diagrams parsed and rendered in one isolated browser; no page errors.`);
   } finally {
     await browser?.close();
