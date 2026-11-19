@@ -1,0 +1,9 @@
+{
+  "label": "对象存储通用原理",
+  "position": 0,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "理解对象模型、完整读写路径、一致性、并发更新和 S3 访问鉴权。"
+  }
+}

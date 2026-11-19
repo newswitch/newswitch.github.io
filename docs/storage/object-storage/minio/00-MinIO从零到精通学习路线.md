@@ -10,6 +10,8 @@ tags: [MinIO, S3, 对象存储, Erasure Coding, 模型仓库]
 
 MinIO 提供兼容 S3 API 的对象存储能力，适合模型制品、数据集、Checkpoint、备份和日志/Trace 后端。它不是共享 POSIX 文件系统，Bucket/Object、HTTP API、版本和 Erasure Coding 才是核心模型。
 
+初次接触对象存储，可以先阅读[对象存储学习路线](../00-对象存储学习路线.md)，掌握通用对象模型、一致性和访问鉴权，再进入 MinIO 的内部实现。
+
 ```text
 S3 Client
 → DNS/TLS/Load Balancer

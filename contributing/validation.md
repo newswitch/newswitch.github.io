@@ -64,6 +64,7 @@ node scripts/checks/verify-nginx-apisix-request-articles.mjs
 node scripts/checks/verify-milvus-vllm-deployment-articles.mjs
 node scripts/checks/verify-linux-perf-routing-articles.mjs
 node scripts/checks/verify-temporal-backstage-articles.mjs
+node scripts/checks/verify-object-storage-foundation-articles.mjs --bash /path/to/bash
 npm run check:datax
 npm run check:integration
 ```
@@ -83,6 +84,8 @@ npm run check:integration
 `verify-linux-perf-routing-articles` 检查 perf 原理、路由原理及 perf 命令篇局部修订共 3 页 MDX、20 个明确解答、旧章节/锚点与导航元数据；核对计数缩放/非法时间、IPC/CPU 算术、4 条折叠栈与 6 行 Self/Children，以及 5 条规则、3 张路由表、3 份查询摘录、掩码/源地址/控制路由和有限反向验证算例。它不是 PMU、栈展开或 Linux FIB/rp_filter 的完整模拟，不执行 perf/nsenter/tcpdump/sysctl 或修改路由；不能替代目标 Linux 内核、硬件和网络环境的实测。
 
 `verify-temporal-backstage-articles` 检查 Temporal 测试与 Backstage 插件 2 页 MDX、20 个解答、旧主题/锚点和导航元数据；核对正文与配套源码一致，解析 4 个 Python 文件和 8 个测试定义、转换 9 个 TS/TSX 模块，并执行无外部依赖的 fixture/DTO 校验与 YAML/JSON 合约检查。需要 Python 3.11+，可用 `--python /path/to/python` 指定。脚本不加载 Temporal SDK、不启动服务、不执行 Workflow/Replay、Backstage Jest、真实令牌验证或完整 TypeScript 类型检查。真实 ActivityEnvironment 测试须在独立环境按 `examples/automation/temporal-testing/README.md` 另行运行；Backstage 核心文件需先接入指定版本 workspace，不能在博客目录当独立应用运行。
+
+`verify-object-storage-foundation-articles` 检查对象存储路线与通用原理 4 页 MDX、17 个解答、3 份 JSON、33 字节正文算例、条件写命令及只读身份策略。`--bash /path/to/bash` 只执行 `bash -n` 检查正文 Bash 块，不执行正文命令。可选 `--node-modules /path/to/node_modules --browser /path/to/chromium` 使用 Playwright 和一个仅绑定环回临时端口的服务渲染 3 张 Mermaid 图；`--screenshots /path/to/output` 保存图形检查截图，结束关闭自有浏览器与服务。不访问对象存储、不读取真实凭证、不验证实际 PUT/GET、条件冲突、TLS、IAM 或 FUSE 行为，也不替代生产构建和网站导航检查。
 
 `check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
 
