@@ -29,13 +29,24 @@ const option = name => {
   return process.argv[index + 1];
 };
 const series = option('--series') ?? 'foundations';
-assert(['foundations', 's3fs'].includes(series), 'Unknown article series.');
-const specs = series === 'foundations' ? foundationSpecs : [
+assert(['foundations', 's3fs', 'completion'].includes(series), 'Unknown article series.');
+const s3fsSpecs = [
   {file: 's3fs-fuse/01-s3fs-fuse原理与文件访问路径.md', questions: 4, diagrams: 1},
   {file: 's3fs-fuse/02-s3fs-fuse安装挂载与配置.md', questions: 5, diagrams: 0},
   {file: 's3fs-fuse/03-s3fs-fuse缓存写入与文件语义.md', questions: 6, diagrams: 1},
   {file: 's3fs-fuse/04-s3fs-fuse的Kubernetes接入与故障排查.md', questions: 6, diagrams: 1},
 ];
+const completionSpecs = [
+  {file: 'clients/01-Mountpoint-for-Amazon-S3原理与访问边界.md', questions: 4, diagrams: 1},
+  {file: 'clients/02-Python-fsspec与s3fs对象访问.md', questions: 5, diagrams: 1},
+  {file: 'clients/03-对象存储接入方式选型.md', questions: 4, diagrams: 1},
+  {file: 'cloud-services/01-Amazon-S3架构存储类别与访问.md', questions: 5, diagrams: 0},
+  {file: 'cloud-services/02-华为OBS架构接入与兼容性.md', questions: 5, diagrams: 0},
+  {file: '06-对象存储访问链路排障.md', questions: 6, diagrams: 1},
+  {file: '../commands/06-object-storage/27-rclone命令详解.md', questions: 6, diagrams: 1},
+  {file: 'minio/03-S3-Put-Get-List-Delete-Multipart-Range-ETag与Checksum.md', questions: 6, diagrams: 1},
+];
+const specs = {foundations: foundationSpecs, s3fs: s3fsSpecs, completion: completionSpecs}[series];
 const read = file => fs.readFileSync(path.join(root, file), 'utf8').replaceAll('\r\n', '\n');
 const parser = unified().use(remarkParse);
 const plain = node => node.value ?? node.children?.map(plain).join('') ?? '';
@@ -114,7 +125,7 @@ if (series === 'foundations') {
   assert.equal(category.link.type, 'doc');
   assert.equal(category.link.id, docIdFromSource(`${base}${specs[0].file}`.slice('docs/'.length)));
   assert.equal(JSON.parse(read(`${base}fundamentals/_category_.json`)).collapsed, true);
-} else {
+} else if (series === 's3fs') {
   const exampleRoot = 'examples/storage/s3fs-lab/';
   const launcher = read(`${exampleRoot}run-readonly.sh`);
   assert(!fs.readFileSync(path.join(root, exampleRoot, 'run-readonly.sh'), 'utf8').includes('\r'), 'Linux launcher requires LF line endings.');
@@ -206,6 +217,65 @@ if (series === 'foundations') {
     assert(configure.includes('fuse3 >= ${min_fuse_version}'));
     console.log(`PASS ${options.length} example S3FS option names and FUSE 3 build dependency against v1.97 source; not a runtime test.`);
   }
+} else {
+  const exampleRoot = 'examples/storage/object-clients/';
+  const {makeFixture, makeCompletion} = await import(new URL('../../examples/storage/object-clients/multipart_fixture.mjs', import.meta.url));
+  const fixture = makeFixture();
+  assert.equal(fixture.first.length, 6 * 1024 * 1024);
+  assert(fixture.first.equals(Buffer.alloc(fixture.first.length, 'A')));
+  assert.equal(fixture.last.toString(), 'END\n');
+  assert.equal(fixture.expected.bytes, 6291460);
+  assert.match(fixture.expected.sha256, /^[a-f0-9]{64}$/);
+  assert.equal(fixture.first.subarray(0, 16).toString(), 'AAAAAAAAAAAAAAAA');
+  assert.deepEqual(makeCompletion({ETag: '"test-part-one"'}, {ETag: '"test-part-two"'}), {
+    Parts: [{ETag: '"test-part-one"', PartNumber: 1}, {ETag: '"test-part-two"', PartNumber: 2}],
+  });
+  assert.throws(() => makeCompletion({}, {ETag: '"test-part-two"'}));
+  assert.equal(100 * 40, 4000);
+  assert.equal(4000 / 1024, 3.90625);
+  assert.equal(16 * 8, 128);
+  assert.equal(3 * 20 + 2 + 4, 66);
+  for (const index of [6, 7]) {
+    const relative = path.posix.normalize((base + specs[index].file).replace(/^docs\//, 'docs/'));
+    const baseline = execFileSync('git', ['show', `ad03014:${relative}`], {encoding: 'utf8', cwd: root}).replaceAll('\r\n', '\n');
+    const before = baseline.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    const metadata = yaml.load(before[1]);
+    for (const field of ['title', 'sidebar_label', 'sidebar_position']) assert.equal(docs[index].meta[field], metadata[field]);
+    const old = parser.parse(before[2]).children.filter(node => node.type === 'heading' && node.depth === 2).map(plain);
+    const current = parser.parse(docs[index].source.replace(/^---\n[\s\S]*?\n---\n/, '')).children
+      .filter(node => node.type === 'heading' && node.depth === 2).map(plain);
+    let previous = -1;
+    for (const heading of old) {
+      const next = current.indexOf(heading);
+      assert(next > previous, `Lost/reordered legacy topic: ${heading}`);
+      previous = next;
+    }
+    for (const match of baseline.matchAll(/\{\/\*\s*#([^*]+)\*\/\}/g)) assert(docs[index].source.includes(match[0]));
+  }
+  assert(docs[6].source.includes('--vfs-cache-mode full'));
+  assert(docs[6].source.includes('v1.76.0'));
+  assert(docs[7].source.includes('RELEASE.2025-10-15T17-29-55Z'));
+  assert(docs[7].source.includes('--range bytes=0-15'));
+  assert.deepEqual(docs[7].json[0].Parts.map(part => part.PartNumber), [1, 2]);
+  assert(docs[7].json[0].Parts.every(part => typeof part.ETag === 'string' && part.ETag.startsWith('"')));
+  assert(read(`${exampleRoot}requirements.txt`).includes('s3fs==2026.9.0'));
+  assert(read(`${exampleRoot}requirements.txt`).includes('fsspec==2026.9.0'));
+  for (const directory of ['clients', 'cloud-services']) assert.equal(JSON.parse(read(`${base}${directory}/_category_.json`)).collapsed, true);
+  if (option('--python')) {
+    const sources = docs.flatMap(doc => doc.code.filter(node => node.lang === 'python').map(node => node.value));
+    for (const file of ['read_window.py', 'test_read_window.py']) sources.push(read(exampleRoot + file));
+    execFileSync(path.resolve(option('--python')), ['-B', '-c', 'import ast,json,sys\nfor src in json.load(sys.stdin): ast.parse(src)\n'], {
+      input: JSON.stringify(sources), encoding: 'utf8', cwd: root, timeout: 10000,
+    });
+    const result = execFileSync(path.resolve(option('--python')), ['-B', '-c',
+      'import unittest,sys\nsuite=unittest.defaultTestLoader.discover("examples/storage/object-clients",pattern="test_read_window.py")\nassert suite.countTestCases()==12\nresult=unittest.TextTestRunner().run(suite)\nprint("executed",suite.countTestCases(),"offline cases")\nsys.exit(not result.wasSuccessful())\n'],
+    {encoding: 'utf8', cwd: root, timeout: 15000});
+    if (result.trim()) console.log(result.trim());
+    console.log('PASS Python AST and 12 BytesIO-backed unit tests; s3fs SDK and remote requests not executed.');
+  } else {
+    console.log('SKIP Python tests: supply --python /path/to/python.');
+  }
+  console.log('PASS in-memory Multipart fixture, response-manifest contracts, four arithmetic examples and two legacy article outlines; no object service contacted.');
 }
 console.log(`PASS ${docs.length} ${series} MDX articles, ${questions} explicit answers, ${jsonBlocks} JSON and ${yamlBlocks} YAML blocks; scoped example contracts.`);
 console.log(option('--bash') ? `PASS ${bashBlocks} Bash blocks parsed with bash -n; none executed.` : 'SKIP Bash syntax: supply --bash /path/to/bash.');

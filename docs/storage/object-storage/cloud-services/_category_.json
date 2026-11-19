@@ -1,0 +1,9 @@
+{
+  "label": "云对象存储",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "学习 Amazon S3 与华为 OBS 的服务边界、存储类别、权限、访问方式和生产运行特征。"
+  }
+}

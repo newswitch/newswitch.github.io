@@ -1,0 +1,9 @@
+{
+  "label": "对象存储客户端与接入选型",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "理解 Mountpoint、Python fsspec/s3fs，以及 API、批量传输、文件式挂载与缓存层的适用边界。"
+  }
+}
