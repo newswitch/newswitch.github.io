@@ -262,8 +262,18 @@ MinIO 集群为对象操作提供其实现定义的强一致行为，但完整�
 6. 使用无权限凭据访问另一个 Prefix；
 7. 上传模型分片和 Manifest，按 Checksum 验证发布。
 
+### 15.1 参考答案与验收结果
+
+1. 使用专用测试桶、唯一Key和受限身份，保存上传大小与可信摘要；独立下载后比较正文，而不是只看命令成功。
+2. HEAD应返回本对象的逻辑长度和元数据。ETag不普遍等于MD5，HEAD也未读取完整正文，不能单独证明内容正确。
+3. 固定不可变Key或VersionId，记录首尾都包含的范围，按正确偏移拼接，最后比较整文件大小与摘要；单个206不等于模型完整。
+4. 保存UploadId与Part真实响应。中断后应能列出对应Parts并继续完成或在明确放弃后中止，不把未完成上传当作完整对象。
+5. 记录实际VersionId和Delete Marker。普通GET变为不存在时，历史正文可能仍可按版本读取；恢复当前视图与重新上传旧正文是不同动作。
+6. 用实际业务身份测试目标和越界Prefix。预期只允许范围内操作，遇到403结合错误码分析，不因此升级为Root。
+7. 先上传数据并校验，再发布完整Manifest和受控入口；读取者固定revision，不在每个分片下载时重新追踪latest。缺文件或摘要错误必须阻止加载。
+
 ## 16. 参考资料
 
-- [MinIO Erasure Coding](https://min.io/docs/minio/linux/operations/concepts/erasure-coding.html)
+- [社区固定版本对象实现](https://github.com/minio/minio/tree/RELEASE.2025-10-15T17-29-55Z/cmd)
 - [Amazon S3 API Reference](https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html)
 - [S3 Multipart、Range 与大模型分发](../01-S3%20Multipart、Range与模型分发.md)

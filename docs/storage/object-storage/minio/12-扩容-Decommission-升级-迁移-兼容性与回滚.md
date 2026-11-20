@@ -21,11 +21,21 @@ MinIO 扩容通常通过增加新的 Server Pool 提供容量。已有对象不�
 
 扩容先在预发布按相同 Endpoint 表达式验证，生产一次只引入一个 Pool 并观察对象放置、性能和告警。
 
+### 1.1 新容量不等于旧数据已经重排
+
+新Pool参与放置和存量对象迁移是两件事。只看集群总容量增加，会漏掉原Pool仍接近满、旧热点没有迁移以及新旧介质速度不均。用管理视图核对各Pool、Set和Drive，不只画一个总容量Gauge。
+
+启动配置里的完整Endpoint集合属于集群拓扑。所有成员应采用一致来源，不能在一台机器上临时多填几条路径后让其余节点“自行发现”。保留变更前后配置摘要和实际成员视图。
+
 ## 2. Decommission
 
 Decommission 把目标 Pool 数据迁移到其余 Pool 后退出使用。它会产生大量读写和网络流量，目标集群必须有足够容量和 Quorum。过程中监控迁移进度、失败对象、前台 P99 和水位，不可在其他 Pool 故障时继续强推。
 
 完成后先验证所有对象和版本可读，再从配置、LB 和基础设施删除旧节点。不要把“命令完成”当作业务校验。
+
+如果待迁移有效正文20 TiB、其他Pool规划余量仅15 TiB，就不能因集群仍能写少量对象而启动退役。还要计入目标冗余、历史版本、锁定数据和迁移期间增长。Decommission不是普通删除命令，不应通过强行移除启动参数跳过数据搬迁。
+
+迁移暂停、失败或中断后的恢复参数按目标mc/Server版本核对。保持旧介质和元数据完整，不把“待退役”当成可以马上格式化的证明。
 
 ## 3. 升级
 
@@ -37,17 +47,72 @@ Decommission 把目标 Pool 数据迁移到其余 Pool 后退出使用。它会�
 6. 每步检查 Quorum、S3 API、版本、KMS 和复制；
 7. 明确何时数据格式或配置变化使二进制回滚不再安全。
 
+### 3.1 三种回滚不是同一种能力
+
+| 回滚 | 所需前提 |
+| --- | --- |
+| 配置回滚 | 旧配置与当前软件/状态仍兼容 |
+| 二进制回退 | 官方明确支持，磁盘和元数据格式未越过不可逆边界 |
+| 数据恢复或反向迁移 | 有独立、可验证恢复点和新写入处理方案 |
+
+保存旧镜像只能提供旧程序，不会把已经改变的数据格式变回去。社区仓库归档后，还需评估漏洞修复与支持来源；不能把“升级到最新标签”当作持续维护方案。
+
 ## 4. 跨产品/集群迁移
 
 用 S3 API 工具或应用重放迁移，保留 Version、Metadata、Tag、Retention、Checksum 和 Policy 的语义差异清单。`mc mirror` 默认行为和删除选项必须在测试 Bucket 验证。
 
 ```text
-全量复制 → 增量同步 → Checksum/数量/版本校验
-→ 只读窗口 → 切换客户端 → 观察 → 停旧写 → 回滚窗口
+全量复制 → 持续增量及校验
+→ 冻结并隔离源写入 → 最终增量与完整校验
+→ 切换客户端 → 开放目标写入 → 观察与保留恢复窗口
 ```
+
+### 4.1 跨产品需要语义映射
+
+| 源状态 | 目标验证 |
+| --- | --- |
+| 当前Key/正文 | 数量、长度与可信摘要 |
+| 旧版本 | 是否迁移，源版本到目标版本的映射 |
+| Delete Marker | 是否保留删除视图及历史恢复能力 |
+| Metadata/Tags | 字段、编码、API权限与逐项结果 |
+| Retention/Legal Hold | 目标能力、到期语义和不可逆保留 |
+| SSE/KMS | 源端可解密、目标重加密、目标密钥可恢复 |
+| Policy/ACL | 身份及资源规则重新适配，而非直接拷JSON |
+
+普通API拷贝常产生目标自己的VersionId，不能要求目标自动沿用源端不透明版本号。客户端固定旧VersionId的引用也需要迁移。列举当前对象数一致，无法证明历史与删除状态一致。
+
+### 4.2 用小清单定义验收
+
+先迁移包含普通对象、Multipart、非ASCII Key、多个历史版本、删除标记和加密对象的小样本。清单至少包含源Bucket/Key/Version、大小、可信摘要、目标身份和校验结果，不保存正文密钥。
+
+```json
+{"source":{"key":"models/demo/config.json","version":"source-id"},"target":{"key":"models/demo/config.json","version":"target-id"},"bytes":33,"verification":"pending"}
+```
+
+这是应用审计记录结构，不是S3请求。先明确字段支持与错误，再扩大数据量。不能用 `mc mirror --remove` 在迁移第一步自动删除目标多余对象。
+
+目标开始接收新写入后，简单把Endpoint切回源端会丢掉这些新写。恢复窗口需要限制新写、保留增量日志或反向迁移，明确哪一端为权威；DNS缓存和连接池也影响实际切换时刻。
 
 ## 5. 验收
 
 随机与全量 Manifest 校验结合，覆盖大对象、Multipart、历史版本、Delete Marker、Object Lock、SSE/KMS 和不同 Prefix。客户端必须验证 Endpoint、证书、Region/签名和重试行为。
 
-参考：[MinIO Decommissioning](https://min.io/docs/minio/linux/operations/install-deploy-manage/decommission-server-pool.html)、[Upgrade](https://min.io/docs/minio/linux/operations/install-deploy-manage/upgrade-minio-deployment.html)。
+## 6. 练习与答案
+
+### 6.1 新Pool加入是否表示旧Pool已释放空间
+
+答案：不表示。容量加入、对象放置与存量迁移分别观察；原Pool可能仍满或存在热点。
+
+### 6.2 保存旧镜像能否保证回滚
+
+答案：不能。还要确认格式兼容、配置变化和新写入状态，必要时执行数据恢复而非直接替换程序。
+
+### 6.3 当前对象数量一致是否证明迁移完整
+
+答案：不能。历史版本、标记、元数据、保留、权限、密钥和内容摘要都需独立校验。
+
+### 6.4 目标开放写入后为什么不能直接切回
+
+答案：新写入可能只在目标，需保留和同步差异、隔离双写并确定权威，单纯改DNS不会自动搬回数据。
+
+参考：[固定版本Pool管理源码](https://github.com/minio/minio/blob/RELEASE.2025-10-15T17-29-55Z/cmd/erasure-server-pool-decom.go)、[S3版本](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html)。

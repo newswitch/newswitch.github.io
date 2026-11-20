@@ -51,6 +51,38 @@ chmod 600 /path/to/private/obsutil-lab.conf
 
 目录需要预先由当前用户管理。不要把 AK、SK 或 Token 放在 `-i/-k/-t` 命令参数里，避免进入历史和进程列表。临时凭证必须包含对应 Token，并有明确的更新与重载流程。命令定义见[配置文件更新](https://support.huaweicloud.com/utiltg-obs/obs_11_0023.html)。
 
+### 3.1 创建专用对象桶
+
+先由管理员确认账号、费用、桶类型和区域。本例采用cn-north-4，管理配置文件指向 `https://obs.cn-north-4.myhuaweicloud.com`；不是并行文件系统，不指定 `-fs`。
+
+在独立、已授权的实验环境创建新桶：
+
+```bash
+BUCKET="obs-learning-$(date -u +%Y%m%d%H%M%S)-$$"
+obsutil mb "obs://$BUCKET" -location=cn-north-4 -acl=private \
+  -config=/path/to/private/obsutil-admin.conf
+```
+
+这里管理配置具有创建能力，不是后续模型读取身份。桶名冲突就换新名，不能连接错误账号后继续操作。地域和Endpoint必须一致，具体命令见[创建桶](https://support.huaweicloud.com/intl/zh-cn/utiltg-obs/obs_11_0008.html)。也可以在控制台选择对象桶、标准存储、私有访问和所需版本控制，再记录实际区域信息，见[桶创建说明](https://support.huaweicloud.com/usermanual-obs/zh-cn_topic_0045829088.html)。
+
+### 3.2 准备读取身份并验证正文
+
+管理员为独立IAM用户或受支持的临时身份授予目标桶/前缀的列举、读取能力，不授予对象写删和策略管理。IAM授权、桶策略与ACL的作用不同；“桶私有”不等于指定业务身份自动可读，也不要把AWS策略原样绑定。见[OBS权限方式](https://support.huaweicloud.com/perms-cfg-obs/obs_40_0001.html)。
+
+用前述交互式config方法分别准备管理和读取配置，配置文件路径不同。先以管理身份上传新探针，再用受限身份读取：
+
+```bash
+LOCAL_DIR="$(mktemp -d)"
+printf 'ready\n' > "$LOCAL_DIR/ready.txt"
+obsutil cp "$LOCAL_DIR/ready.txt" "obs://$BUCKET/models/demo/r1/ready.txt" \
+  -config=/path/to/private/obsutil-admin.conf
+obsutil cp "obs://$BUCKET/models/demo/r1/ready.txt" "$LOCAL_DIR/download.txt" \
+  -config=/path/to/private/obsutil-reader.conf
+cmp "$LOCAL_DIR/ready.txt" "$LOCAL_DIR/download.txt"
+```
+
+相同正文应为6字节，cmp返回0；stat元数据成功不能替代此比较。再按测试Key验证拒绝越界和未授权写入，不能只以管理员成功代替业务验收。管理与读取配置可能含AK/SK/Token，均应受限存放，不能提交或打印。
+
 ## 4. 限定范围列举并下载一个对象
 
 以下以自己的测试桶及 `models/demo/r1/config.json` 为例，配置文件已指向正确 Endpoint：
@@ -112,6 +144,12 @@ OBS 提供标准、低频、归档、深度归档等存储类别。类别影响�
 5. 资源：并发、客户端内存、本地断点与临时文件空间、远端限流及账单工作量。
 
 obsutil 的断点记录和本地结果清单同样需要空间与受限权限。远端容量充足，不表示本地临时下载不会写满磁盘。
+
+### 8.1 一个常见的恢复状态问题
+
+如果归档对象恢复请求已受理，但下载仍失败，先核对Key、版本、恢复是否完成、临时可读期限和身份；不要立刻把桶改为公开或不断提交恢复。待所有模型分片都可读，再校验并发布本地版本。
+
+版本、生命周期与复制应分别查看实际配置和状态。错误Lifecycle可能让旧分片过期，目标站规则存在也不证明历史对象已经复制。恢复结果要以指定文件集合及摘要为准，不只检查一个桶的属性页。
 
 ## 9. 练习与答案
 

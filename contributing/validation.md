@@ -67,6 +67,7 @@ node scripts/checks/verify-temporal-backstage-articles.mjs
 node scripts/checks/verify-object-storage-foundation-articles.mjs --bash /path/to/bash
 node scripts/checks/verify-object-storage-foundation-articles.mjs --series s3fs --bash /path/to/bash --python /path/to/python
 node scripts/checks/verify-object-storage-foundation-articles.mjs --series completion --bash /path/to/bash --python /path/to/python
+node scripts/checks/verify-object-storage-foundation-articles.mjs --series engineering --bash /path/to/bash --python /path/to/python
 npm run check:datax
 npm run check:integration
 ```
@@ -92,6 +93,8 @@ npm run check:integration
 该脚本的 `--series s3fs` 检查 4 篇 S3FS 文章、21 个答案、3 张图、正文代码及配套 systemd/Dockerfile/Pod/启动脚本。`--python` 仅解析写入探针 AST 与 17 字节正文，不执行探针；`--check-upstream` 可只读核对 v1.97 上游手册中的参数名及构建依赖。Bash 检查不执行挂载、卸载、Docker 或 kubectl；静态配置契约不等于 `systemd-analyze verify`、镜像构建、Kubernetes Schema/准入或真实对象服务验收。
 
 `--series completion` 检查剩余 6 篇新增与 2 篇深化的 8 页 MDX、41 个答案、6 张图，保留 rclone/MinIO 的旧章节顺序与导航字段。内存中核对 Multipart 正文、完成清单、Range 和算例；`--python` 解析代码并运行 12 个 BytesIO 替身测试，不导入 s3fs SDK，不联系对象服务。Bash 只做语法检查；可复用前述浏览器参数渲染图表。不执行示例的上传、下载、删除、挂载、云配置或真实兼容性验收。
+
+`--series engineering` 检查 13 篇深化与 2 篇新增正文的 15 页 MDX、67 个解答、3 张图，并保留旧章节和导航字段；额外编译两篇 MinIO 路线/对象路径补答。核对 Compose 四服务八卷、独立 Operator 镜像入口、Tenant/PVC/安全上下文、systemd 挂载依赖、策略、事件结构和容量/Quorum算例。`--python` 运行 23 项标准库离线测试，不导入 Boto3：内存正文替身写入私有临时文件以验证校验与不覆盖发布，事件仅验证解码、身份与同Key序号。Bash只解析语法，图表可使用上述浏览器参数；不执行 Go/Docker 构建、systemd/Kubernetes验收、S3读写、OIDC/KMS、复制或事件队列实验，也不把静态契约称为真实部署兼容认证。
 
 `check:datax` 需要 Python 3.10+，检查 14 页 MDX、56 个练习答案、任务 JSON/YAML、固定数据算术，并运行配置渲染与离线数据契约测试；不启动 DataX JVM、数据库、对象存储或 Kubernetes。可用 `node scripts/checks/verify-datax-articles.mjs --python /path/to/python` 指定解释器。
 

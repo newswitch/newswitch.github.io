@@ -29,7 +29,7 @@ const option = name => {
   return process.argv[index + 1];
 };
 const series = option('--series') ?? 'foundations';
-assert(['foundations', 's3fs', 'completion'].includes(series), 'Unknown article series.');
+assert(['foundations', 's3fs', 'completion', 'engineering'].includes(series), 'Unknown article series.');
 const s3fsSpecs = [
   {file: 's3fs-fuse/01-s3fs-fuse原理与文件访问路径.md', questions: 4, diagrams: 1},
   {file: 's3fs-fuse/02-s3fs-fuse安装挂载与配置.md', questions: 5, diagrams: 0},
@@ -46,7 +46,24 @@ const completionSpecs = [
   {file: '../commands/06-object-storage/27-rclone命令详解.md', questions: 6, diagrams: 1},
   {file: 'minio/03-S3-Put-Get-List-Delete-Multipart-Range-ETag与Checksum.md', questions: 6, diagrams: 1},
 ];
-const specs = {foundations: foundationSpecs, s3fs: s3fsSpecs, completion: completionSpecs}[series];
+const engineeringSpecs = [
+  {file: 'minio/02-Bucket-Object-Erasure-Set-Quorum与Healing.md', legacyAnswers: 7, diagrams: 0},
+  {file: 'minio/04-Versioning-Delete-Marker-Lifecycle-Retention与Object-Lock.md', questions: 4, diagrams: 0},
+  {file: 'minio/05-Erasure-Coding-Bit-Rot-Drive-Node故障与后台Healing.md', questions: 4, diagrams: 1},
+  {file: 'minio/06-单机实验-Docker-分布式Server-Pool-systemd与负载均衡部署.md', questions: 4, diagrams: 0},
+  {file: 'minio/07-Kubernetes-Operator-Tenant-PVC-拓扑-调度与故障域.md', questions: 4, diagrams: 0},
+  {file: 'minio/08-Access-Key-Policy-STS-OIDC-TLS-KMS-SSE与审计.md', questions: 4, diagrams: 0},
+  {file: 'minio/09-Bucket-Replication-Site-Replication-跨集群灾备与一致性边界.md', questions: 4, diagrams: 0},
+  {file: 'minio/10-mc-Admin-API-Prometheus-日志-告警与日常运维.md', questions: 4, diagrams: 0},
+  {file: 'minio/11-容量-Small-Object-Multipart-并发-网卡-磁盘与性能测试.md', questions: 4, diagrams: 0},
+  {file: 'minio/12-扩容-Decommission-升级-迁移-兼容性与回滚.md', questions: 4, diagrams: 0},
+  {file: 'minio/13-MinIO生产故障Runbook-磁盘-节点-Quorum-Healing-证书与容量.md', questions: 4, diagrams: 0},
+  {file: 'cloud-services/01-Amazon-S3架构存储类别与访问.md', questions: 5, diagrams: 0},
+  {file: 'cloud-services/02-华为OBS架构接入与兼容性.md', questions: 5, diagrams: 0},
+  {file: 'clients/04-Python-Boto3与S3-SDK工程化访问.md', questions: 5, diagrams: 1},
+  {file: '07-对象存储事件通知与异步处理.md', questions: 5, diagrams: 1},
+];
+const specs = {foundations: foundationSpecs, s3fs: s3fsSpecs, completion: completionSpecs, engineering: engineeringSpecs}[series];
 const read = file => fs.readFileSync(path.join(root, file), 'utf8').replaceAll('\r\n', '\n');
 const parser = unified().use(remarkParse);
 const plain = node => node.value ?? node.children?.map(plain).join('') ?? '';
@@ -68,10 +85,16 @@ for (const spec of specs) {
   const nodes = parser.parse(match[2]).children;
   assert.equal(nodes.filter(node => node.type === 'heading' && node.depth === 1).length, 1);
   assert.equal(plain(nodes.find(node => node.type === 'heading' && node.depth === 1)), meta.title);
-  const start = nodes.findIndex(node => node.type === 'heading' && node.depth === 2 && /练习与答案$/.test(plain(node)));
-  const end = nodes.findIndex((node, index) => index > start && node.type === 'heading' && node.depth <= 2);
+  const start = nodes.findIndex(node => node.type === 'heading' && (spec.legacyAnswers ? /实验参考答案$/.test(plain(node)) : node.depth === 2 && /练习与答案$/.test(plain(node))));
+  const next = nodes.findIndex((node, index) => index > start && node.type === 'heading' && node.depth <= 2);
+  const end = next < 0 ? nodes.length : next;
   assert(start >= 0 && end > start, `Missing answer section: ${file}`);
   const section = nodes.slice(start + 1, end);
+  if (spec.legacyAnswers) {
+    const list = section.find(node => node.type === 'list' && node.ordered);
+    assert.equal(list?.children.length, spec.legacyAnswers, `Legacy answers: ${file}`);
+    questions += spec.legacyAnswers;
+  } else {
   const positions = section.flatMap((node, index) => node.type === 'heading' && node.depth === 3 ? [index] : []);
   assert.equal(positions.length, spec.questions, `Question count: ${file}`);
   for (const [index, position] of positions.entries()) {
@@ -80,6 +103,7 @@ for (const spec of specs) {
       `Missing explicit answer: ${plain(section[position])}`);
   }
   questions += positions.length;
+  }
   const code = nodes.filter(node => node.type === 'code');
   assert.equal(code.filter(node => node.lang === 'mermaid').length, spec.diagrams);
   const json = code.filter(node => node.lang === 'json').map(node => JSON.parse(node.value));
@@ -217,7 +241,7 @@ if (series === 'foundations') {
     assert(configure.includes('fuse3 >= ${min_fuse_version}'));
     console.log(`PASS ${options.length} example S3FS option names and FUSE 3 build dependency against v1.97 source; not a runtime test.`);
   }
-} else {
+} else if (series === 'completion') {
   const exampleRoot = 'examples/storage/object-clients/';
   const {makeFixture, makeCompletion} = await import(new URL('../../examples/storage/object-clients/multipart_fixture.mjs', import.meta.url));
   const fixture = makeFixture();
@@ -276,6 +300,83 @@ if (series === 'foundations') {
     console.log('SKIP Python tests: supply --python /path/to/python.');
   }
   console.log('PASS in-memory Multipart fixture, response-manifest contracts, four arithmetic examples and two legacy article outlines; no object service contacted.');
+} else {
+  for (const doc of docs.slice(0, 13)) {
+    const relative = path.posix.normalize(doc.file);
+    const oldSource = execFileSync('git', ['show', `bbf73a2:${relative}`], {encoding:'utf8', cwd:root}).replaceAll('\r\n','\n');
+    const oldMatch = oldSource.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    const oldMeta = yaml.load(oldMatch[1]);
+    for (const field of ['title','sidebar_label','sidebar_position']) assert.equal(doc.meta[field],oldMeta[field]);
+    const headings = text => parser.parse(text).children.filter(n=>n.type==='heading'&&n.depth===2).map(plain);
+    let last = -1;
+    const current = headings(doc.source.replace(/^---\n[\s\S]*?\n---\n/,''));
+    for (const heading of headings(oldMatch[2])) {
+      const index = current.indexOf(heading);
+      assert(index > last, `Lost legacy topic: ${relative} ${heading}`);
+      last = index;
+    }
+  }
+  const compose = yaml.load(read('examples/storage/minio-lab/compose.yaml'));
+  assert.equal(Object.keys(compose.services).length,4);
+  assert.equal(Object.keys(compose.volumes).length,8);
+  for(const service of Object.values(compose.services)) {
+    assert.equal(service.command[1],'http://minio{1...4}:9000/data{1...2}');
+    assert.equal(service.volumes.length,2);
+    assert.deepEqual(service.secrets,['root_user','root_password']);
+  }
+  assert(compose.services.minio1.ports.every(port=>port.startsWith('127.0.0.1:')));
+  const tenant=yaml.load(read('examples/storage/minio-lab/tenant.yaml'));
+  const pool=tenant.spec.pools[0];
+  assert.equal(pool.servers*pool.volumesPerServer,8);
+  assert.equal(pool.volumeClaimTemplate.spec.resources.requests.storage,'10Gi');
+  assert.equal(tenant.spec.configuration.name,'storage-configuration');
+  assert.equal(tenant.spec.requestAutoCert,false);
+  assert(tenant.spec.image.endsWith('-operator'));
+  assert.equal(pool.securityContext.fsGroup,1000);
+  const operatorImage=read('examples/storage/minio-lab/Dockerfile.operator');
+  assert(operatorImage.includes('MINIO_CONFIG_ENV_FILE=config.env'));
+  assert(operatorImage.includes('ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]'));
+  assert(!operatorImage.includes('lab-entrypoint'));
+  assert(pool.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution.length===1);
+  const unit=read('examples/storage/minio-lab/minio.service');
+  assert.equal((unit.match(/^ExecStartPre=.*mountpoint/gm)||[]).length,2);
+  assert(unit.includes('RequiresMountsFor=/srv/minio/disk1 /srv/minio/disk2'));
+  const launcher=read('examples/storage/minio-lab/entrypoint.sh');
+  assert(launcher.includes('exec setpriv --reuid=10001 --regid=10001 --clear-groups'));
+  assert(!fs.readFileSync(path.join(root,'examples/storage/minio-lab/entrypoint.sh'),'utf8').includes('\r'));
+  if(option('--bash')) execFileSync(path.resolve(option('--bash')),['-n'],{input:launcher,encoding:'utf8',timeout:10000});
+  const policy=docs[5].json[0];
+  assert.deepEqual(policy.Statement.map(s=>s.Action),[['s3:ListBucket'],['s3:GetObject']]);
+  const notification=docs[14].json[0].QueueConfigurations[0];
+  assert.deepEqual(notification.Events,['s3:ObjectCreated:*']);
+  assert.equal(notification.Filter.Key.FilterRules[0].Value,'input/');
+  assert(!notification.Filter.Key.FilterRules.some(rule=>rule.Value.includes('*')));
+  assert(read('docs/storage/commands/06-object-storage/25-aws-s3api命令详解.md').includes('--object-attributes ETag Checksum ObjectSize StorageClass'));
+  assert(read('docs/storage/ceph/04-client-usage/14-RGW对象存储实战.md').includes('授权 RGW Admin Ops REST API'));
+  for(const name of ['00-MinIO从零到精通学习路线.md','01-MinIO解决什么问题与一个对象的完整读写路径.md']) {
+    const text=read(base+'minio/'+name);
+    assert(/实验结果怎样判断|参考答案与验收结果/.test(text));
+    await compile(text.replace(/^---\n[\s\S]*?\n---\n/,''));
+  }
+  for(const [data, parity] of [[8,8],[12,4]]) {
+    const write=data+(data===parity?1:0);
+    assert.equal(write,data===8?9:12);
+  }
+  assert.equal(16*10*8/16*0.7,56);
+  assert.equal(56-(30+12+2),12);
+  assert(Math.abs(6*1024*1024/150/3600-11.6508444444)<1e-8);
+  assert.equal(1024**4/4096,268435456);
+  assert.equal(2000*0.025,50);
+  assert.equal(16*64,1024);
+  if(option('--python')) {
+    const files=['sdk_read.py','event_order.py','test_object_engineering.py'];
+    const snippets=docs.flatMap(d=>d.code.filter(n=>n.lang==='python').map(n=>n.value));
+    for(const file of files) snippets.push(read('examples/storage/object-engineering/'+file));
+    execFileSync(path.resolve(option('--python')),['-X','utf8','-B','-c','import ast,json,sys\nfor src in json.load(sys.stdin): ast.parse(src)\n'],{input:JSON.stringify(snippets),encoding:'utf8',cwd:root,timeout:10000});
+    const result=execFileSync(path.resolve(option('--python')),['-B','-c','import unittest,sys\nsuite=unittest.defaultTestLoader.discover("examples/storage/object-engineering",pattern="test_object_engineering.py")\nassert suite.countTestCases()==23\nr=unittest.TextTestRunner().run(suite)\nprint("executed",suite.countTestCases(),"offline cases")\nsys.exit(not r.wasSuccessful())\n'],{encoding:'utf8',cwd:root,timeout:15000});
+    console.log(result.trim());
+  } else console.log('SKIP Python engineering tests: supply --python.');
+  console.log('PASS preserved 13 legacy outlines, Compose/Tenant/service contracts, policies, event schema and capacity/quorum arithmetic. No deployment or remote storage operation executed.');
 }
 console.log(`PASS ${docs.length} ${series} MDX articles, ${questions} explicit answers, ${jsonBlocks} JSON and ${yamlBlocks} YAML blocks; scoped example contracts.`);
 console.log(option('--bash') ? `PASS ${bashBlocks} Bash blocks parsed with bash -n; none executed.` : 'SKIP Bash syntax: supply --bash /path/to/bash.');

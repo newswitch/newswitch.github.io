@@ -1,0 +1,52 @@
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: object-lab
+  namespace: object-storage-lab
+spec:
+  image: registry.example.com/storage/minio:source-20251015-operator
+  configuration:
+    name: storage-configuration
+  requestAutoCert: false
+  pools:
+    - name: pool-0
+      servers: 4
+      volumesPerServer: 2
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      containerSecurityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: [ALL]
+        seccompProfile:
+          type: RuntimeDefault
+      nodeSelector:
+        storage.example.com/object-lab: "true"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  v1.min.io/tenant: object-lab
+              topologyKey: kubernetes.io/hostname
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          memory: 4Gi
+      volumeClaimTemplate:
+        metadata:
+          name: data
+        spec:
+          storageClassName: object-lab-retain
+          accessModes: [ReadWriteOnce]
+          resources:
+            requests:
+              storage: 10Gi

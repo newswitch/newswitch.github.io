@@ -56,10 +56,12 @@ aws s3api head-bucket --bucket "$BUCKET"
 aws s3api get-bucket-location --bucket "$BUCKET"
 aws s3api head-object --bucket "$BUCKET" --key "$KEY"
 aws s3api get-object-attributes --bucket "$BUCKET" --key "$KEY" \
-  --object-attributes ETag,Checksum,ObjectSize,StorageClass
+  --object-attributes ETag Checksum ObjectSize StorageClass
 ```
 
 `head-*` 成功证明 endpoint/auth/resource 条件满足；403 可能故意不区分不存在与无权限。`head-object` 不下载 body，适合模型制品存在性和 metadata 校验。
+
+`--object-attributes` 是字符串列表，多个枚举值用空格分开，不能拼成一个逗号字符串。它还需要对应 API 权限及后端支持；HEAD 成功不保证这个扩展查询也成功。参见[参数定义](https://docs.aws.amazon.com/cli/latest/reference/s3api/get-object-attributes.html)。
 
 ## 4. 列表与分页
 
@@ -127,6 +129,8 @@ aws --endpoint-url https://rgw.example.com s3api head-bucket --bucket models
 aws sts get-caller-identity
 aws s3api head-bucket --bucket "$BUCKET" --debug 2>debug.log
 ```
+
+第一条仅用于 AWS 身份体系；第三方 S3 服务不一定实现 AWS STS。使用兼容 Endpoint 时应先确认客户端实际凭证来源，不把 AWS STS 查询作为通用健康检查。`debug.log` 可能包含敏感上下文，需要受限存放、脱敏并按保留策略清理。
 
 - 301/AuthorizationHeaderMalformed：region/endpoint/signing mismatch。
 - SignatureDoesNotMatch：时钟、canonical host/path、代理修改、secret/region。

@@ -411,7 +411,9 @@ aws --profile ceph-rgw \
 | ACL | 较传统的对象或 Bucket 授权机制 |
 | Bucket Policy | 使用 JSON 描述允许或拒绝的访问 |
 | IAM Policy/Role | 更细粒度的身份授权能力，支持程度应按 Ceph 版本验证 |
-| Admin Caps | `radosgw-admin` 管理能力，不等同于普通 S3 权限 |
+| Admin Caps | 授权 RGW Admin Ops REST API 的管理操作，不等同于普通 S3 权限 |
+
+Admin Caps 加在 RGW 用户上，用于其通过 HTTP 调用 Admin Ops API；本地 `radosgw-admin` 则使用 Ceph 配置、身份和访问后端所需的凭证。能够给用户添加 `users=read`，不表示把本地管理机的 CLI 执行权限交给了该用户。三者应分别管理：S3 数据权限、Admin Ops 管理权限、管理机与 Ceph 后端权限。参见[Ceph 管理能力说明](https://docs.ceph.com/en/squid/radosgw/admin/#add-or-remove-admin-capabilities)。
 
 最小权限原则应该落实为：
 

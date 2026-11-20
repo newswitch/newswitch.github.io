@@ -15,13 +15,13 @@ tags: [MinIO, mc, Admin API, Prometheus, 运维]
 ## 1. Alias 与凭据
 
 ```bash
-mc alias set prod https://s3.example.com "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+mc --version
 mc admin info prod
 mc ls prod/models
 mc stat --versions prod/models/qwen/model.bin
 ```
 
-凭据来自 Secret 注入，不写入脚本、历史或 CI 日志。为只读巡检创建独立 Policy，管理命令使用短期授权。
+以上假定 `prod` Alias 已由受控配置流程准备。不要在命令行传入真实密钥；把密钥变量放进 `alias set` 位置参数后，Shell 仍会将它展开到进程参数。配置文件、环境、导出和日志都需要独立保护。为只读巡检创建独立 Policy，管理命令使用单独的受限管理身份。
 
 ## 2. 命令分级
 
@@ -60,4 +60,62 @@ Prometheus 抓取使用独立监控身份和 TLS。高优先级告警包括失�
 - Lifecycle/Object Lock/Policy 漂移；
 - 未完成 Multipart 和历史版本成本。
 
-参考：[MinIO Client](https://min.io/docs/minio/linux/reference/minio-mc.html)、[Monitoring](https://min.io/docs/minio/linux/operations/monitoring.html)。
+### 5.1 一次限定范围的巡检
+
+先确认Alias实际指向、mc与服务版本，输出放在私有目录，不导出密钥：
+
+```bash
+umask 077
+CHECK_DIR="$(mktemp -d)"
+mc admin info prod > "$CHECK_DIR/admin-info.txt"
+mc version info prod/models > "$CHECK_DIR/versioning.txt"
+mc stat prod/models/demo/r1/config.json > "$CHECK_DIR/object-stat.txt"
+```
+
+mc与管理扩展是否匹配要单独确认，S3兼容服务未必支持admin命令。`admin info`是部署视图，`stat`只验证一个对象元数据；巡检中不自动执行heal、mirror、清理或策略修改。
+
+预期观察应形成独立结论：成员在线是否齐全、Set故障余量是否满足、每盘水位是否安全、所需对象是否可读。某个对象stat成功不能替代所有版本和正文校验。
+
+### 5.2 如何关联一个慢请求
+
+假设客户端的一次GET使用2秒建立连接，收到首字节只需0.1秒，但正文传输花80秒。仅看服务TTFB可能正常，用户仍会感觉慢。依次对齐：
+
+1. 业务download-id及固定revision，拆分DNS、连接、首字节、正文与本地写入。
+2. SDK每次尝试的Request ID、响应码和重试；同一业务可能对应多个HTTP请求。
+3. 入口日志对应的后端、状态、首字节及完整耗时。
+4. MinIO API指标、Drive延迟及Healing/复制状态。
+5. 客户端网卡、CPU、缓存盘写入和校验耗时。
+
+下面是自定义脱敏记录示意，不是MinIO原生日志Schema：
+
+```json
+{"download_id":"lab-42","api":"GetObject","attempt":2,"request_id":"redacted","bytes":1048576,"total_ms":850,"checksum":"ok"}
+```
+
+total_ms的起止必须有定义。服务端日志中的成功不证明客户端完成校验；4xx也可能是预期的不存在或条件冲突，不应全部计入服务内部故障。
+
+### 5.3 监控与巡检如何互相补足
+
+长期指标发现趋势，限定查询解释具体资源，业务探针证明用户路径。采集应分别覆盖节点API、每盘与集群汇总，避免把每个节点重复返回的集群离线盘数量相加。具体版本的名称、类型和PromQL沿用第14篇，不在这里重复维护第二套指标表。
+
+管理trace可能产生大量输出并暴露Key、请求头或认证上下文。需要临时授权、范围/时间上限、脱敏和退出；不要为了诊断一分钟的请求，把全量详细trace长期接入普通业务日志。
+
+## 6. 练习与答案
+
+### 6.1 Secret变量传给alias是否消除进程参数泄露
+
+答案：没有。Shell会展开变量，位置参数仍可包含真实值。配置、环境、导出和诊断日志都需要独立保护。
+
+### 6.2 TTFB正常能否排除下载故障
+
+答案：不能。正文传输、本地写盘、校验和重试可能消耗大部分时间，要看完整工作量。
+
+### 6.3 四节点各报两盘离线能否相加为八盘
+
+答案：如果它们都是同一集群汇总视图就不能。先确认指标粒度、唯一设备身份和数据新鲜度，再去重聚合。
+
+### 6.4 admin info成功是否说明某个模型完整
+
+答案：不是。它描述集群管理状态，模型还需固定Manifest、对象集合、版本和正文校验。
+
+参考：[社区mc固定版本](https://github.com/minio/mc/tree/RELEASE.2025-08-13T08-35-41Z)、[监控指标原理](./14-MinIO核心监控指标采集与告警.md)。

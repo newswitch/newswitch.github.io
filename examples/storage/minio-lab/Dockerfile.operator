@@ -1,0 +1,15 @@
+FROM ubuntu:24.04
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 1000 minio && useradd --uid 1000 --gid 1000 --no-create-home minio
+COPY minio /usr/bin/minio
+COPY docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
+COPY LICENSE CREDITS /licenses/
+RUN chmod 0755 /usr/bin/minio /usr/bin/docker-entrypoint.sh
+ENV MINIO_ROOT_USER_FILE=access_key \
+    MINIO_ROOT_PASSWORD_FILE=secret_key \
+    MINIO_CONFIG_ENV_FILE=config.env \
+    HOME=/tmp
+USER 1000:1000
+ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
+CMD ["minio"]

@@ -54,13 +54,52 @@ Amazon S3 是托管对象存储服务。用户管理桶、对象、权限及数�
 
 对模型读取身份，通常应明确允许哪个桶、哪个前缀、当前版本还是历史版本，以及是否需要列举。不要为了修复一次 403 就公开整个桶。
 
+### 4.1 从没有桶到第一次读写
+
+先按组织批准的SSO/角色或交互式配置准备管理Profile `object-lab-admin`，确认账号、地域与预算。业务读取使用另一个Profile `object-lab`；创建资源的能力不能直接授给所有模型Pod。
+
+下面只创建全新普通测试桶，以us-west-2为例，会产生资源与请求费用，不得替换成已有生产桶：
+
+```bash
+export AWS_PAGER=''
+export AWS_REGION=us-west-2
+BUCKET="object-learning-$(date -u +%Y%m%d%H%M%S)-$$"
+aws sts get-caller-identity --profile object-lab-admin
+aws s3api create-bucket --profile object-lab-admin \
+  --bucket "$BUCKET" --region us-west-2 \
+  --create-bucket-configuration LocationConstraint=us-west-2
+aws s3api put-public-access-block --profile object-lab-admin --bucket "$BUCKET" \
+  --public-access-block-configuration \
+  BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+```
+
+us-east-1的普通桶有不同LocationConstraint规则，不能只替换地域字符串。名称冲突应换新名，不扩大权限解决。参见[创建桶API](https://docs.aws.amazon.com/cli/latest/reference/s3api/create-bucket.html)。
+
+按[受限身份策略](../fundamentals/03-S3访问寻址签名与授权.md)替换真实桶ARN，由管理员绑定到测试读取身份，仅授予所需Prefix的列举和GetObject。AWS身份策略、角色与Bucket Policy属于具体权限体系，不是所有S3服务共享的配置。
+
+用管理身份上传6字节探针，再换受限身份读取：
+
+```bash
+LOCAL_DIR="$(mktemp -d)"
+printf 'ready\n' > "$LOCAL_DIR/ready.txt"
+aws s3api put-object --profile object-lab-admin --bucket "$BUCKET" \
+  --key models/demo/r1/ready.txt --body "$LOCAL_DIR/ready.txt"
+aws s3api get-object --profile object-lab --bucket "$BUCKET" \
+  --key models/demo/r1/ready.txt "$LOCAL_DIR/download.txt"
+cmp "$LOCAL_DIR/ready.txt" "$LOCAL_DIR/download.txt"
+```
+
+cmp相同应退出0。还需在全新专用测试Key上验证读取身份的未授权PUT被拒绝；若意外成功就停止分析授权，不对生产对象尝试删除。Profile名称不会自动限制权限，须确认实际调用者与策略。
+
+这个闭环只证明资源、身份和正文访问成立，版本、复制及归档恢复需独立验收。不默认删桶；普通删除也未必清除历史版本及未完成上传费用。
+
 ## 5. 用只读命令确认资源状态
 
 以下需要自己管理的测试桶和受限 AWS 身份，地域应替换为实际值；不创建桶、不修改策略、不删除对象。
 
 ```bash
 export AWS_PROFILE=object-lab
-export AWS_REGION=us-east-1
+export AWS_REGION=us-west-2
 export AWS_PAGER=''
 BUCKET='your-owned-test-bucket'
 
@@ -106,6 +145,12 @@ Versioning 保留对象历史，生命周期管理不同版本的保留与过期
 | 审计 | 谁对哪些资源执行了什么操作 |
 
 不要假定所有请求指标和对象级审计默认都已开启。CloudTrail 的对象数据事件需要单独核对配置，并考虑高请求量下的日志成本。参见[请求指标](https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-configurations.html)与[CloudTrail数据事件](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-cloudtrail-logging-for-s3.html)。
+
+### 8.1 归档恢复怎样验收
+
+对需要恢复的归档对象，先查询准确Key/版本和存储状态，再发起该类别支持的恢复请求，观察是否仍在恢复、临时可读期限及实际GET。不要在每次请求失败时重新发起恢复。
+
+模型由多个对象组成时，Manifest中所有必需文件都必须进入足够长的可读窗口；只恢复config.json并不足够。下载到本地后仍校验摘要，并把恢复耗时计入上线预算。归档恢复不等于对象类别永久改变，也不等于构建独立备份。
 
 ## 9. 练习与答案
 

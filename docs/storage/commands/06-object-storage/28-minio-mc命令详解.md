@@ -15,10 +15,12 @@ MinIO Client `mc` 用类 Unix 子命令操作 MinIO、AWS S3 和部分 S3 兼容
 ```bash
 mc --version
 mc alias list
-mc alias set lab https://minio.example.com ACCESS_KEY SECRET_KEY
+mc alias set --help
 ```
 
-alias 把 endpoint、credential、API/signature/path 信息写入 mc config。示例中的明文参数会进入 shell history/process list；生产优先临时环境、secret injection、STS/OIDC，并保护配置目录。
+alias 把 endpoint、credential、API/signature/path 信息写入 mc config。先由受控配置流程准备独立 Alias，再执行对象命令。`mc alias set NAME URL ACCESS_KEY SECRET_KEY` 的位置参数会进入进程参数；换成 `"$SECRET"` 仍会被 Shell 展开，不能消除这个风险。不要把真实值放进共享终端、CI 参数或文章。
+
+本地实验若使用 `MC_HOST_lab`，应由受控进程环境注入，正确处理 URI 编码；它避免位置参数传密钥，但环境仍不是加密保险箱，不能被调试日志、子进程和高权限用户任意读取。长期服务优先按目标客户端实际支持的临时身份机制设计刷新。配置导出同样含敏感信息。
 
 ```bash
 mc alias export lab > lab-alias.json  # 含敏感信息，严格保护

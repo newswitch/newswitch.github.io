@@ -93,6 +93,28 @@ Write Quorum：安全提交对象写入所需的最少成功 Shards/Drives。
 | 不满足读 Quorum | 对象不可重建/读取 |
 | Drive 恢复但数据落后 | 需要 Healing |
 
+### 5.1 固定布局下的读写边界
+
+以社区源码 `RELEASE.2025-10-15T17-29-55Z` 的常规、未转层且元数据有效一致的对象为基线：读取需要K个有效分片；写Quorum通常为K，K=M时增加到K+1。有效不仅是设备在线，还包括完整性和相容元数据。见[objectQuorumFromMeta实现](https://github.com/minio/minio/blob/RELEASE.2025-10-15T17-29-55Z/cmd/erasure-metadata.go)。
+
+假设Set有16块Drive，K=8、M=8：
+
+| 不可用分片 | 剩余有效分片 | 读K=8 | 写K+1=9 |
+| --- | --- | --- | --- |
+| 0 | 16 | 满足 | 满足 |
+| 4 | 12 | 满足 | 满足 |
+| 7 | 9 | 满足 | 满足 |
+| 8 | 8 | 满足 | 不满足 |
+| 9 | 7 | 不满足 | 不满足 |
+
+不能把这理解为“随便坏8块仍正常读写”。8块恰好只够示例对象读取，已没有再次失去有效分片的余量。若K=12、M=4，两个数量门槛均为12，也不是统一的N/2+1。
+
+### 5.2 从坏节点换算到坏分片
+
+若16成员均匀分布在四台主机，每台承载4个该Set分片，一台离线剩12个，满足示例读写数量条件；两台离线剩8个，只够读取。
+
+如果另一个Set把9个成员集中在同一机架，机架故障可令该Set无法重建，即使其余Set全部健康。必须画出机架、主机、Drive和Set的映射。数量成立仍不保证请求成功，容量、权限、损坏及具体操作的提交要求还需检查。
+
 ## 6. Write 怎样落盘
 
 简化路径：
@@ -262,8 +284,18 @@ AI 数据集大量小文件时，可评估打包、分片格式、数据集容�
 6. 模拟未完成 Multipart，配置清理策略；
 7. 证明集群总在线 Drive 数不能替代单个 Set Quorum。
 
+### 17.1 实验参考答案
+
+1. 16块10 TiB盘、K=8/M=8时原始160 TiB、理论正文80 TiB，还未扣历史版本、元数据和安全水位。
+2. 在四主机图中每台标4个同Set分片，再标机架；检查一个故障域带走哪些有效成员，而不只画网络节点。
+3. 观察成员离线、API与重试；恢复后还要核对Healing完成，Pod Running不等于冗余补齐。
+4. 总正文相同，小对象仍有更多请求和元数据工作，应比较对象数、QPS、带宽、CPU和盘延迟。
+5. 覆盖保留多版本，删除可能新增标记；当前视图变小不等于物理空间已释放。
+6. 核对本次UploadId与Part，确认不再使用后按限定生命周期治理，不能以删除完整对象代替。
+7. 两个16成员Set中，A丢9个、B全健康，总计23个在线也不能重建A的示例对象，B的分片不能替代A。
+
 ## 18. 参考资料
 
-- [MinIO Erasure Coding](https://min.io/docs/minio/linux/operations/concepts/erasure-coding.html)
-- [MinIO Object Store Documentation](https://min.io/docs/minio/linux/index.html)
+- [固定版本纠删码元数据](https://github.com/minio/minio/blob/RELEASE.2025-10-15T17-29-55Z/cmd/erasure-metadata.go)
+- [固定社区源码](https://github.com/minio/minio/tree/RELEASE.2025-10-15T17-29-55Z)
 - [S3 Multipart、Range 与大模型分发](../01-S3%20Multipart、Range与模型分发.md)

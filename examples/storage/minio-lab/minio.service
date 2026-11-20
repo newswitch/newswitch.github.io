@@ -1,0 +1,23 @@
+[Unit]
+Description=MinIO fixed-source laboratory server
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=/srv/minio/disk1 /srv/minio/disk2
+
+[Service]
+Type=simple
+User=minio
+Group=minio
+EnvironmentFile=/etc/minio/server.env
+ExecStartPre=/usr/bin/mountpoint -q /srv/minio/disk1
+ExecStartPre=/usr/bin/mountpoint -q /srv/minio/disk2
+ExecStart=/opt/minio/bin/minio server http://minio{1...4}.lab.internal:9000/srv/minio/disk{1...2} --console-address :9001
+Restart=on-failure
+RestartSec=10
+LimitNOFILE=65536
+TimeoutStopSec=120
+KillSignal=SIGTERM
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

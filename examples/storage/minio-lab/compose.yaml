@@ -1,0 +1,36 @@
+name: object-minio-lab
+x-server: &server
+  image: object-minio-lab:source-20251015
+  command: ["server", "http://minio{1...4}:9000/data{1...2}", "--console-address", ":9001"]
+  secrets: [root_user, root_password]
+  cap_drop: [ALL]
+  cap_add: [SETUID, SETGID]
+  security_opt: ["no-new-privileges:true"]
+services:
+  minio1:
+    <<: *server
+    ports: ["127.0.0.1:19000:9000", "127.0.0.1:19001:9001"]
+    volumes: ["d11:/data1", "d12:/data2"]
+  minio2:
+    <<: *server
+    volumes: ["d21:/data1", "d22:/data2"]
+  minio3:
+    <<: *server
+    volumes: ["d31:/data1", "d32:/data2"]
+  minio4:
+    <<: *server
+    volumes: ["d41:/data1", "d42:/data2"]
+secrets:
+  root_user:
+    file: ${MINIO_LAB_SECRET_DIR:?Set a private secret directory}/root-user
+  root_password:
+    file: ${MINIO_LAB_SECRET_DIR:?Set a private secret directory}/root-password
+volumes:
+  d11: {}
+  d12: {}
+  d21: {}
+  d22: {}
+  d31: {}
+  d32: {}
+  d41: {}
+  d42: {}
